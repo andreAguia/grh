@@ -385,7 +385,6 @@ class MenuServidor {
                     $dtSai = $pessoal->get_dtSaida($rr[0]);
                     $perfil = $pessoal->get_perfilSimples($rr[0]);
                     $cargo = $pessoal->get_cargoSimples($rr[0]);
-                    $motivo = $pessoal->get_motivo($rr[0]);
                     $idSituacao = $pessoal->get_idSituacao($rr[0]);
 
                     # Quando o cargo for null
@@ -396,6 +395,8 @@ class MenuServidor {
                     # Cria um motivo Ativo
                     if ($idSituacao == 1) {
                         $motivo = "Ativo";
+                    }else{
+                        $motivo = $pessoal->get_motivo($rr[0])." - ".$pessoal->get_dtAdmissao($rr[0])." - ".$pessoal->get_dtSaida($rr[0]);
                     }
 
                     #$menu->add_item("link","$cargo - $perfil ($dtAdm - $dtSai) - $motivo",'servidor.php?fase=editar&id='.$rr[0]);

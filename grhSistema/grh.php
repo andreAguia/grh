@@ -67,6 +67,11 @@ if ($acesso) {
     set_session('categoria');
     set_session('parametroProcesso');
     set_session('parametroSexo');
+    
+    set_session('parametroMotivo');
+    set_session('parametroIdade');
+    set_session('parametroTempoCargo');
+    set_session('parametroServicoPublico');
 
     set_session('parametroCentro');
     set_session('parametroLab');

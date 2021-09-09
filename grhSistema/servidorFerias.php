@@ -118,7 +118,8 @@ if ($acesso) {
     $exercícioDisponivel = $pessoal->get_feriasExercicioDisponivel($idServidorPesquisado);
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'anoExercicio',
+    $objeto->set_campos(array(
+        array('nome' => 'anoExercicio',
             'label' => 'Ano do Exercício:',
             'tipo' => 'numero',
             'size' => 7,

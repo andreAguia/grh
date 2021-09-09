@@ -99,6 +99,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
     $controle->set_col(3);
+    $controle->set_autofocus(true);
     $form->add_item($controle);
 
     # Lotação

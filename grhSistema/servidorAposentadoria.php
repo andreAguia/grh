@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario            = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -16,22 +17,23 @@ $acesso = Verifica::acesso($idUsuario, 2);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
-    $intra         = new Intra();
-    $pessoal       = new Pessoal();
+    $intra = new Intra();
+    $pessoal = new Pessoal();
     $aposentadoria = new Aposentadoria();
+    $averbacao = new Averbacao();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Aposentadoria";
-        $data      = date("Y-m-d H:i:s");
+        $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
-
     # Começa uma nova página
     $page = new Page();
+    $page->set_bodyOnLoad('$(document).foundation();');
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -44,13 +46,13 @@ if ($acesso) {
 
     # Verifica a data de saída
     $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
-    $dtHoje  = date("Y-m-d");                                      # Data de hoje
+    $dtHoje = date("Y-m-d");                                      # Data de hoje
     $dtFinal = null;
 
     # Analisa a data
     if (!vazio($dtSaida)) {           // Se tem saída é a saída
-        $dtFinal   = date_to_bd($dtSaida);
-        $disabled  = true;
+        $dtFinal = date_to_bd($dtSaida);
+        $disabled = true;
         $autofocus = false;
     } else {                          // Não tem saída então é hoje
         $dtFinal = $dtHoje;
@@ -68,65 +70,104 @@ if ($acesso) {
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
 
-    $imagem1   = new Imagem(PASTA_FIGURAS . 'ajuda.png', null, 15, 15);
-    $botaoHelp = new Button();
-    $botaoHelp->set_imagem($imagem1);
-    $botaoHelp->set_title("Ajuda");
-    $botaoHelp->set_url("https://docs.google.com/document/d/e/2PACX-1vSH4_OkFekLul3KY6AlTHP0WjDblvsQXdX1uA319UV4REs3d9YklhQJqSFoL_yrHfYEaSmX94RtQ47Q/pub");
-    $botaoHelp->set_target("_blank");
-    #$menu->add_link($botaoHelp,"right");
-    # Relatório
-    $imagem2   = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel  = new Button();
-    $botaoRel->set_imagem($imagem2);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Tempo de Serviço Averbado");
-    $botaoRel->set_url("../grhRelatorios/servidorAposentadoria.php");
-    $botaoRel->set_target("_blank");
-    $menu->add_link($botaoRel, "right");
-
-    $linkBotaoHistorico = new Button("Tempo de Serviço");
-    $linkBotaoHistorico->set_title('Exibe o tempo de Serviço desse Servidor');
-    $linkBotaoHistorico->set_onClick("abreFechaDivId('divTempoServicoAposentadoria');");
-    $linkBotaoHistorico->set_class('success button');
-    $menu->add_link($linkBotaoHistorico, "right");
-
-    $linkRegras = new Button("Regras");
-    $linkRegras->set_title('Exibe as regras da aposentadoria');
-    $linkRegras->set_onClick("abreFechaDivId('divRegrasAposentadoria');");
-    $linkRegras->set_class('success button');
-    $menu->add_link($linkRegras, "right");
+    # Regras
+    $botaoVoltar = new Link("Regras", "areaAposentadoria.php?fase=regras");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_target('_blank');
+    $botaoVoltar->set_title('Regras de aposentadoria');
+    #$menu->add_link($botaoVoltar, "right");
 
     $menu->show();
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
 
-##############################################################################################################################################
-#   Regras
-##############################################################################################################################################
+    tituloTable("Aposentadoria");
+    br();
 
-    echo '<div id="divRegrasAposentadoria">';
-    $painel = new Callout("secondary");
-    $painel->abre();
+    ###
 
-    $aposentadoria->exibeRegras();
+    $tab = new Tab(["Dados do Servidor", "Regras Permanentes", "Regras de Transição"]);
 
-    $painel->fecha();
-    echo '</div>';
+    ###
 
-##############################################################################################################################################
-#   Tempo de Serviço
-##############################################################################################################################################
+    $tab->abreConteudo();
 
-    echo '<div id="divTempoServicoAposentadoria">';
-    $painel = new Callout("secondary");
-    $painel->abre();
+    $grid1 = new Grid();
+    $grid1->abreColuna(12, 4);
 
-    $aposentadoria->exibeTempo($idServidorPesquisado);
+    /*
+     *  Dados do Servidor
+     */
+    $array = [
+        ["Idade", $pessoal->get_idade($idServidorPesquisado)],
+        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) . " dias"],
+        ["Data de Ingresso", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
+    ];
 
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Dados do Servidor");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(array("Descrição", "Valor"));
+    $tabela->set_width(array(60, 40));
+    $tabela->set_align(array("left", "center"));
+    $tabela->set_totalRegistro(false);
+    $tabela->show();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
+
+    /*
+     *  Tempo Averbado
+     */
+    $array = [
+        ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)],
+        ["Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
+    ];
+
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Averbado");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(array("Descrição", "Dias"));
+    $tabela->set_width(array(60, 40));
+    $tabela->set_align(array("left", "center"));
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
+
+    /*
+     *  Tempo Público
+     */
+    $array = [
+        ["Total (averbado + Uenf)", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
+        ["Ininterrupto", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)],
+    ];
+
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Público");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(array("Descrição", "Dias"));
+    $tabela->set_width(array(60, 40));
+    $tabela->set_align(array("left", "center"));
+    $tabela->set_totalRegistro(false);
+    $tabela->show();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12);
+
+    /*
+     *  Resumo do Tempo Averbado
+     */
     $select = 'SELECT dtInicial,
                       dtFinal,
                       dias,
+                      idAverbacao,
                       empresa,
                       CASE empresaTipo
                          WHEN 1 THEN "Pública"
@@ -139,39 +180,113 @@ if ($acesso) {
                       END,
                       cargo,
                       dtPublicacao,
-                      processo,
-                      idAverbacao
+                      processo
                  FROM tbaverbacao
                 WHERE idServidor = ' . $idServidorPesquisado . '
              ORDER BY dtInicial desc';
 
-    $array = $pessoal->select($select);
+    $result = $pessoal->select($select);
 
+    # Tabela
     $tabela = new Tabela();
-    $tabela->set_titulo("Tempo Averbado Detalhado");
-    $tabela->set_conteudo($array);
-    $tabela->set_label(["Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-    $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
-    $tabela->set_align(["center", "center", "center", "left"]);
-    $tabela->set_colunaSomatorio(2);
-    $tabela->set_textoSomatorio("Total de Dias:");
+    $tabela->set_titulo("Tempo Averbado - Detalhado");
+    $tabela->set_conteudo($result);
+    $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+    #$tabela->set_width(array(60, 40));
+    $tabela->set_align(["center", "center", "center", "center", "left"]);
+    $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, "date_to_php"]);
+
+    $tabela->set_classe(array(null, null, null, "Averbacao"));
+    $tabela->set_metodo(array(null, null, null, "getNumDias"));
+
     $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio([2, 3]);
     $tabela->show();
 
-    $painel->fecha();
-    echo '</div>';
+    /*
+     *  Vinculos do servidor
+     */
+    # Pega o idPessoa desse idServidor
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-##############################################################################################################################################
-#   Previsão de Aposentadoria
-##############################################################################################################################################
+    $select = "SELECT dtAdmissao,
+                      dtDemissao,
+                      idServidor,
+                      idServidor,
+                      idServidor,
+                      idServidor
+                 FROM tbservidor
+                WHERE idPessoa = {$idPessoa}
+                  AND idServidor <> {$idServidorPesquisado}  
+             ORDER BY dtadmissao desc";
 
-    $painel = new Callout("secondary");
-    $painel->abre();
+    $result = $pessoal->select($select);
 
-    $aposentadoria->exibePrevisao($idServidorPesquisado);
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Vínculos Anteriores");
+    $tabela->set_conteudo($result);
+    $tabela->set_label(["Admissão", "Saída", "Cargo", "Perfil", "Situação", "Motivo"]);
+    #$tabela->set_width(array(60, 40));
+    $tabela->set_align(["center", "center", "left"]);
+    $tabela->set_funcao(["date_to_php", "date_to_php"]);
 
-    $painel->fecha();
+    $tabela->set_classe([null, null, "Pessoal", "Pessoal", "Pessoal", "Pessoal"]);
+    $tabela->set_metodo([null, null, "get_cargo", "get_perfil", "get_situacao", "get_motivo"]);
 
+    $tabela->show();
+
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+
+    $tab->fechaConteudo();
+
+    ###
+
+    $tab->abreConteudo();
+
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
+
+    $previsao1 = new AposentadoriaPermanente1($idServidorPesquisado);
+    $previsao1->exibeAnalise();
+
+    $previsao2 = new AposentadoriaPermanente2($idServidorPesquisado);
+    $previsao2->exibeAnalise();
+
+    $previsao3 = new AposentadoriaCompulsoria($idServidorPesquisado);
+    $previsao3->exibeAnalise();
+
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+
+    $tab->fechaConteudo();
+
+    ###
+
+    $tab->abreConteudo();
+
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
+
+    $previsao4 = new AposentadoriaTransicao1($idServidorPesquisado);
+    $previsao4->exibeAnalise();
+
+    $previsao5 = new AposentadoriaTransicao2($idServidorPesquisado);
+    $previsao5->exibeAnalise();
+
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+
+    $tab->fechaConteudo();
+
+    ###
+
+    $tab->show();
+
+    $grid->fechaColuna();
+    $grid->fechaGrid();
+    br();
 
     $page->terminaPagina();
 } else {

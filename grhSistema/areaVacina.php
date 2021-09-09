@@ -263,7 +263,7 @@ if ($acesso) {
 
                 $relatorio->set_conteudo($result);
                 $relatorio->set_numGrupo(3);
-                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+                $relatorio->set_bordaInterna(true);
                 $relatorio->show();
             }
 
@@ -310,7 +310,6 @@ if ($acesso) {
 
                 $relatorio->set_conteudo($result);
                 $relatorio->set_numGrupo(3);
-                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
                 $relatorio->show();
             }
 
@@ -357,7 +356,7 @@ if ($acesso) {
 
                 $relatorio->set_conteudo($result);
                 $relatorio->set_numGrupo(3);
-                #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+                $relatorio->set_bordaInterna(true);
                 $relatorio->show();
             }
 

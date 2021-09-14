@@ -264,4 +264,25 @@ class AposentadoriaPermanente2 {
     }
 
     ###########################################################
+
+    public function exibeRegras() {
+
+        # Exibe outras informações
+        $array = [
+            ["Idade", $this->idadeMulher, $this->idadeHomem],
+            ["Serviço Público", $this->servicoPublico, $this->servicoPublico],
+            ["Cargo Efetivo", $this->cargoEfetivo, $this->cargoEfetivo],
+        ];
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo("Regras Gerais");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(array("Item", "Mulher", "Homem"));
+        $tabela->set_width(array(40, 30, 30));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
 }

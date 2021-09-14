@@ -678,6 +678,9 @@ if ($acesso) {
 
             $painel->fecha();
 
+            $permanente = new AposentadoriaPermanente1();
+            $permanente->exibeRegras();
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
 
@@ -793,11 +796,14 @@ if ($acesso) {
 
             $painel->fecha();
 
+            $permanente = new AposentadoriaPermanente2();
+            $permanente->exibeRegras();
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
 
             # Formulário de Pesquisa
-            $form = new Form('?fase=porIdadeContribuicao');
+            $form = new Form('?fase=porIdade');
 
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

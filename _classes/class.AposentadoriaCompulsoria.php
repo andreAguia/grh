@@ -134,14 +134,14 @@ class AposentadoriaCompulsoria {
 
         # Exibe outras informações
         $array = [
-            ["Idade", $idade, $idade]
+            ["Idade", $idade . " anos", $idade . " anos"]
         ];
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Regras Gerais");
         $tabela->set_conteudo($array);
-        $tabela->set_label(array("Item", "Mulher", "Homem"));
+        $tabela->set_label(array("Requisito", "Mulher", "Homem"));
         $tabela->set_width(array(40, 30, 30));
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(false);

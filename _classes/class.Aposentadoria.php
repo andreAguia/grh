@@ -336,4 +336,22 @@ class Aposentadoria {
     }
 
 ##############################################################################################################################################
+
+    /**
+     * Método get_tempoTotal
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoTotal($idServidor) {
+
+        $averbacao = new Averbacao();
+        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
+        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);        
+        $tempoUenf = $this->get_tempoServicoUenf($idServidor);
+
+        return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
+    }
+
+#####################################################################################################################################
 }

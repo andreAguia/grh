@@ -299,18 +299,18 @@ class AposentadoriaPermanente1 {
 
         # Exibe outras informações
         $array = [
-            ["Idade", $this->idadeMulher, $this->idadeHomem],
-            ["Contribuição", $this->contribuicaoMulher, $this->contribuicaoHomem],
-            ["Serviço Público", $this->servicoPublico, $this->servicoPublico],
-            ["Cargo Efetivo", $this->cargoEfetivo, $this->cargoEfetivo],
+            ["Idade", $this->idadeMulher." anos", $this->idadeHomem." anos"],
+            ["Contribuição", $this->contribuicaoMulher." anos<br/>(". ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem." anos<br/>(". ($this->contribuicaoHomem * 365) . " dias)"],
+            ["Serviço Público", $this->servicoPublico." anos<br/>(". ($this->servicoPublico * 365) . " dias)", $this->servicoPublico." anos<br/>(". ($this->servicoPublico * 365) . " dias)"],
+            ["Cargo Efetivo", $this->cargoEfetivo." anos<br/>(". ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo." anos<br/>(". ($this->cargoEfetivo * 365) . " dias)"],
         ];
 
         # Exibe a tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Regras Gerais");
         $tabela->set_conteudo($array);
-        $tabela->set_label(array("Item", "Mulher", "Homem"));
-        $tabela->set_width(array(40, 30, 30));
+        $tabela->set_label(array("Requisito", "Mulher", "Homem"));
+        $tabela->set_width(array(30, 35, 35));
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(false);
         $tabela->show();

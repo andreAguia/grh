@@ -750,7 +750,7 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
-            $tabela->set_width([15, 25, 10, 10, 10, 10, 15, 5]);
+            $tabela->set_width([10, 30, 10, 10, 10, 10, 10, 5]);
             $tabela->set_titulo($titulo);
             $tabela->set_classe([null, "Pessoal", null, "Aposentadoria", "Aposentadoria", "Aposentadoria", "AposentadoriaPermanente1", "AposentadoriaPermanente1"]);
             $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "get_tempoTotal", "get_tempoServicoUenf", "get_tempoPublicoIninterrupto", "getDataAposentadoria", "getDiasFaltantes"]);
@@ -836,8 +836,9 @@ if ($acesso) {
             # Exibe a lista
             $select = "SELECT idFuncional, 
                           tbservidor.idServidor,
-                          tbservidor.idServidor,
                           TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -863,21 +864,21 @@ if ($acesso) {
             $count = $pessoal->count($select);
             $titulo = "Previsão de Aposentadoria por Idade";
 
-            # Exibe a tabela
+             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
-            $tabela->set_align(['center', 'left', 'left']);
-            $tabela->set_width([15, 30, 20, 10, 15, 5]);
+            $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_width([10, 40, 10, 10, 10, 10, 5]);
             $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, "Pessoal", "Pessoal", null, "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
-            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            $tabela->set_classe([null, "Pessoal", null, "Aposentadoria", "Aposentadoria", "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "get_tempoServicoUenf", "get_tempoPublicoIninterrupto", "getDataAposentadoria", "getDiasFaltantes"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editarIdade');
+            $tabela->set_editar('?fase=editarIdadeContribuicao');
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 5,
+                array('coluna' => 6,
                     'valor' => '0',
                     'operador' => '=',
                     'id' => 'emAberto')

@@ -45,25 +45,21 @@ if ($acesso) {
 
     # Cabeçalho da Página
     AreaServidor::cabecalho();
-    
+
     # Pega os parâmetros
     $parametroSexo = post('parametroSexo', get_session('parametroSexo', "Feminino"));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
-    $parametroIdade = post('parametroIdade', get_session('parametroIdade', 55));
-    $parametroTempoCargo = post('parametroTempoCargo', get_session('parametroTempoCargo', 5));
-    $parametroServicoPublico = post('parametroServicoPublico', get_session('parametroServicoPublico', 10));    
     $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
-    $parametroProcesso = post('parametroProcesso', get_session('parametroProcesso')); 
+    $parametroProcesso = post('parametroProcesso', get_session('parametroProcesso'));    
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroSexo', $parametroSexo);
     set_session('parametroLotacao', $parametroLotacao);
-    set_session('parametroIdade', $parametroIdade);
-    set_session('parametroTempoCargo', $parametroTempoCargo);
-    set_session('parametroServicoPublico', $parametroServicoPublico);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroProcesso', $parametroProcesso);
-    
+    set_session('parametroCargo', $parametroCargo);
+
     # Pega as idades de aposentadoria
     if ($parametroSexo == "Feminino") {
         $idadeAposent = $intra->get_variavel("aposentadoria.integral.idade.feminino");
@@ -117,6 +113,9 @@ if ($acesso) {
         ################################################################
 
         case "listaAbono" :
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
 
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -206,58 +205,6 @@ if ($acesso) {
             $controle->set_col(4);
             $form->add_item($controle);
 
-            /*
-             * Idade maior que
-             */
-
-            $arrayIdade = arrayPreenche(45, 75, "c", 5);
-            array_unshift($arrayIdade, "Todas");
-
-            $controle = new Input('parametroIdade', 'combo', 'Idade >=', 1);
-            $controle->set_size(10);
-            $controle->set_title('Idade maior que');
-            $controle->set_helptext('em anos');
-            $controle->set_array($arrayIdade);
-            $controle->set_valor($parametroIdade);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            /*
-             * Tempo na cargo efetivo
-             */
-
-            $arrayTempoCargo = arrayPreenche(5, 30, "c", 5);
-            array_unshift($arrayTempoCargo, "Todos");
-
-            $controle = new Input('parametroTempoCargo', 'combo', 'Cargo Efetivo >=', 1);
-            $controle->set_helptext('em anos');
-            $controle->set_size(10);
-            $controle->set_array($arrayTempoCargo);
-            $controle->set_valor($parametroTempoCargo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            /*
-             * Serviço Publico
-             */
-            
-            $arrayTempoPublico = arrayPreenche(5, 30, "c", 5);
-            array_unshift($arrayTempoPublico, "Todos");
-
-            $controle = new Input('parametroServicoPublico', 'combo', 'Serviço Publico >=', 1);
-            $controle->set_size(10);
-            $controle->set_array($arrayTempoPublico);
-            $controle->set_valor($parametroServicoPublico);
-            $controle->set_helptext('em anos');
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
             $form->show();
 
             if ($parametroLotacao == "*") {
@@ -274,26 +221,23 @@ if ($acesso) {
 
             # Exibe a lista
             $select = "SELECT idFuncional,
-                              idServidor,
                               dtAdmissao,
                               TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
-                              IFNULL((SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor)DIV 365,0) + IFNULL((TIMESTAMPDIFF(YEAR, dtAdmissao, NOW())),0),
-                              TIMESTAMPDIFF(YEAR, dtAdmissao, NOW()) AS tempoCargo,
+                              idServidor,
                               CASE
                                     WHEN status = 1 THEN 'Deferido'
                                     WHEN status = 2 THEN 'Indeferido'
                                     ELSE 'Não Solicitado'
-                              END as status,
-                              idServidor
-                      FROM tbservidor AS SERV LEFT JOIN tbpessoa USING(idPessoa)
+                              END as status
+                      FROM tbservidor LEFT JOIN tbpessoa USING(idPessoa)
                                       LEFT JOIN tbhistlot USING (idServidor)
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                      LEFT JOIN tbcargo ON (SERV.idCargo = tbcargo.idCargo)
+                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                       LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                                       LEFT JOIN tbabono USING (idServidor)
-                     WHERE SERV.situacao = 1
+                     WHERE tbservidor.situacao = 1
                        AND idPerfil = 1
-                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = SERV.idServidor)
+                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                        AND tbpessoa.sexo = '{$parametroSexo}'
                        AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= {$idadeAposent}";
 
@@ -331,27 +275,51 @@ if ($acesso) {
             $select .= " ORDER BY idade";
 
             $result = $pessoal->select($select);
+            $resultado = [];
+
+            # Percorre o banco para verificar se já pode aposentar
+            foreach ($result as $lista) {
+
+                # Pega a data de aposentadoria desse servidor
+                $data = $aposentadoria->get_dataAposentadoriaIntegral($lista["idServidor"]);
+
+                # Verifica se a data colhida já passou
+                if (jaPassou($data)) {
+                    $resultado[] = [
+                        $lista["idFuncional"],
+                        $lista["idServidor"],
+                        $lista["idServidor"],
+                        $lista["dtAdmissao"],
+                        $lista["idade"],
+                        $aposentadoria->get_tempoServicoTotal($lista["idServidor"]), // tempo total
+                        dias_to_diasMesAno($aposentadoria->get_tempoServicoUenf($lista["idServidor"])), // tempo no cargo
+                        $data,
+                        $lista["status"],
+                        $lista["idServidor"]
+                    ];
+                }
+            }
 
             # Tabela com os valores de aposentadoria
             $tabela = new Tabela();
-            $tabela->set_titulo("Servidores Ativos");
-            $tabela->set_label(['idFuncional', 'Servidor', 'Admissão', 'Idade', 'Tempo Público', 'Tempo no Cargo', 'Solicitação', 'Editar']);
-            $tabela->set_align(['center', 'left']);
-            $tabela->set_conteudo($result);
-            $tabela->set_classe([null, "Pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
-            $tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_titulo("Servidores Ativos com Direito a Abono Permanência");
+            $tabela->set_label(['idFuncional', 'Servidor', 'Cargo', 'Admissão', 'Idade', 'Tempo de Serviço', 'Tempo no Cargo', 'a partir de:', 'Solicitação', 'Editar']);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_conteudo($resultado);
+            $tabela->set_classe([null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao"]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 6,
+                array('coluna' => 8,
                     'valor' => "Deferido",
                     'operador' => '=',
                     'id' => 'deferido'),
-                array('coluna' => 6,
+                array('coluna' => 8,
                     'valor' => "Indeferido",
                     'operador' => '=',
                     'id' => 'indeferido'),
-                array('coluna' => 6,
+                array('coluna' => 8,
                     'valor' => "Não Solicitado",
                     'operador' => '=',
                     'id' => 'ns')

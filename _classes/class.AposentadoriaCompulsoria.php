@@ -8,7 +8,6 @@ class AposentadoriaCompulsoria {
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
     private $idServidor = null;
-    private $idade = 75;
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações de contribuição";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – LEI 6.244/2012";
@@ -33,6 +32,10 @@ class AposentadoriaCompulsoria {
         # Pega os dados do servidor
         $pessoal = new Pessoal();
         $idadeServidor = $pessoal->get_idade($this->idServidor);
+        
+        # Pega a idade da regr
+        $intra = new Intra();
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
 
         $hoje = date("d/m/Y");
 
@@ -41,14 +44,14 @@ class AposentadoriaCompulsoria {
          */
 
         # Idade
-        if ($idadeServidor >= $this->idade) {
+        if ($idadeServidor >= $idade) {
             $analiseIdade = "OK";
         } else {
             # Pega a data de nascimento (vem dd/mm/AAAA)
             $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
 
             # Calcula a data
-            $novaData = addAnos($dtNasc, $this->idade);
+            $novaData = addAnos($dtNasc, $idade);
             $analiseIdade = "Somente em {$novaData}.";
         }
 
@@ -73,7 +76,7 @@ class AposentadoriaCompulsoria {
         $grid->abreColuna(8);
 
         $array = [
-            ["Idade", $idadeDescricao, "{$this->idade} anos", "{$idadeServidor} anos", $analiseIdade],
+            ["Idade", $idadeDescricao, "{$idade} anos", "{$idadeServidor} anos", $analiseIdade],
         ];
 
         # Exibe a tabela

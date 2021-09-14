@@ -589,6 +589,12 @@ class LicencaPremio {
 
             $tabela->set_colunaSomatorio([3, 4, 5]);
             $tabela->set_totalRegistro(false);
+            
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 4,
+                    'valor' => 90,
+                    'operador' => '>',
+                    'id' => 'alerta')));
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");

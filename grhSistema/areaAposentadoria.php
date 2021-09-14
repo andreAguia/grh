@@ -49,7 +49,7 @@ if ($acesso) {
     $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
     $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
     $parametroSexo = post('parametroSexo', get_session('parametroSexo', "Feminino"));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroIdade = post('parametroIdade', get_session('parametroIdade', 55));
     $parametroTempoCargo = post('parametroTempoCargo', get_session('parametroTempoCargo', 5));
     $parametroServicoPublico = post('parametroServicoPublico', get_session('parametroServicoPublico', 10));
@@ -303,7 +303,7 @@ if ($acesso) {
         ################################################################
 
         /*
-         * Compulsória
+         * Compulsória por Ano
          */
 
         case "compulsoria" :
@@ -314,7 +314,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(5);
+            $aposentadoria->exibeMenu(8);
 
             $painel->fecha();
 
@@ -347,7 +347,7 @@ if ($acesso) {
 
             $select = "SELECT month(dtNasc),  
                           tbservidor.idServidor,
-                          dtNasc,
+                          tbservidor.idServidor,
                           TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
                           ADDDATE(dtNasc, INTERVAL 75 YEAR),
                           tbservidor.idServidor
@@ -364,12 +364,12 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['Mês', 'Servidor', 'Nascimento', 'Idade', "Fará {$idade}", 'Lotação']);
+            $tabela->set_label(['Mês', 'Servidor', 'Lotação', "Idade", "Fará {$idade}"]);
             $tabela->set_align(['center', 'left', 'center', 'center', 'center', 'left']);
             $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, "Pessoal", null, null, null, "Pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargo", null, null, null, "get_lotacao"]);
-            $tabela->set_funcao(["get_nomeMes", null, "date_to_php", null, "date_to_php"]);
+            $tabela->set_classe([null, "Pessoal", "Pessoal", null, null, "Pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao"]);
+            $tabela->set_funcao(["get_nomeMes", null, null, null, "date_to_php"]);
             #$tabela->set_editar($this->linkEditar);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -390,58 +390,13 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
-        ################################################################   
+        ################################################################
 
         /*
-         *  Regras
+         * Compulsória por Lotação
          */
 
-        case "regras" :
-
-            titulotable("Regras de Aposentadoria");
-            br();
-            $tamanho = "100%";
-            
-            p("== Regras Permanentes ==","center","f16");
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent1.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent2.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent3.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent4.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-            
-             p("== Regras de Transição ==","center","f16");
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent5.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent6.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'aposent7.jpg', null, $tamanho, $tamanho);
-            $figura->show();
-            br(2);
-            break;
-
-        ################################################################   
-
-        /*
-         *  Previsão
-         */
-
-        case "previsao" :
+        case "compulsoriaGeral" :
 
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
@@ -456,19 +411,20 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
 
-            # Formulário de Pesquisa
-            $form = new Form('?fase=previsao');
+            # Idade obrigatória
+            $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
 
-            /*
-             *  Lotação
-             */
+            # Formulário de Pesquisa
+            $form = new Form('?fase=compulsoriaGeral');
+
+            # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-            array_unshift($result, array("*", 'Todas'));
+            array_unshift($result, array("Todos", 'Todas'));
 
             $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);
@@ -477,142 +433,26 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(12);
             $form->add_item($controle);
-
-            /*
-             * Adm & Tec ou Professor
-             */
-
-            $result = $pessoal->select('SELECT DISTINCT tipo, tipo
-                                           FROM tbtipocargo
-                                        ORDER BY 1');
-            array_unshift($result, array("*", 'Todos'));
-
-            $controle = new Input('parametroCargoTipo', 'combo', 'Cargo:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Sexo');
-            $controle->set_array($result);
-            $controle->set_valor($parametroCargoTipo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-
-            /*
-             * Sexo
-             */
-
-            $controle = new Input('parametroSexo', 'combo', 'Sexo:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Sexo');
-            $controle->set_array([["Feminino", "Feminino"], ["Masculino", "Masculino"]]);
-            $controle->set_valor($parametroSexo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            /*
-             * Idade maior que
-             */
-
-            $arrayIdade = arrayPreenche(45, 75, "c", 5);
-            array_unshift($arrayIdade, "Todas");
-
-            $controle = new Input('parametroIdade', 'combo', 'Idade >=', 1);
-            $controle->set_size(10);
-            $controle->set_title('Idade maior que');
-            $controle->set_helptext('em anos');
-            $controle->set_array($arrayIdade);
-            $controle->set_valor($parametroIdade);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            /*
-             * Tempo na cargo efetivo
-             */
-
-            $arrayTempoCargo = arrayPreenche(5, 30, "c", 5);
-            array_unshift($arrayTempoCargo, "Todos");
-
-            $controle = new Input('parametroTempoCargo', 'combo', 'Cargo Efetivo >=', 1);
-            $controle->set_helptext('em anos');
-            $controle->set_size(10);
-            $controle->set_array($arrayTempoCargo);
-            $controle->set_valor($parametroTempoCargo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            /*
-             * Serviço Publico
-             */
-
-            $arrayTempoPublico = arrayPreenche(5, 30, "c", 5);
-            array_unshift($arrayTempoPublico, "Todos");
-
-            $controle = new Input('parametroServicoPublico', 'combo', 'Serviço Publico >=', 1);
-            $controle->set_size(10);
-            $controle->set_array($arrayTempoPublico);
-            $controle->set_valor($parametroServicoPublico);
-            $controle->set_helptext('em anos');
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
             $form->show();
 
-            if ($parametroLotacao == "*") {
-                $parametroLotacao = null;
-            }
-
             # Exibe a lista
-            $select = "SELECT idFuncional,
-                              idServidor,
-                              TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
-                              dtAdmissao,
-                              TIMESTAMPDIFF(YEAR, dtAdmissao, NOW()) AS tempoCargo,
-                              (SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor) DIV 365,
-                              IFNULL((SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor)DIV 365,0) + IFNULL((TIMESTAMPDIFF(YEAR, dtAdmissao, NOW())),0),
-                              idServidor
-                      FROM tbservidor AS SERV LEFT JOIN tbpessoa USING(idPessoa)
-                                      LEFT JOIN tbhistlot USING (idServidor)
-                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                      LEFT JOIN tbcargo ON (SERV.idCargo = tbcargo.idCargo)
-                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                                      LEFT JOIN tbabono USING (idServidor)
-                     WHERE SERV.situacao = 1
-                       AND idPerfil = 1
-                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = SERV.idServidor)
-                       AND tbpessoa.sexo = '{$parametroSexo}'";
+            $select = "SELECT idFuncional,  
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          ADDDATE(dtNasc, INTERVAL 75 YEAR),
+                          TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtNasc, INTERVAL 75 YEAR))
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
 
-            # $parametroCargoTipo
-            if ($parametroCargoTipo <> "*") {
-                $select .= " AND tbtipocargo.tipo = '{$parametroCargoTipo}'";
-            }
-
-            # Idade
-            if ($parametroIdade <> "Todas") {
-                $select .= " AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= {$parametroIdade}";
-            }
-
-            # TempoCargo
-            if ($parametroTempoCargo <> "Todos") {
-                $select .= " AND TIMESTAMPDIFF(YEAR, dtAdmissao, NOW()) >= {$parametroTempoCargo}";
-            }
-
-            # TempoPúblico
-            if ($parametroServicoPublico <> "Todos") {
-                $select .= " AND  (IFNULL((SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor)/365,0) + IFNULL((TIMESTAMPDIFF(YEAR, dtAdmissao, NOW())),0) >= {$parametroServicoPublico})";
-            }
-
-            # lotação
-            if (!is_null($parametroLotacao)) {  // senão verifica o da classe
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
                 if (is_numeric($parametroLotacao)) {
                     $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
@@ -620,129 +460,39 @@ if ($acesso) {
                 }
             }
 
-            $select .= " ORDER BY idade";
-            #echo $select;
+
+            $select .= " ORDER BY dtNasc";
 
             $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = "Previsão de Aposentadoria Compulsória";
 
-            # Tabela com os valores de aposentadoria
+            # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Servidores Ativos que Atendem os Critérios Acima");
-            $tabela->set_label(['idFuncional', 'Servidor', 'Idade', 'Admissão', 'Cargo Efetivo', 'Serviço Público Averbado', 'Serviço Público Averbado + Uenf', 'Editar']);
-            $tabela->set_align(['center', 'left']);
-            $tabela->set_width([10, 20, 10, 10, 15, 15, 15, 5]);
             $tabela->set_conteudo($result);
-            $tabela->set_classe([null, "Pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
-            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', 'Idade', "Compulsória em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_width([15, 40, 15, 10, 15]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarCompulsorioLotacao');
 
-            # Aposentadoria integral
-            $servidorBtn = new Link(null, "?fase=editaServidor&id=");
-            $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
-            $servidorBtn->set_title("Vai para o cadastro do servidor");
-
-            # Coloca os links na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, $servidorBtn]);
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
+                    'valor' => '74',
+                    'operador' => '>',
+                    'id' => 'emAberto')
+            ));
             $tabela->show();
 
-            # Os que ainda não conseguiram
-//            # Exibe a lista
-//            $select = "SELECT idFuncional,
-//                              idServidor,
-//                              TIMESTAMPDIFF(YEAR, dtNasc, NOW()) AS idade,
-//                              dtAdmissao,
-//                              TIMESTAMPDIFF(YEAR, dtAdmissao, NOW()) AS tempoCargo,
-//                              (SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor) DIV 365,
-//                              IFNULL((SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor)DIV 365,0) + IFNULL((TIMESTAMPDIFF(YEAR, dtAdmissao, NOW())),0),
-//                              idServidor
-//                      FROM tbservidor AS SERV LEFT JOIN tbpessoa USING(idPessoa)
-//                                      LEFT JOIN tbhistlot USING (idServidor)
-//                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-//                                      LEFT JOIN tbcargo ON (SERV.idCargo = tbcargo.idCargo)
-//                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-//                                      LEFT JOIN tbabono USING (idServidor)
-//                     WHERE SERV.situacao = 1
-//                       AND idPerfil = 1
-//                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = SERV.idServidor)
-//                       AND tbpessoa.sexo = '{$parametroSexo}'";
-//
-//            # lotação
-//            if (!is_null($parametroLotacao)) {  // senão verifica o da classe
-//                if (is_numeric($parametroLotacao)) {
-//                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-//                } else { # senão é uma diretoria genérica
-//                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-//                }
-//            }
-//            $select .= " AND idServidor NOT IN(";
-//            
-//            $select .= "SELECT idServidor
-//                         FROM tbservidor AS SERV LEFT JOIN tbpessoa USING(idPessoa)
-//                                      LEFT JOIN tbhistlot USING (idServidor)
-//                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-//                                      LEFT JOIN tbcargo ON (SERV.idCargo = tbcargo.idCargo)
-//                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-//                                      LEFT JOIN tbabono USING (idServidor)
-//                     WHERE SERV.situacao = 1
-//                       AND idPerfil = 1
-//                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = SERV.idServidor)
-//                       AND tbpessoa.sexo = '{$parametroSexo}'";
-//
-//            # $parametroCargoTipo
-//            if ($parametroCargoTipo <> "*") {
-//                $select .= " AND tbtipocargo.tipo = '{$parametroCargoTipo}'";
-//            }
-//            
-//            # Idade
-//            if ($parametroIdade <> "Todas") {
-//                $select .= " AND TIMESTAMPDIFF(YEAR, dtNasc, NOW()) >= {$parametroIdade}";
-//            }
-//
-//            # TempoCargo
-//            if ($parametroTempoCargo <> "Todos") {
-//                $select .= " AND TIMESTAMPDIFF(YEAR, dtAdmissao, NOW()) >= {$parametroTempoCargo}";
-//            }
-//            
-//            # TempoPúblico
-//            if ($parametroServicoPublico <> "Todos") {
-//                $select .= " AND  (IFNULL((SELECT SUM(dias) FROM tbaverbacao AS AVERB WHERE AVERB.idServidor = SERV.idServidor) DIV 365,0) + IFNULL((TIMESTAMPDIFF(YEAR, dtAdmissao, NOW())),0) >= {$parametroServicoPublico})";
-//            }
-//
-//            # lotação
-//            if (!is_null($parametroLotacao)) {  // senão verifica o da classe
-//                if (is_numeric($parametroLotacao)) {
-//                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-//                } else { # senão é uma diretoria genérica
-//                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-//                }
-//            }
-//
-//            $select .= ") ORDER BY idade";
-//
-//            $result = $pessoal->select($select);
-//
-//            # Tabela com os valores de aposentadoria
-//            $tabela = new Tabela();
-//            $tabela->set_titulo("Servidores Ativos que NÃO Atendem os Critérios Acima");
-//            $tabela->set_label(['idFuncional', 'Servidor', 'Idade', 'Admissão', 'Cargo Efetivo', 'Serviço Público Averbado', 'Serviço Público Averbado + Uenf', 'Editar']);
-//            $tabela->set_align(['center', 'left']);
-//            $tabela->set_width([10,20,10,10,15,15,15,5]);
-//            $tabela->set_conteudo($result);
-//            $tabela->set_classe([null, "Pessoal"]);
-//            $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
-//            $tabela->set_funcao([null, null, null, "date_to_php"]);
-//
-//            # Aposentadoria integral
-//            $servidorBtn = new Link(null, "?fase=editaServidor&id=");
-//            $servidorBtn->set_imagem(PASTA_FIGURAS_GERAIS . 'bullet_edit.png', 20, 20);
-//            $servidorBtn->set_title("Vai para o cadastro do servidor");
-//
-//            # Coloca os links na tabela			
-//            $tabela->set_link([null, null, null, null, null, null, null, $servidorBtn]);
-//            $tabela->show();
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
             break;
 
-        ################################################################
+        ################################################################  
 
         case "editaServidor" :
             br(8);
@@ -792,6 +542,22 @@ if ($acesso) {
 
         ################################################################
 
+        case "editarCompulsorioLotacao" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=compulsoriaGeral');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
         case "configuracaoCompulsoria" :
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
@@ -799,7 +565,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(6);
+            $aposentadoria->exibeMenu(9);
 
             $painel->fecha();
 
@@ -895,6 +661,384 @@ if ($acesso) {
             break;
 
         ################################################################
+
+        /*
+         * Por idade e tempo de contribuição
+         */
+
+        case "porIdadeContribuicao" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(5);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdadeContribuicao');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = "Previsão de Aposentadoria por Idade e Tempo de Contribuição";
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_width([15, 30, 20, 10, 15, 5]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Pessoal", null, "AposentadoriaPermanente1", "AposentadoriaPermanente1"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarIdadeContribuicao');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'emAberto')
+            ));
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editarIdadeContribuicao" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdadeContribuicao');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
+        /*
+         * Por idade 
+         */
+
+        case "porIdade" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(6);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdadeContribuicao');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+            $titulo = "Previsão de Aposentadoria por Idade";
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_width([15, 30, 20, 10, 15, 5]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Pessoal", null, "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarIdade');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'emAberto')
+            ));
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editarIdade" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdade');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
+        /*
+         * EC nº 41/2003
+         */
+
+        case "transicao1" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(10);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=transicao1');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            tituloTable("ART. 6º. DA EC Nº. 41/2003");
+            callout("É concedido aos servidores que ingressaram no serviço público até 31 de dezembro de 2003.");
+
+            $titulo = null;
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_width([15, 30, 20, 10, 15, 5]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Pessoal", null, "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarIdade');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'emAberto')
+            ));
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editartransicao1" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=transicao1');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
+        /*
+         * EC nº 47/2005
+         */
+
+        case "transicao2" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 3);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(11);
+
+            $painel->fecha();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 9);
+
+            tituloTable("ART. 3º. DA EC Nº. 47/2005");
+            callout("É o benefício aos servidores que ingressaram no serviço público até 16 de dezembro de 1998.");
+
+            br(5);
+            p("Em Construção!", "center", "f20");
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
     }
     $page->terminaPagina();
 } else {

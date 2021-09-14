@@ -144,12 +144,8 @@ class AposentadoriaTransicao2 {
         $grid = new Grid();
         $grid->abreColuna(12);
 
-        tituloTable("Aposentadoria Voluntária por Idade e Tempo de Contribuição");
-        
-        callout("ART. 3º. DA EC Nº. 47/2005<br/>É o benefício concedido aos servidores"
-                . " titulares de cargos efetivos que ingressaram no serviço público até"
-                . " 16 de dezembro de 1998 e que preencherem, cumulativamente, os requisitos"
-                . " estipulados a seguir:");
+        tituloTable("ART. 3º. DA EC Nº. 47/2005");        
+        callout("É o benefício aos servidores que ingressaram no serviço público até 16 de dezembro de 1998.");
 
         $grid->fechaColuna();
         $grid->abreColuna(8);

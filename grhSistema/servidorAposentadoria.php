@@ -250,9 +250,11 @@ if ($acesso) {
 
     $previsao1 = new AposentadoriaPermanente1($idServidorPesquisado);
     $previsao1->exibeAnalise();
+    hr();
 
     $previsao2 = new AposentadoriaPermanente2($idServidorPesquisado);
     $previsao2->exibeAnalise();
+    hr();
 
     $previsao3 = new AposentadoriaCompulsoria($idServidorPesquisado);
     $previsao3->exibeAnalise();
@@ -271,6 +273,7 @@ if ($acesso) {
 
     $previsao4 = new AposentadoriaTransicao1($idServidorPesquisado);
     $previsao4->exibeAnalise();
+    hr();
 
     $previsao5 = new AposentadoriaTransicao2($idServidorPesquisado);
     $previsao5->exibeAnalise();

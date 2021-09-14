@@ -138,7 +138,7 @@ class AposentadoriaPermanente1 {
         $grid->fechaColuna();
         $grid->abreColuna(8);
 
-        $array = [            
+        $array = [
             ["Contribuição", $tempoContribuiçãoDescricao, "{$contribuicaoRegra} anos<br/>(" . ($contribuicaoRegra * 365) . " dias)", "{$tempoTotal} dias", $analiseContribuicao],
             ["Idade", $idadeDescricao, "{$idadeRegra} anos", "{$idadeServidor} anos", $analiseIdade],
             ["Serviço Público", $tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$tempoPublicoIninterrupto} dias", $analisePublico],
@@ -190,4 +190,107 @@ class AposentadoriaPermanente1 {
         $grid->fechaGrid();
     }
 
+    ###########################################################
+
+    public function getDataAposentadoria($idServidor) {
+
+        # Pega os dados do servidor
+        $pessoal = new Pessoal();
+        $idadeServidor = $pessoal->get_idade($idServidor);
+        $sexo = $pessoal->get_sexo($idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+        $averbacao = new Averbacao();
+        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
+        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);
+
+        $aposentadoria = new Aposentadoria();
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
+        $dtIngressoServidor = $aposentadoria->get_dtIngresso($idServidor);
+
+        $tempoTotal = $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
+        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($idServidor);
+
+        if ($sexo == "Masculino") {
+            $idadeRegra = $this->idadeHomem;
+            $contribuicaoRegra = $this->contribuicaoHomem;
+        } else {
+            $idadeRegra = $this->idadeMulher;
+            $contribuicaoRegra = $this->contribuicaoMulher;
+        }
+
+        $hoje = date("d/m/Y");
+
+        /*
+         *  Análise
+         */
+
+        # Idade
+        $dtNasc = $pessoal->get_dataNascimento($idServidor);
+        $dataIdade = addAnos($dtNasc, $idadeRegra);
+
+        # Tempo de Contribuição
+        if ($tempoTotal >= ($contribuicaoRegra * 365)) {
+            $dataContribuicao = null;
+        } else {
+            $resta = ($contribuicaoRegra * 365) - $tempoTotal;
+            $dataContribuicao = addDias($hoje, $resta);
+        }
+
+        # Serviço Público Initerrupto
+        if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
+            $dataPublico = null;
+        } else {
+            $resta = ($this->servicoPublico * 365) - $tempoPublicoIninterrupto;
+            $dataPublico = addDias($hoje, $resta);
+        }
+
+        # Cargo Efetivo
+        if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
+            $dataCargo = null;
+        } else {
+            $resta = ($this->cargoEfetivo * 365) - $tempoUenf;
+            $dataCargo = addDias($hoje, $resta);
+        }
+
+        /*
+         * Verifica a data maior
+         */
+
+        # Compara com a idade
+        $dtRetorno = dataMaior($dtAdmissao, $dataIdade);
+
+        # Agora com a data de contribuição
+        if (!is_null($dataContribuicao)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataContribuicao);
+        }
+
+        # Agora com a data de Serviço Público Initerrupto
+        if (!is_null($dataPublico)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataPublico);
+        }
+
+        # Agora com a data de cargo efetivo
+        if (!is_null($dataCargo)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataCargo);
+        }
+
+        return $dtRetorno;
+    }
+
+    ###########################################################
+
+    public function getDiasFaltantes($idServidor) {
+        
+        # Pega a data de aposentadoria
+        $dtAposent = $this->getDataAposentadoria($idServidor);
+
+        # Verifica se ja passou
+        if (jaPassou($dtAposent)) {
+            return 0;
+        } else {
+            return dataDif(date("d/m/Y"), $dtAposent);
+        }
+    }
+    ###########################################################
 }

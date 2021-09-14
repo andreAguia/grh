@@ -30,11 +30,16 @@ class Aposentadoria {
         $menu->add_item("link", "Aposentados por Tipo", "areaAposentadoria.php?fase=motivo", "Servidores Aposentados por Tipo de Aposentadoria");
         $menu->add_item("link", "Estatística", "areaAposentadoria.php?fase=anoEstatistica", "Estatística dos Servidores Aposentados");
 
-        $menu->add_item("titulo", "Previsão");
-        $menu->add_item("link", "Compulsória Por Ano", "areaAposentadoria.php?fase=compulsoria", "Previsão de Aposentadoria Compulsória");
+        $menu->add_item("titulo", "Regras Permanentes");
+        $menu->add_item("link", "Por Idade e Contribuição", "areaAposentadoria.php?fase=porIdadeContribuicao", "Aposentadoria voluntária por idade e tempo de contribuição");
+        $menu->add_item("link", "Por Idade", "areaAposentadoria.php?fase=porIdade", "Aposentadoria voluntária por idade");
+        $menu->add_item("link", "Compulsória", "areaAposentadoria.php?fase=compulsoriaGeral", "Previsão de aposentadoria compulsória");
+        $menu->add_item("link", "Compulsória por Ano", "areaAposentadoria.php?fase=compulsoria", "Previsão de aposentadoria compulsória por ano");
         #$menu->add_item("link", "Configuração Compulsória", "areaAposentadoria.php?fase=configuracaoCompulsoria", "Configuração");
-        #$menu->add_item("link", "Previsão", "areaAposentadoria.php?fase=previsao", "Previsão de Aposentadoria Geral");
-
+        
+        $menu->add_item("titulo", "Regras de Transição");
+        $menu->add_item("link", "EC nº 41/2003", "areaAposentadoria.php?fase=transicao1", "Regras de transição - EC nº 41/2003");
+        $menu->add_item("link", "EC nº 47/2005", "areaAposentadoria.php?fase=transicao2", "Regras de transição - EC nº 47/2005");
         $menu->show();
     }
 

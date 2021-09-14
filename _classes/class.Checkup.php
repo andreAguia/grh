@@ -4849,4 +4849,85 @@ class Checkup {
     }
 
     ##########################################################
+
+    /**
+     * Método get_licencaPremioMais90dias
+     * 
+     * Servidores com Licença Prêmio com dias diferente de 30, 60 e 90 dias
+     */
+    public function get_licencaPremioMais90dias($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              CONCAT(date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y")),
+                              SUM(tblicencapremio.numDias) as somatorio,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tblicencapremio USING (idServidor)
+                                         LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                         WHERE tbservidor.situacao = 1
+                           AND idPerfil = 1';
+            if (!empty($idServidor)) {
+                $select .= ' AND tbservidor.idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' GROUP BY tblicencapremio.idPublicacaoPremio 
+                           HAVING somatorio > 90
+                         ORDER BY tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidor(es) com Licença Prêmio com mais de 90 dias em um período aquisitivo';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Período Aquisitivo', 'Dias']);
+            $tabela->set_width([15, 20, 20, 20, 20, 5]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_cargo", "get_lotacao"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            $tabela->set_rowspan(1);
+            $tabela->set_grupoCorColuna(1);
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("Não se pode ter mais de 90 dias de licença prêmio em um mesmo período aquisitivo. Houve algum erro no lançamento destes registros !");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
 }

@@ -315,6 +315,9 @@ if ($acesso) {
             $painel->abre();
 
             $aposentadoria->exibeMenu(8);
+            
+            $compulsoria = new AposentadoriaCompulsoria();
+            $compulsoria->exibeRegras();
 
             $painel->fecha();
 
@@ -405,6 +408,9 @@ if ($acesso) {
             $painel->abre();
 
             $aposentadoria->exibeMenu(7);
+            
+            $compulsoria = new AposentadoriaCompulsoria();
+            $compulsoria->exibeRegras();
 
             $painel->fecha();
 

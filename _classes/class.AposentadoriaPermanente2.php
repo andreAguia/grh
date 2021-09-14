@@ -284,5 +284,4 @@ class AposentadoriaPermanente2 {
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
-
 }

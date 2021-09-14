@@ -32,7 +32,7 @@ class AposentadoriaCompulsoria {
         # Pega os dados do servidor
         $pessoal = new Pessoal();
         $idadeServidor = $pessoal->get_idade($this->idServidor);
-        
+
         # Pega a idade da regr
         $intra = new Intra();
         $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
@@ -123,4 +123,29 @@ class AposentadoriaCompulsoria {
         $grid->fechaColuna();
         $grid->fechaGrid();
     }
+
+    ###########################################################
+
+    public function exibeRegras() {
+
+        # Pega a idade da regr
+        $intra = new Intra();
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
+        # Exibe outras informações
+        $array = [
+            ["Idade", $idade, $idade]
+        ];
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo("Regras Gerais");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(array("Item", "Mulher", "Homem"));
+        $tabela->set_width(array(40, 30, 30));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
 }

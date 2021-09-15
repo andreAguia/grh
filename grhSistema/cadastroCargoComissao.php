@@ -91,7 +91,8 @@ if ($acesso) {
                                       vagas,
                                       idTipoComissao,
                                       idTipoComissao,
-                                      IF(ativo = 0, "Não", "Sim") as ativo
+                                      IF(ativo = 0, "Não", "Sim") as ativo,
+                                      idTipoComissao
                                  FROM tbtipocomissao
                                 WHERE ativo = ' . $tipo . '
                                   AND (descricao LIKE "%' . $parametro . '%"
@@ -129,13 +130,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Cargo", "Simbolo", "Valor (R$)", "Vagas", "Vagas<br/>Ocupadas", "Vagas<br/>Disponíveis", "Ativo?"));
-    #$objeto->set_width(array(5,20,10,10,10,10,10,10,10));
+    $objeto->set_label(array("id", "Cargo", "Simbolo", "Valor (R$)", "Vagas", "Vagas<br/>Ocupadas", "Vagas<br/>Disponíveis", "Ativo?", "obs"));
+    $objeto->set_width(array(5, 20, 10, 10, 10, 10, 10, 10, 10));
     $objeto->set_align(array("center", "left"));
 
     $objeto->set_funcao(array(null, null, null, "formataMoeda"));
-    $objeto->set_classe(array(null, null, null, null, null, 'CargoComissao', 'CargoComissao'));
-    $objeto->set_metodo(array(null, null, null, null, null, 'get_numServidoresNomeados', 'get_vagasDisponiveis'));
+    $objeto->set_classe(array(null, null, null, null, null, 'CargoComissao', 'CargoComissao', null, 'CargoComissao'));
+    $objeto->set_metodo(array(null, null, null, null, null, 'get_numServidoresNomeados', 'get_vagasDisponiveis', null, "exibeObs"));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -200,6 +200,13 @@ if ($acesso) {
             $form->show();
 
             $comissao->exibeResumo($parametroCargo);
+            
+            # Exibe observação (quando tiver)
+            $obs = $comissao->get_obs($parametroCargo);
+            
+            if(!is_null($obs)){
+                callout($obs);
+            }
 
             # select
             $select = "SELECT tbcomissao.idComissao,

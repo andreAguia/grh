@@ -653,12 +653,51 @@ class CargoComissao {
         $select = "SELECT idComissao
                      FROM tbcomissao
                     WHERE idDescricaoComissao = {$idDescricao}";
-        
-       
+
         $pessoal = new Pessoal();
         return $pessoal->count($select);
     }
 
     ###########################################################
-                                 
+
+    /**
+     * Método get_obs
+     * 
+     * Informa a observação
+     */
+    public function get_obs($idTipoCargo) {
+
+        $select = 'SELECT obs                             
+                     FROM tbtipocomissao 
+                    WHERE idTipoComissao = ' . $idTipoCargo;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeObs
+     * 
+     * Exibe a observação
+     */
+    public function exibeObs($idTipoCargo) {
+
+        $select = 'SELECT obs                             
+                     FROM tbtipocomissao 
+                    WHERE idTipoComissao = ' . $idTipoCargo;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (is_null($row[0])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $row[0]);
+        }
+    }
+
+    ###########################################################
 }

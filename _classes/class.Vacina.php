@@ -66,6 +66,8 @@ class Vacina {
         foreach ($row as $item) {
             if (!empty($item[0])) {
                 echo date_to_php($item[0]), " - ", $item[1], "<br/>";
+            }else{
+                echo "Data não Informada - ", $item[1], "<br/>";
             }
         }
     }

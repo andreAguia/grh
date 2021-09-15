@@ -121,7 +121,6 @@ if ($acesso) {
             'label' => 'Data:',
             'tipo' => 'data',
             'size' => 20,
-            'required' => true,
             'autofocus' => true,
             'col' => 3,
             'title' => 'Data da aplicação da vacina',

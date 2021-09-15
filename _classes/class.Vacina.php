@@ -79,10 +79,12 @@ class Vacina {
          * @syntax $this->get_dados($idRpa);
          */
         # Monta o select
-        $select = "SELECT DISTINCT idServidor
+        $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina 
                      JOIN tbhistlot USING (idServidor)
-                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)";
+                     JOIN tbservidor USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                  WHERE situacao = 1";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
@@ -100,6 +102,7 @@ class Vacina {
 
         $pessoal = new Pessoal();
         $num = $pessoal->count($select);
+        #echo $select;
         return $num;
     }
 

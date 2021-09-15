@@ -84,7 +84,8 @@ class Vacina {
                      JOIN tbhistlot USING (idServidor)
                      JOIN tbservidor USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                  WHERE situacao = 1";
+                  WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
@@ -101,8 +102,7 @@ class Vacina {
         }
 
         $pessoal = new Pessoal();
-        $num = $pessoal->count($select);
-        #echo $select;
+        $num = $pessoal->count($select);        
         return $num;
     }
 

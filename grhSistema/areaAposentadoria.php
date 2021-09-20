@@ -864,7 +864,7 @@ if ($acesso) {
             $count = $pessoal->count($select);
             $titulo = "Previsão de Aposentadoria por Idade";
 
-             # Exibe a tabela
+            # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
@@ -923,6 +923,9 @@ if ($acesso) {
 
             $painel->fecha();
 
+            $permanente = new AposentadoriaTransicao1();
+            $permanente->exibeRegras();
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
 
@@ -955,6 +958,11 @@ if ($acesso) {
                           tbservidor.idServidor,
                           TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
                           tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
@@ -986,21 +994,25 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Lotação', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
-            $tabela->set_align(['center', 'left', 'left']);
-            $tabela->set_width([15, 30, 20, 10, 15, 5]);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)","Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'center']);
+            #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);
             $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, "Pessoal", "Pessoal", null, "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
-            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            $tabela->set_classe([null, "Pessoal", "Aposentadoria", null, "AposentadoriaTransicao1", "Aposentadoria", "Aposentadoria", "Aposentadoria", "AposentadoriaTransicao1", "AposentadoriaTransicao1"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", "get_dtIngresso", null, "getTempoContribuicao", "get_tempoPublicoIninterrupto", "get_tempoServicoUenf", "get_tempoServicoUenf", "getDataAposentadoria", "getDiasFaltantes"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editarIdade');
+            $tabela->set_editar('?fase=editartransicao1');
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 5,
+                array('coluna' => 9,
                     'valor' => '0',
                     'operador' => '=',
-                    'id' => 'emAberto')
+                    'id' => 'emAberto'),
+                array('coluna' => 9,
+                    'valor' => '---',
+                    'operador' => '=',
+                    'id' => 'aguardando'),
             ));
             $tabela->show();
 

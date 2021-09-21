@@ -76,6 +76,8 @@ class AposentadoriaTransicao1 {
 
         # Data de Ingresso
         if (strtotime(date_to_bd($dtIngressoServidor)) < strtotime(date_to_bd($this->dtIngresso))) {
+            $analiseIngresso = "OK";
+            
             # Tempo de Contribuição
             if ($tempoTotal >= ($contribuicaoRegra * 365)) {
                 $analiseContribuicao = "OK";

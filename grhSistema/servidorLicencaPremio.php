@@ -184,8 +184,8 @@ if ($acesso) {
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
 
-        $objeto->set_rowspan(1);
-        $objeto->set_grupoCorColuna(1);
+        #$objeto->set_rowspan(1);
+        #$objeto->set_grupoCorColuna(1);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');

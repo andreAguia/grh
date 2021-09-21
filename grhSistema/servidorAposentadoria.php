@@ -248,16 +248,16 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
-    $previsao1 = new AposentadoriaPermanente1($idServidorPesquisado);
-    $previsao1->exibeAnalise();
+    $previsao1 = new AposentadoriaPermanente1();
+    $previsao1->exibeAnalise($idServidorPesquisado);
     hr();
 
-    $previsao2 = new AposentadoriaPermanente2($idServidorPesquisado);
-    $previsao2->exibeAnalise();
+    $previsao2 = new AposentadoriaPermanente2();
+    $previsao2->exibeAnalise($idServidorPesquisado);
     hr();
 
-    $previsao3 = new AposentadoriaCompulsoria($idServidorPesquisado);
-    $previsao3->exibeAnalise();
+    $previsao3 = new AposentadoriaCompulsoria();
+    $previsao3->exibeAnalise($idServidorPesquisado);
 
     $grid1->fechaColuna();
     $grid1->fechaGrid();
@@ -271,12 +271,12 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
-    $previsao4 = new AposentadoriaTransicao1($idServidorPesquisado);
-    $previsao4->exibeAnalise();
+    $previsao4 = new AposentadoriaTransicao1();
+    $previsao4->exibeAnalise($idServidorPesquisado);
     hr();
 
-    $previsao5 = new AposentadoriaTransicao2($idServidorPesquisado);
-    $previsao5->exibeAnalise();
+    $previsao5 = new AposentadoriaTransicao2();
+    $previsao5->exibeAnalise($idServidorPesquisado);
 
     $grid1->fechaColuna();
     $grid1->fechaGrid();

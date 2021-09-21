@@ -7,7 +7,7 @@ class AposentadoriaCompulsoria {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $idServidor = null;
+   
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações de contribuição";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – LEI 6.244/2012";
@@ -15,23 +15,20 @@ class AposentadoriaCompulsoria {
 
     ###########################################################
 
-    public function __construct($idServidor = null) {
+    public function __construct() {
 
         /**
-         * Inicia a classe e preenche o idServidor
+         * Inicia a classe
          */
-        if (!is_null($idServidor)) {
-            $this->idServidor = $idServidor;
-        }
     }
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($idServidor = null) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $idadeServidor = $pessoal->get_idade($this->idServidor);
+        $idadeServidor = $pessoal->get_idade($idServidor);
 
         # Pega a idade da regr
         $intra = new Intra();
@@ -48,7 +45,7 @@ class AposentadoriaCompulsoria {
             $analiseIdade = "OK";
         } else {
             # Pega a data de nascimento (vem dd/mm/AAAA)
-            $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
+            $dtNasc = $pessoal->get_dataNascimento($idServidor);
 
             # Calcula a data
             $novaData = addAnos($dtNasc, $idade);

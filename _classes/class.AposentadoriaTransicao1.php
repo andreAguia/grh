@@ -7,7 +7,6 @@ class AposentadoriaTransicao1 {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $idServidor = null;
 
     # Regras
     private $dtIngresso = "30/12/2003";
@@ -27,38 +26,35 @@ class AposentadoriaTransicao1 {
 
     ###########################################################
 
-    public function __construct($idServidor = null) {
+    public function __construct() {
 
         /**
-         * Inicia a classe e preenche o idServidor
+         * Inicia a classe 
          */
-        if (!is_null($idServidor)) {
-            $this->idServidor = $idServidor;
-        }
     }
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($idServidor) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $idadeServidor = $pessoal->get_idade($this->idServidor);
-        $sexo = $pessoal->get_sexo($this->idServidor);
-        $dtAdmissao = $pessoal->get_dtAdmissao($this->idServidor);
+        $idadeServidor = $pessoal->get_idade($idServidor);
+        $sexo = $pessoal->get_sexo($idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
         # Pega o tempo de contribuicao
-        $tempoTotal = $this->getTempoContribuicao($this->idServidor);
+        $tempoTotal = $this->getTempoContribuicao($idServidor);
 
         # Pega a data de Ingresso
         $aposentadoria = new Aposentadoria();
-        $dtIngressoServidor = $aposentadoria->get_dtIngresso($this->idServidor);
+        $dtIngressoServidor = $aposentadoria->get_dtIngresso($idServidor);
 
         # Pega o tempo no cargo efetivo
-        $tempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
 
         # Pega o tempo ininterrupto
-        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
+        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($idServidor);
 
         if ($sexo == "Masculino") {
             $idadeRegra = $this->idadeHomem;
@@ -92,7 +88,7 @@ class AposentadoriaTransicao1 {
                 $analiseIdade = "OK";
             } else {
                 # Pega a data de nascimento (vem dd/mm/AAAA)
-                $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
+                $dtNasc = $pessoal->get_dataNascimento($idServidor);
 
                 # Calcula a data
                 $novaData = addAnos($dtNasc, $idadeRegra);
@@ -396,5 +392,4 @@ class AposentadoriaTransicao1 {
         # Retorna o tempo total em dias
         return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
     }
-
 }

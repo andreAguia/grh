@@ -1054,18 +1054,121 @@ if ($acesso) {
 
             $painel->fecha();
 
+            $permanente = new AposentadoriaTransicao2();
+            $permanente->exibeRegras();
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
 
-            tituloTable("ART. 3º. DA EC Nº. 47/2005");
-            callout("É o benefício aos servidores que ingressaram no serviço público até 16 de dezembro de 1998.");
+            # Formulário de Pesquisa
+            $form = new Form('?fase=transicao1');
 
-            br(5);
-            p("Em Construção!", "center", "f20");
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            tituloTable("ART. 3º. DA EC Nº. 47/2005");
+            callout("É concedido aos servidores que ingressaram no serviço público até 16 de dezembro de 1998.");
+
+            $titulo = null;
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)","Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'center']);
+            #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Aposentadoria", null, "AposentadoriaTransicao2", "Aposentadoria", "Aposentadoria", "Aposentadoria", "AposentadoriaTransicao2", "AposentadoriaTransicao2"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", "get_dtIngresso", null, "getTempoContribuicao", "get_tempoPublicoIninterrupto", "get_tempoServicoUenf", "get_tempoServicoUenf", "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editartransicao2');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 9,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 9,
+                    'valor' => '---',
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+            ));
+            $tabela->show();
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             break;
+
+        ################################################################
+
+        case "editartransicao2" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=transicao2');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        ################################################################
+
     }
     $page->terminaPagina();
 } else {

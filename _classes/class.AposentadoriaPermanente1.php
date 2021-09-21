@@ -7,7 +7,8 @@ class AposentadoriaPermanente1 {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $idServidor = null;
+    
+    # Regras
     private $dtIngresso = "31/12/2003";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
@@ -15,6 +16,8 @@ class AposentadoriaPermanente1 {
     private $idadeMulher = 55;
     private $servicoPublico = 10;
     private $cargoEfetivo = 5;
+    
+    # REmuneração
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações de contribuição";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – LEI 6.244/2012";
@@ -22,36 +25,33 @@ class AposentadoriaPermanente1 {
 
     ###########################################################
 
-    public function __construct($idServidor = null) {
+    public function __construct() {
 
         /**
-         * Inicia a classe e preenche o idServidor
+         * Inicia a classe
          */
-        if (!is_null($idServidor)) {
-            $this->idServidor = $idServidor;
-        }
     }
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($idServidor = null) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $idadeServidor = $pessoal->get_idade($this->idServidor);
-        $sexo = $pessoal->get_sexo($this->idServidor);
-        $dtAdmissao = $pessoal->get_dtAdmissao($this->idServidor);
+        $idadeServidor = $pessoal->get_idade($idServidor);
+        $sexo = $pessoal->get_sexo($idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
         $averbacao = new Averbacao();
-        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($this->idServidor);
-        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($this->idServidor);
+        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
+        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);
 
         $aposentadoria = new Aposentadoria();
-        $tempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
-        $dtIngressoServidor = $aposentadoria->get_dtIngresso($this->idServidor);
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
+        $dtIngressoServidor = $aposentadoria->get_dtIngresso($idServidor);
 
         $tempoTotal = $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
-        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
+        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($idServidor);
 
         if ($sexo == "Masculino") {
             $idadeRegra = $this->idadeHomem;
@@ -89,7 +89,7 @@ class AposentadoriaPermanente1 {
             $analiseIdade = "OK";
         } else {
             # Pega a data de nascimento (vem dd/mm/AAAA)
-            $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
+            $dtNasc = $pessoal->get_dataNascimento($idServidor);
 
             # Calcula a data
             $novaData = addAnos($dtNasc, $idadeRegra);

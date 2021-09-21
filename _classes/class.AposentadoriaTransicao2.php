@@ -7,7 +7,8 @@ class AposentadoriaTransicao2 {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    private $idServidor = null;
+
+    # Regras
     private $dtIngresso = "16/11/1998";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
@@ -16,6 +17,8 @@ class AposentadoriaTransicao2 {
     private $servicoPublico = 25;
     private $cargoEfetivo = 5;
     private $tempoCarreira = 15;
+
+    # Remuneração
     private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "Na mesma data e índice dos servidores ativos";
@@ -23,36 +26,35 @@ class AposentadoriaTransicao2 {
 
     ###########################################################
 
-    public function __construct($idServidor = null) {
+    public function __construct() {
 
         /**
-         * Inicia a classe e preenche o idServidor
+         * Inicia a classe
          */
-        if (!is_null($idServidor)) {
-            $this->idServidor = $idServidor;
-        }
     }
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($idServidor) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
-        $idadeServidor = $pessoal->get_idade($this->idServidor);
-        $sexo = $pessoal->get_sexo($this->idServidor);
-        $dtAdmissao = $pessoal->get_dtAdmissao($this->idServidor);
+        $idadeServidor = $pessoal->get_idade($idServidor);
+        $sexo = $pessoal->get_sexo($idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
-        $averbacao = new Averbacao();
-        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($this->idServidor);
-        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($this->idServidor);
+        # Pega o tempo de contribuicao
+        $tempoTotal = $this->getTempoContribuicao($idServidor);
 
+        # Pega a data de Ingresso
         $aposentadoria = new Aposentadoria();
-        $tempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
-        $dtIngressoServidor = $aposentadoria->get_dtIngresso($this->idServidor);
+        $dtIngressoServidor = $aposentadoria->get_dtIngresso($idServidor);
 
-        $tempoTotal = $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
-        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
+        # Pega o tempo no cargo efetivo
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
+
+        # Pega o tempo ininterrupto
+        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($idServidor);
 
         if ($sexo == "Masculino") {
             $idadeRegra = $this->idadeHomem;
@@ -71,7 +73,7 @@ class AposentadoriaTransicao2 {
         # Data de Ingresso
         if (strtotime(date_to_bd($dtIngressoServidor)) < strtotime(date_to_bd($this->dtIngresso))) {
             $analiseIngresso = "OK";
-
+            
             # Tempo de Contribuição
             if ($tempoTotal >= ($contribuicaoRegra * 365)) {
                 $analiseContribuicao = "OK";
@@ -86,7 +88,7 @@ class AposentadoriaTransicao2 {
                 $analiseIdade = "OK";
             } else {
                 # Pega a data de nascimento (vem dd/mm/AAAA)
-                $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
+                $dtNasc = $pessoal->get_dataNascimento($idServidor);
 
                 # Calcula a data
                 $novaData = addAnos($dtNasc, $idadeRegra);
@@ -111,8 +113,9 @@ class AposentadoriaTransicao2 {
                 $analiseCargoEfetivo = "Ainda faltam {$resta} dias<br/>Somente em {$dtFutura}.";
             }
 
-            # Tempo na Carreira        
-            $carreira = $tempoUenf; # Existe um entendimento que o tempo de carreira é o tempo no mesmo órgão e o mesmo tipo de cargo
+            # Tempo na Carreira
+            # Existe um entendimento que o tempo de carreira é o tempo no mesmo órgão e o mesmo tipo de cargo
+            $carreira = $tempoUenf;
             if ($carreira >= ($this->tempoCarreira * 365)) {
                 $analiseCarreira = "OK";
             } else {
@@ -213,5 +216,180 @@ class AposentadoriaTransicao2 {
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
+    }
+    
+    ###########################################################
+
+    public function getDataAposentadoria($idServidor) {
+
+        # Pega os dados do servidor
+        $pessoal = new Pessoal();
+        $idadeServidor = $pessoal->get_idade($idServidor);
+        $sexo = $pessoal->get_sexo($idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+        # Pega o tempo de contribuicao
+        $tempoTotal = $this->getTempoContribuicao($idServidor);
+
+        # Pega a data de Ingresso
+        $aposentadoria = new Aposentadoria();
+        $dtIngressoServidor = $aposentadoria->get_dtIngresso($idServidor);
+
+        # Pega o tempo no cargo efetivo
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
+
+        # Pega o tempo ininterrupto
+        $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($idServidor);
+
+        if ($sexo == "Masculino") {
+            $idadeRegra = $this->idadeHomem;
+            $contribuicaoRegra = $this->contribuicaoHomem;
+        } else {
+            $idadeRegra = $this->idadeMulher;
+            $contribuicaoRegra = $this->contribuicaoMulher;
+        }
+
+        $hoje = date("d/m/Y");
+
+        /*
+         *  Análise
+         */
+
+        # Data de Ingresso
+        if (strtotime(date_to_bd($dtIngressoServidor)) < strtotime(date_to_bd($this->dtIngresso))) {
+            # Esta rotina só serve para servidores que atendem a data de ingresso
+        } else {
+            # Se não atende retorna informando que não tem direito
+            return "Não pode solicitar essa opção";
+        }
+
+        # Idade
+        $dtNasc = $pessoal->get_dataNascimento($idServidor);
+        $dataIdade = addAnos($dtNasc, $idadeRegra);
+
+        # Tempo de Contribuição
+        if ($tempoTotal >= ($contribuicaoRegra * 365)) {
+            $dataContribuicao = null;
+        } else {
+            $resta = ($contribuicaoRegra * 365) - $tempoTotal;
+            $dataContribuicao = addDias($hoje, $resta);
+        }
+
+        # Serviço Público Initerrupto
+        if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
+            $dataPublico = null;
+        } else {
+            $resta = ($this->servicoPublico * 365) - $tempoPublicoIninterrupto;
+            $dataPublico = addDias($hoje, $resta);
+        }
+
+        # Cargo Efetivo
+        if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
+            $dataCargo = null;
+        } else {
+            $resta = ($this->cargoEfetivo * 365) - $tempoUenf;
+            $dataCargo = addDias($hoje, $resta);
+        }
+
+        # Tempo na Carreira
+        # Existe um entendimento que o tempo de carreira é o tempo no mesmo órgão e o mesmo tipo de cargo
+        $carreira = $tempoUenf;
+        if ($carreira >= ($this->tempoCarreira * 365)) {
+            $dataCarreira = null;
+        } else {
+            $resta = ($this->tempoCarreira * 365) - $carreira;
+            $dataCarreira = addDias($hoje, $resta);
+        }
+
+        /*
+         * Verifica a data maior
+         */
+
+        # Compara com a idade
+        $dtRetorno = dataMaior($dtAdmissao, $dataIdade);
+
+        # Agora com a data de contribuição
+        if (!is_null($dataContribuicao)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataContribuicao);
+        }
+
+        # Agora com a data de Serviço Público Initerrupto
+        if (!is_null($dataPublico)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataPublico);
+        }
+
+        # Agora com a data de cargo efetivo
+        if (!is_null($dataCargo)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataCargo);
+        }
+
+        # Agora com a data de carreira
+        if (!is_null($dataCargo)) {
+            $dtRetorno = dataMaior($dtRetorno, $dataCarreira);
+        }
+
+        return $dtRetorno;
+    }
+
+    ###########################################################
+
+    public function getDiasFaltantes($idServidor) {
+
+        # Pega a data de aposentadoria
+        $dtAposent = $this->getDataAposentadoria($idServidor);
+
+        # Verifica se retornou data
+        if ($dtAposent == "Não pode solicitar essa opção") {
+            return "---";
+        }
+
+        # Verifica se ja passou
+        if (jaPassou($dtAposent)) {
+            return 0;
+        } else {
+            return dataDif(date("d/m/Y"), $dtAposent);
+        }
+    }
+
+    ###########################################################
+
+    public function exibeRegras() {
+
+        # Exibe outras informações
+        $array = [
+            ["Ingresso", "até " . $this->dtIngresso, "até " . $this->dtIngresso],
+            ["Idade", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
+            ["Contribuição", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
+            ["Serviço Público", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
+            ["Carreira", $this->tempoCarreira . " anos<br/>(" . ($this->tempoCarreira * 365) . " dias)", $this->tempoCarreira . " anos<br/>(" . ($this->tempoCarreira * 365) . " dias)"],
+            ["Cargo Efetivo", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"],
+        ];
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo("Regras Gerais");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(array("Requisito", "Mulher", "Homem"));
+        $tabela->set_width(array(30, 35, 35));
+        $tabela->set_align(array("left"));
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    public function getTempoContribuicao($idServidor) {
+
+        # Pega os tempos averbados
+        $averbacao = new Averbacao();
+        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
+        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);
+
+        # Prga o tempo Uenf
+        $aposentadoria = new Aposentadoria();
+        $tempoUenf = $aposentadoria->get_tempoServicoUenf($idServidor);
+
+        # Retorna o tempo total em dias
+        return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
     }
 }

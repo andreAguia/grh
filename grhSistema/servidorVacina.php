@@ -78,7 +78,7 @@ if ($acesso) {
     $objeto->set_selectEdita("SELECT data,
                                      idTipoVacina,
                                      obs,
-                                     idVacina
+                                     idServidor
                                 FROM tbvacina
                                WHERE idVacina = {$id}");
 

@@ -2003,7 +2003,11 @@ class Pessoal extends Bd {
 
         $situacao = parent::select($select, false);
 
-        return $situacao[0];
+        if (empty($situacao)) {
+            return null;
+        } else {
+            return $situacao[0];
+        }
     }
 
     ###########################################################
@@ -4835,7 +4839,7 @@ class Pessoal extends Bd {
                 $link->set_id("aContatos");
                 $link->show();
             } else {
-                echo $conteudo["emailUenf"];                
+                echo $conteudo["emailUenf"];
             }
             br();
         }
@@ -4848,7 +4852,7 @@ class Pessoal extends Bd {
                 $link->set_id("aContatos");
                 $link->show();
             } else {
-                echo $conteudo["emailOutro"];                
+                echo $conteudo["emailOutro"];
             }
         }
     }

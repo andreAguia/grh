@@ -163,7 +163,7 @@ if ($acesso) {
             } else {
                 set_session('sessionCpf', $cpf);
 
-                # Verifica se já existe servidor ativo
+                # Verifica se já existe servidor
                 if (!is_null($idPessoa)) {
 
                     # Servidor ativo
@@ -202,6 +202,8 @@ if ($acesso) {
                         $menu1->show();
 
                         $callout->fecha();
+                    } else {
+                        loadPage('?fase=incluir2');
                     }
                 } else {
                     set_session('sessionCpf', $cpf);
@@ -236,9 +238,9 @@ if ($acesso) {
                 $pis = $pessoal->get_Pis($idPessoa);
                 $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
                 $sexo = $pessoal->get_sexoidPessoa($idPessoa);
-            }else{
+            } else {
                 $sexo = null;
-                $dtNasc  = null;
+                $dtNasc = null;
             }
 
             # Botão voltar
@@ -337,11 +339,10 @@ if ($acesso) {
             #$p->show();
             #$form->add_item($p);
             # Lotação               
-            $lotacao = $pessoal->select('SELECT idlotacao, 
-                                                    concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
-                                               FROM tblotacao
-                                              WHERE ativo
-                                           ORDER BY tblotacao.DIR,tblotacao.GER');
+            $lotacao = $pessoal->select( 'SELECT idlotacao, 
+                                                 concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
+                                            FROM tblotacao 
+                                        ORDER BY ativo DESC, lotacao');
 
             array_unshift($lotacao, array(null, null)); # Adiciona o valor de nulo
 
@@ -398,7 +399,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Matrícula
-            $controle = new Input('matricula', 'hidden', 'Matrícula: (sem o dígito verificador)', 1);
+            $controle = new Input('matricula', 'texto', 'Matrícula: (sem o dígito verificador)', 1);
             $controle->set_size(20);
             $controle->set_linha(3);
             $controle->set_col(3);
@@ -524,7 +525,6 @@ if ($acesso) {
 //                #    $erro = 1;
 //                #}
 //            }
-
             # Verifica se o Cargo foi digitado
             if (($perfil == 1) AND (empty($cargo))) {
                 $msgErro .= 'Você tem que informar o Cargo do Servidor!\n';

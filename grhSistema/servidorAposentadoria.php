@@ -286,10 +286,11 @@ if ($acesso) {
     ###
 
     $tab->show();
-
+    br();
+    
     $grid->fechaColuna();
     $grid->fechaGrid();
-    br();
+    
 
     $page->terminaPagina();
 } else {

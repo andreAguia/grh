@@ -1008,11 +1008,11 @@ if ($acesso) {
                 array('coluna' => 9,
                     'valor' => '0',
                     'operador' => '=',
-                    'id' => 'emAberto'),
+                    'id' => 'pode'),
                 array('coluna' => 9,
                     'valor' => '---',
                     'operador' => '=',
-                    'id' => 'aguardando'),
+                    'id' => 'naoPode'),
             ));
             $tabela->show();
 

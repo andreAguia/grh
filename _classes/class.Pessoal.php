@@ -3313,16 +3313,16 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    function get_existeMatricula($matricula)
+    function get_existeMatricula($matricula) {
 
-    /**
-     * informa se a idServidor informada existe no cadastro
-     * 
-     * @param	string $matricula A matrícula do servidor
-     */ {
-        $select = 'SELECT idServidor
+        /**
+         * informa se a idServidor informada existe no cadastro
+         * 
+         * @param	string $matricula A matrícula do servidor
+         */
+        $select = "SELECT idServidor
                      FROM tbservidor
-                    WHERE matricula = ' . $matricula;
+                    WHERE matricula = '{$matricula}'";
 
         $count = parent::count($select);
 

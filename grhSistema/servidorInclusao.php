@@ -404,6 +404,7 @@ if ($acesso) {
             $controle->set_linha(3);
             $controle->set_col(3);
             $controle->set_title('A matrícula do servidor.');
+            $controle->set_helptext("Somente matrícula da UENF ou FENORTE.");
             $form->add_item($controle);
 
             # submit
@@ -466,7 +467,7 @@ if ($acesso) {
                     $erro = 1;
                 }
             }
-            echo "->>>>" . $matricula;
+            
             # Verifica se a matrícula já existe
             if (!empty($matricula)) {
                 if ($pessoal->get_existeMatricula($matricula)) {

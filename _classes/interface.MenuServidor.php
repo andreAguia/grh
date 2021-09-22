@@ -194,7 +194,7 @@ class MenuServidor {
                 $botao->set_title('Avalia a posentadoria do Servidor');
                 $menu->add_item($botao);
             }
-            
+
             $botao = new BotaoGrafico();
             $botao->set_label('Concurso');
             $botao->set_url('servidorConcurso.php?grh=1');
@@ -415,6 +415,50 @@ class MenuServidor {
     ######################################################################################################################
 
     /**
+     * Método moduloVinculos
+     * 
+     * Exibe os vinculos desse servidor
+     */
+    private function moduloVinculos2() {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Vinculos do servidor
+        $idPessoa = $pessoal->get_idPessoa($this->idServidor);
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        $select = "SELECT idServidor,
+                          idServidor,
+                          idServidor,
+                          dtAdmissao,
+                          dtDemissao,
+                          idServidor
+                        FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                       WHERE tbservidor.idPessoa = {$idPessoa} 
+                         AND idServidor <> " . $this->idServidor;
+
+        $conteudo = $pessoal->select($select);
+
+        # Exibe a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_label(['Perfil', 'Situação', "Cargo", "Admissão", "Saída"]);
+        #$tabela->set_align(['center', 'left', 'center', 'center', 'center', 'left']);
+        $tabela->set_titulo("Outros Vínculos");
+        $tabela->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
+        $tabela->set_metodo(["get_perfil", "get_situacao", "get_cargo"]);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('servidor.php?fase=editar&id=');
+        $tabela->show();
+    }
+
+    ######################################################################################################################
+
+    /**
      * Método moduloRelatorios
      * 
      * Exibe os relatórios desse servidor
@@ -501,7 +545,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro dos Parentes do Servidor');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Vacinas');
         $botao->set_url('servidorVacina.php?grh=1');

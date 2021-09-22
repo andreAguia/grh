@@ -1072,13 +1072,28 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     public function get_matricula($idServidor) {
-        # Pega o cargo do servidor
-        $select = 'SELECT matricula
-                         FROM tbservidor
-                        WHERE idServidor = ' . $idServidor;
+        # Pega o perfil do servidor
+        $idPerfil = $this->get_idPerfil($idServidor);
 
-        $row = parent::select($select, false);
-        return dv($row[0]);
+        if ($idPerfil == 2) {
+
+            # Pega o cargo do servidor
+            $select = 'SELECT matExterna
+                     FROM tbcedido
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = parent::select($select, false);
+            return $row[0];
+        } else {
+
+            # Pega o cargo do servidor
+            $select = 'SELECT matricula
+                     FROM tbservidor
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = parent::select($select, false);
+            return dv($row[0]);
+        }
     }
 
     ###########################################################
@@ -4114,18 +4129,14 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     public function get_idFuncionalEMatricula($idServidor) {
-        # Pega o cargo do servidor
-        $select = 'SELECT idFuncional,
-                          matricula
-                         FROM tbservidor
-                        WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, false);
+        # Pega o idFuncional
+        $idFuncional = $this->get_idFuncional($idServidor);
 
-        pLista(
-                $row["idFuncional"],
-                dv($row["matricula"])
-        );
+        # Pega a matrícula
+        $matricula = $this->get_matricula($idServidor);
+
+        pLista($idFuncional, $matricula);
     }
 
     ###########################################################

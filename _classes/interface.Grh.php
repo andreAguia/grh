@@ -599,7 +599,7 @@ class Grh {
         $div = new Div(null, "hide-for-small-only");
         $div->abre();
 
-        $select = 'SELECT tbservidor.idFuncional,
+        $select = 'SELECT tbservidor.idServidor,
                           tbpessoa.nome,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
@@ -625,11 +625,12 @@ class Grh {
         }
         #$align = array("center");
 
-        $classe = array(null, null, "pessoal", "pessoal", "pessoal", null, "pessoal");
-        $metodo = array(null, null, "get_cargoComSalto", "get_Lotacao", "get_Perfil", null, "get_Situacao");
+        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal", null, "pessoal");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_Lotacao", "get_Perfil", null, "get_Situacao");
 
-        $formatacaoCondicional = array(array('coluna' => 0,
-                'valor' => $servidor->get_idFuncional($idServidor),
+        $formatacaoCondicional = array(
+            array('coluna' => 1,
+                'valor' => $servidor->get_nome($idServidor),
                 'operador' => '=',
                 'id' => 'listaDados'));
 

@@ -1083,7 +1083,11 @@ class Pessoal extends Bd {
                     WHERE idServidor = ' . $idServidor;
 
             $row = parent::select($select, false);
-            return $row[0];
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return $row[0];
+            }
         } else {
 
             # Pega o cargo do servidor
@@ -1092,7 +1096,12 @@ class Pessoal extends Bd {
                     WHERE idServidor = ' . $idServidor;
 
             $row = parent::select($select, false);
-            return dv($row[0]);
+
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return dv($row[0]);
+            }
         }
     }
 
@@ -2018,7 +2027,7 @@ class Pessoal extends Bd {
 
         $situacao = parent::select($select, false);
 
-        if (empty($situacao)) {
+        if (empty($situacao[0])) {
             return null;
         } else {
             return $situacao[0];

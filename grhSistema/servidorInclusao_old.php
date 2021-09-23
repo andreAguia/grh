@@ -22,8 +22,57 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'incluir');
 
+    # Insere jscript extra da inclusão de servidor que oculta campos de acordo com o perfil
+    $jscript = "<script language='JavaScript' >
+
+                function exibeEscondeCampos()
+                {                
+                    switch(document.novoServidor.perfil.value)
+                    {
+                        case '1':
+                            document.novoServidor.cargo.disabled = false;
+                            abreDivId('divEstatutarios');
+                            fechaDivId('divCedidos');
+                            fechaDivId('divConvidados');
+                            fechaDivId('divEstagiarios');                        
+                            break;
+                        case '2':
+                            document.novoServidor.cargo.disabled = true;
+                            abreDivId('divCedidos');
+                            fechaDivId('divEstatutarios');
+                            fechaDivId('divConvidados');
+                            fechaDivId('divEstagiarios'); 
+                            break;
+                        case '3':
+                            document.novoServidor.cargo.disabled = true;
+                            abreDivId('divConvidados');
+                            fechaDivId('divCedidos');
+                            fechaDivId('divEstatutarios');
+                            fechaDivId('divEstagiarios'); 
+                            break;
+                        case '4':
+                            document.novoServidor.cargo.disabled = true;
+                            abreDivId('divEstagiarios');
+                            fechaDivId('divCedidos');
+                            fechaDivId('divConvidados');
+                            fechaDivId('divEstatutarios'); 
+                            break;
+                        default:
+                            document.novoServidor.cargo.disabled = true;
+                            document.novoServidor.salario.disabled = true;
+                            fechaDivId('divCedidos');
+                            fechaDivId('divConvidados');
+                            fechaDivId('divEstatutarios');
+                            fechaDivId('divEstagiarios');
+                            break;
+                    }
+                }
+                </script>";
+
     # Começa uma nova página
     $page = new Page();
+    $page->set_jscript($jscript);
+    $page->set_bodyOnLoad('exibeEscondeCampos();');
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -53,27 +102,9 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_required(true);
+            #$controle->set_required(true);
             $controle->set_autofocus(true);
             $controle->set_title('O CPF do Novo Servidor');
-            $form->add_item($controle);
-
-            # Perfil                
-            $perfil = $pessoal->select('SELECT idperfil,
-                                               nome
-                                          FROM tbperfil
-                                      ORDER BY idPerfil');
-
-            array_unshift($perfil, array(null, null));
-
-            $controle = new Input('perfil', 'combo', 'Perfil:', 1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_required(true);
-            $controle->set_col(3);
-            $controle->set_title('O perfil do Servidor.');
-            $controle->set_array($perfil);
-            $controle->set_onChange('exibeEscondeCampos();');
             $form->add_item($controle);
 
             # submit
@@ -85,6 +116,10 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
+            br(2);
+
+            # Mensagem
+            callout('Para inclusão de um novo servidor é necessário que se informe o CPF para que o sistema verifique se o mesmo já está cadastrado em uma matrícula anterior.');
 
             $callout->fecha();
             $grid->fechaColuna();
@@ -98,15 +133,11 @@ if ($acesso) {
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Flag de erro: 1 - tem erro; 0 - não tem	
-            $erro = 0;
-
-            # Repositório de mensagens de erro        
-            $msgErro = null;
-
+            # Variáveis para tratamento de erros
+            $erro = 0;    // flag de erro: 1 - tem erro; 0 - não tem	
+            $msgErro = null;  // repositório de mensagens de erro        
             # Pega os valores digitados
             $cpf = post('cpf');
-            $perfil = post('perfil');
 
             # Verifica se o CPF foi digitado
             if (empty($cpf)) {
@@ -131,7 +162,6 @@ if ($acesso) {
                 back(1);
             } else {
                 set_session('sessionCpf', $cpf);
-                set_session('sessionPerfil', $perfil);
 
                 # Verifica se já existe servidor
                 if (!is_null($idPessoa)) {
@@ -192,31 +222,25 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # Pega os valores já digitados
+            # Pega o CPF da session
             $cpf = get_session('sessionCpf');
-            $perfil = get_session('sessionPerfil');
+
+            # Variaveis de quando o servidor já for cadastrado
+            $nome = null;
+            $pis = null;
 
             # Verifica se o CPF já está cadastrado
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
-            # Inicia flag de perfil ativo
-            $temAtivo = false;
-
-            # Verifica se já tem alguém com esse cpf
+            # pega o nome e o pis da pessoa (caso ja esteja cadastrado)
             if (!empty($idPessoa)) {
-                # Pega os dados da pessoa (caso ja esteja cadastrado)
                 $nome = $pessoal->get_nomeidPessoa($idPessoa);
+                $pis = $pessoal->get_Pis($idPessoa);
                 $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
                 $sexo = $pessoal->get_sexoidPessoa($idPessoa);
-
-                # Verifica se tem vínculo ativo
-                if (!is_null($pessoal->get_idPessoaAtiva($idPessoa))) {
-                    $temAtivo = true;
-                }
             } else {
-                $nome = null;
-                $dtNasc = null;
                 $sexo = null;
+                $dtNasc = null;
             }
 
             # Botão voltar
@@ -231,11 +255,7 @@ if ($acesso) {
             if (is_null($nome)) {
                 $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema, dessa forma um novo servidor será incluído.';
             } else {
-                if ($temAtivo) {
-                    $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor ATIVO: ' . $nome . '.<br/>Somente será permitido a inclusão de um vínculo INATIVO.<br/>Entre com os outros dados.';
-                } else {
-                    $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor: ' . $nome . '.<br/>Entre com os outros dados.';
-                }
+                $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor: ' . $nome . '. Entre com os outros dados.';
             }
 
             # Mensagem do cpf
@@ -255,29 +275,11 @@ if ($acesso) {
             $controle->set_title('O CPF do Novo Servidor');
             $form->add_item($controle);
 
-            # Perfil                
-            $comboPerfil = $pessoal->select('SELECT idPerfil,
-                                                    nome
-                                               FROM tbperfil
-                                           ORDER BY idPerfil');
-
-            $controle = new Input('perfil', 'combo', 'Perfil:', 1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_readonly(true);
-            $controle->set_disabled(true);
-            $controle->set_required(true);
-            $controle->set_valor($perfil);
-            $controle->set_col(3);
-            $controle->set_title('O perfil do Servidor.');
-            $controle->set_array($comboPerfil);
-            $form->add_item($controle);
-
             # Nome
             $controle = new Input('nome', 'texto', 'Nome:', 1);
             $controle->set_size(50);
-            $controle->set_col(6);
-            $controle->set_linha(2);
+            $controle->set_col(5);
+            $controle->set_linha(1);
             $controle->set_required(true);
             if (!is_null($nome)) {
                 $controle->set_valor($nome);
@@ -286,19 +288,6 @@ if ($acesso) {
                 $controle->set_autofocus(true);
             }
             $controle->set_title('O nome do servidor.');
-            $form->add_item($controle);
-
-            # Data de Nascimento
-            $controle = new Input('dtNasc', 'date', 'Data de Nascimento:', 1);
-            $controle->set_size(15);
-            $controle->set_col(3);
-            $controle->set_required(true);
-            if (!is_null($dtNasc)) {
-                $controle->set_valor($dtNasc);
-                $controle->set_readonly(true);
-            }
-            $controle->set_linha(2);
-            $controle->set_title('A data de nascimento do servidor.');
             $form->add_item($controle);
 
             # Sexo
@@ -310,14 +299,47 @@ if ($acesso) {
             if (!is_null($sexo)) {
                 $controle->set_valor($sexo);
                 $controle->set_readonly(true);
-                $controle->set_disabled(true);
             }
-            $controle->set_linha(2);
+            $controle->set_linha(1);
             $controle->set_title('Sexo do Servidor.');
             $form->add_item($controle);
 
+            # Data de Nascimento
+            $controle = new Input('dtNasc', 'date', 'Data de Nascimento:', 1);
+            $controle->set_size(15);
+            $controle->set_col(3);
+            $controle->set_required(true);
+            if (!is_null($dtNasc)) {
+                $controle->set_valor($dtNasc);
+                $controle->set_readonly(true);
+            }
+            $controle->set_linha(1);
+            $controle->set_title('A data de nascimento do servidor.');
+            $form->add_item($controle);
+
+            # Perfil                
+            $perfil = $pessoal->select('SELECT idperfil,
+                                                   nome
+                                              FROM tbperfil     
+                                             WHERE novoServidor
+                                          ORDER BY nome');
+
+            array_unshift($perfil, array(null, null));
+
+            $controle = new Input('perfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_required(true);
+            $controle->set_col(3);
+            $controle->set_title('O perfil do Servidor.');
+            $controle->set_array($perfil);
+            $controle->set_onChange('exibeEscondeCampos();');
+            $form->add_item($controle);
+
+            #$p->show();
+            #$form->add_item($p);
             # Lotação               
-            $lotacao = $pessoal->select('SELECT idLotacao, 
+            $lotacao = $pessoal->select( 'SELECT idlotacao, 
                                                  concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
                                             FROM tblotacao 
                                         ORDER BY ativo DESC, lotacao');
@@ -326,7 +348,7 @@ if ($acesso) {
 
             $controle = new Input('lotacao', 'combo', 'Lotação Inicial:', 1);
             $controle->set_size(20);
-            $controle->set_linha(3);
+            $controle->set_linha(2);
             $controle->set_col(6);
             $controle->set_required(true);
             $controle->set_title('A Lotação do Servidor.');
@@ -338,110 +360,52 @@ if ($acesso) {
             $controle->set_size(15);
             $controle->set_col(3);
             $controle->set_required(true);
-            $controle->set_linha(3);
+            $controle->set_linha(2);
             $controle->set_title('A data de admissão do servidor.');
             $form->add_item($controle);
 
-            # Se já existir um servidor ativo
-            if ($temAtivo) {
-
-                # Pega os dados da combo situação
-                $situacao = $pessoal->select('SELECT idSituacao,
-                                                     situacao
-                                                FROM tbsituacao
-                                               WHERE idSituacao <> 1 
-                                            ORDER BY situacao');
-
-                array_unshift($situacao, array(null, null));
-
-                $controle = new Input('situacao', 'combo', 'Situação:', 1);
-                $controle->set_size(15);
-                $controle->set_linha(4);
-                $controle->set_required(true);
-                $controle->set_title('A situação do servidor.');
-                $controle->set_col(2);
-                $controle->set_array($situacao);
-                $form->add_item($controle);
-
-                # Pega os dados da combo motivo de Saída do servidor
-                $motivo = $pessoal->select('SELECT idmotivo,
-                                       motivo
-                                  FROM tbmotivo
-                              ORDER BY motivo');
-
-                array_unshift($motivo, array(null, null));
-
-                $controle = new Input('motivo', 'combo', 'Motivo:', 1);
-                $controle->set_size(15);
-                $controle->set_linha(4);
-                $controle->set_title('Motivo da Saida do Servidor.');
-                $controle->set_col(4);
-                $controle->set_array($motivo);
-                $form->add_item($controle);
-
-                # Data de Saída
-                $controle = new Input('dtDemissao', 'date', 'Data de Saída:', 1);
-                $controle->set_size(15);
+            # PIS/Pasep
+            if (is_null($pis)) {
+                $controle = new Input('pisPasep', 'texto', 'Pis/Pasep:', 1);
+                $controle->set_size(20);
+                $controle->set_linha(3);
                 $controle->set_col(3);
-                $controle->set_required(true);
-                $controle->set_linha(4);
-                $controle->set_title('A data de saída do servidor da UENF.');
+                #$controle->set_required(true); // Retirado a pedido de Ana Terezinha em 23/06/2021
+                $controle->set_title('O PIS/Pasep do servidor.');
                 $form->add_item($controle);
             }
 
             # Cargo                
-            $cargo = $pessoal->select('SELECT idcargo, CONCAT(tbtipocargo.cargo," - ",tbcargo.nome) 
-                                         FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
-                                     ORDER BY tbtipocargo.cargo,tbcargo.nome');
+            $cargo = $pessoal->select('SELECT idcargo, CONCAT(tbtipocargo.cargo," - ",tbcargo.nome)'
+                    . '                  FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)'
+                    . '              ORDER BY tbtipocargo.cargo,tbcargo.nome');
 
             array_unshift($cargo, array(null, null));
 
             $controle = new Input('cargo', 'combo', 'Cargo:', 1);
             $controle->set_size(20);
-            $controle->set_linha(5);
+            $controle->set_linha(3);
             $controle->set_title('O Cargo do Servidor.');
             $controle->set_col(6);
             $controle->set_array($cargo);
-            if ($perfil == 1) {
-                $controle->set_required(true);
-            }
             $form->add_item($controle);
 
             # IdFuncional
             $controle = new Input('idFuncional', 'texto', 'IdFuncional:', 1);
             $controle->set_size(20);
-            $controle->set_linha(5);
+            $controle->set_linha(3);
             $controle->set_col(3);
             $controle->set_title('A IdFuncional do servidor.');
             $form->add_item($controle);
 
-            if ($perfil == 2) {
-                # Órgão de Origem
-                $controle = new Input('orgaoOrigem', 'texto', 'Órgão de Origem:', 1);
-                $controle->set_size(50);
-                $controle->set_col(6);
-                $controle->set_linha(6);
-                $controle->set_required(true);
-                $controle->set_title('Órgão de Origem do servidor cedido');
-                $form->add_item($controle);
-
-                # Matrícula de Origem
-                $controle = new Input('matExterna', 'texto', 'Matrícula do Órgão de Origem:', 1);
-                $controle->set_size(50);
-                $controle->set_col(3);
-                $controle->set_linha(6);
-                $controle->set_title('Matrícula do Órgão de Origem:');
-                $form->add_item($controle);
-            } else {
-                # Matrícula
-                $controle = new Input('matricula', 'texto', 'Matrícula Uenf: (sem o dígito verificador)', 1);
-                $controle->set_size(20);
-                $controle->set_linha(5);
-                $controle->set_col(3);
-                $controle->set_title('A matrícula do servidor.');
-                $controle->set_helptext("Se não souber deixa em branco.");
-                $form->add_item($controle);
-            }
+            # Matrícula
+            $controle = new Input('matricula', 'texto', 'Matrícula: (sem o dígito verificador)', 1);
+            $controle->set_size(20);
+            $controle->set_linha(3);
+            $controle->set_col(3);
+            $controle->set_title('A matrícula do servidor.');
+            $controle->set_helptext("Somente matrícula da UENF ou FENORTE.");
+            $form->add_item($controle);
 
             # submit
             $controle = new Input('submit', 'submit');
@@ -462,53 +426,23 @@ if ($acesso) {
         # Valida os outros dados    
         case "validaDados" :
 
-            # Flag de erro: 1 - tem erro; 0 - não tem
-            $erro = 0;
-
-            # Repositório de mensagens de erro
-            $msgErro = null;
-
-            # Pega os valores da session
-            $cpf = get_session('sessionCpf');
-            $perfil = get_session('sessionPerfil');
-
+            # Variáveis para tratamento de erros
+            $erro = 0;    // flag de erro: 1 - tem erro; 0 - não tem	
+            $msgErro = null;  // repositório de mensagens de erro
             # Pega os valores digitados
+            $cpf = post('cpf');
+            $sexo = post('sexo');
+            $nome = post('nome');
+            $perfil = post('perfil');
             $matricula = post('matricula');
+            $dtNasc = post('dtNasc');
             $idFuncional = post('idFuncional');
             $lotacao = post('lotacao');
             $dtAdmissao = post('dtAdmissao');
             $pisPasep = post('pisPasep');
             $cargo = post('cargo');
-
-            $situacao = post('situacao');
-            $orgaoOrigem = post('orgaoOrigem');
-            $matExterna = post('matExterna');
-
             $classe = null;
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
-
-            # Inicia flag de perfil ativo
-            $temAtivo = false;
-
-            # Verifica se já tem alguém com esse cpf
-            if (!empty($idPessoa)) {
-                # Pega os dados da pessoa (caso ja esteja cadastrado)
-                $nome = $pessoal->get_nomeidPessoa($idPessoa);
-                $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
-                $sexo = $pessoal->get_sexoidPessoa($idPessoa);
-
-                # Verifica se tem vínculo ativo
-                if (!is_null($pessoal->get_idPessoaAtiva($idPessoa))) {
-                    $temAtivo = true;
-                    $dtDemissao = post('dtDemissao');
-                    $motivo = post('motivo');
-                }
-            } else {
-                # Senão pega os dados do post
-                $sexo = post('sexo');
-                $nome = post('nome');
-                $dtNasc = post('dtNasc');
-            }
 
             # Verifica se o Nome foi digitado
             if (empty($nome)) {
@@ -516,11 +450,12 @@ if ($acesso) {
                 $erro = 1;
             }
 
-//            # Verifica se o Sexo foi digitado
-//            if (empty($sexo)) {
-//                $msgErro .= 'Você tem que informar o Sexo do Servidor!\n';
-//                $erro = 1;
-//            }
+            # Verifica se o Sexo foi digitado
+            if (empty($sexo)) {
+                $msgErro .= 'Você tem que informar o Sexo do Servidor!\n';
+                $erro = 1;
+            }
+
             # Verifica se o Perfil foi digitado
             if (empty($perfil)) {
                 $msgErro .= 'Você tem que informar o Perfil do Servidor!\n';
@@ -532,7 +467,7 @@ if ($acesso) {
                     $erro = 1;
                 }
             }
-
+            
             # Verifica se a matrícula já existe
             if (!empty($matricula)) {
                 if ($pessoal->get_existeMatricula($matricula)) {
@@ -569,15 +504,31 @@ if ($acesso) {
                 $erro = 1;
             }
 
+            # Verifica o Pis     // Retirado a pedido de Ana Terezinha em 23/06/2021         
+//            if (is_null($idPessoa)) { // Verifica se a pessoa está cadastrada
+//                # Verifica se o Pis foi digitado 
+//                if (vazio($pisPasep)) {
+//                    $msgErro .= 'Você tem que informar o Pis/Pasep do Servidor!\n';
+//                    $erro = 1;
+//                }
+//
+//                # Verifica se o pis já existe
+//                $idPessoaDuplicataPis = $pessoal->get_idPessoaPis($pisPasep);
+//                if (!is_null($idPessoaDuplicataPis)) {
+//                    $msgErro .= 'Esse Pis/Pasep já está cadastrado para o servidor: ' . $pessoal->get_nomeidPessoa($idPessoaDuplicataPis) . '!\n';
+//                    $erro = 1;
+//                }
+//
+//                # Verifica validade do pis (ainda não encontrei funçao que funcione)
+//                #if ($valida->pis($pisPasep)) 
+//                #{
+//                #    $msgErro.='O número do Pis não é válido !!\n';
+//                #    $erro = 1;
+//                #}
+//            }
             # Verifica se o Cargo foi digitado
             if (($perfil == 1) AND (empty($cargo))) {
                 $msgErro .= 'Você tem que informar o Cargo do Servidor!\n';
-                $erro = 1;
-            }
-
-            # Verifica se orgao de origem foi preenchido para cedidos
-            if (($perfil == 2) AND (empty($orgaoOrigem))) {
-                $msgErro .= 'Você tem que informar o órgão de origem de um servidor cedido!\n';
                 $erro = 1;
             }
 
@@ -608,7 +559,7 @@ if ($acesso) {
             } else {
                 # Grava os dados
                 # Tabelas tbpessoa e tbdocumentacao
-                if (empty($idPessoa)) { // Verifica se a pessoa está/ou não cadastrada
+                if (is_null($idPessoa)) { // Verifica se a pessoa está/ou não cadastrada
                     # Gravar na tbpessoa
                     # dados
                     $campos = array('nome', 'dtNasc', 'sexo');
@@ -645,13 +596,8 @@ if ($acesso) {
                 }
 
                 # dados
-                if ($temAtivo) {
-                    $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional', 'dtDemissao', 'motivo');
-                    $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, $situacao, $idFuncional, $dtDemissao, $motivo);
-                } else {
-                    $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional');
-                    $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, 1, $idFuncional);
-                }
+                $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional');
+                $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, 1, $idFuncional);
                 $idValor = null;
                 $tabela = 'tbservidor';
 
@@ -673,10 +619,8 @@ if ($acesso) {
                 $intra->registraLog($idUsuario, $data, $atividade, 'tbpessoa', $idPessoa, 1, $idServidor);
 
                 # tbdocumentacao 
-                if (empty($idPessoa)) {
-                    $atividade = "Inclusão de servidor:[CPF]->" . $cpf . " [pisPasep]->" . $pisPasep . " [idPessoa]->" . $cargo . " [dtAdmissao]->" . $dtAdmissao;
-                    $intra->registraLog($idUsuario, $data, $atividade, 'tbdocumentacao', $idDocumentacao, 1, $idServidor);
-                }
+                $atividade = "Inclusão de servidor:[CPF]->" . $cpf . " [pisPasep]->" . $pisPasep . " [idPessoa]->" . $cargo . " [dtAdmissao]->" . $dtAdmissao;
+                $intra->registraLog($idUsuario, $data, $atividade, 'tbdocumentacao', $idDocumentacao, 1, $idServidor);
 
                 ###################################
                 # Grava na tbhistlot
@@ -717,8 +661,8 @@ if ($acesso) {
                 ###################################
                 # Grava na tbCedido
                 if ($perfil == 2) { // somente cedidos
-                    $campos = array('idServidor', 'orgaoOrigem', 'matExterna');
-                    $valor = array($idServidor, $orgaoOrigem, $matExterna);
+                    $campos = array('idServidor');
+                    $valor = array($idServidor);
                     $idValor = null;
                     $tabela = 'tbcedido';
 

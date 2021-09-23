@@ -617,10 +617,10 @@ class Grh {
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
-            $label = array("Id Funcional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
+            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
             $function = array(null, null, null, null, null, "date_to_php");
         } else {
-            $label = array("Id Funcional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
+            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
             $function = array(null, null, null, null, null, "date_to_php", null, "date_to_php");
         }
         #$align = array("center");
@@ -653,7 +653,7 @@ class Grh {
         $div = new Div(null, "show-for-small-only");
         $div->abre();
 
-        $select = 'SELECT tbservidor.idFuncional,
+        $select = 'SELECT tbservidor.idServidor,
                              tbpessoa.nome,
                              tbservidor.idServidor
                         FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
@@ -664,13 +664,14 @@ class Grh {
 
         # Pega a situação
         $situacao = $servidor->get_situacao($idServidor);
-        $label = array("Id Funcional", "Servidor", "Perfil");
+        $label = array("Id Funcional / Matrícula", "Servidor", "Perfil");
         $function = array(null, null, null);
-        $classe = array(null, null, "pessoal");
-        $metodo = array(null, null, "get_Perfil");
+        $classe = array("pessoal", null, "pessoal");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_Perfil");
 
-        $formatacaoCondicional = array(array('coluna' => 0,
-                'valor' => $servidor->get_idFuncional($idServidor),
+        $formatacaoCondicional = array(
+            array('coluna' => 1,
+                'valor' => $servidor->get_nome($idServidor),
                 'operador' => '=',
                 'id' => 'listaDados'));
 
@@ -711,7 +712,8 @@ class Grh {
         $classe = array("pessoal", null, "pessoal", "pessoal");
         $metodo = array("get_Cargo", null, "get_Lotacao", "get_Situacao");
 
-        $formatacaoCondicional = array(array('coluna' => 3,
+        $formatacaoCondicional = array(
+            array('coluna' => 3,
                 'valor' => $situacao,
                 'operador' => '=',
                 'id' => 'listaDados'));

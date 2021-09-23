@@ -2222,6 +2222,31 @@ class Pessoal extends Bd {
         }
     }
 
+    ###########################################################
+
+    /**
+     * Método get_nomeELotacao
+     * fornece o nome e lotação de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeELotacaoESituacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_lotacao($idServidor)
+            );
+
+            if ($this->get_situacao($idServidor) == "Ativo") {
+                p($this->get_situacao($idServidor), "pconcursadoAtivo");
+            } else {
+                p($this->get_situacao($idServidor),  "pconcursadoNaoAtivo");
+            }
+        }
+    }
+
     ##########################################################
 
     /**

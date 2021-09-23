@@ -189,6 +189,25 @@ tr#inativo td{
 }
 
 /*******************************************
+ * Cadastro de Concurso
+ *******************************************/
+
+p#pconcursadoAtivo{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    color: green;
+    font-weight: bold;
+    
+}
+
+p#pconcursadoNaoAtivo{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+}
+
+/*******************************************
  * Cadastro de Progressão e Enquadramento de Servidor
  *******************************************/
 tr#importado{

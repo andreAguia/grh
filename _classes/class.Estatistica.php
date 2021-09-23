@@ -122,14 +122,14 @@ class Estatistica {
     /**
      * Método get_tabelaSimples
      */
-    public function exibeTabelaSimples() {
+    public function exibeTabelaSimples($titulo = null) {
 
         # Pega os dados
         $this->get_dados();
 
         $tabela = new Tabela();
         $tabela->set_conteudo($this->arrayTabela);
-        $tabela->set_titulo($this->tabelatitulo);
+        $tabela->set_titulo($titulo);
         $tabela->set_label($this->labelTabela);
         $tabela->set_width(array(80, 20));
         $tabela->set_align(array("left", "center"));

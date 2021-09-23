@@ -1621,7 +1621,7 @@ if ($acesso) {
 
             $masculinoTotal = 0;
             $femininoTotal = 0;
-
+            
             # Percorre o array preenchendo os valores
             foreach ($servidores as $value) {
 
@@ -1637,8 +1637,7 @@ if ($acesso) {
                  *  9	Latu Senso/MBA
                  *  10	Mestrado
                  *  11	Doutorado
-                 *  12	Extensão
-                 * 
+                 *  12	Extensão                 * 
                  */
 
                 switch ($escolaridade) {
@@ -1850,7 +1849,7 @@ if ($acesso) {
             $grid->abreColuna(5);
 
             $estatistica = new Estatistica("cidade");
-            $estatistica->exibeTabelaSimples(500);
+            $estatistica->exibeTabelaSimples();
 
             $grid->fechaColuna();
             $grid->abreColuna(7);

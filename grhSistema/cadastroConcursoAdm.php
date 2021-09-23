@@ -214,7 +214,7 @@ if ($acesso) {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Class.", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
             $tabela->set_classe([null, "Concurso", "pessoal", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, "exibeClassificacaoServidor", "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
             #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
             $tabela->set_width(array(15, 6, 22, 25, 22, 5));
             $tabela->set_align(array("left", "center", "left", "left"));

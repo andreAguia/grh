@@ -33,9 +33,9 @@ if ($acesso) {
                         tbpessoa.nome,
                         tbservidor.idServidor,
                         tbservidor.idServidor,
-                        tbservidor.idServidor,
-                        sum(numDias) as soma,
-                        tbservidor.idServidor
+                        tbferias.dtInicial,
+                        tbferias.numDias,
+                        date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf
                    FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                  LEFT JOIN tbcargo USING (idCargo)
                                       JOIN tbtipocargo USING (idTipoCargo)
@@ -43,23 +43,22 @@ if ($acesso) {
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                  WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                   AND tbtipocargo.tipo = 'Professor'
+                   AND tbtipocargo.tipo = 'Adm/Tec'
                    AND anoExercicio = '{$parametroAno}'
                    AND situacao = 1
-              GROUP BY tbpessoa.nome
-              ORDER BY soma,tbpessoa.nome)";
+              ORDER BY tbpessoa.nome)";
 
     $result = $servidor->select($select1);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Férias de Docentes Ativos');
+    $relatorio->set_titulo('Relatório de Férias de Administrativos & Técnicos Ativos');
     $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
 
-    $relatorio->set_label(array("Id", "Servidor", "Cargo", "Lotação", "Perfil", "Dias", "Situação"));
-    $relatorio->set_align(array("center", "left", "center", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, null, "get_situacaoRel"));
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacaoSimples", "get_perfilSimples"));
+    $relatorio->set_label(array("Id", "Servidor", "Cargo", "Lotação", "Início", "Dias", "Término"));
+    $relatorio->set_align(array("center", "left", "left", "left"));
+    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacaoSimples"));
     #$relatorio->set_numGrupo(5);
     $relatorio->set_conteudo($result);
     $relatorio->set_bordaInterna(true);

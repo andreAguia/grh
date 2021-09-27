@@ -300,7 +300,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao', '../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
             $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Com Regencia de Turma', '../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
             $menu->add_item('titulo1', 'Outros');
-            $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Professor', '../grhRelatorios/ferias.exercicio.porTotalDias.professor.php');
+            $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.professor.php');
+            $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.adm.php');
+            $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.fruidas.professor.php');
+            $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.fruidas.adm.php');
 
             $menu->show();
 

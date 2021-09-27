@@ -193,15 +193,22 @@ if ($acesso) {
         case "cargoEmComissao";
             $menu = new Menu();
             $menu->add_item('titulo', 'Cargos');
+            $menu->add_item('titulo1', 'Relação dos Cargos');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Ativos', '../grhRelatorios/cargoComissaoAtivos.php');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Inativos', '../grhRelatorios/cargoComissaoInativos.php');
+            $menu->add_item('titulo1', 'Relação dos Servidores com Cargo em Comissão');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargosComissionados.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargosComissionadosLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargosComissionadosCpfRg.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Docentes','../grhRelatorios/cargosComissionados.docentes.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Adm & Tec','../grhRelatorios/cargosComissionados.adm.php');
+            $menu->add_item('titulo1', 'Histórico');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Ativos - Histórico', '../grhRelatorios/cargosComissionadosAtivosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Inativos - Histórico', '../grhRelatorios/cargosComissionadosInativosHistorico.php');
-
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Inativos - Histórico', '../grhRelatorios/cargosComissionadosInativosHistorico.php');            
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Docentes - Histórico por Ano','../grhRelatorios/cargosComissionados.docentes.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Adm & Tec - Histórico por Ano','../grhRelatorios/cargosComissionados.adm.porAno.php');
+            
             $menu->show();
             break;
 
@@ -429,7 +436,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.administrativos.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.exonerados.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)','../grhRelatorios/movimentacao.data.administrativos.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.administrativos.demitidos.php');
             $menu->show();
             break;
 

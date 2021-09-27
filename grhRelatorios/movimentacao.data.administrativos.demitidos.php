@@ -23,8 +23,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $relatorioAno = post('ano', date('Y'));
-
+    $relatorioData = post('data', date('Y-m-d'));
+    
     ######
 
     $select = 'SELECT tbservidor.idfuncional,
@@ -34,43 +34,48 @@ if ($acesso) {
                       tbperfil.nome,
                       tbservidor.dtAdmissao,
                       tbservidor.dtDemissao,
-                      tbmotivo.motivo,
-                      MONTH(tbservidor.dtDemissao)
+                      tbmotivo.motivo
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
                                     LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                 WHERE YEAR(tbservidor.dtDemissao) = "' . $relatorioAno . '"
+                 WHERE tbservidor.dtDemissao > "' . $relatorioData . '"
                   AND (tbservidor.idCargo <>128 AND tbservidor.idCargo <> 129)
-             ORDER BY MONTH(tbservidor.dtadmissao), dtadmissao';
+                  AND tbservidor.idPerfil = 1
+             ORDER BY dtDemissao';
 
 
     $result = $servidor->select($select);
-
+    
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados em ' . $relatorioAno);
+    $relatorio->set_titulo('Relatório Anual de Estatutários Administrativos & Técnicos Demitidos e Exonerados a Partir ' . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo', 'Mês'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center', 'left', 'left', 'left','center','center','center','left'));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php", null, "get_NomeMes"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
 
     $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacao"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(8);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_formCampos(array(
-        array('nome' => 'ano',
-            'label' => 'Ano:',
-            'tipo' => 'texto',
+        array('nome' => 'data',
+            'label' => 'A partir de:',
+            'tipo' => 'data',
             'size' => 4,
-            'title' => 'Ano',
-            'onChange' => 'formPadrao.submit();',
-            'padrao' => $relatorioAno,
+            'title' => 'A partir desta data',
+            'padrao' => $relatorioData,
             'col' => 3,
-            'linha' => 1)));
+            'linha' => 1),
+        array('nome' => 'submit',
+            'linha' => 1,
+            'size' => 10,
+            'valor' => 'Pesquisar',
+            'label' => null,
+            'tipo' => 'submit')
+        ));
 
     $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');

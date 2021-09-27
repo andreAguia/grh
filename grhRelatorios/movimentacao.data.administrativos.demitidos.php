@@ -47,7 +47,7 @@ if ($acesso) {
     $result = $servidor->select($select);
     
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Anual de Estatutários Administrativos & Técnicos Demitidos e Exonerados a Partir ' . date_to_php($relatorioData));
+    $relatorio->set_titulo('Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados a Partir ' . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo'));

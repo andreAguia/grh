@@ -50,7 +50,7 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados em ' . $relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Demissão', 'Motivo', 'Mês'));
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo', 'Mês'));
     #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
     $relatorio->set_align(array('center', 'left', 'left', 'left','center','center','center','left'));
     $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php", null, "get_NomeMes"));

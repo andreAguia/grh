@@ -180,10 +180,11 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
             $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
             $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
+                        
             $menu->show();
 
             #######################################
-            # Resumo Geral
+            # Resumo GeralS
             # Informa a classe com os parâmetros
             $lista1 = new ListaFerias($parametroAno);
             $lista1->set_lotacao($parametroLotacao);

@@ -38,7 +38,7 @@ if ($acesso) {
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
                                     LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                     LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                 WHERE tbservidor.dtDemissao => "' . $relatorioData . '"
+                 WHERE tbservidor.dtDemissao >= "' . $relatorioData . '"
                   AND (tbservidor.idCargo <>128 AND tbservidor.idCargo <> 129)
                   AND tbservidor.idPerfil = 1
              ORDER BY dtDemissao';

@@ -703,7 +703,9 @@ class Concurso {
             $row = $pessoal->select($select);
             
             foreach($row as $item){
-                p($item["centro"],"pconcursadoNaoAtivo");
+                #p($item["centro"],"pconcursadoNaoAtivo");
+                echo $item["centro"]," ";
+                
             }
         }
     }

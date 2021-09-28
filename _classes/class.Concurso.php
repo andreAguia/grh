@@ -679,5 +679,34 @@ class Concurso {
         }
     }
 
-    ###########################################################
+    #####################################################################################
+
+    /**
+     * Método get_centroVagas
+     * 
+     * Informa o centros com vagas neste concurso
+     */
+    public function get_centroVagas($idConcurso = null) {
+
+        # Verifica se tem $idConcurso
+        if (empty($idConcurso)) {
+            return null;
+        } else {
+            # select            
+            $select = "SELECT distinct centro
+                         FROM tbconcurso LEFT JOIN tbvagahistorico USING (idConcurso)
+                                         LEFT JOIN tbvaga USING (idVaga)
+                        WHERE tbconcurso.idConcurso = {$idConcurso}";
+
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+            
+            foreach($row as $item){
+                p($item["centro"],"pconcursadoNaoAtivo");
+            }
+        }
+    }
+
+    #####################################################################################
 }

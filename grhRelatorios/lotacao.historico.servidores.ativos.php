@@ -39,7 +39,7 @@ if ($acesso) {
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-               WHERE true ';
+               WHERE situacao = 1 ';
 
     # lotacao
     if (!is_null($lotacao)) {

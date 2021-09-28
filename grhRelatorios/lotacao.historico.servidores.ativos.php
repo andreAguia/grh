@@ -56,7 +56,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Histórico de Servidores por Lotação');
+    $relatorio->set_titulo('Histórico de Servidores Ativos por Lotação');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Servidor', 'Lotação', 'Admissão', 'Saída', 'Situação', 'Histórico'));
     $relatorio->set_width(array(10, 20, 0, 10, 10, 10, 40));

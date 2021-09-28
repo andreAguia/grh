@@ -1,0 +1,283 @@
+<?php
+
+/**
+ * Histórico de Progressões e Enquadramentos
+ *  
+ * By Alat
+ */
+# Inicia as variáveis que receberão as sessions
+$idUsuario = null;
+$idServidorPesquisado = null;
+
+# Configuração
+include ("_config.php");
+
+# Permissão de Acesso
+$acesso = Verifica::acesso($idUsuario, 2);
+
+if ($acesso) {
+
+    # Conecta ao Banco de Dados
+    $intra = new Intra();
+    $pessoal = new Pessoal();
+
+    # Verifica a fase do programa
+    $fase = get('fase', 'listar');
+
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh', false);
+    if ($grh) {
+        # Grava no log a atividade
+        $atividade = "Cadastro do servidor - Cadastro das avaliações de desempenho e qualidade";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    }
+
+    # Verifica de onde veio
+    $origem = get_session("origem");
+
+    # pega o id (se tiver)
+    $id = soNumeros(get('id'));
+
+    # Começa uma nova página
+    $page = new Page();
+    $page->iniciaPagina();
+
+    # Cabeçalho da Página
+    AreaServidor::cabecalho();
+
+    # Abre um novo objeto Modelo
+    $objeto = new Modelo();
+
+    ################################################################
+    # Exibe os dados do Servidor
+    $objeto->set_rotinaExtra("get_DadosServidor");
+    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+
+    # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
+    $objeto->set_nome('Cadastro das Avaliações de Desempenho e Qualidade');
+
+    # botão de voltar da lista
+    if ($origem == "areaAvaliacao.php") {
+        $objeto->set_voltarLista($origem);
+    } else {
+        $objeto->set_voltarLista('servidorMenu.php');
+    }
+
+    # select da lista
+    $objeto->set_selectLista("SELECT CASE tipo
+                                          WHEN 1 THEN 'Estágio' 
+                                          WHEN 2 THEN 'Anual'
+                                     END,
+                                     referencia,
+                                     CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
+                                     idAvaliacao,
+                                     idAvaliacao,
+                                     idAvaliacao,
+                                     idAvaliacao,
+                                     idAvaliacao
+                                FROM tbavaliacao
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY dtPeriodo1");
+
+    # select do edita
+    $objeto->set_selectEdita('SELECT tipo,
+                                     referencia,
+                                     dtPeriodo1,
+                                     dtPeriodo2,
+                                     nota1,
+                                     nota2,
+                                     nota3,
+                                     dtPublicacao,
+                                     pgPublicacao,
+                                     obs,
+                                     idServidor
+                                FROM tbavaliacao
+                               WHERE idAvaliacao = ' . $id);
+
+    # Caminhos
+    $objeto->set_linkEditar('?fase=editar');
+    $objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkGravar('?fase=gravar');
+    $objeto->set_linkListar('?fase=listar');
+
+    # Parametros da tabela
+    $objeto->set_label(["Tipo", "Referencia", "Período", "Nota 1", "Nota 2", "Nota 3", "Total", "Publicação"]);
+    $objeto->set_width([10, 10, 20, 10, 10, 10, 10, 15]);
+    #$objeto->set_align(array("center", "left", "center", "center", "left"));
+    #$objeto->set_funcao(array("date_to_php", null, null, "date_to_php"));
+    $objeto->set_classe([null, null, null, "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao"]);
+    $objeto->set_metodo([null, null, null, "exibeNota1", "exibeNota2", "exibeNota3", "exibeTotal", "exibePublicacao"]);
+    # Formatação condicional
+//    $objeto->set_formatacaoCondicional(array(
+//        array('coluna' => 1,
+//            'valor' => "Importado",
+//            'operador' => '=',
+//            'id' => 'importado')));
+    # Classe do banco de dados
+    $objeto->set_classBd('pessoal');
+
+    # Nome da tabela
+    $objeto->set_tabela('tbavaliacao');
+
+    # Nome do campo id
+    $objeto->set_idCampo('idAvaliacao');
+
+    # Tipo de label do formulário
+    $objeto->set_formLabelTipo(1);
+
+    # Cria um array com os anos possíveis
+    $anoInicial = $pessoal->get_anoAdmissao($idServidorPesquisado);
+    $anoAtual = date('Y');
+    $referenciasPossiveis = arrayPreenche($anoInicial, $anoAtual + 2);
+
+    array_unshift($referenciasPossiveis, "Acerto");
+    array_unshift($referenciasPossiveis, "AV4");
+    array_unshift($referenciasPossiveis, "AV3");
+    array_unshift($referenciasPossiveis, "AV2");
+    array_unshift($referenciasPossiveis, "AV1");
+    array_unshift($referenciasPossiveis, null);
+
+    # Propoe os períodos (quando for inclusão)
+    if ($fase == "editar" AND empty($id)) {
+        $avaliacao = new Avaliacao();
+        $dados = $avaliacao->getPeriodoEAno($idServidorPesquisado);
+        $dtPeriodo1 = date_to_bd($dados[0]);
+        $dtPeriodo2 = date_to_bd($dados[1]);
+        $tipo = $dados[2];
+        $referencia = $dados[3];
+    } else {
+        $dtPeriodo1 = null;
+        $dtPeriodo2 = null;
+        $tipo = null;
+        $referencia = null;
+    }
+
+
+    # Campos para o formulario
+    $objeto->set_campos(array(
+        array('nome' => 'tipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
+            'col' => 3,
+            'required' => true,
+            'array' => [[null, null], [1, "Estágio Experimental"], [2, "Anual"]],
+            'size' => 20,
+            'padrao' => $tipo,
+            'title' => 'Tipo de Avaliação',
+            'autofocus' => true,
+            'linha' => 1),
+        array('nome' => 'referencia',
+            'label' => 'Referência:',
+            'tipo' => 'combo',
+            'array' => $referenciasPossiveis,
+            'size' => 10,
+            'col' => 3,
+            'required' => true,
+            'padrao' => $referencia,
+            'title' => 'Valor',
+            'linha' => 1),
+        array('nome' => 'dtPeriodo1',
+            'label' => 'Data Inicial do Período:',
+            'tipo' => 'data',
+            'size' => 15,
+            'col' => 3,
+            'padrao' => $dtPeriodo1,
+            'title' => 'Data Inicial do Período',
+            'linha' => 2),
+        array('nome' => 'dtPeriodo2',
+            'label' => 'Data Final do Período:',
+            'tipo' => 'data',
+            'size' => 15,
+            'col' => 3,
+            'padrao' => $dtPeriodo2,
+            'title' => 'Data Final do Período',
+            'linha' => 2),
+        array('nome' => 'nota1',
+            'label' => 'Nota 1:',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 6,
+            'col' => 2,
+            'title' => 'Nota da primeira avaliação.',
+            'linha' => 3),
+        array('nome' => 'nota2',
+            'label' => 'Nota 2:',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 6,
+            'col' => 2,
+            'title' => 'Nota da segunda avaliação.',
+            'linha' => 3),
+        array('nome' => 'nota3',
+            'label' => 'Nota 3:',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 6,
+            'col' => 2,
+            'title' => 'Nota da terceira avaliação.',
+            'linha' => 3),
+        array('nome' => 'dtPublicacao',
+            'label' => 'Data da Pub. no DOERJ:',
+            'tipo' => 'data',
+            'size' => 15,
+            'col' => 3,
+            'title' => 'Data da Publicação no DOERJ.',
+            'linha' => 2),
+        array('nome' => 'pgPublicacao',
+            'label' => 'Página:',
+            'tipo' => 'texto',
+            'size' => 5,
+            'col' => 1,
+            'title' => 'Página da publicação no DOERJ.',
+            'linha' => 2),
+        array('linha' => 3,
+            'nome' => 'obs',
+            'col' => 12,
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 8)));
+
+//    # tabela
+//    $botao = new Button("Tabela", "tabelaSalarial.php");
+//    $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
+//    $botao->set_target("_blank");
+//
+//    # Relatório
+//    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+//    $botaoRel = new Button();
+//    $botaoRel->set_imagem($imagem);
+//    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões e Enquadramentos");
+//    $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
+//    $botaoRel->set_target("_blank");
+//
+//    $objeto->set_botaoListarExtra(array($botao, $botaoRel));
+    # Log
+    $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
+
+    ################################################################
+
+    switch ($fase) {
+        case "" :
+        case "listar" :
+        case "editar" :
+        case "excluir" :
+            $objeto->$fase($id);
+            break;
+
+        case "gravar" :
+            $objeto->gravar($id);
+            break;
+    }
+    $page->terminaPagina();
+} else {
+    loadPage("../../areaServidor/sistema/login.php");
+}

@@ -201,14 +201,14 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargosComissionados.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargosComissionadosLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargosComissionadosCpfRg.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Docentes','../grhRelatorios/cargosComissionados.docentes.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Adm & Tec','../grhRelatorios/cargosComissionados.adm.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Docentes', '../grhRelatorios/cargosComissionados.docentes.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Adm & Tec', '../grhRelatorios/cargosComissionados.adm.php');
             $menu->add_item('titulo1', 'Histórico');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Ativos - Histórico', '../grhRelatorios/cargosComissionadosAtivosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Inativos - Histórico', '../grhRelatorios/cargosComissionadosInativosHistorico.php');            
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Docentes - Histórico por Ano','../grhRelatorios/cargosComissionados.docentes.porAno.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Adm & Tec - Histórico por Ano','../grhRelatorios/cargosComissionados.adm.porAno.php');
-            
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Inativos - Histórico', '../grhRelatorios/cargosComissionadosInativosHistorico.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Docentes - Histórico por Ano', '../grhRelatorios/cargosComissionados.docentes.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Adm & Tec - Histórico por Ano', '../grhRelatorios/cargosComissionados.adm.porAno.php');
+
             $menu->show();
             break;
 
@@ -380,12 +380,22 @@ if ($acesso) {
         case "lotacao";
             $menu = new Menu();
             $menu->add_item('titulo', 'Lotação');
+            $menu->add_item('titulo1', 'Cadastro de Lotações');
             $menu->add_item('linkWindow', 'Relatório de Lotações Ativas', '../grhRelatorios/lotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Aniversariantes - Por Lotação', '../grhRelatorios/lotacaoAniversariantes.php');
+            $menu->add_item('linkWindow', 'Relatório de Lotações Inativas', '../grhRelatorios/lotacaoInativa.php');
+
+            $menu->add_item('titulo1', 'Servidores nas Lotações');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Por Lotação', '../grhRelatorios/lotacaoServidoresAtivos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Histórico Por Lotação', '../grhRelatorios/lotacaoServidoresAtivosHistorico.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Pro-Reitorias', '../grhRelatorios/lotacaoServidoresAtivosProReitorias.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Inativos - Por Lotação', '../grhRelatorios/lotacaoEstatutariosInativos.php');
+
+            $menu->add_item('titulo1', 'Movimentação de Lotação');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.mensal.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.anual.lotacao.php');
+
+            $menu->add_item('titulo1', 'Histórico de Servidores nas Lotações');
+            $menu->add_item('linkWindow', 'Histórico de Servidores em uma Lotação', '../grhRelatorios/lotacao.historico.servidores.php');
             #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
             $menu->show();
             break;

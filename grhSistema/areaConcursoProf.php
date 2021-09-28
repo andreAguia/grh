@@ -125,7 +125,7 @@ if ($acesso) {
                 ["CCTA", "CCTA"],
             ];
 
-            $controle = new Input('parametroCentro', 'combo', 'Ano:', 1);
+            $controle = new Input('parametroCentro', 'combo', 'Centro:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Centro');
             $controle->set_array($centros);

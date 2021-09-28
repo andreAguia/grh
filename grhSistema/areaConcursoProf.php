@@ -53,7 +53,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -72,7 +74,7 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-            
+
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -80,7 +82,7 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel, "right");
+            $menu1->add_link($botaoRel, "right");
 
             # Vagas
             $botaoVoltar = new Link("Vagas", "areaVagasDocentes.php");
@@ -161,7 +163,7 @@ if ($acesso) {
             if ($parametroAno <> "*") {
                 $select .= "AND anoBase = '{$parametroAno}'";
             }
-            
+
             # Centro
             if ($parametroCentro <> "*") {
                 $select .= "AND '{$parametroCentro}' IN (SELECT DISTINCT centro FROM tbvaga JOIN tbvagahistorico USING (idVaga) WHERE TT.idConcurso = tbvagahistorico.idConcurso)";
@@ -199,7 +201,62 @@ if ($acesso) {
             break;
 
         ################################################################
+        # Relatório
+        case "relatorio" :
+
+            # Inicia a variável do título
+            $titulo = null;
+
+            # Monta a tabala
+            $select = "SELECT anobase,
+                      dtPublicacaoEdital,
+                      regime,
+                      CASE tipo
+                        WHEN 1 THEN 'Adm & Tec'
+                        WHEN 2 THEN 'Professor'
+                        ELSE '--'
+                      END,
+                      orgExecutor,                      
+                      tbplano.numDecreto,
+                      idConcurso,
+                      idConcurso,
+                      idConcurso,
+                      idConcurso
+                 FROM tbconcurso as TT LEFT JOIN tbplano USING (idPlano)
+                WHERE tipo = 2 ";
+
+            # Ano Base
+            if ($parametroAno <> "*") {
+                $select .= "AND anoBase = '{$parametroAno}'";
+                $titulo = "Ano: {$parametroAno}";
+            }
+
+            # Centro
+            if ($parametroCentro <> "*") {
+                $select .= "AND '{$parametroCentro}' IN (SELECT DISTINCT centro FROM tbvaga JOIN tbvagahistorico USING (idVaga) WHERE TT.idConcurso = tbvagahistorico.idConcurso)";
+                $titulo .= " Centro: {$parametroCentro}";
+            }
+
+            $select .= " ORDER BY anobase desc, dtPublicacaoEdital desc";
+
+            $resumo = $pessoal->select($select);
+
+            # Monta a tabela
+            $relatorio = new Relatorio();
+            $relatorio->set_conteudo($resumo);
+            $relatorio->set_titulo("Concursos para Servidores Professores");
+            $relatorio->set_subtitulo($titulo);
+            $relatorio->set_label(["Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Ativos", "Inativos", "Total"]);
+            $relatorio->set_align(["center"]);
+            $relatorio->set_width([10, 10, 10, 10, 10, 20, 10, 5, 5, 5]);
+            $relatorio->set_funcao([null, 'date_to_php']);
+            $relatorio->set_classe([null, null, null, null, null, null, "Concurso", "Pessoal", "Pessoal", "Pessoal"]);
+            $relatorio->set_metodo([null, null, null, null, null, null, "get_centroVagas", "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
+            $relatorio->set_bordaInterna(true);
+            $relatorio->show();
+            break;
     }
+
     $grid->fechaColuna();
     $grid->fechaGrid();
 

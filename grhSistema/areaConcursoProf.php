@@ -42,9 +42,11 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', "*"));
+    $parametroCentro = post('parametroCentro', get_session('parametroCentro', "*"));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
+    set_session('parametroCentro', $parametroCentro);
 
     # Começa uma nova página
     $page = new Page();
@@ -70,6 +72,15 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
+            
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            #$menu1->add_link($botaoRel, "right");
 
             # Vagas
             $botaoVoltar = new Link("Vagas", "areaVagasDocentes.php");
@@ -100,8 +111,28 @@ if ($acesso) {
             $controle->set_array($anoBase);
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(2);
+            $form->add_item($controle);
+
+            # Centro
+            $centros = [
+                ["*", "Todos"],
+                ["CCH", "CCH"],
+                ["CBB", "CBB"],
+                ["CCT", "CCT"],
+                ["CCTA", "CCTA"],
+            ];
+
+            $controle = new Input('parametroCentro', 'combo', 'Ano:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Centro');
+            $controle->set_array($centros);
+            $controle->set_valor($parametroCentro);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -121,13 +152,19 @@ if ($acesso) {
                       idConcurso,
                       idConcurso,
                       idConcurso,
+                      idConcurso,
                       idConcurso
-                 FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
+                 FROM tbconcurso as TT LEFT JOIN tbplano USING (idPlano)
                 WHERE tipo = 2 ";
 
             # Ano Base
             if ($parametroAno <> "*") {
                 $select .= "AND anoBase = '{$parametroAno}'";
+            }
+            
+            # Centro
+            if ($parametroCentro <> "*") {
+                $select .= "AND '{$parametroCentro}' IN (SELECT DISTINCT centro FROM tbvaga JOIN tbvagahistorico USING (idVaga) WHERE TT.idConcurso = tbvagahistorico.idConcurso)";
             }
 
             $select .= " ORDER BY anobase desc, dtPublicacaoEdital desc";
@@ -138,19 +175,19 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_titulo("Concursos para Servidores Professores");
-            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Ativos", "Inativos", "Total", "Acessar"]);
+            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Ativos", "Inativos", "Total", "Acessar"]);
             $tabela->set_align(["center"]);
-            $tabela->set_width([5, 8, 10, 10, 10, 10, 17, 5, 5, 5, 5, 5]);
+            $tabela->set_width([5, 5, 10, 10, 10, 10, 15, 5, 5, 5, 5, 5, 5]);
             $tabela->set_funcao([null, null, 'date_to_php']);
-            $tabela->set_classe([null, null, null, null, null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
+            $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", "Pessoal", "Pessoal", "Pessoal"]);
             $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 9, "==");
-            $tabela->set_metodo([null, null, null, null, null, null, null, "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
+            $tabela->set_metodo([null, null, null, null, null, null, null, "get_centroVagas", "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 
             $botao = new Link(null, '?fase=acessaConcurso&idConcurso=', 'Acessa a página do concurso');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, null, $botao]);
             $tabela->show();
             break;
 

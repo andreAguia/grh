@@ -87,18 +87,18 @@ if ($acesso) {
 
     # Exibe as vagas de Docente
     $select = 'SELECT tblotacao.DIR,
-                                     tblotacao.GER,
-                                     tbcargo.nome,
-                                     area,
-                                     idServidor,
-                                     tbvagahistorico.obs,
-                                     idVagaHistorico
-                                FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                                                     JOIN tblotacao USING (idLotacao)
-                                                     JOIN tbvaga USING (idVaga)
-                                                     JOIN tbcargo USING (idCargo)
-                               WHERE idConcurso = ' . $idConcurso . ' ORDER BY tblotacao.DIR, tblotacao.GER desc';
-
+                      tblotacao.GER,
+                      tbcargo.nome,
+                      area,
+                      idServidor,
+                      tbvagahistorico.obs,
+                      idVagaHistorico
+                 FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
+                                      JOIN tblotacao USING (idLotacao)
+                                      JOIN tbvaga USING (idVaga)
+                                      JOIN tbcargo USING (idCargo)
+                WHERE idConcurso = ' . $idConcurso . ' ORDER BY tblotacao.DIR, tblotacao.GER desc';
+ 
     $conteudo = $pessoal->select($select);
     $numConteudo = $pessoal->count($select);
 

@@ -1,7 +1,6 @@
 <?php
 
-class Lotacao
-{
+class Lotacao {
 
     /**
      * Classe que abriga as várias rotina de Lotação
@@ -10,8 +9,7 @@ class Lotacao
      */
     ###########################################################
 
-    public function getLotacao($idLotacao = null)
-    {
+    public function getLotacao($idLotacao = null) {
         /**
          * Retorna o nome da lotação
          * 
@@ -35,8 +33,7 @@ class Lotacao
 
     ###########################################################
 
-    public function getLotacaoAnterior($idHistLot = null)
-    {
+    public function getLotacaoAnterior($idHistLot = null) {
         /**
          * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
          * 
@@ -63,10 +60,10 @@ class Lotacao
                       ORDER BY data";
 
             $row2 = $pessoal->select($select2);
-            
+
             $lotacaoAnterior = null;
             foreach ($row2 as $item) {
-                
+
                 if ($item[0] == $idHistLot) {
                     break;
                 } else {
@@ -80,8 +77,7 @@ class Lotacao
 
     ###########################################################
 
-    public function getNomeLotacaoAnterior($idHistLot = null)
-    {
+    public function getNomeLotacaoAnterior($idHistLot = null) {
         /**
          * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
          * 
@@ -96,6 +92,40 @@ class Lotacao
                 return null;
             } else {
                 return $this->getLotacao($idLotacao);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function exibeHistoricoLotacao($idServidor = null) {
+        /**
+         * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Agora pega a lotação anterior a esta mudança
+            $select = "SELECT data,
+                              lotacao,
+                              motivo
+                         FROM tbhistlot 
+                        WHERE idServidor = {$idServidor}
+                     ORDER BY data";
+
+            $row = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            foreach ($row as $item) {
+                plista(date_to_php($item["data"]) . " - " . $pessoal->get_nomeLotacao($item["lotacao"]), $item["motivo"]);
+                $count--;
+                if($count > 0){
+                    hr();
+                }
             }
         }
     }

@@ -892,6 +892,47 @@ tr#ns{
 }
 
 /*******************************************
+ * Controle de avaliação funcional
+ *******************************************/
+p#pNota{
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#pPercentagem1{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    color: green;
+    font-weight:bold;
+}
+
+p#pPercentagem2{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    color: blue;
+    font-weight:bold;
+}
+
+p#pPercentagem3{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    color: darkolivegreen;
+    font-weight:bold;
+}
+
+p#pPercentagem4{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+    color: red;
+    font-weight:bold;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

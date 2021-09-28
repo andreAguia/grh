@@ -396,6 +396,7 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Histórico de Servidores nas Lotações');
             $menu->add_item('linkWindow', 'Histórico de Servidores em uma Lotação', '../grhRelatorios/lotacao.historico.servidores.php');
+            $menu->add_item('linkWindow', 'Histórico de Servidores Ativos em uma Lotação', '../grhRelatorios/lotacao.historico.servidores.ativos.php');
             #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
             $menu->show();
             break;

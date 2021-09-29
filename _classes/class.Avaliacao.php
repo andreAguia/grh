@@ -1,0 +1,388 @@
+<?php
+
+class Avaliacao {
+
+    /**
+     * Abriga as várias rotina referentes a avaliacaço de desempenho de um servidor
+     *
+     * @author André Águia (Alat) - alataguia@gmail.com
+     */
+##############################################################
+
+    public function getDados($id = null) {
+
+        # Verifica se o id foi informado
+        if (vazio($id)) {
+            alert("É necessário informar o id.");
+            return;
+        }
+
+        # Pega os dados
+        $servidor = new Pessoal();
+        $select = "SELECT *
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        # Retorno
+        return $servidor->select($select, false);
+    }
+
+###########################################################
+
+    function exibePublicacao($id) {
+
+        /**
+         * Informe os dados da Publicação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT dtPublicacao, pgPublicacao
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        if (empty($row[0])) {
+            pLista("---");
+        } else {
+            pLista(
+                    date_to_php($row[0]),
+                    "pag: " . trataNulo($row[1])
+            );
+        }
+    }
+
+    ###########################################################
+
+    function getPeriodoEAno($idServidor) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega a última avaliação desse servidor
+        $select = "SELECT *
+                     FROM tbavaliacao
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtPeriodo1 DESC
+                    LIMIT 1";
+
+        $row = $pessoal->select($select, false);
+
+        # Se estive vazio ele nunca teve avaliação o próximo é AV1
+        if (empty($row['idAvaliacao'])) {
+            $tipo = 1;  // tipo é estágio
+            $dtPeriodo1 = $pessoal->get_dtAdmissao($idServidor);    // pega o iício do período a data de admissão
+            $dtPeriodo2 = addMeses($dtPeriodo1, 8);                 // o fim do período é 8 meses
+            $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
+            $referencia = "AV1";
+            return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+        } else {
+            # Se o anterior foi AV1 o próximo é AV2
+            if ($row['referencia'] == "AV1") {
+                $tipo = 1;  // tipo é estágio
+                $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
+                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
+                $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
+                $referencia = "AV2";
+                return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+            }
+
+            # Se o anterior foi AV2 o próximo é AV3
+            if ($row['referencia'] == "AV2") {
+                $tipo = 1;  // tipo é estágio
+                $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
+                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
+                $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
+                $referencia = "AV3";
+                return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+            }
+
+            # Se o anterior foi AV3 o próximo é AV4
+            if ($row['referencia'] == "AV3") {
+                $tipo = 1;  // tipo é estágio
+                $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
+                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
+                $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
+                $referencia = "AV4";
+                return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+            }
+
+            # Se o anterior foi AV4 o próximo é Acerto
+            if ($row['referencia'] == "AV4") {
+                $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
+
+                # Verifica quanto falta para chegar o próximo 01/04
+                $diaDt = day($dtPeriodo1);
+                $anoDt = year($dtPeriodo1);
+                $mesDt = month($dtPeriodo1);
+
+                if ($mesDt < 4) {
+                    $tipo = 2;  // tipo é acerto
+                    $dtPeriodo2 = "31/03/{$anoDt}";
+                    $referencia = "Acerto";
+                } elseif ($mesDt == 4) {
+                    $tipo = 1;  // tipo é anual
+                    $referencia = $anoDt;
+                    if ($diaDt == 30) {
+                        $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                    } else {
+                        $dtPeriodo2 = ($diaDt + 1) . "/04/" . ($anoDt + 1);
+                    }
+                } elseif ($mesDt > 4) {
+                    $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                    $tipo = 3;  // tipo é anual
+                    $referencia = $anoDt;
+                }
+
+                return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+            }
+
+            if ($row['referencia'] == "Acerto" OR is_numeric($row['referencia'])) {
+                $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
+                $tipo = 3;  // tipo é anual                
+                $anoDt = year($dtPeriodo1);
+                $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                $referencia = $anoDt;
+
+                return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
+            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeNota1($id) {
+
+        /**
+         * Exibe a nota 1 de uma avaliação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT nota1
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        $nota = $row[0];
+        $porcentagem = (100 * $nota) / 120;
+
+        # Retorno
+        if (empty($nota)) {
+            p("---", "pNota");
+        } else {
+            plista($nota, "(" . number_format($porcentagem, 1) . " %)");
+
+//            p($nota, "pNota");
+//
+//            if ($porcentagem >= 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem1");
+//            }
+//
+//            if ($porcentagem >= 70 AND $porcentagem < 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem2");
+//            }
+//
+//            if ($porcentagem >= 50 AND $porcentagem < 70) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem3");
+//            }
+//
+//            if ($porcentagem < 50) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem4");
+//            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeNota2($id) {
+
+        /**
+         * Exibe a nota 1 de uma avaliação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT nota2
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        $nota = $row[0];
+        $porcentagem = (100 * $nota) / 120;
+
+        # Retorno
+        if (empty($nota)) {
+            p("---", "pNota");
+        } else {
+            plista($nota, "(" . number_format($porcentagem, 1) . " %)");
+
+//            p($nota, "pNota");
+//
+//            if ($porcentagem >= 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem1");
+//            }
+//
+//            if ($porcentagem >= 70 AND $porcentagem < 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem2");
+//            }
+//
+//            if ($porcentagem >= 50 AND $porcentagem < 70) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem3");
+//            }
+//
+//            if ($porcentagem < 50) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem4");
+//            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeNota3($id) {
+
+        /**
+         * Exibe a nota 1 de uma avaliação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT nota3
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        $nota = $row[0];
+        $porcentagem = (100 * $nota) / 120;
+
+        # Retorno
+        if (empty($nota)) {
+            p("---", "pNota");
+        } else {
+            plista($nota, "(" . number_format($porcentagem, 1) . " %)");
+
+//            p($nota, "pNota");
+//
+//            if ($porcentagem >= 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem1");
+//            }
+//
+//            if ($porcentagem >= 70 AND $porcentagem < 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem2");
+//            }
+//
+//            if ($porcentagem >= 50 AND $porcentagem < 70) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem3");
+//            }
+//
+//            if ($porcentagem < 50) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem4");
+//            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeTotal($id) {
+
+        /**
+         * Exibe a nota 1 de uma avaliação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT nota1, nota2, nota3
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        $nota = $row[0] + $row[1] + $row[2];
+        $porcentagem = (100 * $nota) / 360;
+
+        # Retorno
+        if (empty($nota)) {
+            p("---", "pNota");
+        } else {
+            plista($nota, "(" . number_format($porcentagem, 1) . " %)");
+
+//            p($nota, "pNota");
+//
+//            if ($porcentagem >= 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem1");
+//            }
+//
+//            if ($porcentagem >= 70 AND $porcentagem < 90) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem2");
+//            }
+//
+//            if ($porcentagem >= 50 AND $porcentagem < 70) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem3");
+//            }
+//
+//            if ($porcentagem < 50) {
+//                p("(" . number_format($porcentagem, 1) . " %)", "pPercentagem4");
+//            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeResultado($id) {
+
+        /**
+         * Exibe a nota 1 de uma avaliação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega os dias publicados
+        $select = "SELECT nota1, nota2, nota3
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        $nota = $row[0] + $row[1] + $row[2];
+        $porcentagem = (100 * $nota) / 360;
+
+        # Retorno
+        if (empty($nota)) {
+            p("---", "pNota");
+        } else {
+            if ($porcentagem >= 90) {
+                p("Habilitado para progressão diferenciada", "pPercentagem1");
+            }
+
+            if ($porcentagem >= 70 AND $porcentagem < 90) {
+                p("Habilitado para progressão simples por merecimento:", "pPercentagem2");
+            }
+
+            if ($porcentagem >= 50 AND $porcentagem < 70) {
+                p("Não definido na portaria", "pPercentagem3");
+            }
+
+            if ($porcentagem < 50) {
+                p("Insuficiente", "pPercentagem4");
+            }
+        }
+    }
+
+    ###########################################################
+}

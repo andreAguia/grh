@@ -67,7 +67,8 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT CASE tipo
                                           WHEN 1 THEN 'Estágio' 
-                                          WHEN 2 THEN 'Anual'
+                                          WHEN 2 THEN 'Acerto'
+                                          WHEN 3 THEN 'Anual'
                                      END,
                                      referencia,
                                      CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
@@ -78,7 +79,7 @@ if ($acesso) {
                                      idAvaliacao
                                 FROM tbavaliacao
                                WHERE idServidor = {$idServidorPesquisado}
-                            ORDER BY dtPeriodo1");
+                            ORDER BY dtPeriodo1 DESC");
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,
@@ -161,11 +162,10 @@ if ($acesso) {
             'tipo' => 'combo',
             'col' => 3,
             'required' => true,
-            'array' => [[null, null], [1, "Estágio Experimental"], [2, "Anual"]],
+            'array' => [[null, null], [1, "Estágio Experimental"], [2, "Acerto"], [3, "Anual"]],
             'size' => 20,
             'padrao' => $tipo,
             'title' => 'Tipo de Avaliação',
-            'autofocus' => true,
             'linha' => 1),
         array('nome' => 'referencia',
             'label' => 'Referência:',
@@ -197,6 +197,7 @@ if ($acesso) {
             'label' => 'Nota 1:',
             'tipo' => 'texto',
             'required' => true,
+            'autofocus' => true,
             'size' => 6,
             'col' => 2,
             'title' => 'Nota da primeira avaliação.',
@@ -274,7 +275,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($id);
+            $objeto->gravar($id,"servidorAvaliacaoExtra.php");
             break;
     }
     $page->terminaPagina();

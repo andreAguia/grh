@@ -278,6 +278,14 @@ class MenuServidor {
 
         # Obs
         $botao = new BotaoGrafico();
+        $botao->set_label('Avaliação');
+        $botao->set_url('servidorAvaliacao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'avaliacao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle das avaliações de desempenho e qualidade do servidor');
+        $menu->add_item($botao);
+        
+        # Obs
+        $botao = new BotaoGrafico();
         $botao->set_label('Observações');
         $botao->set_url('servidorObs.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);

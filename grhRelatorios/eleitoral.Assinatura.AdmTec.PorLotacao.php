@@ -84,6 +84,7 @@ if ($acesso) {
         array('nome' => 'lotacao',
             'label' => 'Lotação',
             'tipo' => 'combo',
+            'autofocus' => true,
             'array' => $lotacao,
             'col' => 12,
             'size' => 10,

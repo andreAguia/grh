@@ -102,7 +102,8 @@ if ($acesso) {
     $array = [
         ["Idade", $pessoal->get_idade($idServidorPesquisado)],
         ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) . " dias"],
-        ["Data de Ingresso", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
+        ["Tempo Averbado + Tempo de Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoTotal($idServidorPesquisado). " dias"],
+        ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
     ];
 
     # Tabela

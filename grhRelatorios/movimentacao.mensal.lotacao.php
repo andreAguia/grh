@@ -50,7 +50,7 @@ if ($acesso) {
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes) . ' / ' . $relatorioAno);
 
     $relatorio->set_label(["IdFuncional", "Nome", "Data", "Saiu de", "Foi para"]);
-    #$relatorio->set_width([10, 20, 10, 20, 20, 20]);
+    $relatorio->set_width([10, 20, 10, 30, 30]);
     $relatorio->set_align(["center", "left", "center", "left", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php"]);
 

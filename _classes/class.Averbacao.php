@@ -3,8 +3,13 @@
 class Averbacao {
 
     function getNumDias($idAverbacao) {
-
-        # Pega os dados
+        
+        # Verifica se foi informado o id
+        if(empty($idAverbacao)){
+            return null;
+        }
+        
+        # Pega os valores
         $select = "SELECT dtInicial,
                          dtFinal
                    FROM tbaverbacao
@@ -21,6 +26,11 @@ class Averbacao {
     #####################################################
 
     function tempoSobreposto($idServidor) {
+        
+        # Verifica se foi informado o id
+        if(empty($idServidor)){
+            return null;
+        }        
 
         # Conecta ao Banco de Dados
         $intra = new Intra();
@@ -98,6 +108,13 @@ class Averbacao {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_tempoAverbadoPrivado($idServidor) {
+        
+        # Verifica se foi informado o id
+        if(empty($idServidor)){
+            return null;
+        }
+        
+        # Pega os valores
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 2 AND idServidor = ' . $idServidor . '
@@ -124,6 +141,13 @@ class Averbacao {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_tempoAverbadoPublico($idServidor) {
+        
+        # Verifica se foi informado o id
+        if(empty($idServidor)){
+            return null;
+        }
+        
+        # Pega os valores
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
                     WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
@@ -139,6 +163,31 @@ class Averbacao {
         } else {
             return $row[0];
         }
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método get_tempoAverbadoTotal
+     * informa o total de dias de tempo averbado em empresa Pública e privada
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoAverbadoTotal($idServidor) {
+        
+        # Verifica se foi informado o id
+        if(empty($idServidor)){
+            return null;
+        }
+        
+        # Pega o tempo público
+        $publico = $this->get_tempoAverbadoPublico($idServidor);
+        
+        # Pega o privado
+        $privado = $this->get_tempoAverbadoPrivado($idServidor);
+        
+        # Retorno o total
+        return $publico + $privado;
     }
 
 ##############################################################################################################################################

@@ -67,8 +67,7 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT CASE tipo
                                           WHEN 1 THEN 'Estágio' 
-                                          WHEN 2 THEN 'Acerto'
-                                          WHEN 3 THEN 'Anual'
+                                          WHEN 2 THEN 'Anual'
                                      END,
                                      referencia,
                                      CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
@@ -109,12 +108,9 @@ if ($acesso) {
     #$objeto->set_funcao(array("date_to_php", null, null, "date_to_php"));
     $objeto->set_classe([null, null, null, "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao"]);
     $objeto->set_metodo([null, null, null, "exibeNota1", "exibeNota2", "exibeNota3", "exibeTotal", "exibePublicacao"]);
-    # Formatação condicional
-//    $objeto->set_formatacaoCondicional(array(
-//        array('coluna' => 1,
-//            'valor' => "Importado",
-//            'operador' => '=',
-//            'id' => 'importado')));
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
+    
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -131,8 +127,7 @@ if ($acesso) {
     $anoInicial = $pessoal->get_anoAdmissao($idServidorPesquisado);
     $anoAtual = date('Y');
     $referenciasPossiveis = arrayPreenche($anoInicial, $anoAtual + 2);
-
-    array_unshift($referenciasPossiveis, "Acerto");
+    
     array_unshift($referenciasPossiveis, "AV4");
     array_unshift($referenciasPossiveis, "AV3");
     array_unshift($referenciasPossiveis, "AV2");
@@ -159,11 +154,12 @@ if ($acesso) {
     $objeto->set_campos(array(
         array('nome' => 'tipo',
             'label' => 'Tipo:',
-            'tipo' => 'combo',
+            'tipo' => 'combo',            
+            'autofocus' => true,
             'col' => 3,
             'required' => true,
-            'array' => [[null, null], [1, "Estágio Experimental"], [2, "Acerto"], [3, "Anual"]],
-            'size' => 20,
+            'array' => [[null, null], [1, "Estágio"], [2, "Anual"]],
+            'size' => 10,
             'padrao' => $tipo,
             'title' => 'Tipo de Avaliação',
             'linha' => 1),
@@ -182,6 +178,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 15,
             'col' => 3,
+            'required' => true,
             'padrao' => $dtPeriodo1,
             'title' => 'Data Inicial do Período',
             'linha' => 2),
@@ -190,6 +187,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 15,
             'col' => 3,
+            'required' => true,
             'padrao' => $dtPeriodo2,
             'title' => 'Data Final do Período',
             'linha' => 2),
@@ -197,7 +195,6 @@ if ($acesso) {
             'label' => 'Nota 1:',
             'tipo' => 'texto',
             'required' => true,
-            'autofocus' => true,
             'size' => 6,
             'col' => 2,
             'title' => 'Nota da primeira avaliação.',

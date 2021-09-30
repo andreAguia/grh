@@ -111,7 +111,7 @@ class Avaliacao {
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
             }
 
-            # Se o anterior foi AV4 o próximo é Acerto
+            # Se o anterior foi AV4 o próximo é Anual
             if ($row['referencia'] == "AV4") {
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
 
@@ -119,14 +119,14 @@ class Avaliacao {
                 $diaDt = day($dtPeriodo1);
                 $anoDt = year($dtPeriodo1);
                 $mesDt = month($dtPeriodo1);
+                                
+                $tipo = 2;
+                $referencia = $anoDt;
 
                 if ($mesDt < 4) {
-                    $tipo = 2;  // tipo é acerto
                     $dtPeriodo2 = "31/03/{$anoDt}";
-                    $referencia = "Acerto";
                 } elseif ($mesDt == 4) {
-                    $tipo = 1;  // tipo é anual
-                    $referencia = $anoDt;
+                    
                     if ($diaDt == 30) {
                         $dtPeriodo2 = "31/03/" . ($anoDt + 1);
                     } else {
@@ -134,19 +134,17 @@ class Avaliacao {
                     }
                 } elseif ($mesDt > 4) {
                     $dtPeriodo2 = "31/03/" . ($anoDt + 1);
-                    $tipo = 3;  // tipo é anual
-                    $referencia = $anoDt;
                 }
 
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
             }
 
-            if ($row['referencia'] == "Acerto" OR is_numeric($row['referencia'])) {
+            if ($row['tipo'] == 2) {
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
-                $tipo = 3;  // tipo é anual                
                 $anoDt = year($dtPeriodo1);
-                $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                $tipo = 2;
                 $referencia = $anoDt;
+                $dtPeriodo2 = "31/03/" . ($anoDt + 1);
 
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
             }

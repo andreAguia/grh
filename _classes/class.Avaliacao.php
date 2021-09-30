@@ -119,21 +119,24 @@ class Avaliacao {
                 $diaDt = day($dtPeriodo1);
                 $anoDt = year($dtPeriodo1);
                 $mesDt = month($dtPeriodo1);
-                                
+
                 $tipo = 2;
-                $referencia = $anoDt;
 
                 if ($mesDt < 4) {
                     $dtPeriodo2 = "31/03/{$anoDt}";
+                    $referencia = $anoDt;
                 } elseif ($mesDt == 4) {
-                    
+
                     if ($diaDt == 30) {
                         $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                        $referencia = $anoDt + 1;
                     } else {
                         $dtPeriodo2 = ($diaDt + 1) . "/04/" . ($anoDt + 1);
+                        $referencia = $anoDt + 1;
                     }
                 } elseif ($mesDt > 4) {
                     $dtPeriodo2 = "31/03/" . ($anoDt + 1);
+                    $referencia = $anoDt + 1;
                 }
 
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
@@ -143,7 +146,7 @@ class Avaliacao {
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
                 $anoDt = year($dtPeriodo1);
                 $tipo = 2;
-                $referencia = $anoDt;
+                $referencia = $anoDt + 1;
                 $dtPeriodo2 = "31/03/" . ($anoDt + 1);
 
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];

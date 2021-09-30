@@ -126,7 +126,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = $pessoal->get_anoAdmissao($idServidorPesquisado);
     $anoAtual = date('Y');
-    $referenciasPossiveis = arrayPreenche($anoInicial, $anoAtual + 2);
+    $referenciasPossiveis = arrayPreenche($anoInicial, $anoAtual + 1);
     
     array_unshift($referenciasPossiveis, "AV4");
     array_unshift($referenciasPossiveis, "AV3");
@@ -158,7 +158,7 @@ if ($acesso) {
             'autofocus' => true,
             'col' => 3,
             'required' => true,
-            'array' => [[null, null], [1, "Estágio"], [2, "Anual"]],
+            'array' => [[null, null], [1, "Estágio Probatório"], [2, "Anual"]],
             'size' => 10,
             'padrao' => $tipo,
             'title' => 'Tipo de Avaliação',

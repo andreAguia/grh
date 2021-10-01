@@ -297,7 +297,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(3);
 
-            $processoSei = trataNulo($avaliacao->getProcessoSei($idServidorPesquisado));
+            $processoSei = $avaliacao->getProcessoSei($idServidorPesquisado);
             $processoFisico = $avaliacao->getProcessoFisico($idServidorPesquisado);
 
             $painel = new Callout();
@@ -305,8 +305,13 @@ if ($acesso) {
 
             tituloTable("N° do Processo:");
             br();
-            p("SEI - {$processoSei}", 'f14', "center");
-
+            
+            if(empty($processoSei)){
+                p("SEI - {$processoSei}", 'f14', "center");
+            }else{
+                p("---", 'f14', "center");
+            }
+            
             # Verifica se tem processo antigo
             if (!is_null($processoFisico)) {
                 p($processoFisico, "processoAntigoReducao");

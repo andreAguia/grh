@@ -237,6 +237,13 @@ if ($acesso) {
                     loadPage("?fase=uploadMcf&id=.$id");
                 }
             }
+            
+            # Informa caso exista um arquivo com o mesmo nome
+            $arquivoDocumento = $pasta.$id.".pdf";
+            if (file_exists($arquivoDocumento)) {
+                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!","puploadMensagem");
+                br();
+            }
 
             $grid->fechaColuna();
             $grid->fechaGrid();

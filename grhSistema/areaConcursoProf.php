@@ -179,7 +179,7 @@ if ($acesso) {
             $tabela->set_titulo("Concursos para Servidores Professores");
             $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Ativos", "Inativos", "Total", "Acessar"]);
             $tabela->set_align(["center"]);
-            $tabela->set_width([5, 5, 10, 10, 10, 10, 15, 5, 5, 5, 5, 5, 5]);
+            $tabela->set_width([5, 6, 10, 10, 7, 7, 15, 10, 5, 5, 5, 5, 5]);
             $tabela->set_funcao([null, null, 'date_to_php']);
             $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", "Pessoal", "Pessoal", "Pessoal"]);
             $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 9, "==");

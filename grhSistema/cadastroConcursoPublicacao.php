@@ -217,17 +217,21 @@ if ($acesso) {
             # Botão voltar
             botaoVoltar('?');
 
+            # Título
             tituloTable("Upload de Publicações");
 
+            # Limita a tela
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
+            # Monta o formulário
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
+            # Pasta onde será guardado o arquivo
             $pasta = PASTA_CONCURSO;
 
             # Se não existe o programa cria
@@ -249,7 +253,7 @@ if ($acesso) {
             }
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
 
-            br(2);
+            br();
             p($texto, "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
@@ -269,6 +273,13 @@ if ($acesso) {
                 } else {
                     loadPage("?fase=uploadPublicacao&id=$id");
                 }
+            }
+            
+            # Informa caso exista um arquivo com o mesmo nome
+            $arquivoDocumento = $pasta.$id.".pdf";
+            if (file_exists($arquivoDocumento)) {
+                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!","puploadMensagem");
+                br();
             }
 
             $grid->fechaColuna();

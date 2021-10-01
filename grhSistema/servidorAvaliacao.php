@@ -300,11 +300,9 @@ if ($acesso) {
             $processoSei = $avaliacao->getProcessoSei($idServidorPesquisado);
             $processoFisico = $avaliacao->getProcessoFisico($idServidorPesquisado);
 
+            tituloTable("N° do Processo:");
             $painel = new Callout();
             $painel->abre();
-
-            tituloTable("N° do Processo:");
-            br();
             
             if(empty($processoSei)){
                 p("---", 'f14', "center");                

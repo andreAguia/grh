@@ -307,9 +307,9 @@ if ($acesso) {
             br();
             
             if(empty($processoSei)){
-                p("SEI - {$processoSei}", 'f14', "center");
+                p("---", 'f14', "center");                
             }else{
-                p("---", 'f14', "center");
+                p("SEI - {$processoSei}", 'f14', "center");
             }
             
             # Verifica se tem processo antigo

@@ -386,4 +386,58 @@ class Avaliacao {
     }
 
     ###########################################################
+
+    function getProcessoSei($idServidor) {
+
+        # Verifica se o id foi informado
+        if (vazio($idServidor)) {
+            alert("É necessário informar o id.");
+            return;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega a última avaliação desse servidor
+        $select = "SELECT processoAvaliacaoSei	
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    function getProcessoFisico($idServidor) {
+
+        # Verifica se o id foi informado
+        if (vazio($idServidor)) {
+            alert("É necessário informar o id.");
+            return;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega a última avaliação desse servidor
+        $select = "SELECT processoAvaliacaoFisico	
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
 }

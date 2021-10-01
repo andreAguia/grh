@@ -20,6 +20,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $avaliacao = new Avaliacao();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -51,8 +52,10 @@ if ($acesso) {
 
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    if ($fase <> "listar") {
+        $objeto->set_rotinaExtra("get_DadosServidor");
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    }
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro das Avaliações de Desempenho e Qualidade');
@@ -103,14 +106,14 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Tipo", "Referencia", "Período", "Nota 1", "Nota 2", "Nota 3", "Total", "Publicação"]);
-    $objeto->set_width([10, 10, 20, 10, 10, 10, 10, 15]);
+    $objeto->set_width([8, 8, 19, 10, 10, 10, 10, 15]);
     #$objeto->set_align(array("center", "left", "center", "center", "left"));
     #$objeto->set_funcao(array("date_to_php", null, null, "date_to_php"));
     $objeto->set_classe([null, null, null, "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao"]);
     $objeto->set_metodo([null, null, null, "exibeNota1", "exibeNota2", "exibeNota3", "exibeTotal", "exibePublicacao"]);
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
-    
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -127,7 +130,7 @@ if ($acesso) {
     $anoInicial = $pessoal->get_anoAdmissao($idServidorPesquisado);
     $anoAtual = date('Y');
     $referenciasPossiveis = arrayPreenche($anoInicial, $anoAtual + 1);
-    
+
     array_unshift($referenciasPossiveis, "AV4");
     array_unshift($referenciasPossiveis, "AV3");
     array_unshift($referenciasPossiveis, "AV2");
@@ -154,7 +157,7 @@ if ($acesso) {
     $objeto->set_campos(array(
         array('nome' => 'tipo',
             'label' => 'Tipo:',
-            'tipo' => 'combo',            
+            'tipo' => 'combo',
             'autofocus' => true,
             'col' => 3,
             'required' => true,
@@ -243,20 +246,6 @@ if ($acesso) {
             'title' => 'Matrícula',
             'linha' => 8)));
 
-//    # tabela
-//    $botao = new Button("Tabela", "tabelaSalarial.php");
-//    $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
-//    $botao->set_target("_blank");
-//
-//    # Relatório
-//    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-//    $botaoRel = new Button();
-//    $botaoRel->set_imagem($imagem);
-//    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões e Enquadramentos");
-//    $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
-//    $botaoRel->set_target("_blank");
-//
-//    $objeto->set_botaoListarExtra(array($botao, $botaoRel));
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
@@ -266,13 +255,92 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+            # Retira os botões da classe
+            $objeto->set_botaoVoltarLista(false);
+            $objeto->set_botaoIncluir(false);
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $linkBotao1 = new Link("Voltar", '?fase=listar');
+            $linkBotao1->set_class('button');
+            $linkBotao1->set_title('Volta para a página anterior');
+            $linkBotao1->set_accessKey('V');
+            $menu->add_link($linkBotao1, "left");
+
+            # Afastamentos
+            $botaoAfast = new Button('Todos os Afastamentos', 'servidorAfastamentos.php?volta=0');
+            $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
+            $botaoAfast->set_target("_blank");
+            $menu->add_link($botaoAfast, "right");
+
+//            # Processo
+//            $botaoProcesso = new Button("Edita Processo", "servidorProcessoAvaliacao.php");
+//            $botaoProcesso->set_title("Edita o processo");
+//            $menu->add_link($botaoProcesso, "right");
+
+            # Incluir
+            $botaoIncluir = new Button("Incluir", '?fase=editar');
+            $botaoIncluir->set_title("Incluir novo registro");
+            $menu->add_link($botaoIncluir, "right");
+
+            $menu->show();
+
+            # Exibe os dados do servidor
+            get_DadosServidor($idServidorPesquisado);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
+
+            $processoSei = trataNulo($avaliacao->getProcessoSei($idServidorPesquisado));
+            $processoFisico = $avaliacao->getProcessoFisico($idServidorPesquisado);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            tituloTable("N° do Processo:");
+            br();
+            p("SEI - {$processoSei}", 'f14', "center");
+
+            # Verifica se tem processo antigo
+            if (!is_null($processoFisico)) {
+                p($processoFisico, "processoAntigoReducao");
+            }
+
+            $div = new Div("divEditaProcesso");
+            $div->abre();
+            if ($processoSei == "--") {
+                $link = new Link("Incluir Processo", 'servidorProcessoAvaliacao.php', "Inclui o número do processo");
+            } else {
+                $link = new Link("Editar Processo", 'servidorProcessoAvaliacao.php', "Edita o número do processo");
+            }
+            $link->set_id("editaProcesso");
+            $link->show();
+            $div->fecha();
+
+            $painel->fecha();
+
+            $grid->fechaColuna();
+
+            $grid->abreColuna(9);
+            $objeto->listar();
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            break;
+
         case "editar" :
         case "excluir" :
             $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->gravar($id,"servidorAvaliacaoExtra.php");
+            $objeto->gravar($id, "servidorAvaliacaoExtra.php");
             break;
     }
     $page->terminaPagina();

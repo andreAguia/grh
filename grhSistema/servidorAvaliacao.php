@@ -267,7 +267,7 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Botão voltar
-            $linkBotao1 = new Link("Voltar", '?fase=listar');
+            $linkBotao1 = new Link("Voltar", 'servidorMenu.php');
             $linkBotao1->set_class('button');
             $linkBotao1->set_title('Volta para a página anterior');
             $linkBotao1->set_accessKey('V');

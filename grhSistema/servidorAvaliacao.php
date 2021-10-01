@@ -319,7 +319,7 @@ if ($acesso) {
 
             $div = new Div("divEditaProcesso");
             $div->abre();
-            if ($processoSei == "--") {
+            if(empty($processoSei)){
                 $link = new Link("Incluir Processo", 'servidorProcessoAvaliacao.php', "Inclui o número do processo");
             } else {
                 $link = new Link("Editar Processo", 'servidorProcessoAvaliacao.php', "Edita o número do processo");

@@ -29,7 +29,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Cadastro das avaliações de desempenho e qualidade";
+        $atividade = "Cadastro do servidor - Avaliações de desempenho e qualidade";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -58,7 +58,7 @@ if ($acesso) {
     }
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro das Avaliações de Desempenho e Qualidade');
+    $objeto->set_nome('Avaliações de Desempenho e Qualidade');
 
     # botão de voltar da lista
     if ($origem == "areaAvaliacao.php") {

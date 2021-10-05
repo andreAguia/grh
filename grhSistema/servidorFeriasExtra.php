@@ -11,6 +11,9 @@ $numDias = $campoValor[2];
 $idServidor = $campoValor[4];
 $dtInicial = $campoValor[1];
 
+# Conecta ao banco de dados
+$pessoal = new Pessoal();
+
 # Pega o perfil do servidor
 $idPerfil = $pessoal->get_idPerfil($idServidor);
 
@@ -23,9 +26,6 @@ if ($dtInicial <= $hoje) {
 } else {
     $campoValor[5] = "solicitada";
 }
-
-# Conecta ao banco de dados
-$pessoal = new Pessoal();
 
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);

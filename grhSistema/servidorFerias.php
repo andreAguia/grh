@@ -48,6 +48,12 @@ if ($acesso) {
     $objeto = new Modelo();
 
     ################################################################
+    # Exibe os dados do Servidor
+    if ($fase <> "listar") {
+        $objeto->set_rotinaExtra("get_DadosServidor");
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    }
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Histórico de Férias');
 
@@ -223,7 +229,6 @@ if ($acesso) {
 
             $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
             if (is_null($lista)) {
-                br();
                 tituloTable('Resumo');
                 $callout = new Callout();
                 $callout->abre();
@@ -245,17 +250,17 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
-            
+
             # Exibe as férias pendentes
             $ferias = new Ferias();
             $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
-            if(!empty($pendentes)){
+            if (!empty($pendentes)) {
                 $callout = new Callout("warning");
                 $callout->abre();
                 p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center');
                 $callout->fecha();
             }
-            
+
             $objeto->listar();
 
             $grid2->fechaColuna();

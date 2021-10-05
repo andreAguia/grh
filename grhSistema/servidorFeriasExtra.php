@@ -5,10 +5,15 @@
  * 
  */
 
-$exercicio = $campoValor[0];    // Ano exercício
-$numDias = $campoValor[2];         // Dias solicitado
-$idServidor = $campoValor[4];   // idServidor
-$dtInicial = $campoValor[1];  // dataInicial 
+# Pega os valores digitados
+$exercicio = $campoValor[0];
+$numDias = $campoValor[2];
+$idServidor = $campoValor[4];
+$dtInicial = $campoValor[1];
+
+# Pega o perfil do servidor
+$idPerfil = $pessoal->get_idPerfil($idServidor);
+
 # Define a data de hoje
 $hoje = date("Y-m-d");
 
@@ -24,10 +29,14 @@ $pessoal = new Pessoal();
 
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
-if ($dtInicial < $dtAdmissao) {
-    $erro = 1;
-    $msgErro .= 'O servidor não pode pedir férias ANTES de ser admitido!\n';
+
+# Somente para quem né cedido, pois pode ter férias em seu órgão de origem
+if ($idPerfil <> 2) { 
+    $dtAdmissao = date_to_bd($dtAdmissao);
+    if ($dtInicial < $dtAdmissao) {
+        $erro = 1;
+        $msgErro .= 'O servidor não pode pedir férias ANTES de ser admitido!\n';
+    }
 }
 
 # Verifica se a data Inicial é posterior a data de saida

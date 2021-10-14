@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -43,6 +44,13 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "upload") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -71,6 +79,8 @@ if ($acesso) {
                                      habilitacao,
                                      instEnsino,
                                      anoTerm,                              
+                                     idFormacao,
+                                     idFormacao,
                                      idFormacao
                                 FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
                           WHERE idPessoa=' . $idPessoa . '
@@ -87,10 +97,6 @@ if ($acesso) {
                                 FROM tbformacao
                                WHERE idFormacao = ' . $id);
 
-    # ordem da lista
-    #$objeto->set_orderCampo($orderCampo);
-    #$objeto->set_orderTipo($orderTipo);
-    #$objeto->set_orderChamador('?fase=listar');
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -98,10 +104,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Nível", "Curso", "Instituição", "Ano de Término"));
-    #$objeto->set_width(array(15,30,35,10));	
-    $objeto->set_align(array("center", "left", "left"));
-    #$objeto->set_function(array (null,"date_to_php"));
+    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Ver", "Upload"]);
+    $objeto->set_width([10, 30, 30, 10, 5, 5]);
+    $objeto->set_align(["center", "left", "left"]);
+
+    $objeto->set_classe([null, null, null, null, "Formacao", "Formacao"]);
+    $objeto->set_metodo([null, null, null, null, "exibeCertificado", "exibeBotaoUpload"]);
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -120,19 +129,19 @@ if ($acesso) {
                                        FROM tbescolaridade
                                    ORDER BY idEscolaridade');
     array_unshift($result, array(null, null));
-    
+
     # Pega os dados da datalist curso
     $cursos = $pessoal->select('SELECT distinct habilitacao
                                        FROM tbformacao
                                    ORDER BY habilitacao');
     array_unshift($cursos, array(null));
-    
+
     # Pega os dados da datalist instEnsino
     $instEnsino = $pessoal->select('SELECT distinct instEnsino
                                        FROM tbformacao
                                    ORDER BY instEnsino');
     array_unshift($instEnsino, array(null));
-    
+
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'idEscolaridade',
             'label' => 'Nível:',
@@ -213,7 +222,87 @@ if ($acesso) {
         case "gravar" :
             $objeto->$fase($id);
             break;
+        ################################################################
+
+        case "upload" :
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+
+            # Botão voltar
+            botaoVoltar('?');
+
+            # Título
+            tituloTable("Upload de Certificado / Diploma de Curso");
+
+            # Limita a tela
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+            # Monta o formulário
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+
+            # Pasta onde será guardado o arquivo
+            $pasta = PASTA_CERTIFICADO;
+
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
+            # Extensões possíveis
+            $extensoes = array("pdf");
+
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
+
+            $texto = "Extensões Permitidas:";
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+            br();
+            p($texto, "f14", "center");
+
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
+
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
+
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Fez o upload de publicação de concurso";
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+
+                    # Volta para o menu
+                    loadPage("?fase=listar");
+                } else {
+                    loadPage("?fase=uploadPublicacao&id=$id");
+                }
+            }
+
+            # Informa caso exista um arquivo com o mesmo nome
+            $arquivoDocumento = $pasta . $id . ".pdf";
+            if (file_exists($arquivoDocumento)) {
+                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!", "puploadMensagem");
+                br();
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ##################################################################
     }
+
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");

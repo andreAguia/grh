@@ -92,16 +92,65 @@ class Formacao {
         # Pega a escolaridade da tabela formação
         $select = "SELECT idEscolaridade FROM tbformacao WHERE idEscolaridade <> 12 AND idPessoa = $idPessoa ORDER BY idEscolaridade desc LIMIT 1";
         $dados = $pessoal->select($select, false);
-        
-        if(empty($dados[0])){
+
+        if (empty($dados[0])) {
             $dados[0] = 0;
         }
 
         # Pega a maior escolaridade
-        $maior = maiorValor([$idEscolaridade,$dados[0]]);
-        
+        $maior = maiorValor([$idEscolaridade, $dados[0]]);
+
         # Retorna a maior escolaridade registrada
         return $maior;
     }
 
+    ###########################################################
+
+    public function exibeBotaoUpload($idFormacao) {
+        /**
+         * Exibe um botão de upload
+         * 
+         * @param $idFormacao integer null O id 
+         * 
+         * @syntax $formacao->exibeBotaoUpload($idFormacao);
+         */
+        # Verifica se tem id
+        if (empty($idFormacao)) {
+            return null;
+        } else {
+            # Exibe o botão
+            $link = new Link(null, "?fase=upload&id={$idFormacao}", "Upload o certificado / diploma do curso");
+            $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
+            #$link->set_target("_blank");
+            $link->show();
+        }
+    }
+
+    ###########################################################
+
+    public function exibeCertificado($idFormacao) {
+        /**
+         * Exibe um link para exibir o pdf do certificado
+         * 
+         * @param $idFormacao integer null O id
+         * 
+         * @syntax $formacao->exibeCertificado($idFormacao);
+         */
+        # Monta o arquivo
+        $arquivo = PASTA_CERTIFICADO . $idFormacao . ".pdf";
+
+        # Verifica se ele existe
+        if (file_exists($arquivo)) {
+
+            # Monta o link
+            $link = new Link(null, $arquivo, "Exibe o certificado / diploma do curso");
+            $link->set_imagem(PASTA_FIGURAS . "olho.png", 20, 20);
+            $link->set_target("_blank");
+            $link->show();
+        } else {
+            echo "-";
+        }
+    }
+
+###########################################################
 }

@@ -129,6 +129,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Mês
+            array_unshift($mes, array('*', '-- Todos --'));
             $controle = new Input('parametroMes', 'combo', 'Mês:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra pelo Mês');
@@ -213,7 +214,9 @@ if ($acesso) {
             # Exibe a tabela de Servidores afastados
             $afast = new ListaAfastamentos();
             $afast->set_ano($parametroAno);
-            $afast->set_mes($parametroMes);
+            if ($parametroMes <> "*") {
+                $afast->set_mes($parametroMes);
+            }
             $afast->set_tipo($parametroTipo);
             $afast->set_lotacao($parametroLotacao);
             if ($parametroCargo <> "*") {
@@ -248,7 +251,9 @@ if ($acesso) {
 
             $afast = new ListaAfastamentos();
             $afast->set_ano($parametroAno);
-            $afast->set_mes($parametroMes);
+            if ($parametroMes <> "*") {
+                $afast->set_mes($parametroMes);
+            }
             $afast->set_lotacao($parametroLotacao);
             if ($parametroCargo <> "*") {
                 $afast->set_cargo($parametroCargo);

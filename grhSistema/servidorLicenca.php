@@ -36,6 +36,13 @@ if ($acesso) {
 
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
+    
+    # botão de voltar da lista
+    if (empty($origem)) {
+        $voltar = 'servidorMenu.php';
+    } else {
+        $voltar = $origem;
+    }
 
     # pega o idTpLicenca (se tiver)
     $idTpLicenca = soNumeros(get('idTpLicenca'));
@@ -302,13 +309,6 @@ if ($acesso) {
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome('Afastamentos e Licenças');
-
-        # botão de voltar da lista
-        if (vazio($origem)) {
-            $voltar = 'servidorMenu.php';
-        } else {
-            $voltar = $origem;
-        }
 
         # botão de voltar da lista
         $objeto->set_voltarLista($voltar);

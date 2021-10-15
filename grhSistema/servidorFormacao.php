@@ -36,6 +36,13 @@ if ($acesso) {
     # Verifica de onde veio
     $origem = get_session("origem");
 
+    # botão de voltar da lista
+    if (empty($origem)) {
+        $voltar = 'servidorMenu.php';
+    } else {
+        $voltar = $origem;
+    }
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -68,11 +75,7 @@ if ($acesso) {
     $objeto->set_nome('Cadastro da Formação Escolar do Servidor');
 
     # botão de voltar da lista
-    if ($origem == "areaFormacao") {
-        $objeto->set_voltarLista('areaFormacao.php');
-    } else {
-        $objeto->set_voltarLista('servidorMenu.php');
-    }
+    $objeto->set_voltarLista($voltar);
 
     # select da lista
     $objeto->set_selectLista('SELECT escolaridade,

@@ -296,7 +296,7 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', 'areaFormacao');
+            set_session('origem', 'areaFormacao.php');
 
             # Carrega a página específica
             loadPage('servidorFormacao.php');

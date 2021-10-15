@@ -40,8 +40,15 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Verifica se veio da área de Redução
+    # Verifica de onde veio
     $origem = get_session("origem");
+
+    # botão de voltar da lista
+    if (empty($origem)) {
+        $voltar = 'servidorMenu.php';
+    } else {
+        $voltar = $origem;
+    }
 
     $jscript = '// Pega os valores da pendêencia                
                 
@@ -133,13 +140,6 @@ if ($acesso) {
         # Limita o tamanho da tela
         $grid = new Grid();
         $grid->abreColuna(12);
-
-        # botão de voltar da lista
-        if (vazio($origem)) {
-            $voltar = 'servidorMenu.php';
-        } else {
-            $voltar = $origem;
-        }
 
         # Cria um menu
         $menu = new MenuBar();

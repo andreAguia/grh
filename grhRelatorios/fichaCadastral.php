@@ -1054,6 +1054,7 @@ if ($acesso) {
     if ($postLicenca) {
         tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
+        // Retira as licenças 23, 34 e 29 da ficha a pedido de Rose
         $select = 'SELECT tbtipolicenca.nome,
                         CASE alta
                            WHEN 1 THEN "Sim"
@@ -1067,6 +1068,7 @@ if ($acesso) {
                         idLicenca
                    FROM tblicenca LEFT JOIN tbtipolicenca USING (idTpLicenca)
                   WHERE idServidor=' . $idServidorPesquisado . '
+                    AND (idTpLicenca <> 23 AND idTpLicenca <> 34 AND idTpLicenca <> 29)
                   ORDER BY 3 desc';
 
         $result = $pessoal->select($select);

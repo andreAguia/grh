@@ -568,7 +568,7 @@ class ListaAfastamentos {
                           tbtrabalhotre.dias,
                           ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
                           "Trabalhando no TRE",
-                          "---",
+                          "",
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)

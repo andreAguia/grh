@@ -99,7 +99,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Descrição", "Data", "Pag", "Ver", "Upload"]);
-    $objeto->set_width([40, 15, 15, 10, 10]);
+    $objeto->set_width([50, 10, 10, 10, 10]);
     $objeto->set_align(["left"]);
     $objeto->set_funcao([null, "date_to_php"]);
 

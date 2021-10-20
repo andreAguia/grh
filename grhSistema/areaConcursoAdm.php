@@ -21,7 +21,7 @@ $idConcurso = get('idConcurso');
 if ($fase <> "aguardaPlanilha" AND $fase <> "planilha" AND $fase <> "editar") {
     set_session('idConcurso');
     set_session('parametroCargo');
-    set_session('origem', basename(__FILE__));
+    #set_session('origem', basename(__FILE__));
     set_session('parametroLotacao');
     set_session('parametroPerfil');
     set_session('parametroSituacao');
@@ -49,6 +49,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $concurso = new Concurso();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -68,12 +69,14 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorioInativos" AND $fase <> "relatorioAtivos" AND $fase <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     $grid = new Grid();
     $grid->abreColuna(12);
 
-################################################################
+    ################################################################
 
     switch ($fase) {
         case "listar" :
@@ -122,6 +125,7 @@ if ($acesso) {
                       idConcurso,
                       idConcurso,
                       idConcurso,
+                      idConcurso,
                       idConcurso
                  FROM tbconcurso LEFT JOIN tbplano USING (idPlano)
                 WHERE true
@@ -134,29 +138,46 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_titulo("Concursos para Servidores Administrativos & Técnicos");
-            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Ativos", "Inativos", "Total", "Acessar"]);
+            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Total", "Acessar"]);
+            $tabela->set_colspanLabel([null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);
             $tabela->set_width([5, 8, 10, 10, 10, 10, 17, 5, 5, 5, 5, 5]);
             $tabela->set_funcao([null, null, 'date_to_php']);
-            $tabela->set_classe([null, null, null, null, null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null, null, null, null, null, null, "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
-            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 9, "==");
+            $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", null, "Concurso", null, "Concurso"]);
+            $tabela->set_metodo([null, null, null, null, null, null, null, "get_numServidoresAtivosConcurso", null, "get_numServidoresInativosConcurso", null, "get_numServidoresConcurso"]);
+            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 11, "==");
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 
+             # Ver servidores ativos
+            $servAtivos = new Link(null, "?fase=aguardeAtivos&id=");
+            $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+            $servAtivos->set_title("Exibe os servidores ativos");
+
+            # Ver servidores inativos
+            $servInativos = new Link(null, '?fase=aguardeInativos&id=');
+            $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+            $servInativos->set_title("Exibe os servidores inativos");
+
+            # Botão Editar
             $botao = new Link(null, '?fase=acessaConcurso&idConcurso=', 'Acessa a página do concurso');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, null, $servAtivos, null, $servInativos, null, $botao]);
+
             $tabela->show();
             break;
 
-################################################################
+        ################################################################
         # Chama o menu do Servidor que se quer editar
         case "acessaConcurso" :
             set_session('idConcurso', $idConcurso);
             loadPage('cadastroConcursoAdm.php');
             break;
-################################################################
+
+        ################################################################
+
         case "aguardaPlanilha" :
 
             br(8);
@@ -206,7 +227,7 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(4);
-            $form->add_item($controle);            
+            $form->add_item($controle);
 
             # Perfil
             $result = $pessoal->select('SELECT idperfil, nome
@@ -355,12 +376,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_titulo("Relação Geral de Concursados Administrativos e Técnicos");
-            $tabela->set_label(["id / Matrícula", "Servidor", "Perfil", "Admissão", "Saída", "Situação", "Concurso", "Vaga Anteriormente Ocupada por:", "Ato de Investidura", "Termo de Posse","Acessar"]);
+            $tabela->set_label(["id / Matrícula", "Servidor", "Perfil", "Admissão", "Saída", "Situação", "Concurso", "Vaga Anteriormente Ocupada por:", "Ato de Investidura", "Termo de Posse", "Acessar"]);
             $tabela->set_align(["center", "left"]);
             $tabela->set_funcao([null, null, null, 'date_to_php', 'date_to_php', null, null, null, 'date_to_php', 'date_to_php']);
             $tabela->set_classe(["Pessoal", "Pessoal", "Pessoal", null, null, "Pessoal", "Concurso", "Concurso"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", "get_perfil", null, null, "get_situacao", "get_nomeConcurso", "exibeOcupanteAnterior"]);
-            
+
             $botao = new Link(null, '?fase=editar&idServidor=', 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
             $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
@@ -382,8 +403,130 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorConcurso.php');
             break;
+
+        ################################################################
+
+        case "aguardeAtivos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresAtivos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "exibeServidoresAtivos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'areaConcursoAdm.php?fase=exibeServidoresAtivos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivos&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_concurso($id);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "exibeServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'areaConcursoAdm.php?fase=exibeServidoresInativos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioInativos&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($id);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "relatorioAtivos" :
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_concurso($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
+
+        case "relatorioInativos" :
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($id);
+            $lista->showRelatorio();
+            break;
+
         ################################################################
     }
+
     $grid->fechaColuna();
     $grid->fechaGrid();
 

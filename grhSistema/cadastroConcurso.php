@@ -116,8 +116,8 @@ if ($acesso) {
 
     $objeto->set_funcao(array(null, null, 'date_to_php'));
 
-    $objeto->set_classe(array(null, null, null, null, null, null, "Pessoal", "Pessoal", "Pessoal"));
-    $objeto->set_metodo(array(null, null, null, null, null, null, "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"));
+    $objeto->set_classe(array(null, null, null, null, null, null, "Concurso", "Concurso", "Concurso"));
+    $objeto->set_metodo(array(null, null, null, null, null, null, "get_numServidoresAtivosConcurso", "get_numServidoresInativosConcurso", "get_numServidoresConcurso"));
 
     $objeto->set_excluirCondicional('?fase=excluir', 0, 8, "==");
 

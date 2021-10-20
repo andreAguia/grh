@@ -126,8 +126,7 @@ class ListaServidores {
      *
      */
     private function prepara() {
-        # Pega o time inicial
-        #$this->time_start = microtime(true);
+        
         # Inicia variáveis
         $tipo = null;
 
@@ -167,7 +166,7 @@ class ListaServidores {
             $select .= ' LEFT JOIN tbarea ON (tbcargo.idArea = tbarea.idArea)';
         }
 
-        # CArgo em comissão
+        # Cargo em comissão
         if (!is_null($this->cargoComissao)) {
             $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                          LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';

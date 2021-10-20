@@ -47,7 +47,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorioInativos" AND $fase <> "relatorioAtivos") {
         AreaServidor::cabecalho();
     }
 

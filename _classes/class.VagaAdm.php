@@ -127,7 +127,7 @@ class VagaAdm {
     ###########################################################
 
     /**
-     * Método get_servidoresConcurso
+     * Método get_numServidoresConcurso
      * 
      * Exibe o número de servidores ativos e Inativos em um determinado concurso
      */
@@ -167,7 +167,7 @@ class VagaAdm {
     ###########################################################
 
     /**
-     * Método get_servidoresConcurso
+     * Método get_numServidoresAtivosConcurso
      * 
      * Exibe o número de servidores ativos e Inativos em um determinado concurso
      */

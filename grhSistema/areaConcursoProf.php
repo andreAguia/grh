@@ -14,7 +14,7 @@ include ("_config.php");
 # Limpa as sessões
 set_session('idConcurso');
 set_session('parametroCargo');
-set_session('origem', basename(__FILE__));
+#set_session('origem', basename(__FILE__));
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -23,6 +23,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $concurso = new Concurso();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -53,7 +54,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorioInativos" AND $fase <> "relatorioAtivos" AND $fase <> "relatorio") {
         AreaServidor::cabecalho();
     }
 
@@ -155,6 +156,8 @@ if ($acesso) {
                       idConcurso,
                       idConcurso,
                       idConcurso,
+                      idConcurso,
+                      idConcurso,
                       idConcurso
                  FROM tbconcurso as TT LEFT JOIN tbplano USING (idPlano)
                 WHERE tipo = 2 ";
@@ -177,19 +180,34 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
             $tabela->set_titulo("Concursos para Servidores Professores");
-            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Ativos", "Inativos", "Total", "Acessar"]);
+            $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Total", "Acessar"]);
+            $tabela->set_colspanLabel([null, null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);
             $tabela->set_width([5, 6, 10, 10, 7, 7, 15, 10, 5, 5, 5, 5, 5]);
             $tabela->set_funcao([null, null, 'date_to_php']);
-            $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", "Pessoal", "Pessoal", "Pessoal"]);
-            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 10, "==");
-            $tabela->set_metodo([null, null, null, null, null, null, null, "get_centroVagas", "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
+            $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", "Concurso", null, "Concurso", null, "Concurso"]);
+            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 12, "==");
+            $tabela->set_metodo([null, null, null, null, null, null, null, "get_centroVagas", "get_numServidoresAtivosConcurso", null, "get_numServidoresInativosConcurso", null, "get_numServidoresConcurso"]);
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 
+            # Ver servidores ativos
+            $servAtivos = new Link(null, "?fase=aguardeAtivos&id=");
+            $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+            $servAtivos->set_title("Exibe os servidores ativos");
+
+            # Ver servidores inativos
+            $servInativos = new Link(null, '?fase=aguardeInativos&id=');
+            $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+            $servInativos->set_title("Exibe os servidores inativos");
+
+            # Botão Editar
             $botao = new Link(null, '?fase=acessaConcurso&idConcurso=', 'Acessa a página do concurso');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, null, $botao]);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, $servAtivos, null, $servInativos, null, $botao]);
+
             $tabela->show();
             break;
 
@@ -250,11 +268,133 @@ if ($acesso) {
             $relatorio->set_align(["center"]);
             $relatorio->set_width([10, 10, 10, 10, 10, 20, 10, 5, 5, 5]);
             $relatorio->set_funcao([null, 'date_to_php']);
-            $relatorio->set_classe([null, null, null, null, null, null, "Concurso", "Pessoal", "Pessoal", "Pessoal"]);
-            $relatorio->set_metodo([null, null, null, null, null, null, "get_centroVagas", "get_servidoresAtivosConcurso", "get_servidoresInativosConcurso", "get_servidoresConcurso"]);
+            $relatorio->set_classe([null, null, null, null, null, null, "Concurso", "Concurso", "Concurso", "Concurso"]);
+            $relatorio->set_metodo([null, null, null, null, null, null, "get_centroVagas", "get_numServidoresAtivosConcurso", "get_numServidoresInativosConcurso", "get_numServidoresConcurso"]);
             $relatorio->set_bordaInterna(true);
             $relatorio->show();
             break;
+            
+        ################################################################
+
+        case "aguardeAtivos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresAtivos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "exibeServidoresAtivos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'areaConcursoProf.php?fase=exibeServidoresAtivos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivos&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_concurso($id);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "exibeServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'areaConcursoProf.php?fase=exibeServidoresInativos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioInativos&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($id);
+            $lista->showTabela();
+            
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "relatorioAtivos" :
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_concurso($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
+
+        case "relatorioInativos" :
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos - Concurso: ' . $concurso->get_nomeConcurso($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
     }
 
     $grid->fechaColuna();

@@ -593,8 +593,8 @@ class Concurso {
         $pessoal = new Pessoal();
 
         # Variáveis
-        $ativos = $pessoal->get_servidoresAtivosConcurso($idConcurso);
-        $inativos = $pessoal->get_servidoresInativosConcurso($idConcurso);
+        $ativos = $this->get_numServidoresAtivosConcurso($idConcurso);
+        $inativos = $this->get_numServidoresInativosConcurso($idConcurso);
         $vagas = $concurso->get_numVagasConcurso($idConcurso);
         $publicacao = $concurso->get_numPublicacaoConcurso($idConcurso);
         $tipo = $concurso->get_tipo($idConcurso);
@@ -701,14 +701,136 @@ class Concurso {
             # Pega os dados
             $pessoal = new Pessoal();
             $row = $pessoal->select($select);
-            
-            foreach($row as $item){
+
+            foreach ($row as $item) {
                 #p($item["centro"],"pconcursadoNaoAtivo");
-                echo $item["centro"]," ";
-                
+                echo $item["centro"], " ";
             }
         }
     }
 
-    #####################################################################################
+    ###########################################################
+
+    /**
+     * Método get_numServidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado concurso
+     */
+    public function get_numServidoresAtivosConcurso($idConcurso) {
+
+        # Verifica se foi informado o id
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $dados = $this->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor';
+
+        # Se for concurso de professor
+        if ($tipo == 2) {
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+
+        $select .= ' WHERE situacao = 1';
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
+        }
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numServidoresInativosConcurso
+     * 
+     * Exibe o número de servidores inativos em um determinado concurso
+     */
+    public function get_numServidoresInativosConcurso($idConcurso) {
+
+        # Verifica se foi informado o id
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $dados = $this->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor';
+
+        # Se for concurso de professor
+        if ($tipo == 2) {
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+
+        $select .= ' WHERE situacao <> 1';
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
+        }
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numServidoresConcurso
+     * 
+     * Exibe o número de servidores ativos e Inativos em um determinado concurso
+     */
+    public function get_numServidoresConcurso($idConcurso) {
+
+        # Verifica se foi informado o id
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $dados = $this->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        $select = 'SELECT tbservidor.idServidor                             
+                     FROM tbservidor';
+
+        # Se for concurso de professor
+        if ($tipo == 2) {
+            $select .= ' JOIN tbvagahistorico ON (tbvagahistorico.idServidor = tbservidor.idServidor)';
+        }
+
+        $select .= ' WHERE true';
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
+         }
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+
+        return $numero;
+    }
+
+    ###########################################################
 }

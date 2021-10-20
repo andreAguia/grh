@@ -935,51 +935,7 @@ class Grh {
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
-
-    ###########################################################
-
-    /**
-     * Método exibe get_numServidoresAtivosConcurso
-     * 
-     * Exibe o número de servidores ativos por concurso e o link para exibí-los
-     * Usado na tabela da rotina de cadastro de concurso
-     */
-    public function get_numServidoresAtivosConcurso($idConcurso) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresAtivosConcurso($idConcurso);
-
-        # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresAtivos&id=' . $idConcurso);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
-        $botao->show();
-    }
-
-    ###########################################################
-
-    /**
-     * Método exibe get_numServidoresInativosConcurso
-     * 
-     * Exibe o número de servidores inativos por concurso e o link para exibí-los
-     * Usado na tabela da rotina de cadastro de concurso
-     */
-    public function get_numServidoresInativosConcurso($idConcurso) {
-
-        # Conecta com o banco de dados
-        $pessoal = new Pessoal();
-
-        echo $pessoal->get_servidoresInativosConcurso($idConcurso);
-
-        # Botão de exibição dos servidores
-        $botao = new Link('', '?fase=listaServidoresInativos&id=' . $idConcurso);
-        $botao->set_id('aServidorTipoCargo');
-        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
-        $botao->show();
-    }
-
+    
     ###########################################################
 
     /**

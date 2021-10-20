@@ -44,6 +44,11 @@ if ($acesso) {
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', 128));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
 
+    # Filtra caso o parametro venha com valor *
+    if($parametroCentro == "*"){
+        $parametroCentro = "CCT";
+    }
+    
     # Joga os parâmetros par as sessions
     set_session('parametroCentro', $parametroCentro);
     set_session('parametroLab', $parametroLab);

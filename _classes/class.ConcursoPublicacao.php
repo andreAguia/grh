@@ -119,8 +119,9 @@ class ConcursoPublicacao {
 
         # Verifica se tem observação, se tiver exibe uma figura com mouseover
         if (!empty($dados["obs"])) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-            toolTip("(Obs)", $dados["obs"]);
+            p($dados["obs"],"pObservacaoConcurso");
+//            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+//            toolTip("(Obs)", $dados["obs"]);
         }
     }
 

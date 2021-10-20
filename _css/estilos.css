@@ -207,6 +207,13 @@ p#pconcursadoNaoAtivo{
     font-size: 12px;
 }
 
+p#pObservacaoConcurso{
+    padding: 0px;
+    margin: 0px;
+    font-size: 11px;
+    color: green;
+}
+
 /*******************************************
  * Cadastro de Progressão e Enquadramento de Servidor
  *******************************************/

@@ -73,8 +73,8 @@ class ListaServidores {
         $this->ordenacaoCombo = array(
             array("1 asc", "por Id Funcional asc"),
             array("1 desc", "por Id Funcional desc"),
-            array("2 asc", "por Nome asc"),
-            array("2 desc", "por Nome desc"),
+            array("2 asc, 6 asc", "por Nome asc"),
+            array("2 desc, 6 asc", "por Nome desc"),
             array("tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"),
             array("tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"),
             array("UADM asc, DIR asc, GER asc", "por Lotação asc"),

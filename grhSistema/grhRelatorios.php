@@ -438,6 +438,8 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório por Período de Servidores Demitidos e Exonerados', '../grhRelatorios/movimentacao.periodo.geral.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.exonerados.php');
+            
+            $menu->add_item('titulo1', 'Todos os Servidores');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.ativos.admitidos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.geral.admitidos.php');
 

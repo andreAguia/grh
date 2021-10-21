@@ -617,6 +617,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Parentes');
             $menu->add_item('linkWindow', 'Relatório de Parentes de Servidores ', '../grhRelatorios/parentes.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Parentes de Servidores Com até 24 Anos', '../grhRelatorios/parentes.ate24.php');
+            $menu->add_item('linkWindow', 'Relatório de Parentes de Servidores Com até 7 Anos', '../grhRelatorios/parentes.ate7.php');
             $menu->show();
             break;
 

@@ -438,12 +438,15 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório por Período de Servidores Demitidos e Exonerados', '../grhRelatorios/movimentacao.periodo.geral.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.exonerados.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.ativos.admitidos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.geral.admitidos.php');
 
             $menu->add_item('titulo1', 'Somente os Docentes');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/movimentacao.anual.docentes.admitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.exonerados.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Docentes Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.docentes.demitidos.php');
 
             $menu->add_item('titulo1', 'Somente os Técnicos & Administrativos');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Admitidos', '../grhRelatorios/movimentacao.anual.administrativos.admitidos.php');
@@ -451,7 +454,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.exonerados.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.administrativos.demitidos.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Docentes Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.docentes.demitidos.php');
+            
             $menu->show();
             break;
 

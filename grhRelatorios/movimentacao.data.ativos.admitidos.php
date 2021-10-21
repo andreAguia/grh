@@ -43,7 +43,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Admitidos a Partir ' . date_to_php($relatorioData));
+    $relatorio->set_titulo('Relatório de Servidores Ativos Admitidos a Partir ' . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão'));

@@ -851,5 +851,26 @@ class Sispatri {
         $pessoal->gravar(['textoCi'], [$textoCi], 1);
     }
 
+     ###########################################################
+
+    /**
+     * Método exibeDataUltimaImportacao
+     * 
+     * Método exibe a data da última importação
+     */
+    
+    public function exibeDataUltimaImportacao() {
+        
+        # Começa o painel
+        $painel = new Callout("warning");
+        $painel->abre();
+        
+        $intra = new Intra();        
+        p("Última Importação:", "pdataImportacaoSispatriTexto");
+        p(trataNulo($intra->get_variavel('dataUltimaImportacao')), "pdataImportacaoSispatriValor");
+        
+        $painel->fecha();
+    }
+
     ###########################################################
 }

@@ -30,7 +30,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-
+    
     # Começa uma nova página
     $page = new Page();
     if ($fase == "uploadPublicacao") {

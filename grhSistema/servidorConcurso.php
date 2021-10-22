@@ -363,8 +363,11 @@ if ($acesso) {
     if (!empty($idConcursoServidor)) {
 
         $menu = new Menu("menuVertical");
-        $menu->add_item('titulo', 'Publicações Gerais');
-
+        $menu->add_item('titulo', 'Menu');
+        $menu->add_item('titulo1', 'Cadastro de Concurso');
+        $menu->add_item('link', "Acessa o Cadastro do Concurso", "?fase=acessaConcurso", "Acessar o cadstro do concurso ");
+        
+        $menu->add_item('titulo1','Publicações Gerais');
         $select = "SELECT descricao,
                       data,
                       pag,
@@ -379,6 +382,7 @@ if ($acesso) {
         # Preenche com os cargos
         foreach ($conteudo as $item) {
             $menu->add_item('linkWindow', date_to_php($item[1]) . ' - ' . $item[0], PASTA_CONCURSO . $item[3] . ".pdf", $item[4]);
+            #$menu->add_item('linkWindow', plista(date_to_php($item[1]) . ' - ' . $item[0],$item[4]), PASTA_CONCURSO . $item[3] . ".pdf", $item[4]);
         }
         $objeto->set_menuLateralEditar($menu);
     }
@@ -397,6 +401,16 @@ if ($acesso) {
                 $objeto->$fase($idServidorPesquisado);
             }
             break;
+
+        ################################################################
+        # Chama o menu do Servidor que se quer editar
+        case "acessaConcurso" :
+            set_session('idConcurso', $idConcursoServidor);
+            set_session('origem', "servidorConcurso.php");
+            loadPage('cadastroConcursoPublicacao.php');
+            break;
+
+        ################################################################
     }
 
     $page->terminaPagina();

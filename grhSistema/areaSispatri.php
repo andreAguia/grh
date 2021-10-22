@@ -141,12 +141,15 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12, 3);
 
+            # Exibe a data da Última importação
+            $sispatri->exibeDataUltimaImportacao();
+
             # Resumo
             $sispatri->exibeResumo();
 
             if ($parametroSituacao == "Entregaram") {
                 $sispatri->exibeResumoPorCargoEntregaram();
-            }else{
+            } else {
                 $sispatri->exibeResumoPorCargoNaoEntregaram();
             }
 
@@ -474,7 +477,6 @@ if ($acesso) {
             loadPage("?fase=importar4");
             break;
 
-
         case "importar4" :
             # Define o arquivo a ser importado
             $arquivo = "../_temp/sispatri.csv";
@@ -573,6 +575,9 @@ if ($acesso) {
                     $pessoal->gravar($campos, $valor, $tt[0], "tbsispatri", "idSispatri");
                 }
             }
+
+            # Atualiza nas variaveis de sistema a data da importação
+            $intra->set_variavel('dataUltimaImportacao', date("d/m/Y H:i:s"));
 
             if ($problema > 0) {
                 alert("A importação foi concluída com {$problema} problema(s)");

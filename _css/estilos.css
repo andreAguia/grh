@@ -613,6 +613,25 @@ tr#cessaoTerminada{
 }
 
 /*******************************************
+ * sispatri
+ *******************************************/
+
+p#pdataImportacaoSispatriTexto {
+    font-size: 11px;
+    margin: 0;
+    padding: 0px;
+    text-align: center;
+}
+
+p#pdataImportacaoSispatriValor {
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+
+/*******************************************
  * Frequencia do servidor
  *******************************************/
 tr#frequencia{

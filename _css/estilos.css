@@ -854,19 +854,29 @@ pre, code{
     overflow: auto;
 }
 
-p#patualizacaoR{
+p#patualizacao{
     padding: 0px;
     margin: 0px;
-    font-size: 14px;
-    text-align: right;
-}
-
-p#patualizacaoL{
-    padding: 0px;
-    margin: 0px;
-    font-size: 14px;
+    margin-top: 13px;
+    font-size: 13px;
     text-align: left;
 }
+
+p#patualizacaoTexto{
+    padding: 0px;
+    margin: 0px;
+    margin-left: 30px;
+    font-size: 13px;
+    text-align: left;
+}
+
+hr#hratualizacao{
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: -12px;
+    border: 1px solid #000;
+}
+
 
 /*******************************************
  * Classe Licença

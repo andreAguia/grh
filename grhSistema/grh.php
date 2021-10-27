@@ -427,8 +427,6 @@ if ($acesso) {
 
             # Título
             titulo("Detalhes das Atualizações");
-            #p("Detalhes das Atualizações","center","f16");
-            br();
 
             # Limita ainda mais a tela para o painel
             $grid = new Grid("center");
@@ -439,22 +437,13 @@ if ($acesso) {
 
             # Percorre os dados
             foreach ($atualizacoes as $valor) {
-                $painel = new Callout();
-                $painel->abre();
-
-                $grid2 = new Grid("center");
-                $grid2->abreColuna(6);                
-                p("Versão: " . $valor[0], "patualizacaoL");
-                $grid2->fechaColuna();
-                $grid2->abreColuna(6);
-                p(date_to_php($valor[1]), "patualizacaoR");
-                $grid2->fechaColuna();
-                $grid2->fechaGrid();
-                hr("rpa");
-
-                p(str_replace('-', '<br/>-', $valor[2]), "f14");
-                $painel->fecha();
+                
+                p("Versão: " . $valor[0]." - ".date_to_php($valor[1]), "patualizacao");                
+                hr("hratualizacao");
+                p(str_replace('-', '<br/>-', $valor[2]), "patualizacaoTexto");
             }
+            
+            br(2);
 
             $grid->fechaColuna();
             $grid->fechaGrid();

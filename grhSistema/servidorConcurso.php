@@ -360,13 +360,17 @@ if ($acesso) {
 
     ###############################################################
     # Inicia o Menu de Cargos
-    if (!empty($idConcursoServidor)) {
-
-        $menu = new Menu("menuVertical");
-        $menu->add_item('titulo', 'Menu');
-        $menu->add_item('titulo1', 'Cadastro de Concurso');
-        $menu->add_item('link', "Acessa o Cadastro do Concurso", "?fase=acessaConcurso", "Acessar o cadstro do concurso ");
+    if (!empty($idConcursoServidor)) {        
         
+        # Cadastro de concurso    
+        if($origem <> "cadastroConcursoAdm.php"){
+            $botao = new Button("Cadastro de Concurso","?fase=acessaConcurso");
+            $botao->set_title("Acessa o cadastro do concurso");
+            $objeto->set_botaoEditarExtra(array($botao));
+        }
+        
+        $menu = new Menu("menuVertical");
+        $menu->add_item('titulo', 'Menu');        
         $menu->add_item('titulo1','Publicações Gerais');
         $select = "SELECT descricao,
                       data,

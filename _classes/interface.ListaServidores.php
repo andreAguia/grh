@@ -25,6 +25,7 @@ class ListaServidores {
     private $situacao = null;
     private $situacaoSinal = "=";
     private $lotacao = null;
+    private $cpf = null;
 
     /*
      * da listagem
@@ -159,6 +160,7 @@ class ListaServidores {
                                      LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
                                      LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                     LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)';
         # Área
@@ -179,7 +181,7 @@ class ListaServidores {
 
         $select .= ' WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
-        # Matrícula, nome ou id
+        # Matrícula, nome ou id ou cpf
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
@@ -194,6 +196,11 @@ class ListaServidores {
 		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%"))';
             }
             $this->subTitulo .= "pesquisa: " . $this->matNomeId . "<br/>";
+        }
+        
+        # cpf
+        if (!is_null($this->cpf)) {
+            $select .= ' AND (tbdocumentacao.CPF LIKE "%' . $this->cpf . '%")';
         }
 
         # situação

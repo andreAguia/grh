@@ -54,6 +54,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
+    $parametroCpf = retiraAspas(post('parametroCpf', get_session('parametroCpf')));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
     $parametroCargoComissao = post('parametroCargoComissao', get_session('parametroCargoComissao', '*'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
@@ -71,6 +72,7 @@ if ($acesso) {
 
     # Joga os parâmetros par as sessions
     set_session('parametroNomeMat', $parametroNomeMat);
+    set_session('parametroCpf', $parametroCpf);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroCargoComissao', $parametroCargoComissao);
     set_session('parametroLotacao', $parametroLotacao);
@@ -145,11 +147,21 @@ if ($acesso) {
             $form = new Form('?');
 
             # Nome ou Matrícula
-            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Mat. ou Id:', 1);
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Mat ou Id:', 1);
             $controle->set_size(55);
             $controle->set_title('Nome, matrícula ou ID:');
             $controle->set_valor($parametroNomeMat);
             $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+             # CPF
+            $controle = new Input('parametroCpf', 'cpf', 'Cpf:', 1);
+            $controle->set_size(55);
+            $controle->set_title("CPF do servidor:");
+            $controle->set_valor($parametroCpf);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
@@ -197,7 +209,7 @@ if ($acesso) {
             $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(7);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             # Cargos em Comissão
@@ -283,6 +295,11 @@ if ($acesso) {
 
             if (!vazio($parametroNomeMat)) {
                 $lista->set_matNomeId($parametroNomeMat);
+                $lista->set_paginacao(false);
+            }
+            
+            if (!vazio($parametroCpf)) {
+                $lista->set_cpf($parametroCpf);
                 $lista->set_paginacao(false);
             }
 

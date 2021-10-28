@@ -898,7 +898,7 @@ class MenuPrincipal {
 
         $tamanhoImage = 60;
         $menu = new MenuGrafico(2);
-        $menu->set_espacoEntreLink(true);
+        #$menu->set_espacoEntreLink(true);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Admin & Técnicos');
@@ -935,7 +935,7 @@ class MenuPrincipal {
 
         $tamanhoImage = 60;
         $menu = new MenuGrafico(2);
-        $menu->set_espacoEntreLink(true);
+        #$menu->set_espacoEntreLink(true);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Vacina');

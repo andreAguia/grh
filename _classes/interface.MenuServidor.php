@@ -71,19 +71,23 @@ class MenuServidor {
         $this->moduloPessoais();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(5, 3, 2);
+        $grid->abreColuna(5, 4, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(5, 3, 2);
+        $grid->abreColuna(6, 4, 2);
         $this->moduloBeneficios();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(7, 6, 5);
+        $grid->abreColuna(6, 4, 2);
+        $this->moduloPandemia();
+        $grid->fechaColuna();
+        # --
+        $grid->abreColuna(12, 6, 4);
         $this->moduloFinanceiro();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(12, 6, 5);
+        $grid->abreColuna(12, 6, 4);
         $this->moduloAfastamentos();
         $grid->fechaColuna();
         # --
@@ -554,13 +558,6 @@ class MenuServidor {
         $botao->set_title('Cadastro dos Parentes do Servidor');
         $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vacinas');
-        $botao->set_url('servidorVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle de vacinação de servidores');
-        $menu->add_item($botao);
-
         $menu->show();
         br();
     }
@@ -823,5 +820,36 @@ class MenuServidor {
         $painel->fecha();
     }
 
-######################################################################################################################
+    ######################################################################################################################
+
+    /**
+     * Método moduloPandemia
+     *  
+     * Exibe os dados de benefícios desse servidor
+     */
+    private function moduloPandemia() {
+        titulo('Pandemia');
+        br();
+
+        $menu = new MenuGrafico(1);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacinas');
+        $botao->set_url('servidorVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle de vacinação de servidores');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Comorbidades');
+        $botao->set_url('servidorComorbidade.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'comorbidade.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro de comorbidades dos servidores');
+        $menu->add_item($botao);
+
+        $menu->show();
+        br();
+    }
+
+    ######################################################################################################################
 }

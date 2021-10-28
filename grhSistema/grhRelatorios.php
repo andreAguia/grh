@@ -488,7 +488,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Financeiro');
             $menu->add_item('linkWindow', 'Financeiro', '../grhRelatorios/financeiro.php');
-            $menu->add_item('linkWindow', 'Servidores Adm & Tec com a Última Progressão', '../grhRelatorios/admTecProgressao.php');
+            $menu->add_item('linkWindow', 'Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.nascimento.porLotacao.php');
 
             $menu->show();
             break;

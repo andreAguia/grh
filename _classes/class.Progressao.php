@@ -85,6 +85,29 @@ class Progressao {
 
     ###########################################################
 
+    function get_FaixaAtual($idServidor = null) {
+
+        /**
+         * Fornece o Nivel/Faixa/Padrao do servidor
+         */
+        # Troca o valor informado para a variável da classe
+        if (!vazio($idServidor)) {
+            $this->idServidor = $idServidor;
+        }
+
+        $select = "SELECT tbclasse.faixa
+                     FROM tbprogressao LEFT JOIN tbclasse USING (idCLasse)
+                    WHERE idServidor = $this->idServidor
+                 ORDER BY dtInicial desc";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        return $row[0];
+    }
+
+    ###########################################################
+
     function get_dtInicialAtual($idServidor) {
 
         /**

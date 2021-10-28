@@ -27,6 +27,7 @@ class MenuPrincipal {
         # Módulos
         $this->moduloServidores();
         $this->moduloAreaConcursos();
+        $this->moduloAreaPandemia();
         $this->moduloTabelaAuxiliares();
         #$this->moduloSei();
         #$this->moduloSigrh();
@@ -560,13 +561,6 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle dos responsáveis pela prestação de contas');
         $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vacina');
-        $botao->set_url('areaVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle da vacinação de servidores');
-        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');
@@ -918,6 +912,43 @@ class MenuPrincipal {
         $botao->set_url('areaConcursoProf.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'profe.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Concursos');
+        $menu->add_item($botao);
+
+        $menu->show();
+        $painel->fecha();
+    }
+
+     ######################################################################################################################
+
+    /**
+     * Método moduloAreaEspecial
+     * 
+     * Exibe o menu de Legislação
+     */
+    private function moduloAreaPandemia() {
+
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo('Área da Pandemia');
+        br();
+
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(2);
+        $menu->set_espacoEntreLink(true);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacina');
+        $botao->set_url('areaVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle da vacinação de servidores');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Comorbidades');
+        $botao->set_url('areaComorbidade.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'comorbidade.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de comorbidades dos servidores');
         $menu->add_item($botao);
 
         $menu->show();

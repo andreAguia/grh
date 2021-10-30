@@ -27,6 +27,14 @@ if ($dtInicial <= $hoje) {
     $campoValor[5] = "solicitada";
 }
 
+# Verifica se nao e ferias antecipadas. Com o inicio anterior ao ano exercicio
+$anoInicio = year(date_to_php($dtInicial));
+
+if($anoInicio < $exercicio){
+    $erro = 1;
+    $msgErro .= "Não se pode marcar ferias de {$exercicio} começando em {$anoInicio}.";
+}
+
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
@@ -58,7 +66,7 @@ switch ($diasFerias) {
 
     case 30 :       // Já pediu o limite
         $erro = 1;
-        $msgErro .= 'O servidor não tem mais dias disponíveis para férias nesse período!\n';
+        $msgErro .= 'O servidor não tem mais dias disponíveis para férias nesse ano exercicio!\n';
         break;
 
     case 20:

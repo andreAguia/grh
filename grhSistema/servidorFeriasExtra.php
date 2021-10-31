@@ -32,7 +32,7 @@ $anoInicio = year(date_to_php($dtInicial));
 
 if($anoInicio < $exercicio){
     $erro = 1;
-    $msgErro .= "Não se pode marcar ferias de {$exercicio} começando em {$anoInicio}.";
+    $msgErro .= 'Não se pode marcar ferias de '.$exercicio.' começando em '.$anoInicio.'!\n';
 }
 
 # Verifica se a data Inicial é anterior a data de admissão

@@ -755,7 +755,8 @@ class Pessoal extends Bd {
 
             # Define o cargo
             if (($row["idTipoCargo"] == 1) OR ($row["idTipoCargo"] == 2)) {
-                p($row["nome"], "pLinha1");
+                p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+                #p($row["nome"], "pLinha1");
             } else {
                 p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
             }

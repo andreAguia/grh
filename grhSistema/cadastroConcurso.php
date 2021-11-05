@@ -40,7 +40,7 @@ if ($acesso) {
 
     # Pega o tipo do concurso
     if (empty($id)) {
-        $tipo = get('tipo');
+        $tipo = get_session('concursoTipo');
     } else {
         $concurso = new Concurso($id);
         $tipo = $concurso->get_tipo($id);
@@ -103,8 +103,16 @@ if ($acesso) {
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar($origem);
-    $objeto->set_voltarForm($origem);
+
+    if ($tipo == 1) {
+        $objeto->set_voltarForm('cadastroConcursoAdm.php');
+        $objeto->set_linkListar('cadastroConcursoAdm.php');
+        $objeto->set_linkAposGravar('cadastroConcursoAdm.php');
+    } else {
+        $objeto->set_voltarForm('cadastroConcursoProf.php');
+        $objeto->set_linkListar('cadastroConcursoProf.php');
+        $objeto->set_linkAposGravar('cadastroConcursoProf.php');
+    }
 
     # Parametros da tabela
     $objeto->set_label(array("id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Ativos", "Inativos", "Total"));
@@ -141,7 +149,7 @@ if ($acesso) {
                                       CONCAT("(",DATE_FORMAT(dtVigencia, "%d/%m/%Y"),") ",numDecreto)	
                                   FROM tbplano
                               ORDER BY numDecreto DESC');
-    
+
     array_push($result, array(null, null));
 
     # Campos para o formulario
@@ -173,6 +181,7 @@ if ($acesso) {
             'nome' => 'regime',
             'label' => 'Regime:',
             'tipo' => 'combo',
+            'padrao' => "Estatutário",
             'array' => array("CLT", "Estatutário"),
             'required' => true,
             'col' => 3,
@@ -210,10 +219,7 @@ if ($acesso) {
 
     # idUsuário para o LogLicença sem vencimentosLicença sem vencimentos
     $objeto->set_idUsuario($idUsuario);
-
-    $objeto->set_botaoVoltarLista(false);
-    $objeto->set_botaoIncluir(false);
-
+    
     ################################################################
 
     switch ($fase) {

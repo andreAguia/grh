@@ -35,12 +35,15 @@ $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
 $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
 $parametroConcurso = post('parametroConcurso', get_session('parametroConcurso', '*'));
 
-# Joga os parâmetros par as sessions
+# Joga os parâmetros para as sessions
 set_session('parametroCargo', $parametroCargo);
 set_session('parametroLotacao', $parametroLotacao);
 set_session('parametroPerfil', $parametroPerfil);
 set_session('parametroSituacao', $parametroSituacao);
 set_session('parametroConcurso', $parametroConcurso);
+
+# Coloca o tipo do concurso na session
+set_session('concursoTipo', 1);
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
@@ -104,7 +107,7 @@ if ($acesso) {
             $menu1->add_link($botaoPlanilha, "right");
 
             # Novo Concurso
-            $botaoVoltar = new Link("Novo Concurso", "cadastroConcurso.php?fase=editar&tipo=1");
+            $botaoVoltar = new Link("Novo Concurso", "cadastroConcurso.php?fase=editar");
             $botaoVoltar->set_class('button');
             $menu1->add_link($botaoVoltar, "right");
 
@@ -149,7 +152,7 @@ if ($acesso) {
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 
-             # Ver servidores ativos
+            # Ver servidores ativos
             $servAtivos = new Link(null, "?fase=aguardeAtivos&id=");
             $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
             $servAtivos->set_title("Exibe os servidores ativos");

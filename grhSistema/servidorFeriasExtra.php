@@ -30,16 +30,16 @@ if ($dtInicial <= $hoje) {
 # Verifica se nao e ferias antecipadas. Com o inicio anterior ao ano exercicio
 $anoInicio = year(date_to_php($dtInicial));
 
-if($anoInicio < $exercicio){
+if ($anoInicio < $exercicio) {
     $erro = 1;
-    $msgErro .= 'Não se pode marcar ferias de '.$exercicio.' começando em '.$anoInicio.'!\n';
+    $msgErro .= 'Não se pode marcar ferias de ' . $exercicio . ' começando em ' . $anoInicio . '!\n';
 }
 
 # Verifica se a data Inicial é anterior a data de admissão
 $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
 # Somente para quem né cedido, pois pode ter férias em seu órgão de origem
-if ($idPerfil <> 2) { 
+if ($idPerfil <> 2) {
     $dtAdmissao = date_to_bd($dtAdmissao);
     if ($dtInicial < $dtAdmissao) {
         $erro = 1;

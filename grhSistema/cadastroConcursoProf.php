@@ -32,14 +32,30 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # Pega as variáveis
+    # Pega a fase
     $fase = get('fase', 'Publicacao');
+
+    # Pega o idConcurso
     $idConcurso = get_session("idConcurso");
+
+    # Volta quando não temos o idconcurso
+    if (empty($idConcurso)) {
+        $fase = "nenhum";
+        loadPage("areaConcursoProf.php");
+    } else {
+        # Pega as variáveis
+        $idServidorPesquisado = get('idServidorPesquisado');
+        $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
+        set_session('parametroCargo', $parametroCargo);
+        $concurso = new Concurso($idConcurso);
+    }
+
+    # Pega as variáveis
     $idServidorPesquisado = get('idServidorPesquisado');
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
     set_session('parametroCargo', $parametroCargo);
     $concurso = new Concurso($idConcurso);
-    
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -80,7 +96,7 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Classificação");
+            $concurso->exibeMenu($idConcurso, "Classificação");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -136,7 +152,7 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Classificação");
+            $concurso->exibeMenu($idConcurso, "Classificação");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -247,7 +263,7 @@ if ($acesso) {
             break;
 
         ################################################################
-        
+
         case "aguardaListaServidoresAtivos" :
 
             # Cria um menu
@@ -273,8 +289,8 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Servidores Ativos");
-            
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos");
+
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
 
@@ -346,7 +362,7 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Servidores Ativos");
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -388,7 +404,7 @@ if ($acesso) {
             if ($parametroCargo <> "*") {
                 $lista = new ListaServidores("{$parametroCargo} - Servidores Ativos");
                 $lista->set_cargo($parametroCargo);
-            }else{
+            } else {
                 $lista = new ListaServidores("Servidores Ativos");
             }
 
@@ -401,7 +417,7 @@ if ($acesso) {
             break;
 
         ################################################################
-        
+
         case "aguardaListaServidoresInativos" :
 
             # Cria um menu
@@ -424,10 +440,10 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($idConcurso, true);           
+            $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Servidores Inativos");
+            $concurso->exibeMenu($idConcurso, "Servidores Inativos");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -498,10 +514,10 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($idConcurso, true);            
+            $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso,"Servidores Inativos");
+            $concurso->exibeMenu($idConcurso, "Servidores Inativos");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -538,12 +554,12 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            
+
             # Lista de Servidores
             if ($parametroCargo <> "*") {
                 $lista = new ListaServidores("{$parametroCargo} - Servidores Inativos");
                 $lista->set_cargo($parametroCargo);
-            }else{
+            } else {
                 $lista = new ListaServidores("Servidores Inativos");
             }
             $lista->set_situacao(1);

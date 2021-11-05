@@ -575,7 +575,12 @@ class Concurso {
             # Pega os dados
             $pessoal = new Pessoal();
             $row = $pessoal->select($select, false);
-            return $row[0];
+
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return $row[0];
+            }
         }
     }
 
@@ -823,7 +828,7 @@ class Concurso {
             $select .= ' AND (tbservidor.idConcurso = ' . $idConcurso . ')';
         } else {
             $select .= ' AND (tbvagahistorico.idConcurso = ' . $idConcurso . ')';
-         }
+        }
 
         # Pega os dados
         $pessoal = new Pessoal();

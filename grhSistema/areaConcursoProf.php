@@ -15,7 +15,6 @@ include ("_config.php");
 set_session('idConcurso');
 set_session('parametroCargo');
 #set_session('origem', basename(__FILE__));
-
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
 
@@ -45,9 +44,12 @@ if ($acesso) {
     $parametroAno = post('parametroAno', get_session('parametroAno', "*"));
     $parametroCentro = post('parametroCentro', get_session('parametroCentro', "*"));
 
-    # Joga os parâmetros par as sessions
+    # Joga os parâmetros para as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroCentro', $parametroCentro);
+
+    # Coloca o tipo do concurso na session
+    set_session('concursoTipo', 2);
 
     # Começa uma nova página
     $page = new Page();
@@ -92,7 +94,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "right");
 
             # Novo Concurso
-            $botaoVoltar = new Link("Novo Concurso", "cadastroConcurso.php?fase=editar&tipo=2");
+            $botaoVoltar = new Link("Novo Concurso", "cadastroConcurso.php?fase=editar");
             $botaoVoltar->set_class('button');
             $menu1->add_link($botaoVoltar, "right");
 
@@ -273,7 +275,7 @@ if ($acesso) {
             $relatorio->set_bordaInterna(true);
             $relatorio->show();
             break;
-            
+
         ################################################################
 
         case "aguardeAtivos" :
@@ -368,7 +370,7 @@ if ($acesso) {
             $lista->set_situacaoSinal("<>");
             $lista->set_concurso($id);
             $lista->showTabela();
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;

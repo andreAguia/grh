@@ -127,7 +127,7 @@ class ListaServidores {
      *
      */
     private function prepara() {
-        
+
         # Inicia variáveis
         $tipo = null;
 
@@ -138,6 +138,11 @@ class ListaServidores {
             $dados = $concurso->get_dados($this->concurso);
             $tipo = $dados['tipo'];
         }
+
+//        # Retira o dígito verificador do campo $matNomeId
+//        if (str_contains($this->matNomeId, '-')) {
+//            $this->matNomeId = 
+//        }
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();
@@ -197,7 +202,7 @@ class ListaServidores {
             }
             $this->subTitulo .= "pesquisa: " . $this->matNomeId . "<br/>";
         }
-        
+
         # cpf
         if (!is_null($this->cpf)) {
             $select .= ' AND (tbdocumentacao.CPF LIKE "%' . $this->cpf . '%")';
@@ -425,7 +430,7 @@ class ListaServidores {
 
         # Pega o time inicial
         $time_start = microtime(true);
-        
+
         # Executa rotina interna
         $this->prepara();
 

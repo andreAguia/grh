@@ -79,7 +79,7 @@ if ($acesso) {
         array('linha' => 1,
             'nome' => 'processoAvaliacaoSei',
             'label' => 'Processo Sei:',
-            'tipo' => 'sei',
+            'tipo' => 'texto',
             'autofocus' => true,
             'size' => 30,
             'col' => 5,

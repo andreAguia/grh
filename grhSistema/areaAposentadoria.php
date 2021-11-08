@@ -994,7 +994,7 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)","Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left', 'center']);
             #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);
             $tabela->set_titulo($titulo);
@@ -1125,7 +1125,7 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)","Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left', 'center']);
             #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);
             $tabela->set_titulo($titulo);
@@ -1168,7 +1168,6 @@ if ($acesso) {
             break;
 
         ################################################################
-
     }
     $page->terminaPagina();
 } else {

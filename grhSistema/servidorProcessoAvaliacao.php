@@ -98,7 +98,7 @@ if ($acesso) {
 
     # Log
     $objeto->set_idUsuario($idUsuario);
-    $objeto->set_idServidorPesquisado($idServidorPesquisado);
+    $objeto->set_idServidorPesquisahttps://sgrh.uenf.br/areaServidor/_img/historico.pngdo($iJoaodServidorPesquisado);
 
     ################################################################
 
@@ -108,7 +108,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado);
+            $objeto->gravar($idServidorPesquisado,"servidorProcessoAvaliacaoExtra.php");
             break;
     }
     $page->terminaPagina();

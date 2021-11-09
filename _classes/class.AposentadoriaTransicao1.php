@@ -7,7 +7,6 @@ class AposentadoriaTransicao1 {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-
     # Regras
     private $dtIngresso = "30/12/2003";
     private $contribuicaoHomem = 35;
@@ -73,7 +72,7 @@ class AposentadoriaTransicao1 {
         # Data de Ingresso
         if (strtotime(date_to_bd($dtIngressoServidor)) < strtotime(date_to_bd($this->dtIngresso))) {
             $analiseIngresso = "OK";
-            
+
             # Tempo de Contribuição
             if ($tempoTotal >= ($contribuicaoRegra * 365)) {
                 $analiseContribuicao = "OK";
@@ -210,9 +209,9 @@ class AposentadoriaTransicao1 {
             tituloTable("ART. 6º. DA EC Nº. 41/2003");
             callout("É concedido aos servidores que ingressaram no serviço público até 31 de dezembro de 2003.");
             br();
-            
-            p("Data de Ingresso: {$dtIngressoServidor}<br/>Não tem direito a esta modalidade de aposentadoria.","center","f14");
-            
+
+            p("Data de Ingresso: {$dtIngressoServidor}<br/>Não tem direito a esta modalidade de aposentadoria.", "center", "f14");
+
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
@@ -341,11 +340,9 @@ class AposentadoriaTransicao1 {
         # Verifica se retornou data
         if ($dtAposent == "Não pode solicitar essa opção") {
             return "---";
-        }
-
-        # Verifica se ja passou
-        if (jaPassou($dtAposent)) {
-            return 0;
+        } elseif (jaPassou($dtAposent)) {
+            # Verifica se já passou
+            return "0";
         } else {
             return dataDif(date("d/m/Y"), $dtAposent);
         }
@@ -392,4 +389,5 @@ class AposentadoriaTransicao1 {
         # Retorna o tempo total em dias
         return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
     }
+
 }

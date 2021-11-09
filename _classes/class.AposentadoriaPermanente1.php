@@ -287,7 +287,7 @@ class AposentadoriaPermanente1 {
 
         # Verifica se ja passou
         if (jaPassou($dtAposent)) {
-            return 0;
+            return "0";
         } else {
             return dataDif(date("d/m/Y"), $dtAposent);
         }

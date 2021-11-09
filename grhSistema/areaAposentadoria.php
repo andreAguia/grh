@@ -20,7 +20,7 @@ if ($acesso) {
     $pessoal = new Pessoal();
     $intra = new Intra();
     $aposentadoria = new Aposentadoria();
-    #$previsao = new PrevisaoAposentadoria();
+
     # Verifica a fase do programa
     $fase = get('fase');
 
@@ -54,6 +54,7 @@ if ($acesso) {
     $parametroTempoCargo = post('parametroTempoCargo', get_session('parametroTempoCargo', 5));
     $parametroServicoPublico = post('parametroServicoPublico', get_session('parametroServicoPublico', 10));
     $parametroCargoTipo = post('parametroCargoTipo', get_session('parametroCargoTipo', "*"));
+    $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Todos"));
 
     # Joga os parâmetros par as sessions
     set_session('parametroSexo', $parametroSexo);
@@ -64,6 +65,7 @@ if ($acesso) {
     set_session('parametroTempoCargo', $parametroTempoCargo);
     set_session('parametroServicoPublico', $parametroServicoPublico);
     set_session('parametroCargoTipo', $parametroCargoTipo);
+    set_session('parametroTipo', $parametroTipo);
 
     # Limita a página
     $grid = new Grid();
@@ -148,10 +150,31 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
+        ################################################################
+
         /*
-         *  Aposentadoria por Motivo / Tipo
+         *  Aposentados por Motivo / Tipo
          */
         case "motivo" :
+
+        case "":
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=motivo2');
+            break;
+
+        ################################################################
+
+        case "motivo2" :
 
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
@@ -200,10 +223,30 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
+        ################################################################
+
         /*
          *  Estatística
          */
         case "anoEstatistica" :
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=anoEstatistica2');
+            break;
+
+        ################################################################
+
+        case "anoEstatistica2" :
 
             $grid = new Grid();
             $grid->abreColuna(12, 3);
@@ -308,13 +351,32 @@ if ($acesso) {
 
         case "compulsoria" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=compulsoria2');
+            break;
+
+        ################################################################
+
+
+        case "compulsoria2" :
+
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(8);
+            $aposentadoria->exibeMenu(9);
 
             $compulsoria = new AposentadoriaCompulsoria();
             $compulsoria->exibeRegras();
@@ -367,7 +429,7 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['Mês', 'Servidor', 'Lotação', "Idade", "Fará {$idade}"]);
+            $tabela->set_label(['Mês', 'Servidor', 'Lotação', "Idade", "Fará / Fez {$idade}"]);
             $tabela->set_align(['center', 'left', 'center', 'center', 'center', 'left']);
             $tabela->set_titulo($titulo);
             $tabela->set_classe([null, "Pessoal", "Pessoal", null, null, "Pessoal"]);
@@ -396,10 +458,29 @@ if ($acesso) {
         ################################################################
 
         /*
-         * Compulsória por Lotação
+         * Compulsória Geral
          */
 
         case "compulsoriaGeral" :
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=compulsoriaGeral2');
+            break;
+
+        ################################################################
+
+
+        case "compulsoriaGeral2" :
 
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
@@ -407,7 +488,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(7);
+            $aposentadoria->exibeMenu(8);
 
             $compulsoria = new AposentadoriaCompulsoria();
             $compulsoria->exibeRegras();
@@ -439,7 +520,17 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -466,6 +557,20 @@ if ($acesso) {
                 }
             }
 
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) >= 75";
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) < 75";
+            }
+            
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) > 500";
+            }
 
             $select .= " ORDER BY dtNasc";
 
@@ -571,7 +676,7 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(9);
+            $aposentadoria->exibeMenu(10);
 
             $painel->fecha();
 
@@ -674,13 +779,31 @@ if ($acesso) {
 
         case "porIdadeContribuicao" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=porIdadeContribuicao2');
+            break;
+
+        ################################################################
+
+        case "porIdadeContribuicao2" :
+
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(5);
+            $aposentadoria->exibeMenu(6);
 
             $painel->fecha();
 
@@ -709,7 +832,17 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -743,11 +876,61 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
             $titulo = "Previsão de Aposentadoria por Idade e Tempo de Contribuição";
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
             $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([10, 30, 10, 10, 10, 10, 10, 5]);
@@ -794,13 +977,31 @@ if ($acesso) {
 
         case "porIdade" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=porIdade2');
+            break;
+
+        ################################################################
+
+        case "porIdade2" :
+
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(6);
+            $aposentadoria->exibeMenu(7);
 
             $painel->fecha();
 
@@ -829,7 +1030,17 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -862,11 +1073,61 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
             $titulo = "Previsão de Aposentadoria por Idade";
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
             $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([10, 40, 10, 10, 10, 10, 5]);
@@ -913,13 +1174,31 @@ if ($acesso) {
 
         case "transicao1" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=transicao12');
+            break;
+
+        ################################################################
+
+        case "transicao12" :
+
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(10);
+            $aposentadoria->exibeMenu(11);
 
             $painel->fecha();
 
@@ -948,7 +1227,17 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -986,6 +1275,51 @@ if ($acesso) {
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
 
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
             tituloTable("ART. 6º. DA EC Nº. 41/2003");
             callout("É concedido aos servidores que ingressaram no serviço público até 31 de dezembro de 2003.");
 
@@ -993,7 +1327,11 @@ if ($acesso) {
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
             $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left', 'center']);
             #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);
@@ -1044,13 +1382,31 @@ if ($acesso) {
 
         case "transicao2" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=transicao22');
+            break;
+
+        ################################################################
+
+        case "transicao22" :
+
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
             $painel = new Callout();
             $painel->abre();
 
-            $aposentadoria->exibeMenu(11);
+            $aposentadoria->exibeMenu(12);
 
             $painel->fecha();
 
@@ -1061,7 +1417,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 9);
 
             # Formulário de Pesquisa
-            $form = new Form('?fase=transicao1');
+            $form = new Form('?fase=transicao2');
 
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -1079,7 +1435,17 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -1117,6 +1483,51 @@ if ($acesso) {
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
 
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaTransicao = new AposentadoriaTransicao2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaTransicao->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
             tituloTable("ART. 3º. DA EC Nº. 47/2005");
             callout("É concedido aos servidores que ingressaram no serviço público até 16 de dezembro de 1998.");
 
@@ -1124,7 +1535,11 @@ if ($acesso) {
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
             $tabela->set_label(['IdFuncional', 'Servidor', 'Ingresso', "Idade", "Tempo de Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Carreira<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left', 'center']);
             #$tabela->set_width([10, 20, 10, 10, 10, 10, 10, 10, 10]);

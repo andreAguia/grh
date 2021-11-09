@@ -341,11 +341,10 @@ class AposentadoriaTransicao2 {
         # Verifica se retornou data
         if ($dtAposent == "Não pode solicitar essa opção") {
             return "---";
-        }
-
-        # Verifica se ja passou
-        if (jaPassou($dtAposent)) {
-            return 0;
+       return "---";
+        } elseif (jaPassou($dtAposent)) {
+            # Verifica se já passou
+            return "0";
         } else {
             return dataDif(date("d/m/Y"), $dtAposent);
         }

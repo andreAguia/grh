@@ -1164,7 +1164,7 @@ class LicencaPremio {
 
         if (is_numeric($idServidor)) {
 
-            # Pega os dias publicados
+            # Pega os dados
             $select = 'SELECT obsPremio
                          FROM tbservidor
                         WHERE idServidor = ' . $idServidor;

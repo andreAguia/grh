@@ -36,7 +36,7 @@ if ($acesso) {
 
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
-    
+
     # botão de voltar da lista
     if (empty($origem)) {
         $voltar = 'servidorMenu.php';
@@ -338,6 +338,7 @@ if ($acesso) {
                                      ADDDATE(dtInicial,numDias-1),
                                      CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
                                      dtPublicacao,
+                                     CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor=' . $idServidorPesquisado;
@@ -352,7 +353,8 @@ if ($acesso) {
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
                                        CONCAT("6&",tblicencapremio.idServidor),
-                                       tbpublicacaopremio.dtPublicacao,                                       
+                                       tbpublicacaopremio.dtPublicacao,
+                                       CONCAT("6&",tblicencapremio.idServidor),
                                        "-"
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
@@ -364,6 +366,7 @@ if ($acesso) {
                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                                        CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
                                        tblicencasemvencimentos.dtPublicacao,
+                                       CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
                                        "-"
                                   FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado . ')
@@ -404,14 +407,14 @@ if ($acesso) {
         $stringComparacao = $nome . "<br/>" . $lei;
 
         # Editar e excluir condicional
-        $objeto->set_editarCondicional('?fase=editar', '-', 8, "<>");
-        $objeto->set_excluirCondicional('?fase=excluir', '-', 8, "<>");
+        $objeto->set_editarCondicional('?fase=editar', '-', 9, "<>");
+        $objeto->set_excluirCondicional('?fase=excluir', '-', 9, "<>");
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        $objeto->set_width(array(30, 5, 5, 10, 5, 10, 15, 5));
+        $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"));
+        $objeto->set_width(array(30, 3, 3, 10, 5, 10, 15, 5, 4));
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"));
         $objeto->set_classe(array("Licenca"));
         $objeto->set_metodo(array("exibeNome"));
         $objeto->set_numeroOrdem(true);

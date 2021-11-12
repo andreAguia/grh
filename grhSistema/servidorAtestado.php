@@ -106,7 +106,7 @@ if ($acesso) {
                                      especi_medico,
                                      tipo,
                                      tbparentesco.Parentesco,
-                                     tbatestado.obs,
+                                     idAtestado,
                                      idAtestado
                                 FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -140,6 +140,9 @@ if ($acesso) {
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
     $objeto->set_align(array("center", "center", "center", "left", "center", "center", "center", "left"));
     $objeto->set_funcao(array("date_to_php", null, "date_to_php"));
+
+    $objeto->set_classe(array(null, null, null, null, null, null, null, "Atestado"));
+    $objeto->set_metodo(array(null, null, null, null, null, null, null, "exibeObs"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

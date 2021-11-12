@@ -2262,7 +2262,7 @@ class Pessoal extends Bd {
             if ($this->get_situacao($idServidor) == "Ativo") {
                 p($this->get_situacao($idServidor), "pconcursadoAtivo");
             } else {
-                p($this->get_situacao($idServidor),  "pconcursadoNaoAtivo");
+                p($this->get_situacao($idServidor), "pconcursadoNaoAtivo");
             }
         }
     }
@@ -5772,6 +5772,7 @@ class Pessoal extends Bd {
      */
     public function get_concurso($idServidor) {
 
+        # Verifica se  id foi informado
         if (empty($idServidor)) {
             return null;
         } else {
@@ -5805,4 +5806,5 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
 }

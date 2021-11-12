@@ -8,6 +8,7 @@ class Ferias {
      * @author André Águia (Alat) - alataguia@gmail.com
      */
     ###########################################################
+    
     function exibeFeriasPendentes($idServidor) {
         /**
          * Função uma string com as pendências de férias do servidor
@@ -77,5 +78,28 @@ class Ferias {
         return $retorno;
     }
 
-##########################################################
+##########################################################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = 'SELECT obs
+                     FROM tbferias
+                    WHERE idFerias = ' . $id;
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno[0])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $retorno[0]);
+        }
+    }
+
+###########################################################
 }

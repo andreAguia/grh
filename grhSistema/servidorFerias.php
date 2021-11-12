@@ -76,7 +76,7 @@ if ($acesso) {
                                      numDias,
                                      ADDDATE(dtInicial,numDias-1),
                                      idFerias,
-                                     obs,
+                                     idFerias,
                                      idFerias
                                 FROM tbferias
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -101,9 +101,9 @@ if ($acesso) {
     $objeto->set_label(array("Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', null));
-    $objeto->set_width(array(10, 10, 15, 10, 15, 10, 20));
-    $objeto->set_classe(array(null, null, null, null, null, "pessoal"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_feriasPeriodo"));
+    $objeto->set_width(array(10, 10, 15, 10, 15, 10, 10));
+    $objeto->set_classe(array(null, null, null, null, null, "pessoal", "Ferias"));
+    $objeto->set_metodo(array(null, null, null, null, null, "get_feriasPeriodo", "exibeObs"));
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);

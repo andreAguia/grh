@@ -118,8 +118,8 @@ function get_DadosFrequencia($idHistCessao) {
 
 function formataAtribuicao($texto) {
     $pulo = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    $novoTexto = $pulo."&nbsp;".str_replace(";", ";<br/>{$pulo}", $texto);
-    
+    $novoTexto = $pulo . "&nbsp;" . str_replace(";", ";<br/>{$pulo}", $texto);
+
     return $novoTexto;
 }
 
@@ -904,7 +904,6 @@ function exibeDocumentacaoLicenca($idTipoLicenca) {
 
     $row = $pessoal->select($select, false);
 
-
     p($row[2], "f22", "center");
 
     # Div onde vai exibir o procedimento
@@ -1156,6 +1155,64 @@ function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
 
     $div->fecha();
     return;
+}
+
+##########################################################
+
+function exibeObsLicenca($texto) {
+    /**
+     * Função que exibe as observações das licenças
+     * 
+     * A tabela de licença de um servidor recebe informação de várias
+     * tabelas unidas. Dessa forma foi criado uma codificação para
+     * exibir a obs da tabela específica.
+     * Essa função identifica e retorna a obs correta
+     * 
+     */
+    # Divide o texto TIPO&ID
+    $pedaco = explode("&", $texto);
+
+    # Pega os pedaços
+    $tipo = $pedaco[0];
+    $id = $pedaco[1];
+
+    # Inicia a variável de retorno
+    $processo = null;
+
+    # Execute uma rotina específica para cada tipo de licença
+    switch ($tipo) {
+
+        # Licença Prêmio
+        case 6 :
+            # Inicia a classe
+            $licenca = new LicencaPremio();
+
+            # Exibe a Obs
+            $licenca->exibeObs($id);
+            break;
+
+        # Licença Sem Vencimentos
+        case 5 :
+        case 8 :
+        case 16 :
+            # Inicia a classe
+            $licenca = new LicencaSemVencimentos();
+
+            # Exibe a Obs
+            $licenca->exibeObs($id);
+            break;
+
+        # Outras Licenças
+        default:
+
+            # Inicia a classe
+            $licenca = new Licenca();
+
+            # Exibe a Obs
+            $licenca->exibeObs($id);
+            break;
+
+    }
 }
 
 ##########################################################

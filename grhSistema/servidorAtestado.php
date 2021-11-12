@@ -138,7 +138,7 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(array("Data Inicial", "Dias", "Data Término", "Médico", "Especialidade", "Tipo", "Parentesco", "Obs"));
     #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center", "center", "center", "left", "center", "center", "center", "left"));
+    $objeto->set_align(array("center", "center", "center", "left"));
     $objeto->set_funcao(array("date_to_php", null, "date_to_php"));
 
     $objeto->set_classe(array(null, null, null, null, null, null, null, "Atestado"));

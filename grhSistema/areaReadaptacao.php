@@ -200,7 +200,10 @@ if ($acesso) {
                 $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
             }
 
-            $select .= " ORDER BY status, dtTermino, dtInicio";
+            $select .= " ORDER BY status, 
+                    CASE WHEN status = 3 THEN dtTermino END DESC,
+                    CASE WHEN status <> 3 THEN dtTermino END ASC,
+                    dtInicio";
 
             $resumo = $pessoal->select($select);
 

@@ -65,14 +65,19 @@ class Vacina {
 
         # Exibe as vacinas
         if ($num == 0) {
-            p("Não Informado","pVacinaNInformada");
-        } elseif($num == 1) {
-            p(date_to_php($row[0][0]). " - ". $row[0][1],"pVacinaUmaDose");
-        }else{
+            p("Não Informado", "pVacinaNInformada");
+        } elseif ($num == 1) {
+            if (empty($row[0][0])) {
+                p("Data não Informada - " . $row[0][1], "pVacinaUmaDose");
+            } else {
+                p(date_to_php($row[0][0]) . " - " . $row[0][1], "pVacinaUmaDose");
+            }
+            
+        } else {
             foreach ($row as $item) {
-                if (empty($item[0]) OR $item[0] == ' ') {
-                    p("Data não Informada - ". $item[1],"pVacinaUmaDose");
-                } else {                    
+                if (empty($item[0])) {
+                    p("Data não Informada - " . $item[1], "pVacinaUmaDose");
+                } else {
                     echo date_to_php($item[0]), " - ", $item[1], "<br/>";
                 }
             }

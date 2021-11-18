@@ -7,7 +7,6 @@ class AposentadoriaPermanente1 {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    
     # Regras
     private $dtIngresso = "31/12/2003";
     private $contribuicaoHomem = 35;
@@ -16,12 +15,19 @@ class AposentadoriaPermanente1 {
     private $idadeMulher = 55;
     private $servicoPublico = 10;
     private $cargoEfetivo = 5;
-    
-    # REmuneração
+
+    # Remuneração
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações de contribuição";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – LEI 6.244/2012";
     private $paridade = "SEM PARIDADE";
+
+    # Descrições
+    private $dtIngressoDescricao = "Data de entrada no serviço público sem interrupção.";
+    private $tempoContribuiçãoDescricao = "Tempo Total averbado (público e privado).";
+    private $idadeDescricao = "Idade do servidor.";
+    private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
+    private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
 
     ###########################################################
 
@@ -118,11 +124,7 @@ class AposentadoriaPermanente1 {
          * Descrição
          */
 
-        $dtIngressoDescricao = "Data de entrada no serviço público sem interrupção.";
-        $tempoContribuiçãoDescricao = "Tempo Total averbado (público e privado).";
-        $idadeDescricao = "Idade do servidor.";
-        $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
-        $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
+
 
         /*
          *  Tabela
@@ -139,10 +141,10 @@ class AposentadoriaPermanente1 {
         $grid->abreColuna(8);
 
         $array = [
-            ["Contribuição", $tempoContribuiçãoDescricao, "{$contribuicaoRegra} anos<br/>(" . ($contribuicaoRegra * 365) . " dias)", "{$tempoTotal} dias", $analiseContribuicao],
-            ["Idade", $idadeDescricao, "{$idadeRegra} anos", "{$idadeServidor} anos", $analiseIdade],
-            ["Serviço Público", $tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$tempoPublicoIninterrupto} dias", $analisePublico],
-            ["Cargo Efetivo", $tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$tempoUenf} dias", $analiseCargoEfetivo],
+            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$contribuicaoRegra} anos<br/>(" . ($contribuicaoRegra * 365) . " dias)", "{$tempoTotal} dias", $analiseContribuicao],
+            ["Idade", $this->idadeDescricao, "{$idadeRegra} anos", "{$idadeServidor} anos", $analiseIdade],
+            ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$tempoPublicoIninterrupto} dias", $analisePublico],
+            ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$tempoUenf} dias", $analiseCargoEfetivo],
         ];
 
         # Exibe a tabela
@@ -299,10 +301,10 @@ class AposentadoriaPermanente1 {
 
         # Exibe outras informações
         $array = [
-            ["Idade", $this->idadeMulher." anos", $this->idadeHomem." anos"],
-            ["Contribuição", $this->contribuicaoMulher." anos<br/>(". ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem." anos<br/>(". ($this->contribuicaoHomem * 365) . " dias)"],
-            ["Serviço Público", $this->servicoPublico." anos<br/>(". ($this->servicoPublico * 365) . " dias)", $this->servicoPublico." anos<br/>(". ($this->servicoPublico * 365) . " dias)"],
-            ["Cargo Efetivo", $this->cargoEfetivo." anos<br/>(". ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo." anos<br/>(". ($this->cargoEfetivo * 365) . " dias)"],
+            ["<span data-tooltip title='{$this->idadeDescricao}'>Idade</span>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
+            ["<span data-tooltip title='{$this->tempoContribuiçãoDescricao}'>Contribuição</span>", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
+            ["<span data-tooltip title='{$this->tempoPublicoDescicao}'>Serviço Público</span>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
+            ["<span data-tooltip title='{$this->tempoCargoDescicao}'>Cargo Efetivo</span>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"],
         ];
 
         # Exibe a tabela
@@ -315,4 +317,31 @@ class AposentadoriaPermanente1 {
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
+
+    ###########################################################
+
+    public function exibeDados($idServidor) {
+
+        # Verifica se foi informado do id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Abre as classes
+            $pessoal = new Pessoal();
+            $aposentadoria = new Aposentadoria();
+
+            # Idade
+            p("Idade: " . $pessoal->get_idade($idServidor), "pLinha1");
+
+            # Contribuição
+            p("Contribuição: " . $aposentadoria->get_tempoTotal($idServidor) . " dias", "pLinha1");
+
+            # Serviço Público
+            p("Serviço Público: " . $aposentadoria->get_tempoServicoUenf($idServidor) . " dias", "pLinha1");
+
+            # Serviço Público
+            p("Cargo Efetivo: " . $aposentadoria->get_tempoPublicoIninterrupto($idServidor) . " dias", "pLinha1");
+        }
+    }
+
 }

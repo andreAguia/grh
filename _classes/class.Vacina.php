@@ -60,14 +60,21 @@ class Vacina {
                    ORDER BY data";
 
             $row = $pessoal->select($select);
+            $num = count($row);
         }
 
         # Exibe as vacinas
-        foreach ($row as $item) {
-            if (!empty($item[0])) {
-                echo date_to_php($item[0]), " - ", $item[1], "<br/>";
-            }else{
-                echo "Data não Informada - ", $item[1], "<br/>";
+        if ($num == 0) {
+            p("Não Informado","pVacinaNInformada");
+        } elseif($num == 1) {
+            p(date_to_php($row[0][0]). " - ". $row[0][1],"pVacinaUmaDose");
+        }else{
+            foreach ($row as $item) {
+                if (!empty($item[0])) {
+                    echo date_to_php($item[0]), " - ", $item[1], "<br/>";
+                } else {
+                    echo "Data não Informada - ", $item[1], "<br/>";
+                }
             }
         }
     }
@@ -104,7 +111,7 @@ class Vacina {
         }
 
         $pessoal = new Pessoal();
-        $num = $pessoal->count($select);        
+        $num = $pessoal->count($select);
         return $num;
     }
 
@@ -121,20 +128,20 @@ class Vacina {
         $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
         $vacinados = $this->getNumServidoresVacinados($idLotacao);
-        
-        $porcentagemVacinados = number_format(($vacinados * 100)/$numServidores, 1, '.', '');
-        $porcentagemNaoVacinados = number_format(100-$porcentagemVacinados, 1, '.', '');
+
+        $porcentagemVacinados = number_format(($vacinados * 100) / $numServidores, 1, '.', '');
+        $porcentagemNaoVacinados = number_format(100 - $porcentagemVacinados, 1, '.', '');
 
         $array = [
-            ["Sim", $vacinados,"{$porcentagemVacinados} %"],
-            ["Nâo", $numServidores - $vacinados,"{$porcentagemNaoVacinados} %"],
+            ["Sim", $vacinados, "{$porcentagemVacinados} %"],
+            ["Nâo", $numServidores - $vacinados, "{$porcentagemNaoVacinados} %"],
         ];
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
         $tabela->set_titulo("Quadro da Vacina");
-        $tabela->set_label(["Vacinados", "Servidores","%"]);
+        $tabela->set_label(["Vacinados", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         #$tabela->set_align(["left"]);
 
@@ -171,11 +178,11 @@ class Vacina {
                 $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
         }
-        
+
         $select .= " AND tbtipovacina.nome IS NOT null
                 GROUP BY tbtipovacina.nome
                 ORDER BY 2 DESC ";
-        
+
         #echo $select;
 
         $pessoal = new Pessoal();
@@ -195,11 +202,11 @@ class Vacina {
 
         $tabela->show();
     }
-    
+
     ###########################################################
 
     public function getNumServidoresAtivosVacinadosVacina($idTipoVacina = null) {
-        
+
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)
@@ -210,11 +217,11 @@ class Vacina {
         $num = $pessoal->count($select);
         return $num;
     }
-    
+
     ###########################################################
 
     public function getNumServidoresInativosVacinadosVacina($idTipoVacina = null) {
-        
+
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)
@@ -225,11 +232,11 @@ class Vacina {
         $num = $pessoal->count($select);
         return $num;
     }
-    
+
     ###########################################################
 
     public function getNumServidoresGeralVacinadosVacina($idTipoVacina = null) {
-        
+
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)

@@ -965,7 +965,26 @@ p#pPercentagem4{
     padding: 0px;
     margin: 0px;
     color: red;
-    font-weight:bold;
+    font-weight: bold;
+}
+
+/*******************************************
+ * Área Vacina
+ *******************************************/
+
+p#pVacinaNInformada{
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+    color: red;
+    font-weight: bold;
+}
+
+p#pVacinaUmaDose{
+    font-size: 12px;
+    padding: 0px;
+    margin: 0px;
+    color: red;
 }
 
 /*******************************************

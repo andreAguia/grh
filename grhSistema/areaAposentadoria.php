@@ -99,6 +99,8 @@ if ($acesso) {
 
     switch ($fase) {
 
+        ################################################################    
+
         /*
          *  Aposentados por ano
          */
@@ -172,8 +174,6 @@ if ($acesso) {
             loadPage('?fase=motivo2');
             break;
 
-        ################################################################
-
         case "motivo2" :
 
             $grid2 = new Grid();
@@ -244,8 +244,6 @@ if ($acesso) {
             loadPage('?fase=anoEstatistica2');
             break;
 
-        ################################################################
-
         case "anoEstatistica2" :
 
             $grid = new Grid();
@@ -260,7 +258,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #################################################################
+            #####
 
             $grid->abreColuna(12, 9);
 
@@ -288,7 +286,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #################################################################
+            #####
 
             $grid->abreColuna(6);
 
@@ -346,6 +344,394 @@ if ($acesso) {
         ################################################################
 
         /*
+         * Por idade e tempo de contribuição
+         */
+
+        case "porIdadeContribuicao" :
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=porIdadeContribuicao2');
+            break;        
+
+        case "porIdadeContribuicao2" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 4);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(6);
+
+            $painel->fecha();
+
+            $permanente = new AposentadoriaPermanente1();
+            $permanente->exibeRegras();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 8);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdadeContribuicao');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,                         
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente1();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            $titulo = "Previsão de Aposentadoria por Idade e Tempo de Contribuição";
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
+            $tabela->set_label(['IdFuncional', 'Servidor', "Dados", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_width([10, 30, 30, 15, 10]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "AposentadoriaPermanente1", "AposentadoriaPermanente1", "AposentadoriaPermanente1"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeDados", "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarIdadeContribuicao');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 4,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'emAberto')
+            ));
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+
+        case "editarIdadeContribuicao" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdadeContribuicao');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+        
+        ################################################################
+
+        /*
+         * Por idade 
+         */
+
+        case "porIdade" :
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=porIdade2');
+            break;
+
+        case "porIdade2" :
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 4);
+
+            $painel = new Callout();
+            $painel->abre();
+
+            $aposentadoria->exibeMenu(7);
+
+            $painel->fecha();
+
+            $permanente = new AposentadoriaPermanente2();
+            $permanente->exibeRegras();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 8);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=porIdade');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT idFuncional, 
+                          tbservidor.idServidor,
+                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                # Inicia a classe
+                $aposentadoriaPermanente = new AposentadoriaPermanente2();
+                $resultado = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
+                        $resultado[] = $item;
+                    }
+                }
+            }
+
+            $titulo = "Previsão de Aposentadoria por Idade";
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($resultado);
+            }
+            $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_width([10, 40, 10, 10, 10, 10, 5]);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", null, "Aposentadoria", "Aposentadoria", "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "get_tempoServicoUenf", "get_tempoPublicoIninterrupto", "getDataAposentadoria", "getDiasFaltantes"]);
+            #$tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarIdadeContribuicao');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 6,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'emAberto')
+            ));
+            $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            break;
+
+        case "editarIdade" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=porIdade');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+
+        ################################################################        
+
+
+        /*
          * Compulsória por Ano
          */
 
@@ -364,9 +750,6 @@ if ($acesso) {
 
             loadPage('?fase=compulsoria2');
             break;
-
-        ################################################################
-
 
         case "compulsoria2" :
 
@@ -477,9 +860,6 @@ if ($acesso) {
             loadPage('?fase=compulsoriaGeral2');
             break;
 
-        ################################################################
-
-
         case "compulsoriaGeral2" :
 
             $grid2 = new Grid();
@@ -566,7 +946,7 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
                 $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) < 75";
             }
-            
+
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
                 $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) > 500";
@@ -772,400 +1152,7 @@ if ($acesso) {
             break;
 
         ################################################################
-
-        /*
-         * Por idade e tempo de contribuição
-         */
-
-        case "porIdadeContribuicao" :
-
-            br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            loadPage('?fase=porIdadeContribuicao2');
-            break;
-
-        ################################################################
-
-        case "porIdadeContribuicao2" :
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 3);
-
-            $painel = new Callout();
-            $painel->abre();
-
-            $aposentadoria->exibeMenu(6);
-
-            $painel->fecha();
-
-            $permanente = new AposentadoriaPermanente1();
-            $permanente->exibeRegras();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 9);
-
-            # Formulário de Pesquisa
-            $form = new Form('?fase=porIdadeContribuicao');
-
-            # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
-
-            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroLotacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(8);
-            $form->add_item($controle);
-
-            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Tipo');
-            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
-            $controle->set_valor($parametroTipo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-            $form->show();
-
-            # Exibe a lista
-            $select = "SELECT idFuncional, 
-                          tbservidor.idServidor,
-                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor
-                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                     JOIN tbhistlot USING (idServidor)
-                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND idPerfil = 1";
-
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
-            }
-
-
-            $select .= " ORDER BY tbpessoa.nome";
-
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            # Os que já podem requerer
-            if ($parametroTipo == "Já Podem requerer") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente1();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            # Os que Ainda Não Podem Requerer
-            if ($parametroTipo == "Ainda Não Podem Requerer") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente1();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            # Os que Não Tem Direito
-            if ($parametroTipo == "Não Tem Direito") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente1();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            $titulo = "Previsão de Aposentadoria por Idade e Tempo de Contribuição";
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            if ($parametroTipo == "Todos") {
-                $tabela->set_conteudo($result);
-            } else {
-                $tabela->set_conteudo($resultado);
-            }
-            $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Contribuição<br/>(dias)", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
-            $tabela->set_align(['center', 'left']);
-            $tabela->set_width([10, 30, 10, 10, 10, 10, 10, 5]);
-            $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, "Pessoal", null, "Aposentadoria", "Aposentadoria", "Aposentadoria", "AposentadoriaPermanente1", "AposentadoriaPermanente1"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "get_tempoTotal", "get_tempoServicoUenf", "get_tempoPublicoIninterrupto", "getDataAposentadoria", "getDiasFaltantes"]);
-            #$tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editarIdadeContribuicao');
-
-            $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 7,
-                    'valor' => '0',
-                    'operador' => '=',
-                    'id' => 'emAberto')
-            ));
-            $tabela->show();
-
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-            break;
-
-        ################################################################
-
-        case "editarIdadeContribuicao" :
-            br(8);
-            aguarde();
-
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado', $id);
-
-            # Informa a origem
-            set_session('origem', 'areaAposentadoria.php?fase=porIdadeContribuicao');
-
-            # Carrega a página específica
-            loadPage('servidorMenu.php');
-            break;
-
-        ################################################################
-
-        /*
-         * Por idade 
-         */
-
-        case "porIdade" :
-
-            br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            loadPage('?fase=porIdade2');
-            break;
-
-        ################################################################
-
-        case "porIdade2" :
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 3);
-
-            $painel = new Callout();
-            $painel->abre();
-
-            $aposentadoria->exibeMenu(7);
-
-            $painel->fecha();
-
-            $permanente = new AposentadoriaPermanente2();
-            $permanente->exibeRegras();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 9);
-
-            # Formulário de Pesquisa
-            $form = new Form('?fase=porIdade');
-
-            # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
-
-            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroLotacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(8);
-            $form->add_item($controle);
-
-            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Tipo');
-            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
-            $controle->set_valor($parametroTipo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-            $form->show();
-
-            # Exibe a lista
-            $select = "SELECT idFuncional, 
-                          tbservidor.idServidor,
-                          TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor
-                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                     JOIN tbhistlot USING (idServidor)
-                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND idPerfil = 1";
-
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
-            }
-
-
-            $select .= " ORDER BY tbpessoa.nome";
-
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            # Os que já podem requerer
-            if ($parametroTipo == "Já Podem requerer") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente2();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            # Os que Ainda Não Podem Requerer
-            if ($parametroTipo == "Ainda Não Podem Requerer") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente2();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            # Os que Não Tem Direito
-            if ($parametroTipo == "Não Tem Direito") {
-
-                # Inicia a classe
-                $aposentadoriaPermanente = new AposentadoriaPermanente2();
-                $resultado = array();
-
-                # percorre o array do banco de dados
-                foreach ($result as $item) {
-                    if ($aposentadoriaPermanente->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
-                    }
-                }
-            }
-
-            $titulo = "Previsão de Aposentadoria por Idade";
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            if ($parametroTipo == "Todos") {
-                $tabela->set_conteudo($result);
-            } else {
-                $tabela->set_conteudo($resultado);
-            }
-            $tabela->set_label(['IdFuncional', 'Servidor', "Idade", "Serviço Público<br/>(dias)", "Cargo Efetivo<br/>(dias)", "Aposenta em:", "Faltam<br/>(dias)"]);
-            $tabela->set_align(['center', 'left']);
-            $tabela->set_width([10, 40, 10, 10, 10, 10, 5]);
-            $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, "Pessoal", null, "Aposentadoria", "Aposentadoria", "AposentadoriaPermanente2", "AposentadoriaPermanente2"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "get_tempoServicoUenf", "get_tempoPublicoIninterrupto", "getDataAposentadoria", "getDiasFaltantes"]);
-            #$tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editarIdadeContribuicao');
-
-            $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 6,
-                    'valor' => '0',
-                    'operador' => '=',
-                    'id' => 'emAberto')
-            ));
-            $tabela->show();
-
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-            break;
-
-        ################################################################
-
-        case "editarIdade" :
-            br(8);
-            aguarde();
-
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado', $id);
-
-            # Informa a origem
-            set_session('origem', 'areaAposentadoria.php?fase=porIdade');
-
-            # Carrega a página específica
-            loadPage('servidorMenu.php');
-            break;
-
+        
         ################################################################
 
         /*

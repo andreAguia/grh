@@ -70,10 +70,10 @@ class Vacina {
             p(date_to_php($row[0][0]). " - ". $row[0][1],"pVacinaUmaDose");
         }else{
             foreach ($row as $item) {
-                if (!empty($item[0])) {
+                if (empty($item[0]) OR $item[0] == ' ') {
+                    p("Data não Informada - ". $item[1],"pVacinaUmaDose");
+                } else {                    
                     echo date_to_php($item[0]), " - ", $item[1], "<br/>";
-                } else {
-                    echo "Data não Informada - ", $item[1], "<br/>";
                 }
             }
         }

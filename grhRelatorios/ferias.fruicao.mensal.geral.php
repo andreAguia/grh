@@ -28,6 +28,7 @@ if ($acesso) {
     $parametroAno = get_session('parametroAno', date("Y"));
     $parametroLotacao = get_session('parametroLotacao');
     $parametroStatus = get_session('parametroStatus');
+    $parametroPerfil = get_session("parametroPerfil");
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
@@ -42,7 +43,11 @@ if ($acesso) {
     # Pega o mes
     $parametroMes = post('parametroMes', 1);
 
-    ######
+    if ($parametroPerfil == "*") {
+        $parametroPerfil = null;
+    }
+
+    ############################################################################
 
     $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
@@ -77,6 +82,11 @@ if ($acesso) {
     if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
         $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
     }
+    
+    # Verifica se tem filtro por perfil
+    if (!is_null($parametroPerfil)) {
+        $select .= " AND idPerfil = {$parametroPerfil}";
+    }
 
     $select .= " ORDER BY tbpessoa.nome";
 
@@ -84,10 +94,23 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
+    $titulo3 = null;
+
+    # Lotação no subtítulo
+    if (!is_null($parametroLotacao)) {
+        $titulo3 .= $servidor->get_nomeLotacao($parametroLotacao);
+    }
+
     # Status no subtítulo
     if (!is_null($parametroStatus)) {
-        $relatorio->set_tituloLinha3('Ferias ' . plm($parametroStatus) . 's');
+        $titulo3 .= "<br/>Ferias {$parametroStatus}s";
     }
+    
+    if (!is_null($parametroPerfil)) {
+        $titulo3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
+    }
+
+    $relatorio->set_tituloLinha3($titulo3);
 
     $relatorio->set_titulo('Relatório Mensal Geral de Férias');
     $relatorio->set_tituloLinha2(get_nomeMes($parametroMes) . " / " . $parametroAno);

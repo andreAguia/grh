@@ -28,7 +28,8 @@ if ($acesso) {
     $parametroAno = get_session("parametroAno", date('Y'));
     $parametroLotacao = get_session("parametroLotacao");
     $parametroSituacao = get_session("parametroSituacao");
-    
+    $parametroPerfil = get_session("parametroPerfil");
+
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
         $parametroLotacao = null;
@@ -38,11 +39,14 @@ if ($acesso) {
         $parametroSituacao = null;
     }
 
-    ######
+    if ($parametroPerfil == "*") {
+        $parametroPerfil = null;
+    }
+
+    ############################################################################
 
     /*
-     * A primeira listagem so vale para os ativos ou todos
-     * Dessa forma quando não for ativo ou todos não exibe essa primeira listagem
+     * Exibe os servidores ativos que não solicitartam férias nesse exercício
      */
 
     if ($parametroSituacao == 1 OR is_null($parametroSituacao)) {
@@ -69,6 +73,11 @@ if ($acesso) {
             }
         }
 
+        # Verifica se tem filtro por perfil
+        if (!is_null($parametroPerfil)) {
+            $select2 .= " AND idPerfil = {$parametroPerfil}";
+        }
+
         $select2 .= "
          AND tbservidor.situacao = 1
          AND tbpessoa.nome NOT IN 
@@ -88,37 +97,57 @@ if ($acesso) {
             }
         }
 
+        # Verifica se tem filtro por perfil
+        if (!is_null($parametroPerfil)) {
+            $select2 .= " AND idPerfil = {$parametroPerfil}";
+        }
+
         $select2 .= "
             AND tbservidor.situacao = 1
        ORDER BY tbpessoa.nome asc)
           ORDER BY tbpessoa.nome asc";
 
         $result = $servidor->select($select2);
+        $count1 = $servidor->count($select2);
 
-        $relatorio = new Relatorio();
-        $relatorio->set_titulo('Relatório de Férias');
-        $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
+        if ($count1 > 0) {
 
-        if (!is_null($parametroLotacao)) {
-            $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($parametroLotacao));
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo('Relatório de Férias');
+            $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
+
+            $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
+
+            if (!is_null($parametroPerfil)) {
+                $linha3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
+            }
+
+            if (!is_null($parametroLotacao)) {
+                $linha3 .= "<br/>{$servidor->get_nomeLotacao($parametroLotacao)}";
+            }
+
+            $relatorio->set_tituloLinha3($linha3);
+            
+            $relatorio->set_subtitulo("== Servidores que Não Solicitaram Férias ==");
+            $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
+            $relatorio->set_align(array("center", "left", "left"));
+            $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, "get_situacaoRel"));
+            $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
+            $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
+            $relatorio->set_bordaInterna(true);
+            $relatorio->set_conteudo($result);
+
+            $relatorio->set_dataImpressao(false);
+            $relatorio->show();
+            
+            $soma1 = $relatorio->get_totalRegistroValor();
         }
-
-        #$relatorio->set_subtitulo('Agrupados pelo Total de Dias e Ordenado pelo Nome');
-        $relatorio->set_subtitulo("== Não Solicitaram ==");
-
-        $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
-        $relatorio->set_align(array("center", "left", "left"));
-        $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, "get_situacaoRel"));
-        $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-        $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", "get_perfilSimples"));
-        $relatorio->set_bordaInterna(true);
-        $relatorio->set_conteudo($result);
-
-        $relatorio->set_dataImpressao(false);
-        $relatorio->show();
     }
 
-    #####
+    ############################################################################
+    /*
+     * Exibe os que solicitaram agrupados por total de dias
+     */
 
     $select1 = "(SELECT tbservidor.idFuncional,
                         tbpessoa.nome,
@@ -149,6 +178,11 @@ if ($acesso) {
         $select1 .= " AND situacao = {$parametroSituacao}";
     }
 
+    # Verifica se tem filtro por perfil
+    if (!is_null($parametroPerfil)) {
+        $select1 .= " AND idPerfil = {$parametroPerfil}";
+    }
+
     $select1 .= " GROUP BY tbpessoa.nome
                  ORDER BY soma,tbpessoa.nome)";
 
@@ -156,14 +190,38 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
+    # Verifica se já teve o título na listagem acima
     if ($parametroSituacao == 1 OR is_null($parametroSituacao)) {
-        $relatorio->set_cabecalhoRelatorio(false);
-        $relatorio->set_menuRelatorio(false);
+
+        # Verifica se teve listagem acima
+        if ($count1 > 0) {
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+        } else {
+            $relatorio->set_titulo('Relatório de Férias');
+            $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
+            
+            $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
+
+            if (!is_null($parametroPerfil)) {
+                $linha3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
+            }
+
+            if (!is_null($parametroLotacao)) {
+                $linha3 .= "<br/>{$servidor->get_nomeLotacao($parametroLotacao)}";
+            }
+
+            $relatorio->set_tituloLinha3($linha3);
+        }
     } else {
         $relatorio->set_titulo('Relatório de Férias');
         $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
 
-        $linha3 = $servidor->get_nomeSituacao($parametroSituacao);
+        $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
+
+        if (!is_null($parametroPerfil)) {
+            $linha3 .= "<br/>{$servidor->get_nomePerfil($parametroPerfil)}";
+        }
 
         if (!is_null($parametroLotacao)) {
             $linha3 .= "<br/>{$servidor->get_nomeLotacao($parametroLotacao)}";
@@ -171,8 +229,8 @@ if ($acesso) {
 
         $relatorio->set_tituloLinha3($linha3);
     }
-    
-    #$relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
+
+    $relatorio->set_subtitulo("== Servidores que Solicitaram Férias ==");
     $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
     $relatorio->set_align(array("center", "left", "left"));
     $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, "get_situacaoRel"));
@@ -182,6 +240,11 @@ if ($acesso) {
     $relatorio->set_conteudo($result);
     $relatorio->set_bordaInterna(true);
     $relatorio->show();
+
+     if (!empty($soma1)) {
+        $soma2 = $relatorio->get_totalRegistroValor();
+        p("Total Geral de Registros: " . ($soma1 + $soma2), "f12", "center");
+    }
 
     $page->terminaPagina();
 }

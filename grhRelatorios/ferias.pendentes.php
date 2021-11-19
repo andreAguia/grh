@@ -27,6 +27,7 @@ if ($acesso) {
     # Pega os parametros
     $parametroLotacao = get_session("parametroLotacao");
     $parametroSituacao = get_session("parametroSituacao");
+    $parametroPerfil = get_session("parametroPerfil");
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
@@ -37,13 +38,12 @@ if ($acesso) {
         $parametroSituacao = null;
     }
 
-    ######
+    if ($parametroPerfil == "*") {
+        $parametroPerfil = null;
+    }
 
-    /*
-     * A primeira listagem so vale para os ativos ou todos
-     * Dessa forma quando não for ativo ou todos não exibe essa primeira listagem
-     */
 
+    ############################################################################
 
     $select2 = "SELECT tbservidor.idFuncional,
                            tbservidor.idServidor,
@@ -65,6 +65,11 @@ if ($acesso) {
         }
     }
 
+    # Verifica se tem filtro por perfil
+    if (!is_null($parametroPerfil)) {
+        $select2 .= " AND idPerfil = {$parametroPerfil}";
+    }
+
     $select2 .= "
          AND tbservidor.situacao = 1        
          ORDER BY tbpessoa.nome asc";
@@ -74,11 +79,19 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Férias com Pendências');
 
-    if (!is_null($parametroLotacao)) {
-        $relatorio->set_tituloLinha3($servidor->get_nomeLotacao($parametroLotacao));
+    $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
+
+    if (!is_null($parametroPerfil)) {
+        $linha3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
     }
 
-    $relatorio->set_label(array("Id", "Servidor", "Lotação", "Admissão","Pendências","Situação"));
+    if (!is_null($parametroLotacao)) {
+        $linha3 .= "<br/>{$servidor->get_nomeLotacao($parametroLotacao)}";
+    }
+
+    $relatorio->set_tituloLinha3($linha3);
+
+    $relatorio->set_label(array("Id", "Servidor", "Lotação", "Admissão", "Pendências", "Situação"));
     $relatorio->set_align(array("center", "left"));
     $relatorio->set_funcao(array(null, null, null, "date_to_php", "trataNulo", "get_situacaoRel"));
     $relatorio->set_classe(array(null, "pessoal", "pessoal", null, "Ferias"));

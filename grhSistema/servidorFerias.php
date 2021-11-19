@@ -153,7 +153,7 @@ if ($acesso) {
             'title' => 'Dias de Férias.',
             'linha' => 1),
         array('linha' => 3,
-            'col' => 10,
+            'col' => 12,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

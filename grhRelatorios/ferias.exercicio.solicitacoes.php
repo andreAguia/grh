@@ -28,6 +28,7 @@ if ($acesso) {
     $parametroAno = get_session("parametroAno", date('Y'));
     $parametroLotacao = get_session("parametroLotacao");
     $parametroSituacao = get_session("parametroSituacao");
+    $parametroPerfil = get_session("parametroPerfil");
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
@@ -38,7 +39,11 @@ if ($acesso) {
         $parametroSituacao = null;
     }
 
-    ######
+    if ($parametroPerfil == "*") {
+        $parametroPerfil = null;
+    }
+
+    ############################################################################
 
     $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
@@ -72,6 +77,11 @@ if ($acesso) {
         $select .= " AND situacao = {$parametroSituacao}";
     }
 
+    # Verifica se tem filtro por perfil
+    if (!is_null($parametroPerfil)) {
+        $select .= " AND idPerfil = {$parametroPerfil}";
+    }
+
     $select .= ' ORDER BY year(tbferias.dtInicial), month(tbferias.dtInicial), tbferias.dtInicial';
 
     $result = $servidor->select($select);
@@ -80,23 +90,17 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Anual de Férias');
     $relatorio->set_tituloLinha2("Ano Exercício: " . $parametroAno);
 
-    $linha3 = null;
+    $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
+
+    if (!is_null($parametroPerfil)) {
+        $linha3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
+    }
 
     if (!is_null($parametroLotacao)) {
-        $linha3 .= $servidor->get_nomeLotacao($parametroLotacao);
+        $linha3 .= "<br/>{$servidor->get_nomeLotacao($parametroLotacao)}";
     }
 
-    if (!is_null($parametroSituacao)) {
-        if (is_null($linha3)) {
-            $linha3 .= $servidor->get_nomeSituacao($parametroSituacao);
-        }else{
-            $linha3 .= "<br/>{$servidor->get_nomeSituacao($parametroSituacao)}";
-        }
-    }
-
-    if (!is_null($linha3)) {
-        $relatorio->set_tituloLinha3($linha3);
-    }
+    $relatorio->set_tituloLinha3($linha3);
 
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
     $relatorio->set_bordaInterna(true);

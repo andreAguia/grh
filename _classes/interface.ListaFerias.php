@@ -1,7 +1,6 @@
 <?php
 
-class ListaFerias
-{
+class ListaFerias {
 
     /**
      * Exibe várias informações em forma de listas sobre as férias dos servidores
@@ -15,12 +14,12 @@ class ListaFerias
     private $anoExercicio = null;
     private $lotacao = null;
     private $situacao = null;
+    private $perfil = null;
     private $permiteEditar = true;
 
     ###########################################################
 
-    public function __construct($anoExercicio)
-    {
+    public function __construct($anoExercicio) {
 
         /**
          * Inicia a classe atribuindo um valor ao anoExercicio
@@ -32,8 +31,7 @@ class ListaFerias
 
     ###########################################################
 
-    public function set_lotacao($idLotacao = null)
-    {
+    public function set_lotacao($idLotacao = null) {
         /**
          * Informa a lotação dos servidores cujas ferias serão exibidas
          * 
@@ -58,8 +56,7 @@ class ListaFerias
 
     ###########################################################
 
-    public function set_situacao($situacao = null)
-    {
+    public function set_situacao($situacao = null) {
         /**
          * Informa a situacao dos servidores cujas ferias serão exibidas
          * 
@@ -84,8 +81,32 @@ class ListaFerias
 
     ###########################################################
 
-    public function showResumoGeral()
-    {
+    public function set_perfil($perfil = null) {
+        /**
+         * Informa o perfil dos servidores cujas ferias serão exibidas
+         * 
+         * @param $perfil integer null o id do perfil a ser exibida as férias
+         * 
+         * @note Quando o $perfil não é informado será exibido todos os perfis
+         * 
+         * @syntax $ListaFerias->set_perfil([$perfil]);  
+         */
+        # Força a ser nulo mesmo quando for ""
+        if (empty($perfil)) {
+            $perfil = null;
+        }
+
+        # Transforma em nulo a máscara *
+        if ($perfil == "*") {
+            $perfil = null;
+        }
+
+        $this->perfil = $perfil;
+    }
+
+    ###########################################################
+
+    public function showResumoGeral() {
 
         /**
          * Informa os totais de servidores do setor com ou sem férias
@@ -103,7 +124,7 @@ class ListaFerias
         if ($this->situacao == 1 OR is_null($this->situacao)) {
             $servset2 = $this->getServidoresSemFerias();    // Os que não pediram férias
             $totalServidores2 = count($servset2);
-        }else{
+        } else {
             $totalServidores2 = 0;
         }
         $semFerias[] = array("Solicitaram", $totalServidores1);
@@ -125,8 +146,7 @@ class ListaFerias
 
     ###########################################################
 
-    public function showResumoPorDia()
-    {
+    public function showResumoPorDia() {
 
         /**
          * Informa os totais de servidores que solicitaram férias por total de dias solicitados
@@ -174,8 +194,7 @@ class ListaFerias
      * Exibe um resumo geral das férias por lotação
      *
      */
-    public function showPorDia()
-    {
+    public function showPorDia() {
 
         # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
         $diasTotais = $this->getDiasFerias();
@@ -212,9 +231,9 @@ class ListaFerias
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
-            $tabela->set_label(array("Id", "Servidor", "Lotação","Admissão", "Dias", "Situação","Pendências"));
-            $tabela->set_classe(array(null, "pessoal", "pessoal",null,null,null,"Ferias"));
-            $tabela->set_metodo(array(null, "get_nomeECargoEPerfil", "get_lotacaoSimples",null,null,null,"exibeFeriasPendentes"));
+            $tabela->set_label(array("Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"));
+            $tabela->set_classe(array(null, "pessoal", "pessoal", null, null, null, "Ferias"));
+            $tabela->set_metodo(array(null, "get_nomeECargoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"));
             $tabela->set_funcao(array(null, null, null, "date_to_php", null, "get_situacao"));
             $tabela->set_align(array("center", "left", "left"));
             $tabela->set_idCampo('idServidor');
@@ -251,8 +270,7 @@ class ListaFerias
      * Informa os totais de dias de férias de uma determinada lotação de uma ano exercício
      *
      */
-    private function getDiasFerias($idLotacao = null)
-    {
+    private function getDiasFerias($idLotacao = null) {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -285,6 +303,11 @@ class ListaFerias
             $select .= " AND situacao = {$this->situacao}";
         }
 
+        # Verifica se tem filtro por perfil
+        if (!is_null($this->perfil)) {
+            $select .= " AND idPerfil = {$this->perfil}";
+        }
+
         $select .= " GROUP BY idServidor
                      ORDER BY soma desc";
 
@@ -300,8 +323,7 @@ class ListaFerias
      * Informa array com os totais de servidores pelo total de dias de férias de uma determinada lotação de uma ano exercício
      *
      */
-    private function getTotalServidorDiasFerias($diasTotais)
-    {
+    private function getTotalServidorDiasFerias($diasTotais) {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -328,6 +350,11 @@ class ListaFerias
                 $select .= " AND situacao = {$this->situacao}";
             }
 
+            # Verifica se tem filtro por perfil
+            if (!is_null($this->perfil)) {
+                $select .= " AND idPerfil = {$this->perfil}";
+            }
+
             $select .= " GROUP BY idServidor
                      HAVING soma = $valor[0]
                      ORDER BY 1";
@@ -346,8 +373,7 @@ class ListaFerias
      * Informa array com todos os servidores que pediram férias desse setor e o total de dias
      *
      */
-    private function getServidoresComTotalDiasFerias()
-    {
+    private function getServidoresComTotalDiasFerias() {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
@@ -379,6 +405,11 @@ class ListaFerias
             $select .= " AND situacao = {$this->situacao}";
         }
 
+        # Verifica se tem filtro por perfil
+        if (!is_null($this->perfil)) {
+            $select .= " AND idPerfil = {$this->perfil}";
+        }
+
         $select .= "
               AND anoExercicio = $this->anoExercicio
         GROUP BY tbpessoa.nome
@@ -398,8 +429,7 @@ class ListaFerias
      * Informa array com todos os servidores que não pediram férias desse setor
      *
      */
-    private function getServidoresSemFerias()
-    {
+    private function getServidoresSemFerias() {
         # Varifica se a situação é ativo ou todos
         if ($this->situacao == 1 OR is_null($this->situacao)) {
 
@@ -429,6 +459,11 @@ class ListaFerias
                 }
             }
 
+            # Verifica se tem filtro por perfil
+            if (!is_null($this->perfil)) {
+                $select2 .= " AND idPerfil = {$this->perfil}";
+            }
+
             $select2 .= "
              AND tbservidor.situacao = 1
              AND tbpessoa.nome NOT IN 
@@ -447,6 +482,11 @@ class ListaFerias
                 } else { # senão é uma diretoria genérica
                     $select2 .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
                 }
+            }
+
+            # Verifica se tem filtro por perfil
+            if (!is_null($this->perfil)) {
+                $select2 .= " AND idPerfil = {$this->perfil}";
             }
 
             $select2 .= "

@@ -3,7 +3,7 @@
 /**
  * Área de Férias
  * 
- * Por data de fruição
+ * Por Ano de fruição
  *  
  * By Alat
  */
@@ -41,11 +41,13 @@ if ($acesso) {
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
     $parametroStatus = post('parametroStatus', get_session('parametroStatus'));
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
 
-    # Joga os parâmetros par as sessions    
+    # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroStatus', $parametroStatus);
+    set_session('parametroPerfil', $parametroPerfil);
 
     # Começa uma nova página
     $page = new Page();
@@ -66,18 +68,6 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-
-    # Ano Exercício
-    $botaoExercicio = new Link("por Ano de Exercício", "areaFeriasExercicio.php");
-    $botaoExercicio->set_class('button');
-    $botaoExercicio->set_title('Férias por Ano Exercício');
-    #$menu1->add_link($botaoExercicio,"right");
-    # Ano por Fruíção
-    $botaoFruicao = new Link("Ano de Fruição");
-    $botaoFruicao->set_class('button');
-    $botaoFruicao->set_title('Férias por Ano em que foi realmente fruído');
-    #$menu1->add_link($botaoFruicao,"right");
-
     $menu1->show();
 
     # Título
@@ -90,7 +80,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anos = arrayPreenche($anoInicial, $anoAtual+2, "d");
+    $anos = arrayPreenche($anoInicial, $anoAtual + 2, "d");
 
     $controle = new Input('parametroAno', 'combo', 'Ano de Fruição:', 1);
     $controle->set_size(8);
@@ -118,7 +108,23 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(8);
+    $controle->set_col(6);
+    $form->add_item($controle);
+
+    # Perfil
+    $result = $pessoal->select('SELECT idperfil, nome
+                                          FROM tbperfil                                
+                                      ORDER BY 1');
+    array_unshift($result, array(null, '-- Todos --'));
+
+    $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Perfil');
+    $controle->set_array($result);
+    $controle->set_valor($parametroPerfil);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     # Status    
@@ -201,6 +207,11 @@ if ($acesso) {
                     $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
                 }
             }
+            
+            # Verifica se tem filtro por perfil
+            if (!is_null($parametroPerfil)) {
+                $select .= " AND idPerfil = {$parametroPerfil}";
+            }
 
             # Status
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
@@ -255,6 +266,11 @@ if ($acesso) {
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
                 $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
             }
+            
+            # Verifica se tem filtro por perfil
+            if (!is_null($parametroPerfil)) {
+                $select .= " AND idPerfil = {$parametroPerfil}";
+            }
 
             $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
 
@@ -301,6 +317,11 @@ if ($acesso) {
                 }
             }
 
+            # Verifica se tem filtro por perfil
+            if (!is_null($parametroPerfil)) {
+                $select .= " AND idPerfil = {$parametroPerfil}";
+            }
+
             $select .= " GROUP BY status ORDER BY status";
 
             $resumo = $servidor->select($select);
@@ -337,7 +358,8 @@ if ($acesso) {
                              date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
                              idFerias,
                              tbferias.status,
-                             tbsituacao.situacao
+                             tbsituacao.situacao,
+                             tbferias.idFerias
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -359,7 +381,11 @@ if ($acesso) {
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
                 $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
             }
-
+            
+            # Verifica se tem filtro por perfil
+            if (!is_null($parametroPerfil)) {
+                $select .= " AND idPerfil = {$parametroPerfil}";
+            }
 
             $select .= " ORDER BY tbpessoa.nome, tbferias.anoExercicio, dtInicial";
 
@@ -367,11 +393,11 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano de Fruição: " . $parametroAno . " (Data Inicial)");
-            $tabela->set_label(array('Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação'));
+            $tabela->set_label(array('Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs'));
             $tabela->set_align(array("left"));
             $tabela->set_funcao(array(null, null, "date_to_php", null, null, null, null));
-            $tabela->set_classe(array("pessoal", null, null, null, null, "pessoal"));
-            $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo"));
+            $tabela->set_classe(array("pessoal", null, null, null, null, "pessoal", null, null, "Ferias"));
+            $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs"));
             $tabela->set_conteudo($result);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

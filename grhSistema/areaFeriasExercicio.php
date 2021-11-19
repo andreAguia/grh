@@ -3,6 +3,8 @@
 /**
  * Área de Férias
  *
+ * Por Ano de exercício
+ *  
  * By Alat
  */
 # Reservado para o servidor logado
@@ -37,13 +39,15 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
-    
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
+
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
+    set_session('parametroPerfil', $parametroPerfil);
 
     # Começa uma nova página
     $page = new Page();
@@ -64,18 +68,6 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-
-    # Ano Exercício
-    $botaoVoltar = new Link("Ano Exercício");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano Exercício');
-    #$menu1->add_link($botaoVoltar,"right");
-    # Ano por Fruíção
-    $botaoVoltar = new Link("por Ano de Fruição", "areaFeriasFruicao.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Férias por Ano em que foi realmente fruído');
-    #$menu1->add_link($botaoVoltar,"right");
-
     $menu1->show();
 
     # Título
@@ -88,7 +80,7 @@ if ($acesso) {
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoInicial, $anoAtual+2, "d");
+    $anoExercicio = arrayPreenche($anoInicial, $anoAtual + 2, "d");
 
     $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
     $controle->set_size(8);
@@ -98,7 +90,7 @@ if ($acesso) {
     $controle->set_valor($parametroAno);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(3);
+    $controle->set_col(2);
     $controle->set_autofocus(true);
     $form->add_item($controle);
 
@@ -118,7 +110,23 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(7);
+    $controle->set_col(6);
+    $form->add_item($controle);
+
+    # Perfil
+    $result = $pessoal->select('SELECT idperfil, nome
+                                          FROM tbperfil                                
+                                      ORDER BY 1');
+    array_unshift($result, array('*', '-- Todos --'));
+
+    $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Perfil');
+    $controle->set_array($result);
+    $controle->set_valor($parametroPerfil);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     # Situação
@@ -173,14 +181,14 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
             $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
-            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');            
+            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
             $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
             $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
             $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
-                        
+
             $menu->show();
 
             #######################################
@@ -189,6 +197,7 @@ if ($acesso) {
             $lista1 = new ListaFerias($parametroAno);
             $lista1->set_lotacao($parametroLotacao);
             $lista1->set_situacao($parametroSituacao);
+            $lista1->set_perfil($parametroPerfil);
 
             # resumo geral
             $lista1->showResumoGeral();

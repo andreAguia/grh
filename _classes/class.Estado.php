@@ -1,9 +1,9 @@
 <?php
 
-class Cidade {
+class Estado {
 
     /**
-     * Classe que abriga as várias rotina do Cadastro de cidades
+     * Classe que abriga as várias rotina do Cadastro de Estado
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
@@ -29,8 +29,8 @@ class Cidade {
 
         # Pega os dados
         $select = "SELECT * 
-                     FROM tbcidade
-                    WHERE idCidade = {$id}";
+                     FROM tbestado
+                    WHERE idEstado = {$id}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -40,27 +40,4 @@ class Cidade {
     }
 
 ###########################################################
-
-    public function getCidade($id = null) {
-        /**
-         * Retorna o nome e o estado da Cidade
-         * 
-         * @syntax $cidade->getCidade($id);
-         */
-                
-        if (empty($id)) {
-            return null;
-        } else {
-            $dadosCidade = $this->get_dados($id);
-            
-            $estado = new Estado();
-            $dadosEstado = $estado->get_dados($dadosCidade["idEstado"]);
-            
-            
-            return "{$dadosCidade["nome"]} - {$dadosEstado["uf"]}";
-        }
-            
-    }    
-
-    ###########################################################
 }

@@ -287,7 +287,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'avaliacao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle das avaliações de desempenho e qualidade do servidor');
         $menu->add_item($botao);
-        
+
         # Obs
         $botao = new BotaoGrafico();
         $botao->set_label('Observações');
@@ -407,8 +407,8 @@ class MenuServidor {
                     # Cria um motivo Ativo
                     if ($idSituacao == 1) {
                         $motivo = "Ativo";
-                    }else{
-                        $motivo = $pessoal->get_motivo($rr[0])." - ".$pessoal->get_dtAdmissao($rr[0])." - ".$pessoal->get_dtSaida($rr[0]);
+                    } else {
+                        $motivo = $pessoal->get_motivo($rr[0]) . " - " . $pessoal->get_dtAdmissao($rr[0]) . " - " . $pessoal->get_dtSaida($rr[0]);
                     }
 
                     #$menu->add_item("link","$cargo - $perfil ($dtAdm - $dtSai) - $motivo",'servidor.php?fase=editar&id='.$rr[0]);
@@ -490,18 +490,24 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Documento Termo de Responsabilidade', '../grhRelatorios/declaracao.Eleitoral.Termo.Responsabilidade.php');
         $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilizacao.php');
 
-        $menu->add_item('titulo', 'Outros Documentos', '#');
+        $menu->add_item('titulo', 'Declarações', '#');
+        $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
+        $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
+
+        if ($this->perfil == 1 AND $this->situacao == "Ativo") {
+            $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.Exercicio.php');
+        }
+
+        $menu->add_item('titulo', 'Despachos', '#');
         $menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
         $menu->add_item("linkWindow", "Despacho para Reitoria", "../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow", "Despacho para Publicação de Ato do Reitor", "../grhRelatorios/despacho.Publicacao.php");
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
 
+        $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
         $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo=$cargo");
-
-        $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
-        $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
 
         #$menu->add_item('link','Declaração para o INSS','#');
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");

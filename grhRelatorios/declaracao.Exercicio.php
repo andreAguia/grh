@@ -28,6 +28,9 @@ if ($acesso) {
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
     $dtAdmissao = dataExtenso($pessoal->get_dtAdmissao($idServidorPesquisado));
+    $lotacao = $pessoal->get_lotacaoSimples($idServidorPesquisado);
+    $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
+    $nomeLotacao = $pessoal->get_nomeLotacao2($idLotacao);
     
     if($idPerfil == 2){
         $cargoEfetivo = "exercendo a função equivalente ao {$cargoEfetivo}";
@@ -47,13 +50,14 @@ if ($acesso) {
     # Monta a Declaração
     $dec = new Declaracao();
     $dec->set_carimboCnpj(true);
-    #$dec->set_assinatura(true);
+    $dec->set_assinatura(true);
     
     $dec->set_data(date("d/m/Y"));
 
     $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
             . " ID funcional nº {$idFuncional}, é servidor desta Universidade admitido através de concurso"
-            . " público na data de {$dtAdmissao} para o cargo de {$cargoEfetivo}.");
+            . " público na data de {$dtAdmissao} para o cargo de {$cargoEfetivo}, desempenhando suas"
+            . " atribuições no(a) {$nomeLotacao}.");
 
     $dec->set_saltoRodape(10);    
     $dec->show();

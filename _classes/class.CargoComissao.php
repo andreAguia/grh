@@ -695,8 +695,31 @@ class CargoComissao {
         if (is_null($row[0])) {
             echo "---";
         } else {
-            toolTip("Obs", $row[0]);
+            toolTip("Obs", $row[0]);http://localhost/areaServidor/sistema/administracao.php
         }
+    }
+
+    ###########################################################
+
+    /**
+     * Método getReitorData
+     * 
+     * Informa o nome do reitor na data informada
+     */
+    public function get_idServidorReitorData($data) {
+
+        $select = 'SELECT idServidor                             
+                     FROM tbcomissao 
+                    WHERE idTipoComissao = 13 
+                      AND tipo <> 2 
+                      AND (
+                      (CAST("' . date_to_bd($data) . '" AS DATE) BETWEEN dtNom AND dtExo) OR (dtExo IS NULL AND dtNom <= CAST("' . date_to_bd($data) . '" AS DATE))
+                      )';
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        return $row[0];
     }
 
     ###########################################################

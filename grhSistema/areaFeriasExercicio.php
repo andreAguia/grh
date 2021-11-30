@@ -168,10 +168,9 @@ if ($acesso) {
 ################################################################
 
         case "exibeLista":
-
-            $grid2 = new Grid();
-
+            
             # Área Lateral
+            $grid2 = new Grid();
             $grid2->abreColuna(3);
 
             ########################################

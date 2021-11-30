@@ -561,6 +561,13 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle dos responsáveis pela prestação de contas');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Licença Médica');
+        $botao->set_url('areaLicencaMedica.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'licMedica.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Servidores com Licença Médica');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Cedidos da Uenf');

@@ -220,9 +220,15 @@ if ($acesso) {
         ################################################################
         # Chama o menu do Servidor que se quer editar
         case "editaServidor" :
+            
+            # Informa o $id Servidor
             set_session('idServidorPesquisado', $id);
-            set_session('areaPremio', true);
-            loadPage('servidorLicenca.php');
+
+            # Informa a origem
+            set_session('origem', 'areaLicencaMedica.php');
+
+            # Carrega a página específica
+            loadPage('servidorLicenca.php');            
             break;
 
         ################################################################

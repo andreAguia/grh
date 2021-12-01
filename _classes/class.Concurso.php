@@ -612,6 +612,7 @@ class Concurso {
                 ["Vagas", "cadastroConcursoVagaAdm.php", $vagas],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
+                ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];
         } else {
             $itensMenu = [

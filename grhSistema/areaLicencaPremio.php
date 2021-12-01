@@ -37,7 +37,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroProcesso = post('parametroProcesso', get_session('parametroProcesso'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $selectRelatorio = get_session('selectRelatorio');

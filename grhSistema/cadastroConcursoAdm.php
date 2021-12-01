@@ -31,7 +31,7 @@ if ($acesso) {
 
     # Pega a fase
     $fase = get('fase', 'aguardaClassificacao');
-    
+
     # Pega o idConcurso
     $idConcurso = get_session("idConcurso");
 
@@ -52,7 +52,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorioAtivos" AND $fase <> "relatorioInativos") {
+    if ($fase <> "relatorioAtivos" AND $fase <> "relatorioInativos" AND $fase <> "relatorioTodos") {
         AreaServidor::cabecalho();
     }
 
@@ -583,6 +583,166 @@ if ($acesso) {
 
         ################################################################
 
+        case "aguardaListaServidoresTodos" :
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            #######################################################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Todos os Servidores");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            #######################################################3
+
+            $grid->abreColuna(9);
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=listaServidoresTodos');
+            break;
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "listaServidoresTodos" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos');
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioTodos");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            #######################################################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Todos os Servidores");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            #######################################################
+
+            $grid->abreColuna(9);
+
+            # Formulário
+            $form = new Form('?fase=aguardaListaServidoresTodos');
+
+            # cargos por nivel
+            $result = $pessoal->select('SELECT cargo,
+                                               cargo
+                                          FROM tbtipocargo
+                                         WHERE cargo <> "Professor Associado" 
+                                           AND cargo <> "Professor Titular" 
+                                      ORDER BY 2');
+
+            # acrescenta todos
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Lista de Servidores
+            if ($parametroCargo <> "*") {
+                $lista = new ListaServidores("{$parametroCargo} - Servidores Ativos e Inativos");
+                $lista->set_cargo($parametroCargo);
+                $atividade = "Visualizou os todos os servidores ativos e inativos do cargo " . $parametroCargo . " do concurso " . $concurso->get_nomeConcurso($idConcurso);
+            } else {
+                $lista = new ListaServidores("Servidores Ativos e Inativos");
+                $atividade = "Visualizou todos os servidores ativos e inativos do concurso " . $concurso->get_nomeConcurso($idConcurso);
+            }
+            
+            $lista->set_concurso($idConcurso);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+
+        ################################################################
+
+
         case "relatorioAtivos" :
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos');
@@ -601,6 +761,18 @@ if ($acesso) {
             $lista = new ListaServidores('Servidores Inativos');
             $lista->set_situacao(1);
             $lista->set_situacaoSinal("<>");
+            $lista->set_concurso($idConcurso);
+            if ($parametroCargo <> "*") {
+                $lista->set_cargo($parametroCargo);
+            }
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
+
+        case "relatorioTodos" :
+            # Lista de Servidores ativos e Inativos
+            $lista = new ListaServidores('Servidores Ativos e Inativos');
             $lista->set_concurso($idConcurso);
             if ($parametroCargo <> "*") {
                 $lista->set_cargo($parametroCargo);

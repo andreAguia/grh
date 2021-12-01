@@ -39,7 +39,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
 

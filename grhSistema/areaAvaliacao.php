@@ -148,7 +148,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Controle de Avaliação Funcional');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Tipo", "Referencia", "Período", "Processo", "Obs"]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Processo", "Tipo", "Referencia", "Período", "Obs"]);
             #$tabela->set_width([10, 40, 40]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left"]);

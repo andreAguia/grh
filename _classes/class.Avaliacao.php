@@ -453,7 +453,7 @@ class Avaliacao {
         } else {
 
             pLista(
-                    "SEI - ".$this->getProcessoSei($idServidor),
+                    "SEI - " . $this->getProcessoSei($idServidor),
                     $this->getProcessoFisico($idServidor)
             );
         }
@@ -479,6 +479,49 @@ class Avaliacao {
             echo "---";
         } else {
             toolTip("Obs", $retorno[0]);
+        }
+    }
+
+###########################################################
+
+    public function exibeAvaliacoes($idServidor) {
+
+        /**
+         * Exibe os processos
+         */
+        # Verifica se o id foi informado
+        if (vazio($idServidor)) {
+            alert("É necessário informar o id.");
+            return;
+        } else {
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            # Pega array com os dias publicados
+            $select = "SELECT tipo,
+                              referencia,
+                              dtPeriodo1,
+                              dtPeriodo2 
+                         FROM tbavaliacao WHERE idServidor = {$idServidor}";
+                         
+            $row = $pessoal->select($select);
+            
+            foreach($row as $item){
+                # Tipo
+                if($row["tipo"] == 1){
+                    echo "Estágio - ";
+                }else{
+                    echo "Anual   - ";
+                }
+                
+                # Referência
+                echo $row["referencia"]," - ";
+                
+                # Período
+                echo date_to_php($row["dtPeriodo1"]);
+                echo " a ";
+                echo date_to_php($row["dtPeriodo2"]);
+            }
         }
     }
 

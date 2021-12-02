@@ -117,6 +117,7 @@ if ($acesso) {
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
+                              tbservidor.idServidor,
                               CASE tipo
                                     WHEN 1 THEN 'Estágio' 
                                     WHEN 2 THEN 'Anual'

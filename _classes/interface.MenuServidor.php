@@ -280,7 +280,7 @@ class MenuServidor {
         $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
         $menu->add_item($botao);
 
-        # Obs
+        # Avaliação
         $botao = new BotaoGrafico();
         $botao->set_label('Avaliação');
         $botao->set_url('servidorAvaliacao.php?grh=1');

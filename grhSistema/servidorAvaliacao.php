@@ -61,10 +61,10 @@ if ($acesso) {
     $objeto->set_nome('Avaliações de Desempenho e Qualidade');
 
     # botão de voltar da lista
-    if ($origem == "areaAvaliacao.php") {
-        $objeto->set_voltarLista($origem);
-    } else {
+    if (empty($origem)) {
         $objeto->set_voltarLista('servidorMenu.php');
+    } else {
+        $objeto->set_voltarLista($origem);
     }
 
     # select da lista
@@ -268,7 +268,12 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Botão voltar
-            $linkBotao1 = new Link("Voltar", 'servidorMenu.php');
+            if (empty($origem)) {
+                $linkBotao1 = new Link("Voltar", 'servidorMenu.php');
+            } else {
+                $linkBotao1 = new Link("Voltar", $origem);
+            }
+            
             $linkBotao1->set_class('button');
             $linkBotao1->set_title('Volta para a página anterior');
             $linkBotao1->set_accessKey('V');

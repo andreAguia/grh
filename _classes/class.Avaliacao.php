@@ -441,6 +441,26 @@ class Avaliacao {
 
     ##########################################################################################
 
+    public function exibeProcesso($idServidor) {
+
+        /**
+         * Exibe os processos
+         */
+        # Verifica se o id foi informado
+        if (vazio($idServidor)) {
+            alert("É necessário informar o id.");
+            return;
+        } else {
+
+            pLista(
+                    "SEI - ".$this->getProcessoSei($idServidor),
+                    $this->getProcessoFisico($idServidor)
+            );
+        }
+    }
+
+###########################################################
+
     public function exibeObs($id) {
 
         /**

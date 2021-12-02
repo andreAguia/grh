@@ -116,13 +116,13 @@ if ($acesso) {
 
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
+                              tbservidor.idServidor,
                               CASE tipo
                                     WHEN 1 THEN 'Estágio' 
                                     WHEN 2 THEN 'Anual'
                                END,
                                referencia,
-                               CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),                               
-                               tbservidor.idServidor,
+                               CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
                                idAvaliacao,
                                tbservidor.idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -151,9 +151,9 @@ if ($acesso) {
             $tabela->set_label(["IdFuncional", "Servidor", "Tipo", "Referencia", "Período", "Processo", "Obs"]);
             #$tabela->set_width([10, 40, 40]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "center"]);
-            $tabela->set_classe([null, "pessoal", null, null, null, "Avaliacao", "Avaliacao"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, null, null, "exibeProcesso", "exibeObs"]);
+            $tabela->set_align(["center", "left"]);
+            $tabela->set_classe([null, "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeProcesso", null, null, null, "exibeObs"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);

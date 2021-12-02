@@ -439,5 +439,28 @@ class Avaliacao {
         }
     }
 
-    ###########################################################
+    ##########################################################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT obs
+                     FROM tbavaliacao
+                    WHERE idAvaliacao = {$id}";
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno[0])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $retorno[0]);
+        }
+    }
+
+###########################################################
 }

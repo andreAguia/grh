@@ -78,6 +78,7 @@ if ($acesso) {
                                      idAvaliacao,
                                      idAvaliacao,
                                      idAvaliacao,
+                                     idAvaliacao,
                                      idAvaliacao
                                 FROM tbavaliacao
                                WHERE idServidor = {$idServidorPesquisado}
@@ -105,12 +106,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Tipo", "Referencia", "Período", "Nota 1", "Nota 2", "Nota 3", "Total", "Publicação"]);
-    $objeto->set_width([8, 8, 19, 10, 10, 10, 10, 15]);
+    $objeto->set_label(["Tipo", "Referencia", "Período", "Nota 1", "Nota 2", "Nota 3", "Total", "Publicação", "Obs"]);
+    $objeto->set_width([6, 6, 19, 10, 10, 10, 10, 15, 5]);
     #$objeto->set_align(array("center", "left", "center", "center", "left"));
     #$objeto->set_funcao(array("date_to_php", null, null, "date_to_php"));
-    $objeto->set_classe([null, null, null, "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao"]);
-    $objeto->set_metodo([null, null, null, "exibeNota1", "exibeNota2", "exibeNota3", "exibeTotal", "exibePublicacao"]);
+    $objeto->set_classe([null, null, null, "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao", "Avaliacao"]);
+    $objeto->set_metodo([null, null, null, "exibeNota1", "exibeNota2", "exibeNota3", "exibeTotal", "exibePublicacao", "exibeObs"]);
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
@@ -283,7 +284,6 @@ if ($acesso) {
 //            $botaoProcesso = new Button("Edita Processo", "servidorProcessoAvaliacao.php");
 //            $botaoProcesso->set_title("Edita o processo");
 //            $menu->add_link($botaoProcesso, "right");
-
             # Incluir
             $botaoIncluir = new Button("Incluir", '?fase=editar');
             $botaoIncluir->set_title("Incluir novo registro");
@@ -303,13 +303,13 @@ if ($acesso) {
             tituloTable("N° do Processo:");
             $painel = new Callout();
             $painel->abre();
-            
-            if(empty($processoSei)){
-                p("---", 'f14', "center");                
-            }else{
+
+            if (empty($processoSei)) {
+                p("---", 'f14', "center");
+            } else {
                 p("SEI - {$processoSei}", 'f14', "center");
             }
-            
+
             # Verifica se tem processo antigo
             if (!is_null($processoFisico)) {
                 p($processoFisico, "processoAntigoReducao");
@@ -317,7 +317,7 @@ if ($acesso) {
 
             $div = new Div("divEditaProcesso");
             $div->abre();
-            if(empty($processoSei)){
+            if (empty($processoSei)) {
                 $link = new Link("Incluir Processo", 'servidorProcessoAvaliacao.php', "Inclui o número do processo");
             } else {
                 $link = new Link("Editar Processo", 'servidorProcessoAvaliacao.php', "Edita o número do processo");

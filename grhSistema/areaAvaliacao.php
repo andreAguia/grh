@@ -141,7 +141,7 @@ if ($acesso) {
                 }
             }
 
-            $select .= "ORDER BY tbpessoa.nome";
+            $select .= "ORDER BY tbpessoa.nome, tbavaliacao.dtPeriodo1";
 
             $result = $pessoal->select($select);
 

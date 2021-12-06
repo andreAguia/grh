@@ -117,7 +117,6 @@ if ($acesso) {
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
-                              tbservidor.idServidor,
                               CASE tipo
                                     WHEN 1 THEN 'Estágio' 
                                     WHEN 2 THEN 'Anual'
@@ -156,7 +155,7 @@ if ($acesso) {
             $tabela->set_classe([null, "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
             $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeProcesso", null, null, null, "exibeObs"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_rowspan(1);
+            $tabela->set_rowspan([0, 1, 2]);
             $tabela->set_grupoCorColuna(1);
 
             $tabela->set_idCampo('idServidor');

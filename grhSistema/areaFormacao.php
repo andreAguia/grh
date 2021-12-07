@@ -270,12 +270,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso"));
+            $tabela->set_label(["IdFuncional", "Servidor", "Escolaridade", "Curso"]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center", "left", "center", "left"));
-            $tabela->set_classe(array(null, "pessoal", null, "Formacao"));
-            $tabela->set_metodo(array(null, "get_nomeECargoELotacao", null, "exibeCurso"));
-            $tabela->set_rowspan(1);
+            $tabela->set_align(["center", "left", "center", "left"]);
+            $tabela->set_classe([null, "pessoal", null, "Formacao"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "exibeCurso"]);
+            $tabela->set_rowspan([0,1]);
             $tabela->set_grupoCorColuna(1);
 
             $tabela->set_idCampo('idServidor');

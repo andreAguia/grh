@@ -26,7 +26,7 @@ class Cessao {
         return $servidor->select($select, false);
     }
 
-######################################################################################################################
+###########################################################
 
     public function exibeDados($idHistCessao) {
 
@@ -41,9 +41,10 @@ class Cessao {
                           dtInicio,
                           dtFim,
                           orgao,
+                          idHistCessao,
                           processo,
                           dtPublicacao,
-                          obs
+                          idHistCessao
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
@@ -51,13 +52,13 @@ class Cessao {
         $tabela = new Tabela();
         $tabela->set_conteudo($servidor->select($select, true));
         $tabela->set_titulo("Dados da Cessão");
-        $tabela->set_label(["Status", "Data Inicial", "Data Final", "Órgão Cessionário", "Processo", "Data de Publicação", "Obs"]);
-        $tabela->set_funcao([null, "date_to_php", "date_to_php", null, null, "date_to_php"]);
-        $tabela->set_width([8, 8, 8, 10, 15, 8, 53]);
-        $tabela->set_align(["center", "center", "center", "center", "center", "center", "left"]);
+        $tabela->set_label(["Status", "Data Inicial", "Data Final", "Órgão Cessionário", "Contatos do Órgão", "Processo", "Data de Publicação", "Obs"]);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php", null, null, null, "date_to_php"]);
+        $tabela->set_width([10, 10, 10, 15, 15, 15, 10, 5]);
+        #$tabela->set_align(["center", "center", "center", "center", "center", "center", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_classe(["Cessao"]);
-        $tabela->set_metodo(["getStatus"]);
+        $tabela->set_classe(["Cessao", null, null, null, "Cessao", null, null, "Cessao"]);
+        $tabela->set_metodo(["getStatus", null, null, null, "exibeContatos", null, null, "exibeObs"]);
 
         # Pinta a tabela de cor diferente
         $dados = $this->getDados($idHistCessao);
@@ -79,14 +80,14 @@ class Cessao {
         $grid->fechaGrid();
     }
 
-######################################################################################################################
+###########################################################
 
     public function getDataInicialFrequencia($idHistCessao) {
         /*
          * Exibe o primeiro dia do mês da frequencia de cessão que ainda não foi atestada
          * Para o sistema sugerir no formulário de cadastro de frequência
          */
-        
+
         # Reserva uma variavel para a data escolhida
         $dataEscolhida = null;
 
@@ -102,7 +103,7 @@ class Cessao {
         # Pega os Dados das Frequencias cadastradas desta Cessao
         $select = "SELECT dtFinal, idServidor FROM tbfrequencia WHERE idHistCessao = {$idHistCessao} ORDER BY dtFinal DESC";
         $dadosFrequencia = $servidor->select($select, false);
-        
+
         # Verifica as frequencias
         if (empty($dadosFrequencia)) {
             # Nao tem nenhuma frequência pega a data inicial da cessao
@@ -111,9 +112,9 @@ class Cessao {
             # Se tiver frequência pega a data posterior a última frequência cadastrada
             $dataEscolhida = addDias(date_to_php($dadosFrequencia[0]), 1, false);
         }
-        
+
         # Pega o ultimo dia do mês
-        $ultimoDia = ultimoDiaMes($dataEscolhida);        
+        $ultimoDia = ultimoDiaMes($dataEscolhida);
 
         # Quando tiver data final...
         if (!empty($dtFinal)) {
@@ -137,7 +138,7 @@ class Cessao {
 
         # Se tiver afastamento Temos que avaliar as datas deste afastamento
         if (!empty($verifica)) {
-            
+
             # Pega as datas do afastamento
             $dtInicialAfast = date_to_php($verifica["dtInicial"]);
             $dtFinalAfast = date_to_php($verifica["dtFinal"]);
@@ -178,7 +179,7 @@ class Cessao {
         }
     }
 
-######################################################################################################################
+###########################################################
 
     public function getDataFinalFrequencia($idHistCessao) {
         /*
@@ -226,7 +227,7 @@ class Cessao {
         }
     }
 
-######################################################################################################################
+###########################################################
 
     public function getStatus($idHistCessao) {
         /*
@@ -251,7 +252,7 @@ class Cessao {
         }
     }
 
-######################################################################################################################
+###########################################################
 
     public function lotacaoCorreta($idServidor) {
         /*
@@ -268,7 +269,7 @@ class Cessao {
         }
     }
 
-######################################################################################################################
+###########################################################
 
     public function getNumCessaoVigente($idServidor) {
         /*
@@ -287,7 +288,7 @@ class Cessao {
         return $servidor->count($select);
     }
 
-######################################################################################################################
+###########################################################
 
     public function getNumLancamentosFrequencia($idHistCessao) {
         /*
@@ -306,12 +307,67 @@ class Cessao {
         # Botão de controle de frequência
         $botao = new BotaoGrafico();
         $botao->set_title("{$num} Lançamentos de Frequência");
-        -
-                $botao->set_label($num);
+        $botao->set_label($num);
         $botao->set_url("servidorFrequencia.php?idHistCessao={$idHistCessao}");
         $botao->set_imagem(PASTA_FIGURAS . 'frequencia.jpg', 23, 23);
         $botao->show();
     }
 
-######################################################################################################################
+###########################################################
+
+    public function exibeContatos($id) {
+
+        # Verifica se o id foi informado
+        if (vazio($id)) {
+            alert("É necessário informar o id.");
+            return;
+        } else {
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            $select = "SELECT orgaoTel, 
+                              orgaoEmail
+                         FROM tbhistcessao
+                        WHERE idHistCessao = {$id}";
+
+            $row = $servidor->select($select, false);
+
+            if (empty($row["orgaoTel"])) {
+                $row["orgaoTel"] = "---";
+            } else {
+                $row["orgaoTel"] = "Tel: " . $row["orgaoTel"];
+            }
+
+            plista(
+                    $row["orgaoTel"],
+                    $row["orgaoEmail"]
+            );
+        }
+    }
+
+###########################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT obs
+                     FROM tbhistcessao
+                    WHERE idHistCessao = {$id}";
+
+        $retorno = $pessoal->select($select, false);
+
+        if (empty($retorno["obs"])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $retorno["obs"]);
+        }
+    }
+
+###########################################################
 }

@@ -250,11 +250,12 @@ if ($acesso) {
     if ($afastamento == 1) {
         $afastamento = 2;
         $selectEscolhido = $select1;
-        $botao = "secondary";
+        $labelBotao = "Exibe os Afastamentos";
     } else {
         $afastamento = 1;
         $selectEscolhido = $select;
-        $botao = "primary";
+        $botao = "warning";
+        $labelBotao = "Oculta os Afastamentos";
     }
 
     # select da lista
@@ -359,10 +360,11 @@ if ($acesso) {
     $botao1->set_url('?fase=exibeObs');
     $botao1->set_target("_blank");
 
-    $botao2 = new Button("Afastamentos");
-    $botao2->set_title("Exibe ou nao os afastamentos do periodo");
+    $botao2 = new Button($labelBotao);
     $botao2->set_url('?afastamento=' . $afastamento);
-    $botao2->set_class("{$botao} button");
+    if (!empty($botao)) {
+        $botao2->set_class("{$botao} button");
+    }
 
     $objeto->set_botaoListarExtra([$botao2, $botao1]);
 

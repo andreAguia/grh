@@ -71,6 +71,7 @@ if ($acesso) {
                                      dtInicio,
                                      dtFim,
                                      orgao,
+                                     idHistCessao,
                                      processo,
                                      obs,
                                      idHistCessao,
@@ -86,6 +87,8 @@ if ($acesso) {
                                      processo,                                 
                                      dtPublicacao,
                                      orgao,
+                                     orgaoTel,
+                                     orgaoEmail,
                                      obs,
                                      idServidor
                                 FROM tbhistcessao
@@ -98,12 +101,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Processo", "Obs", "Frequência"]);
-    $objeto->set_width([8, 8, 8, 10, 15, 38, 5]);
-    $objeto->set_align(["center", "center", "center", "center",  "center", "left"]);
+    $objeto->set_label(["Status", "Data Inicial", "Data Término", "Órgão Cessionário", "Contatos do Órgão", "Processo", "Obs", "Frequência"]);
+    $objeto->set_width([8, 8, 8, 15, 14, 14, 20, 5]);
+    $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
-    $objeto->set_classe(["Cessao",null,null,null,null,null,"Cessao"]);
-    $objeto->set_metodo(["getStatus",null,null,null,null,null,"getNumLancamentosFrequencia"]);
+    $objeto->set_classe(["Cessao", null, null, null, "Cessao", null, null, "Cessao"]);
+    $objeto->set_metodo(["getStatus", null, null, null, "exibeContatos", null, null, "getNumLancamentosFrequencia"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 0,
@@ -164,8 +167,22 @@ if ($acesso) {
             'tipo' => 'texto',
             'required' => true,
             'size' => 100,
-            'col' => 12,
+            'col' => 6,
             'title' => 'O órgão cessionário',
+            'linha' => 2),
+        array('nome' => 'orgaoTel',
+            'label' => 'Telefone do Órgão:',
+            'tipo' => 'texto',
+            'size' => 100,
+            'col' => 3,
+            'title' => 'O telefone do órgão cessionário',
+            'linha' => 2),
+        array('nome' => 'orgaoEmail',
+            'label' => 'E-mail do Órgão:',
+            'tipo' => 'email',
+            'size' => 100,
+            'col' => 3,
+            'title' => 'O e-mail do órgão cessionário',
             'linha' => 2),
         array('linha' => 3,
             'nome' => 'obs',

@@ -12,7 +12,7 @@ $dtInicial = date_to_php($campoValor[6]);
 $numDias = $campoValor[7];
 $dtTermino = $campoValor[8];
 $dtRetorno = $campoValor[9];
-$idServidor = $campoValor[15];
+$idServidor = $campoValor[17];
 
 # Preenche a data de término quando for nula
 if (empty($dtTermino)) {

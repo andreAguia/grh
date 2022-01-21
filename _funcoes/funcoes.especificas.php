@@ -289,6 +289,110 @@ function exibeProcesso($texto) {
 
 ##########################################################
 
+function exibeDtTermino($texto) {
+    /**
+     * Função que exibe a data término das licença de diversas tabelas
+     * 
+     * O problema está na licença sem vencimentos que a data de término
+     * pode ser a data de retorno antecipado. Esta rotina verifica se é
+     * licença sem vencimentos e se tem uma data de retorno antecipado
+     * para exibir junto
+     * 
+     */
+    # Verifica o que é texto
+    if (strpos($texto, "&") === false) {
+        # é uma data
+        return date_to_php($texto);
+    } else {
+        # é uma licença sem vencimentos
+        # Divide o texto TIPO&ID
+        $pedaco = explode("&", $texto);
+
+        # Pega os pedaços
+        $tipo = $pedaco[0];
+        $id = $pedaco[1];
+
+        switch ($tipo) {
+
+            # Licença Sem Vencimentos
+            case "tblicencasemvencimentos" :
+                # Inicia a classe
+                $licenca = new LicencaSemVencimentos();
+
+                # Pega os dados
+                $dados = $licenca->get_dados($id);
+
+                # Calcula a data de término
+                $dtTermino = addDias(date_to_php($dados['dtInicial']), $dados['numDias']);
+
+                if (empty($dados['dtRetorno'])) {
+                    echo $dtTermino;
+                } else {
+                    plista(date_to_php($dados['dtRetorno']), $dtTermino);
+                }
+                break;
+
+            default :
+                echo "---";
+                break;
+        }
+    }
+}
+
+##########################################################
+
+function exibeDtTerminoRel($texto) {
+    /**
+     * Função que exibe a data término das licença de diversas tabelas
+     * 
+     * O problema está na licença sem vencimentos que a data de término
+     * pode ser a data de retorno antecipado. Esta rotina verifica se é
+     * licença sem vencimentos e se tem uma data de retorno antecipado
+     * para exibir junto
+     * 
+     */
+    # Verifica o que é texto
+    if (strpos($texto, "&") === false) {
+        # é uma data
+        return date_to_php($texto);
+    } else {
+        # é uma licença sem vencimentos
+        # Divide o texto TIPO&ID
+        $pedaco = explode("&", $texto);
+
+        # Pega os pedaços
+        $tipo = $pedaco[0];
+        $id = $pedaco[1];
+
+        switch ($tipo) {
+
+            # Licença Sem Vencimentos
+            case "tblicencasemvencimentos" :
+                # Inicia a classe
+                $licenca = new LicencaSemVencimentos();
+
+                # Pega os dados
+                $dados = $licenca->get_dados($id);
+
+                # Calcula a data de término
+                $dtTermino = addDias(date_to_php($dados['dtInicial']), $dados['numDias']);
+
+                if (empty($dados['dtRetorno'])) {
+                    echo $dtTermino;
+                } else {
+                    echo date_to_php($dados['dtRetorno'])," *";
+                }
+                break;
+
+            default :
+                echo "---";
+                break;
+        }
+    }
+}
+
+##########################################################
+
 function acertaDataFerias($texto) {
     /**
      * Função que acerta o nome do mês e exibe junto do ano
@@ -1169,49 +1273,83 @@ function exibeObsLicenca($texto) {
      * Essa função identifica e retorna a obs correta
      * 
      */
-    # Divide o texto TIPO&ID
-    $pedaco = explode("&", $texto);
+    # Verifica o que é texto
+    if (strpos($texto, "&") === false) {
+        # é uma data
+        return date_to_php($texto);
+    } else {
+        # Divide o texto TIPO&ID
+        $pedaco = explode("&", $texto);
 
-    # Pega os pedaços
-    $tipo = $pedaco[0];
-    $id = $pedaco[1];
+        # Pega os pedaços
+        $tipo = $pedaco[0];
+        $id = $pedaco[1];
 
-    # Inicia a variável de retorno
-    $processo = null;
+        # Inicia a variável de retorno
+        $processo = null;
 
-    # Execute uma rotina específica para cada tipo de licença
-    switch ($tipo) {
+        # Execute uma rotina específica para cada tipo de licença
+        switch ($tipo) {
 
-        # Licença Prêmio
-        case 6 :
-            # Inicia a classe
-            $licenca = new LicencaPremio();
+            # Licença Prêmio
+            case "tblicencapremio" :
+                # Inicia a classe
+                $licenca = new LicencaPremio();
 
-            # Exibe a Obs
-            $licenca->exibeObs($id);
-            break;
+                # Exibe a Obs
+                $licenca->exibeObs($id);
+                break;
 
-        # Licença Sem Vencimentos
-        case 5 :
-        case 8 :
-        case 16 :
-            # Inicia a classe
-            $licenca = new LicencaSemVencimentos();
+            # Licença Sem Vencimentos
+            case "tblicencasemvencimentos" :
+                # Inicia a classe
+                $licenca = new LicencaSemVencimentos();
 
-            # Exibe a Obs
-            $licenca->exibeObs($id);
-            break;
+                # Exibe a Obs
+                $licenca->exibeObs($id);
+                break;
 
-        # Outras Licenças
-        default:
+            # Outras Licenças
+            case "tblicenca" :
 
-            # Inicia a classe
-            $licenca = new Licenca();
+                # Inicia a classe
+                $licenca = new Licenca();
 
-            # Exibe a Obs
-            $licenca->exibeObs($id);
-            break;
+                # Exibe a Obs
+                $licenca->exibeObs($id);
+                break;
 
+            # Férias
+            case "tbferias" :
+                # Inicia a classe
+                $ferias = new Ferias();
+
+                # Exibe a Obs
+                $ferias->exibeObs($id);
+                break;
+
+            # Atestado ou faltas abonadas
+            case "tbatestado" :
+                # Inicia a classe
+                $atestado = new Atestado();
+
+                # Exibe a Obs
+                $atestado->exibeObs($id);
+                break;
+
+            # Folga TRE
+            case "tbfolga" :
+                # Inicia a classe
+                $folga = new FolgaTre();
+
+                # Exibe a Obs
+                $folga->exibeObs($id);
+                break;
+
+            default :
+                echo "---";
+                break;
+        }
     }
 }
 

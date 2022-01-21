@@ -81,7 +81,7 @@ class ListaAfastamentosServidorPremio
                    SELECT YEAR(tblicencasemvencimentos.dtInicial),
                            tblicencasemvencimentos.dtInicial,
                                    tblicencasemvencimentos.numDias,
-                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                                   CONCAT('tblicencasemvencimentos&',idLicencaSemVencimentos),
                                    tbtipolicenca.nome
                               FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                            JOIN tbpessoa USING (idPessoa)
@@ -104,7 +104,7 @@ class ListaAfastamentosServidorPremio
         $tabela->set_titulo('Afastamentos');
         $tabela->set_label(array('Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
         $tabela->set_align(array('center', 'center', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, "date_to_php", null, "date_to_php"));
+        $tabela->set_funcao(array(null, "date_to_php", null, "exibeDtTermino"));
         $tabela->set_width(array(10, 10, 5, 10, 65));
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);

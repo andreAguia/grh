@@ -64,7 +64,7 @@ if ($acesso) {
                                    "",
                                    tblicencasemvencimentos.dtInicial,
                                    tblicencasemvencimentos.numdias,
-                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numdias-1),
+                                   CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
                                    CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
                                    tblicencasemvencimentos.dtPublicacao,
                                    "-"
@@ -92,7 +92,7 @@ if ($acesso) {
     $relatorio->set_label(array("Licença", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('left'));
-    $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+    $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'exibeDtTermino', 'exibeProcesso', 'date_to_php'));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

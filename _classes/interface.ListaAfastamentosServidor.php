@@ -1,10 +1,9 @@
 <?php
 
-class ListaAfastamentosServidor
-{
+class ListaAfastamentosServidor {
 
     /**
-     * Abriga as várias rotina referentes ao afastamento do servidor
+     * Lista os afastamentos de um servidor específico
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
@@ -15,16 +14,14 @@ class ListaAfastamentosServidor
     /**
      * Método Construtor
      */
-    public function __construct($idServidor)
-    {
+    public function __construct($idServidor) {
 
         $this->idServidor = $idServidor;
     }
 
     ###############################################################
 
-    public function exibeTabela()
-    {
+    public function exibeTabela() {
 
         /**
          * monta o select para toda a classe
@@ -40,7 +37,8 @@ class ListaAfastamentosServidor
                            tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,IF(alta=1,' - Com Alta',''))
+                           CONCAT(tbtipolicenca.nome,IF(alta=1,' - Com Alta','')),
+                           CONCAT('tblicenca','&',tblicenca.idLicenca) 
                       FROM tblicenca JOIN tbservidor USING (idServidor)
                                      JOIN tbpessoa USING (idPessoa)
                                      JOIN tbtipolicenca USING (idTpLicenca)
@@ -53,7 +51,8 @@ class ListaAfastamentosServidor
                          tblicencapremio.dtInicial,
                          tblicencapremio.numDias,
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
-                         'Licença Prêmio'
+                         'Licença Prêmio',
+                         CONCAT('tblicencapremio','&',tblicencapremio.idLicencaPremio) 
                     FROM tblicencapremio JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
@@ -65,7 +64,8 @@ class ListaAfastamentosServidor
                           tbferias.dtInicial,
                           tbferias.numDias,
                           ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
-                          CONCAT('Férias ',tbferias.anoExercicio)
+                          CONCAT('Férias ',tbferias.anoExercicio),
+                          CONCAT('tbferias','&',tbferias.idFerias) 
                      FROM tbferias JOIN tbservidor USING (idServidor)
                                    JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
@@ -77,7 +77,8 @@ class ListaAfastamentosServidor
                           tbatestado.dtInicio,
                           tbatestado.numDias,
                           ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
-                          'Falta Abonada'
+                          'Falta Abonada',
+                          CONCAT('tbatestado','&',tbatestado.idAtestado)   
                      FROM tbatestado JOIN tbservidor USING (idServidor)
                                      JOIN tbpessoa USING (idPessoa) 
                     WHERE tbservidor.idServidor = {$this->idServidor}";
@@ -89,7 +90,8 @@ class ListaAfastamentosServidor
                           tbtrabalhotre.data,
                           tbtrabalhotre.dias,
                           ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
-                          'Trabalhando no TRE'
+                          'Trabalhando no TRE',
+                          CONCAT('tbtrabalhotre','&',tbtrabalhotre.idTrabalhoTre)   
                      FROM tbtrabalhotre JOIN tbservidor USING (idServidor)
                                         JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
@@ -101,7 +103,8 @@ class ListaAfastamentosServidor
                           tbfolga.data,
                           tbfolga.dias,
                           ADDDATE(tbfolga.data,tbfolga.dias-1),
-                          'Folga TRE'
+                          'Folga TRE',
+                          CONCAT('tbfolga','&',tbfolga.idFolga)                          
                      FROM tbfolga JOIN tbservidor USING (idServidor)
                                   JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
@@ -112,8 +115,9 @@ class ListaAfastamentosServidor
                    SELECT YEAR(tblicencasemvencimentos.dtInicial),
                            tblicencasemvencimentos.dtInicial,
                                    tblicencasemvencimentos.numDias,
-                                   ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                                   tbtipolicenca.nome
+                                   CONCAT('tblicencasemvencimentos&',idLicencaSemVencimentos),
+                                   tbtipolicenca.nome,
+                                   CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
                               FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                            JOIN tbpessoa USING (idPessoa)
                                                            JOIN tbtipolicenca USING (idTpLicenca)
@@ -130,10 +134,10 @@ class ListaAfastamentosServidor
 
         $tabela = new Tabela();
         $tabela->set_titulo('Afastamentos');
-        $tabela->set_label(array('Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
+        $tabela->set_label(array('Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', "Obs"));
         $tabela->set_align(array('center', 'center', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, "date_to_php", null, "date_to_php"));
-        $tabela->set_width(array(10, 10, 5, 10, 65));
+        $tabela->set_funcao(array(null, "date_to_php", null, "exibeDtTermino", null, "exibeObsLicenca"));
+        $tabela->set_width(array(10, 10, 5, 10, 60, 5));
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
         $tabela->set_conteudo($result);

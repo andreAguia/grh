@@ -72,7 +72,7 @@ class VerificaAfastamentos {
 
     ###########################################################
     /*
-     * Se tem que retiirar ou isentar algum registro e tabela da busca
+     * Se tem que retirar ou isentar algum registro e tabela da busca
      * Usado em rotinas de cadastro de afastamento para não achar a si mesma
      */
 
@@ -250,12 +250,15 @@ class VerificaAfastamentos {
         /*
          *  Licenças sem vencimentos
          */
+        
+        # Sem Data de retorno
         $select = "SELECT idLicencaSemVencimentos, tbtipolicenca.nome
-                 FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
-                WHERE idServidor = {$this->idServidor}
-                  AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
+                     FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
+                    WHERE idServidor = {$this->idServidor}
+                      AND dtRetorno IS NULL  
+                      AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
+                       OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
+                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
         if ($this->tabela == "tblicencasemvencimentos" AND!empty($this->id)) {
@@ -271,6 +274,31 @@ class VerificaAfastamentos {
             $this->detalhe = $afast['nome'];
             return true;
         }
+        
+        # Com Data de retorno antecipado
+        $select = "SELECT idLicencaSemVencimentos, tbtipolicenca.nome
+                     FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
+                    WHERE idServidor = {$this->idServidor}
+                      AND dtRetorno IS NOT NULL  
+                      AND (('{$this->dtFinal}' BETWEEN dtInicial AND dtRetorno) 
+                       OR ('{$this->dtInicial}' BETWEEN dtInicial AND dtRetorno) 
+                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= dtRetorno))";
+
+        // se tiver isenção
+        if ($this->tabela == "tblicencasemvencimentos" AND!empty($this->id)) {
+            $select .= " AND idLicencaSemVencimentos <> {$this->id}";
+        }
+
+        $select .= " ORDER BY dtInicial";
+
+        $afast = $pessoal->select($select, false);
+
+        if (!empty($afast)) {
+            $this->afastamento = "Licença";
+            $this->detalhe = $afast['nome'];
+            return true;
+        }
+
 
         /*
          *  Faltas Abonadas por atestado

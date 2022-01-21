@@ -1226,7 +1226,7 @@ if ($acesso) {
         $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
                             tblicencasemvencimentos.dtInicial,
                             tblicencasemvencimentos.numDias,
-                            ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                            CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos), 
                             CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencasemvencimentos),
                             tblicencasemvencimentos.dtPublicacao,
                             idLicencasemvencimentos
@@ -1238,7 +1238,7 @@ if ($acesso) {
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(array("Tipo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_funcao(array(null, 'date_to_php', null, 'exibeDtTerminoRel', 'exibeProcesso', 'date_to_php'));
         $relatorio->set_align(array('left', 'center', 'center', 'center', 'left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_botaoVoltar(false);

@@ -230,12 +230,12 @@ class ListaAfastamentos {
         }
 
         #######################
-        # Licença
+        # Licença geral
         $select .= '       tblicenca.dtInicial,
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                            CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
-                           tblicenca.obs,
+                           CONCAT("tblicenca","&",idLicenca),
                           tbservidor.idServidor
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)
@@ -321,7 +321,7 @@ class ListaAfastamentos {
                          tblicencapremio.numDias,
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
                          (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
-                         tblicencapremio.obs,
+                         CONCAT("tblicencapremio","&",idLicencaPremio),
                          tbservidor.idServidor
                     FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                        JOIN tbhistlot USING (idServidor)
@@ -404,7 +404,7 @@ class ListaAfastamentos {
                           tbferias.numDias,
                           ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
                           CONCAT("Férias ",tbferias.anoExercicio),
-                          tbferias.obs,
+                          CONCAT("tbferias","&",idFerias),
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
@@ -486,7 +486,7 @@ class ListaAfastamentos {
                           tbatestado.numDias,
                           ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
                           "Falta Abonada",
-                          tbatestado.obs,
+                          CONCAT("tbatestado","&",idAtestado),
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
@@ -650,7 +650,7 @@ class ListaAfastamentos {
                           tbfolga.dias,
                           ADDDATE(tbfolga.data,tbfolga.dias-1),
                           "Folga TRE",
-                          tbfolga.obs,
+                          CONCAT("tbfolga","&",idFolga),
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
@@ -715,7 +715,7 @@ class ListaAfastamentos {
         }
 
         #######################
-        # Licença sem vencimentos
+        # Licença sem vencimentos sem Data de retorno
         $select .= ') UNION (
                    SELECT ';
 
@@ -732,7 +732,7 @@ class ListaAfastamentos {
                                    tblicencasemvencimentos.numDias,
                                    ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                                    tbtipolicenca.nome,
-                                   tblicencasemvencimentos.obs,
+                                   CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
                                    tbservidor.idServidor
                               FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                    JOIN tbhistlot USING (idServidor)
@@ -742,14 +742,15 @@ class ListaAfastamentos {
                                                    JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
                                               LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                               LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                             WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)           
+                             WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)
+                               AND dtRetorno IS NULL  
                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
         if (!empty($this->tipo)) {
             if (is_numeric($this->tipo)) {
                 if (($this->tipo == 5) OR ($this->tipo == 8) OR ($this->tipo == 16)) {
-                    $select .= ' AND idTpLicenca = ' . $this->tipo;
+                    $select .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $this->tipo;
                 } else {
                     $select .= ' AND false';
                 }
@@ -799,6 +800,93 @@ class ListaAfastamentos {
                 }
             }
         }
+        
+        #######################
+        # Licença sem vencimentos Com Data de retorno antecipado
+        $select .= ') UNION (
+                   SELECT ';
+
+        if ($this->idFuncional) {
+            $select .= 'tbservidor.idfuncional,';
+        }
+
+        if (empty($this->idServidor)) {
+            $select .= ' tbservidor.idServidor,
+                          tbservidor.idServidor,';
+        }
+
+        $select .= '     tblicencasemvencimentos.dtInicial,
+                                   tblicencasemvencimentos.numDias,
+                                   CONCAT("tblicencasemvencimentos&",idLicencaSemVencimentos),
+                                   tbtipolicenca.nome,
+                                   CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
+                                   tbservidor.idServidor
+                              FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbhistlot USING (idServidor)
+                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                              LEFT JOIN tblicencasemvencimentos USING (idServidor)
+                                              LEFT JOIN tbperfil USING (idPerfil)
+                                                   JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
+                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                              LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                             WHERE (tbtipolicenca.idTpLicenca = 5 OR tbtipolicenca.idTpLicenca = 8 OR tbtipolicenca.idTpLicenca = 16)
+                               AND dtRetorno IS NOT NULL  
+                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
+
+        # Tipo de afastamento
+        if (!empty($this->tipo)) {
+            if (is_numeric($this->tipo)) {
+                if (($this->tipo == 5) OR ($this->tipo == 8) OR ($this->tipo == 16)) {
+                    $select .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $this->tipo;
+                } else {
+                    $select .= ' AND false';
+                }
+            } else {
+                $select .= ' AND false';
+            }
+        }
+
+
+        # Verifica se é somente de um servidor
+        if (empty($this->idServidor)) {
+            $select .= ' AND tbservidor.situacao = 1';
+        } else {
+            $select .= ' AND tbservidor.idServidor = ' . $this->idServidor;
+            $select .= ' AND tblicencasemvencimentos.dtInicial IS NOT null';
+        }
+
+        if (!empty($this->mes)) {
+            $select .= '       
+                               AND (("' . $data . '" BETWEEN tblicencasemvencimentos.dtInicial AND tblicencasemvencimentos.dtRetorno)
+                                OR  (LAST_DAY("' . $data . '") BETWEEN tblicencasemvencimentos.dtInicial AND tblicencasemvencimentos.dtRetorno)
+                                OR  ("' . $data . '" < tblicencasemvencimentos.dtInicial AND LAST_DAY("' . $data . '") > tblicencasemvencimentos.dtRetorno))';
+        } elseif ($this->ano) {
+            $select .= ' AND (((YEAR(tblicencasemvencimentos.dtInicial) = ' . $this->ano . ') OR (YEAR(tblicencasemvencimentos.dtRetorno) = ' . $this->ano . ')) 
+                         OR ((YEAR(tblicencasemvencimentos.dtInicial) < ' . $this->ano . ') AND (YEAR(tblicencasemvencimentos.dtRetorno) > ' . $this->ano . ')))';
+        }
+
+        # lotacao
+        if (!is_null($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $select .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
 
         #######################  
         # Licença Médica Sem Alta
@@ -818,7 +906,7 @@ class ListaAfastamentos {
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                            CONCAT(tbtipolicenca.nome," - (Em Aberto)<br/>",IFnull(tbtipolicenca.lei,"")),
-                           tblicenca.obs,
+                           CONCAT("tblicenca","&",idLicenca),
                           T2.idServidor
                       FROM tbservidor AS T2 
                            LEFT JOIN tbpessoa USING (idPessoa)
@@ -930,13 +1018,13 @@ class ListaAfastamentos {
 
             if ($this->idFuncional) {
 
-                $tabela->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação'));
-                $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left', 'left'));
+                $tabela->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs'));
+                $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
                 $tabela->set_classe(array(null, null, "pessoal"));
                 $tabela->set_metodo(array(null, null, "get_lotacaoSimples"));
-                $tabela->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
-                $tabela->set_width(array(10, 20, 15, 10, 5, 10, 15, 20));
+                $tabela->set_funcao(array(null, null, null, "date_to_php", null, "exibeDtTermino", null, "exibeObsLicenca"));
+                $tabela->set_width(array(10, 20, 10, 8, 5, 8, 30, 5));
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe(array(null, "pessoal", "pessoal"));
@@ -952,7 +1040,7 @@ class ListaAfastamentos {
 
                 $tabela->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left', 'left'));
-                $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+                $tabela->set_funcao(array(null, null, "date_to_php", null, "exibeDtTermino"));
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe(array("pessoal", "pessoal"));
@@ -969,7 +1057,7 @@ class ListaAfastamentos {
 
             $tabela->set_label(array('Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação'));
             $tabela->set_align(array('center', 'center', 'center', 'left', 'left'));
-            $tabela->set_funcao(array("date_to_php", null, "date_to_php"));
+            $tabela->set_funcao(array("date_to_php", null, "exibeDtTermino"));
             $tabela->set_width(array(15, 5, 15, 35, 30));
         }
 
@@ -1018,7 +1106,7 @@ class ListaAfastamentos {
             $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
-            $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
+            $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "exibeDtTermino"));
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe(array(null, "pessoal", "pessoal"));
@@ -1032,7 +1120,7 @@ class ListaAfastamentos {
             $relatorio->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
-            $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+            $relatorio->set_funcao(array(null, null, "date_to_php", null, "exibeDtTermino"));
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe(array("pessoal", "pessoal"));

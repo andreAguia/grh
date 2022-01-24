@@ -363,7 +363,7 @@ if ($acesso) {
                                        tblicencasemvencimentos.idTpLicenca,"",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
-                                       CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),                                       
+                                       ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),                                 
                                        CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencaSemVencimentos),
                                        tblicencasemvencimentos.dtPublicacao,
                                        CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
@@ -414,7 +414,7 @@ if ($acesso) {
         $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"));
         $objeto->set_width(array(30, 3, 3, 10, 5, 10, 15, 5, 4));
         $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'exibeDtTermino', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"));
+        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"));
         $objeto->set_classe(array("Licenca"));
         $objeto->set_metodo(array("exibeNome"));
         $objeto->set_numeroOrdem(true);

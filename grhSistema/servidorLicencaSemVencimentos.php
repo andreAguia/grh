@@ -88,6 +88,26 @@ if ($acesso) {
                     $("#dtTermino").val(formatado);
                   });
                   
+                // Quando muda a data de retorno
+                 $("#dtRetorno").change(function(){
+                    
+                    var dt1 = $("#dtRetorno").val();                    
+                    data1 = new Date(dt1);                    
+                    data1.setDate(data1.getDate() - 0);                    
+                    formatado = data1.getFullYear() + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");
+                    $("#dtTermino").val(formatado);
+                    
+                    var dt1 = $("#dtInicial").val();
+                    var dt2 = $("#dtTermino").val();
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(dt2);
+                    
+                    dias = (data2 - data1)/(1000*3600*24)+1;
+
+                    $("#numDias").val(dias);
+                  });      
+                  
                 });
              </script>';
 
@@ -216,7 +236,8 @@ if ($acesso) {
                               ORDER BY 2');
     array_unshift($result, array(null, ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'idTpLicenca',
+    $objeto->set_campos(array(
+        array('nome' => 'idTpLicenca',
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'size' => 50,
@@ -282,7 +303,7 @@ if ($acesso) {
             'col' => 2,
             'linha' => 4),
         array('nome' => 'dtTermino',
-            'label' => 'Data de Termino (previsto):',
+            'label' => 'Data de Termino:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,

@@ -114,14 +114,14 @@ class ListaAfastamentosServidor {
         $select .= ") UNION (
                    SELECT YEAR(tblicencasemvencimentos.dtInicial),
                            tblicencasemvencimentos.dtInicial,
-                                   tblicencasemvencimentos.numDias,
-                                   CONCAT('tblicencasemvencimentos&',idLicencaSemVencimentos),
-                                   tbtipolicenca.nome,
-                                   CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
-                              FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
-                                                           JOIN tbpessoa USING (idPessoa)
-                                                           JOIN tbtipolicenca USING (idTpLicenca)
-                             WHERE tbservidor.idServidor = {$this->idServidor}";
+                           tblicencasemvencimentos.numDias,
+                           ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                           tbtipolicenca.nome,
+                           CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
+                      FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
+                                                   JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbtipolicenca USING (idTpLicenca)
+                      WHERE tbservidor.idServidor = {$this->idServidor}";
 
         #######################                      
         $select .= ") ORDER BY 1 desc, 2 desc";
@@ -136,7 +136,7 @@ class ListaAfastamentosServidor {
         $tabela->set_titulo('Afastamentos');
         $tabela->set_label(array('Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', "Obs"));
         $tabela->set_align(array('center', 'center', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, "date_to_php", null, "exibeDtTermino", null, "exibeObsLicenca"));
+        $tabela->set_funcao(array(null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"));
         $tabela->set_width(array(10, 10, 5, 10, 60, 5));
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);

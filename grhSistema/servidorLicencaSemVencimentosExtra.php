@@ -27,20 +27,6 @@ if (empty($numDias)) {
     $campoValor[6] = null;
 }
 
-# Verifica a data de retorno
-if (!empty($dtRetorno)) {
-    # Verifica qual é q data maior
-    $dtRetorno = date_to_php($dtRetorno);
-    $dtTermino = date_to_php($dtTermino);
-    $dm = dataMaior($dtRetorno, $dtTermino);
-
-    # Verifica a data de retorno é anterior a data de termino
-    if ($dtRetorno <> $dtTermino AND $dm == $dtRetorno) {
-        $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
-        $erro = 1;
-    }
-}
-
 /*
  *  Verifica se já tem outro afastamento nesse período
  */

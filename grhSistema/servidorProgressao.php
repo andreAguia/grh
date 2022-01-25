@@ -25,7 +25,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Histórico de progressão e enquadramento";
+        $atividade = "Cadastro do servidor - Histórico de progressão funcional";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -56,7 +56,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Progressões e Enquadramentos do Servidor');
+    $objeto->set_nome('Cadastro de Progressões do Servidor');
 
     # botão de voltar da lista
     if ($origem == "areaProgressao.php") {
@@ -171,7 +171,7 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'col' => 3,
-            'title' => 'Data inícial da Progressão ou Enquadramento.',
+            'title' => 'Data inícial da Progressão.',
             'linha' => 1),
         array('nome' => 'idTpProgressao',
             'label' => 'Tipo:',
@@ -180,7 +180,7 @@ if ($acesso) {
             'required' => true,
             'array' => $result1,
             'size' => 20,
-            'title' => 'Tipo de Progressão / Enquadramento',
+            'title' => 'Tipo de Progressão',
             'linha' => 1),
         array('nome' => 'idClasse',
             'label' => 'Classe:',
@@ -236,7 +236,7 @@ if ($acesso) {
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões e Enquadramentos");
+    $botaoRel->set_title("Imprimir Relatório de Histórico de Progressões");
     $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
     $botaoRel->set_target("_blank");
 

@@ -98,7 +98,7 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1),
         array('nome' => 'formacao',
-            'label' => 'Formação.',
+            'label' => 'Formação',
             'tipo' => 'simnao',
             'size' => 5,
             'title' => 'Exibe a Área de Foemação Educacional do servidor',
@@ -116,7 +116,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1),
         array('nome' => 'dependentes',
-            'label' => 'Depend.',
+            'label' => 'Dependentes',
             'tipo' => 'simnao',
             'size' => 5,
             'title' => 'Exibe os Dependentes do Servidor',
@@ -151,7 +151,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 2),
-        array('nome' => 'licenca',
+        array('nome' => 'licencas',
             'label' => 'Licença',
             'tipo' => 'simnao',
             'size' => 1,
@@ -161,16 +161,16 @@ if ($acesso) {
             'col' => 3,
             'linha' => 2),
         array('nome' => 'progressao',
-            'label' => 'Progre.',
+            'label' => 'Progressões',
             'tipo' => 'simnao',
             'size' => 1,
-            'title' => 'Exibe o Histórico de Progressões e Enquadramento',
+            'title' => 'Exibe o Histórico de Progressões',
             'valor' => $postProgressao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 3),
         array('nome' => 'gratificacao',
-            'label' => 'Gratif.',
+            'label' => 'Gratificações',
             'tipo' => 'simnao',
             'size' => 1,
             'title' => 'Exibe o Histórico de Gratificação Especial',
@@ -858,7 +858,7 @@ if ($acesso) {
      */
 
     if ($postProgressao) {
-        tituloRelatorio('Histórico de Progressões e Enquadramentos');
+        tituloRelatorio('Histórico de Progressões');
 
         $select = 'SELECT tbprogressao.dtInicial,
                          tbtipoprogressao.nome,
@@ -1226,7 +1226,7 @@ if ($acesso) {
         $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
                             tblicencasemvencimentos.dtInicial,
                             tblicencasemvencimentos.numDias,
-                            CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos), 
+                            ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                             CONCAT(tblicencasemvencimentos.idTpLicenca,"&",idLicencasemvencimentos),
                             tblicencasemvencimentos.dtPublicacao,
                             idLicencasemvencimentos
@@ -1238,7 +1238,7 @@ if ($acesso) {
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(array("Tipo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        $relatorio->set_funcao(array(null, 'date_to_php', null, 'exibeDtTerminoRel', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
         $relatorio->set_align(array('left', 'center', 'center', 'center', 'left'));
         $relatorio->set_conteudo($result);
         $relatorio->set_botaoVoltar(false);

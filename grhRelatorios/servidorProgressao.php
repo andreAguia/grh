@@ -24,7 +24,7 @@ if ($acesso) {
 
     ######
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Histórico de Progressões e Enquadramentos');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Histórico de Progressões');
 
     br();
     $select = "SELECT tbprogressao.dtInicial,
@@ -55,7 +55,7 @@ if ($acesso) {
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
-    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Progressões e Enquadramentos");
+    $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Progressões");
     $relatorio->show();
 
     $page->terminaPagina();

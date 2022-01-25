@@ -26,7 +26,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de progressão e enquadramento";
+        $atividade = "Visualizou a área de progressão";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -144,7 +144,7 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores Administrativos e Técnicos Ativos Com a Última Progressão / Enquadramento');
+            $tabela->set_titulo('Servidores Administrativos e Técnicos Ativos Com a Última Progressão');
             $tabela->set_label(array('IdFuncional', 'Servidor', 'Salário Atual', 'Data Inicial', 'Análise'));
             $tabela->set_align(array("center", "left", "left"));
             $tabela->set_funcao(array(null, null, "exibeDadosSalarioAtual"));

@@ -591,10 +591,10 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Progressão & Enquadramento');
+        $botao->set_label('Progressão');
         $botao->set_url('areaProgressao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'progressao.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Área das rotinas de Progressão e enquadramento do serviodor');
+        $botao->set_title('Área das rotinas de progressão e posicionamento inicial do serviodor');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

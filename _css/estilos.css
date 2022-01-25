@@ -215,7 +215,7 @@ p#pObservacaoConcurso{
 }
 
 /*******************************************
- * Cadastro de Progressão e Enquadramento de Servidor
+ * Cadastro de Progressão de Servidor
  *******************************************/
 tr#importado{
     background-color: #ffcccc;
@@ -232,7 +232,7 @@ p#pprogressao2{
     font-size: 10px;
 }
 /*******************************************
- * Área de Progressão e Enquadramento
+ * Área de Progressão
  *******************************************/
 
 tr#tanofim td{

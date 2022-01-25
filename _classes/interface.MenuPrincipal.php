@@ -857,7 +857,7 @@ class MenuPrincipal {
         $menu->add_item('link', 'Parentesco', 'cadastroParentesco.php?grh=1', 'Acessa o Cadastro de Parentesco');
         $menu->add_item('link', 'Situação', 'cadastroSituacao.php?grh=1', 'Acessa o Cadastro de Situação');
         $menu->add_item('link', 'Motivos de Saída', 'cadastroMotivo.php?grh=1', 'Acessa o Cadastro de Motivo de Saída');
-        $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão & Enquadramento');
+        $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão');
         $menu->add_item('link', 'Nacionalidade', 'cadastroNacionalidade.php?grh=1', 'Acessa o Cadastro de Nacionalidade');
         $menu->add_item('link', 'País', 'cadastroPais.php?grh=1', 'Acessa o Cadastro de Pais');
         $menu->add_item('link', 'Estado', 'cadastroEstado.php?grh=1', 'Acessa o Cadastro de Estados');

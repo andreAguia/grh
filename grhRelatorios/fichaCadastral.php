@@ -854,7 +854,7 @@ if ($acesso) {
     }
 
     /*
-     * Histórico de Progressão e Enquadramento 
+     * Histórico de Progressão 
      */
 
     if ($postProgressao) {

@@ -215,7 +215,7 @@ class PlanoCargos {
          *
          * @Obs O id Servidor é necessário pois existem planos que só são válidos para determinados cargos. Se não for fornecido isso será ignorado.
          * @Obs Se a data estiver nulla será considerada a data atual
-         * @Obs Utilizada na rotina de enquadramento e progressão para saber em qual plano o servidor foi enquadrado ou progredido
+         * @Obs Utilizada na rotina de progressão para saber em qual plano o servidor foi progredido
          */
         # Conecta
         $pessoal = new Pessoal();
@@ -297,7 +297,7 @@ class PlanoCargos {
 
     public function evibeValor($idClasse) {
         /**
-         * Exive informação da faixa, valor e plano referente ao idClasse para ser exibido na rotina de cadastro de enquadramento & progressão
+         * Exive informação da faixa, valor e plano referente ao idClasse para ser exibido na rotina de cadastro de progressão
          * 
          * @param $classe  texto   null A classe do salário
          * 

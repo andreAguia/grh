@@ -49,7 +49,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Administrativos e Técnicos Ativos');
-    $relatorio->set_tituloLinha2('Com a Última Progressão / Enquadramento');
+    $relatorio->set_tituloLinha2('Com a Última Progressão');
     $relatorio->set_subtitulo('Agrupados por Escolaridade do Cargo - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Servidor', 'Salário Atual', 'Data Inicial', 'Análise', "Cargo"));
     $relatorio->set_align(array("center", "left", "left"));

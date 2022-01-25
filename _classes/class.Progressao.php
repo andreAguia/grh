@@ -3,7 +3,7 @@
 class Progressao {
 
     /**
-     * Abriga as várias rotina do Cadastro de progressão e enquadramento de um servidor
+     * Abriga as várias rotina do Cadastro de progressão de um servidor
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */

@@ -676,10 +676,10 @@ class MenuServidor {
         $menu = new MenuGrafico(3);
         if ($pessoal->get_perfilProgressao($this->perfil) == "Sim") {
             $botao = new BotaoGrafico();
-            $botao->set_label('Progressão e Enquadramento');
+            $botao->set_label('Progressão');
             $botao->set_url('servidorProgressao.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'salario.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-            $botao->set_title('Cadastro de Progressões e Enquadramentos do Servidor');
+            $botao->set_title('Cadastro de Progressões do Servidor');
             $menu->add_item($botao);
         }
 

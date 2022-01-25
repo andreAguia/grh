@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Histórico de Progressões e Enquadramentos
+ * Histórico de Progressões
  *  
  * By Alat
  */

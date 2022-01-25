@@ -408,7 +408,7 @@ class Avaliacao {
         if (empty($row[0])) {
             return null;
         } else {
-            return $row[0];
+            return "SEI - " . $row[0];
         }
     }
 
@@ -453,7 +453,7 @@ class Avaliacao {
         } else {
 
             pLista(
-                    "SEI - " . $this->getProcessoSei($idServidor),
+                    $this->getProcessoSei($idServidor),
                     $this->getProcessoFisico($idServidor)
             );
         }
@@ -469,16 +469,21 @@ class Avaliacao {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        # Pega array com os dias publicados
-        $select = "SELECT obs
+        if (empty($id)) {
+            echo "---";
+        } else {
+
+            # Pega array com os dias publicados
+            $select = "SELECT obs
                      FROM tbavaliacao
                     WHERE idAvaliacao = {$id}";
 
-        $retorno = $pessoal->select($select, false);
-        if (empty($retorno[0])) {
-            echo "---";
-        } else {
-            toolTip("Obs", $retorno[0]);
+            $retorno = $pessoal->select($select, false);
+            if (empty($retorno[0])) {
+                echo "---";
+            } else {
+                toolTip("Obs", $retorno[0]);
+            }
         }
     }
 
@@ -503,20 +508,20 @@ class Avaliacao {
                               dtPeriodo1,
                               dtPeriodo2 
                          FROM tbavaliacao WHERE idServidor = {$idServidor}";
-                         
+
             $row = $pessoal->select($select);
-            
-            foreach($row as $item){
+
+            foreach ($row as $item) {
                 # Tipo
-                if($row["tipo"] == 1){
+                if ($row["tipo"] == 1) {
                     echo "Estágio - ";
-                }else{
+                } else {
                     echo "Anual   - ";
                 }
-                
+
                 # Referência
-                echo $row["referencia"]," - ";
-                
+                echo $row["referencia"], " - ";
+
                 # Período
                 echo date_to_php($row["dtPeriodo1"]);
                 echo " a ";

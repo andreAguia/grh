@@ -126,7 +126,7 @@ if ($acesso) {
                                idAvaliacao,
                                tbservidor.idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbavaliacao USING (idServidor)
+                                         LEFT JOIN tbavaliacao USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1

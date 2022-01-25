@@ -715,7 +715,7 @@ class ListaAfastamentos {
         }
 
         #######################
-        # Licença sem vencimentos sem Data de retorno
+        # Licença sem vencimentos
         $select .= ') UNION (
                    SELECT ';
 
@@ -952,7 +952,7 @@ class ListaAfastamentos {
 
                 $tabela->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
                 $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left', 'left'));
-                $tabela->set_funcao(array(null, null, "date_to_php", null, "exibeDtTermino"));
+                $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe(array("pessoal", "pessoal"));
@@ -969,7 +969,7 @@ class ListaAfastamentos {
 
             $tabela->set_label(array('Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação'));
             $tabela->set_align(array('center', 'center', 'center', 'left', 'left'));
-            $tabela->set_funcao(array("date_to_php", null, "exibeDtTermino"));
+            $tabela->set_funcao(array("date_to_php", null, "date_to_php"));
             $tabela->set_width(array(15, 5, 15, 35, 30));
         }
 

@@ -518,13 +518,12 @@ class MenuPrincipal {
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
         
-        $botao = new BotaoGrafico();
-        $botao->set_label('Abono Permanência');
-        #$botao->set_url('areaAbonoPermanencia.php?grh=1');
-        $botao->set_url('#');
-        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Área das rotinas de abono permanência do serviodor');
-        $menu->add_item($botao);
+//        $botao = new BotaoGrafico();
+//        $botao->set_label('Abono Permanência');
+//        $botao->set_url('areaAbonoPermanencia.php?grh=1');
+//        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
+//        $botao->set_title('Área das rotinas de abono permanência do serviodor');
+//        $menu->add_item($botao);
         
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');

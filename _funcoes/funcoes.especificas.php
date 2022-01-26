@@ -810,8 +810,8 @@ function exibeFoto($idPessoa) {
      * Usado na rotina da área de fotografia
      */
     $foto = new ExibeFoto();
-    $foto->set_fotoLargura(45);
-    $foto->set_fotoAltura(55);
+    $foto->set_fotoLargura(80);
+    $foto->set_fotoAltura(100);
     $foto->set_url('?fase=exibeFoto&idPessoa=' . $idPessoa);
     $foto->show($idPessoa);
 }

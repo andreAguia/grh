@@ -408,7 +408,7 @@ class Avaliacao {
         if (empty($row[0])) {
             return null;
         } else {
-            return "SEI - " . $row[0];
+            return "SEI - {$row[0]}";
         }
     }
 

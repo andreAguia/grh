@@ -37,7 +37,7 @@ if ($acesso) {
     # Pega os parâmetros  
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
-    $parametroComprovante = post('parametroComprovante', get_session('parametroComprovante', 'Sim'));
+    $parametroComprovante = post('parametroComprovante', get_session('parametroComprovante', 'Todos'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
@@ -215,7 +215,7 @@ if ($acesso) {
             $tabela->set_titulo('Controle de Vacinação dos Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["Servidor", "Data", "Vacina", "Enviou Comprovante?"]);
-            $tabela->set_width([50, 10, 20, 10]);
+            $tabela->set_width([50, 15, 20, 10]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left"]);
             $tabela->set_classe(["pessoal"]);

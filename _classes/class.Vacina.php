@@ -242,7 +242,8 @@ class Vacina {
             }
         }
 
-        $select .= " GROUP BY comprovante
+        $select .= " AND comprovante IS NOT null
+                GROUP BY comprovante
                 ORDER BY 2 DESC ";
 
         #echo $select;

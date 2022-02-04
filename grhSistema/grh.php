@@ -39,6 +39,7 @@ if ($acesso) {
     set_session('origemId');
     set_session('sessionParametroPlano');
     set_session('sessionParametroNivel');
+    set_session('parametro');
     set_session('parametroNomeMat');
     set_session('parametroCpf');
     set_session('parametroNome');
@@ -53,6 +54,7 @@ if ($acesso) {
     set_session('parametroPerfil');
     set_session('parametroPasta');
     set_session('parametroSituacao');
+    set_session('parametroStatus');
     set_session('parametroPaginacao');
     set_session('parametroOrdenacao');
     set_session('parametroDescricao');
@@ -91,6 +93,7 @@ if ($acesso) {
     
     # Vacina
     set_session('parametroVacinado');
+    set_session('parametroComprovante');
 
     /*
      *  Menu

@@ -2185,7 +2185,28 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_nomeECargoELotacaoEPerfil
+     * Método get_nomeECargoELotacaoEId
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoELotacaoEId($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_lotacao($idServidor),
+                    "ID: ".$this->get_idFuncional($idServidor)
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacao
      * fornece o nome, cargo e perfil de um servidor
      * 
      * @param	string $idServidor idServidor do servidor

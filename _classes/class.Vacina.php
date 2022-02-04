@@ -54,7 +54,8 @@ class Vacina {
 
             # Pega os dados
             $select = "SELECT data,
-                              tbtipovacina.nome
+                              tbtipovacina.nome,
+                              comprovante
                        FROM tbvacina JOIN tbtipovacina USING (idTipoVacina)                       
                       WHERE idServidor = {$idServidor}
                    ORDER BY data";
@@ -70,15 +71,22 @@ class Vacina {
             if (empty($row[0][0])) {
                 p("Data não Informada - " . $row[0][1], "pVacinaUmaDose");
             } else {
-                p(date_to_php($row[0][0]) . " - " . $row[0][1], "pVacinaUmaDose");
+                if ($row[0][2]) {
+                    p(date_to_php($row[0][0]) . " - COM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
+                }else{
+                    p(date_to_php($row[0][0]) . " - SEM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
+                }
             }
-            
         } else {
             foreach ($row as $item) {
                 if (empty($item[0])) {
                     p("Data não Informada - " . $item[1], "pVacinaUmaDose");
                 } else {
-                    echo date_to_php($item[0]), " - ", $item[1], "<br/>";
+                    if ($item[2]) {
+                        echo date_to_php($item[0]), " - COM COMPROVANTE - ", $item[1], "<br/>";
+                    } else {
+                        echo date_to_php($item[0]), " - SEM COMPROVANTE - ", $item[1], "<br/>";
+                    }
                 }
             }
         }
@@ -196,8 +204,57 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo("por Vacina");
+        $tabela->set_titulo("Vacinados por Vacina");
         $tabela->set_label(["Vacina", "Servidores"]);
+        #$tabela->set_width(array(30, 15, 15, 15, 15));
+        $tabela->set_align(["left"]);
+
+        $tabela->set_colunaSomatorio(1);
+        $tabela->set_textoSomatorio("Total:");
+        $tabela->set_totalRegistro(false);
+
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    public function exibeQuadroVacinadosComprovante($idLotacao = null) {
+
+        # Trata os dados
+        if ($idLotacao == "Todos") {
+            $idLotacao = null;
+        }
+
+        # Geral - Por Cargo
+        $select = "SELECT if(comprovante,'Com Comprovante','Sem Comprovante'), count(DISTINCT tbvacina.idServidor) as jj
+                     FROM tbservidor LEFT JOIN tbvacina USING (idServidor)
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                               WHERE situacao = 1
+                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+        # Verifica se tem filtro por lotação
+        if (!empty($idLotacao)) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+        }
+
+        $select .= " GROUP BY comprovante
+                ORDER BY 2 DESC ";
+
+        #echo $select;
+
+        $pessoal = new Pessoal();
+        $servidores = $pessoal->select($select);
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($servidores);
+        $tabela->set_titulo("Vacinados por Comprovação");
+        $tabela->set_label(["Tipo", "Servidores"]);
         #$tabela->set_width(array(30, 15, 15, 15, 15));
         $tabela->set_align(["left"]);
 

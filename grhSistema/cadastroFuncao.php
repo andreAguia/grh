@@ -118,7 +118,7 @@ if ($acesso) {
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([4, 6]);
+    $objeto->set_colunaSomatorio(4);
 
     $objeto->set_classe([null, null, null, null, "Pessoal"]);
     $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo"]);
@@ -129,7 +129,7 @@ if ($acesso) {
     $servAtivos->set_title("Exibe os servidores ativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, $servAtivos));
+    $objeto->set_link([null, null, null, null, null, $servAtivos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

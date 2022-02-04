@@ -65,9 +65,10 @@ if ($acesso) {
     }
 
     # select da lista
-    $objeto->set_selectLista("SELECT YEAR(data) ano,
+    $objeto->set_selectLista("SELECT IFNULL(YEAR(data),'---') ano,
                                      data,               
                                      tbtipovacina.nome,
+                                     if(comprovante,'<span class=\'label succes\' title=\'Servidor enviou o comprovante\'>Sim</span>','<span class=\'label alert\' title=\'Servidor NÃO enviou o comprovante\'>Não</span>'),
                                      tbvacina.obs,
                                      idVacina
                                 FROM tbvacina JOIN tbtipovacina USING (idTipoVacina)
@@ -77,6 +78,7 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita("SELECT data,
                                      idTipoVacina,
+                                     comprovante,
                                      obs,
                                      idServidor
                                 FROM tbvacina
@@ -89,9 +91,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano", "Data", "Tipo", "Obs"]);
-    $objeto->set_width([10, 10, 20, 50]);
-    $objeto->set_align(["center", "center", "left", "left"]);
+    $objeto->set_label(["Ano", "Data", "Tipo", "Enviou Comprovante?", "Obs"]);
+    $objeto->set_width([10, 10, 15, 10, 45]);
+    $objeto->set_align(["center", "center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php"]);
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -131,8 +133,15 @@ if ($acesso) {
             'required' => true,
             'array' => $tipoVacina,
             'title' => 'Tipo da vacina',
-            'col' => 5,
+            'col' => 3,
             'size' => 50,
+            'linha' => 1),
+        array('nome' => 'comprovante',
+            'label' => 'Enviou Comprovante:',
+            'tipo' => 'simnao',
+            'title' => 'Informa se o servidor enviou comprovante a GRH',
+            'col' => 3,
+            'size' => 10,
             'linha' => 1),
         array('nome' => 'obs',
             'label' => 'Observações:',
@@ -162,7 +171,6 @@ if ($acesso) {
 
     # Envia os botões
     #$objeto->set_botaoListarExtra([$botaoRel, $botaoTipo]);
-
     ################################################################
 
     switch ($fase) {

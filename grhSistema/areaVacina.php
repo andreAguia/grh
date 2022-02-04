@@ -37,10 +37,12 @@ if ($acesso) {
     # Pega os parâmetros  
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
+    $parametroComprovante = post('parametroComprovante', get_session('parametroComprovante', 'Sim'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroVacinado', $parametroVacinado);
+    set_session('parametroComprovante', $parametroComprovante);
 
     # Começa uma nova página
     $page = new Page();
@@ -99,7 +101,7 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel, "right");
+            #$menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
@@ -122,7 +124,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(9);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             # Vacinado
@@ -133,7 +135,18 @@ if ($acesso) {
             $controle->set_valor($parametroVacinado);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            # comprovante
+            $controle = new Input('parametroComprovante', 'combo', 'Com Comprovante?:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra Comprovados /  não Comprovados');
+            $controle->set_array([["Todos", "Todos"], ["Sim", "Sim"], ["Não", "Não"]]);
+            $controle->set_valor($parametroComprovante);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -143,6 +156,7 @@ if ($acesso) {
 
             $vacina = new Vacina();
             $vacina->exibeQuadroVacinas($parametroLotacao);
+            $vacina->exibeQuadroVacinadosComprovante($parametroLotacao);
             $vacina->exibeQuadroVacinados($parametroLotacao);
 
             $grid->fechaColuna();
@@ -151,10 +165,13 @@ if ($acesso) {
             ##############
             # Pega os dados
 
-            $select = "SELECT tbservidor.idfuncional,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+            $select = "SELECT tbservidor.idServidor,
+                              tbvacina.data,
+                              IFNULL(tbtipovacina.nome,'<span class=\'label alert\' title=\'NÃO informou o tipo da vacina\'>Não Informado</span>'),
+                              if(comprovante,'<span class=\'label succes\' title=\'Servidor enviou o comprovante\'>Sim</span>','<span class=\'label alert\' title=\'Servidor NÃO enviou o comprovante\'>Não</span>')
+                         FROM tbservidor LEFT JOIN tbvacina USING (idServidor)
+                                         LEFT JOIN tbtipovacina ON (tbvacina.idTipoVacina = tbtipovacina.idTipoVacina)
+                                         JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
@@ -179,6 +196,16 @@ if ($acesso) {
                 $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
             }
 
+            # Não Comprovados
+            if ($parametroComprovante == "Não") {
+                $select .= " AND NOT comprovante ";
+            }
+
+            # Vacinados
+            if ($parametroComprovante == "Sim") {
+                $select .= " AND comprovante ";
+            }
+
 
             $select .= "ORDER BY tbpessoa.nome";
 
@@ -187,15 +214,17 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Controle de Vacinação dos Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Vacinas"]);
-            $tabela->set_width([10, 40, 40]);
+            $tabela->set_label(["Servidor", "Data", "Vacina", "Enviou Comprovante?"]);
+            $tabela->set_width([50, 10, 20, 10]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "left"]);
-            $tabela->set_classe([null, "pessoal", "Vacina"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeVacinas"]);
-            #$tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_rowspan(1);
-            $tabela->set_grupoCorColuna(1);
+            $tabela->set_align(["left"]);
+            $tabela->set_classe(["pessoal"]);
+            $tabela->set_metodo(["get_nomeECargoELotacaoEId"]);
+            #$tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeVacinas"]);
+            $tabela->set_funcao([null, "date_to_php"]);
+            $tabela->set_totalRegistroTexto("N° de registros de vacinas: ");
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

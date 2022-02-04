@@ -27,7 +27,7 @@ class MenuPrincipal {
         # Módulos
         $this->moduloServidores();
         $this->moduloAreaConcursos();
-        $this->moduloAreaPandemia();
+//        $this->moduloAreaPandemia();
         $this->moduloTabelaAuxiliares();
         #$this->moduloSei();
         #$this->moduloSigrh();
@@ -516,6 +516,20 @@ class MenuPrincipal {
         $botao->set_url('areaAposentadoria.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
+        $menu->add_item($botao);
+        
+//        $botao = new BotaoGrafico();
+//        $botao->set_label('Publicações');
+//        $botao->set_url('areaPublicacao.php?grh=1');
+//        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
+//        $botao->set_title('Área das publicações no DOERJ');
+//        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacina');
+        $botao->set_url('areaVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle da vacinação de servidores');
         $menu->add_item($botao);
         
 //        $botao = new BotaoGrafico();

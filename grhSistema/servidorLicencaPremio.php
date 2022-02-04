@@ -224,8 +224,8 @@ if ($acesso) {
         $select .= ' ORDER BY dtInicioPeriodo desc';
 
         $publicacao = $pessoal->select($select);
-
-        array_unshift($publicacao, array(null, ' -- Selecione uma Publicação')); # Adiciona o valor de nulo
+        array_unshift($publicacao, array(null, ' -- Selecione uma Publicação'));
+        
         # Campos para o formulario
         $objeto->set_campos(array(
             array('nome' => 'dtInicial',
@@ -333,7 +333,6 @@ if ($acesso) {
                 }
 
                 # Função para acrescentar a rotina extra
-
                 function exibeObs($idServidor) {
                     $licencPremio = new LicencaPremio();
                     $licencPremio->exibeObsGeral($idServidor);

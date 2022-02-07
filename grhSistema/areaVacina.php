@@ -101,7 +101,7 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel, "right");
+            $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
@@ -135,19 +135,25 @@ if ($acesso) {
             $controle->set_valor($parametroVacinado);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
+            if ($parametroVacinado == "Sim") {
+                $controle->set_col(2);
+            } else {
+                $controle->set_col(4);
+            }
             $form->add_item($controle);
 
-            # comprovante
-            $controle = new Input('parametroComprovante', 'combo', 'Com Comprovante?:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra Comprovados /  não Comprovados');
-            $controle->set_array([["Todos", "Todos"], ["Sim", "Sim"], ["Não", "Não"]]);
-            $controle->set_valor($parametroComprovante);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            $form->add_item($controle);
+            if ($parametroVacinado == "Sim") {
+                # comprovante
+                $controle = new Input('parametroComprovante', 'combo', 'Com Comprovante?:', 1);
+                $controle->set_size(30);
+                $controle->set_title('Filtra Comprovados /  não Comprovados');
+                $controle->set_array([["Todos", "Todos"], ["Sim", "Sim"], ["Não", "Não"]]);
+                $controle->set_valor($parametroComprovante);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(1);
+                $controle->set_col(2);
+                $form->add_item($controle);
+            }
 
             $form->show();
 
@@ -196,14 +202,16 @@ if ($acesso) {
                 $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
             }
 
-            # Não Comprovados
-            if ($parametroComprovante == "Não") {
-                $select .= " AND NOT comprovante ";
-            }
+            if ($parametroVacinado == "Sim") {
+                # Não Comprovados
+                if ($parametroComprovante == "Não") {
+                    $select .= " AND NOT comprovante ";
+                }
 
-            # Vacinados
-            if ($parametroComprovante == "Sim") {
-                $select .= " AND comprovante ";
+                # Vacinados
+                if ($parametroComprovante == "Sim") {
+                    $select .= " AND comprovante ";
+                }
             }
 
 
@@ -253,19 +261,25 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
+            
+            # inicia o subtítulo
+            $subTitulo = null;
 
+            # Verifica se é ou não de vacinados
             if ($parametroVacinado == "Sim") {
 
-                $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
-                      tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                $select = "SELECT tbservidor.idServidor,
+                              tbvacina.data,
+                              IFNULL(tbtipovacina.nome,'Não Informado'),
+                              if(comprovante,'Sim','Não'),
+                              concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
+                         FROM tbservidor LEFT JOIN tbvacina USING (idServidor)
+                                         LEFT JOIN tbtipovacina ON (tbvacina.idTipoVacina = tbtipovacina.idTipoVacina)
+                                         JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
@@ -276,23 +290,54 @@ if ($acesso) {
                     }
                 }
 
-                $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina)
-                ORDER BY lotacao, tbpessoa.nome";
+                # Não Vacinados
+                if ($parametroVacinado == "Não") {
+                    $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina) ";
+                }
+
+                # Vacinados
+                if ($parametroVacinado == "Sim") {
+                    $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
+                }
+
+                if ($parametroVacinado == "Sim") {
+                    # Não Comprovados
+                    if ($parametroComprovante == "Não") {
+                        $select .= " AND NOT comprovante ";
+                        $subTitulo = "Que NÃO Entregaram Comprovante";
+                    }
+
+                    # Comprovados
+                    if ($parametroComprovante == "Sim") {
+                        $select .= " AND comprovante ";
+                        $subTitulo = "Que Entregaram Comprovante";
+                    }
+                }
+
+
+                $select .= "ORDER BY lotacao, tbpessoa.nome";
 
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Servidores Vacinados');
-                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Vacinas"]);
-                $relatorio->set_width([10, 30, 30, 0, 30]);
-                $relatorio->set_align(["center", "left", "left", "left", "left"]);
+                $relatorio->set_titulo('Relatório de Servidores Que Informaram Ter Sido Vacinados');
+                $relatorio->set_subtitulo($subTitulo);
+                $relatorio->set_label(["Servidor", "Data", "Vacina", "Enviou Comprovante?", "Lotação"]);
+                $relatorio->set_width([50, 15, 20, 10, 0]);
+                $relatorio->set_align(["left"]);
 
-                $relatorio->set_classe([null, null, "pessoal", null, "Vacina"]);
-                $relatorio->set_metodo([null, null, "get_cargoSimples", null, "exibeVacinas"]);
+                $relatorio->set_classe(["pessoal"]);
+                $relatorio->set_metodo(["get_nomeECargoELotacaoEId"]);
+                $relatorio->set_funcao([null, "date_to_php"]);
 
                 $relatorio->set_conteudo($result);
-                $relatorio->set_numGrupo(3);
+                $relatorio->set_numGrupo(4);
                 $relatorio->set_bordaInterna(true);
+
+                $relatorio->set_totalRegistroTexto("N° de registros de vacinas: ");
+                $relatorio->set_rowspan(0);
+                $relatorio->set_grupoCorColuna(0);
+
                 $relatorio->show();
             }
 
@@ -329,7 +374,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Servidores Não Vacinados');
+                $relatorio->set_titulo('Relatório de Servidores Que Não Informaram Se Foram Vacinados');
                 $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação"]);
                 $relatorio->set_width([10, 45, 45, 0]);
                 $relatorio->set_align(["center", "left", "left"]);

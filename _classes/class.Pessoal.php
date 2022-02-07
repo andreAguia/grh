@@ -2198,7 +2198,7 @@ class Pessoal extends Bd {
                     $this->get_nome($idServidor),
                     $this->get_cargo($idServidor),
                     $this->get_lotacao($idServidor),
-                    "ID: ".$this->get_idFuncional($idServidor)
+                    "ID: " . $this->get_idFuncional($idServidor)
             );
         }
     }
@@ -2615,13 +2615,17 @@ class Pessoal extends Bd {
      */
     function get_trienioDataInicial($idServidor) {
         $select = 'SELECT dtInicial
-                         FROM tbtrienio
-                        WHERE idServidor = ' . $idServidor . '
-                             ORDER BY percentual desc';
+                     FROM tbtrienio
+                    WHERE idServidor = ' . $idServidor . '
+                 ORDER BY percentual desc';
 
         $row = parent::select($select, false);
 
-        return date_to_php($row[0]);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]);
+        }
     }
 
     ###########################################################
@@ -5827,5 +5831,4 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
 }

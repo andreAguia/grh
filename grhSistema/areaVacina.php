@@ -320,7 +320,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Servidores Que Informaram Ter Sido Vacinados');
+                $relatorio->set_titulo('Relatório de Servidores Que Informaram Terem Sido Vacinados');
                 $relatorio->set_subtitulo($subTitulo);
                 $relatorio->set_label(["Servidor", "Data", "Vacina", "Enviou Comprovante?", "Lotação"]);
                 $relatorio->set_width([50, 15, 20, 10, 0]);

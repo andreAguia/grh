@@ -36,11 +36,11 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
+    if (is_null(post('parametro'))) {
+        $parametro = retiraAspas(get_session('sessionParametro'));
     } else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
+        $parametro = post('parametro');
+        set_session('sessionParametro', $parametro);
     }
 
     # Começa uma nova página
@@ -222,8 +222,10 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Pega os dados do plano
-            $plano = new PlanoCargos();
-            $dados = $plano->get_dadosPlano($id);
+            if (!empty($id)) {
+                $plano = new PlanoCargos();
+                $dados = $plano->get_dadosPlano($id);
+            }
 
             # Cria um menu
             $menu = new MenuBar();
@@ -235,17 +237,19 @@ if ($acesso) {
             $menu->add_link($linkVoltar, "left");
 
             # Texto da Lei
-            if (!vazio($dados[4])) {
-                $botaoRel = new Button("Diário Oficial", "../_legislacao/" . $dados[4]);
-                $botaoRel->set_title("Publicação da Lei");
-                $botaoRel->set_target("_blank");
+            if (!empty($id)) {
+                if (!empty($dados[4])) {
+                    $botaoRel = new Button("Diário Oficial", "../_legislacao/" . $dados[4]);
+                    $botaoRel->set_title("Publicação da Lei");
+                    $botaoRel->set_target("_blank");
+                    $menu->add_link($botaoRel, "right");
+                }
+
+                # Tabela
+                $botaoRel = new Button("Tabela", "?fase=tabela&id=$id");
+                $botaoRel->set_title("Tabela");
                 $menu->add_link($botaoRel, "right");
             }
-
-            # Tabela
-            $botaoRel = new Button("Tabela", "?fase=tabela&id=$id");
-            $botaoRel->set_title("Tabela");
-            $menu->add_link($botaoRel, "right");
 
             # Editar
             $botaoEditar = new Button("Editar", "?fase=editar2&id=$id");

@@ -91,7 +91,6 @@ class PlanoCargos {
         $tabela->set_totalRegistro(false);
         $tabela->show();
 
-
         # Exibe a tabela de valores
         echo "<table class='tabelaPadrao'>";
         echo '<caption>Valores</caption>';
@@ -264,7 +263,6 @@ class PlanoCargos {
                      WHERE faixa = "' . $classe . '"
                      AND idPlano = "' . $idPlano . '"';
 
-
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
         return $row[0];
@@ -286,7 +284,6 @@ class PlanoCargos {
                      FROM tbclasse
                      WHERE faixa = "' . $classe . '"
                      AND idPlano = "' . $idPlano . '"';
-
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -315,7 +312,6 @@ class PlanoCargos {
 
             $pessoal = new Pessoal();
             $row = $pessoal->select($select, false);
-
 
             pLista(
                     "{$row[0]} - {$row[1]}",
@@ -447,9 +443,12 @@ class PlanoCargos {
         $select .= ' ORDER BY valor desc';
 
         $row = $pessoal->select($select, false);
-        $idClasse = $row[0];
 
-        return $idClasse;
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################

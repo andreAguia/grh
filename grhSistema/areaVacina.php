@@ -162,8 +162,9 @@ if ($acesso) {
 
             $vacina = new Vacina();
             $vacina->exibeQuadroVacinas($parametroLotacao);
-            $vacina->exibeQuadroVacinadosComprovante($parametroLotacao);
-            $vacina->exibeQuadroVacinados($parametroLotacao);
+            $vacina->exibeQuadroVacinadosNComprovados($parametroLotacao);
+            $vacina->exibeQuadroDosesPorComprovante($parametroLotacao);
+            $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
@@ -230,7 +231,7 @@ if ($acesso) {
             $tabela->set_metodo(["get_nomeECargoELotacaoEId"]);
             #$tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeVacinas"]);
             $tabela->set_funcao([null, "date_to_php"]);
-            $tabela->set_totalRegistroTexto("N° de registros de vacinas: ");
+            $tabela->set_totalRegistroTexto("N° de doses de vacinas: ");
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 

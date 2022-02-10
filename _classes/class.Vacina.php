@@ -73,7 +73,7 @@ class Vacina {
             } else {
                 if ($row[0][2]) {
                     p(date_to_php($row[0][0]) . " - COM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
-                }else{
+                } else {
                     p(date_to_php($row[0][0]) . " - SEM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
                 }
             }
@@ -94,7 +94,7 @@ class Vacina {
 
 ###########################################################
 
-    public function getNumServidoresVacinados($idLotacao = null, $idTipoVacina = null) {
+    public function getNumServidoresAtivosVacinados($idLotacao = null, $idTipoVacina = null) {
         /**
          * Retorna o nome da lotação
          * 
@@ -106,8 +106,118 @@ class Vacina {
                      JOIN tbhistlot USING (idServidor)
                      JOIN tbservidor USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                  WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                    WHERE situacao = 1
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+        # Verifica se tem filtro por lotação
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else {
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+        }
+
+        # Verifica se tem filtro por vacina
+        if (!empty($idTipoVacina) AND ($idTipoVacina <> "Todos")) {
+            $select .= " AND idTipoVacina = {$idTipoVacina}";
+        }
+
+        $pessoal = new Pessoal();
+        $num = $pessoal->count($select);
+        return $num;
+    }
+
+    ###########################################################
+
+    public function getNumDoses($idLotacao = null, $idTipoVacina = null) {
+        /**
+         * Retorna o nome da lotação
+         * 
+         * @syntax $this->get_dados($idRpa);
+         */
+        # Monta o select
+        $select = "SELECT tbvacina.idServidor
+                     FROM tbvacina 
+                     JOIN tbhistlot USING (idServidor)
+                     JOIN tbservidor USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE situacao = 1
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+        # Verifica se tem filtro por lotação
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else {
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+        }
+
+        # Verifica se tem filtro por vacina
+        if (!empty($idTipoVacina) AND ($idTipoVacina <> "Todos")) {
+            $select .= " AND idTipoVacina = {$idTipoVacina}";
+        }
+
+        $pessoal = new Pessoal();
+        $num = $pessoal->count($select);
+        return $num;
+    }
+
+    ###########################################################
+
+    public function getNumDosesComprovadas($idLotacao = null, $idTipoVacina = null) {
+        /**
+         * Retorna o nome da lotação
+         * 
+         * @syntax $this->get_dados($idRpa);
+         */
+        # Monta o select
+        $select = "SELECT tbvacina.idServidor
+                     FROM tbvacina 
+                     JOIN tbhistlot USING (idServidor)
+                     JOIN tbservidor USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE situacao = 1
+                      AND comprovante
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+        # Verifica se tem filtro por lotação
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else {
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+        }
+
+        # Verifica se tem filtro por vacina
+        if (!empty($idTipoVacina) AND ($idTipoVacina <> "Todos")) {
+            $select .= " AND idTipoVacina = {$idTipoVacina}";
+        }
+
+        $pessoal = new Pessoal();
+        $num = $pessoal->count($select);
+        return $num;
+    }
+
+    ###########################################################
+
+    public function getNumDosesNaoComprovadas($idLotacao = null, $idTipoVacina = null) {
+        /**
+         * Retorna o nome da lotação
+         * 
+         * @syntax $this->get_dados($idRpa);
+         */
+        # Monta o select
+        $select = "SELECT tbvacina.idServidor
+                     FROM tbvacina 
+                     JOIN tbhistlot USING (idServidor)
+                     JOIN tbservidor USING (idServidor)
+                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE situacao = 1
+                      AND NOT comprovante
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
@@ -140,7 +250,7 @@ class Vacina {
         # Pega os dados
         $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
-        $vacinados = $this->getNumServidoresVacinados($idLotacao);
+        $vacinados = $this->getNumServidoresAtivosVacinados($idLotacao);
 
         $porcentagemVacinados = number_format(($vacinados * 100) / $numServidores, 1, '.', '');
         $porcentagemNaoVacinados = number_format(100 - $porcentagemVacinados, 1, '.', '');
@@ -167,7 +277,7 @@ class Vacina {
 
     ###########################################################
 
-    public function exibeQuadroVacinados($idLotacao = null) {
+    public function exibeQuadroDosesPorVacina($idLotacao = null) {
 
         # Trata os dados
         if ($idLotacao == "Todos") {
@@ -175,7 +285,7 @@ class Vacina {
         }
 
         # Geral - Por Cargo
-        $select = "SELECT tbtipovacina.nome, count(DISTINCT tbvacina.idServidor) as jj
+        $select = "SELECT tbtipovacina.nome, count(tbvacina.idServidor) as jj
                      FROM tbservidor LEFT JOIN tbvacina USING (idServidor)
                                      LEFT JOIN tbtipovacina USING (idTipoVacina)
                                           JOIN tbhistlot USING (idServidor)
@@ -204,8 +314,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo("Vacinados por Vacina");
-        $tabela->set_label(["Vacina", "Servidores"]);
+        $tabela->set_titulo("Doses por Vacina");
+        $tabela->set_label(["Vacina", "Doses"]);
         #$tabela->set_width(array(30, 15, 15, 15, 15));
         $tabela->set_align(["left"]);
 
@@ -218,20 +328,21 @@ class Vacina {
 
     ###########################################################
 
-    public function exibeQuadroVacinadosComprovante($idLotacao = null) {
+    public function exibeQuadroVacinadosNComprovados($idLotacao = null) {
 
         # Trata os dados
         if ($idLotacao == "Todos") {
             $idLotacao = null;
         }
 
-        # Geral - Por Cargo
-        $select = "SELECT if(comprovante,'Com Comprovante','Sem Comprovante'), count(DISTINCT tbvacina.idServidor) as jj
-                     FROM tbservidor LEFT JOIN tbvacina USING (idServidor)
-                                          JOIN tbhistlot USING (idServidor)
-                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                               WHERE situacao = 1
-                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+        # Pega os servidores que tem doses não comprovadas
+        $select = "SELECT DISTINCT tbvacina.idServidor
+                     FROM tbvacina LEFT JOIN tbservidor USING (idServidor)
+                                        JOIN tbhistlot USING (idServidor)
+                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE situacao = 1
+                       AND NOT comprovante 
+                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao)) {
@@ -241,23 +352,58 @@ class Vacina {
                 $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
         }
-
-        $select .= " AND comprovante IS NOT null
-                GROUP BY comprovante
-                ORDER BY 2 DESC ";
-
-        #echo $select;
-
+        
         $pessoal = new Pessoal();
-        $servidores = $pessoal->select($select);
+        $Ncomprovadas = $pessoal->count($select);
+        $vacinados = $this->getNumServidoresAtivosVacinados($idLotacao);
+        $porcentagemNaoComprovadas = number_format(($Ncomprovadas * 100) / $vacinados, 1, '.', '');
+
+        $servidores = [
+            [$Ncomprovadas, $porcentagemNaoComprovadas]
+        ];
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo("Vacinados por Comprovação");
-        $tabela->set_label(["Tipo", "Servidores"]);
-        #$tabela->set_width(array(30, 15, 15, 15, 15));
-        $tabela->set_align(["left"]);
+        $tabela->set_titulo("Vacinados Não Comprovados");
+        $tabela->set_label(["Servidores", "%"]);
+        $tabela->set_width([33, 33, 33]);
+
+//        $tabela->set_colunaSomatorio(1);
+//        $tabela->set_textoSomatorio("Total:");
+        $tabela->set_totalRegistro(false);
+
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    public function exibeQuadroDosesPorComprovante($idLotacao = null) {
+
+        # Trata os dados
+        if ($idLotacao == "Todos") {
+            $idLotacao = null;
+        }
+
+        # Pega os dados
+        $comprovadas = $this->getNumDosesComprovadas($idLotacao);
+        $Ncomprovadas = $this->getNumDosesNaoComprovadas($idLotacao);
+        $total = $this->getNumDoses($idLotacao);
+
+        $porcentagemComprovadas = number_format(($comprovadas * 100) / $total, 1, '.', '');
+        $porcentagemNaoComprovadas = number_format(($Ncomprovadas * 100) / $total, 1, '.', '');
+
+        $servidores = [
+            ["Sim", $comprovadas, $porcentagemComprovadas],
+            ["Não", $Ncomprovadas, $porcentagemNaoComprovadas]
+        ];
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($servidores);
+        $tabela->set_titulo("Doses por Comprovação");
+        $tabela->set_label(["Comprovadas", "Doses", "%"]);
+        $tabela->set_width([33, 33, 33]);
 
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");

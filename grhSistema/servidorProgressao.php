@@ -140,7 +140,8 @@ if ($acesso) {
                                       nome
                                  FROM tbtipoprogressao
                              ORDER BY nome');
-    array_push($result1, array(null, null)); # Adiciona o valor de nulo
+    array_push($result1, array(null, null)); 
+    
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $idCargo = $lista->get_idCargo($idServidorPesquisado);
@@ -157,7 +158,7 @@ if ($acesso) {
         $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
     }
 
-    $combo .= ' ORDER BY tbplano.planoAtual, tbplano.dtPublicacao, tbplano.planoAtual, SUBSTRING(faixa, 1, 1), valor';
+    $combo .= ' ORDER BY tbplano.planoAtual DESC, tbplano.dtPublicacao DESC, SUBSTRING(faixa, 1, 1), valor';
 
 
     $result2 = $lista->select($combo);

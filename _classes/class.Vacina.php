@@ -365,7 +365,7 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo("Servidores com Doses Não Comprovadas");
+        $tabela->set_titulo("Servidores com Alguma Dose Não Comprovada");
         $tabela->set_label(["Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
 

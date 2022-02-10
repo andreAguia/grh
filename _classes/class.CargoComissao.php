@@ -719,7 +719,11 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
 
-        return $row[0];
+        if(empty($row)){
+            return null;
+        }else{
+            return $row[0];
+        }        
     }
 
     ###########################################################

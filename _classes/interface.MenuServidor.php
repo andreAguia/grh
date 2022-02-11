@@ -63,24 +63,17 @@ class MenuServidor {
         $this->moduloVinculos();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(12, 7, 7);
+        $grid->abreColuna(12, 6, 6);
         $this->moduloFuncionais();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(7, 5, 3);
+        $grid->abreColuna(7, 5, 4);
         $this->moduloPessoais();
+        $this->moduloBeneficios();
         $grid->fechaColuna();
         # --
         $grid->abreColuna(5, 4, 2);
         $this->moduloFoto();
-        $grid->fechaColuna();
-        # --
-        $grid->abreColuna(6, 4, 2);
-        $this->moduloBeneficios();
-        $grid->fechaColuna();
-        # --
-        $grid->abreColuna(6, 4, 2);
-        $this->moduloPandemia();
         $grid->fechaColuna();
         # --
         $grid->abreColuna(12, 6, 4);
@@ -91,7 +84,7 @@ class MenuServidor {
         $this->moduloAfastamentos();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(12, 6, 6);
+        $grid->abreColuna(12, 6, 4);
         $this->moduloRelatorios();
         $grid->fechaColuna();
         # --
@@ -153,7 +146,7 @@ class MenuServidor {
         titulo('Funcionais');
         br();
 
-        $menu = new MenuGrafico(5);
+        $menu = new MenuGrafico(4);
 
         # Funcionais
         $botao = new BotaoGrafico();
@@ -528,7 +521,7 @@ class MenuServidor {
         titulo('Pessoais');
         br();
 
-        $menu = new MenuGrafico(2);
+        $menu = new MenuGrafico(3);
         $botao = new BotaoGrafico();
         $botao->set_label('Pessoais');
         $botao->set_url('servidorPessoais.php?grh=1');
@@ -562,6 +555,13 @@ class MenuServidor {
         $botao->set_url('servidorDependentes.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro dos Parentes do Servidor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Vacinas');
+        $botao->set_url('servidorVacina.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle de vacinação de servidores');
         $menu->add_item($botao);
 
         $menu->show();
@@ -758,7 +758,7 @@ class MenuServidor {
         titulo('Benefícios');
         br();
 
-        $menu = new MenuGrafico(1);
+        $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
@@ -839,12 +839,7 @@ class MenuServidor {
 
         $menu = new MenuGrafico(1);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vacinas');
-        $botao->set_url('servidorVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle de vacinação de servidores');
-        $menu->add_item($botao);
+        
 
         $botao = new BotaoGrafico();
         $botao->set_label('Comorbidades');

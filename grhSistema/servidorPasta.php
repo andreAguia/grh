@@ -6,7 +6,7 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario            = null;              # Servidor logado
+$idUsuario = null;              # Servidor logado
 $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 # Configuração
 include ("_config.php");
@@ -20,14 +20,14 @@ if ($acesso) {
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
-    $intra   = new Intra();
+    $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Pasta Funcional";
-        $data      = date("Y-m-d H:i:s");
+        $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
@@ -128,32 +128,32 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome'      => 'tipo',
-            'label'     => 'Tipo:',
-            'tipo'      => 'combo',
+        array('nome' => 'tipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
             'autofocus' => true,
-            'required'  => true,
-            'array'     => array(array(null, null),
+            'required' => true,
+            'array' => array(array(null, null),
                 array(1, 'Documento'),
                 array(2, 'Processo')),
-            'size'      => 20,
-            'title'     => 'Qual o tipo de Docuemnto',
-            'col'       => 3,
-            'linha'     => 1),
-        array('linha'    => 1,
-            'nome'     => 'descricao',
-            'label'    => 'Descrição:',
-            'tipo'     => 'texto',
+            'size' => 20,
+            'title' => 'Qual o tipo de Docuemnto',
+            'col' => 3,
+            'linha' => 1),
+        array('linha' => 1,
+            'nome' => 'descricao',
+            'label' => 'Descrição:',
+            'tipo' => 'texto',
             'required' => true,
-            'col'      => 8,
-            'size'     => 250),
-        array('linha'  => 3,
-            'nome'   => 'idServidor',
-            'label'  => 'Servidor:',
-            'tipo'   => 'hidden',
+            'col' => 8,
+            'size' => 250),
+        array('linha' => 3,
+            'nome' => 'idServidor',
+            'label' => 'Servidor:',
+            'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,
-            'col'    => 9,
-            'size'   => 10)));
+            'col' => 9,
+            'size' => 10)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -301,7 +301,7 @@ if ($acesso) {
             tituloTable("Upload de Documento para Pasta Funcional");
 
             $grid->fechaColuna();
-            $grid->abreColuna(6);            
+            $grid->abreColuna(6);
 
             echo "<form class='upload1' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
@@ -320,33 +320,33 @@ if ($acesso) {
             $extensoes = ["pdf"];
 
             # Pega os valores do php.ini
-            $postMax   = limpa_numero(ini_get('post_max_size'));
+            $postMax = limpa_numero(ini_get('post_max_size'));
             $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-            $limite    = menorValor(array($postMax, $uploadMax));
+            $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
 
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-            
+
             # Exibe o nome do processo/documento para informar na tela de upload
             $ClassePasta = new PastaFuncional();
             $dadosPasta = $ClassePasta->get_dados($id);
-            
-            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";            
+
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
             br();
             p($texto, "f14", "center");
             p($dadosPasta["descricao"], "f14", "center");
 
-            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {                
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
                 $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
                     # Registra log
                     $Objetolog = new Intra();
-                    $data      = date("Y-m-d H:i:s");
+                    $data = date("Y-m-d H:i:s");
                     $atividade = "Fez o upload de documento para pasta funcional";
                     $Objetolog->registraLog($idUsuario, $data, $atividade, "tbpasta", $id, 8, $idServidorPesquisado);
 
@@ -356,11 +356,11 @@ if ($acesso) {
                     loadPage("?fase=upload&id=.$id");
                 }
             }
-            
+
             # Informa caso exista um arquivo com o mesmo nome
-            $arquivoDocumento = $pasta.$id.".pdf";
+            $arquivoDocumento = $pasta . $id . ".pdf";
             if (file_exists($arquivoDocumento)) {
-                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!","puploadMensagem");
+                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!", "puploadMensagem");
                 br();
             }
 

@@ -218,4 +218,163 @@ class Progressao {
     }
 
     ###########################################################
+
+    function exibeDadosSalarioAtual($idServidor) {
+
+        /**
+         * Exibe vários dados referente ao salário atual do servidor
+         */
+        # Verifica se o id foi enviado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega o idClasse atual 
+            $idClasse = $this->get_IdClasseAtual($idServidor);
+
+            # Pega os dados desta idClasse
+            $classe = new Classe();
+            $dados = $classe->get_dados($idClasse);
+            if (empty($dados[0])) {
+                return null;
+            } else {
+
+                # Exibe os dados
+                pLista(
+                        "Faixa: " . $dados["faixa"],
+                        "Valor: $" . $dados["valor"],
+                        "Plano: " . $dados["idPlano"],
+                        "Nível: " . $dados["nivel"]
+                );
+            }
+        }
+    }
+
+###########################################################
+
+    function exibeDadosSalarioNovo($idServidor) {
+
+        /**
+         * Exibe vários dados referente ao salário Novo do servidor 
+         * (Aumento de salário de janeiro dse 2022)
+         */
+        # Define o novo plano
+        $idPlano = 14;
+
+        # Verifica se o id foi enviado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega o idClasse atual 
+            $idClasse = $this->get_IdClasseAtual($idServidor);
+
+            if (empty($idClasse)) {
+                return null;
+            } else {
+
+                # Pega a faixa. que servirá de base para a importação
+                $classe = new Classe();
+                $dados = $classe->get_dados($idClasse);
+                $faixa = $dados["faixa"];
+
+                if ($dados["idPlano"] == 8) {
+
+                    # Pega essa faixa na nova tabela
+                    $select = "SELECT idClasse 
+                         FROM tbclasse
+                        WHERE faixa = '{$faixa}'
+                          AND idPlano = 14";
+
+                    $pessoal = new Pessoal();
+                    $row = $pessoal->select($select, false);
+
+                    if (empty($row[0])) {
+                        return null;
+                    } else {
+                        # Pega os dados dessa faixa na nova tabela
+                        $dados2 = $classe->get_dados($row[0]);
+
+                        # Exibe os dados
+                        pLista(
+                                "Faixa: " . $dados2["faixa"],
+                                "Valor: $" . $dados2["valor"],
+                                "Plano: " . $dados2["idPlano"],
+                                "Nível: " . $dados2["nivel"]
+                        );
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
+    ###########################################################
+
+    function exibeLancamento($idServidor) {
+
+        /**
+         * Exibe e faz os lançamentos 
+         * (Aumento de salário de janeiro dse 2022)
+         */
+        # Define o novo plano
+        $idPlano = 14;
+
+        # Verifica se o id foi enviado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega o idClasse atual 
+            $idClasse = $this->get_IdClasseAtual($idServidor);
+
+            if (empty($idClasse)) {
+                return null;
+            } else {
+
+                # Pega a faixa. que servirá de base para a importação
+                $classe = new Classe();
+                $dados = $classe->get_dados($idClasse);
+                $faixa = $dados["faixa"];
+
+                if ($dados["idPlano"] == 8) {
+
+                    # Pega essa faixa na nova tabela
+                    $select = "SELECT idClasse 
+                             FROM tbclasse
+                            WHERE faixa = '{$faixa}'
+                              AND idPlano = 14";
+
+                    $pessoal = new Pessoal();
+                    $row = $pessoal->select($select, false);
+
+                    if (empty($row[0])) {
+                        return null;
+                    } else {
+                        # Pega os dados dessa faixa na nova tabela
+                        $dados2 = $classe->get_dados($row[0]);
+                        echo "idServidor: {$idServidor}";
+                        br();
+                        echo "idTpProgressao: 5";
+                        br();
+                        echo "idClasse: {$row[0]}";
+                        br();
+                        echo "dtPublicacao: 28/01/2022";
+                        br();
+                        echo "dtInicial: 01/01/2022";
+                        br();
+                        echo "obs: De acordo com a Lei Estadual nº 9.436, de 14 de outubro de 2021";
+                        br();
+                        #echo "INSERT INTO tbprogressao ('idServidor','idTpProgressao','idClasse','dtPublicacao','dtInicial','obs') VALUES ({$idServidor},5,'2022_01_28','2022_01_01','De acordo com a Lei Estadual nº 9.436, de 14 de outubro de 2021'";
+
+                        # Grava na tabela
+                        $campos = ['idServidor','idTpProgressao','idClasse','dtPublicacao','dtInicial','obs'];
+                        $valor = [$idServidor,5,$row[0],'2022_01_28','2022_01_01','De acordo com a Lei Estadual nº 9.436, de 14 de outubro de 2021'];
+                        $pessoal->gravar($campos, $valor, null, "tbprogressao", "idProgressao", false);
+                    }
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
 }

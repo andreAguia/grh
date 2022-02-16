@@ -35,7 +35,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros    
-    $parametroCargo = post('parametroCargo', get_session('parametroCargo', 6));
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo', 1));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroCargo', $parametroCargo);
@@ -118,7 +118,7 @@ if ($acesso) {
             $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $controle->set_array($result);
             $controle->set_autofocus(true);
             $form->add_item($controle);

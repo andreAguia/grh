@@ -17,10 +17,11 @@ if (!is_null($campoValor[10])) {
         # Verifica se e realmente @uenf
         $pos1 = stripos($campoValor[10], "@uenf");
         $pos2 = stripos($campoValor[10], "@lenep.uenf");
+        $pos3 = stripos($campoValor[10], "@pq.uenf");
 
         # se tem @uenf
-        if ($pos1 === false AND $pos2 === false) {
-            $msgErro .= 'O e-mail institucional não é @uenf nem @lenep.uenf !\n';
+        if ($pos1 === false AND $pos2 === false AND $pos3 === false) {
+            $msgErro .= 'O e-mail não é institucional!\n';
             $erro = 1;
         }
     }

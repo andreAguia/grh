@@ -29,6 +29,7 @@ class MenuPrincipal {
         $this->moduloAreaConcursos();
 //        $this->moduloAreaPandemia();
         $this->moduloTabelaAuxiliares();
+//        $this->moduloPlanoCargos();
         #$this->moduloSei();
         #$this->moduloSigrh();
         $this->moduloLegislacao();
@@ -221,7 +222,7 @@ class MenuPrincipal {
      * Método moduloSispatri
      */
     private function moduloSispatri() {
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("https://www.servidor.rj.gov.br/portal-web/portal/publico/Noticia/detalhar?hdnNoticia=1152");
@@ -449,16 +450,9 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label('Plano de Cargos & Vencimentos');
         $botao->set_url('cadastroPlanoCargos.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'plano.gif', $tamanhoImage, $tamanhoImage);
+        $botao->set_imagem(PASTA_FIGURAS . 'plano.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Plano de Cargos & Vencimentos');
         $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Tabela Salarial');
-        $botao->set_url('cadastroTabelaSalarial.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Cadastro de Tipos de Licenças');
-        $botao->set_accesskey('b');
 
         $botao = new BotaoGrafico();
         $botao->set_label('Professor Visitante');
@@ -517,28 +511,28 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
-        
+
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Publicações');
 //        $botao->set_url('areaPublicacao.php?grh=1');
 //        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
 //        $botao->set_title('Área das publicações no DOERJ');
 //        $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Vacina');
         $botao->set_url('areaVacina.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle da vacinação de servidores');
         $menu->add_item($botao);
-        
+
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Abono Permanência');
 //        $botao->set_url('areaAbonoPermanencia.php?grh=1');
 //        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
 //        $botao->set_title('Área das rotinas de abono permanência do serviodor');
 //        $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
         $botao->set_url('areaReadaptacao.php?grh=1');
@@ -574,7 +568,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle dos responsáveis pela prestação de contas');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Licença Médica');
         $botao->set_url('areaLicencaMedica.php?grh=1');
@@ -588,7 +582,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Avaliação');
         $botao->set_url('areaAvaliacao.php?grh=1');
@@ -685,7 +679,7 @@ class MenuPrincipal {
             $botao->set_title('Recadastramento de Servidores');
             $menu->add_item($botao);
         }
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('RPA');
         $botao->set_url('cadastroRpa.php?grh=1');
@@ -945,37 +939,37 @@ class MenuPrincipal {
         $painel->fecha();
     }
 
-     ######################################################################################################################
+    ######################################################################################################################
 
     /**
-     * Método moduloAreaEspecial
+     * Método moduloPlanoCargos
      * 
-     * Exibe o menu de Legislação
+     * Exibe o menu de Plano de Cargos
      */
-    private function moduloAreaPandemia() {
+    private function moduloPlanoCargos() {
 
         $painel = new Callout();
         $painel->abre();
 
-        titulo('Área da Pandemia');
+        titulo('Plano de Cargos');
         br();
 
         $tamanhoImage = 60;
         $menu = new MenuGrafico(2);
         #$menu->set_espacoEntreLink(true);
-        
+
         $botao = new BotaoGrafico();
-        $botao->set_label('Vacina');
-        $botao->set_url('areaVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle da vacinação de servidores');
+        $botao->set_label('Plano de Cargos & Vencimentos');
+        $botao->set_url('cadastroPlanoCargos.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'plano.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Plano de Cargos & Vencimentos');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Comorbidades');
-        $botao->set_url('areaComorbidade.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'comorbidade.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Cadastro de comorbidades dos servidores');
+        $botao->set_label('Tabela Salarial');
+        $botao->set_url('cadastroTabelaSalarial.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'tabela.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Tipos de Licenças');
         $menu->add_item($botao);
 
         $menu->show();

@@ -49,6 +49,47 @@ class PlanoCargos {
 
     ###########################################################
 
+    public function exibeDadosPlano($idPlano = null) {
+        /**
+         * Exibe uma pequena tabela com o dados do plano
+         * 
+         * @param $idPlano integer null o $idPlano
+         * 
+         * @syntax $plano->exibeDAdosPlano([$idPlano]);  
+         */
+        # Conecta
+        $pessoal = new Pessoal();
+
+        # Pega o nome da tabela
+        $dados = $this->get_dadosPlano($idPlano);
+
+        # Verifica o status
+        if ($dados['planoAtual']) {
+            $status = "Vigente";
+        } else {
+            $status = "Antigo";
+        }
+
+        # Exibe a tabela identificando o plano
+        $tabela = new Tabela();
+        $tabela->set_titulo($dados[0]);
+        $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6], $status]));
+        $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores", "Status"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_width([15,15,15,10,5]);
+
+        $formatacaoCondicional = array(
+            array('coluna' => 3,
+                'valor' => $dados[6],
+                'operador' => '=',
+                'id' => 'listaDados'));
+
+        $tabela->set_formatacaoCondicional($formatacaoCondicional);
+        $tabela->show();
+    }
+
+    ###########################################################
+
     public function exibeTabela($idPlano = null, $editavel = false) {
         /**
          * Retorna a tabela salarial do plano
@@ -80,16 +121,8 @@ class PlanoCargos {
             $temLetra = true;
         }
 
-        # Pega o nome da tabela
-        $dados = $this->get_dadosPlano($idPlano);
-
-        # Exibe a tabela identificando o plano
-        $tabela = new Tabela();
-        $tabela->set_titulo($dados[0]);
-        $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6]]));
-        $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores"]);
-        $tabela->set_totalRegistro(false);
-        $tabela->show();
+        # Exibe quadro do plano
+        $this->exibeDadosPlano($idPlano);
 
         # Exibe a tabela de valores
         echo "<table class='tabelaPadrao'>";

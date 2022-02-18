@@ -37,8 +37,8 @@ if ($acesso) {
     # Zera sessions
     set_session('origem');  
     set_session('origemId');
-    set_session('sessionParametroPlano');
-    set_session('sessionParametroNivel');
+    set_session('parametroPlano');
+    set_session('parametroNivel');
     set_session('parametro');
     set_session('parametroNomeMat');
     set_session('parametroCpf');

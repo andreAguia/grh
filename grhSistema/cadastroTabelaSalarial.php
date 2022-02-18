@@ -21,9 +21,9 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-
-    # Verifica se veio da rotina de PCV
-    $pcv = get('pcv');
+    
+    # Pega o plano
+    $parametroPlano = get_session('parametroPlano');
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -35,22 +35,7 @@ if ($acesso) {
     }
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));
-
-
-    if (is_null(post('parametroPlano'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametroPlano = retiraAspas(get_session('sessionParametroPlano')); # passa o parametro da session para a variavel parametro retirando as aspas
-    } else {
-        $parametroPlano = post('parametroPlano');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametroPlano', $parametroPlano);    # transfere para a session para poder recuperá-lo depois
-    }
-
-    if (is_null(post('parametroNivel'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametroNivel = retiraAspas(get_session('sessionParametroNivel')); # passa o parametro da session para a variavel parametro retirando as aspas
-    } else {
-        $parametroNivel = post('parametroNivel');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametroNivel', $parametroNivel);    # transfere para a session para poder recuperá-lo depois
-    }
+    $id = soNumeros(get('id'));    
 
     # Começa uma nova página
     $page = new Page();
@@ -66,26 +51,20 @@ if ($acesso) {
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Tabela Salarial');
 
-    # bot?o de voltar da lista
-    $objeto->set_voltarLista('grh.php');
+    # botão de voltar da lista
+    $objeto->set_voltarLista("cadastroPlanoCargos.php?fase=exibeTabela&id={$parametroPlano}");
 
     # select da lista
     $objeto->set_selectLista('SELECT idClasse,
-                                      tbplano.numDecreto,
                                       tbclasse.nivel,
                                       tbtipocargo.cargo,
                                       faixa,
-                                      valor,                 
-                                      CASE tbplano.planoAtual                                        
-                                           WHEN 1 THEN "Vigente"
-                                           ELSE "Antigo"
-                                      end,                      
+                                      valor,
                                       idClasse
                                  FROM tbclasse JOIN tbplano USING (idPlano)
                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                WHERE tbclasse.nivel LIKE "%' . $parametroNivel . '%"
-                                  AND tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
-                             ORDER BY tbplano.planoAtual desc,tbplano.dtPublicacao desc, tbclasse.nivel desc, faixa asc');
+                                WHERE tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
+                             ORDER BY SUBSTRING(faixa, 1, 1), valor');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,
@@ -100,24 +79,15 @@ if ($acesso) {
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-
-    # Dá acesso a exclusão somente ao administrador
-    if (Verifica::acesso($idUsuario, 1)) {
-        $objeto->set_linkExcluir('?fase=excluir');
-    }
+    $objeto->set_linkExcluir('?fase=excluir');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Plano", "Nível", "Cargo", "Faixa", "Valor", "Status"));
-    #$objeto->set_width(array(5,30,20,10,10,10));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(null, null, null, null, null, "formataMoeda"));
-
-    $planoAtual = $pessoal->get_numDecretoPlanoAtual();
-
-    $objeto->set_formatacaoCondicional(array(array('coluna' => 6,
-            'valor' => "Vigente",
-            'operador' => '<>',
-            'id' => 'inativo')));
+    $objeto->set_label(array("id", "Nível", "Cargo", "Faixa", "Valor"));
+    $objeto->set_width(array(10,20,20,15,15));
+    $objeto->set_funcao(array(null, null, null, null, "formataMoeda"));
+    $objeto->set_rowspan([1]);
+    $objeto->set_grupoCorColuna(1);
+    
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -147,6 +117,7 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
+            'col' => 6,
             'nome' => 'idPlano',
             'label' => 'Plano de Cargos:',
             'tipo' => 'combo',
@@ -155,26 +126,30 @@ if ($acesso) {
             'autofocus' => true,
             'size' => 20),
         array('linha' => 1,
+            'col' => 4,
             'nome' => 'nivel',
             'label' => 'Nível:',
             'tipo' => 'combo',
             'array' => array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
             'required' => true,
             'size' => 20),
-        array('linha' => 1,
+        array('linha' => 3,
+            'col' => 6,
             'nome' => 'idTipoCargo',
             'label' => 'Cargo:',
             'tipo' => 'combo',
             'array' => $cargo,
             'required' => true,
             'size' => 20),
-        array('linha' => 1,
+        array('linha' => 3,
+            'col' => 4,
             'nome' => 'faixa',
             'label' => 'Faixa:',
             'tipo' => 'texto',
             'required' => true,
             'size' => 20),
-        array('linha' => 1,
+        array('linha' => 4,
+            'col' => 5,
             'nome' => 'valor',
             'label' => 'Valor:',
             'tipo' => 'moeda',
@@ -184,43 +159,20 @@ if ($acesso) {
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
-    # Verifica se veio do pcv e muda volta do formulário
-    if (!is_null($pcv)) {
-        $objeto->set_voltarForm('cadastroPlanoCargos.php?fase=tabela&id=' . $pcv);
-        $objeto->set_linkListar('cadastroPlanoCargos.php?fase=tabela&id=' . $pcv);
-        $objeto->set_linkGravar('?fase=gravar&pcv=' . $pcv);
-    }
-
     ################################################################
     switch ($fase) {
         case "" :
         case "listar" :
 
-            $form = new Form('?fase=listar');
+            function exibePlano($idPlano = null) {
+                # Exibe quadro do plano
+                $plano = new PlanoCargos();
+                $plano->exibeDadosPlano($idPlano);
+            }
 
-            $controle = new Input('parametroPlano', 'combo', 'Plano:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Nivel');
-            $controle->set_array($result);
-            $controle->set_valor($parametroPlano);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(5);
-            $form->add_item($controle);
-
-            $controle = new Input('parametroNivel', 'combo', 'Nivel:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Nivel');
-            $controle->set_array(array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"));
-            $controle->set_valor($parametroNivel);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(5);
-            $form->add_item($controle);
-
-            $form->show();
+            $objeto->set_rotinaExtraListar('exibePlano');
+            $objeto->set_rotinaExtraListarParametro($parametroPlano);
             $objeto->listar();
-
             break;
 
         case "editar" :

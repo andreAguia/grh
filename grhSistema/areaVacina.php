@@ -38,11 +38,13 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
     $parametroComprovante = post('parametroComprovante', get_session('parametroComprovante', 'Todos'));
+    $parametroTipoVacina = post('parametroTipoVacina', get_session('parametroTipoVacina', 'Todos'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroVacinado', $parametroVacinado);
     set_session('parametroComprovante', $parametroComprovante);
+    set_session('parametroTipoVacina', $parametroTipoVacina);
 
     # Começa uma nova página
     $page = new Page();
@@ -124,7 +126,24 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            # Tipo de Vacina
+            $tipoVacina = $pessoal->select('SELECT idTipoVacina,
+                                           nome
+                                      FROM tbtipovacina
+                                  ORDER BY nome');
+            array_unshift($tipoVacina, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroTipoVacina', 'combo', 'Vacina:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo de Vacina');
+            $controle->set_array($tipoVacina);
+            $controle->set_valor($parametroTipoVacina);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             # Vacinado
@@ -185,12 +204,16 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+            if ($parametroLotacao <> "Todos") {
                 if (is_numeric($parametroLotacao)) {
                     $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
+            }
+
+            if ($parametroTipoVacina <> "Todos") {
+                $select .= " AND tbvacina.idTipoVacina = {$parametroTipoVacina} ";
             }
 
             # Não Vacinados
@@ -262,7 +285,7 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
-            
+
             # inicia o subtítulo
             $subTitulo = null;
 
@@ -289,6 +312,11 @@ if ($acesso) {
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                     }
+                }
+
+                # tipo de Vacina
+                if ($parametroTipoVacina <> "Todos") {
+                    $select .= " AND tbvacina.idTipoVacina = {$parametroTipoVacina} ";
                 }
 
                 # Não Vacinados

@@ -93,7 +93,7 @@ if ($acesso) {
     
     # Vacina
     set_session('parametroVacinado');
-    set_session('parametroComprovante');
+    set_session('parametroJustificativa');
 
     /*
      *  Menu

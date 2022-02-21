@@ -1244,7 +1244,7 @@ class LicencaPremio {
             $painel = new Callout("warning");
             $painel->abre();
 
-            p("observação Geral:", "labelOcorrencias");
+            p("Observação Geral:", "labelOcorrencias");
             p(nl2br($mensagem), "left", "f14");
 
             $painel->fecha();

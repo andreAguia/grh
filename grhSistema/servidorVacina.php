@@ -68,7 +68,6 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT IFNULL(YEAR(data),'---') ano,
                                      data,               
                                      tbtipovacina.nome,
-                                     if(comprovante,'<span class=\'label succes\' title=\'Servidor enviou o comprovante\'>Sim</span>','<span class=\'label alert\' title=\'Servidor NÃO enviou o comprovante\'>Não</span>'),
                                      tbvacina.obs,
                                      idVacina
                                 FROM tbvacina JOIN tbtipovacina USING (idTipoVacina)
@@ -78,7 +77,6 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita("SELECT data,
                                      idTipoVacina,
-                                     comprovante,
                                      obs,
                                      idServidor
                                 FROM tbvacina
@@ -91,9 +89,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano", "Data", "Tipo", "Enviou Comprovante?", "Obs"]);
-    $objeto->set_width([10, 10, 15, 10, 45]);
-    $objeto->set_align(["center", "center", "center", "center", "left"]);
+    $objeto->set_label(["Ano", "Data", "Tipo", "Obs"]);
+    $objeto->set_width([10, 10, 15, 55]);
+    $objeto->set_align(["center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php"]);
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -136,13 +134,6 @@ if ($acesso) {
             'col' => 3,
             'size' => 50,
             'linha' => 1),
-        array('nome' => 'comprovante',
-            'label' => 'Enviou Comprovante:',
-            'tipo' => 'simnao',
-            'title' => 'Informa se o servidor enviou comprovante a GRH',
-            'col' => 3,
-            'size' => 10,
-            'linha' => 1),
         array('nome' => 'obs',
             'label' => 'Observações:',
             'tipo' => 'textarea',
@@ -161,21 +152,30 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir");
-    $botaoRel->set_target("_blank");
-    $botaoRel->set_url('../grhRelatorios/lotacao.php');
+    # Ressalva Vacina
+    $botaoObs = new Button("Justificativa", "servidorVacinaRessalva.php");
+    $botaoObs->set_title("Insere / edita justificativa para a não vacinação");
 
-    # Envia os botões
-    #$objeto->set_botaoListarExtra([$botaoRel, $botaoTipo]);
+    $objeto->set_botaoListarExtra([$botaoObs]);
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
+            # Função para acrescentar a rotina extra
+
+            function exibeObs($idServidor) {
+                $vacinaObj = new Vacina();
+                $vacinaObj->exibeJustificativa($idServidor);
+            }
+
+            # Acrescenta as rotinas
+            $objeto->set_rotinaExtraListar("exibeObs");
+            $objeto->set_rotinaExtraListarParametro($idServidorPesquisado);
+
+            $objeto->listar();
+            break;
+
         case "editar" :
         case "excluir" :
             $objeto->$fase($id);

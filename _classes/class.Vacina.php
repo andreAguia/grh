@@ -54,41 +54,18 @@ class Vacina {
 
             # Pega os dados
             $select = "SELECT data,
-                              tbtipovacina.nome,
-                              comprovante
-                       FROM tbvacina JOIN tbtipovacina USING (idTipoVacina)                       
-                      WHERE idServidor = {$idServidor}
-                   ORDER BY data";
+                              tbtipovacina.nome
+                         FROM tbvacina JOIN tbtipovacina USING (idTipoVacina)                       
+                        WHERE idServidor = {$idServidor}
+                     ORDER BY data DESC";
 
             $row = $pessoal->select($select);
             $num = count($row);
         }
 
         # Exibe as vacinas
-        if ($num == 0) {
-            p("Não Informado", "pVacinaNInformada");
-        } elseif ($num == 1) {
-            if (empty($row[0][0])) {
-                p("Data não Informada - " . $row[0][1], "pVacinaUmaDose");
-            } else {
-                if ($row[0][2]) {
-                    p(date_to_php($row[0][0]) . " - COM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
-                } else {
-                    p(date_to_php($row[0][0]) . " - SEM COMPROVANTE - " . $row[0][1], "pVacinaUmaDose");
-                }
-            }
-        } else {
-            foreach ($row as $item) {
-                if (empty($item[0])) {
-                    p("Data não Informada - " . $item[1], "pVacinaUmaDose");
-                } else {
-                    if ($item[2]) {
-                        echo date_to_php($item[0]), " - COM COMPROVANTE - ", $item[1], "<br/>";
-                    } else {
-                        echo date_to_php($item[0]), " - SEM COMPROVANTE - ", $item[1], "<br/>";
-                    }
-                }
-            }
+        foreach ($row as $item) {
+            echo date_to_php($item[0]), " - ", $item[1], "<br/>";
         }
     }
 
@@ -352,7 +329,7 @@ class Vacina {
                 $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
         }
-        
+
         $pessoal = new Pessoal();
         $Ncomprovadas = $pessoal->count($select);
         $vacinados = $this->getNumServidoresAtivosVacinados($idLotacao);
@@ -454,6 +431,37 @@ class Vacina {
         $pessoal = new Pessoal();
         $num = $pessoal->count($select);
         return $num;
+    }
+
+    ###########################################################
+
+    public function exibeJustificativa($idServidor = null) {
+
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            # Monta o select
+            $select = "SELECT justificativaVacina
+                         FROM tbservidor
+                        WHERE idServidor = {$idServidor}";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+
+            if (empty($row[0])) {
+                return null;
+            } else {
+                $painel = new Callout();
+                $painel->abre();
+
+                tituloTable("Justificativa enviada pelo Servidor");
+                br();
+                p(nl2br($row[0]), "left", "f14");
+
+                $painel->fecha();
+            }
+        }
     }
 
     ###########################################################

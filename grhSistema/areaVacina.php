@@ -158,9 +158,8 @@ if ($acesso) {
 
             $vacina = new Vacina();
             $vacina->exibeQuadroVacinas($parametroLotacao);
-            #$vacina->exibeQuadroVacinadosNComprovados($parametroLotacao);
-            #$vacina->exibeQuadroDosesPorComprovante($parametroLotacao);
             if ($parametroVacinado == "Sim") {
+                $vacina->exibeQuadroQuantidadeDoses($parametroLotacao);
                 $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
             }
 

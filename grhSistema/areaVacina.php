@@ -334,7 +334,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Servidores Vacinados');
+                $relatorio->set_titulo('Servidores que Entregaram Comprovante de Vacinação');
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
                     $relatorio->set_subtitulo($parametroLotacao);
@@ -391,7 +391,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Servidores Não Vacinados');
+                $relatorio->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
                     $relatorio->set_subtitulo($parametroLotacao);

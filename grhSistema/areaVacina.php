@@ -200,12 +200,12 @@ if ($acesso) {
                 $tabela = new Tabela();
                 if ($parametroLotacao <> "Todos") {
                     if (is_numeric($parametroLotacao)) {
-                        $tabela->set_titulo("Servidores Vacinados - {$pessoal->get_nomeLotacao($parametroLotacao)}");
+                        $tabela->set_titulo("Servidores que Entregaram Comprovante de Vacinação - {$pessoal->get_nomeLotacao($parametroLotacao)}");
                     } else {
-                        $tabela->set_titulo("Servidores Vacinados - {$parametroLotacao}");
+                        $tabela->set_titulo("Servidores que Entregaram Comprovante de Vacinação - {$parametroLotacao}");
                     }
                 } else {
-                    $tabela->set_titulo('Servidores Vacinados');
+                    $tabela->set_titulo('Servidores que Entregaram Comprovante de Vacinação');
                 }
                 $tabela->set_label(["Servidor", "Vacinas"]);
                 $tabela->set_width([50, 45]);
@@ -253,12 +253,12 @@ if ($acesso) {
                 $tabela = new Tabela();
                 if ($parametroLotacao <> "Todos") {
                     if (is_numeric($parametroLotacao)) {
-                        $tabela->set_titulo("Servidores Não Vacinados - {$pessoal->get_nomeLotacao($parametroLotacao)}");
+                        $tabela->set_titulo("Servidores que NÃO Entregaram Comprovante de Vacinação - {$pessoal->get_nomeLotacao($parametroLotacao)}");
                     } else {
-                        $tabela->set_titulo("Servidores Não Vacinados - {$parametroLotacao}");
+                        $tabela->set_titulo("Servidores que NÃO Entregaram Comprovante de Vacinação - {$parametroLotacao}");
                     }
                 } else {
-                    $tabela->set_titulo('Servidores Não Vacinados');
+                    $tabela->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
                 }
                 $tabela->set_label(["Servidor", "Justificativa"]);
                 $tabela->set_width([40, 55]);

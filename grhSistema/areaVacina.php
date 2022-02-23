@@ -128,7 +128,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Vacinado
-            $controle = new Input('parametroVacinado', 'combo', 'Vacinado?', 1);
+            $controle = new Input('parametroVacinado', 'combo', 'Entregou Comprovante?', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra Vacinados /  não Vacinados');
             $controle->set_array([["Sim", "Sim"], ["Não", "Não"]]);
@@ -140,7 +140,7 @@ if ($acesso) {
 
             if ($parametroVacinado == "Não") {
                 # Com justificativa
-                $controle = new Input('parametroJustificativa', 'combo', 'Justificado?', 1);
+                $controle = new Input('parametroJustificativa', 'combo', 'Entregou Justificativa?', 1);
                 $controle->set_size(30);
                 $controle->set_title('Filtra Justificado /  não Justificado');
                 $controle->set_array([["Todos", "Todos"], ["Sim", "Sim"], ["Não", "Não"]]);

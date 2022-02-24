@@ -166,8 +166,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo("Quadro da Vacina");
-        $tabela->set_label(["Vacinados", "Servidores", "%"]);
+        $tabela->set_titulo("Entrega de Comprovantes");
+        $tabela->set_label(["Entregaram", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         #$tabela->set_align(["left"]);
 
@@ -220,7 +220,7 @@ class Vacina {
         $tabela->set_titulo("Doses por Vacina");
         $tabela->set_label(["Vacina", "Doses"]);
         #$tabela->set_width(array(30, 15, 15, 15, 15));
-        $tabela->set_align(["left"]);
+        #$tabela->set_align(["left"]);
 
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");

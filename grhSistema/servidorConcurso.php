@@ -64,6 +64,7 @@ if ($acesso) {
                                      dtPublicConcursoResultado,
                                      pgPublicConcursoResultado,
                                      classificacaoConcurso,
+                                     cotasConcurso,
                                      instituicaoConcurso,
                                      dtPublicConvocacao,
                                      pgPublicConvocacao,
@@ -82,7 +83,6 @@ if ($acesso) {
         $objeto->set_selectEdita("SELECT idConcurso,
                                      dtPublicConcursoResultado,
                                      pgPublicConcursoResultado,
-                                     classificacaoConcurso,
                                      dtPublicConvocacao,
                                      pgPublicConvocacao,
                                      dtPublicResultadoExameMedico,
@@ -237,16 +237,26 @@ if ($acesso) {
                 'tipo' => 'texto',
                 'size' => 6,
                 'title' => 'Página da publicação',
-                'col' => 2),
-            array('linha' => 2,
-                'nome' => 'classificacaoConcurso',
-                'label' => 'Classificação:',
-                'tipo' => 'numero',
-                'size' => 6,
-                'title' => 'Classificação final do concurso',
-                'col' => 2));
+                'col' => 2)
+    );
 
     if ($tipoCargo == "Adm/Tec") {
+        array_push($campos,
+                array('linha' => 2,
+                    'nome' => 'classificacaoConcurso',
+                    'label' => 'Classificação:',
+                    'tipo' => 'numero',
+                    'size' => 6,
+                    'title' => 'Classificação final do concurso',
+                    'col' => 2),
+                array('linha' => 2,
+                    'nome' => 'cotasConcurso',
+                    'label' => 'Cota:',
+                    'tipo' => 'texto',
+                    'size' => 50,
+                    'title' => 'Informar, se tiver, que tipo de cota é a vaga.',
+                    'col' => 4)
+        );
 
         if ($idConcursoServidor == 2) {
             array_push($campos,
@@ -360,18 +370,18 @@ if ($acesso) {
 
     ###############################################################
     # Inicia o Menu de Cargos
-    if (!empty($idConcursoServidor)) {        
-        
+    if (!empty($idConcursoServidor)) {
+
         # Cadastro de concurso    
-        if($origem <> "cadastroConcursoAdm.php"){
-            $botao = new Button("Cadastro de Concurso","?fase=acessaConcurso");
+        if ($origem <> "cadastroConcursoAdm.php") {
+            $botao = new Button("Cadastro de Concurso", "?fase=acessaConcurso");
             $botao->set_title("Acessa o cadastro do concurso");
             $objeto->set_botaoEditarExtra(array($botao));
         }
-        
+
         $menu = new Menu("menuVertical");
-        $menu->add_item('titulo', 'Menu');        
-        $menu->add_item('titulo1','Publicações Gerais');
+        $menu->add_item('titulo', 'Menu');
+        $menu->add_item('titulo1', 'Publicações Gerais');
         $select = "SELECT descricao,
                       data,
                       pag,

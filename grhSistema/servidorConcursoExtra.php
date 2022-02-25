@@ -9,5 +9,5 @@
 if($campoValor[0] <> 2){
     # Apaga a instituição
     # Só vale para o concurso de 2001
-    $campoValor[5] = null;    
+    $campoValor[6] = null;    
 }

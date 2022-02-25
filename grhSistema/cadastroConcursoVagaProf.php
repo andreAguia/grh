@@ -22,7 +22,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    set_session('origem', basename(__FILE__) . "?fase={$fase}");
     $idConcurso = get_session('idConcurso');
 
     # Pega o tipo do concurso
@@ -98,7 +98,7 @@ if ($acesso) {
                                       JOIN tbvaga USING (idVaga)
                                       JOIN tbcargo USING (idCargo)
                 WHERE idConcurso = ' . $idConcurso . ' ORDER BY tblotacao.DIR, tblotacao.GER desc';
- 
+
     $conteudo = $pessoal->select($select);
     $numConteudo = $pessoal->count($select);
 
@@ -106,11 +106,12 @@ if ($acesso) {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
-        $tabela->set_align(array("center", "center", "center", "left", "left"));
-        $tabela->set_label(array("Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"));
+        $tabela->set_align(["center", "center", "center", "left", "left"]);
+        $tabela->set_label(["Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"]);
+        #$tabela->set_width([10, 10, 20, 20, 20, 20]);
         $tabela->set_titulo("Vagas de Professores");
-        $tabela->set_classe(array(null, null, null, null, "Vaga"));
-        $tabela->set_metodo(array(null, null, null, null, "get_Nome"));
+        $tabela->set_classe([null, null, null, null, "Vaga"]);
+        $tabela->set_metodo([null, null, null, null, "get_Nome"]);
         $tabela->set_numeroOrdem(true);
 
         $tabela->set_rowspan(0);

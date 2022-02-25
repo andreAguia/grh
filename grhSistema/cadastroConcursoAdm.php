@@ -183,7 +183,8 @@ if ($acesso) {
 
             # Monta o select
             $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
-                              idServidor,                                                 
+                              idServidor, 
+                              cotasConcurso,
                               idServidor,
                               idServidor,
                               idServidor,
@@ -210,7 +211,7 @@ if ($acesso) {
                 $atividade = "Visualizou a classificação do concurso " . $concurso->get_nomeConcurso($idConcurso);
             }
 
-            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, classificacaoConcurso";
+            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso";
 
             # Pega os dados
             $row = $pessoal->select($select);
@@ -219,17 +220,17 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Classificação - {$titulo}");
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Class.", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
-            $tabela->set_classe([null, "Concurso", "pessoal", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, "exibeClassificacaoServidor", "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
-            #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
-            $tabela->set_width(array(15, 6, 22, 25, 22, 5));
-            $tabela->set_align(array("left", "center", "left", "left"));
+            $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
+            $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
+            $tabela->set_funcao([null, null, "trataNulo"]);
+            $tabela->set_width(array(15, 5, 5, 20, 25, 20, 5));
+            $tabela->set_align(array("left", "center", "center", "left", "left"));
 
             # Botão de exibição dos servidores com permissão a essa regra
             $botao = new Link(null, '?fase=editaServidor&idServidorPesquisado=', 'Edita o Servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -728,7 +729,7 @@ if ($acesso) {
                 $lista = new ListaServidores("Servidores Ativos e Inativos");
                 $atividade = "Visualizou todos os servidores ativos e inativos do concurso " . $concurso->get_nomeConcurso($idConcurso);
             }
-            
+
             $lista->set_concurso($idConcurso);
             $lista->showTabela();
 

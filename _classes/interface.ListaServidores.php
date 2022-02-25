@@ -74,8 +74,8 @@ class ListaServidores {
         $this->ordenacaoCombo = array(
             array("1 asc", "por Id Funcional asc"),
             array("1 desc", "por Id Funcional desc"),
-            array("2 asc, 6 asc", "por Nome asc"),
-            array("2 desc, 6 asc", "por Nome desc"),
+            array("2 asc", "por Nome asc"),
+            array("2 desc", "por Nome desc"),
             array("tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"),
             array("tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"),
             array("UADM asc, DIR asc, GER asc", "por Lotação asc"),
@@ -295,16 +295,18 @@ class ListaServidores {
             $select .= ", 2 asc";
         }
 
-        # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por admissão
-        if (($this->ordenacao <> "6 asc") AND ($this->ordenacao <> "6 desc")) {
-            $select .= ", 6 asc";
-        }
+//        # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por admissão
+//        if (($this->ordenacao <> "6 asc") AND ($this->ordenacao <> "6 desc")) {
+//            $select .= ", 6 asc";
+//        }
 
         foreach ($this->ordenacaoCombo as $value) {
             if ($value[0] == $this->ordenacao) {
                 $this->subTitulo .= "Ordenado " . $value[1] . "<br/>";
             }
         }
+        
+        # echo $select;
 
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select, true);

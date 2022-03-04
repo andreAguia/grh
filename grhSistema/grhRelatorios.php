@@ -199,6 +199,7 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Relação dos Servidores com Cargo em Comissão');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargosComissionados.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão com Vagas - Agrupados por Cargo', '../grhRelatorios/cargosComissionadosVagas.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargosComissionadosLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargosComissionadosCpfRg.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Docentes', '../grhRelatorios/cargosComissionados.docentes.php');

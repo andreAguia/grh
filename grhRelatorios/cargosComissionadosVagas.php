@@ -38,7 +38,7 @@ if ($acesso) {
                      tbcomissao.idComissao,
                      tbcomissao.dtNom,
                      tbperfil.nome,
-                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao) comissao
+                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao," (",tbtipocomissao.vagas," vaga(s))") comissao
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa) 
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)

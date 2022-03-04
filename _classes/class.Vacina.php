@@ -270,7 +270,7 @@ class Vacina {
         $arraySimples2 = array_count_values($arraySimples);
         
         foreach($arraySimples2 as $key => $value){
-            $arraySimples3[] = [$key." doses",$value];
+            $arraySimples3[] = [$key." dose(s)",$value];
         }
 
         # Monta a tabela

@@ -359,8 +359,7 @@ if ($acesso) {
 
                 $select = "SELECT tbpessoa.nome,
                                   tbservidor.idServidor,
-                                  concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
-                                  tbservidor.justificativaVacina
+                                  concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                              JOIN tbhistlot USING (idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -396,8 +395,8 @@ if ($acesso) {
                     $relatorio->set_subtitulo($parametroLotacao);
                 }
 
-                $relatorio->set_label(["Servidor", "Cargo", "Lotação", "Justificativa"]);
-                $relatorio->set_width([30, 30, 0, 40]);
+                $relatorio->set_label(["Servidor", "Cargo", "Lotação"]);
+                #$relatorio->set_width([30, 30, 0, 40]);
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(["left", "left", "left", "left"]);
                 $relatorio->set_classe([null, "pessoal"]);

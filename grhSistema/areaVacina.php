@@ -161,8 +161,6 @@ if ($acesso) {
             if ($parametroVacinado == "Sim") {
                 $vacina->exibeQuadroQuantidadeDoses($parametroLotacao);
                 $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
-            }else{
-                callout("Retirados os servidores cedidos da Uenf a pedido do Reitor.");
             }
 
             $grid->fechaColuna();
@@ -221,6 +219,11 @@ if ($acesso) {
                 /*
                  * Não Vacinados
                  */
+                # Avisa da retirada dos servidores cedidos do relatório
+                if ($parametroLotacao == "Todos" OR $parametroLotacao == "Reitoria") {
+                    callout("A pedido do Reitor, os servidores cedidos aparecem abaixo, mas não aparecerão no relatório.");
+                }
+
                 $select = "SELECT tbservidor.idServidor,
                                   tbservidor.justificativaVacina
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -236,10 +239,7 @@ if ($acesso) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                        $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                     }
-                }else{
-                    $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                 }
 
                 if ($parametroJustificativa == "Sim") {
@@ -380,7 +380,7 @@ if ($acesso) {
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                         $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                     }
-                }else{
+                } else {
                     $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                 }
 

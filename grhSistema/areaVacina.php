@@ -161,6 +161,8 @@ if ($acesso) {
             if ($parametroVacinado == "Sim") {
                 $vacina->exibeQuadroQuantidadeDoses($parametroLotacao);
                 $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
+            }else{
+                callout("Retirados os servidores cedidos da Uenf a pedido do Reitor.");
             }
 
             $grid->fechaColuna();
@@ -234,7 +236,10 @@ if ($acesso) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                     }
+                }else{
+                    $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                 }
 
                 if ($parametroJustificativa == "Sim") {
@@ -373,7 +378,10 @@ if ($acesso) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                     }
+                }else{
+                    $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                 }
 
                 if ($parametroJustificativa == "Sim") {

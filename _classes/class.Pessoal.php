@@ -4792,7 +4792,7 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    public function get_emails($idServidor, $br = true, $link = true) {
+    public function get_emails($idServidor, $br = true, $link = false) {
 
         # Função que retorna os emails pessoal e Uenf do servidor cadastrado no sistema
         #

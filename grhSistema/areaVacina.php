@@ -225,6 +225,7 @@ if ($acesso) {
                 }
 
                 $select = "SELECT tbservidor.idServidor,
+                                  tbservidor.idServidor,
                                   tbservidor.justificativaVacina
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                              JOIN tbhistlot USING (idServidor)
@@ -264,12 +265,12 @@ if ($acesso) {
                 } else {
                     $tabela->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
                 }
-                $tabela->set_label(["Servidor", "Justificativa"]);
-                $tabela->set_width([40, 55]);
+                $tabela->set_label(["Servidor", "E-mail", "Justificativa"]);
+                $tabela->set_width([30, 20, 45]);
                 $tabela->set_conteudo($result);
-                $tabela->set_align(["left", "left"]);
-                $tabela->set_classe(["pessoal"]);
-                $tabela->set_metodo(["get_nomeECargoELotacao"]);
+                $tabela->set_align(["left", "center", "left"]);
+                $tabela->set_classe(["pessoal", "pessoal"]);
+                $tabela->set_metodo(["get_nomeECargoELotacao", "get_emails"]);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->show();

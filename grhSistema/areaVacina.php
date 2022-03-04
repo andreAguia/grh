@@ -342,7 +342,7 @@ if ($acesso) {
                 $relatorio->set_titulo('Servidores que Entregaram Comprovante de Vacinação');
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
-                    $relatorio->set_subtitulo($parametroLotacao);
+                    $relatorio->set_tituloLinha3($parametroLotacao);
                 }
                 $relatorio->set_label(["Nome", "Cargo", "Lotação", "Vacinas"]);
                 $relatorio->set_width([30, 30, 0, 40]);
@@ -362,6 +362,7 @@ if ($acesso) {
              */
 
             if ($parametroVacinado == "Não") {
+                $relatorio = new Relatorio();
 
                 $select = "SELECT tbpessoa.nome,
                                   tbservidor.idServidor,
@@ -391,17 +392,18 @@ if ($acesso) {
 
                 if ($parametroJustificativa == "Não") {
                     $select .= " AND (tbservidor.justificativaVacina = '' OR tbservidor.justificativaVacina is null)";
+                    $relatorio->set_tituloLinha2("Lista de não Aptos - Portaria Reitoria 115/2022");
                 }
 
                 $select .= "ORDER BY lotacao, tbpessoa.nome";
 
                 $result = $pessoal->select($select);
 
-                $relatorio = new Relatorio();
+                
                 $relatorio->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
-                    $relatorio->set_subtitulo($parametroLotacao);
+                    $relatorio->set_tituloLinha3($parametroLotacao);
                 }
 
                 $relatorio->set_label(["Servidor", "Cargo", "Lotação"]);

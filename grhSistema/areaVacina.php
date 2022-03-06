@@ -37,7 +37,7 @@ if ($acesso) {
     # Pega os parâmetros  
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
-    $parametroJustificativa = post('parametroJustificativa', get_session('parametroJustificativa', 'Todos'));
+    $parametroJustificativa = post('parametroJustificativa', get_session('parametroJustificativa', 'Não'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
@@ -140,10 +140,10 @@ if ($acesso) {
 
             if ($parametroVacinado == "Não") {
                 # Com justificativa
-                $controle = new Input('parametroJustificativa', 'combo', 'Entregou Justificativa?', 1);
+                $controle = new Input('parametroJustificativa', 'combo', 'Isento da Entrega?', 1);
                 $controle->set_size(30);
                 $controle->set_title('Filtra Justificado /  não Justificado');
-                $controle->set_array([["Todos", "Todos"], ["Sim", "Sim"], ["Não", "Não"]]);
+                $controle->set_array([["Sim", "Sim"], ["Não", "Não"]]);
                 $controle->set_valor($parametroJustificativa);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
@@ -219,12 +219,9 @@ if ($acesso) {
                 /*
                  * Não Vacinados
                  */
-                # Avisa da retirada dos servidores cedidos do relatório
-                if ($parametroLotacao == "Todos" OR $parametroLotacao == "Reitoria") {
-                    callout("A pedido do Reitor, os servidores cedidos aparecem abaixo, mas não aparecerão no relatório.");
-                }
 
-                $select = "SELECT tbservidor.idServidor,
+                if ($parametroJustificativa == "Sim") {
+                    $select = "SELECT tbservidor.idServidor,
                                   tbservidor.idServidor,
                                   tbservidor.justificativaVacina
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -233,6 +230,16 @@ if ($acesso) {
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina)";
+                } else {
+                    $select = "SELECT tbservidor.idServidor,
+                                      tbservidor.idServidor
+                                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                                 JOIN tbhistlot USING (idServidor)
+                                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina)";
+                }
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "Todos") {
@@ -265,10 +272,19 @@ if ($acesso) {
                 } else {
                     $tabela->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
                 }
-                $tabela->set_label(["Servidor", "E-mail", "Justificativa"]);
-                $tabela->set_width([30, 20, 45]);
-                $tabela->set_conteudo($result);
-                $tabela->set_align(["left", "center", "left"]);
+
+                if ($parametroJustificativa == "Sim") {
+                    $tabela->set_label(["Servidor", "E-mail", "Justificativa da Isenção da Entrega"]);
+                    $tabela->set_width([30, 20, 45]);
+                    $tabela->set_align(["left", "left", "left"]);
+                }
+
+                if ($parametroJustificativa == "Não") {
+                    $tabela->set_label(["Servidor", "E-mail"]);
+                    $tabela->set_width([50, 45]);
+                    $tabela->set_align(["left", "left"]);
+                }
+                $tabela->set_conteudo($result);                
                 $tabela->set_classe(["pessoal", "pessoal"]);
                 $tabela->set_metodo(["get_nomeECargoELotacao", "get_emails"]);
                 $tabela->set_idCampo('idServidor');
@@ -380,14 +396,12 @@ if ($acesso) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                        $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                     }
-                } else {
-                    $select .= " AND (tblotacao.idlotacao <> 113)"; // Retira os cedidos da Uenf (as pedido do Reitor)
                 }
-
+                
                 if ($parametroJustificativa == "Sim") {
                     $select .= " AND tbservidor.justificativaVacina <> '' ";
+                    $relatorio->set_tituloLinha2("Servidores Isentados da Entrega dos Comprovantes de Vacina");
                 }
 
                 if ($parametroJustificativa == "Não") {
@@ -399,7 +413,6 @@ if ($acesso) {
 
                 $result = $pessoal->select($select);
 
-                
                 $relatorio->set_titulo('Servidores que NÃO Entregaram Comprovante de Vacinação');
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {

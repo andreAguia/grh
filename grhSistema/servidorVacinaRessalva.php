@@ -40,7 +40,7 @@ if ($acesso) {
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Justificativa enviada pelo servidor para a não vacinação");
+    $objeto->set_nome("Justificativa para a Isenção");
 
     # select do edita
     $selectEdita = 'SELECT justificativaVacina
@@ -75,11 +75,11 @@ if ($acesso) {
     # Campos para o formulario
     $campos = array(array('linha' => 1,
             'nome' => 'justificativaVacina',
-            'label' => 'Justificativa:',
+            'label' => 'Justificativa para a Isenção:',
             'tipo' => 'textarea',
             'size' => array(80, 4),
             'autofocus' => true,
-            'title' => 'Justificativa enviada pelo servidor para a não vacinação.'));
+            'title' => 'Justificativa para a isenção de enviar o comprovante de vacinação.'));
 
     $objeto->set_campos($campos);
 

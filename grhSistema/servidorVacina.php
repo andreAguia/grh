@@ -153,7 +153,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Ressalva Vacina
-    $botaoObs = new Button("Justificativa", "servidorVacinaRessalva.php");
+    $botaoObs = new Button("Cadastra Isenção", "servidorVacinaRessalva.php");
     $botaoObs->set_title("Insere / edita justificativa para a não vacinação");
 
     $objeto->set_botaoListarExtra([$botaoObs]);

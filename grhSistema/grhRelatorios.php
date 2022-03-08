@@ -510,7 +510,8 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Telefones dos Servidores 2', '../grhRelatorios/telefone2.php');
 
             $menu->add_item('titulo1', 'Contatos');
-            $menu->add_item('linkWindow', 'Contatos dos Servidores', '../grhRelatorios/contatos.php');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores 1', '../grhRelatorios/contatos.php');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores 2', '../grhRelatorios/contatos2.php');
             $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');
             #$menu->add_item('linkWindow', 'Servidores sem Algum dos Contatos', '../grhRelatorios/contatos.servidoresSemContatos.php');
             $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional Cadastrado', '../grhRelatorios/contatos.servidoresSemEmail.php');

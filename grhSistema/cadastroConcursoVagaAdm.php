@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cadastro de Estado Civil
+ * Cadastro de Concurso ADM
  *  
  * By Alat
  */
@@ -22,7 +22,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    set_session('origem', basename( __FILE__ )."?fase={$fase}");
+    set_session('origem', basename(__FILE__) . "?fase={$fase}");
     $idConcurso = get_session('idConcurso');
 
     # Pega o tipo do concurso
@@ -35,8 +35,8 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-    
-     if ($fase == "listar") {
+
+    if ($fase == "listar") {
         # Grava no log a atividade
         $atividade = "Visualizou as vagas do concurso " . $concurso->get_nomeConcurso($idConcurso);
         $data = date("Y-m-d H:i:s");
@@ -61,7 +61,9 @@ if ($acesso) {
                                      vagasNovas,
                                      vagasReposicao,
                                      idConcursoVaga,
-                                     idConcursoVaga
+                                     CONCAT(idConcurso,'&',idTipoCargo),
+                                     CONCAT(idConcurso,'&',idTipoCargo),
+                                     idConcurso
                                  FROM tbconcursovaga JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE idConcurso = {$idConcurso}
                              ORDER BY 1");
@@ -71,6 +73,7 @@ if ($acesso) {
                                      vagasNovas,
                                      vagasReposicao,
                                      obs,
+                                     idConcurso,
                                      idConcurso
                                 FROM tbconcursovaga
                               WHERE idConcursoVaga = {$id}");
@@ -82,12 +85,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição", "Total"));
-    $objeto->set_width(array(40, 15, 15, 15));
+    $objeto->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição", "Total", "Servidores Ativos"));
+    $objeto->set_width(array(30, 15, 15, 15, 15));
     $objeto->set_align(array("left"));
-    $objeto->set_classe(array(null, null, null, "Concurso"));
-    $objeto->set_metodo(array(null, null, null, "get_totalVagasConcurso"));
-    $objeto->set_colunaSomatorio([1, 2, 3]);
+    $objeto->set_classe(array(null, null, null, "Concurso", "Concurso"));
+    $objeto->set_metodo(array(null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"));
+    $objeto->set_colunaSomatorio([1, 2, 3, 4]);
     $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados
@@ -158,6 +161,7 @@ if ($acesso) {
         case "" :
         case "listar" :
             # Cria uma rotina extra
+
             function rotinaLateral($idConcurso) {
                 $grid = new Grid();
                 $grid->abreColuna(3);

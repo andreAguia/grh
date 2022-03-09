@@ -718,6 +718,52 @@ class Concurso {
     ###########################################################
 
     /**
+     * Método get_numServidoresAtivosConcursoCargo
+     * 
+     * Exibe o número de servidores ativos em um determinado concurso
+     */
+    public function get_numServidoresAtivosConcursoCargo($texto) {
+
+        # Divide o texto TIPO&ID
+        $pedaco = explode("&", $texto);
+
+        # Divide o texto TIPO&ID
+        $pedaco = explode("&", $texto);
+
+        # Pega os pedaços
+        $idConcurso = $pedaco[0];
+        $idTipoCargo = $pedaco[1];
+
+        # Verifica se foi informado o id
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $dados = $this->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        # A princípio só funciona para concurso adm
+        if ($tipo == 2) { // Retira os professores
+            return null;
+        } else {
+            $select = "SELECT tbservidor.idServidor                             
+                         FROM tbservidor JOIN tbcargo USING (idCargo)
+                        WHERE situacao = 1
+                          AND tbcargo.idTipoCargo = {$idTipoCargo}
+                          AND tbservidor.idConcurso = {$idConcurso}";
+
+            # Pega os dados
+            $pessoal = new Pessoal();
+            $numero = $pessoal->count($select);
+
+            return $numero;
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_numServidoresAtivosConcurso
      * 
      * Exibe o número de servidores ativos em um determinado concurso

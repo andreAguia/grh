@@ -86,7 +86,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("Cargo", "Vagas Novas", "Vagas de Reposição", "Total", "Servidores Ativos"));
-    $objeto->set_width(array(30, 15, 15, 15, 15));
+    $objeto->set_width(array(30, 14, 14, 14, 14));
     $objeto->set_align(array("left"));
     $objeto->set_classe(array(null, null, null, "Concurso", "Concurso"));
     $objeto->set_metodo(array(null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"));

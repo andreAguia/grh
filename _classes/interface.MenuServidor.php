@@ -67,12 +67,12 @@ class MenuServidor {
         $this->moduloFuncionais();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(7, 5, 4);
+        $grid->abreColuna(8, 6, 4);
         $this->moduloPessoais();
         $this->moduloBeneficios();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(5, 4, 2);
+        $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
         # --

@@ -223,6 +223,7 @@ if ($acesso) {
                 if ($parametroJustificativa == "Sim") {
                     $select = "SELECT tbservidor.idServidor,
                                   tbservidor.idServidor,
+                                  tbservidor.idServidor,
                                   tbservidor.justificativaVacina
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                              JOIN tbhistlot USING (idServidor)
@@ -232,6 +233,7 @@ if ($acesso) {
                           AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina)";
                 } else {
                     $select = "SELECT tbservidor.idServidor,
+                                      tbservidor.idServidor,
                                       tbservidor.idServidor
                                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                                  JOIN tbhistlot USING (idServidor)
@@ -274,19 +276,20 @@ if ($acesso) {
                 }
 
                 if ($parametroJustificativa == "Sim") {
-                    $tabela->set_label(["Servidor", "E-mail", "Justificativa da Isenção da Entrega"]);
-                    $tabela->set_width([30, 20, 45]);
-                    $tabela->set_align(["left", "left", "left"]);
+                    $tabela->set_label(["Servidor", "Situação", "E-mail", "Justificativa da Isenção da Entrega"]);
+                    $tabela->set_width([30, 20, 10, 35]);
+                    $tabela->set_align(["left", "left", "center", "left"]);
                 }
 
                 if ($parametroJustificativa == "Não") {
-                    $tabela->set_label(["Servidor", "E-mail"]);
-                    $tabela->set_width([50, 45]);
+                    $tabela->set_label(["Servidor", "E-mail", "Situação"]);
+                    $tabela->set_width([40, 45, 10]);
                     $tabela->set_align(["left", "left"]);
                 }
-                $tabela->set_conteudo($result);                
+                $tabela->set_conteudo($result);
                 $tabela->set_classe(["pessoal", "pessoal"]);
                 $tabela->set_metodo(["get_nomeECargoELotacao", "get_emails"]);
+                $tabela->set_funcao([null, null, "get_situacao"]);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->show();
@@ -398,7 +401,7 @@ if ($acesso) {
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                     }
                 }
-                
+
                 if ($parametroJustificativa == "Sim") {
                     $select .= " AND tbservidor.justificativaVacina <> '' ";
                     $relatorio->set_tituloLinha2("Servidores Isentados da Entrega dos Comprovantes de Vacina");

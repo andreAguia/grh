@@ -361,7 +361,7 @@ if ($acesso) {
             $grid1->fechaGrid();
 
             loadPage('?fase=porIdadeContribuicao2');
-            break;        
+            break;
 
         case "porIdadeContribuicao2" :
 
@@ -533,7 +533,7 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
-        
+
         ################################################################
 
         /*
@@ -727,7 +727,6 @@ if ($acesso) {
             loadPage('servidorMenu.php');
             break;
 
-
         ################################################################        
 
 
@@ -822,6 +821,13 @@ if ($acesso) {
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
             $tabela->set_idCampo('idServidor');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
+                    'valor' => 74,
+                    'operador' => '>',
+                    'id' => 'indeferido')
+            ));
 
             if ($count > 0) {
                 $tabela->show();
@@ -975,7 +981,7 @@ if ($acesso) {
                 array('coluna' => 3,
                     'valor' => '74',
                     'operador' => '>',
-                    'id' => 'emAberto')
+                    'id' => 'indeferido')
             ));
             $tabela->show();
 
@@ -1152,7 +1158,6 @@ if ($acesso) {
             break;
 
         ################################################################
-        
         ################################################################
 
         /*

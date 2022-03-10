@@ -229,6 +229,12 @@ if ($acesso) {
                 # Cria um menu
                 $menu1 = new MenuBar();
                 
+//                # Relatório
+//                $botaoVoltar = new Link("Imprimir", "?fase=imprimir");
+//                $botaoVoltar->set_class('button');
+//                $botaoVoltar->set_title('Imprimir a tabela do plano');
+//                $menu1->add_link($botaoVoltar, "right");
+                
                 # Editar
                 $botaoVoltar = new Link("Editar", "cadastroTabelaSalarial.php");
                 $botaoVoltar->set_class('button');

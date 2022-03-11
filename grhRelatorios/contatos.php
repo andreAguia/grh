@@ -60,16 +60,12 @@ if ($acesso) {
         }
     }
 
-    if (is_null($lotacao)) {
-        $select .= ' ORDER BY tbpessoa.nome';
-    } else {
-        $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
-    }
+    $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
+    $relatorio->set_subtitulo($subTitulo . 'Ordenados pela Lotação');
     $relatorio->set_label(array('IdFuncional', 'Servidor', 'Lotação', 'Telefones', 'Emails'));
     #$relatorio->set_width(array(10,40,50));
     $relatorio->set_align(array("center", "left", "left", "left", "left", "left"));

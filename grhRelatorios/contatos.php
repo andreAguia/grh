@@ -35,7 +35,8 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idServidor,
+    $select = 'SELECT idFuncional, 
+                     tbservidor.idServidor,
                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
@@ -69,14 +70,14 @@ if ($acesso) {
 
     $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação', 'Telefones','Emails'));
+    $relatorio->set_label(array('IdFuncional', 'Servidor', 'Lotação', 'Telefones', 'Emails'));
     #$relatorio->set_width(array(10,40,50));
-    $relatorio->set_align(array("left", "left", "left", "left", "left"));
+    $relatorio->set_align(array("center", "left", "left", "left", "left", "left"));
     $relatorio->set_conteudo($result);
     $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefones", "get_emails"));
+    $relatorio->set_classe(array(null, "pessoal", null, "pessoal", "pessoal"));
+    $relatorio->set_metodo(array(null, "get_nomeECargo", null, "get_telefones", "get_emails"));
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao

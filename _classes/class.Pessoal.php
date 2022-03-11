@@ -4089,8 +4089,8 @@ class Pessoal extends Bd {
     public function get_idFuncional($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT idFuncional
-                         FROM tbservidor
-                        WHERE idServidor = ' . $idServidor;
+                     FROM tbservidor
+                    WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
 

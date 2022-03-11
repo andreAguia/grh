@@ -33,7 +33,7 @@ if ($acesso) {
                       tbservidor.idServidor,
                       concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,'')) lotacao,
                       dtEntrega,
-                      CONCAT('SEI-',processo)
+                      processo
                  FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)

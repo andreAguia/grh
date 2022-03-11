@@ -208,7 +208,7 @@ if ($acesso) {
                       IF(acumula,'SIM','Não'),
                       tbservidor.idServidor,
                       tbacumulacaodeclaracao.idServidor,
-                      CONCAT('SEI-',processo),
+                      processo,
                       idAcumulacaoDeclaracao
                  FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)

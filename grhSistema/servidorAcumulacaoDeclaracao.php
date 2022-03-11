@@ -60,7 +60,7 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT anoReferencia,
                        dtEntrega, 
                        IF(acumula,'SIM','Não'),
-                       CONCAT('SEI-',processo),
+                       processo,
                        obs,
                        idAcumulacaoDeclaracao
                   FROM tbacumulacaodeclaracao 
@@ -149,7 +149,7 @@ if ($acesso) {
             'linha' => 1,
             'nome' => 'processo',
             'label' => 'Processo:',
-            'tipo' => 'sei',
+            'tipo' => 'texto',
             'required' => true,
             'col' => 4,
             'size' => 50),

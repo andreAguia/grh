@@ -47,14 +47,14 @@ if ($acesso) {
     $idGerente = $pessoal->get_gerente(66);
     $gerente = $pessoal->get_nome($idGerente);
     $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
-    $idFuncional = $pessoal->get_idFuncional($idGerente);
+    $idFuncionalGerente = $pessoal->get_idFuncional($idGerente);
 
     # Monta a CI
     $despacho = new Despacho();
 
     $despacho->set_origemNome($gerente);
     $despacho->set_origemDescricao($cargo);
-    $despacho->set_origemIdFuncional($idFuncional);
+    $despacho->set_origemIdFuncional($idFuncionalGerente);
 
     $despacho->set_destino("À Reitoria");
     $despacho->set_texto('Trata o presente processo de solicitação de ' . strtoupper($nomeLicenca) . ', do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>, '

@@ -629,6 +629,13 @@ function get_situacao($idServidor) {
         if ($verifica->verifica()) {
             $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
         }
+        
+        # Verifica se está em vias de aposentadoria Compulsória
+        $idade = $pessoal->get_idade($idServidor);
+        
+        if($idade >= 75){
+            $retorno .= "<br/><span title='Servidor com {$idade} anos. Deverá aposentar Compulsoriamente.' class='primary label'>Aguardando<br/>Aposentadoria<br/>Compulsória</span>";
+        }
     }
 
     return $retorno;

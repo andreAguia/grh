@@ -236,7 +236,8 @@ class ListaAfastamentos {
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                            CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
                            CONCAT("tblicenca","&",idLicenca),
-                          tbservidor.idServidor
+                          tbservidor.idServidor,
+                          tbpessoa.nome
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -322,7 +323,8 @@ class ListaAfastamentos {
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
                          (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
                          CONCAT("tblicencapremio","&",idLicencaPremio),
-                         tbservidor.idServidor
+                         tbservidor.idServidor,
+                          tbpessoa.nome
                     FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -405,7 +407,8 @@ class ListaAfastamentos {
                           ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
                           CONCAT("Férias ",tbferias.anoExercicio),
                           CONCAT("tbferias","&",idFerias),
-                          tbservidor.idServidor
+                          tbservidor.idServidor,
+                          tbpessoa.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -487,7 +490,8 @@ class ListaAfastamentos {
                           ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
                           "Falta Abonada",
                           CONCAT("tbatestado","&",idAtestado),
-                          tbservidor.idServidor
+                          tbservidor.idServidor,
+                          tbpessoa.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -569,7 +573,8 @@ class ListaAfastamentos {
                           ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
                           "Trabalhando no TRE",
                           "",
-                          tbservidor.idServidor
+                          tbservidor.idServidor,
+                          tbpessoa.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -651,7 +656,8 @@ class ListaAfastamentos {
                           ADDDATE(tbfolga.data,tbfolga.dias-1),
                           "Folga TRE",
                           CONCAT("tbfolga","&",idFolga),
-                          tbservidor.idServidor
+                          tbservidor.idServidor,
+                          tbpessoa.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -733,7 +739,8 @@ class ListaAfastamentos {
                          ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                          tbtipolicenca.nome,
                          CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
-                         tbservidor.idServidor
+                         tbservidor.idServidor,
+                          tbpessoa.nome
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -819,7 +826,8 @@ class ListaAfastamentos {
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                            CONCAT(tbtipolicenca.nome," - (Em Aberto)<br/>",IFnull(tbtipolicenca.lei,"")),
                            CONCAT("tblicenca","&",idLicenca),
-                          T2.idServidor
+                          T2.idServidor,
+                          tbpessoa.nome
                       FROM tbservidor AS T2 
                            LEFT JOIN tbpessoa USING (idPessoa)
                                 JOIN tbhistlot USING (idServidor)
@@ -886,9 +894,9 @@ class ListaAfastamentos {
         #######################    
 
         if ($this->idFuncional) {
-            $select .= ') ORDER BY 4';
+            $select .= ') ORDER BY 10, 4';
         } else {
-            $select .= ') ORDER BY 3';
+            $select .= ') ORDER BY 9, 3';
         }
         #echo $select;
         return $select;
@@ -946,8 +954,8 @@ class ListaAfastamentos {
                     $tabela->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
                 }
 
-//                $tabela->set_rowspan(1);
-//                $tabela->set_grupoCorColuna(1);
+                $tabela->set_rowspan(1);
+                $tabela->set_grupoCorColuna(1);
             } else {
 
                 $tabela->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
@@ -962,8 +970,8 @@ class ListaAfastamentos {
                     $tabela->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
                 }
 
-//                $tabela->set_rowspan(0);
-//                $tabela->set_grupoCorColuna(0);
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
             }
         } else {
 
@@ -1004,7 +1012,7 @@ class ListaAfastamentos {
         } else {
             $tt = $this->lotacao;
         }
-        $relatorio->set_subtitulo($tt);
+        $relatorio->set_subtitulo("Ordenado por Nome");
 
         $nomeMes = get_nomeMes($this->mes);
 
@@ -1013,12 +1021,14 @@ class ListaAfastamentos {
         } else {
             $relatorio->set_tituloLinha2($this->ano);
         }
+        $relatorio->set_tituloLinha3($tt);
 
         if ($this->idFuncional) {
             $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
             $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
 
             $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
+            #$relatorio->set_rowspan(1);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe(array(null, "pessoal", "pessoal"));
@@ -1033,6 +1043,7 @@ class ListaAfastamentos {
             $relatorio->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
 
             $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+            #$relatorio->set_rowspan(0);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe(array("pessoal", "pessoal"));

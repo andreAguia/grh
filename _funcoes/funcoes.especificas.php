@@ -632,8 +632,9 @@ function get_situacao($idServidor) {
         
         # Verifica se está em vias de aposentadoria Compulsória
         $idade = $pessoal->get_idade($idServidor);
+        $idPerfil = $pessoal->get_idPerfil($idServidor);
         
-        if($idade >= 75){
+        if($idade >= 75 AND $idPerfil == 1){
             $retorno .= "<br/><span title='Servidor com {$idade} anos. Deverá aposentar Compulsoriamente.' class='primary label'>Aguardando<br/>Aposentadoria<br/>Compulsória</span>";
         }
     }

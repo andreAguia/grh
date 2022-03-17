@@ -116,10 +116,7 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
-
-            # Título
-            #titulo("Área de Licença Premio");
-            ################################################################
+            
             # Formulário de Pesquisa
             $form = new Form('?');
 

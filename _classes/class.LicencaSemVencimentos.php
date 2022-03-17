@@ -10,6 +10,7 @@ class LicencaSemVencimentos
      */
     private $linkEditar = null;
     private $atual = true;
+    private $nome = null;
 
     ###########################################################
 
@@ -351,7 +352,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function exibeLista()
+    public function exibeLista($nome = null)
     {
 
         /**
@@ -377,8 +378,16 @@ class LicencaSemVencimentos
                          idLicencaSemVencimentos, 
                          idLicencaSemVencimentos,
                          idServidor
-                    FROM tblicencasemvencimentos
-           ORDER BY dtSolicitacao desc, dtInicial desc';
+                    FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
+                                                 JOIN tbpessoa USING (idPessoa)
+                    WHERE TRUE';
+        
+        # Matrícula, nome ou id ou cpf
+        if (!empty($nome)){
+                $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+        }
+        
+        $select .= ' ORDER BY dtSolicitacao desc, dtInicial desc';
 
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
@@ -424,7 +433,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function exibeRelatorio()
+    public function exibeRelatorio($nome = null)
     {
 
         /**
@@ -434,8 +443,9 @@ class LicencaSemVencimentos
          */
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
-
-        $data = date("Y-m-d");
+        
+        
+        $relatorio = new Relatorio();
 
         # Licença
         $select = 'SELECT idLicencaSemVencimentos,
@@ -450,16 +460,24 @@ class LicencaSemVencimentos
                          idLicencaSemVencimentos, 
                          idLicencaSemVencimentos,
                          idServidor
-                    FROM tblicencasemvencimentos
-           ORDER BY dtSolicitacao desc';
+                    FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
+                                                 JOIN tbpessoa USING (idPessoa)
+                    WHERE TRUE';
+        
+        # Matrícula, nome ou id ou cpf
+        if (!empty($nome)){
+                $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+                $relatorio->set_subtitulo("Pesquisa: {$nome}");
+        }
+        
+        $select .= ' ORDER BY dtSolicitacao desc, dtInicial desc';
 
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
 
         $titulo = 'Servidores Em Licença Sem vencimentos';
 
-        # Monta o Relatório
-        $relatorio = new Relatorio();
+        # Monta o Relatório        
         $relatorio->set_titulo($titulo);
 
         $relatorio->set_label(array("Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));

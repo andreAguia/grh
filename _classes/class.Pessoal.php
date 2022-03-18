@@ -5831,4 +5831,43 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_concursoRelatorio
+     * Informa o concurso do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_concursoRelatorio($idServidor) {
+
+        # Verifica se  id foi informado
+        if (empty($idServidor)) {
+            return "---";
+        } else {
+            # Pega o cargo do servidor
+            $select = 'SELECT anobase,
+                              regime,
+                              OrgExecutor,
+                              dtPublicacaoEdital,
+                              tipo
+                     FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = parent::select($select, false);
+
+            if (empty($row[0])) {
+                return "---";
+            }
+
+            if ($row[4] == 1) {
+                $tipo = "Adm & Tec";
+            } else {
+                $tipo = "Professor";
+            }
+
+            echo $row[0], "<br/>", $tipo, " - ", $row[1], "<br/>Edital: ", date_to_php($row[3]);
+        }
+    }
+
+    ###########################################################
 }

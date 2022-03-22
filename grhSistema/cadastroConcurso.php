@@ -148,7 +148,7 @@ if ($acesso) {
     $result = $pessoal->select('SELECT idPlano, 
                                       CONCAT("(",DATE_FORMAT(dtVigencia, "%d/%m/%Y"),") ",numDecreto)	
                                   FROM tbplano
-                              ORDER BY numDecreto DESC');
+                              ORDER BY dtVigencia DESC');
 
     array_push($result, array(null, null));
 

@@ -111,7 +111,7 @@ if ($acesso) {
     } else {
         $objeto->set_voltarForm('cadastroConcursoProf.php');
         $objeto->set_linkListar('cadastroConcursoProf.php');
-        $objeto->set_linkAposGravar('cadastroConcursoProf.php');
+        $objeto->set_linkAposGravar('cadastroConcursoProf.php');        
     }
 
     # Parametros da tabela

@@ -605,7 +605,7 @@ class Concurso {
         $tipo = $concurso->get_tipo($idConcurso);
 
         # Monta o array
-        if ($tipo == 1) {
+        if ($tipo == 1) {   // Administrativo
             $itensMenu = [
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao"],
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
@@ -614,7 +614,7 @@ class Concurso {
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];
-        } else {
+        } else {            // Professor
             $itensMenu = [
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
                 ["Vagas", "cadastroConcursoVagaProf.php", $vagas],

@@ -33,11 +33,11 @@ if ($acesso) {
     }
 
     # Pega a fase
-    $fase = get('fase', 'Publicacao');
+    $fase = get('fase');
 
     # Pega o idConcurso
     $idConcurso = get_session("idConcurso");
-
+    
     # Volta quando não temos o idconcurso
     if (empty($idConcurso)) {
         $fase = "nenhum";
@@ -72,8 +72,8 @@ if ($acesso) {
 
     switch ($fase) {
         case "":
-        case "aguardaClassificacao" :
-
+        case "aguarda" :
+            
             # Cria um menu
             $menu1 = new MenuBar();
 
@@ -118,133 +118,133 @@ if ($acesso) {
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
-            loadPage('?fase=classificacao');
+            loadPage('cadastroConcursoPublicacao.php');
             break;
 
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
 
-        ################################################################
-
-        case "classificacao" :
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            $menu1->show();
-
-            $grid->fechaColuna();
-
-            #######################################################
-            # Menu
-
-            $grid->abreColuna(3);
-
-            # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($idConcurso, true);
-
-            # menu
-            $concurso->exibeMenu($idConcurso, "Classificação");
-
-            # Exibe os servidores deste concurso
-            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
-
-            $grid->fechaColuna();
-
-            #######################################################3
-
-            $grid->abreColuna(9);
-
-            # Formulário
-            $form = new Form('?fase=aguardaClassificacao');
-
-            # cargos por nivel
-            $result = $pessoal->select('SELECT cargo,
-                                                cargo
-                                           FROM tbtipocargo
-                                          WHERE cargo <> "Professor Associado" 
-                                            AND cargo <> "Professor Titular" 
-                                       ORDER BY 2');
-
-            # acrescenta todos
-            array_unshift($result, array('*', '-- Todos --'));
-
-            $controle = new Input('parametroCargo', 'combo', 'Cargo - Área - Função:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Cargo');
-            $controle->set_array($result);
-            $controle->set_valor($parametroCargo);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(true);
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $form->add_item($controle);
-
-            $form->show();
-
-            # Monta o select
-            $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
-                              classificacaoConcurso,                                                           
-                              idServidor,
-                              idServidor,
-                              idServidor,
-                              idServidor
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbperfil USING (idPerfil)
-                                         LEFT JOIN tbcargo USING (idCargo)
-                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                        WHERE idConcurso = {$idConcurso}";
-
-            # cargo
-            if ($parametroCargo <> "*") {
-                if (is_numeric($parametroCargo)) {
-                    $select .= ' AND (tbcargo.idcargo = "' . $parametroCargo . '")';
-                    $titulo = $pessoal->get_nomeCompletoCargo($parametroCargo);
-                } else { # senão é nivel do cargo
-                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
-                    $titulo = $parametroCargo;
-                }
-            } else {
-                $titulo = "Classificação Geral";
-            }
-
-            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, classificacaoConcurso";
-
-            # Pega os dados
-            $row = $pessoal->select($select);
-
-            # tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Classificação - {$titulo}");
-            $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Class.", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
-            $tabela->set_classe([null, null, "pessoal", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, null, "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
-            #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
-            $tabela->set_width(array(15, 6, 22, 25, 22, 5));
-            $tabela->set_align(array("left", "center", "left", "left"));
-
-            # Botão de exibição dos servidores com permissão a essa regra
-            $botao = new Link(null, '?fase=editaServidor&idServidorPesquisado=', 'Edita o Servidor');
-            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, $botao]);
-
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-
-            $tabela->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
+//        ################################################################
+//
+//        case "classificacao" :
+//
+//            # Cria um menu
+//            $menu1 = new MenuBar();
+//
+//            # Voltar
+//            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+//            $botaoVoltar->set_class('button');
+//            $botaoVoltar->set_title('Voltar a página anterior');
+//            $botaoVoltar->set_accessKey('V');
+//            $menu1->add_link($botaoVoltar, "left");
+//
+//            $menu1->show();
+//
+//            $grid->fechaColuna();
+//
+//            #######################################################
+//            # Menu
+//
+//            $grid->abreColuna(3);
+//
+//            # Exibe os dados do Concurso
+//            $concurso->exibeDadosConcurso($idConcurso, true);
+//
+//            # menu
+//            $concurso->exibeMenu($idConcurso, "Classificação");
+//
+//            # Exibe os servidores deste concurso
+//            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+//
+//            $grid->fechaColuna();
+//
+//            #######################################################3
+//
+//            $grid->abreColuna(9);
+//
+//            # Formulário
+//            $form = new Form('?fase=aguardaClassificacao');
+//
+//            # cargos por nivel
+//            $result = $pessoal->select('SELECT cargo,
+//                                                cargo
+//                                           FROM tbtipocargo
+//                                          WHERE cargo <> "Professor Associado" 
+//                                            AND cargo <> "Professor Titular" 
+//                                       ORDER BY 2');
+//
+//            # acrescenta todos
+//            array_unshift($result, array('*', '-- Todos --'));
+//
+//            $controle = new Input('parametroCargo', 'combo', 'Cargo - Área - Função:', 1);
+//            $controle->set_size(30);
+//            $controle->set_title('Filtra por Cargo');
+//            $controle->set_array($result);
+//            $controle->set_valor($parametroCargo);
+//            $controle->set_onChange('formPadrao.submit();');
+//            $controle->set_autofocus(true);
+//            $controle->set_linha(1);
+//            $controle->set_col(12);
+//            $form->add_item($controle);
+//
+//            $form->show();
+//
+//            # Monta o select
+//            $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
+//                              classificacaoConcurso,                                                           
+//                              idServidor,
+//                              idServidor,
+//                              idServidor,
+//                              idServidor
+//                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+//                                         LEFT JOIN tbperfil USING (idPerfil)
+//                                         LEFT JOIN tbcargo USING (idCargo)
+//                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+//                        WHERE idConcurso = {$idConcurso}";
+//
+//            # cargo
+//            if ($parametroCargo <> "*") {
+//                if (is_numeric($parametroCargo)) {
+//                    $select .= ' AND (tbcargo.idcargo = "' . $parametroCargo . '")';
+//                    $titulo = $pessoal->get_nomeCompletoCargo($parametroCargo);
+//                } else { # senão é nivel do cargo
+//                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+//                    $titulo = $parametroCargo;
+//                }
+//            } else {
+//                $titulo = "Classificação Geral";
+//            }
+//
+//            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, classificacaoConcurso";
+//
+//            # Pega os dados
+//            $row = $pessoal->select($select);
+//
+//            # tabela
+//            $tabela = new Tabela();
+//            $tabela->set_titulo("Classificação - {$titulo}");
+//            $tabela->set_conteudo($row);
+//            $tabela->set_label(["Cargo", "Class.", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Editar"]);
+//            $tabela->set_classe([null, null, "pessoal", "Concurso", "Concurso"]);
+//            $tabela->set_metodo([null, null, "get_nomeELotacaoEPerfilESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior"]);
+//            #$tabela->set_funcao([null, null, null, null, "date_to_php"]);
+//            $tabela->set_width(array(15, 6, 22, 25, 22, 5));
+//            $tabela->set_align(array("left", "center", "left", "left"));
+//
+//            # Botão de exibição dos servidores com permissão a essa regra
+//            $botao = new Link(null, '?fase=editaServidor&idServidorPesquisado=', 'Edita o Servidor');
+//            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+//            $tabela->set_link([null, null, null, null, null, $botao]);
+//
+//            $tabela->set_rowspan(0);
+//            $tabela->set_grupoCorColuna(0);
+//
+//            $tabela->show();
+//
+//            $grid->fechaColuna();
+//            $grid->fechaGrid();
+//            break;
 
         ################################################################
 

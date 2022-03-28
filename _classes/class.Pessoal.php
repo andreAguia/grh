@@ -2646,14 +2646,13 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (!vazio($row[0])) {
+        if (empty($row[0])) {
+            return null;
+        } else {
             $dataTrienio = date_to_php($row[0]);
             $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
-        } else {
-            $dataProximo = null;
+            return $dataProximo;
         }
-
-        return $dataProximo;
     }
 
     ###########################################################
@@ -2673,7 +2672,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
+        }
     }
 
     ###########################################################
@@ -2692,7 +2695,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2711,7 +2718,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return date_to_php($row[0]);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]);
+        }
     }
 
     ###########################################################

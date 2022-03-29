@@ -2646,14 +2646,13 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if (!vazio($row[0])) {
+        if (empty($row[0])) {
+            return null;
+        } else {
             $dataTrienio = date_to_php($row[0]);
             $dataProximo = addAnos($dataTrienio, 3);  //Soma 3 anos ao último triênio recebido
-        } else {
-            $dataProximo = null;
+            return $dataProximo;
         }
-
-        return $dataProximo;
     }
 
     ###########################################################
@@ -2673,7 +2672,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]) . ' - ' . date_to_php($row[1]);
+        }
     }
 
     ###########################################################
@@ -2692,7 +2695,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2711,7 +2718,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return date_to_php($row[0]);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]);
+        }
     }
 
     ###########################################################
@@ -5827,6 +5838,45 @@ class Pessoal extends Bd {
                     $tipo . " - " . $row[1],
                     "Edital: " . date_to_php($row[3])
             );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_concursoRelatorio
+     * Informa o concurso do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_concursoRelatorio($idServidor) {
+
+        # Verifica se  id foi informado
+        if (empty($idServidor)) {
+            return "---";
+        } else {
+            # Pega o cargo do servidor
+            $select = 'SELECT anobase,
+                              regime,
+                              OrgExecutor,
+                              dtPublicacaoEdital,
+                              tipo
+                     FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = parent::select($select, false);
+
+            if (empty($row[0])) {
+                return "---";
+            }
+
+            if ($row[4] == 1) {
+                $tipo = "Adm & Tec";
+            } else {
+                $tipo = "Professor";
+            }
+
+            echo $row[0], "<br/>", $tipo, " - ", $row[1], "<br/>Edital: ", date_to_php($row[3]);
         }
     }
 

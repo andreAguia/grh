@@ -328,7 +328,7 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.dtAdmissao,
                       tbservidor.idServidor,
-                      concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso,
+                      tbservidor.idServidor,
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
                  FROM tbservidor LEFT OUTER JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
@@ -344,8 +344,8 @@ if ($acesso) {
     $relatorio->set_width(array(12, 30, 20, 12, 26));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, "Pessoal"));
-    $relatorio->set_metodo(array(null, "get_Cargo"));
+    $relatorio->set_classe(array(null, "Pessoal", "Pessoal"));
+    $relatorio->set_metodo(array(null, "get_Cargo", "get_concursoRelatorio"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);

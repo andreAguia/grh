@@ -316,6 +316,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Triênio');
             $menu->add_item('linkWindow', 'Relatório Geral de Triênio', '../grhRelatorios/geralTrienio.php');
+            $menu->add_item('linkWindow', 'Relatório de Triênio por Lotação', '../grhRelatorios/trienioLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/vencimentoMensalTrienio.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/vencimentoAnualTrienio.php');
 

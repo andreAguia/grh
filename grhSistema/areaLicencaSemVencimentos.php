@@ -38,13 +38,11 @@ if ($acesso) {
     $idTpLicenca = soNumeros(get('idTpLicenca'));
 
     # Pega os parâmetros
-    #$parametroAno = post('parametroAno',get_session('parametroAno',date('Y')));
-    #$parametroMes = post('parametroMes',get_session('parametroMes',date('m')));
-    #$parametroLotacao = post('parametroLotacao',get_session('parametroLotacao',66));
+    $parametroNome = post('parametroNome', get_session('parametroNome'));
+
     # Joga os parâmetros par as sessions
-    #set_session('parametroAno',$parametroAno);
-    #set_session('parametroMes',$parametroMes);
-    #set_session('parametroLotacao',$parametroLotacao);
+    set_session('parametroNome', $parametroNome);
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -106,13 +104,33 @@ if ($acesso) {
 
             $menu1->show();
 
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            $controle = new Input('parametroNome', 'texto', 'Pesquisa por Nome:', 1);
+            $controle->set_size(100);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNome);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+
             exibeRegraStatusLSV();
 
             ################################################################
             # Exibe a tabela de Servidores
             $lsv = new LicencaSemVencimentos();
             $lsv->set_linkEditar('?fase=editaServidor');
-            $lsv->exibeLista();
+
+            if (empty($parametroNome)) {
+                $lsv->exibeLista();
+            } else {
+                $lsv->exibeLista($parametroNome);
+            }
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -137,8 +155,13 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
-            $afast = new LicencaSemVencimentos();
-            $afast->exibeRelatorio();
+            $lsv = new LicencaSemVencimentos();
+            
+            if (empty($parametroNome)) {
+                $lsv->exibeRelatorio();
+            } else {
+                $lsv->exibeRelatorio($parametroNome);
+            }
             break;
 
         ################################################################  

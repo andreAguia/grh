@@ -68,7 +68,11 @@ if ($acesso) {
                                 FROM tbclasse JOIN tbplano USING (idPlano)
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                                WHERE tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
-                            ORDER BY SUBSTRING(faixa, 1, 1), valor');
+                            ORDER BY 
+                              CASE WHEN tbclasse.nivel = "Doutorado" THEN "zzz" END,
+                                     tbclasse.nivel,
+                                     SUBSTRING(faixa, 1, 1), 
+                                     valor');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,

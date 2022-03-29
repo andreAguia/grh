@@ -44,7 +44,12 @@ class PlanoCargos {
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
-        return $row;
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row;
+        }
     }
 
     ###########################################################
@@ -76,7 +81,7 @@ class PlanoCargos {
         $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6], $status]));
         $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores", "Status"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_width([15,15,15,10,5]);
+        $tabela->set_width([15, 15, 15, 10, 5]);
 
         $formatacaoCondicional = array(
             array('coluna' => 3,

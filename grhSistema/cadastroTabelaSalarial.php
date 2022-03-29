@@ -18,12 +18,13 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $plano = new PlanoCargos();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
     
     # Pega o plano
-    $parametroPlano = get_session('parametroPlano');
+    $parametroPlano = get_session('parametroPlano',$plano->get_planoAtual());
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -56,15 +57,15 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT idClasse,
-                                      tbclasse.nivel,
-                                      tbtipocargo.cargo,
-                                      faixa,
-                                      valor,
-                                      idClasse
-                                 FROM tbclasse JOIN tbplano USING (idPlano)
-                                               LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                WHERE tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
-                             ORDER BY SUBSTRING(faixa, 1, 1), valor');
+                                     tbclasse.nivel,
+                                     tbtipocargo.cargo,
+                                     faixa,
+                                     valor,
+                                     idClasse
+                                FROM tbclasse JOIN tbplano USING (idPlano)
+                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
+                               WHERE tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
+                            ORDER BY SUBSTRING(faixa, 1, 1), valor');
 
     # select do edita
     $objeto->set_selectEdita('SELECT nivel,
@@ -102,9 +103,9 @@ if ($acesso) {
 
     # Pega os dados da combo de cargo
     $cargo = $pessoal->select('SELECT idTipoCArgo, 
-                                       cargo
-                                  FROM tbtipocargo
-                              ORDER BY cargo desc');
+                                      cargo
+                                 FROM tbtipocargo
+                             ORDER BY cargo desc');
     array_unshift($cargo, array(0, null));
 
     # Pega os dados da combo de Plano e Cargos
@@ -163,7 +164,7 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
-
+            
             function exibePlano($idPlano = null) {
                 # Exibe quadro do plano
                 $plano = new PlanoCargos();

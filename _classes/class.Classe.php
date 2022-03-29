@@ -29,12 +29,42 @@ class Classe {
             $select = "SELECT * 
                          FROM tbclasse
                         WHERE idClasse = {$id}";
-
-            $pessoal = new Pessoal();
+            
             $row = $pessoal->select($select, false);
 
             # Retorno
             return $row;
+        }
+    }
+
+##############################################################
+
+    public function get_numSalarios($idPlano = null) {
+
+        /**
+         * Informa o número de salários cadastrado nesse plano
+         * 
+         * @param $idPlano integer null O idPlano 
+         * 
+         * @syntax $classe->get_numSalarios([$idPlano]);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se o id foi informado
+        if (empty($idPlano)) {
+            return null;
+        } else {
+            # Pega os dados
+            $select = "SELECT idClasse 
+                         FROM tbclasse
+                        WHERE idPlano = {$idPlano}";
+
+            
+            $numero = $pessoal->count($select, false);
+
+            # Retorno
+            return $numero;
         }
     }
 

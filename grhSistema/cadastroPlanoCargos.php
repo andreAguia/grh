@@ -101,7 +101,7 @@ if ($acesso) {
 
     # Dá acesso a exclusão somente ao administrador
     if (Verifica::acesso($idUsuario, 1)) {
-        #$objeto->set_linkExcluir('?fase=excluir');
+        $objeto->set_linkExcluir('?fase=excluir');
     }
 
     # Parametros da tabela
@@ -228,13 +228,12 @@ if ($acesso) {
 
                 # Cria um menu
                 $menu1 = new MenuBar();
-                
+
 //                # Relatório
 //                $botaoVoltar = new Link("Imprimir", "?fase=imprimir");
 //                $botaoVoltar->set_class('button');
 //                $botaoVoltar->set_title('Imprimir a tabela do plano');
 //                $menu1->add_link($botaoVoltar, "right");
-                
                 # Editar
                 $botaoVoltar = new Link("Editar", "cadastroTabelaSalarial.php");
                 $botaoVoltar->set_class('button');
@@ -242,7 +241,7 @@ if ($acesso) {
                 $menu1->add_link($botaoVoltar, "right");
 
                 $menu1->show();
-            }else{
+            } else {
                 br();
             }
 
@@ -258,9 +257,22 @@ if ($acesso) {
 
         ################################################################
 
-        case "excluir" :
         case "gravar" :
+
             $objeto->$fase($id);
+            break;
+
+        ################################################################
+
+        case "excluir" :
+            # Verifica se este plano tem algum salário cadastrado nele
+            $classe = new Classe();
+            if ($classe->get_numSalarios($id) == 0) {
+                $objeto->excluir($id);                
+            } else {
+                alert('Este pĺano de cargos tem salário cadastrados.\nNão é possível excluí-lo');
+                back(1);
+            }
             break;
 
         ################################################################

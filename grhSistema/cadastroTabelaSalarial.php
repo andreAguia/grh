@@ -33,6 +33,9 @@ if ($acesso) {
         $atividade = "Visualizou o cadastro de tabela salarial";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+        $voltarLista = "grh.php";
+    }else{
+        $voltarLista = "cadastroPlanoCargos.php?fase=exibeTabela&id={$parametroPlano}";
     }
 
     # pega o id (se tiver)
@@ -53,7 +56,7 @@ if ($acesso) {
     $objeto->set_nome('Tabela Salarial');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista("cadastroPlanoCargos.php?fase=exibeTabela&id={$parametroPlano}");
+    $objeto->set_voltarLista($voltarLista);
 
     # select da lista
     $objeto->set_selectLista('SELECT idClasse,
@@ -112,8 +115,8 @@ if ($acesso) {
     $result = $pessoal->select('SELECT idPlano, 
                                        numDecreto
                                   FROM tbplano
+                                 WHERE idPlano = '.$parametroPlano.'  
                               ORDER BY dtPublicacao desc');
-    array_unshift($result, array(0, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -125,6 +128,7 @@ if ($acesso) {
             'array' => $result,
             'required' => true,
             'autofocus' => true,
+            'padrao' => $parametroPlano,
             'size' => 20),
         array('linha' => 1,
             'col' => 4,

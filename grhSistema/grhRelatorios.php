@@ -88,6 +88,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Faltas', '?fase=faltas', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Férias', '?fase=ferias', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Formação', '?fase=formacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Geral', '?fase=geral', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
@@ -272,6 +273,16 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Formação dos Servidores');
             $menu->add_item('linkWindow', 'Relatório dos Servidores por Formação', '../grhRelatorios/servidoresComFormacao.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "frequencia";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'FoLha de Frequência dos Servidores');
+            $menu->add_item('linkWindow', 'Folha de Frequencia de uma Lotação', '../grhRelatorios/folhaFrequenciaLotacao.php');
 
             $menu->show();
             break;

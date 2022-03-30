@@ -71,6 +71,7 @@ if ($acesso) {
     set_session('parametroProcesso');
     set_session('parametroSexo');
     set_session('parametroAlta');
+    set_session('parametroTrimestre');
    
     set_session('concursoTipo');
     

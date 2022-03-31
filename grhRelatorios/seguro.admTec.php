@@ -38,6 +38,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idfuncional,
                      tbpessoa.nome,
                      tbdocumentacao.cpf,
+                     CONCAT(tbdocumentacao.identidade," - ",IFNULL(tbdocumentacao.orgaoId,"")),
                      tbpessoa.dtNasc,
                      tbpessoa.sexo
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
@@ -68,15 +69,9 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Sexo'));
-    #$relatorio->set_width(array(10,35,15,10,30));
-    $relatorio->set_align(array("center", "left", "center", "center", "left"));
-
-    $relatorio->set_funcao(array(null, null, null, "date_to_php"));
-
-    #$relatorio->set_classe(array(null,null,null,null,"pessoal"));
-    #$relatorio->set_metodo(array(null,null,null,null,"get_cargoSimples"));
-
+    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Identidade', 'Nascimento', 'Sexo']);
+    $relatorio->set_align(["center", "left"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
     $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

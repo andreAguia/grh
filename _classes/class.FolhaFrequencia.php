@@ -89,7 +89,7 @@ class FolhaFrequencia {
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);        
         $relatorio->set_linhaNomeColuna(false);
-        $relatorio->set_cabecalhoRelatorio($cabecalho);
+        $relatorio->set_menuRelatorio($cabecalho);
         
         $relatorio->set_logServidor($idServidor);
         $relatorio->set_logDetalhe("Visualizou a Folha de Presença de " . $trimestre . "° Trimestre / $anoBase");

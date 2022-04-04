@@ -47,6 +47,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Inativos');
+    $relatorio->set_subtitulo('Ordenados pela Data de Saída');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Situação'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center", "left", "left", "left"));

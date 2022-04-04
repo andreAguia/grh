@@ -29,31 +29,32 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
+                     tbservidor.idServidor,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
+                     tbservidor.dtDemissao,
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                    
-                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                LEFT JOIN tbcargo USING (idCargo)
+                                     JOIN tbtipocargo USING (idTipoCargo)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE tbservidor.situacao = 1
-                 AND tbservidor.idPerfil <> 10
-                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-            ORDER BY tbpessoa.nome';
+               WHERE tbservidor.situacao <> 1
+                 AND idConcurso IS NOT NULL
+                 AND tbtipocargo.tipo = "Adm/Tec"
+            ORDER BY tbservidor.dtDemissao';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
-    $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação'));
+    $relatorio->set_titulo('Relatório Geral de Servidores Inativos - Administrativos e Técnicos');
+    $relatorio->set_subtitulo('Ordenados pela Data de Saída');
+    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Situação'));
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
+    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
 
-    $relatorio->set_classe(array(null, null, "pessoal", null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargo", null, null, null, "get_Situacao"));
+    $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, null, null, "pessoal"));
+    $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, null, null, "get_Situacao"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

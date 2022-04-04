@@ -90,7 +90,9 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Formação', '?fase=formacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral', '?fase=geral', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Geral - Servidores Ativos', '?fase=geralAtivos', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
@@ -336,12 +338,12 @@ if ($acesso) {
 
         ######################################
 
-        case "geral";
+        case "geralAtivos";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Geral');
+            $menu->add_item('titulo', 'Geral - Servidores Ativos');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos', '../grhRelatorios/geralServidoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Professores Ativos', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Administrativos e Técnicos Ativos', '../grhRelatorios/geralServidoresAdmTecAtivos.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Professores', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresAdmTecAtivos.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacaoSexo.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoCpf.php');
@@ -355,9 +357,32 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geralServidoresNomeCpfNascimentoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geralServidoresNomeCpfCargoIdade.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "geralInativos";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Geral - Inativos');
+            $menu->add_item('titulo1', 'Ordenados pela Data de Saída');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.php');
+            #$menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.php');
+            $menu->add_item('titulo1', 'Ordenados pelo Nome');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.porNome.php');
+            #$menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.porNome.php');
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "geralGeral";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Geral _ Ativos e Inativos');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Agrupados por Lotação', '../grhRelatorios/geralServidoresLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Com CPF', '../grhRelatorios/geralServidoresCPF.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.php');
             $menu->show();
             break;
 

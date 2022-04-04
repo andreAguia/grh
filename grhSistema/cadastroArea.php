@@ -41,7 +41,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorioAtivo" AND $fase <> "relatorioInativo") {
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -64,6 +66,8 @@ if ($acesso) {
                        descricao,
                        requisitos,
                        idarea,
+                       idarea,
+                        idarea,
                        idarea
                   FROM tbarea LEFT JOIN tbtipocargo USING (idTipoCargo)
                  WHERE area LIKE '%$parametro%'
@@ -89,26 +93,31 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Cargo", "Area", "Descrição Sintética da Área", "Requisitos para Provimento", "Servidores<br/>Ativos", "Ver"));
-    $objeto->set_width(array(5, 5, 15, 35, 20, 5, 5));
-    $objeto->set_align(array("center", "center", "left", "left", "left"));
+    $objeto->set_label(["id", "Cargo", "Area", "Descrição Sintética da Área", "Requisitos para Provimento", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
+    $objeto->set_width([5, 5, 15, 30, 20, 5, 5, 5, 5]);
+    $objeto->set_align(["center", "center", "left", "left", "left"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio(5);
-    $objeto ->set_totalRegistro(false);
+    $objeto->set_colunaSomatorio([5, 7]);
+    $objeto->set_totalRegistro(false);
 
-    $objeto->set_classe(array(null, null, null, null, null, "Pessoal"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresArea"));
+    $objeto->set_classe([null, null, null, null, null, "CargoArea", null, "CargoArea"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivos", null, "get_numServidoresInativos"]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
     $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
     $servAtivos->set_title("Exibe os servidores ativos");
 
+    # Ver servidores inativos
+    $servInativos = new Link(null, "?fase=aguardeInativos&id={$id}");
+    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servInativos->set_title("Exibe os servidores inativos");
+
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array("", "", "", "", "", "", $servAtivos));
+    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -168,16 +177,28 @@ if ($acesso) {
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
-    
+
     ################################################################
-    
+
     switch ($fase) {
         case "" :
         case "listar" :
             $objeto->listar();
             break;
-        case "editar" :
+
         case "excluir" :
+            # Verifica se tem servidores cargos com essa área
+            $cargoarea = new CargoArea();
+            if ($cargoarea->get_numCargoArea($id) > 0) {
+                alert("Existem cargos cadastrados nessa área. Não é possível excluí-la!!");
+                back(1);
+            } else {
+                # Se não tiver exclui
+                $objeto->excluir($id);
+            }
+            break;
+
+        case "editar" :
         case "gravar" :
             $objeto->$fase($id);
             break;
@@ -240,6 +261,70 @@ if ($acesso) {
             # Lista de Servidores Ativos
             $lista = new ListaServidores("Servidores Ativos - Area: {$pessoal->get_area($id)}");
             $lista->set_situacao(1);
+            $lista->set_area($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
+
+        case "exibeServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroArea.php?fase=exibeServidoresInativos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioInativo&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores("Servidores Ativos - Area: {$pessoal->get_area($id)}");
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_area($id);
+            $lista->showTabela();
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "relatorioInativo" :
+            # Pega o nome do tipo de cargo
+            $nomeTipo = $pessoal->get_nomeTipoCargo($id);
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores("Servidores Inativos - Area: {$pessoal->get_area($id)}");
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_area($id);
             $lista->showRelatorio();
             break;

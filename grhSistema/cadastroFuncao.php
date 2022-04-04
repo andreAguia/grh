@@ -33,10 +33,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-
-    # Verifica a paginacão
-    #$paginacao = get('paginacao',get_session('sessionPaginacao',0));	// Verifica se a paginação vem por get, senão pega a session
-    #set_session('sessionPaginacao',$paginacao);                         // Grava a paginação na session
+    
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));# passa o parametro da session para a variavel parametro retirando as aspas
@@ -54,7 +51,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio" OR $fase <> "mapa") {
+    if ($fase <> "relatorio" AND $fase <> "mapa" AND $fase <> "relatorioInativo") {
         AreaServidor::cabecalho();
     }
 
@@ -77,6 +74,8 @@ if ($acesso) {
                                       tbtipocargo.cargo,
                                       tbarea.area,
                                       nome,                              
+                                      idCargo,
+                                      idCargo,
                                       idCargo,
                                       idCargo,
                                       idCargo,
@@ -111,7 +110,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver"]);
+    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
     #$objeto->set_width(array(5,20,25,25,10,5,5));
     $objeto->set_align(["center", "left", "left", "left"]);
 
@@ -120,16 +119,21 @@ if ($acesso) {
 
     $objeto->set_colunaSomatorio(4);
 
-    $objeto->set_classe([null, null, null, null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo"]);
+    $objeto->set_classe([null, null, null, null, "Pessoal", null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo"]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
     $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
     $servAtivos->set_title("Exibe os servidores ativos");
 
+    # Ver servidores inativos
+    $servInativos = new Link(null, "?fase=aguardeInativos&id={$id}");
+    $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $servInativos->set_title("Exibe os servidores inativos");
+
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, $servAtivos]);
+    $objeto->set_link([null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -305,6 +309,67 @@ if ($acesso) {
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
+            $lista->set_cargo($id);
+            $lista->showRelatorio();
+            break;
+
+        ################################################################
+
+        case "aguardeInativos" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=exibeServidoresInativos&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "exibeServidoresInativos" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroFuncao.php?fase=exibeServidoresInativos&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Botão voltar
+            $btnVoltar = new Button("Voltar", "?");
+            $btnVoltar->set_title('Volta para a página anterior');
+            $btnVoltar->set_accessKey('V');
+            $menu->add_link($btnVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioInativo&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Inativos - Cargo: ' . $pessoal->get_nomeCargo($id));
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
+            $lista->set_cargo($id);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "relatorioInativo" :
+            # Lista de Servidores Inativos
+            $lista = new ListaServidores('Servidores Inativos');
+            $lista->set_situacao(1);
+            $lista->set_situacaoSinal("<>");
             $lista->set_cargo($id);
             $lista->showRelatorio();
             break;

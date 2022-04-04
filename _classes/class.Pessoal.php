@@ -4272,24 +4272,6 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
-    /**
-     * Método get_servidoresArea
-     * 
-     * Exibe o número de servidores ativos em uma determinada area
-     */
-    public function get_numServidoresArea($id) {
-        $select = 'SELECT idServidor                             
-                         FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
-                        WHERE situacao = 1 AND 
-                              tbcargo.idArea = ' . $id;
-
-        $numero = parent::count($select);
-        return $numero;
-    }
-
-    ###########################################################
-
     /**
      * Método get_nomeSituacao
      * 

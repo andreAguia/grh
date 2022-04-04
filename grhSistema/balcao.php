@@ -278,6 +278,7 @@ if ($acesso) {
                                     WHERE (balcao = 'Manhã' OR  balcao = 'Ambos')
                                       AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
                                       AND uenf_grh.tbhistlot.lotacao = 66
+                                      AND situacao = 1
                                  ORDER BY uenf_grh.tbpessoa.nome";
 
                         $manha = $intra->select($select1);
@@ -291,6 +292,7 @@ if ($acesso) {
                                     WHERE (balcao = 'Tarde' OR  balcao = 'Ambos')
                                       AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
                                       AND uenf_grh.tbhistlot.lotacao = 66
+                                      AND situacao = 1
                                  ORDER BY uenf_grh.tbpessoa.nome";
 
                         $tarde = $intra->select($select2);
@@ -512,6 +514,7 @@ if ($acesso) {
                         WHERE senha IS NOT null
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbhistlot.lotacao = 66
+                          AND situacao = 1
                      ORDER BY tbpessoa.nome asc';
 
             $lista = $pessoal->select($select);

@@ -276,7 +276,10 @@ class MenuPrincipal {
         $intra = new Intra();
 
         # Pega os sortudos
-        $select = "SELECT idServidorManha, idServidorTarde
+        $select = "SELECT idServidorManha,
+                          idServidorManhaOnline, 
+                          idServidorTarde,
+                          idServidorTardeOnline
                      FROM tbbalcao 
                     WHERE month(curdate()) = mes 
                       AND day(curdate()) = dia 
@@ -288,7 +291,7 @@ class MenuPrincipal {
 
         # Caso seja exibe uma mensagem
         if (!empty($sortudos)) {
-            if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1])) {
+            if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1]) OR ($idServidor == $sortudos[2]) OR ($idServidor == $sortudos[3])) {
                 $painel2 = new Callout("warning");
                 $painel2->abre();
 
@@ -299,22 +302,22 @@ class MenuPrincipal {
         } else {
             $sortudos[0] = "";
             $sortudos[1] = "";
+            $sortudos[2] = "";
+            $sortudos[3] = "";
         }
 
-        # Inicia painel
         $painel = new Callout("primary");
         $painel->abre();
-
-        titulo('Hoje no Balcão');
-        br();
-
-        if (is_null($sortudos)) {
+        
+        if (is_null($sortudos)) {            
             p("Não Haverá Atendimento Hoje.");
         } else {
+
             echo "<table class='tabelaPadrao'>";
-            #echo "<tr><th>Turno</th><th>Servidor</th></tr>";
-            echo "<tr><td>Manhã:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td></tr>";
-            echo "<tr><td>Tarde:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
+            echo "<caption>Hoje no Balcão</caption>";
+            echo "<tr><th>Turno</th><th>Presencial</th><th>Online</th></tr>";
+            echo "<tr><td align='center'>Manhã:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
+            echo "<tr><td align='center'>Tarde:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[2])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[3])) . "</td></tr>";
             echo "</table>";
         }
 

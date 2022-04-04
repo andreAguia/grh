@@ -82,7 +82,7 @@ if ($acesso) {
                 # Cria um menu
                 $menu1 = new MenuBar();
 
-                # Sair da Área do Servidor
+                # Voltar
                 $linkVoltar = new Link("Voltar", "grh.php");
                 $linkVoltar->set_class('button');
                 $linkVoltar->set_title('Voltar');
@@ -273,10 +273,9 @@ if ($acesso) {
                                       AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
                                       AND uenf_grh.tbhistlot.lotacao = 66
                                  ORDER BY uenf_grh.tbpessoa.nome";
-                       
+
                         $manha = $intra->select($select1);
                         array_unshift($manha, array(null, null)); # Adiciona o valor de nulo
-                        
                         # Tarde
                         $select2 = "SELECT idServidor
                                       FROM uenf_areaservidor.tbusuario JOIN uenf_grh.tbservidor USING (idServidor)
@@ -290,18 +289,23 @@ if ($acesso) {
 
                         $tarde = $intra->select($select2);
                         array_unshift($tarde, array(null, null)); # Adiciona o valor de nulo
-                        # Turno da manhã
+
+                        /*
+                         *  Turno da manhã
+                         */
                         # Verifica se tem atendimento de manhã
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
 
                             echo '<td>';
 
+                            # Pega o servidor
+                            $coitadoPresencial = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
+                            $coitadoOnline = get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo");
+
+                            p("Presencial:", "labelBalcao");
                             echo '<select name="m' . $contador . '">';
 
-                            # Pega o valor quando tiver
-                            $valor = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
-
-                            # Percorre o array de servidores da manhã
+                            # Percorre o array de servidores Presencial
                             foreach ($manha as $servidores) {
 
                                 # Simplifica o nome
@@ -310,7 +314,7 @@ if ($acesso) {
                                 echo ' <option value="' . $servidores[0] . '"';
 
                                 # Varifica se é o cara
-                                if ($servidores[0] == $valor) {
+                                if ($servidores[0] == $coitadoPresencial) {
                                     echo ' selected="selected"';
                                 }
 
@@ -318,21 +322,12 @@ if ($acesso) {
                             }
 
                             echo '</select>';
-                            echo '</td>';
-                        } else {
-                            echo '<td align="center">-----</td>';
-                        }
 
-                        # Turno da Tarde
-                        # Verifica se tem atendimento
-                        if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                            echo '<td>';
-                            echo '<select name="t' . $contador . '">';
-                            # Pega o valor quando tiver
-                            $valor = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
+                            p("Online:", "labelBalcao");
+                            echo '<select name="mo' . $contador . '">';
 
-                            # Percorre o array de servidores da tarde
-                            foreach ($tarde as $servidores) {
+                            # Percorre o array de servidores Online
+                            foreach ($manha as $servidores) {
 
                                 # Simplifica o nome
                                 #$servidores[0] = get_nomeSimples($servidores[0]);
@@ -340,46 +335,111 @@ if ($acesso) {
                                 echo ' <option value="' . $servidores[0] . '"';
 
                                 # Varifica se é o cara
-                                if ($servidores[0] == $valor) {
+                                if ($servidores[0] == $coitadoOnline) {
                                     echo ' selected="selected"';
                                 }
 
                                 echo '>' . $pessoal->get_nomeSimples($servidores[0]) . '</option>';
                             }
+
+                            echo '</select>';
+                            echo '</td>';
+                        } else {
+                            echo '<td align="center">-----</td>';
+                        }
+
+                        /*
+                         * Turno da Tarde
+                         */
+                        # Verifica se tem atendimento
+                        if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
+                            echo '<td>';
+
+                            # Pega o servidor
+                            $coitadoPresencial = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
+                            $coitadoOnline = get_servidorBalcao($parametroAno, $parametroMes, $contador, "to");
+
+                            p("Presencial:", "labelBalcao");
+                            echo '<select name="t' . $contador . '">';
+
+                            # Percorre o array de servidores Presencial
+                            foreach ($manha as $servidores) {
+
+                                # Simplifica o nome
+                                #$servidores[0] = get_nomeSimples($servidores[0]);
+
+                                echo ' <option value="' . $servidores[0] . '"';
+
+                                # Varifica se é o cara
+                                if ($servidores[0] == $coitadoPresencial) {
+                                    echo ' selected="selected"';
+                                }
+
+                                echo '>' . $pessoal->get_nomeSimples($servidores[0]) . '</option>';
+                            }
+
+                            echo '</select>';
+
+                            p("Online:", "labelBalcao");
+                            echo '<select name="to' . $contador . '">';
+
+                            # Percorre o array de servidores Online
+                            foreach ($manha as $servidores) {
+
+                                # Simplifica o nome
+                                #$servidores[0] = get_nomeSimples($servidores[0]);
+
+                                echo ' <option value="' . $servidores[0] . '"';
+
+                                # Varifica se é o cara
+                                if ($servidores[0] == $coitadoOnline) {
+                                    echo ' selected="selected"';
+                                }
+
+                                echo '>' . $pessoal->get_nomeSimples($servidores[0]) . '</option>';
+                            }
+
                             echo '</select>';
                             echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
                         }
                     } else {
-                        # Turno da manhã
+                        /*
+                         *  Turno da manhã
+                         */
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
-                            $ditoCujo = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
-                            echo '<td';
 
-                            if (is_null($ditoCujo)) {
-                                echo ' id="ausente"';
-                                $ditoCujo = "?";
-                            } else {
-                                $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
-                            }
-                            echo ' align="center"><span id="f14">' . $ditoCujo . '</span></td>';
+                            # Pega o servidor
+                            $coitadoPresencial = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"));
+                            $coitadoOnline = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"));
+
+                            echo '<td>';
+                            p("Presencial:", "labelBalcao");
+                            p($pessoal->get_nomeSimples($coitadoPresencial), "coitado");
+                            hr("hrBalcao");
+                            p("Online:", "labelBalcao");
+                            p($pessoal->get_nomeSimples($coitadoOnline), "coitado");
+                            echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
                         }
 
-                        # Turno da Tarde
+                        /*
+                         *  Turno da Tarde
+                         */
                         if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                            $ditoCujo = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
-                            echo '<td';
+                            # Pega o servidor
+                            $coitadoPresencial = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"));
+                            $coitadoOnline = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"));
 
-                            if (is_null($ditoCujo)) {
-                                echo ' id="ausente"';
-                                $ditoCujo = "?";
-                            } else {
-                                $ditoCujo = $pessoal->get_nomeSimples($ditoCujo);
-                            }
-                            echo ' align="center"><span id="f14">' . $ditoCujo . '</span></td>';
+                            echo '<td>';
+                            p("Presencial:", "labelBalcao");
+                            p($pessoal->get_nomeSimples($coitadoPresencial), "coitado");
+                            hr("hrBalcao");
+                            p("Online:", "labelBalcao");
+                            p($pessoal->get_nomeSimples($coitadoOnline), "coitado");
+                            echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
                         }
@@ -411,23 +471,33 @@ if ($acesso) {
             while ($contador < $dias) {
                 $contador++;
                 $vmanha = post("m$contador");
+                $vmanhaOnline = post("mo$contador");
                 $vtarde = post("t$contador");
+                $vtardeOnline = post("to$contador");
 
                 # Limpa os valores
-                if (($vmanha == "?") OR (vazio($vmanha))) {
+                if (($vmanha == "---") OR (empty($vmanha))) {
                     $vmanha = null;
                 }
 
-                if (($vtarde == "?") OR (vazio($vtarde))) {
+                if (($vmanhaOnline == "---") OR (empty($vmanhaOnline))) {
+                    $vmanhaOnline = null;
+                }
+
+                if (($vtarde == "---") OR (empty($vtarde))) {
                     $vtarde = null;
+                }
+
+                if (($vtardeOnline == "---") OR (empty($vtardeOnline))) {
+                    $vtardeOnline = null;
                 }
 
                 # Verifica se já existe esse campo e pega o id para o update
                 $idBalcao = get_idBalcao($parametroAno, $parametroMes, $contador);
 
                 # Grava na tabela
-                $campos = array("ano", "mes", "dia", "idServidorManha", "idServidorTarde");
-                $valor = array($parametroAno, $parametroMes, $contador, $vmanha, $vtarde);
+                $campos = array("ano", "mes", "dia", "idServidorManha", "idServidorManhaOnline", "idServidorTarde", "idServidorTardeOnline");
+                $valor = array($parametroAno, $parametroMes, $contador, $vmanha, $vmanhaOnline, $vtarde, $vtardeOnline);
                 $pessoal->gravar($campos, $valor, $idBalcao, "tbbalcao", "idBalcao", false);
             }
             loadPage("?");

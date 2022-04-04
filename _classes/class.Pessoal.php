@@ -2297,20 +2297,25 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_nomeSimples($idServidor) {
-        if (empty($idServidor)) {
-            return "----";
-        } else {
-            $select = 'SELECT tbpessoa.nome
+        if (is_numeric($idServidor)) {
+
+            if (empty($idServidor)) {
+                return "---";
+            } else {
+                $select = 'SELECT tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
                         WHERE idServidor = ' . $idServidor;
 
-            if ($idServidor == 0) {
-                return "----";
-            } else {
-                $nome = parent::select($select, false);
+                if ($idServidor == 0) {
+                    return "---";
+                } else {
+                    $nome = parent::select($select, false);
 
-                return get_nomeSimples($nome[0]);
+                    return get_nomeSimples($nome[0]);
+                }
             }
+        } else {
+            return "---";
         }
     }
 

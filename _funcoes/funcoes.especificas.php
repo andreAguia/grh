@@ -664,12 +664,14 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
     $pessoal = new Pessoal();
 
     $select = 'SELECT idServidorManha,
-                      idServidorTarde
+                      idServidorManhaOnline,
+                      idServidorTarde,
+                      idServidorTardeOnline
                 FROM tbbalcao
                WHERE ano = ' . $ano . '
                  AND mes = ' . $mes . ' 
                  AND dia = ' . $dia;
-
+    
     $row = $pessoal->select($select, false);
     $count = $pessoal->count($select, false);
 
@@ -677,16 +679,28 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
         return null;
     } else {
         if ($turno == "m") {
-            if (vazio($row[0])) {
+            if (empty($row[0])) {
                 return null;
             } else {
                 return $row[0];
             }
-        } else {
+        } elseif ($turno == "mo") {
             if (vazio($row[1])) {
                 return null;
             } else {
                 return $row[1];
+            }
+        } elseif ($turno == "t") {
+            if (vazio($row[2])) {
+                return null;
+            } else {
+                return $row[2];
+            }
+       } elseif ($turno == "to") {
+            if (vazio($row[3])) {
+                return null;
+            } else {
+                return $row[3];
             }
         }
     }

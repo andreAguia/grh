@@ -564,6 +564,25 @@ td#sematendimento{
     background-color: #b9b9b9;
 }
 
+p#labelBalcao{
+    font-size: 9px;
+    text-align: left;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#coitado{
+    font-size: 14px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+hr#hrBalcao{
+    padding: 3px;
+    margin: 3px;
+}
+
 /*******************************************
  * Controle de solicitação de redução de Carga horária
  *******************************************/

@@ -256,6 +256,7 @@ class MenuServidor {
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
         $botao->set_url('servidorPasta.php?grh=1');
+        $botao->set_url('servidorPasta2.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);

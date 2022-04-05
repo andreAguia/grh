@@ -101,12 +101,12 @@ if ($acesso) {
 
         # Exibe o número do dia
         echo '<td align="center">';
-        p($contador, "coitado");
+        echo $contador;
         echo '</td>';
 
         # Exibe o nome da semana
         echo '<td align="center">';
-        p($diaSemana[$wday], "coitado");
+        echo $diaSemana[$wday];
         echo '</td>';
 
         # Coluna do codigo
@@ -130,9 +130,9 @@ if ($acesso) {
              */
             if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
                 echo '<td>';
-                p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"))), "coitado");
+                echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m")));
                 echo '</td><td>';
-                p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"))), "coitado");
+                echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo")));
                 echo '</td>';
             } else {
                 echo '<td align="center">-----</td>';
@@ -143,9 +143,9 @@ if ($acesso) {
              */
             if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
                 echo '<td>';
-                p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"))), "coitado");
+                echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t")));
                 echo '</td><td>';
-                p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"))), "coitado");
+                echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to")));
                 echo '</td>';
             } else {
                 echo '<td align="center">-----</td>';

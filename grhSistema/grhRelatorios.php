@@ -367,11 +367,11 @@ if ($acesso) {
             $menu->add_item('titulo', 'Geral - Inativos');
             $menu->add_item('titulo1', 'Ordenados pela Data de Saída');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.php');
-            #$menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.php');
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.php');
             $menu->add_item('titulo1', 'Ordenados pelo Nome');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.porNome.php');
-            #$menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.porNome.php');
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.porNome.php');
             $menu->show();
             break;

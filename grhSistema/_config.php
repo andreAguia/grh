@@ -43,12 +43,13 @@ define("PASTA_ESTILOS", "../_css/");                                  # Estilos 
 /*
  *  Arquivos
  */
-define("PASTA_FOTOS", "../../_arquivos/fotos/");                     # Fotos dos Servidores
-define("PASTA_MCF", "../../_arquivos/mcf/");                         # MCF dos Servidores
-define("PASTA_CONCURSO", "../../_arquivos/concurso/");               # Publicações de concurso
-define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");          # Publicações no DOERJ
-define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");        # Fotos dos Servidores
-define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");        # Fotos dos certificados de cursos
+define("PASTA_FOTOS", "../../_arquivos/fotos/");                    # Fotos dos Servidores
+define("PASTA_MCF", "../../_arquivos/mcf/");                        # MCF dos Servidores
+define("PASTA_CONCURSO", "../../_arquivos/concurso/");              # Publicações de concurso
+define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");         # Publicações no DOERJ
+define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");       # Fotos dos Servidores
+define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");       # Fotos dos certificados de cursos
+define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos Gerais
 
 /*
  *  Tags aceitas em campos com htmlTag = true

@@ -195,7 +195,7 @@ if ($acesso) {
 
             # Cabeçalho
             echo '<tr>';
-            echo '<th rowspan="2">DIA</th>';
+            echo '<th rowspan="2">Dia</th>';
             echo '<th rowspan="2">Dia da Semana</th>';
             echo '<th colspan="2">Manhã</th>';
             echo '<th colspan="2">Tarde</th>';

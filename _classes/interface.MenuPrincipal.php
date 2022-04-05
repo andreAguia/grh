@@ -27,12 +27,13 @@ class MenuPrincipal {
         # Módulos
         $this->moduloServidores();
         $this->moduloAreaConcursos();
-//        $this->moduloAreaPandemia();
+        $this->moduloDocumentos();
         $this->moduloTabelaAuxiliares();
-//        $this->moduloPlanoCargos();
+        #$this->moduloAreaPandemia();
+        #$this->moduloPlanoCargos();
         #$this->moduloSei();
         #$this->moduloSigrh();
-        $this->moduloDocumentos();
+        
         $this->moduloTabelasSecundarias();
 
         $grid->fechaColuna();

@@ -190,6 +190,7 @@ if ($acesso) {
 
             # Pega os dados da combo concurso
             $concurso = $pessoal->select($select);
+            array_unshift($concurso, array(null, null));
         } else {
             $concurso = null;
             $idConcurso = null;

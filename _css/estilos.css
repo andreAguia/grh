@@ -571,18 +571,6 @@ p#labelBalcao{
     margin: 0px;
 }
 
-p#coitado{
-    font-size: 14px;
-    text-align: center;
-    padding: 0px;
-    margin: 0px;
-}
-
-hr#hrBalcao{
-    padding: 3px;
-    margin: 3px;
-}
-
 /*******************************************
  * Controle de solicitação de redução de Carga horária
  *******************************************/

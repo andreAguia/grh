@@ -198,6 +198,17 @@ class MenuServidor {
             $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Dados do concurso');
             $menu->add_item($botao);
+        } else {
+            # Somente admin
+            # Para resolver problemas do cadastro de concurso de servidores não concursados
+            if (Verifica::acesso($this->idUsuario, 1)) {
+                $botao = new BotaoGrafico();
+                $botao->set_label('Concurso<br/>(Admin)');
+                $botao->set_url('servidorConcurso.php?grh=1');
+                $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+                $botao->set_title('Dados do concurso');
+                $menu->add_item($botao);
+            }
         }
 
         # Cessão
@@ -245,6 +256,7 @@ class MenuServidor {
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
         $botao->set_url('servidorPasta.php?grh=1');
+        $botao->set_url('servidorPasta2.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
@@ -556,7 +568,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro dos Parentes do Servidor');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Vacinas');
         $botao->set_url('servidorVacina.php?grh=1');
@@ -838,8 +850,6 @@ class MenuServidor {
         br();
 
         $menu = new MenuGrafico(1);
-
-        
 
         $botao = new BotaoGrafico();
         $botao->set_label('Comorbidades');

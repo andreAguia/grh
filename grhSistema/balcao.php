@@ -151,7 +151,7 @@ if ($acesso) {
 
             ###########################################################################################################
             $grid1 = new Grid();
-            $grid1->abreColuna(6);
+            $grid1->abreColuna(5);
 
             $painel = new Callout();
             $painel->abre();
@@ -179,25 +179,31 @@ if ($acesso) {
 
             ###########################################################################################################
 
-            $grid1->abreColuna(6);
+            $grid1->abreColuna(7);
 
             # Cabeçalho
             echo '<table class="tabelaPadrao">';
 
             echo '<caption>Controle de Atendimento no Balcão</caption>';
 
-            echo '<col style="width:10%">';
-            echo '<col style="width:30%">';
-            echo '<col style="width:30%">';
-            echo '<col style="width:30%">';
+            echo '<col style="width:5%">';
+            echo '<col style="width:15%">';
+            echo '<col style="width:20%">';
+            echo '<col style="width:20%">';
+            echo '<col style="width:20%">';
+            echo '<col style="width:20%">';
 
             # Cabeçalho
             echo '<tr>';
-            echo '<th>DIA</th>';
-            echo '<th>Dia da Semana</th>';
-            echo '<th>Manhã</th>';
-            echo '<th>Tarde</th>';
+            echo '<th rowspan="2">Dia</th>';
+            echo '<th rowspan="2">Dia da Semana</th>';
+            echo '<th colspan="2">Manhã</th>';
+            echo '<th colspan="2">Tarde</th>';
             echo '</tr>';
+            echo '<th>Presencial</th>';
+            echo '<th>Online</th>';
+            echo '<th>Presencial</th>';
+            echo '<th>Online</th>';
 
             # Verifica quantos dias tem o mês específico
             $dias = date("j", mktime(0, 0, 0, $parametroMes + 1, 0, $parametroAno));
@@ -247,9 +253,9 @@ if ($acesso) {
 
                 # Coluna do codigo
                 if (!is_null($feriado)) {
-                    echo '<td colspan="2" align="center">' . $feriado . '</td>';
+                    echo '<td colspan="4" align="center">' . $feriado . '</td>';
                 } elseif (($wday == 0) OR ($wday == 6)) {
-                    echo '<td colspan="2" align="center"><b><span id="f14">----------</span></b></td>';
+                    echo '<td colspan="4" align="center"><b><span id="f14">----------</span></b></td>';
                 } else {
 
                     # Define a regra de funcionamento para cada dia da semana seguindo o valor de $wday
@@ -272,6 +278,7 @@ if ($acesso) {
                                     WHERE (balcao = 'Manhã' OR  balcao = 'Ambos')
                                       AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
                                       AND uenf_grh.tbhistlot.lotacao = 66
+                                      AND situacao = 1
                                  ORDER BY uenf_grh.tbpessoa.nome";
 
                         $manha = $intra->select($select1);
@@ -285,6 +292,7 @@ if ($acesso) {
                                     WHERE (balcao = 'Tarde' OR  balcao = 'Ambos')
                                       AND uenf_grh.tbhistlot.data = (select max(data) from uenf_grh.tbhistlot where uenf_grh.tbhistlot.idServidor = uenf_grh.tbservidor.idServidor)
                                       AND uenf_grh.tbhistlot.lotacao = 66
+                                      AND situacao = 1
                                  ORDER BY uenf_grh.tbpessoa.nome";
 
                         $tarde = $intra->select($select2);
@@ -302,7 +310,6 @@ if ($acesso) {
                             $coitadoPresencial = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
                             $coitadoOnline = get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo");
 
-                            p("Presencial:", "labelBalcao");
                             echo '<select name="m' . $contador . '">';
 
                             # Percorre o array de servidores Presencial
@@ -322,8 +329,7 @@ if ($acesso) {
                             }
 
                             echo '</select>';
-
-                            p("Online:", "labelBalcao");
+                            echo '</td><td>';
                             echo '<select name="mo' . $contador . '">';
 
                             # Percorre o array de servidores Online
@@ -359,7 +365,6 @@ if ($acesso) {
                             $coitadoPresencial = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
                             $coitadoOnline = get_servidorBalcao($parametroAno, $parametroMes, $contador, "to");
 
-                            p("Presencial:", "labelBalcao");
                             echo '<select name="t' . $contador . '">';
 
                             # Percorre o array de servidores Presencial
@@ -379,8 +384,7 @@ if ($acesso) {
                             }
 
                             echo '</select>';
-
-                            p("Online:", "labelBalcao");
+                            echo '</td><td>';
                             echo '<select name="to' . $contador . '">';
 
                             # Percorre o array de servidores Online
@@ -409,17 +413,10 @@ if ($acesso) {
                          *  Turno da manhã
                          */
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
-
-                            # Pega o servidor
-                            $coitadoPresencial = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"));
-                            $coitadoOnline = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"));
-
                             echo '<td>';
-                            p("Presencial:", "labelBalcao");
-                            p($pessoal->get_nomeSimples($coitadoPresencial), "coitado");
-                            hr("hrBalcao");
-                            p("Online:", "labelBalcao");
-                            p($pessoal->get_nomeSimples($coitadoOnline), "coitado");
+                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"))), "coitado");
+                            echo '</td><td>';
+                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"))), "coitado");
                             echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
@@ -429,16 +426,10 @@ if ($acesso) {
                          *  Turno da Tarde
                          */
                         if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                            # Pega o servidor
-                            $coitadoPresencial = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"));
-                            $coitadoOnline = trataNulo(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"));
-
                             echo '<td>';
-                            p("Presencial:", "labelBalcao");
-                            p($pessoal->get_nomeSimples($coitadoPresencial), "coitado");
-                            hr("hrBalcao");
-                            p("Online:", "labelBalcao");
-                            p($pessoal->get_nomeSimples($coitadoOnline), "coitado");
+                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"))), "coitado");
+                            echo '</td><td>';
+                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"))), "coitado");
                             echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
@@ -523,6 +514,7 @@ if ($acesso) {
                         WHERE senha IS NOT null
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbhistlot.lotacao = 66
+                          AND situacao = 1
                      ORDER BY tbpessoa.nome asc';
 
             $lista = $pessoal->select($select);

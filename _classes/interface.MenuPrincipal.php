@@ -27,12 +27,13 @@ class MenuPrincipal {
         # Módulos
         $this->moduloServidores();
         $this->moduloAreaConcursos();
-//        $this->moduloAreaPandemia();
+        $this->moduloDocumentos();
         $this->moduloTabelaAuxiliares();
-//        $this->moduloPlanoCargos();
+        #$this->moduloAreaPandemia();
+        #$this->moduloPlanoCargos();
         #$this->moduloSei();
         #$this->moduloSigrh();
-        $this->moduloLegislacao();
+        
         $this->moduloTabelasSecundarias();
 
         $grid->fechaColuna();
@@ -240,23 +241,24 @@ class MenuPrincipal {
      * 
      * Exibe o menu de Legislação
      */
-    private function moduloLegislacao() {
+    private function moduloDocumentos() {
 
         $painel = new Callout();
         $painel->abre();
 
         # Servidores
-        titulo('Legislação');
-        br();
+        titulo('Documentos');
 
         # Menu
         $menu = new Menu("menuProcedimentos");
-        #$menu->add_item('titulo','Legislação','#','Área Especial');
+        $menu->add_item('titulo','Documentos Gerais','#','Área Especial');
+        $menu->add_item('linkWindow', 'Codigos de Afastemento', PASTA_DOCUMENTOS.'codigoAfastamento.pdf');
+        $menu->add_item('titulo','Legislação','#','Área Especial');
         $menu->add_item('linkWindow', 'Estatuto dos Servidores', "http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1", "Decreto nº 2479 de 08 de Março de 1979");
         $menu->add_item('linkWindow', 'Plano de Cargos e Vencimentos', "http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument", "LEI Nº 4.800 de 29 de Junho de 2006");
         $menu->add_item('linkWindow', 'Resoluções da Reitoria', "http://uenf.br/reitoria/legislacao/resolucoes/");
         $menu->add_item('linkWindow', 'Portarias', "http://uenf.br/reitoria/legislacao/portarias/");
-        $menu->add_item('linkWindow', 'Estatuto da UENF', "http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");
+        #$menu->add_item('linkWindow', 'Estatuto da UENF', "http://www.uenf.br/Uenf/Downloads/REITORIA_1360_1101117875.pdf");
 
         $menu->show();
         $painel->fecha();
@@ -276,7 +278,10 @@ class MenuPrincipal {
         $intra = new Intra();
 
         # Pega os sortudos
-        $select = "SELECT idServidorManha, idServidorTarde
+        $select = "SELECT idServidorManha,
+                          idServidorManhaOnline, 
+                          idServidorTarde,
+                          idServidorTardeOnline
                      FROM tbbalcao 
                     WHERE month(curdate()) = mes 
                       AND day(curdate()) = dia 
@@ -288,7 +293,7 @@ class MenuPrincipal {
 
         # Caso seja exibe uma mensagem
         if (!empty($sortudos)) {
-            if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1])) {
+            if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1]) OR ($idServidor == $sortudos[2]) OR ($idServidor == $sortudos[3])) {
                 $painel2 = new Callout("warning");
                 $painel2->abre();
 
@@ -299,22 +304,22 @@ class MenuPrincipal {
         } else {
             $sortudos[0] = "";
             $sortudos[1] = "";
+            $sortudos[2] = "";
+            $sortudos[3] = "";
         }
 
-        # Inicia painel
         $painel = new Callout("primary");
         $painel->abre();
-
-        titulo('Hoje no Balcão');
-        br();
-
-        if (is_null($sortudos)) {
+        
+        if (is_null($sortudos)) {            
             p("Não Haverá Atendimento Hoje.");
         } else {
+
             echo "<table class='tabelaPadrao'>";
-            #echo "<tr><th>Turno</th><th>Servidor</th></tr>";
-            echo "<tr><td>Manhã:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td></tr>";
-            echo "<tr><td>Tarde:</td><td>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
+            echo "<caption>Hoje no Balcão</caption>";
+            echo "<tr><th>Turno</th><th>Presencial</th><th>Online</th></tr>";
+            echo "<tr><td align='center'>Manhã:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
+            echo "<tr><td align='center'>Tarde:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[2])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[3])) . "</td></tr>";
             echo "</table>";
         }
 
@@ -686,6 +691,13 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Emissão de RPA');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Publicações');
+        $botao->set_url('publicacoes.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Publicações no DOERJ');
+        #$menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();

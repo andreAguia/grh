@@ -413,10 +413,11 @@ if ($acesso) {
                          *  Turno da manhã
                          */
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
-                            echo '<td>';
-                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"))), "coitado");
-                            echo '</td><td>';
-                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"))), "coitado");
+                            echo '<td align="center">';
+                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m")));
+                            echo '</td>';
+                            echo '<td align="center">';
+                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo")));
                             echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';
@@ -426,10 +427,11 @@ if ($acesso) {
                          *  Turno da Tarde
                          */
                         if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                            echo '<td>';
-                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"))), "coitado");
-                            echo '</td><td>';
-                            p(trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"))), "coitado");
+                            echo '<td align="center">';
+                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t")));
+                            echo '</td>';
+                            echo '<td align="center">';
+                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to")));
                             echo '</td>';
                         } else {
                             echo '<td align="center">-----</td>';

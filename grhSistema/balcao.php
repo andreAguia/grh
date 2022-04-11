@@ -151,7 +151,7 @@ if ($acesso) {
 
             ###########################################################################################################
             $grid1 = new Grid();
-            $grid1->abreColuna(5);
+            $grid1->abreColuna(6);
 
             $painel = new Callout();
             $painel->abre();
@@ -179,7 +179,7 @@ if ($acesso) {
 
             ###########################################################################################################
 
-            $grid1->abreColuna(7);
+            $grid1->abreColuna(6);
 
             # Cabeçalho
             echo '<table class="tabelaPadrao">';
@@ -221,7 +221,7 @@ if ($acesso) {
                 $wday = $Tdate["wday"];
 
                 # Array dom os nomes do dia da semana
-                $diaSemana = array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sabado");
+                $diaSemana = array("Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado");
 
                 # Verifica se nesta data existe um feriado
                 $feriado = $pessoal->get_feriado($data);

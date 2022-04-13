@@ -146,7 +146,8 @@ if ($acesso) {
     array_unshift($instEnsino, array(null));
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'idEscolaridade',
+    $objeto->set_campos(array(
+        array('nome' => 'idEscolaridade',
             'label' => 'Nível:',
             'tipo' => 'combo',
             'array' => $result,
@@ -288,7 +289,7 @@ if ($acesso) {
                     # Volta para o menu
                     loadPage("?fase=listar");
                 } else {
-                    loadPage("?fase=uploadPublicacao&id=$id");
+                    loadPage("?fase=upload&id=$id");
                 }
             }
 

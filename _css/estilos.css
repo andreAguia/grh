@@ -1418,14 +1418,14 @@ table#tableRelatorioBalcao caption{
 
 table#tableRelatorioBalcao th{
     color: #000000;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     border: 1px solid black;
 }
 
 table#tableRelatorioBalcao td{
     color: #000000;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     border: 1px solid black;
 }

@@ -938,36 +938,36 @@ class ListaAfastamentos {
 
             if ($this->idFuncional) {
 
-                $tabela->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs'));
-                $tabela->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
+                $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
 
-                $tabela->set_classe(array(null, null, "pessoal"));
-                $tabela->set_metodo(array(null, null, "get_lotacaoSimples"));
-                $tabela->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"));
-                $tabela->set_width(array(10, 20, 10, 8, 5, 8, 30, 5));
+                $tabela->set_classe([null, null, "pessoal"]);
+                $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
+                $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                $tabela->set_width([10, 20, 10, 8, 5, 8, 30, 5]);
 
                 if ($this->nomeSimples) {
-                    $tabela->set_classe(array(null, "pessoal", "pessoal"));
-                    $tabela->set_metodo(array(null, "get_nomeSimples", "get_lotacaoSimples"));
+                    $tabela->set_classe([null, "pessoal", "pessoal"]);
+                    $tabela->set_metodo([null, "get_nomeSimples", "get_lotacaoSimples"]);
                 } else {
-                    $tabela->set_classe(array(null, "pessoal", "pessoal"));
-                    $tabela->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
+                    $tabela->set_classe([null, "pessoal", "pessoal"]);
+                    $tabela->set_metodo([null, "get_nomeECargo", "get_lotacaoSimples"]);
                 }
 
                 $tabela->set_rowspan(1);
                 $tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
-                $tabela->set_align(array('left', 'left', 'center', 'center', 'center', 'left', 'left'));
-                $tabela->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+                $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                $tabela->set_align(['left', 'left', 'center', 'center', 'center', 'left', 'left']);
+                $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
 
                 if ($this->nomeSimples) {
-                    $tabela->set_classe(array("pessoal", "pessoal"));
-                    $tabela->set_metodo(array("get_nomeSimples", "get_lotacaoSimples"));
+                    $tabela->set_classe(["pessoal", "pessoal"]);
+                    $tabela->set_metodo(["get_nomeSimples", "get_lotacaoSimples"]);
                 } else {
-                    $tabela->set_classe(array("pessoal", "pessoal"));
-                    $tabela->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
+                    $tabela->set_classe(["pessoal", "pessoal"]);
+                    $tabela->set_metodo(["get_nomeECargo", "get_lotacaoSimples"]);
                 }
 
                 $tabela->set_rowspan(0);
@@ -975,10 +975,10 @@ class ListaAfastamentos {
             }
         } else {
 
-            $tabela->set_label(array('Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação'));
-            $tabela->set_align(array('center', 'center', 'center', 'left', 'left'));
-            $tabela->set_funcao(array("date_to_php", null, "date_to_php"));
-            $tabela->set_width(array(15, 5, 15, 35, 30));
+            $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação']);
+            $tabela->set_align(['center', 'center', 'center', 'left', 'left']);
+            $tabela->set_funcao(["date_to_php", null, "date_to_php"]);
+            $tabela->set_width([15, 5, 15, 35, 30]);
         }
 
         if (!empty($this->linkEditar)) {

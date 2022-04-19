@@ -33,17 +33,16 @@ if ($acesso) {
     $select = '(SELECT tbservidor.idFuncional,  
                       tbpessoa.nome,
                       tbservidor.dtadmissao,
-                      CONCAT(MAX(tbtrienio.percentual),"%"),
+                      if(MAX(tbtrienio.percentual) < 60,CONCAT(MAX(tbtrienio.percentual),"%"),CONCAT("<b>",MAX(tbtrienio.percentual),"%","</b>")),
                       MAX(tbtrienio.dtInicial),
-                      DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),
+                      if(MAX(tbtrienio.percentual) < 60, DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),NULL),
                       month(DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR))
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                     LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
                 WHERE tbservidor.situacao = 1
                   AND idPerfil = 1              
                 GROUP BY tbservidor.idServidor
-               HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = "' . $relatorioAno . '"
-             ORDER BY tbpessoa.nome)
+               HAVING YEAR (DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)) = "' . $relatorioAno . '")
              UNION
              (SELECT  tbservidor.idFuncional,  
                       tbpessoa.nome,
@@ -58,16 +57,15 @@ if ($acesso) {
                   AND idPerfil = 1              
              GROUP BY tbservidor.idServidor
              HAVING YEAR (DATE_ADD(tbservidor.dtadmissao, INTERVAL 3 YEAR)) = "' . $relatorioAno . '"
-                 AND MAX(tbtrienio.dtInicial) IS null
-             ORDER BY tbpessoa.nome)
-             ORDER BY 6,2';
+                 AND MAX(tbtrienio.dtInicial) IS null)
+             ORDER BY 7,2';
 
 
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Anual de Vencimento de Triênios - ' . $relatorioAno);
-    $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
+    $relatorio->set_subtitulo('Agrupado pelo Mês e Ordenado pelo Nome');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio', 'Mês'));
     $relatorio->set_width(array(10, 50, 10, 10, 10, 10));

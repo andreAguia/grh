@@ -33,9 +33,9 @@ if ($acesso) {
     $select = '(SELECT DISTINCT tbservidor.idFuncional,  
                       tbpessoa.nome,
                       tbservidor.dtadmissao,
-                      CONCAT(MAX(tbtrienio.percentual),"%"),
+                      if(MAX(tbtrienio.percentual) < 60,CONCAT(MAX(tbtrienio.percentual),"%"),CONCAT("<b>",MAX(tbtrienio.percentual),"%","</b>")),
                       MAX(tbtrienio.dtInicial),
-                      DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR)
+                      if(MAX(tbtrienio.percentual) < 60, DATE_ADD(MAX(tbtrienio.dtInicial), INTERVAL 3 YEAR),NULL)
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                     LEFT JOIN tbtrienio ON (tbtrienio.idServidor = tbservidor.idServidor)
                 WHERE tbservidor.situacao = 1
@@ -66,9 +66,9 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Vencimento de Triênios');
+    $relatorio->set_titulo('Relatório Mensal de Vencimento de Triênios');
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes) . ' / ' . $relatorioAno);
-    $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
+    $relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
 
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio'));
     $relatorio->set_width(array(10, 50, 10, 10, 10, 10));

@@ -68,6 +68,13 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
+    
+    # Cadastro de processo de férias
+    $botaoProcesso = new Link("Processos de Férias", "cadastroFeriasProcesso.php");
+    $botaoProcesso->set_class('button');
+    $botaoProcesso->set_title('Acessa o controle dos processos de férias');    
+    $menu1->add_link($botaoProcesso, "right");
+    
     $menu1->show();
 
     # Título

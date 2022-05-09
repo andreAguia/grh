@@ -72,7 +72,7 @@ if ($acesso) {
 
     $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');
-    $relatorio->set_bordaInterna(true);
+    #$relatorio->set_bordaInterna(true);
     $relatorio->show();
 
     $page->terminaPagina();

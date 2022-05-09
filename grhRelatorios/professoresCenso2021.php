@@ -54,7 +54,7 @@ if ($acesso) {
     $relatorio->set_metodo(array(null, null,null, "get_emails", "get_cargoSimples"));
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_bordaInterna(true);
+    #$relatorio->set_bordaInterna(true);
     $relatorio->show();
 
     $page->terminaPagina();

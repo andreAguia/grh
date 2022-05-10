@@ -221,11 +221,13 @@ if ($acesso) {
         case "cedidos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Cedidos');
+            $menu->add_item('titulo1', 'Cedidos da Uenf');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos', '../grhRelatorios/estatutarios.cedidos.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Admin e Tecnicos Cedidos', '../grhRelatorios/estatutarios.cedidos.admin.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Professores Cedidos', '../grhRelatorios/estatutarios.cedidos.professores.php');
             $menu->add_item('linkWindow', 'Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.historico.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.orgao.php');
+            $menu->add_item('titulo1', 'Cedidos de Fora');
             #$menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidosporOrgao.php');
 
@@ -476,7 +478,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório por Período de Servidores Demitidos e Exonerados', '../grhRelatorios/movimentacao.periodo.geral.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Servidores Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.geral.exonerados.php');
-            
+
             $menu->add_item('titulo1', 'Todos os Servidores');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.ativos.admitidos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Admitidos (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.geral.admitidos.php');
@@ -494,7 +496,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.exonerados.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.administrativos.demitidos.php');
-            
+
             $menu->show();
             break;
 
@@ -634,7 +636,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Inativos', '../grhRelatorios/historico.exFenorte.inativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Por Concurso', '../grhRelatorios/historico.exFenorte.porConcurso.php');
-            
+
             $menu->add_item('titulo1', 'Anuais');
             $menu->add_item('linkWindow', 'Servidores Por Ano de Admissão Com Email e CPF Por Tipo de Cargo', '../grhRelatorios/servidoresPorAnoAdmissaoComEmailCpf.php');
             $menu->add_item('linkWindow', 'Servidores Por Ano de Saída Com Email e CPF Por Tipo de Cargo', '../grhRelatorios/servidoresPorAnoDemissaoComEmailCpf.php');

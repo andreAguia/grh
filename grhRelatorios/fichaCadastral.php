@@ -364,10 +364,12 @@ if ($acesso) {
      */
 
     tituloRelatorio('Dados Financeiros');
+    
+    $trienioClasse = new Trienio();
 
     # pega os valores
     $salarioBase = $pessoal->get_salarioBase($idServidorPesquisado);                              // salário base
-    $trienio = ($salarioBase * ($pessoal->get_trienioPercentual($idServidorPesquisado))) / 100;     // triênio
+    $trienio = $trienioClasse->getValor($idServidorPesquisado);                                   // triênio
     $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);                        // cargo em comissão
     $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);                            // gratificação especial
     $total = $salarioBase + $trienio + $comissao + $gratificacao;

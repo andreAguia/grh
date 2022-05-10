@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    $trienio = new Trienio();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -50,8 +51,8 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Pega os dados do último percentual
-    $ultimoPercentual = $pessoal->get_trienioPercentual($idServidorPesquisado);
-    $ultimoTrienio = $pessoal->get_trienioDataInicial($idServidorPesquisado);
+    $ultimoPercentual = $trienio->getPercentual($idServidorPesquisado);
+    $ultimoTrienio = $trienio->getDataInicial($idServidorPesquisado);
     $dataAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
     if (is_null($ultimoTrienio)) {

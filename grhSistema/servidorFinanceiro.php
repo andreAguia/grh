@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    $trienioClasse = new Trienio();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -47,7 +48,7 @@ if ($acesso) {
 
     # Pega os dados financeiros
     $salario = $pessoal->get_salarioBase($idServidorPesquisado);
-    $trienio = $pessoal->get_trienioValor($idServidorPesquisado);
+    $trienio = $trienioClasse->getValor($idServidorPesquisado);
     $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);
     $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);
     $cessao = $pessoal->get_salarioCessao($idServidorPesquisado);

@@ -17,11 +17,11 @@ class Trienio {
 
     ###########################################################
 
+    /**
+     * informa os dados de um triênio
+     */
     function getDados($id) {
 
-        /**
-         * fornece a próxima tarefa a ser realizada
-         */
         # Pega os dados
         $select = "SELECT *
                      FROM tbtrienio
@@ -37,7 +37,7 @@ class Trienio {
 
     /**
      * Método get_Valor
-     * informa o valor atual do trienio de um servidor
+     * informa o último (atual) valor do trienio de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -48,7 +48,7 @@ class Trienio {
 
         # Pega os valores
         $salario = $pessoal->get_salarioBase($idServidor);
-        $percentual = $pessoal->get_trienioPercentual($idServidor);
+        $percentual = $this->getPercentual($idServidor);
 
         return $salario * ($percentual / 100);
     }
@@ -83,7 +83,7 @@ class Trienio {
 
     /**
      * Método exibePercentual
-     * informa o percentual atual do trienio de um servidor
+     * exibe o último (atual) percentual do trienio de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -128,7 +128,7 @@ class Trienio {
 
     /**
      * Método getPeriodoAquisitivo
-     * informa a período Aquisitivo de um trienio de um servidor
+     * informa o último (atual) período Aquisitivo de um trienio de um servidor
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -178,7 +178,7 @@ class Trienio {
             if ($row[1] < 60) {
                 $dataTrienio = date_to_php($row[0]);
                 return addAnos($dataTrienio, 3);
-            }else{
+            } else {
                 return null;
             }
         }
@@ -211,4 +211,28 @@ class Trienio {
 
     ###########################################################
 
+    /**
+     * Método getPublicacao
+     * informa data da publicação no DOERJ do triênio vigente (último)
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function getPublicacao($idServidor) {
+        $select = 'SELECT dtPublicacao
+                     FROM tbtrienio
+                    WHERE idServidor = ' . $idServidor . '
+                 ORDER BY percentual desc';
+
+        # Conecta ao banco de dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return date_to_php($row[0]);
+        }
+    }
+
+    ###########################################################
 }

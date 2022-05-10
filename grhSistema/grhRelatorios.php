@@ -330,10 +330,10 @@ if ($acesso) {
         case "trienio";
             $menu = new Menu();
             $menu->add_item('titulo', 'Triênio');
-            $menu->add_item('linkWindow', 'Relatório Geral de Triênio', '../grhRelatorios/geralTrienio.php');
-            $menu->add_item('linkWindow', 'Relatório de Triênio por Lotação', '../grhRelatorios/trienioLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/vencimentoMensalTrienio.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/vencimentoAnualTrienio.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Triênio', '../grhRelatorios/trienio.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Triênio por Lotação', '../grhRelatorios/trienio.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.anual.php');
 
             $menu->show();
             break;

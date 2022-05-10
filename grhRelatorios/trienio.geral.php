@@ -49,12 +49,12 @@ if ($acesso) {
     $relatorio->set_subtitulo('Ordenado por Nome do Servidor');
 
     $relatorio->set_label(['Id Funcional', 'Nome', 'Salário', 'Triênio', '%', 'a Partir de', 'Período Aquisitivo', 'Próximo Triênio', 'Processo', 'Publicação']);
-    $relatorio->set_width([5,15,5,5,5,15,20,10,10,10]);
+    #$relatorio->set_width([5,15,5,5,5,15,20,10,10,10]);
     $relatorio->set_align(["center", "left", "right", "right"]);
     $relatorio->set_funcao([null, null, 'formataMoeda', 'formataMoeda']);
 
-    $relatorio->set_classe([null, null, "pessoal", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_salarioBase", "getValor", "exibePercentual", "getDataInicial", "getPeriodoAquisitivo", "getProximoTrienio", "getNumProcesso", "get_trienioPublicacao"]);
+    $relatorio->set_classe([null, null, "pessoal", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio"]);
+    $relatorio->set_metodo([null, null, "get_salarioBase", "getValor", "exibePercentual", "getDataInicial", "getPeriodoAquisitivo", "getProximoTrienio", "getNumProcesso", "getPublicacao"]);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

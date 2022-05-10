@@ -73,8 +73,8 @@ if ($acesso) {
     $relatorio->set_align(array("center", "left", "right", "right", "center", "center", "center", "center", "right"));
     $relatorio->set_funcao(array(null, null, 'formataMoeda', 'formataMoeda'));
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_salarioBase", "get_trienioValor", "get_trienioPercentual", "get_trienioDataInicial", "get_trienioPeriodoAquisitivo", "get_trienioDataProximoTrienio", "get_trienioNumProcesso", "get_trienioPublicacao"));
+    $relatorio->set_classe(array(null, null, "pessoal", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio", "Trienio"));
+    $relatorio->set_metodo(array(null, null, "get_salarioBase", "getValor", "exibePercentual", "getDataInicial", "getPeriodoAquisitivo", "getProximoTrienio", "getNumProcesso", "getPublicacao"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

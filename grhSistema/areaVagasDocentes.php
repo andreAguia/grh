@@ -74,7 +74,7 @@ if ($acesso) {
             $menu = new MenuBar();
 
             # Voltar
-            $botao = new Link("Voltar", "areaConcursoProf.php");
+            $botao = new Link("Voltar", "areaConcursoProf.php?origem=vagas");
 
             $botao->set_class('button');
             $botao->set_title('Voltar a página anterior');

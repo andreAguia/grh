@@ -14,7 +14,7 @@ include ("_config.php");
 # Limpa as sessões
 set_session('idConcurso');
 set_session('parametroCargo');
-#set_session('origem', basename(__FILE__));
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, 2);
 
@@ -27,6 +27,12 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
     $idConcurso = get('idConcurso');
+    $origem = get('origem');
+
+    # Limpa os parâmetros quando vem das vagas
+    if ($origem == "vagas") {
+        set_session('parametroCentro');
+    }
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);

@@ -375,6 +375,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.porNome.php');
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.porNome.php');
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários e Celetistas Inativos', '../grhRelatorios/servidores.estatutarios.celetistas.inativos.porNome.php');
             $menu->show();
             break;
 

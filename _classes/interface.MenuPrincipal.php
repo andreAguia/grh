@@ -43,7 +43,7 @@ class MenuPrincipal {
         $grid->abreColuna(12, 8, 5);
 
         # Módulos      
-        #$this->moduloSispatri();
+        $this->moduloSispatri();
         $this->moduloSistemas();
 
         $this->moduloAreaEspecial();

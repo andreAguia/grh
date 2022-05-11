@@ -564,6 +564,12 @@ td#sematendimento{
     background-color: #b9b9b9;
 }
 
+td#eu{
+    color: #ff0000;
+    font-weight: bold;
+    text-align: center;
+}
+
 p#labelBalcao{
     font-size: 9px;
     text-align: left;

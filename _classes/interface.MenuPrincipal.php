@@ -276,15 +276,16 @@ class MenuPrincipal {
                     $categoriaAtual = $valor["categoria"];
                     $menu->add_item('titulo', $valor["categoria"], '#', "Categoria " . $valor["categoria"]);
                 }
-                
+
                 if (empty($valor["title"])) {
                     $title = $valor["texto"];
                 } else {
                     $title = $valor["title"];
                 }
-                $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);           }
+                $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+            }
         }
-       
+
         $menu->add_item('titulo', 'Legislação', '#', 'Área Especial');
         $menu->add_item('linkWindow', 'Estatuto dos Servidores', "http://alerjln1.alerj.rj.gov.br/decest.nsf/968d5212a901f75f0325654c00612d5c/2caa8a7c2265c33b0325698a0068e8fb?OpenDocument#_Section1", "Decreto nº 2479 de 08 de Março de 1979");
         $menu->add_item('linkWindow', 'Plano de Cargos e Vencimentos', "http://alerjln1.alerj.rj.gov.br/contlei.nsf/b24a2da5a077847c032564f4005d4bf2/aa5390d4c58db774832571b60066a2ba?OpenDocument", "LEI Nº 4.800 de 29 de Junho de 2006");
@@ -350,8 +351,42 @@ class MenuPrincipal {
             echo "<table class='tabelaPadrao'>";
             echo "<caption>Hoje no Balcão</caption>";
             echo "<tr><th>Turno</th><th>Presencial</th><th>Online</th></tr>";
-            echo "<tr><td align='center'>Manhã:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td></tr>";
-            echo "<tr><td align='center'>Tarde:</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[2])) . "</td><td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[3])) . "</td></tr>";
+
+            # Atendimento da Manhã
+            echo "<tr><td align='center'>Manhã:</td>";
+
+            # Manhã Presencial
+            if ($idServidor == $sortudos[0]) {
+                echo "<td id='eu'>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td>";
+            } else {
+                echo "<td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[0])) . "</td>";
+            }
+
+            # Manhã Online
+            if ($idServidor == $sortudos[1]) {
+                echo "<td id='eu'>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td>";
+            } else {
+                echo "<td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[1])) . "</td>";
+            }
+
+            # Atendimento da Tarde
+            echo "<tr><td align='center'>Tarde:</td>";
+
+            # Tarde Presencial
+            if ($idServidor == $sortudos[2]) {
+                echo "<td id='eu'>" . trataNulo($pessoal->get_nomeSimples($sortudos[2])) . "</td>";
+            } else {
+                echo "<td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[2])) . "</td>";
+            }
+
+            # Tarde Online
+            if ($idServidor == $sortudos[3]) {
+                echo "<td id='eu'>" . trataNulo($pessoal->get_nomeSimples($sortudos[3])) . "</td>";
+            } else {
+                echo "<td align='center'>" . trataNulo($pessoal->get_nomeSimples($sortudos[3])) . "</td>";
+            }
+
+            echo "</tr>";
             echo "</table>";
         }
 

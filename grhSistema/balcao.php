@@ -54,6 +54,9 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
+    # Pega o id do Servidor logado
+    $idservidorLogado = $intra->get_idServidor($idUsuario);
+
 #########################################################################################################################
 
     switch ($fase) {
@@ -413,12 +416,31 @@ if ($acesso) {
                          *  Turno da manhã
                          */
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
-                            echo '<td align="center">';
-                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m")));
-                            echo '</td>';
-                            echo '<td align="center">';
-                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo")));
-                            echo '</td>';
+                            
+                            $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
+
+                            if ($idservidorLogado == $idServidorBalcao) {
+                                echo '<td id="eu" align="center">';
+                                echo "<b>" . trataNulo($pessoal->get_nomeSimples($idServidorBalcao)) . "</b>";
+                                echo '</td>';
+                            } else {
+                                echo '<td align="center">';
+                                echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
+                                echo '</td>';
+                            }
+                            
+                            $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo");
+
+                            if ($idservidorLogado == $idServidorBalcao) {
+                                echo '<td id="eu" align="center">';
+                                echo "<b>" . trataNulo($pessoal->get_nomeSimples($idServidorBalcao)) . "</b>";
+                                echo '</td>';
+                            } else {
+                                echo '<td align="center">';
+                                echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
+                                echo '</td>';
+                            }
+                            
                         } else {
                             echo '<td align="center">-----</td>';
                         }
@@ -427,12 +449,30 @@ if ($acesso) {
                          *  Turno da Tarde
                          */
                         if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                            echo '<td align="center">';
-                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t")));
-                            echo '</td>';
-                            echo '<td align="center">';
-                            echo trataNulo($pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to")));
-                            echo '</td>';
+                           
+                            $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
+
+                            if ($idservidorLogado == $idServidorBalcao) {
+                                echo '<td id="eu" align="center">';
+                                echo "<b>" . trataNulo($pessoal->get_nomeSimples($idServidorBalcao)) . "</b>";
+                                echo '</td>';
+                            } else {
+                                echo '<td align="center">';
+                                echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
+                                echo '</td>';
+                            }
+                            
+                           $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "to");
+
+                            if ($idservidorLogado == $idServidorBalcao) {
+                                echo '<td id="eu" align="center">';
+                                echo "<b>" . trataNulo($pessoal->get_nomeSimples($idServidorBalcao)) . "</b>";
+                                echo '</td>';
+                            } else {
+                                echo '<td align="center">';
+                                echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
+                                echo '</td>';
+                            }
                         } else {
                             echo '<td align="center">-----</td>';
                         }

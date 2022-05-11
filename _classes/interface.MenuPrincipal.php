@@ -226,10 +226,10 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label();
-        $botao->set_url("https://www.servidor.rj.gov.br/portal-web/portal/publico/Noticia/detalhar?hdnNoticia=1152");
+        $botao->set_url("https://www.sispatriapp.rj.gov.br/PaginasPublicas/Login.aspx");
         $botao->set_imagem(PASTA_FIGURAS . 'sispatri2.png', '100%', '100%');
         $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
-        #$botao->set_target("_blank");
+        $botao->set_target("_blank");
         $botao->show();
         br();
     }

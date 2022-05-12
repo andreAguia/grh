@@ -491,8 +491,9 @@ if ($acesso) {
                 foreach ($lines as $linha) {
 
                     # Zera as variáveis de gravação
-                    $nome = null;
+                    $obs = null;
                     $cpf = null;
+                    $contador = 1;
 
                     # incrementa as linhas
                     $linhas++;
@@ -504,21 +505,43 @@ if ($acesso) {
                     foreach ($parte as $pp) {
 
                         if (!empty($pp)) {
-                            if ($pp == "Nome do Agente" OR $pp == "Processo:") {
+                            if ($pp == "Nome do Agente" 
+                                    OR $pp == "Processo:"
+                                    OR $pp == "LISTAGEM DE AGENTES"
+                                    OR $pp == "Situação: REGULARES"                                    
+                                    OR $pp == "Situação: REGULARES"
+                                    ) {
                                 break;
-                            }
-                            if (is_numeric($pp)) {
+                            } 
+                            
+                            # Guarda a terceira coluna para o cpf
+                            if($contador == 3){
                                 $cpf = $pp;
-                                $certos++;
-                            } else {
-                                $nome .= $pp . " | ";
                             }
+                            
+                            # Guarda as outras coluna para a obs
+                            $obs .= $pp . " | ";
+                            
+//                            if (is_numeric($pp)) {
+//                                $cpf = $pp;
+//                                $certos++;
+//                            } else {
+//                                $nome .= $pp . " | ";
+//                            }
+                            $contador++;
+                        }
+                        if(validaCpf($cpf)){
+                            $certos++;
+                            $obs= null;
+                        }else{
+                            $cpf = null;
                         }
                     }
+                  
                     if (!empty($cpf)) {
                         # Grava na tabela tbsispatri
                         $campos = array("cpf", "obs");
-                        $valor = array(utf8_encode($cpf), utf8_encode($nome));
+                        $valor = array(utf8_encode($cpf), utf8_encode($obs));
                         $pessoal->gravar($campos, $valor, null, "tbsispatri", "idSispatri");
                     }
                 }
@@ -546,18 +569,22 @@ if ($acesso) {
             foreach ($row as $tt) {
 
                 $novoCpf = $tt[1];
-                $len = strlen($novoCpf);
+//                $len = strlen($novoCpf);
+//
+//                $novoCpf = str_pad($novoCpf, 11, "0", STR_PAD_LEFT);
+//
+//                # CPF XXX.XXX.XXX-XX
+//                $parte1 = substr($novoCpf, 0, 3);
+//                $parte2 = substr($novoCpf, 3, 3);
+//                $parte3 = substr($novoCpf, 6, 3);
+//                $parte4 = substr($novoCpf, -2);
+//
+//                $cpfFinalizado = "$parte1.$parte2.$parte3-$parte4";
 
-                $novoCpf = str_pad($novoCpf, 11, "0", STR_PAD_LEFT);
-
-                # CPF XXX.XXX.XXX-XX
-                $parte1 = substr($novoCpf, 0, 3);
-                $parte2 = substr($novoCpf, 3, 3);
-                $parte3 = substr($novoCpf, 6, 3);
-                $parte4 = substr($novoCpf, -2);
-
-                $cpfFinalizado = "$parte1.$parte2.$parte3-$parte4";
-
+                # No novo formato do sispatri o cpf já vem com os pontos e o traço
+                # Não é necessário a rotina acima para colocar
+                $cpfFinalizado = $novoCpf;
+                
                 $select2 = "SELECT idPessoa
                               FROM tbdocumentacao
                              WHERE CPF = '$cpfFinalizado'";

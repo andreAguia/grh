@@ -113,7 +113,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 4,2';
+        $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -166,7 +166,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 4,2';
+        $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -219,7 +219,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 4,2';
+        $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -273,7 +273,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 4,2';
+        $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -326,7 +326,7 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY 4,2';
+        $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -361,7 +361,7 @@ class Sispatri {
             }
         }
 
-        $select .= ' ORDER BY 4,2';
+        $select .= ' ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);

@@ -52,18 +52,15 @@ if ($acesso) {
     $relatorio->set_titulo('Censo de Docentes');
     $relatorio->set_tituloLinha2("Docentes Ativos em  " . $parametroAno);
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('Nome', 'CPF', 'Lotação', 'Email', 'Nome da Mãe', 'Admissão', 'Saída'));
-    $relatorio->set_width(array(20, 10, 20, 10, 20, 10, 10));
-    $relatorio->set_align(array("left", "left", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['Nome', 'CPF', 'Lotação', 'Email', 'Nome da Mãe', 'Admissão', 'Saída']);
+    $relatorio->set_width([20, 10, 20, 10, 20, 10, 10]);
+    $relatorio->set_align(["left", "left", "left", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_lotacao", "get_emails"));
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_lotacao", "get_emails"]);
 
     $relatorio->set_conteudo($result);
-
-    # Seleciona o tipo de cargo
-    $listaCargo = $servidor->select('SELECT distinct tipo,tipo from tbtipocargo');
 
     $relatorio->set_formCampos(array(
         array('nome' => 'parametroAno',

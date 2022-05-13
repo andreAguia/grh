@@ -109,7 +109,7 @@ if ($acesso) {
         array('linha' => 1,
             'col' => 3,
             'nome' => 'lotacao',
-            'label' => 'Diretpria / Centro:',
+            'label' => 'Diretoria / Centro:',
             'tipo' => 'combo',
             'array' => $result,
             'required' => true,

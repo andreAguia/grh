@@ -181,6 +181,13 @@ if ($acesso) {
             $grid2->abreColuna(3);
 
             ########################################
+            # Exibe o Processo de férias            
+            $classeFerias = new Ferias();
+            
+            # Exibe o processo
+            $classeFerias->exibeProcesso($pessoal->get_lotacaoDiretoria($parametroLotacao));
+            
+            ########################################
             # Menu
             tituloTable("Menu");
 

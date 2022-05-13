@@ -73,9 +73,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Lotação", "Processo", "Obs"));
-    $objeto->set_width(array(30, 30, 30));
-    $objeto->set_align(array("left", "left", "left"));
+    $objeto->set_label(["Lotação", "Processo", "Obs"]);
+    $objeto->set_width([20, 30, 30]);
+    $objeto->set_align(["left", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -90,10 +90,18 @@ if ($acesso) {
     $objeto->set_formlabelTipo(1);
 
     # Lotação
-    $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+    if (empty($id)) {
+        $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+                                  FROM tblotacao
+                                 WHERE ativo
+                                   AND DIR NOT IN (SELECT lotacao FROM tbferiasprocesso)
+                              ORDER BY DIR');
+    } else {
+        $result = $pessoal->select('SELECT DISTINCT DIR, DIR
                                   FROM tblotacao
                                  WHERE ativo
                               ORDER BY DIR');
+    }
     array_unshift($result, array(null, null));
 
     # Campos para o formulario

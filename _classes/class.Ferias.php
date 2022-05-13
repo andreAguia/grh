@@ -8,7 +8,7 @@ class Ferias {
      * @author André Águia (Alat) - alataguia@gmail.com
      */
     ###########################################################
-    
+
     function exibeFeriasPendentes($idServidor) {
         /**
          * Função uma string com as pendências de férias do servidor
@@ -78,7 +78,7 @@ class Ferias {
         return $retorno;
     }
 
-##########################################################################################
+###########################################################
 
     public function exibeObs($id) {
 
@@ -99,6 +99,50 @@ class Ferias {
         } else {
             toolTip("Obs", $retorno[0]);
         }
+    }
+
+###########################################################
+
+    public function getProcesso($lotacao) {
+
+        /**
+         * Retorna o número do processo de férias de uma lotação
+         */
+        # verifica se foi informado a lotação
+        if (empty($lotacao)) {
+            return null;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT processo
+                     FROM tbferiasprocesso
+                    WHERE lotacao = '{$lotacao}'";
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno[0])) {
+            return null;
+        } else {
+            return $retorno[0];
+        }
+    }
+
+###########################################################
+
+    public function exibeProcesso($lotacao) {
+
+        # verifica se foi informado a lotação
+        if (empty($lotacao)) {
+            return null;
+        }
+
+        titulotable("Processo de Férias");
+        $painel = new Callout();
+        $painel->abre();
+        p(trataNulo($this->getProcesso($lotacao)), "f16", "center");
+        $painel->fecha();
     }
 
 ###########################################################

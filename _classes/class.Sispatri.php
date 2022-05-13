@@ -489,7 +489,9 @@ class Sispatri {
     public function exibeProblemas() {
 
         # Pega os dados
-        $select = 'SELECT cpf,obs,idSispatri
+        $select = 'SELECT cpf,
+                          obs,
+                          idSispatri
                      FROM tbsispatri 
                     WHERE idServidor Is NULL';
 

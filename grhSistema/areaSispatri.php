@@ -486,6 +486,7 @@ if ($acesso) {
             # Verifica a existência do arquivo
             if (file_exists($arquivo)) {
                 $lines = file($arquivo);
+                $linhaDados = false;
 
                 # Percorre o arquivo e guarda os dados em um array
                 foreach ($lines as $linha) {
@@ -505,39 +506,36 @@ if ($acesso) {
                     foreach ($parte as $pp) {
 
                         if (!empty($pp)) {
-                            if ($pp == "Nome do Agente" 
-                                    OR $pp == "Processo:"
-                                    OR $pp == "LISTAGEM DE AGENTES"
-                                    OR $pp == "Situação: REGULARES"                                    
-                                    OR $pp == "Situação: REGULARES"
-                                    ) {
-                                break;
-                            } 
-                            
-                            # Guarda a terceira coluna para o cpf
-                            if($contador == 3){
-                                $cpf = $pp;
+
+                            if ($linhaDados) {
+                                # Guarda a terceira coluna para o cpf
+                                if ($contador == 3) {
+                                    $cpf = $pp;
+                                }
+
+                                # Guarda as outras coluna para a obs
+                                if ($contador == 7) {
+                                    $obs .= $pp;
+                                } else {
+                                    $obs .= "{$pp} | ";
+                                }
+                            } else {
+                                if ($pp == "Nome do Agente") {
+                                    $linhaDados = true;
+                                    break;
+                                } else {
+                                    break;
+                                }
                             }
-                            
-                            # Guarda as outras coluna para a obs
-                            $obs .= $pp . " | ";
-                            
-//                            if (is_numeric($pp)) {
-//                                $cpf = $pp;
-//                                $certos++;
-//                            } else {
-//                                $nome .= $pp . " | ";
-//                            }
                             $contador++;
                         }
-                        if(validaCpf($cpf)){
+                        if (validaCpf($cpf)) {
                             $certos++;
-                            $obs= null;
-                        }else{
+                        } else {
                             $cpf = null;
                         }
                     }
-                  
+
                     if (!empty($cpf)) {
                         # Grava na tabela tbsispatri
                         $campos = array("cpf", "obs");
@@ -562,29 +560,14 @@ if ($acesso) {
             $problema = 0;
 
             br();
-            $select = 'SELECT idSispatri,cpf FROM tbsispatri';
+            $select = 'SELECT idSispatri, cpf FROM tbsispatri';
             $row = $pessoal->select($select);
             $contador = 0;
 
             foreach ($row as $tt) {
 
-                $novoCpf = $tt[1];
-//                $len = strlen($novoCpf);
-//
-//                $novoCpf = str_pad($novoCpf, 11, "0", STR_PAD_LEFT);
-//
-//                # CPF XXX.XXX.XXX-XX
-//                $parte1 = substr($novoCpf, 0, 3);
-//                $parte2 = substr($novoCpf, 3, 3);
-//                $parte3 = substr($novoCpf, 6, 3);
-//                $parte4 = substr($novoCpf, -2);
-//
-//                $cpfFinalizado = "$parte1.$parte2.$parte3-$parte4";
+                $cpfFinalizado = $tt[1];
 
-                # No novo formato do sispatri o cpf já vem com os pontos e o traço
-                # Não é necessário a rotina acima para colocar
-                $cpfFinalizado = $novoCpf;
-                
                 $select2 = "SELECT idPessoa
                               FROM tbdocumentacao
                              WHERE CPF = '$cpfFinalizado'";

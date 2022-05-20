@@ -14,7 +14,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -115,7 +115,7 @@ if ($acesso) {
     $result = $pessoal->select('SELECT idperfil, nome
                                           FROM tbperfil                                
                                       ORDER BY 1');
-    array_unshift($result, array(null, '-- Todos --'));
+    array_unshift($result, array('*', '-- Todos --'));
 
     $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
     $controle->set_size(30);
@@ -131,7 +131,7 @@ if ($acesso) {
     $controle = new Input('parametroStatus', 'combo', 'Status:', 1);
     $controle->set_size(10);
     $controle->set_title('Filtra por Status');
-    $controle->set_array(array("Todos", "solicitada", "fruída"));
+    $controle->set_array(["Todos", "solicitada", "fruída"]);
     $controle->set_valor($parametroStatus);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
@@ -162,13 +162,17 @@ if ($acesso) {
 
         case "exibeLista" :
 
-            $grid2 = new Grid();
-
             # Área Lateral
+            $grid2 = new Grid();
             $grid2->abreColuna(3);
 
-            #######################################
-            # Menu
+            ########################################
+            # Exibe o Processo de férias            
+            $classeFerias = new Ferias();
+            $classeFerias->exibeProcesso($parametroLotacao);
+            
+            ########################################
+            # Menu            
             tituloTable("Menu");
 
             $menu = new Menu("menuProcedimentos");
@@ -195,27 +199,27 @@ if ($acesso) {
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
+                        WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
             
             # Verifica se tem filtro por perfil
-            if (!is_null($parametroPerfil)) {
+            if (($parametroPerfil <> "*") AND ($parametroPerfil <> "")) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             # Status
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
-                $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
+                $select .= " AND (tbferias.status = '{$parametroStatus}')";
             }
 
             $select .= " GROUP BY anoExercicio ORDER BY anoExercicio";
@@ -250,30 +254,30 @@ if ($acesso) {
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                         WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
+                         WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
 
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
-                $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
+                $select .= " AND (tbferias.status = '{$parametroStatus}')";
             }
             
             # Verifica se tem filtro por perfil
-            if (!is_null($parametroPerfil)) {
+            if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
-
+            
             $resumo = $servidor->select($select);
 
             # Pega a soma dos campos
@@ -318,12 +322,12 @@ if ($acesso) {
             }
 
             # Verifica se tem filtro por perfil
-            if (!is_null($parametroPerfil)) {
+            if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             $select .= " GROUP BY status ORDER BY status";
-
+            
             $resumo = $servidor->select($select);
 
             # Pega a soma dos campos
@@ -383,12 +387,12 @@ if ($acesso) {
             }
             
             # Verifica se tem filtro por perfil
-            if (!is_null($parametroPerfil)) {
+            if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             $select .= " ORDER BY tbpessoa.nome, tbferias.anoExercicio, dtInicial";
-
+            
             $result = $servidor->select($select);
 
             $tabela = new Tabela();

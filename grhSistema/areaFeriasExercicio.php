@@ -14,7 +14,7 @@ $idUsuario = null;
 include "_config.php";
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -68,13 +68,13 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-    
+
     # Cadastro de processo de férias
     $botaoProcesso = new Link("Processos de Férias", "cadastroFeriasProcesso.php");
     $botaoProcesso->set_class('button');
-    $botaoProcesso->set_title('Acessa o controle dos processos de férias');    
+    $botaoProcesso->set_title('Acessa o controle dos processos de férias');
     $menu1->add_link($botaoProcesso, "right");
-    
+
     $menu1->show();
 
     # Título
@@ -175,7 +175,7 @@ if ($acesso) {
 ################################################################
 
         case "exibeLista":
-            
+
             # Área Lateral
             $grid2 = new Grid();
             $grid2->abreColuna(3);
@@ -183,9 +183,7 @@ if ($acesso) {
             ########################################
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
-            
-            # Exibe o processo
-            $classeFerias->exibeProcesso($pessoal->get_lotacaoDiretoria($parametroLotacao));
+            $classeFerias->exibeProcesso($parametroLotacao);
             
             ########################################
             # Menu

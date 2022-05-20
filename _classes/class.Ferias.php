@@ -113,6 +113,12 @@ class Ferias {
             return null;
         }
 
+        # Exibe o processo
+        if (is_numeric($lotacao)) {
+            $pessoal = new Pessoal();
+            $lotacao = $pessoal->get_lotacaoDiretoria($lotacao);
+        } 
+        
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 

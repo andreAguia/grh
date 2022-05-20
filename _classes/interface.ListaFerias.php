@@ -357,7 +357,8 @@ class ListaFerias {
 
             $select .= " GROUP BY idServidor
                      HAVING soma = $valor[0]
-                     ORDER BY 1";
+                     ORDER BY 1";            
+            
             $num = $servidor->count($select);
             $conta[] = array($valor[0], $num);
         }
@@ -453,9 +454,9 @@ class ListaFerias {
             # Verifica se tem filtro por lotação
             if (!is_null($this->lotacao)) {  // senão verifica o da classe
                 if (is_numeric($this->lotacao)) {
-                    $select2 .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+                    $select2 .= " AND (tblotacao.idlotacao = {$this->lotacao})";
                 } else { # senão é uma diretoria genérica
-                    $select2 .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+                    $select2 .= " AND (tblotacao.DIR = '{$this->lotacao}')";
                 }
             }
 
@@ -473,14 +474,14 @@ class ListaFerias {
                                 JOIN tbhistlot USING (idServidor)
                                 JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND anoExercicio = $this->anoExercicio";
+                  AND anoExercicio = {$this->anoExercicio}";
 
             if (!is_null($this->lotacao)) {
 
                 if (is_numeric($this->lotacao)) {
-                    $select2 .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+                    $select2 .= " AND (tblotacao.idlotacao = {$this->lotacao})";
                 } else { # senão é uma diretoria genérica
-                    $select2 .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+                    $select2 .= " AND (tblotacao.DIR = '{$this->lotacao}')";
                 }
             }
 

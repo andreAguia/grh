@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -30,7 +30,13 @@ if ($acesso) {
     }
 
     # Verifica a fase do programa
-    $fase = get('fase', 'ver');
+    if (Verifica::acesso($idUsuario, 12)) {
+        $fase = get('fase', 'editar');
+    } else {
+        $fase = get('fase', 'ver');
+    }
+
+    # Verifica de onde veio
     $origem = get_session("origem");
 
     # Começa uma nova página
@@ -96,6 +102,11 @@ if ($acesso) {
                                      obsConcurso
                                 FROM tbservidor
                                WHERE idServidor = {$idServidorPesquisado}");
+    }
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
     }
 
     # Caminhos
@@ -375,9 +386,11 @@ if ($acesso) {
 
         # Cadastro de concurso    
         if ($origem <> "cadastroConcursoAdm.php") {
-            $botao = new Button("Cadastro de Concurso", "?fase=acessaConcurso");
-            $botao->set_title("Acessa o cadastro do concurso");
-            $objeto->set_botaoEditarExtra(array($botao));
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botao = new Button("Cadastro de Concurso", "?fase=acessaConcurso");
+                $botao->set_title("Acessa o cadastro do concurso");
+                $objeto->set_botaoEditarExtra(array($botao));
+            }
         }
 
         $menu = new Menu("menuVertical");

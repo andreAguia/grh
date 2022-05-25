@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -81,40 +81,44 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita('SELECT nome,
-                                      tipo,
-                                      progressao,
-                                      trienio,
-                                      comissao,
-                                      gratificacao,
-                                      ferias,
-                                      licenca,
-                                      matIni,
-                                      matFim,
-                                      novoServidor,
-                                     obs
-                                FROM tbperfil
-                               WHERE idPerfil = ' . $id);
-
-    # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
+                                     tipo,
+                                     progressao,
+                                     trienio,
+                                     comissao,
+                                     gratificacao,
+                                     ferias,
+                                     licenca,
+                                     matIni,
+                                     matFim,
+                                     novoServidor,
+                                    obs
+                               FROM tbperfil
+                              WHERE idPerfil = ' . $id);
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Excluir somente para Administradores
     if (Verifica::acesso($idUsuario, 1)) {
         $objeto->set_linkExcluir('?fase=excluir');  // Excluir somente para administradores
     }
-
+    
+    # Caminhos
+    $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Tipo", "Perfil", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"));
-    $objeto->set_colspanLabel(array(null, null, null, 2, null, 2));
-    $objeto->set_width(array(5, 23, 30, 10, 5, 10, 5));
-    $objeto->set_align(array("center", "center", "left"));
+    $objeto->set_label(["id", "Tipo", "Perfil", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
+    $objeto->set_colspanLabel([null, null, null, 2, null, 2]);
+    $objeto->set_width([5, 23, 30, 10, 5, 10, 5]);
+    $objeto->set_align(["center", "center", "left"]);
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe(array(null, null, null, "Pessoal", null, "Pessoal", null));
-    $objeto->set_metodo(array(null, null, null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null));
+    $objeto->set_classe([null, null, null, "Pessoal", null, "Pessoal", null]);
+    $objeto->set_metodo([null, null, null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -262,7 +266,7 @@ if ($acesso) {
     $botaoRel->set_target("_blank");
     $botaoRel->set_url('../grhRelatorios/perfil.php');
 
-    $objeto->set_botaoListarExtra(array($botaoGra, $botaoRel));
+    $objeto->set_botaoListarExtra([$botaoGra, $botaoRel]);
 
     ################################################################
 

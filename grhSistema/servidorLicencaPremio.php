@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -165,6 +165,11 @@ if ($acesso) {
                                     FROM tblicencapremio
                                    WHERE idLicencaPremio = ' . $id);
 
+        # Habilita o modo leitura para usuario de regra 12
+        if (Verifica::acesso($idUsuario, 12)) {
+            $objeto->set_modoLeitura(true);
+        }
+
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
         $objeto->set_linkExcluir('?fase=excluir');
@@ -186,7 +191,6 @@ if ($acesso) {
 
         #$objeto->set_rowspan(1);
         #$objeto->set_grupoCorColuna(1);
-
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
 
@@ -225,7 +229,7 @@ if ($acesso) {
 
         $publicacao = $pessoal->select($select);
         array_unshift($publicacao, array(null, ' -- Selecione uma Publicação'));
-        
+
         # Campos para o formulario
         $objeto->set_campos(array(
             array('nome' => 'dtInicial',
@@ -295,10 +299,16 @@ if ($acesso) {
         $botaoRel->set_target("_blank");
 
         # Edita Obs
-        $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
-        $botaoObs->set_title("Insere / edita as observações gerais.");
+        if (Verifica::acesso($idUsuario, [1, 2])) {
+            $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
+            $botaoObs->set_title("Insere / edita as observações gerais.");
+            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast]);
+        }
 
-        $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast]);
+        if (Verifica::acesso($idUsuario, 12)) {
+            $objeto->set_botaoListarExtra([$botaoRel, $botaoAfastPremio, $botaoAfast]);
+        }
+        
 
         ################################################################
 
@@ -333,6 +343,7 @@ if ($acesso) {
                 }
 
                 # Função para acrescentar a rotina extra
+
                 function exibeObs($idServidor) {
                     $licencPremio = new LicencaPremio();
                     $licencPremio->exibeObsGeral($idServidor);
@@ -379,20 +390,22 @@ if ($acesso) {
                 }
 
                 # Cria um menu
-                $menu = new MenuBar();
+                if (Verifica::acesso($idUsuario, [1, 2])) {
+                    $menu = new MenuBar();
 
-                # Editar Processo
-                $linkBotao1 = new Link("Editar Processo", "servidorProcessoPremio.php");
-                $linkBotao1->set_class('button');
-                $linkBotao1->set_title("Edita o número do processo de licença prêmio");
-                $menu->add_link($linkBotao1, "left");
+                    # Editar Processo
+                    $linkBotao1 = new Link("Editar Processo", "servidorProcessoPremio.php");
+                    $linkBotao1->set_class('button');
+                    $linkBotao1->set_title("Edita o número do processo de licença prêmio");
+                    $menu->add_link($linkBotao1, "left");
 
-                # Cadastro de Publicações
-                $linkBotao3 = new Link("Publicações", "servidorPublicacaoPremio.php");
-                $linkBotao3->set_class('button');
-                $linkBotao3->set_title("Acessa o Cadastro de Publicações");
-                $menu->add_link($linkBotao3, "right");
-                $menu->show();
+                    # Cadastro de Publicações
+                    $linkBotao3 = new Link("Publicações", "servidorPublicacaoPremio.php");
+                    $linkBotao3->set_class('button');
+                    $linkBotao3->set_title("Acessa o Cadastro de Publicações");
+                    $menu->add_link($linkBotao3, "right");
+                    $menu->show();
+                }
 
                 # Exibe as publicações de Licença Prêmio
                 $licenca->exibePublicacoesPremio($idServidorPesquisado);

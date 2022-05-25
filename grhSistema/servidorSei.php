@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Verifica a fase do programa
@@ -21,7 +21,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));
@@ -63,7 +63,7 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
-    
+
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
@@ -87,6 +87,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbsei
                                WHERE idSei = ' . $id);
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -118,7 +123,7 @@ if ($acesso) {
     $categorias = $pessoal->select('SELECT idSeiCategoria, categoria
                                        FROM tbseicategoria
                                    ORDER BY categoria');
-    array_unshift($categorias, array(null,null));
+    array_unshift($categorias, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -158,13 +163,15 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-    
-    # Cadastro de Categoria
-    $botaoCat = new Button("Categorias");
-    $botaoCat->set_title("Acessa o Cadastro de Categorias");
-    $botaoCat->set_url('cadastroSeiCategoria.php');
 
-    $objeto->set_botaoListarExtra([$botaoCat]);
+    # Cadastro de Categoria
+    if (Verifica::acesso($idUsuario, [1, 2])) {
+        $botaoCat = new Button("Categorias");
+        $botaoCat->set_title("Acessa o Cadastro de Categorias");
+        $botaoCat->set_url('cadastroSeiCategoria.php');
+
+        $objeto->set_botaoListarExtra([$botaoCat]);
+    }
 
     ################################################################
 

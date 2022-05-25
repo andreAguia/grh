@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -86,9 +86,11 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Incluir
-            $botaoInserir = new Button("Incluir", "?fase=incluir");
-            $botaoInserir->set_title("Incluir um Servidor");
-            $menu1->add_link($botaoInserir, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botaoInserir = new Button("Incluir", "?fase=incluir");
+                $botaoInserir->set_title("Incluir um Servidor");
+                $menu1->add_link($botaoInserir, "right");
+            }
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -192,22 +194,22 @@ if ($acesso) {
             $tabela->set_editar('?fase=editaServidor');
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna'   => 1,
-                    'valor'    => 'Em Aberto',
+                array('coluna' => 1,
+                    'valor' => 'Em Aberto',
                     'operador' => '=',
-                    'id'       => 'emAberto'),
-                array('coluna'   => 1,
-                    'valor'    => 'Arquivado',
+                    'id' => 'emAberto'),
+                array('coluna' => 1,
+                    'valor' => 'Arquivado',
                     'operador' => '=',
-                    'id'       => 'arquivado'),
-                array('coluna'   => 1,
-                    'valor'    => 'Vigente',
+                    'id' => 'arquivado'),
+                array('coluna' => 1,
+                    'valor' => 'Vigente',
                     'operador' => '=',
-                    'id'       => 'vigenteReducao'),
-                array('coluna'   => 1,
-                    'valor'    => 'Aguardando Publicação',
+                    'id' => 'vigenteReducao'),
+                array('coluna' => 1,
+                    'valor' => 'Aguardando Publicação',
                     'operador' => '=',
-                    'id'       => 'aguardando')
+                    'id' => 'aguardando')
             ));
             $tabela->show();
 
@@ -310,7 +312,6 @@ if ($acesso) {
 
             # Pega os dados
             $conteudo = $pessoal->select($select);
-
 
             # Monta a tabela
             $tabela = new Tabela();

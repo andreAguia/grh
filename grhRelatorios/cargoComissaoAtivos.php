@@ -14,7 +14,7 @@ $idUsuario = null;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, [2, 10]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 3, 9, 10, 11, 12]);   // é acessado pela area do servidor
 
 if ($acesso) {
     # Conecta ao Banco de Dados

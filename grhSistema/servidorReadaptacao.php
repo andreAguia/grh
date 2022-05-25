@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -208,7 +208,7 @@ if ($acesso) {
         $grid->abreColuna(12);
 
         # botão de voltar da lista
-        if (vazio($origem)) {
+        if (empty($origem)) {
             $voltar = 'servidorMenu.php';
         } else {
             $voltar = $origem;
@@ -225,11 +225,13 @@ if ($acesso) {
         $menu->add_link($linkBotao1, "left");
 
         # Incluir
-        $linkBotao2 = new Link("Incluir", '?fase=editar');
-        $linkBotao2->set_class('button');
-        $linkBotao2->set_title('Incluir uma nova solicitação de redução');
-        $linkBotao2->set_accessKey('I');
-        $menu->add_link($linkBotao2, "right");
+        if (Verifica::acesso($idUsuario, [1, 2])) {
+            $linkBotao2 = new Link("Incluir", '?fase=editar');
+            $linkBotao2->set_class('button');
+            $linkBotao2->set_title('Incluir uma nova solicitação de redução');
+            $linkBotao2->set_accessKey('I');
+            $menu->add_link($linkBotao2, "right");
+        }
 
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -313,6 +315,11 @@ if ($acesso) {
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 2,
@@ -543,7 +550,7 @@ if ($acesso) {
             if (!vazio($emailOutro)) {
                 $emails .= "$emailOutro<br/>";
             }
-            
+
             if (!vazio($emailPessoal)) {
                 $emails .= "$emailPessoal<br/>";
             }
@@ -669,7 +676,6 @@ if ($acesso) {
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
             $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
-            
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
@@ -1145,7 +1151,7 @@ if ($acesso) {
             $controle->set_required(true);
             $controle->set_title('A data da CI de término.');
             $form->add_item($controle);
-            
+
             # servidor da grh
             $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
             $controle->set_size(10);
@@ -1208,7 +1214,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-        
+
         case "ciTerminoFormValida" :
 
             # Pega os Dados
@@ -1225,7 +1231,7 @@ if ($acesso) {
             $botaoEscolhido = get_post_action("salvar", "imprimir");
             $numCiTerminoDigitados = vazioPraNulo(post("numCiTermino"));
             $dtCiTerminoDigitado = vazioPraNulo(post("dtCiTermino"));
-            
+
             $servidorGrh = post("servidorGrh");
             $chefeDigitado = post("chefia");
             $cargoDigitado = post("cargo");

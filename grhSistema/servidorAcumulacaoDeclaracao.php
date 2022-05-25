@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -34,6 +34,9 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Verifica se veio da área de Redução
+    $origem = get_session("origem");
 
     # Começa uma nova página
     $page = new Page();
@@ -54,8 +57,15 @@ if ($acesso) {
     $objeto->set_nome('Controle da Entrega da Declaração Anual de Acumulação de Cargo Público');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista("servidorMenu.php?fase=acumulacao");
-
+    if (empty($origem)) {
+        $voltar = 'servidorMenu.php';
+    } else {
+        $voltar = $origem;
+    }
+    
+    # botão de voltar da lista
+    $objeto->set_voltarLista($voltar);
+    
     # select da lista
     $objeto->set_selectLista("SELECT anoReferencia,
                        dtEntrega, 
@@ -76,6 +86,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbacumulacaodeclaracao
                                WHERE idAcumulacaoDeclaracao = ' . $id);
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -116,11 +131,11 @@ if ($acesso) {
 
     $declaracao = new AcumulacaoDeclaracao();
     $anoDisponível = $declaracao->getProximoAnoReferencia($idServidorPesquisado);
-    
+
     # Cria um array com os anos possíveis
     $anoInicial = 2019;
     $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoInicial,$anoAtual + 1, "d");
+    $anoExercicio = arrayPreenche($anoInicial, $anoAtual + 1, "d");
 
     # Campos para o formulario
     $objeto->set_campos(array(

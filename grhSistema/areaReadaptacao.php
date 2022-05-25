@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -94,9 +94,11 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Incluir
-            $botaoInserir = new Button("Incluir", "?fase=incluir");
-            $botaoInserir->set_title("Incluir um Servidor");
-            $menu1->add_link($botaoInserir, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botaoInserir = new Button("Incluir", "?fase=incluir");
+                $botaoInserir->set_title("Incluir um Servidor");
+                $menu1->add_link($botaoInserir, "right");
+            }
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -212,7 +214,7 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(array("Origem", "Tipo", "Status", "Servidor", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
             $tabela->set_align(array("center", "center", "center", "left", "center", "center", "left", "center", "center", "left"));
-            
+
             $tabela->set_classe(array(null, null, "Readaptacao", "Pessoal", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
             $tabela->set_metodo(array(null, null, "exibeStatus", "get_nomeEidFuncional", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
 
@@ -222,22 +224,22 @@ if ($acesso) {
             $tabela->set_editar('?fase=editaServidor');
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna'   => 2,
-                    'valor'    => 'Em Aberto',
+                array('coluna' => 2,
+                    'valor' => 'Em Aberto',
                     'operador' => '=',
-                    'id'       => 'emAberto'),
-                array('coluna'   => 2,
-                    'valor'    => 'Arquivado',
+                    'id' => 'emAberto'),
+                array('coluna' => 2,
+                    'valor' => 'Arquivado',
                     'operador' => '=',
-                    'id'       => 'arquivado'),
-                array('coluna'   => 2,
-                    'valor'    => 'Vigente',
+                    'id' => 'arquivado'),
+                array('coluna' => 2,
+                    'valor' => 'Vigente',
                     'operador' => '=',
-                    'id'       => 'vigenteReducao'),
-                array('coluna'   => 2,
-                    'valor'    => 'Aguardando Publicação',
+                    'id' => 'vigenteReducao'),
+                array('coluna' => 2,
+                    'valor' => 'Aguardando Publicação',
                     'operador' => '=',
-                    'id'       => 'aguardando')
+                    'id' => 'aguardando')
             ));
 
             $tabela->show();
@@ -295,6 +297,10 @@ if ($acesso) {
 
         case "incluir2" :
 
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
             # Cria um menu
             $menu = new MenuBar();
 
@@ -342,7 +348,6 @@ if ($acesso) {
             # Pega os dados
             $conteudo = $pessoal->select($select);
 
-
             # Monta a tabela
             $tabela = new Tabela();
 
@@ -357,6 +362,9 @@ if ($acesso) {
             $tabela->set_nomeColunaEditar("Inserir");
             $tabela->set_textoRessaltado($parametroNome);
             $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
         ################################################################

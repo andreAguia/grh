@@ -891,14 +891,23 @@ class ListaAfastamentos {
             }
         }
 
-        #######################    
-
+        ####################### 
+        $order1 = 7;
+        $order2 = 1;
+        
         if ($this->idFuncional) {
-            $select .= ') ORDER BY 10, 4';
-        } else {
-            $select .= ') ORDER BY 9, 3';
+            $order1 ++;
+            $order2 ++;
         }
-        #echo $select;
+        
+        if (empty($this->idServidor)) {
+            $order1 ++;
+            $order2 ++;
+            $order1 ++;
+            $order2 ++;
+        }
+
+        $select .= ') ORDER BY ' . $order1 . ', ' . $order2;
         return $select;
     }
 
@@ -975,10 +984,10 @@ class ListaAfastamentos {
             }
         } else {
 
-            $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Observação']);
-            $tabela->set_align(['center', 'center', 'center', 'left', 'left']);
+            $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $tabela->set_align(['center', 'center', 'center', 'left']);
             $tabela->set_funcao(["date_to_php", null, "date_to_php"]);
-            $tabela->set_width([15, 5, 15, 35, 30]);
+            $tabela->set_width([15, 5, 15, 55]);
         }
 
         if (!empty($this->linkEditar)) {

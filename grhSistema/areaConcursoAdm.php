@@ -46,7 +46,7 @@ set_session('parametroConcurso', $parametroConcurso);
 set_session('concursoTipo', 1);
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados

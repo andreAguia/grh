@@ -22,7 +22,7 @@ $origemId = get_session("origemId");
 $grh = get('grh', false);
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -125,7 +125,7 @@ if ($acesso) {
 
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
-        
+
         # Exibe o idServidor somente para o administrador
         if (Verifica::acesso($idUsuario, 1)) {
             p($idServidorPesquisado, "idServidor2");
@@ -183,11 +183,12 @@ if ($acesso) {
 
             $menu->show();
 
-            br(2);
-
-            $link = new Link("Alterar Foto", "?fase=uploadFoto");
-            $link->set_id("alteraFoto");
-            $link->show();
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                br(2);
+                $link = new Link("Alterar Foto", "?fase=uploadFoto");
+                $link->set_id("alteraFoto");
+                $link->show();
+            }
 
             $painel->fecha();
 

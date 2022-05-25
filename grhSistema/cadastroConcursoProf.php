@@ -15,7 +15,7 @@ include ("_config.php");
 set_session('origem');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 

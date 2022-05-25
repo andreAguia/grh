@@ -21,7 +21,7 @@ $row = unserialize(urldecode($row));    // monta o array
 $servidor = get('servidor');                      // pega o array
 $servidor = unserialize(urldecode($servidor));    // monta o array
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados

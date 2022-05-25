@@ -11,7 +11,7 @@ $idUsuario = null;              # Servidor logado
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 # Pega os parâmetros
 $parametroAno = get_session('parametroAno', date("Y"));

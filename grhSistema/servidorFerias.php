@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -91,6 +91,10 @@ if ($acesso) {
                                      idServidor
                                 FROM tbferias
                                WHERE idFerias = ' . $id);
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -101,7 +105,7 @@ if ($acesso) {
     $objeto->set_label(array("Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', null));
-    $objeto->set_width(array(10, 10, 15, 10, 15, 10, 10));
+    #$objeto->set_width(array(10, 10, 15, 10, 15, 10, 10));
     $objeto->set_classe(array(null, null, null, null, null, "pessoal", "Ferias"));
     $objeto->set_metodo(array(null, null, null, null, null, "get_feriasPeriodo", "exibeObs"));
 
@@ -211,10 +215,12 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Incluir
-            $linkIncluir = new Link("Incluir", '?fase=editar');
-            $linkIncluir->set_class('button');
-            $linkIncluir->set_title('Incluir novas ferias');
-            $menu1->add_link($linkIncluir, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $linkIncluir = new Link("Incluir", '?fase=editar');
+                $linkIncluir->set_class('button');
+                $linkIncluir->set_title('Incluir novas ferias');
+                $menu1->add_link($linkIncluir, "right");
+            }
 
             $menu1->show();
 

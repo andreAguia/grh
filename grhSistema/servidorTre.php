@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados   
@@ -109,7 +109,8 @@ if ($acesso) {
             $grid->abreColuna(4);
 
             # Tabela
-            $folgas = Array(Array('Dias Trabalhados', $diasTrabalhados),
+            $folgas = Array(
+                Array('Dias Trabalhados', $diasTrabalhados),
                 Array('Folgas Concedidas', $folgasConcedidas),
                 Array('Folgas Fruídas', $folgasFruidas),
                 Array('Folgas Pendentes', $folgasPendentes));

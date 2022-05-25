@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados   
@@ -63,10 +63,11 @@ if ($acesso) {
                                 FROM tbfolga
                                WHERE idFolga = ' . $id);
 
-    # ordem da lista
-    #$objeto->set_orderCampo($orderCampo);
-    #$objeto->set_orderTipo($orderTipo);
-    #$objeto->set_orderChamador('?fase=listar');
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -135,7 +136,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Libera Inclusao, ediçao e exclusao somente para servidores autorizados na regra 6
-    if (Verifica::acesso($idUsuario, 6)) {
+    if (Verifica::acesso($idUsuario, [1, 6])) {
         $objeto->set_botaoIncluir(true);
         $objeto->set_botaoEditar(true);
         $objeto->set_botaoExcluir(true);
@@ -157,7 +158,7 @@ if ($acesso) {
         case "editar" :
             Grh::listaFolgasTre($idServidorPesquisado);
         case "excluir" :
-            if (Verifica::acesso($idUsuario, 6)) {
+            if (Verifica::acesso($idUsuario, [1, 6])) {
                 $objeto->$fase($id);
             } else {
                 $objeto->listar();
@@ -165,7 +166,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            if (Verifica::acesso($idUsuario, 6)) {
+            if (Verifica::acesso($idUsuario, [1, 6])) {
                 $objeto->gravar($id, "servidorTreFolgaExtra.php");
             } else {
                 $objeto->listar();

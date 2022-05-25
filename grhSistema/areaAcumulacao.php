@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -58,24 +58,41 @@ if ($acesso) {
 ################################################################
 
     switch ($fase) {
+        case "":
+            br(4);
+            aguarde();
+            br();
 
-        case "" :
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=listaAcumulacao');
+            break;
+
+################################################################
+        
         case "listaAcumulacao" :
 
             # Cria um menu
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php?fase=acumulacao");
+            $botaoVoltar = new Link("Voltar", "grh.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
             # Incluir
-            $botaoInserir = new Button("Incluir", "?fase=incluir");
-            $botaoInserir->set_title("Incluir um Servidor");
-            $menu1->add_link($botaoInserir, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botaoInserir = new Button("Incluir", "?fase=incluir");
+                $botaoInserir->set_title("Incluir um Servidor");
+                $menu1->add_link($botaoInserir, "right");
+            }
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -154,14 +171,14 @@ if ($acesso) {
             $tabela->set_titulo("Área de Acumulação");
 
             $tabela->set_formatacaoCondicional(array(
-                array('coluna'   => 0,
-                    'valor'    => 'Resolvido',
+                array('coluna' => 0,
+                    'valor' => 'Resolvido',
                     'operador' => '=',
-                    'id'       => 'emAberto'),
-                array('coluna'   => 0,
-                    'valor'    => 'Pendente',
+                    'id' => 'emAberto'),
+                array('coluna' => 0,
+                    'valor' => 'Pendente',
                     'operador' => '=',
-                    'id'       => 'alerta')
+                    'id' => 'alerta')
             ));
 
             $tabela->set_idCampo('idServidor');
@@ -187,7 +204,7 @@ if ($acesso) {
             set_session('origem', 'areaAcumulacao.php');
 
             # Carrega a página específica
-            loadPage('servidorMenu.php?fase=acumulacao');
+            loadPage('servidorAcumulacao.php');
             break;
 
         ################################################################
@@ -264,7 +281,6 @@ if ($acesso) {
 
             # Pega os dados
             $conteudo = $pessoal->select($select);
-
 
             # Monta a tabela
             $tabela = new Tabela();

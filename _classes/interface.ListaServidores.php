@@ -140,9 +140,11 @@ class ListaServidores {
         }
 
         # Retira o dígito verificador do campo $matNomeId
-        if (strpos($this->matNomeId, '-') !== false) {
-            $arrayTroca = ['-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9'];
-            $this->matNomeId = str_replace($arrayTroca, "", $this->matNomeId);
+        if (!empty($this->matNomeId)) {
+            if (str_contains($this->matNomeId, '-') !== false) {
+                $arrayTroca = ['-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9'];
+                $this->matNomeId = str_replace($arrayTroca, "", $this->matNomeId);
+            }
         }
 
         # Conecta com o banco de dados
@@ -305,9 +307,8 @@ class ListaServidores {
                 $this->subTitulo .= "Ordenado " . $value[1] . "<br/>";
             }
         }
-        
-        # echo $select;
 
+        # echo $select;
         # Pega a quantidade de itens da lista
         $conteudo = $servidor->select($select, true);
         $totalRegistros = count($conteudo);

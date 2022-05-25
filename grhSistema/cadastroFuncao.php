@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -100,6 +100,11 @@ if ($acesso) {
                                      obs
                                 FROM tbcargo
                                WHERE idCargo = ' . $id);
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     if (Verifica::acesso($idUsuario, 1)) {      // Excluir somente admin

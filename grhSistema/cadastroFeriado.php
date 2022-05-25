@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -79,11 +79,18 @@ if ($acesso) {
                                 FROM tbferiado
                                WHERE idferiado = ' . $id);
 
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
+
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
-    $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('?fase=listar');
+    if (Verifica::acesso($idUsuario, [1, 2])) {
+        $objeto->set_linkEditar('?fase=editar');
+        $objeto->set_linkExcluir('?fase=excluir');
+        $objeto->set_linkGravar('?fase=gravar');
+        $objeto->set_linkListar('?fase=listar');
+    }
 
     # Parametros da tabela
     $objeto->set_label(array("Tipo", "Data", "Descrição"));

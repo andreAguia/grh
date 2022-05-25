@@ -16,7 +16,7 @@ include ("_config.php");
 set_session('idHistCessao');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Verifica a fase do programa
@@ -93,6 +93,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbhistcessao
                                WHERE idHistCessao = {$id}");
+                               
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');

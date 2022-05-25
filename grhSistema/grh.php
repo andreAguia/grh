@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -35,7 +35,7 @@ if ($acesso) {
     AreaServidor::cabecalho();
 
     # Zera sessions
-    set_session('origem');  
+    set_session('origem');
     set_session('origemId');
     set_session('parametroPlano');
     set_session('parametroNivel');
@@ -72,9 +72,9 @@ if ($acesso) {
     set_session('parametroSexo');
     set_session('parametroAlta');
     set_session('parametroTrimestre');
-   
+
     set_session('concursoTipo');
-    
+
     set_session('parametroMotivo');
     set_session('parametroIdade');
     set_session('parametroTempoCargo');
@@ -91,7 +91,7 @@ if ($acesso) {
     # RPA
     set_session('sessionidPrestador');
     set_session('sessionCpfPrestador');
-    
+
     # Vacina
     set_session('parametroVacinado');
     set_session('parametroJustificativa');
@@ -103,8 +103,12 @@ if ($acesso) {
         # Exibe o Menu Inicial
         case "menu" :
 
+            # Pega o nome do usuário logado
+            $nickUser = $intra->get_nickUsuario($idUsuario);
+
+            # Exibe a Versão e o usuário logado
             p(SISTEMA, 'grhTitulo');
-            p("Versão: " . VERSAO, "versao");
+            p("Usuário: {$nickUser} - Versão: " . VERSAO, "versao");
 
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -118,7 +122,6 @@ if ($acesso) {
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Sair do Sistema');
             $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
-            $linkVoltar->set_accessKey('i');
             $menu->add_link($linkVoltar, "left");
 
             # Alterações
@@ -134,18 +137,24 @@ if ($acesso) {
             $botaoRel->set_title("Relatórios dos Sistema");
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel, "right");
-
+            
             # Alertas
             $linkArea = new Link("Alertas", "alertas.php?grh=1");
             $linkArea->set_class('button alert');
             $linkArea->set_title('Alertas do Sistema');
             $menu->add_link($linkArea, "right");
+            
+            # Trocar Senha
+            $botaoSenha = new Link("Alterar Senha", '../../areaServidor/sistema/trocarSenha.php');
+            $botaoSenha->set_class('button');
+            $botaoSenha->set_title('Altera a senha do usuário logado');
+            $menu->add_link($botaoSenha, "right");            
 
             # Administração do Sistema
             if (Verifica::acesso($idUsuario, 1)) {   // Somente Administradores
-                $linkAdm = new Link("Administração", "../../areaServidor/sistema/administracao.php");
+                $linkAdm = new Link("Area do Servidor", "../../areaServidor/sistema/areaServidor.php");
                 $linkAdm->set_class('button success');
-                $linkAdm->set_title('Administração dos Sistemas');
+                $linkAdm->set_title('Área do Servidor');
                 $menu->add_link($linkAdm, "right");
             }
 
@@ -153,7 +162,6 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
-
 
             /*
              *  Faz as alterações de férias
@@ -235,40 +243,6 @@ if ($acesso) {
             ########
             # monta o menu principal
             $menu = new MenuPrincipal($idUsuario);
-
-            # Perfil
-            $idPessoa = $intra->get_idPessoa($idUsuario);
-            $nickUser = $intra->get_nickUsuario($idUsuario);
-            $title = "Usuário: $nickUser";
-
-            $div = new Div("menuPerfil");
-            $div->abre();
-
-            echo '<button class="button" type="button" data-toggle="example-dropdown-1">' . $nickUser . '</button>';
-
-            $div->fecha();
-
-            echo '<div class="dropdown-pane" id="example-dropdown-1" data-dropdown data-hover="true" data-hover-pane="true">';
-
-            $figura = new Imagem(PASTA_FOTOS . $idPessoa . '.jpg', $title, 70, 70);
-            $figura->set_id('perfil');
-            $figura->show();
-
-            br();
-            p("Usuário:", "puser");
-            p($intra->get_nickUsuario($idUsuario), "f12", "left");
-
-            p("Nome:", "puser");
-            p($intra->get_nomeUsuario($idUsuario), "f12", "left");
-
-            # Trocar Senha
-            $botao = new Link("Trocar Senha", '../../areaServidor/sistema/trocarSenha.php');
-            $botao->set_class('button small');
-            $botao->set_title('Altera a senha do usuário logado');
-            $botao->show();
-
-
-            echo '</div>';
 
             # Zera a session de alerta
             set_session('alerta');
@@ -444,12 +418,12 @@ if ($acesso) {
 
             # Percorre os dados
             foreach ($atualizacoes as $valor) {
-                
-                p("Versão: " . $valor[0]." - ".date_to_php($valor[1]), "patualizacao");                
+
+                p("Versão: " . $valor[0] . " - " . date_to_php($valor[1]), "patualizacao");
                 hr("hratualizacao");
                 p(str_replace('-', '<br/>-', $valor[2]), "patualizacaoTexto");
             }
-            
+
             br(2);
 
             $grid->fechaColuna();
@@ -462,6 +436,11 @@ if ($acesso) {
 ##################################################################
 
         case "acumulacao" :
+            
+            /*
+             * Área desativada
+             * Agora o acesso é feito de forma direta sem esse menu
+             */
 
             # Limita a tela
             $grid = new Grid();
@@ -532,5 +511,5 @@ if ($acesso) {
 
     $page->terminaPagina();
 } else {
-    loadPage("../../areaServidor/sistema/login.php");    
+    loadPage("../../areaServidor/sistema/login.php");
 }

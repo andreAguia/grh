@@ -13,7 +13,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -152,12 +152,14 @@ if ($acesso) {
         $menu->add_link($linkBotao1, "left");
 
         if ($processo <> "--") {
-            # Incluir
-            $linkBotao2 = new Link("Incluir", '?fase=editar');
-            $linkBotao2->set_class('button');
-            $linkBotao2->set_title('Incluir uma nova solicitação de redução');
-            $linkBotao2->set_accessKey('I');
-            $menu->add_link($linkBotao2, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                # Incluir
+                $linkBotao2 = new Link("Incluir", '?fase=editar');
+                $linkBotao2->set_class('button');
+                $linkBotao2->set_title('Incluir uma nova solicitação de redução');
+                $linkBotao2->set_accessKey('I');
+                $menu->add_link($linkBotao2, "right");
+            }
         }
 
         # Site
@@ -252,6 +254,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbreducao
                                WHERE idReducao = ' . $id);
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -503,7 +510,7 @@ if ($acesso) {
             if (!vazio($emailOutro)) {
                 $emails .= "$emailOutro<br/>";
             }
-            
+
             if (!vazio($emailPessoal)) {
                 $emails .= "$emailPessoal<br/>";
             }

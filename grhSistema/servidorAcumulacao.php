@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -34,6 +34,9 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Verifica se veio da área de Redução
+    $origem = get_session("origem");
 
     # Começa uma nova página
     $page = new Page();
@@ -49,7 +52,7 @@ if ($acesso) {
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
-    
+
     # Rotina extra editar
     $objeto->set_rotinaExtraEditar("exibeDeclaracaoAcumulacaoPositiva");
     $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
@@ -58,7 +61,14 @@ if ($acesso) {
     $objeto->set_nome('Cadastro de Acumulações de Cargos Públicos');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista("servidorMenu.php?fase=acumulacao");
+    if (empty($origem)) {
+        $voltar = 'servidorMenu.php';
+    } else {
+        $voltar = $origem;
+    }
+    
+    # botão de voltar da lista
+    $objeto->set_voltarLista($voltar);
 
     # select da lista
     $objeto->set_selectLista('SELECT CASE conclusao
@@ -102,28 +112,33 @@ if ($acesso) {
                                 FROM tbacumulacao
                                WHERE idAcumulacao = ' . $id);
 
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $objeto->set_formatacaoCondicional(array(array('coluna'   => 0,
-            'valor'    => 'Resolvido',
+    $objeto->set_formatacaoCondicional(array(array('coluna' => 0,
+            'valor' => 'Resolvido',
             'operador' => '=',
-            'id'       => 'emAberto'),
-        array('coluna'   => 0,
-            'valor'    => 'Pendente',
+            'id' => 'emAberto'),
+        array('coluna' => 0,
+            'valor' => 'Pendente',
             'operador' => '=',
-            'id'       => 'alerta')
+            'id' => 'alerta')
     ));
 
     # Parametros da tabela
     $objeto->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Cargo Acumulado"));
     $objeto->set_align(array("center", "center", "center", "center", "left"));
     #$objeto->set_funcao(array(null, null, "date_to_php"));
-    $objeto->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao","Acumulacao"));
-    $objeto->set_metodo(array(null, "get_resultado", "exibePublicacao", "exibeProcesso","exibeDadosOutroVinculo"));
+    $objeto->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"));
+    $objeto->set_metodo(array(null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo"));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -138,200 +153,200 @@ if ($acesso) {
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome'      => 'processo',
-            'label'     => 'Processo:',
-            'tipo'      => 'texto',
-            'size'      => 30,
-            'col'       => 3,
-            'title'     => 'Número do Processo',
+    $objeto->set_campos(array(array('nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Número do Processo',
             'autofocus' => true,
-            'linha'     => 1),
-        array('nome'  => 'dtProcesso',
+            'linha' => 1),
+        array('nome' => 'dtProcesso',
             'label' => 'Data do Processo:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data de entrada do processo.',
             'linha' => 1),
-        array('nome'  => 'origemProcesso',
+        array('nome' => 'origemProcesso',
             'label' => 'Processo aberto por:',
-            'tipo'  => 'texto',
-            'size'  => 200,
+            'tipo' => 'texto',
+            'size' => 200,
             'valor' => null,
-            'col'   => 3,
+            'col' => 3,
             'title' => 'Órgão que abriu o processo.',
             'linha' => 1),
-        array('nome'  => 'dtEnvio',
+        array('nome' => 'dtEnvio',
             'label' => 'Data do Envio à COCPP/SECCG:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data do Envio ao Rio.',
             'linha' => 1),
-        array('nome'     => 'instituicao',
+        array('nome' => 'instituicao',
             'fieldset' => 'Outro Vínculo:',
-            'label'    => 'Instituição:',
-            'tipo'     => 'texto',
-            'size'     => 200,
-            'col'      => 6,
-            'title'    => 'Instituição Pública.',
-            'linha'    => 2),
-        array('nome'  => 'cargo',
+            'label' => 'Instituição:',
+            'tipo' => 'texto',
+            'size' => 200,
+            'col' => 6,
+            'title' => 'Instituição Pública.',
+            'linha' => 2),
+        array('nome' => 'cargo',
             'label' => 'Cargo:',
-            'tipo'  => 'texto',
-            'size'  => 200,
-            'col'   => 6,
+            'tipo' => 'texto',
+            'size' => 200,
+            'col' => 6,
             'title' => 'Cargo na outra Instituição.',
             'linha' => 2),
-        array('nome'  => 'matricula',
+        array('nome' => 'matricula',
             'label' => 'Matrícula:',
-            'tipo'  => 'texto',
-            'size'  => 20,
-            'col'   => 2,
+            'tipo' => 'texto',
+            'size' => 20,
+            'col' => 2,
             'title' => 'Matrícula da outra instituição.',
             'linha' => 3),
-        array('nome'  => 'dtAdmissao',
+        array('nome' => 'dtAdmissao',
             'label' => 'Data de Admissão:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data de admissão da outra instituição',
             'linha' => 3),
-        array('nome'  => 'dtAposentadoria',
+        array('nome' => 'dtAposentadoria',
             'label' => 'Data da Aposentadoria:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data de aposentadoria na outra instituição',
             'linha' => 3),
-        array('nome'     => 'resultado',
+        array('nome' => 'resultado',
             'fieldset' => 'fecha',
-            'label'    => 'Resultado:',
-            'tipo'     => 'combo',
-            'array'    => array(array(null, null),
+            'label' => 'Resultado:',
+            'tipo' => 'combo',
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
-            'size'     => 2,
-            'valor'    => null,
-            'col'      => 2,
-            'title'    => 'Resultado.',
-            'linha'    => 4),
-        array('nome'  => 'dtPublicacao',
+            'size' => 2,
+            'valor' => null,
+            'col' => 2,
+            'title' => 'Resultado.',
+            'linha' => 4),
+        array('nome' => 'dtPublicacao',
             'label' => 'Data da Publicação:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data da publicação.',
             'linha' => 4),
-        array('nome'  => 'pgPublicacao',
+        array('nome' => 'pgPublicacao',
             'label' => 'Página:',
-            'tipo'  => 'texto',
-            'size'  => 10,
-            'col'   => 2,
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 4),
-        array('nome'     => 'conclusao',
-            'label'    => 'Conclusão:',
-            'tipo'     => 'combo',
-            'array'    => array(array(null, null),
+        array('nome' => 'conclusao',
+            'label' => 'Conclusão:',
+            'tipo' => 'combo',
+            'array' => array(array(null, null),
                 array(1, "Pendente"),
                 array(2, "Resolvido")),
-            'size'     => 2,
+            'size' => 2,
             'required' => true,
-            'valor'    => null,
-            'col'      => 2,
-            'title'    => 'Conclusão.',
-            'linha'    => 4),
-        array('nome'     => 'resultado1',
+            'valor' => null,
+            'col' => 2,
+            'title' => 'Conclusão.',
+            'linha' => 4),
+        array('nome' => 'resultado1',
             'fieldset' => 'Recursos:',
-            'label'    => 'Recurso 1:',
-            'tipo'     => 'combo',
-            'array'    => array(array(null, null),
+            'label' => 'Recurso 1:',
+            'tipo' => 'combo',
+            'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
-            'size'     => 2,
-            'valor'    => null,
-            'col'      => 2,
-            'title'    => 'Resultado.',
-            'linha'    => 5),
-        array('nome'  => 'dtPublicacao1',
+            'size' => 2,
+            'valor' => null,
+            'col' => 2,
+            'title' => 'Resultado.',
+            'linha' => 5),
+        array('nome' => 'dtPublicacao1',
             'label' => 'Data da Publicação:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data da publicação.',
             'linha' => 5),
-        array('nome'  => 'pgPublicacao1',
+        array('nome' => 'pgPublicacao1',
             'label' => 'Página:',
-            'tipo'  => 'texto',
-            'size'  => 10,
-            'col'   => 2,
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 5),
-        array('nome'  => 'resultado2',
+        array('nome' => 'resultado2',
             'label' => 'Recurso 2:',
-            'tipo'  => 'combo',
+            'tipo' => 'combo',
             'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
-            'size'  => 2,
+            'size' => 2,
             'valor' => null,
-            'col'   => 2,
+            'col' => 2,
             'title' => 'Resultado.',
             'linha' => 6),
-        array('nome'  => 'dtPublicacao2',
+        array('nome' => 'dtPublicacao2',
             'label' => 'Data da Publicação:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data da publicação.',
             'linha' => 6),
-        array('nome'  => 'pgPublicacao2',
+        array('nome' => 'pgPublicacao2',
             'label' => 'Página:',
-            'tipo'  => 'texto',
-            'size'  => 10,
-            'col'   => 2,
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 6),
-        array('nome'  => 'resultado3',
+        array('nome' => 'resultado3',
             'label' => 'Recurso 3:',
-            'tipo'  => 'combo',
+            'tipo' => 'combo',
             'array' => array(array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
-            'size'  => 2,
+            'size' => 2,
             'valor' => null,
-            'col'   => 2,
+            'col' => 2,
             'title' => 'Resultado.',
             'linha' => 7),
-        array('nome'  => 'dtPublicacao3',
+        array('nome' => 'dtPublicacao3',
             'label' => 'Data da Publicação:',
-            'tipo'  => 'data',
-            'size'  => 20,
-            'col'   => 3,
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 3,
             'title' => 'Data da publicação.',
             'linha' => 7),
-        array('nome'  => 'pgPublicacao3',
+        array('nome' => 'pgPublicacao3',
             'label' => 'Página:',
-            'tipo'  => 'texto',
-            'size'  => 10,
-            'col'   => 2,
+            'tipo' => 'texto',
+            'size' => 10,
+            'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 7),
-        array('linha'    => 8,
+        array('linha' => 8,
             'fieldset' => 'fecha',
-            'col'      => 12,
-            'nome'     => 'obs',
-            'label'    => 'Observação:',
-            'tipo'     => 'textarea',
-            'size'     => array(80, 5)),
-        array('nome'   => 'idServidor',
-            'label'  => 'idServidor:',
-            'tipo'   => 'hidden',
+            'col' => 12,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,
-            'size'   => 5,
-            'title'  => 'Matrícula',
-            'linha'  => 5)));
+            'size' => 5,
+            'title' => 'Matrícula',
+            'linha' => 5)));
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -348,7 +363,7 @@ if ($acesso) {
     $botao2->set_target("_blank");
 
     $objeto->set_botaoListarExtra(array($botaoRel, $botao2));
-    
+
     # Botão exibe declaração na rotina editar
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");

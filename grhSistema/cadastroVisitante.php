@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -101,6 +101,11 @@ if ($acesso) {
                                 FROM tbvisitante
                                WHERE idVisitante = {$id}");
 
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
+
     # ordem da lista
     $objeto->set_orderCampo($orderCampo);
     $objeto->set_orderTipo($orderTipo);
@@ -128,7 +133,7 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
+
     # Pega os dados da combo idLotacao
     $selectLotacao = 'SELECT idlotacao, 
                              concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
@@ -136,14 +141,12 @@ if ($acesso) {
 
     $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(null, null)); # Adiciona o valor de nulo
-
     # Pega os dados da combo de cidade
     $cidade = $pessoal->select('SELECT idCidade,
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                   FROM tbcidade JOIN tbestado USING (idEstado)
                               ORDER BY proximidade,tbestado.uf,tbcidade.nome');
     array_unshift($cidade, array(null, null)); # Adiciona o valor de nulo
-
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -169,7 +172,7 @@ if ($acesso) {
             'col' => 12,
             'title' => 'Em qual setor o professor visitante está lotado',
             'linha' => 1),
-         array('linha' => 3,
+        array('linha' => 3,
             'nome' => 'endereco',
             'label' => 'Endereço:',
             'tipo' => 'texto',
@@ -238,7 +241,7 @@ if ($acesso) {
             'title' => 'E-mail',
             'col' => 4,
             'size' => 100),
-        ));
+    ));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

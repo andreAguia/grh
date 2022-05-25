@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -391,6 +391,11 @@ if ($acesso) {
                                    idServidor
                               FROM tblicenca WHERE idLicenca = ' . $id);
 
+        # Habilita o modo leitura para usuario de regra 12
+        if (Verifica::acesso($idUsuario, 12)) {
+            $objeto->set_modoLeitura(true);
+        }
+
         # Caminhos
         $objeto->set_linkEditar('?fase=editar');
         #$objeto->set_linkExcluir('?fase=excluir');
@@ -408,7 +413,9 @@ if ($acesso) {
 
         # Editar e excluir condicional
         $objeto->set_editarCondicional('?fase=editar', '-', 9, "<>");
-        $objeto->set_excluirCondicional('?fase=excluir', '-', 9, "<>");
+        if (Verifica::acesso($idUsuario, [1, 2])) {
+            $objeto->set_excluirCondicional('?fase=excluir', '-', 9, "<>");
+        }
 
         # Parametros da tabela
         $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"));

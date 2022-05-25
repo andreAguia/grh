@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -29,7 +29,11 @@ if ($acesso) {
     }
 
     # Verifica a fase do programa
-    $fase = get('fase', 'ver');
+    if (Verifica::acesso($idUsuario, 12)) {
+        $fase = get('fase', 'editar');
+    } else {
+        $fase = get('fase', 'ver');
+    }
 
     # Pega dados dessa matrícula
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -73,7 +77,11 @@ if ($acesso) {
                         ufCp
                    FROM tbdocumentacao
                   WHERE idPessoa = ' . $idPessoa;
-
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # select do edita
     $objeto->set_selectEdita($selectEdita);

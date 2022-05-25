@@ -531,14 +531,14 @@ class MenuPrincipal {
         $botao->set_url('cadastroVisitante.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'professorVisitante.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de Professores Visitantes (bolsistas)');
-        $menu->add_item($botao);
+        #$menu->add_item($botao);   # Retirado por falta de uso
 
         $botao = new BotaoGrafico();
         $botao->set_label('RPA');
         $botao->set_url('rpa.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de RPAs');
-        #$menu->add_item($botao);  
+        #$menu->add_item($botao);   # Retirado por falta de uso
 
         $menu->show();
         $painel->fecha();
@@ -584,20 +584,25 @@ class MenuPrincipal {
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
 
+        $botao = new BotaoGrafico();
+        $botao->set_label('Licença Médica');
+        $botao->set_url('areaLicencaMedica.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'licMedica.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Servidores com Licença Médica');
+        $menu->add_item($botao);
+
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Publicações');
 //        $botao->set_url('areaPublicacao.php?grh=1');
 //        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
 //        $botao->set_title('Área das publicações no DOERJ');
 //        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vacina');
-        $botao->set_url('areaVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle da vacinação de servidores');
-        $menu->add_item($botao);
-
+//        $botao = new BotaoGrafico();
+//        $botao->set_label('Vacina');
+//        $botao->set_url('areaVacina.php?grh=1');
+//        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
+//        $botao->set_title('Controle da vacinação de servidores');
+//        $menu->add_item($botao);
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Abono Permanência');
 //        $botao->set_url('areaAbonoPermanencia.php?grh=1');
@@ -620,10 +625,17 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Acumulação de Cargos Públicos');
-        $botao->set_url('?fase=acumulacao');
+        $botao->set_label('Acumulação de Cargos');
+        $botao->set_url('areaAcumulacao.php');
         $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Acumulação de Cargo Público');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Declaração de Acumulação');
+        $botao->set_url('areaAcumulacaoDeclaracao.php');
+        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle da entrega da declaração anual de acumulação de cargos públicos');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -637,15 +649,8 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label('Responsáveis pela Prestação de Contas');
         $botao->set_url('areaPrestacaoContas.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle dos responsáveis pela prestação de contas');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Licença Médica');
-        $botao->set_url('areaLicencaMedica.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'licMedica.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Servidores com Licença Médica');
+        $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle dos ordenadores de despesas e responsáveis pela prestação de contas');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
@@ -718,13 +723,15 @@ class MenuPrincipal {
         $botao->set_title('Exibe os telefones e ramais da UENF');
         $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Sispatri');
-        $botao->set_url("areaSispatri.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS . 'sispatri.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Sispatri');
-        #$botao->set_accesskey('S');
-        $menu->add_item($botao);
+        if (Verifica::acesso($this->idUsuario, [1, 13])) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Sispatri');
+            $botao->set_url("areaSispatri.php?grh=1");
+            $botao->set_imagem(PASTA_FIGURAS . 'sispatri.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de Sispatri');
+            #$botao->set_accesskey('S');
+            $menu->add_item($botao);
+        }
 
         $botao = new BotaoGrafico();
         $botao->set_label('MCF');
@@ -757,7 +764,7 @@ class MenuPrincipal {
         $botao->set_url('cadastroRpa.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Emissão de RPA');
-        $menu->add_item($botao);
+        #$menu->add_item($botao); ### retirado por falta de uso
 
         $botao = new BotaoGrafico();
         $botao->set_label('Publicações');

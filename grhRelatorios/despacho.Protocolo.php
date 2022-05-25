@@ -17,7 +17,7 @@ include ("../grhSistema/_config.php");
 $postAssunto = post('assunto');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 

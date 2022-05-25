@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -132,12 +132,15 @@ if ($acesso) {
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
 
-            # Novo Servidor
-            $linkBotao2 = new Link("Novo Servidor", "servidorInclusao.php");
-            $linkBotao2->set_class('button');
-            $linkBotao2->set_title('Incluir Novo Servidor');
-            $linkBotao2->set_accessKey('N');
-            $menu1->add_link($linkBotao2, "right");
+            # Novo Servidor            
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $linkBotao2 = new Link("Novo Servidor", "servidorInclusao.php");
+                $linkBotao2->set_class('button');
+                $linkBotao2->set_title('Incluir Novo Servidor');
+                $linkBotao2->set_accessKey('N');
+                $menu1->add_link($linkBotao2, "right");
+            }
+
             $menu1->show();
 
             # Lista de Servidores Ativos
@@ -156,8 +159,8 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-            
-             # CPF
+
+            # CPF
             $controle = new Input('parametroCpf', 'cpf', 'Cpf:', 1);
             $controle->set_size(55);
             $controle->set_title("CPF do servidor:");
@@ -297,7 +300,7 @@ if ($acesso) {
                 $lista->set_matNomeId($parametroNomeMat);
                 $lista->set_paginacao(false);
             }
-            
+
             if (!vazio($parametroCpf)) {
                 $lista->set_cpf($parametroCpf);
                 $lista->set_paginacao(false);

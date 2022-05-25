@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -107,16 +107,7 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
-
-            # Relatórios
-            $menu = new Menu('horizontal');
-            #$menu->add_item('titulo','Relatórios');
-            $menu->add_item('linkWindow', 'Relatorio da Tela', '../grhRelatorios/treGeral.php');
-            #$menu->add_item('linkWindow','Mensal de Dias Trabalhados','../grhRelatorios/treAfastamentoMensal.php');
-            $menu->add_item('linkWindow', 'Anual de Dias Trabalhados', '../grhRelatorios/treAfastamentoAnual.php');
-            #$menu->add_item('linkWindow','Mensal de Folgas Fruídas','../grhRelatorios/treFolgaMensal.php'); 
-            $menu->add_item('linkWindow', 'Anual de Folgas Fruídas', '../grhRelatorios/treFolgaAnual.php');
-            # $menu->show();
+            
             ###
             # Formulário de Pesquisa
             $form = new Form('?');

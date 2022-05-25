@@ -121,14 +121,17 @@ class MenuServidor {
         $grid->fechaColuna();
         $grid->fechaGrid();
 
-        $div = new Div("center");
-        $div->abre();
+        if (Verifica::acesso($this->idUsuario, [1, 2])) {
 
-        $link = new Link("Alterar Foto", "?fase=uploadFoto");
-        $link->set_id("alteraFoto");
-        $link->show();
+            $div = new Div("center");
+            $div->abre();
 
-        $div->fecha();
+            $link = new Link("Alterar Foto", "?fase=uploadFoto");
+            $link->set_id("alteraFoto");
+            $link->show();
+
+            $div->fecha();
+        }
     }
 
 ######################################################################################################################
@@ -228,11 +231,21 @@ class MenuServidor {
             $menu->add_item($botao);
         }
 
+
+        # Pasta Funcional
+        $botao = new BotaoGrafico();
+        $botao->set_label('Pasta Funcional');
+        $botao->set_url('servidorPasta.php?grh=1');
+        #$botao->set_url('servidorPasta2.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Pasta funcional do servidor');
+        $menu->add_item($botao);
+
         # Acumulação
         $botao = new BotaoGrafico();
         $botao->set_label('Acumulação de Cargos Públicos');
         #$botao->set_url('servidorAcumulacao.php?grh=1');
-        $botao->set_url('servidorMenu.php?fase=acumulacao');
+        $botao->set_url('servidorAcumulacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle de Acumulação de Cargo Público');
         $menu->add_item($botao);
@@ -243,22 +256,14 @@ class MenuServidor {
         $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
-        #$menu->add_item($botao);
+        $menu->add_item($botao);
+
         # Prestador de Contas
         $botao = new BotaoGrafico();
         $botao->set_label('Ordenação de Despesas');
         $botao->set_url('servidorOrdenador.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Histórico de designação para ordenação de despesas');
-        $menu->add_item($botao);
-
-        # Pasta Funcional
-        $botao = new BotaoGrafico();
-        $botao->set_label('Pasta Funcional');
-        $botao->set_url('servidorPasta.php?grh=1');
-        #$botao->set_url('servidorPasta2.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
 
         # Sei

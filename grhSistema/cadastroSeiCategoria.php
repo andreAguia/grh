@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Verifica a fase do programa
@@ -79,6 +79,11 @@ if ($acesso) {
     $objeto->set_label(array("id", "Categoria", "Obs"));
     $objeto->set_width(array(5, 30, 60));
     $objeto->set_align(array("center", "left", "left"));
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 8, 12]);
 
 if ($acesso) {
 
@@ -91,7 +91,7 @@ if ($acesso) {
                 $linkVoltar->set_title('Voltar');
                 $menu1->add_link($linkVoltar, "left");
 
-                if (Verifica::acesso($idUsuario, 8)) {
+                if (Verifica::acesso($idUsuario, [1, 8])) {
                     # Servidores
                     $linkServ = new Link("Servidores", "?fase=servidores");
                     $linkServ->set_class('button');
@@ -416,7 +416,7 @@ if ($acesso) {
                          *  Turno da manhã
                          */
                         if (($regraFuncionamento[$wday] == "m") OR ($regraFuncionamento[$wday] == "a")) {
-                            
+
                             $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "m");
 
                             if ($idservidorLogado == $idServidorBalcao) {
@@ -428,7 +428,7 @@ if ($acesso) {
                                 echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
                                 echo '</td>';
                             }
-                            
+
                             $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo");
 
                             if ($idservidorLogado == $idServidorBalcao) {
@@ -440,7 +440,6 @@ if ($acesso) {
                                 echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
                                 echo '</td>';
                             }
-                            
                         } else {
                             echo '<td align="center">-----</td>';
                         }
@@ -449,7 +448,7 @@ if ($acesso) {
                          *  Turno da Tarde
                          */
                         if (($regraFuncionamento[$wday] == "t") OR ($regraFuncionamento[$wday] == "a")) {
-                           
+
                             $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "t");
 
                             if ($idservidorLogado == $idServidorBalcao) {
@@ -461,8 +460,8 @@ if ($acesso) {
                                 echo trataNulo($pessoal->get_nomeSimples($idServidorBalcao));
                                 echo '</td>';
                             }
-                            
-                           $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "to");
+
+                            $idServidorBalcao = get_servidorBalcao($parametroAno, $parametroMes, $contador, "to");
 
                             if ($idservidorLogado == $idServidorBalcao) {
                                 echo '<td id="eu" align="center">';

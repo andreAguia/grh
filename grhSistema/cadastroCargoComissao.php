@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -109,6 +109,11 @@ if ($acesso) {
                                      obs
                                 FROM tbtipocomissao
                                WHERE idTipoComissao = ' . $id);
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     $objeto->set_formatacaoCondicional(array(array('coluna' => 6,
             'valor' => 0,
@@ -160,20 +165,20 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
-            'col' => 5,
+            'col' => 4,
             'nome' => 'descricao',
             'label' => 'Cargo em Comissão:',
             'tipo' => 'texto',
             'autofocus' => true,
             'size' => 50),
         array('linha' => 1,
-            'col' => 3,
+            'col' => 2,
             'nome' => 'simbolo',
             'label' => 'Símbolo:',
             'tipo' => 'texto',
             'size' => 10),
         array('linha' => 1,
-            'col' => 2,
+            'col' => 3,
             'nome' => 'valsal',
             'label' => 'Valor do Salário:',
             'tipo' => 'moeda',
@@ -185,7 +190,7 @@ if ($acesso) {
             'tipo' => 'numero',
             'size' => 10),
         array('linha' => 1,
-            'col' => 1,
+            'col' => 2,
             'nome' => 'ativo',
             'title' => 'Informa se o cargo está ativo',
             'label' => 'Ativo:',

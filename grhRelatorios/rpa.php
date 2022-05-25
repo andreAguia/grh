@@ -14,7 +14,7 @@ $idUsuario = null;
 include ("../grhSistema/_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 # pega o id (se tiver)
 $id = soNumeros(get('id'));

@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -103,7 +103,7 @@ if ($acesso) {
     $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
-    if (Verifica::acesso($idUsuario, 7)) {
+    if (Verifica::acesso($idUsuario, [1, 7])) {
         $objeto->set_linkEditar('?fase=editar');
         $objeto->set_linkExcluir('?fase=excluir');
     } else {
@@ -128,7 +128,7 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
+
     # Cria combo de servidores da GRH
     $select = "SELECT tbpessoa.nome 
                  FROM tbpessoa JOIN tbservidor USING (idPessoa) 
@@ -138,16 +138,16 @@ if ($acesso) {
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND tbhistlot.lotacao = 66
                  ORDER BY tbpessoa.nome";
-    
+
     $servGrh = $pessoal->select($select);
-    
+
     # Inicia o array da combo
     $comboServidores[] = null;
     $comboServidores[] = "Todos";
     $comboServidores[] = "Bolsista";
-    
+
     # Adapta o array a combo
-    foreach($servGrh as $item){
+    foreach ($servGrh as $item) {
         $comboServidores[] = get_nomeSimples($item["nome"]);
     }
 

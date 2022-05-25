@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -100,6 +100,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbaverbacao
                                WHERE idAverbacao = ' . $id);
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -264,10 +269,13 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Incluir
-            $linkIncluir = new Link("Incluir", '?fase=editar');
-            $linkIncluir->set_class('button');
-            $linkIncluir->set_title('Incluir novas ferias');
-            $menu1->add_link($linkIncluir, "right");
+            # Habilita o modo leitura para usuario de regra 12
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $linkIncluir = new Link("Incluir", '?fase=editar');
+                $linkIncluir->set_class('button');
+                $linkIncluir->set_title('Incluir novas ferias');
+                $menu1->add_link($linkIncluir, "right");
+            }
 
             $menu1->show();
 

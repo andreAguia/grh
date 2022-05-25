@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -86,7 +86,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php?fase=acumulacao");
+            $botaoVoltar = new Link("Voltar", "grh.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
@@ -310,10 +310,10 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Ativos que NÃO Entregaram a Declaração do Ano {$parametroAno}");
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Entregue em", "Declarou Acumular", "Servidor", "Lotação", "Processo"));
-            $tabela->set_align(array("center", "center", "left", "left", "center"));
-            $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
-            $tabela->set_metodo(array(null, null, "get_nomeECargoEPerfil", "get_Lotacao"));
+            $tabela->set_label(["Entregue em", "Declarou Acumular", "Servidor", "Lotação", "Processo"]);
+            $tabela->set_align(["center", "center", "left", "left", "center"]);
+            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoEPerfil", "get_Lotacao"]);
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
@@ -337,7 +337,7 @@ if ($acesso) {
             set_session('origem', 'areaAcumulacaoDeclaracao.php');
 
             # Carrega a página específica
-            loadPage('servidorMenu.php?fase=acumulacao');
+            loadPage('servidorAcumulacaoDeclaracao.php');
             break;
 
         ################################################################

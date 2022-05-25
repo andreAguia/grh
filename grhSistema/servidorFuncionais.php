@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -20,7 +20,11 @@ if ($acesso) {
     $intra = new Intra();
 
     # Verifica a fase do programa
-    $fase = get('fase', 'ver');
+    if (Verifica::acesso($idUsuario, 12)) {
+        $fase = get('fase', 'editar');
+    }else{
+        $fase = get('fase', 'ver');
+    }
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -96,7 +100,10 @@ if ($acesso) {
             FROM tbservidor
             WHERE idServidor = ' . $idServidorPesquisado;
 
-    #echo $selectEdita;
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     $objeto->set_selectEdita($selectEdita);
 

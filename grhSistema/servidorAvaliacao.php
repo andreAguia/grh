@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 
@@ -98,6 +98,11 @@ if ($acesso) {
                                      idServidor
                                 FROM tbavaliacao
                                WHERE idAvaliacao = ' . $id);
+
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -273,7 +278,7 @@ if ($acesso) {
             } else {
                 $linkBotao1 = new Link("Voltar", $origem);
             }
-            
+
             $linkBotao1->set_class('button');
             $linkBotao1->set_title('Volta para a página anterior');
             $linkBotao1->set_accessKey('V');
@@ -285,14 +290,12 @@ if ($acesso) {
             $botaoAfast->set_target("_blank");
             $menu->add_link($botaoAfast, "right");
 
-//            # Processo
-//            $botaoProcesso = new Button("Edita Processo", "servidorProcessoAvaliacao.php");
-//            $botaoProcesso->set_title("Edita o processo");
-//            $menu->add_link($botaoProcesso, "right");
             # Incluir
-            $botaoIncluir = new Button("Incluir", '?fase=editar');
-            $botaoIncluir->set_title("Incluir novo registro");
-            $menu->add_link($botaoIncluir, "right");
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botaoIncluir = new Button("Incluir", '?fase=editar');
+                $botaoIncluir->set_title("Incluir novo registro");
+                $menu->add_link($botaoIncluir, "right");
+            }
 
             $menu->show();
 

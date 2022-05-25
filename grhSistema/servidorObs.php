@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, 2);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Verifica a fase do programa
@@ -50,6 +50,11 @@ if ($acesso) {
     $objeto->set_selectEdita('SELECT obs
                                 FROM tbservidor
                                WHERE idServidor = ' . $idServidorPesquisado);
+    
+    # Habilita o modo leitura para usuario de regra 12
+    if (Verifica::acesso($idUsuario, 12)) {
+        $objeto->set_modoLeitura(true);
+    }
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');

@@ -870,6 +870,7 @@ class Sispatri {
         $intra = new Intra();        
         p("Última Importação:", "pdataImportacaoSispatriTexto");
         p(trataNulo($intra->get_variavel('dataUltimaImportacao')), "pdataImportacaoSispatriValor");
+        p(trataNulo("Feita pelo usuário: ".$intra->get_variavel('usuarioUltimaImportacao')), "pdataImportacaoSispatriTexto");
         
         $painel->fecha();
     }

@@ -588,6 +588,7 @@ if ($acesso) {
 
             # Atualiza nas variaveis de sistema a data da importação
             $intra->set_variavel('dataUltimaImportacao', date("d/m/Y H:i:s"));
+            $intra->set_variavel('usuarioUltimaImportacao', $intra->get_nickUsuario($idUsuario));
 
             if ($problema > 0) {
                 alert("A importação foi concluída com {$problema} problema(s)");

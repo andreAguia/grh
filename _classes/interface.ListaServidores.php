@@ -139,13 +139,24 @@ class ListaServidores {
             $tipo = $dados['tipo'];
         }
 
+        # Verifica se existe a função str_contains do PHP 8
+        # Ou seja se for em servidores com PHP anterior
+        # Cria uma função str_contains com o mesmo efeito
+        if (!function_exists('str_contains')) {
+            function str_contains($haystack, $needle) {
+                return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+            }
+
+        }
+
         # Retira o dígito verificador do campo $matNomeId
-//        if (!empty($this->matNomeId)) {
-//            if (str_contains($this->matNomeId, '-') !== false) {
-//                $arrayTroca = ['-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9'];
-//                $this->matNomeId = str_replace($arrayTroca, "", $this->matNomeId);
-//            }
-//        }
+        # Usando a função str_contains (veja código acima)
+        if (!empty($this->matNomeId)) {
+            if (str_contains($this->matNomeId, '-') !== false) {
+                $arrayTroca = ['-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9'];
+                $this->matNomeId = str_replace($arrayTroca, "", $this->matNomeId);
+            }
+        }
 
         # Conecta com o banco de dados
         $servidor = new Pessoal();

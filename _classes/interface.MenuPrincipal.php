@@ -282,7 +282,16 @@ class MenuPrincipal {
                 } else {
                     $title = $valor["title"];
                 }
-                $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+
+                # Verifica qual documento
+                $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+                if (file_exists($arquivoDocumento)) {
+                    # Caso seja PDF abre uma janela com o pdf
+                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                }else{
+                    # Caso seja um .doc, somente faz o download
+                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+                }                
             }
         }
 

@@ -39,19 +39,21 @@ class MenuDocumentos {
          * 
          * @syntax $formacao->exibeDocumento($id);
          */
-        # Monta o arquivo
-        $arquivo = PASTA_DOCUMENTOS . $id . ".pdf";
 
         # Verifica se ele existe
-        if (file_exists($arquivo)) {
-
+        if (file_exists(PASTA_DOCUMENTOS . $id . ".pdf")) {
             # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o documento");
+            $link = new Link(null, PASTA_DOCUMENTOS . $id . ".pdf", "Exibe o documento");
             $link->set_imagem(PASTA_FIGURAS . "olho.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
+        } elseif (file_exists(PASTA_DOCUMENTOS . $id . ".doc")) {
+            # Monta o link
+            $link = new Link(null, PASTA_DOCUMENTOS . $id . ".doc", "Exibe o documento");
+            $link->set_imagem(PASTA_FIGURAS . "olho.png", 20, 20);
+            $link->show();
         } else {
-            echo "-";
+            echo "---";
         }
     }
 

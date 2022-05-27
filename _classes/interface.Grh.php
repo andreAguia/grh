@@ -710,7 +710,7 @@ class Grh {
         }
 
         $classe = array("pessoal", null, "pessoal", "pessoal");
-        $metodo = array("get_Cargo", null, "get_Lotacao", "get_Situacao");
+        $metodo = array("get_CargoCompleto2", null, "get_Lotacao", "get_Situacao");
 
         $formatacaoCondicional = array(
             array('coluna' => 3,
@@ -813,12 +813,12 @@ class Grh {
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo($titulo);
-        $relatorio->set_label(array("Id", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação"));
+        $relatorio->set_label(["Id", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação"]);
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
-        $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
-        $relatorio->set_classe(array(null, null, null, "pessoal", null, "pessoal", "pessoal"));
-        $relatorio->set_metodo(array(null, null, null, "get_cargoComSalto", null, "get_Lotacao", "get_Situacao"));
-        $relatorio->set_align(array('center'));
+        $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+        $relatorio->set_classe([null, null, null, "pessoal", null, "pessoal", "pessoal"]);
+        $relatorio->set_metodo([null, null, null, "get_cargoCompleto", null, "get_Lotacao", "get_Situacao"]);
+        $relatorio->set_align(['center']);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);

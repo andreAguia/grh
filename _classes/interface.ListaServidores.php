@@ -461,11 +461,11 @@ class ListaServidores {
 
         # Dados da Tabela
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
             $width = array(8, 20, 20, 18, 14, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", $situacao);
         } else {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
             $width = array(8, 20, 20, 18, 14, 5, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "date_to_php", $situacao);
         }
@@ -540,18 +540,18 @@ class ListaServidores {
         $conteudo = $servidor->select($this->select, true);
 
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
             $width = array(8, 20, 25, 23, 14, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "get_situacaoRel");
         } else {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
+            $label = array("ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
             $width = array(8, 20, 25, 20, 14, 5, 5, 5);
             $function = array(null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
         }
 
         $align = array("center", "left", "left", "left");
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_lotacao", "get_perfil");
 
         # Relatório
         $relatorio = new Relatorio();

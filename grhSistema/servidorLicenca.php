@@ -327,12 +327,17 @@ if ($acesso) {
         $objeto->set_arrayPesquisa($result);
 
         # select da lista
+        /*
+         * Licança geral
+         */
+
         $selectLicença = '(SELECT tblicenca.idTpLicenca,
                                   tblicenca.idTpLicenca,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
                                         end,
+                                     idLicenca,   
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
@@ -345,10 +350,15 @@ if ($acesso) {
         if (!vazio($parametro)) {
             $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro . ' ORDER BY 4 desc)';
         } else {
+            /*
+             * Licença prêmio e sem vencimentos
+             */
             $selectLicença .= ')
                                UNION
                                (SELECT 6,
-                                       6,"",
+                                       6,
+                                       "",
+                                       "",
                                        dtInicial,
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -360,7 +370,9 @@ if ($acesso) {
                                  WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
                                      UNION
                                (SELECT tblicencasemvencimentos.idTpLicenca,
-                                       tblicencasemvencimentos.idTpLicenca,"",
+                                       tblicencasemvencimentos.idTpLicenca,
+                                       "",
+                                       "",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),                                 
@@ -370,7 +382,7 @@ if ($acesso) {
                                        "-"
                                   FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado . ')
-                              ORDER BY 4 desc';
+                              ORDER BY 5 desc';
         }
 
         $objeto->set_selectLista($selectLicença);
@@ -418,12 +430,12 @@ if ($acesso) {
         }
 
         # Parametros da tabela
-        $objeto->set_label(array("Licença ou Afastamento", "Doc.", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"));
-        $objeto->set_width(array(30, 3, 3, 10, 5, 10, 15, 5, 4));
-        $objeto->set_align(array("left"));
-        $objeto->set_funcao(array(null, "exibeBotaoDocumentacaoLicenca", null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"));
-        $objeto->set_classe(array("Licenca"));
-        $objeto->set_metodo(array("exibeNome"));
+        $objeto->set_label(["Licença ou Afastamento", "Doc.", "Alta", "Bim", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        #$objeto->set_width([30, 3, 3, 10, 5, 10, 15, 5, 4]);
+        $objeto->set_align(["left"]);
+        $objeto->set_funcao([null, "exibeBotaoDocumentacaoLicenca", null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
+        $objeto->set_classe(["Licenca", null, null, "LicencaMedica"]);
+        $objeto->set_metodo(["exibeNome", null, null, "ExibeBim"]);
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
 

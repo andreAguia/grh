@@ -246,6 +246,7 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
     /**
      * Método get_salarioCessao
      * informa o sal�rio recebido pelo �rg�o de origem de um cedido
@@ -860,6 +861,45 @@ class Pessoal extends Bd {
         }
 
         return $retorno;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoCompleto2($idServidor, $exibeComissao = true) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbtipocargo.sigla,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if ($row["idPerfil"] == 2) {
+            p("Exercendo função equivalente ao", "pLinha3");
+            p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+        } else {
+            plista(
+                    $row["cargo"],
+                    $row["area"],
+                    $row["nome"],
+                    $comissao
+            );
+        }
     }
 
     ###########################################################
@@ -1711,13 +1751,13 @@ class Pessoal extends Bd {
 
     function get_licencaPericia($idLicenca) {
 
-
         # Função que informa se esse tipo de licença necessita de perícia (licença m�dica)
         #
         # Parâmetro: id do tipo de licença
         # Valida parametro
-        if (is_null($idLicenca))
+        if (empty($idLicenca)) {
             return false;
+        }
 
         # Monta o select		
         $select = 'SELECT pericia
@@ -1820,13 +1860,19 @@ class Pessoal extends Bd {
         #
         # Parâmetro: id da licença
         # Valida parametro
-        if (is_null($idLicenca))
-            return false;
+        if (empty($idLicenca)) {
+            return null;
+        }
+
+        # Se é numérico
+        if (!is_numeric($idLicenca)) {
+            return null;
+        }
 
         # Monta o select		
         $select = 'SELECT idTpLicenca
-                         FROM tblicenca
-                        WHERE idLicenca = ' . $idLicenca;
+                     FROM tblicenca
+                    WHERE idLicenca = ' . $idLicenca;
 
         $row = parent::select($select, false);
 
@@ -4090,6 +4136,7 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
     /**
      * Método get_nomeSituacao
      * 

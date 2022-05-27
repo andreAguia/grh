@@ -626,7 +626,7 @@ class Grh {
         #$align = array("center");
 
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal", null, "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_Lotacao", "get_Perfil", null, "get_Situacao");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_Situacao");
 
         $formatacaoCondicional = array(
             array('coluna' => 1,

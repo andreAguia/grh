@@ -470,9 +470,9 @@ class ListaServidores {
             $function = array(null, null, null, null, null, "date_to_php", "date_to_php", $situacao);
         }
 
-        $align = array("center", "left", "left", "left");
+        $align = array("center", "left", "center", "left");
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoComSalto", "get_lotacao", "get_perfil");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_lotacao", "get_perfil");
 
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);

@@ -17,7 +17,7 @@ $idComissao = get('id');
 $postData = post('dataEmissao', date("Y-m-d"));
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario);
+$acesso = $acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
 
 if ($acesso) {
 

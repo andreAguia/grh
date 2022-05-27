@@ -517,7 +517,7 @@ class MenuServidor {
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
-        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo=$cargo");
+        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
 
         #$menu->add_item('link','Declaração para o INSS','#');
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");

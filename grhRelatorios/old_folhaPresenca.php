@@ -18,7 +18,7 @@ $anoBase = post('anoBase', date('Y'));
 $mesBase = post('mesBase', date('m'));
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario);
+$acesso = $acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
 
 if ($acesso) {
 

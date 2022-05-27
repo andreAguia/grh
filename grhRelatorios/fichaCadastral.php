@@ -39,7 +39,7 @@ $postElogio = post('elogio');
 $postDadosUsuario = post('dadosUsuario');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario);
+$acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados    

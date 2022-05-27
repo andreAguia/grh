@@ -14,7 +14,7 @@ include ("../grhSistema/_config.php");
 $idComissao = get('id');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario);
+$acesso = $acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
 
 if ($acesso) {
 

@@ -424,9 +424,9 @@ if ($acesso) {
         $stringComparacao = $nome . "<br/>" . $lei;
 
         # Editar e excluir condicional
-        $objeto->set_editarCondicional('?fase=editar', '-', 9, "<>");
+        $objeto->set_editarCondicional('?fase=editar', '-', 10, "<>");
         if (Verifica::acesso($idUsuario, [1, 2])) {
-            $objeto->set_excluirCondicional('?fase=excluir', '-', 9, "<>");
+            $objeto->set_excluirCondicional('?fase=excluir', '-', 10, "<>");
         }
 
         # Parametros da tabela

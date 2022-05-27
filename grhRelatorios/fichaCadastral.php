@@ -345,7 +345,7 @@ if ($acesso) {
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
     $relatorio->set_classe(array(null, "Pessoal", "Pessoal"));
-    $relatorio->set_metodo(array(null, "get_Cargo", "get_concursoRelatorio"));
+    $relatorio->set_metodo(array(null, "get_CargoCompleto2", "get_concursoRelatorio"));
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(0);
     $relatorio->set_botaoVoltar(false);

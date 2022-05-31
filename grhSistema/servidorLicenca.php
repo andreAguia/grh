@@ -281,8 +281,19 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+
+    # Jascript do formulário
     if ($fase == "editar") {
         $page->set_jscript($script);
+    }
+
+    # Jascript do upload
+    if ($fase == "uploadBim") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
     }
     $page->iniciaPagina();
 
@@ -575,7 +586,35 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicenca.php?parametro=" . $parametro);
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra(array($botaoRel));
+        $objeto->set_botaoListarExtra([$botaoRel]);
+
+        # Botão de Upload Bim (somente no ver de licenças médicas)
+        if (!empty($id)) {
+            # Pega o tipo de licença
+            $tipo = $pessoal->get_tipoLicenca($id);
+
+            # Verifica se esse tipo tem perícia
+            if ($pessoal->get_licencaPericia($tipo) == "Sim") {
+
+                # Monta o arquivo
+                $arquivo = PASTA_BIM . "{$id}.pdf";
+
+                # Muda o botão se tem ou não algum bim já cadastrado
+                if (file_exists($arquivo)) {
+                    $imagem = new Imagem(PASTA_FIGURAS . 'trocar.png', null, 17, 17);
+                    $botaoUp = new Button();
+                    $botaoUp->set_imagem($imagem);
+                    $botaoUp->set_url("?fase=uploadBim&id={$id}");
+                    $botaoUp->set_title("Trocar o Bim cadastrado");
+                    #$botaoUp->set_confirma('Já existe um Bim cadastrado. Deseja mesmo substituí-lo?');
+                    $botaoUp->set_target("_blank");
+                    $objeto->set_botaoEditarExtra([$botaoUp]);
+                }
+            }
+        }
+
+
+
 
         ################################################################
 
@@ -601,6 +640,108 @@ if ($acesso) {
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;
+
+            ################################################################
+
+            case "uploadBim" :
+                $grid = new Grid("center");
+                $grid->abreColuna(12);
+
+                # Botão voltar
+                if (!file_exists(PASTA_BIM . "{$id}.pdf")) {
+                    botaoVoltar('?');
+
+                    # Título
+                    tituloTable("Upload Bim");
+                    
+                    # Define o link de voltar após o salvar
+                    $voltarsalvar = "?fase=listar";
+                } else {
+                    br();
+                    
+                    # Título
+                    tituloTable("Substituir o Bim Cadastrado");
+                    
+                    # Define o link de voltar após o salvar
+                    $voltarsalvar = "?fase=uploadTerminado";
+                }
+
+                # Limita a tela
+                $grid->fechaColuna();
+                $grid->abreColuna(6);
+
+                # Monta o formulário
+                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+
+                # Pasta onde será guardado o arquivo
+                $pasta = PASTA_BIM;
+
+                # Se não existe o programa cria
+                if (!file_exists($pasta) || !is_dir($pasta)) {
+                    mkdir($pasta, 0755);
+                }
+
+                # Extensões possíveis
+                $extensoes = array("pdf");
+
+                # Pega os valores do php.ini
+                $postMax = limpa_numero(ini_get('post_max_size'));
+                $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+                $limite = menorValor(array($postMax, $uploadMax));
+
+                $texto = "Extensões Permitidas:";
+                foreach ($extensoes as $pp) {
+                    $texto .= " $pp";
+                }
+                $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+                br();
+                p($texto, "f14", "center");
+
+                if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                    $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
+
+                    # Salva e verifica se houve erro
+                    if ($upload->salvar()) {
+
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $atividade = "Fez o upload de publicação de concurso";
+                        $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+
+                        # Volta para o menu
+                        loadPage($voltarsalvar);
+                    } else {
+                        loadPage("?fase=uploadBim&id=$id");
+                    }
+                }
+
+                # Informa caso exista um arquivo com o mesmo nome
+                $arquivoDocumento = $pasta . $id . ".pdf";
+                if (file_exists($arquivoDocumento)) {
+                    p("Já existe um documento para este registro!!<br/>"
+                            . "O novo documento irá substituir o antigo !", "puploadMensagem");
+                    br();
+                }
+
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+                break;
+                
+                case "uploadTerminado" :                
+                # Informa que o bim foi substituído
+                alert("Bim substituído !!");
+                                
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                break;
+
+            ##################################################################
         }
     }
     $page->terminaPagina();

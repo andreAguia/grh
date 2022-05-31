@@ -50,6 +50,7 @@ define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");         # Publica√ß√
 define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");       # Fotos dos Servidores
 define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");       # Fotos dos certificados de cursos
 define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos Gerais
+define("PASTA_BIM", "../../_arquivos/bim/");                        # BIM
 
 /*
  *  Tags aceitas em campos com htmlTag = true

@@ -758,7 +758,7 @@ if ($acesso) {
                     alert("PDF Excluído !!");
 
                     # Registra log
-                    $atividade = "Excluiu o arquivo PDF do Bim!";
+                    $atividade = "Excluiu o arquivo PDF do Bim";
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);

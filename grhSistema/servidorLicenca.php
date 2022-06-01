@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -48,7 +49,7 @@ if ($acesso) {
     $idTpLicenca = soNumeros(get('idTpLicenca'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
+    if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
     } else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
@@ -599,22 +600,15 @@ if ($acesso) {
                 # Monta o arquivo
                 $arquivo = PASTA_BIM . "{$id}.pdf";
 
-                # Muda o botão se tem ou não algum bim já cadastrado
-                if (file_exists($arquivo)) {
-                    $imagem = new Imagem(PASTA_FIGURAS . 'trocar.png', null, 17, 17);
-                    $botaoUp = new Button();
-                    $botaoUp->set_imagem($imagem);
-                    $botaoUp->set_url("?fase=uploadBim&id={$id}");
-                    $botaoUp->set_title("Trocar o Bim cadastrado");
-                    #$botaoUp->set_confirma('Já existe um Bim cadastrado. Deseja mesmo substituí-lo?');
-                    $botaoUp->set_target("_blank");
-                    $objeto->set_botaoEditarExtra([$botaoUp]);
-                }
+                # Botão de Upload
+                $botao = new Button("Upload do PDF do Bim");
+                $botao->set_url("?fase=uploadBim&id={$id}");
+                $botao->set_title("Faz o Upload do PDF do Bim");
+                $botao->set_target("_blank");
+
+                $objeto->set_botaoEditarExtra([$botao]);
             }
         }
-
-
-
 
         ################################################################
 
@@ -649,21 +643,36 @@ if ($acesso) {
 
                 # Botão voltar
                 if (!file_exists(PASTA_BIM . "{$id}.pdf")) {
-                    botaoVoltar('?');
-
+                   br();
+                   
                     # Título
                     tituloTable("Upload Bim");
-                    
-                    # Define o link de voltar após o salvar
-                    $voltarsalvar = "?fase=listar";
-                } else {
-                    br();
-                    
-                    # Título
-                    tituloTable("Substituir o Bim Cadastrado");
-                    
+
                     # Define o link de voltar após o salvar
                     $voltarsalvar = "?fase=uploadTerminado";
+
+                    # do Log
+                    $atividade = "Fez o upload do Bim de uma licença médica";
+                } else {# Cria um menu
+                    # Monta o Menu
+                    $menu = new MenuBar();
+
+                    $botaoApaga = new Button("Apagar o Bim");
+                    $botaoApaga->set_url("?fase=apagaBim&id={$id}");
+                    $botaoApaga->set_title("Apaga o arquivo PDF do Bim cadastrado");
+                    $botaoApaga->set_class("button alert");
+                    $botaoApaga->set_confirma('Tem certeza que vc deseja apagar o documento PDF deste BIM?');
+                    $menu->add_link($botaoApaga, "right");
+                    $menu->show();
+
+                    # Título
+                    tituloTable("Substituir o Bim Cadastrado");
+
+                    # Define o link de voltar após o salvar
+                    $voltarsalvar = "?fase=uploadTerminado";
+
+                    # do Log
+                    $atividade = "Substituiu o arquivo PDF do Bim de uma licença médica";
                 }
 
                 # Limita a tela
@@ -711,8 +720,7 @@ if ($acesso) {
                         # Registra log
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
-                        $atividade = "Fez o upload de publicação de concurso";
-                        $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+                        $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8, $idServidorPesquisado);
 
                         # Volta para o menu
                         loadPage($voltarsalvar);
@@ -732,16 +740,39 @@ if ($acesso) {
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;
-                
-                case "uploadTerminado" :                
+
+            case "uploadTerminado" :
                 # Informa que o bim foi substituído
-                alert("Bim substituído !!");
-                                
+                alert("PDF Cadastrado !!");
+
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
                 break;
 
-            ##################################################################
+            ################################################################
+
+            case "apagaBim" :
+
+                # Apaga o arquivo
+                if (unlink(PASTA_BIM . "{$id}.pdf")) {
+                    alert("PDF Excluído !!");
+
+                    # Registra log
+                    $atividade = "Excluiu o arquivo PDF do Bim!";
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);
+
+                    # Fecha a janela
+                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                } else {
+                    alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                    # Fecha a janela
+                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                }
+
+                break;
         }
     }
     $page->terminaPagina();

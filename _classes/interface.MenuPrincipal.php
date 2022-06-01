@@ -344,10 +344,7 @@ class MenuPrincipal {
                 $painel2->fecha();
             }
         } else {
-            $sortudos[0] = "";
-            $sortudos[1] = "";
-            $sortudos[2] = "";
-            $sortudos[3] = "";
+            $sortudos = ["","","",""];
         }
 
         $painel = new Callout("primary");

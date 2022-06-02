@@ -32,7 +32,7 @@ class ListaServidores {
      */
     private $permiteEditar = true;
     private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
-    private $ordenacaoCombo = array();          # Array da combo de ordanação
+    private $ordenacaoCombo = array();          # Array da combo de ordenação
 
     /*
      *  Outros
@@ -85,7 +85,9 @@ class ListaServidores {
             array("6 asc", "por Admissão asc"),
             array("6 desc", "por Admissão desc"),
             array("tbsituacao.situacao asc", "por Situação asc"),
-            array("tbsituacao.situacao desc", "por Situação desc")
+            array("tbsituacao.situacao desc", "por Situação desc"),
+            array("tbservidor.dtDemissao asc", "por Saída asc"),
+            array("tbservidor.dtDemissao desc", "por Saída desc"),
         );
     }
 

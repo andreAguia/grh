@@ -172,8 +172,8 @@ if ($acesso) {
 
             # Situação
             $result = $pessoal->select('SELECT idsituacao, situacao
-                                              FROM tbsituacao                                
-                                          ORDER BY 1');
+                                          FROM tbsituacao                                
+                                      ORDER BY 1');
             array_unshift($result, array('*', '-- Todos --'));
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
@@ -188,10 +188,10 @@ if ($acesso) {
 
             # Cargos
             $result1 = $pessoal->select('SELECT tbcargo.idCargo, 
-                                                    concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
-                                              FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                                           LEFT JOIN tbarea USING (idArea)    
-                                      ORDER BY 2');
+                                                concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
+                                           FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                        LEFT JOIN tbarea USING (idArea)    
+                                       ORDER BY 2');
 
             # cargos por nivel
             $result2 = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
@@ -217,9 +217,9 @@ if ($acesso) {
 
             # Cargos em Comissão
             $result = $pessoal->select('SELECT tbtipocomissao.idTipoComissao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
-                                              FROM tbtipocomissao
-                                              WHERE ativo
-                                          ORDER BY tbtipocomissao.simbolo');
+                                          FROM tbtipocomissao
+                                         WHERE ativo
+                                      ORDER BY tbtipocomissao.simbolo');
             array_unshift($result, array('*', '-- Todos --'));
 
             $controle = new Input('parametroCargoComissao', 'combo', 'Cargo em Comissão:', 1);
@@ -253,8 +253,8 @@ if ($acesso) {
 
             # Perfil
             $result = $pessoal->select('SELECT idperfil, nome
-                                              FROM tbperfil                                
-                                          ORDER BY 1');
+                                          FROM tbperfil                                
+                                      ORDER BY 1');
             array_unshift($result, array('*', '-- Todos --'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);

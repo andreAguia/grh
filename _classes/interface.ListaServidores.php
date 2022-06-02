@@ -86,8 +86,8 @@ class ListaServidores {
             array("6 desc", "por Admissão desc"),
             array("tbsituacao.situacao asc", "por Situação asc"),
             array("tbsituacao.situacao desc", "por Situação desc"),
-            array("tbservidor.dtDemissao asc", "por Saída asc"),
-            array("tbservidor.dtDemissao desc", "por Saída desc"),
+            array("tbservidor.dtDemissao asc", "pela Data de Saída asc"),
+            array("tbservidor.dtDemissao desc", "pela Data de Saída desc"),
         );
     }
 

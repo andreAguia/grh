@@ -248,7 +248,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Perfil
@@ -277,7 +277,7 @@ if ($acesso) {
             $controle->set_valor($parametroOrdenacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
-            $controle->set_col(2);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # submit

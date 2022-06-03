@@ -42,12 +42,20 @@ class MenuPrincipal {
         # Área Central 
         $grid->abreColuna(12, 8, 5);
 
-        # Módulos      
-        $this->moduloSispatri();
+        # dia do Profissional de RH
+        if (date("m-d") == "06-03") {
+            $this->moduloDiaRh();
+        }
+
+        # Sispatri        
+        #$this->moduloSispatri();
+        # sistemas
         $this->moduloSistemas();
 
+        # Área Especial
         $this->moduloAreaEspecial();
 
+        # Links Externos
         $this->moduloLinksExternos();
 
         $grid->fechaColuna();
@@ -237,6 +245,35 @@ class MenuPrincipal {
     ######################################################################################################################
 
     /**
+     * Método moduloSispatri
+     */
+    private function moduloDiaRh() {
+
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo('Dia do Profissional de RH');
+        br();
+
+        $div = new Div('center');
+        $div->abre();
+
+        $figura = new Imagem(PASTA_FIGURAS . 'rh.jpg', 'Feliz Dia do Profissional de Recursos Humanos', '80%', '80%');
+        $figura->set_class('center');
+        $figura->show();
+
+        $div->fecha();
+
+        br();
+
+        p("Parabéns Servidor pelo Dia do<br/>Profissional de Recursos Humanos", "f20", "center");
+
+        $painel->fecha();
+    }
+
+    ######################################################################################################################
+
+    /**
      * Método moduloLegislacao
      * 
      * Exibe o menu de Legislação
@@ -288,10 +325,10 @@ class MenuPrincipal {
                 if (file_exists($arquivoDocumento)) {
                     # Caso seja PDF abre uma janela com o pdf
                     $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                }else{
+                } else {
                     # Caso seja um .doc, somente faz o download
                     $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
-                }                
+                }
             }
         }
 
@@ -344,7 +381,7 @@ class MenuPrincipal {
                 $painel2->fecha();
             }
         } else {
-            $sortudos = ["","","",""];
+            $sortudos = ["", "", "", ""];
         }
 
         $painel = new Callout("primary");
@@ -739,15 +776,18 @@ class MenuPrincipal {
             $menu->add_item($botao);
         }
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('MCF');
-        $botao->set_url("cadastroMcf.php?grh=1");
-        $botao->set_imagem(PASTA_FIGURAS . 'mcf.jpg', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de MCF');
-        $menu->add_item($botao);
+        # Controle de MCF
+        if (Verifica::acesso($this->idUsuario, [1, 14])) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('MCF');
+            $botao->set_url("cadastroMcf.php?grh=1");
+            $botao->set_imagem(PASTA_FIGURAS . 'mcf.jpg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de MCF');
+            $menu->add_item($botao);
+        }
 
         # Controle de pastas Digitalizadas
-        if (Verifica::acesso($this->idUsuario, 4)) {
+        if (Verifica::acesso($this->idUsuario, [1, 4])) {
             $botao = new BotaoGrafico();
             $botao->set_label('Pastas Digitalizadas');
             $botao->set_url('cadastroPasta.php?grh=1');

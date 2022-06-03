@@ -177,9 +177,9 @@ if ($acesso) {
         $arquivo = PASTA_MCF . "{$id}.pdf";
 
         # Botão de Upload
-        $botao = new Button("Upload do PDF do Mcf");
+        $botao = new Button("Arquivo PDF");
         $botao->set_url("?fase=uploadMcf&id={$id}");
-        $botao->set_title("Faz o Upload do PDF do Mcf");
+        $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
         $botao->set_target("_blank");
 
         $objeto->set_botaoEditarExtra([$botao]);
@@ -227,24 +227,24 @@ if ($acesso) {
                 br();
 
                 # Título
-                tituloTable("Upload MCF");
+                tituloTable("Upload do Arquivo PDF");
 
                 # do Log
-                $atividade = "Fez o upload do Bim de uma licença médica";
+                $atividade = "Fez o upload do arquivo PDF do MCF";
             } else {
                 # Monta o Menu
                 $menu = new MenuBar();
 
-                $botaoApaga = new Button("Apagar o MCF");
+                $botaoApaga = new Button("Excluir Arquivo PDF");
                 $botaoApaga->set_url("?fase=apagaMcf&id={$id}");
-                $botaoApaga->set_title("Apaga o arquivo PDF do MCF cadastrado");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                 $botaoApaga->set_class("button alert");
-                $botaoApaga->set_confirma('Tem certeza que vc deseja apagar o documento PDF deste MCF?');
+                $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
                 $menu->add_link($botaoApaga, "right");
                 $menu->show();
 
                 # Título
-                tituloTable("Substituir o MCF Cadastrado");
+                tituloTable("Substituir o Arquivo PDF Cadastrado");
 
                 # Define o link de voltar após o salvar
                 $voltarsalvar = "?fase=uploadTerminado";
@@ -293,7 +293,7 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8, $idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, "tbmcf", $id, 8);
 
                     # Fecha a janela aberta
                     loadPage("?fase=uploadTerminado");
@@ -329,13 +329,13 @@ if ($acesso) {
 
             # Apaga o arquivo
             if (unlink(PASTA_MCF . "{$id}.pdf")) {
-                alert("PDF Excluído !!");
+                alert("Arquivo Excluído !!");
 
                 # Registra log
-                $atividade = "Excluiu o arquivo PDF do Bim";
+                $atividade = "Excluiu o arquivo PDF do MCF";
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
-                $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);
+                $Objetolog->registraLog($idUsuario, $data, $atividade, "tbmcf", $id, 3);
 
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';

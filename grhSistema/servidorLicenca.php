@@ -601,9 +601,9 @@ if ($acesso) {
                 $arquivo = PASTA_BIM . "{$id}.pdf";
 
                 # Botão de Upload
-                $botao = new Button("Upload do PDF do Bim");
+                $botao = new Button("Arquivo PDF");
                 $botao->set_url("?fase=uploadBim&id={$id}");
-                $botao->set_title("Faz o Upload do PDF do Bim");
+                $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
                 $botao->set_target("_blank");
 
                 $objeto->set_botaoEditarExtra([$botao]);
@@ -655,7 +655,7 @@ if ($acesso) {
                     br();
 
                     # Título
-                    tituloTable("Upload Bim");
+                    tituloTable("Upload do Arquivo PDF (Bim)");
 
                     # do Log
                     $atividade = "Fez o upload do Bim de uma licença médica";
@@ -663,16 +663,16 @@ if ($acesso) {
                     # Monta o Menu
                     $menu = new MenuBar();
 
-                    $botaoApaga = new Button("Apagar o Bim");
+                    $botaoApaga = new Button("Excluir o Arquivo PDF");
                     $botaoApaga->set_url("?fase=apagaBim&id={$id}");
-                    $botaoApaga->set_title("Apaga o arquivo PDF do Bim cadastrado");
+                    $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                     $botaoApaga->set_class("button alert");
-                    $botaoApaga->set_confirma('Tem certeza que vc deseja apagar o documento PDF deste BIM?');
+                    $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
                     $menu->add_link($botaoApaga, "right");
                     $menu->show();
 
                     # Título
-                    tituloTable("Substituir o Bim Cadastrado");
+                    tituloTable("Substituir o Arquivo PDF Cadastrado");
 
                     # Define o link de voltar após o salvar
                     $voltarsalvar = "?fase=uploadTerminado";
@@ -757,7 +757,7 @@ if ($acesso) {
 
                 # Apaga o arquivo
                 if (unlink(PASTA_BIM . "{$id}.pdf")) {
-                    alert("PDF Excluído !!");
+                    alert("Arquivo Excluído !!");
 
                     # Registra log
                     $atividade = "Excluiu o arquivo PDF do Bim";

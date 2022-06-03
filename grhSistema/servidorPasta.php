@@ -96,7 +96,7 @@ if ($acesso) {
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -180,7 +180,7 @@ if ($acesso) {
             $linkBotao1->set_accessKey('V');
             $menu->add_link($linkBotao1, "left");
 
-            if (Verifica::acesso($idUsuario, 4)) {
+            if (Verifica::acesso($idUsuario, [1, 4])) {
 
                 # Editar
                 $linkBotao5 = new Link("Editar", "?fase=listar");
@@ -303,7 +303,11 @@ if ($acesso) {
             # Dados do Servidor
             get_DadosServidor($idServidorPesquisado);
 
-            tituloTable("Upload de Documento para Pasta Funcional");
+            # Exibe o nome do processo/documento para informar na tela de upload
+            $ClassePasta = new PastaFuncional();
+            $dadosPasta = $ClassePasta->get_dados($id);
+
+            tituloTable("Upload de Documento para Pasta Funcional<br/>".$dadosPasta["descricao"]);
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
@@ -334,15 +338,10 @@ if ($acesso) {
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-
-            # Exibe o nome do processo/documento para informar na tela de upload
-            $ClassePasta = new PastaFuncional();
-            $dadosPasta = $ClassePasta->get_dados($id);
-
+            
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
             br();
             p($texto, "f14", "center");
-            p($dadosPasta["descricao"], "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
                 $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
@@ -365,6 +364,7 @@ if ($acesso) {
             # Informa caso exista um arquivo com o mesmo nome
             $arquivoDocumento = $pasta . $id . ".pdf";
             if (file_exists($arquivoDocumento)) {
+                br();
                 p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!", "puploadMensagem");
                 br();
             }

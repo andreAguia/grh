@@ -8,35 +8,37 @@ class Alertas {
      * @author André Águia (Alat) - alataguia@gmail.com
      */
     private $itens = array(
-        array('Licenças', 'licencas'),
-        array('Triênio', 'trienio'),
-        array('Auxílio Creche', 'creche'),
-        array('Motorista', 'motorista'),
         array('Aposentadoria', 'aposentadoria'),
+        array('Auxílio Creche', 'creche'),
+        array('Benefícios', 'beneficios'),
         array('Cadastro Geral', 'cadastro'),
-        array('Perfil', 'perfil'),
-        array('Concurso', 'concurso'),
         array('Cargo em Comissão', 'comissao'),
+        array('Concurso', 'concurso'),
         array('Cedidos', 'cedidos'),
         array('Férias', 'ferias'),
-        array('TRE', 'tre'),
+        array('Licenças', 'licencas'),
+        array('Motorista', 'motorista'),
+        array('Perfil', 'perfil'),
         array('Progressão', 'progressao'),
-        array('Benefícios', 'beneficios')
+        array('TRE', 'tre'),
+        array('Triênio', 'trienio'),
     );
 
     ######################################################################################################################    
 
     public function menu($fase) {
 
-        # Ordena as categorias
-
-        function cmp($a, $b) {
-            # Função específica que compara se $a é maior que $b
-            return $a[0] > $b[0];
-        }
-
-        // Ordena
-        usort($this->itens, 'cmp');
+//        # Ordena as categorias
+//        function cmp($a, $b) {
+//            # Função específica que compara se $a é maior que $b
+//            return $a[0] > $b[0];
+//        }
+//
+//        // Ordena
+//        usort($this->itens, 'cmp');
+//        
+//        Estava dando deprecated na função usort
+        
 
         $menu = new Menu();
         $menu->add_item('titulo', 'Categorias');

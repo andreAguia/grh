@@ -641,19 +641,25 @@ if ($acesso) {
                 $grid = new Grid("center");
                 $grid->abreColuna(12);
 
+                # Pasta onde será guardado o arquivo
+                $pasta = PASTA_BIM;
+
+                # Nome da rotina de upload
+                $rotinaUpload = "?fase=uploadBim&id={$id}";
+
+                # Extensões possíveis
+                $extensoes = ["pdf"];
+
                 # Botão voltar
-                if (!file_exists(PASTA_BIM . "{$id}.pdf")) {
-                   br();
-                   
+                if (!file_exists("{$pasta}{$id}.pdf")) {
+                    br();
+
                     # Título
                     tituloTable("Upload Bim");
 
-                    # Define o link de voltar após o salvar
-                    $voltarsalvar = "?fase=uploadTerminado";
-
                     # do Log
                     $atividade = "Fez o upload do Bim de uma licença médica";
-                } else {# Cria um menu
+                } else {
                     # Monta o Menu
                     $menu = new MenuBar();
 
@@ -675,6 +681,7 @@ if ($acesso) {
                     $atividade = "Substituiu o arquivo PDF do Bim de uma licença médica";
                 }
 
+                #####
                 # Limita a tela
                 $grid->fechaColuna();
                 $grid->abreColuna(6);
@@ -686,16 +693,10 @@ if ($acesso) {
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-                # Pasta onde será guardado o arquivo
-                $pasta = PASTA_BIM;
-
                 # Se não existe o programa cria
                 if (!file_exists($pasta) || !is_dir($pasta)) {
                     mkdir($pasta, 0755);
                 }
-
-                # Extensões possíveis
-                $extensoes = array("pdf");
 
                 # Pega os valores do php.ini
                 $postMax = limpa_numero(ini_get('post_max_size'));
@@ -722,9 +723,10 @@ if ($acesso) {
                         $data = date("Y-m-d H:i:s");
                         $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8, $idServidorPesquisado);
 
-                        # Volta para o menu
-                        loadPage($voltarsalvar);
+                        # Fecha a janela aberta
+                        loadPage("?fase=uploadTerminado");
                     } else {
+                        # volta a tela de upload
                         loadPage("?fase=uploadBim&id=$id");
                     }
                 }
@@ -773,6 +775,8 @@ if ($acesso) {
                 }
 
                 break;
+
+            ################################################################
         }
     }
     $page->terminaPagina();

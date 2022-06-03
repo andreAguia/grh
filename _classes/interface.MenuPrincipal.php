@@ -266,7 +266,7 @@ class MenuPrincipal {
 
         br();
 
-        p("Parabéns Servidor pelo Dia do<br/>Profissional de Recursos Humanos", "f20", "center");
+        p("Parabéns Servidor pelo Dia do<br/>Profissional de Recursos Humanos", "f16", "center");
 
         $painel->fecha();
     }

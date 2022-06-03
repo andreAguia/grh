@@ -81,12 +81,11 @@ if ($acesso) {
                                       mes,
                                       obs,
                                       idMcf,
-                                      idMcf,
                                       idMcf
                                  FROM tbmcf
                                 WHERE ano LIKE "%' . $parametro . '%"
                                    OR obs LIKE "%' . $parametro . '%" 
-                             ORDER BY ano desc,mes');
+                             ORDER BY ano desc,mes desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT ano,
@@ -94,7 +93,7 @@ if ($acesso) {
                                      obs
                                 FROM tbmcf
                                WHERE idMcf = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -107,22 +106,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Ano", "Mês", "Obs", " Ver", "Upload"));
-    $objeto->set_width(array(5, 10, 10, 40, 10, 10));
-    $objeto->set_align(array("center", "center", "center", "left"));
-    $objeto->set_funcao(array(null, null, "get_nomeMes"));
+    $objeto->set_label(["Id", "Ano", "Mês", "Obs", " Ver"]);
+    $objeto->set_width([5, 10, 10, 65, 5]);
+    $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_funcao([null, null, "get_nomeMes"]);
 
-    $objeto->set_classe(array(null, null, null, null, "Pessoal"));
-    $objeto->set_metodo(array(null, null, null, null, "exibeMcf"));
-
-    # Botão de Upload
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    $botao->set_url('?fase=uploadMcf&id=');
-    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, $botao));
+    $objeto->set_classe([null, null, null, null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "exibeMcf"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -165,7 +155,23 @@ if ($acesso) {
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
 
+    # Botão de Upload 
+    if (!empty($id)) {
+
+        # Monta o arquivo
+        $arquivo = PASTA_MCF . "{$id}.pdf";
+
+        # Botão de Upload
+        $botao = new Button("Upload do PDF do Mcf");
+        $botao->set_url("?fase=uploadMcf&id={$id}");
+        $botao->set_title("Faz o Upload do PDF do Mcf");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
+
     ################################################################
+
     switch ($fase) {
         case "" :
         case "listar" :
@@ -173,40 +179,81 @@ if ($acesso) {
             break;
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;
 
-        ##################################################################
+        case "excluir" :
+
+            # Verifica se tem PDF e apaga o PDF
+            if (file_exists(PASTA_MCF . "{$id}.pdf")) {
+                unlink(PASTA_MCF . "{$id}.pdf");
+            }
+            $objeto->$fase($id);
+            break;
+
+        ################################################################
 
         case "uploadMcf" :
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
+            # Pasta onde será guardado o arquivo
+            $pasta = PASTA_MCF;
+
+            # Nome da rotina de upload
+            $rotinaUpload = "?fase=uploadMcf&id={$id}";
+
+            # Extensões possíveis
+            $extensoes = ["pdf"];
+
             # Botão voltar
-            botaoVoltar('?fase=listar');
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+                br();
 
-            tituloTable("Upload de MCF");
+                # Título
+                tituloTable("Upload MCF");
 
+                # do Log
+                $atividade = "Fez o upload do Bim de uma licença médica";
+            } else {
+                # Monta o Menu
+                $menu = new MenuBar();
+
+                $botaoApaga = new Button("Apagar o MCF");
+                $botaoApaga->set_url("?fase=apagaMcf&id={$id}");
+                $botaoApaga->set_title("Apaga o arquivo PDF do MCF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma('Tem certeza que vc deseja apagar o documento PDF deste MCF?');
+                $menu->add_link($botaoApaga, "right");
+                $menu->show();
+
+                # Título
+                tituloTable("Substituir o MCF Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo PDF do MCF";
+            }
+
+            #####
+            # Limita a tela
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
+            # Monta o formulário
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-            $pasta = PASTA_MCF;
-
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);
             }
-
-            # Extensões possíveis
-            $extensoes = array("pdf");
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));
@@ -214,14 +261,12 @@ if ($acesso) {
             $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
-
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
 
-            br(2);
+            br();
             p($texto, "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
@@ -233,20 +278,21 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload do mcf";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8, $idServidorPesquisado);
 
-                    # Volta para o menu
-                    loadPage("?fase=listar");
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
                 } else {
-                    loadPage("?fase=uploadMcf&id=.$id");
+                    # volta a tela de upload
+                    loadPage("?fase=uploadBim&id=$id");
                 }
             }
-            
+
             # Informa caso exista um arquivo com o mesmo nome
-            $arquivoDocumento = $pasta.$id.".pdf";
+            $arquivoDocumento = $pasta . $id . ".pdf";
             if (file_exists($arquivoDocumento)) {
-                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!","puploadMensagem");
+                p("Já existe um documento para este registro!!<br/>"
+                        . "O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
 
@@ -254,7 +300,40 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ##################################################################
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("PDF Cadastrado !!");
+
+            # Fecha a janela
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            break;
+
+        ################################################################
+
+        case "apagaMcf" :
+
+            # Apaga o arquivo
+            if (unlink(PASTA_MCF . "{$id}.pdf")) {
+                alert("PDF Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo PDF do Bim";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            }
+
+            break;
+
+        ################################################################
     }
 
     $page->terminaPagina();

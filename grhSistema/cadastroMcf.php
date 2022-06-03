@@ -125,7 +125,20 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-
+    
+    # Pega o ultimo mês cadastrado
+    $mcf = new Mcf();
+    $ultimoMes = $mcf->getUltimoMesCadastrado();
+    $ultimoAno = $mcf->getUltimoAnoCadastrado();
+    
+    # Acerta o mês
+    if($ultimoMes < "12"){
+        $ultimoMes++;
+    }else{
+        $ultimoMes = "1";
+        $ultimoAno++;
+    }            
+    
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -135,6 +148,7 @@ if ($acesso) {
             'array' => $ano,
             'required' => true,
             'autofocus' => true,
+            'padrao' => $ultimoAno,
             'col' => 3,
             'size' => 30),
         array('linha' => 1,
@@ -143,6 +157,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $mes,
             'required' => true,
+            'padrao' => $ultimoMes,
             'col' => 3,
             'size' => 30),
         array('linha' => 1,

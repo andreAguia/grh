@@ -44,24 +44,24 @@ if ($acesso) {
 
         # Exibe os servidores ativos que Não entregaram o sispatri
         if ($parametroAfastamento == "Todos") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivos();
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivos(false);
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
         }
 
         if ($parametroAfastamento == "Férias") {            
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosFerias();
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosFerias(false);
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Férias");
         }
 
         if ($parametroAfastamento == "Licença Prêmio") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio();
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio(false);
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Licença Prêmio");
         }
 
         if ($parametroAfastamento == "Licença Médica") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica();
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica(false);
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Licença Médica");
         }
@@ -73,7 +73,7 @@ if ($acesso) {
         $relatorio->set_tituloLinha2($parametroLotacao);
     }
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situação'));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situação']);
     $relatorio->set_align(array("center", "left", "left", "left"));
     $relatorio->set_classe(array(null, null, "pessoal", null, "pessoal"));
     $relatorio->set_metodo(array(null, null, "get_Cargo", null, "get_situacao"));

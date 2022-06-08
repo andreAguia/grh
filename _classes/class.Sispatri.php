@@ -9,6 +9,7 @@ class Sispatri {
      */
     private $lotacao = null;
     private $situacao = null;
+    private $exibeEmail = true;
 
 ###########################################################
 
@@ -73,14 +74,20 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivos() {
+    public function get_servidoresNaoEntregaramAtivos($exibeEmail = true) {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+        
+        # Exibe o e-mail ou não
+        if ($exibeEmail) {
+            $select .= ' tbpessoa.emailUenf,';
+        }
+        
+        $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -123,14 +130,20 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosFerias() {
+    public function get_servidoresNaoEntregaramAtivosFerias($exibeEmail = true) {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+        
+        # Exibe o e-mail ou não
+        if ($exibeEmail) {
+            $select .= ' tbpessoa.emailUenf,';
+        }
+        
+        $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -176,14 +189,20 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosLicPremio() {
+    public function get_servidoresNaoEntregaramAtivosLicPremio($exibeEmail = true) {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+        
+        # Exibe o e-mail ou não
+        if ($exibeEmail) {
+            $select .= ' tbpessoa.emailUenf,';
+        }
+        
+        $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -229,14 +248,20 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosLicMedica() {
+    public function get_servidoresNaoEntregaramAtivosLicMedica($exibeEmail = true) {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+        
+        # Exibe o e-mail ou não
+        if ($exibeEmail) {
+            $select .= ' tbpessoa.emailUenf,';
+        }
+        
+        $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -283,14 +308,20 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosTrabalhando() {
+    public function get_servidoresNaoEntregaramAtivosTrabalhando($exibeEmail = true) {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                          tbpessoa.nome,
                          tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+        
+        # Exibe o e-mail ou não
+        if ($exibeEmail) {
+            $select .= ' tbpessoa.emailUenf,';
+        }
+        
+        $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -576,7 +607,7 @@ class Sispatri {
 
         $servidores = $pessoal->select($select);
         $total = array_sum(array_column($servidores, "jj"));
-        
+
         array_push($servidores, array('Total', $total));
 
         # Exemplo de tabela simples
@@ -622,7 +653,7 @@ class Sispatri {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-        
+
         $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
                                               FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -646,7 +677,7 @@ class Sispatri {
 
         $servidores = $pessoal->select($select);
         $total = array_sum(array_column($servidores, "jj"));
-        
+
         array_push($servidores, array('Total', $total));
 
         # Exemplo de tabela simples
@@ -718,12 +749,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -739,12 +770,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -760,12 +791,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -781,12 +812,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -802,12 +833,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -853,25 +884,24 @@ class Sispatri {
         $pessoal->gravar(['textoCi'], [$textoCi], 1);
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método exibeDataUltimaImportacao
      * 
      * Método exibe a data da última importação
      */
-    
     public function exibeDataUltimaImportacao() {
-        
+
         # Começa o painel
         $painel = new Callout("warning");
         $painel->abre();
-        
-        $intra = new Intra();        
+
+        $intra = new Intra();
         p("Última Importação:", "pdataImportacaoSispatriTexto");
         p(trataNulo($intra->get_variavel('dataUltimaImportacao')), "pdataImportacaoSispatriValor");
-        p(trataNulo("Feita pelo usuário: ".$intra->get_variavel('usuarioUltimaImportacao')), "pdataImportacaoSispatriTexto");
-        
+        p(trataNulo("Feita pelo usuário: " . $intra->get_variavel('usuarioUltimaImportacao')), "pdataImportacaoSispatriTexto");
+
         $painel->fecha();
     }
 

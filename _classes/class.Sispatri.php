@@ -9,7 +9,6 @@ class Sispatri {
      */
     private $lotacao = null;
     private $situacao = null;
-    private $exibeEmail = true;
 
 ###########################################################
 
@@ -81,12 +80,12 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
-        
+
         # Exibe o e-mail ou não
         if ($exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
-        
+
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -137,12 +136,12 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
-        
+
         # Exibe o e-mail ou não
         if ($exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
-        
+
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -196,12 +195,12 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
-        
+
         # Exibe o e-mail ou não
         if ($exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
-        
+
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -255,12 +254,12 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
-        
+
         # Exibe o e-mail ou não
         if ($exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
-        
+
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -268,7 +267,8 @@ class Sispatri {
                                          JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
-                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
+                     AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
+                     AND (CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1) OR alta <> 1)
                      AND (idTpLicenca = 1 OR idTpLicenca = 30)
                      ';
         # Lotacao
@@ -315,12 +315,12 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
-        
+
         # Exibe o e-mail ou não
         if ($exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
-        
+
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -903,6 +903,230 @@ class Sispatri {
         p(trataNulo("Feita pelo usuário: " . $intra->get_variavel('usuarioUltimaImportacao')), "pdataImportacaoSispatriTexto");
 
         $painel->fecha();
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeDataUltimaImportacao
+     * 
+     * Método exibe a data da última importação
+     */
+    public function exibeEmails() {
+        # Pega os dados
+        $select = 'SELECT tbpessoa.emailUenf
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbservidor.situacao = 1';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY tbpessoa.nome';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        foreach ($retorno as $item) {
+            if (!empty($item[0])) {
+                echo $item[0] . ", ";
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeDataUltimaImportacao
+     * 
+     * Método exibe a data da última importação
+     */
+    public function exibeEmailsFerias() {
+        # Pega os dados
+        $select = 'SELECT tbpessoa.emailUenf
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY tbpessoa.nome';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        foreach ($retorno as $item) {
+            if (!empty($item[0])) {
+                echo $item[0] . ", ";
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeDataUltimaImportacao
+     * 
+     * Método exibe a data da última importação
+     */
+    public function exibeEmailsLicMedica() {
+        # Pega os dados
+        $select = 'SELECT tbpessoa.emailUenf
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
+                     AND (CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1) OR alta <> 1)
+                     AND (idTpLicenca = 1 OR idTpLicenca = 30)';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY tbpessoa.nome';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        foreach ($retorno as $item) {
+            if (!empty($item[0])) {
+                echo $item[0] . ", ";
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeDataUltimaImportacao
+     * 
+     * Método exibe a data da última importação
+     */
+    public function exibeEmailsLicPremio() {
+        # Pega os dados
+        $select = 'SELECT tbpessoa.emailUenf
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tblicencapremio ON (tbservidor.idServidor = tblicencapremio.idServidor)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.situacao = 1
+                     AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
+                                              FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                               AND tbservidor.situacao = 1';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ') ORDER BY tbpessoa.nome';
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        foreach ($retorno as $item) {
+            if (!empty($item[0])) {
+                echo $item[0] . ", ";
+            }
+        }
     }
 
     ###########################################################

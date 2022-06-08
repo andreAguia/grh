@@ -35,7 +35,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros    
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
     $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
@@ -69,7 +69,7 @@ if ($acesso) {
     $menu1 = new MenuBar();
 
     # Voltar
-    if ($fase <> "ci") {
+    if ($fase <> "ci" AND $fase <> "email") {
         if ($fase == "importar" OR $fase == "regras" OR $fase == "config") {
             $botaoVoltar = new Link("Voltar", "?");
         } else {
@@ -88,12 +88,22 @@ if ($acesso) {
             $botaoImp->set_accessKey('I');
             $menu1->add_link($botaoImp, "right");
 
-            if ($parametroSituacao == "Não Entregaram" AND $parametroLotacao <> "Todos") {
-                # ci
-                $botaoci = new Link("CI", "?fase=ci");
+            if ($parametroSituacao == "Não Entregaram") {
+
+                if ($parametroLotacao <> "Todos") {
+                    # ci
+                    $botaoci = new Link("CI", "?fase=ci");
+                    $botaoci->set_target("_blank");
+                    $botaoci->set_class('button');
+                    $botaoci->set_title('CI dos servidores que NÃO entregaram o Sispatri');
+                    $menu1->add_link($botaoci, "right");
+                }
+
+                # e-mail
+                $botaoci = new Link("E-mail", "?fase=email");
                 $botaoci->set_target("_blank");
                 $botaoci->set_class('button');
-                $botaoci->set_title('CI dos servidores que NÃO entregaram o Sispatri');
+                $botaoci->set_title('relação de e-mails dos servidores desta listagem');
                 $menu1->add_link($botaoci, "right");
             }
 
@@ -112,10 +122,18 @@ if ($acesso) {
         # Titulo
         titulo("Área do Sispatri");
         br();
-    } else {
+    }
+
+    if ($fase == "ci") {
         # Titulo
         br();
         titulo("CI dos Servidores que NÃO Entregaram a Declaração do Sispatri");
+        br();
+    }
+
+    if ($fase == "email") {
+        br();
+        titulo("E-mails dos Servidores");
         br();
     }
 
@@ -178,6 +196,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
+            $controle->set_autofocus(true);
             if ($parametroSituacao == "Entregaram") {
                 $controle->set_col(9);
             } else {
@@ -348,6 +367,26 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
+            break;
+
+        ################################################################
+
+        case "email" :
+            if ($parametroAfastamento == "Todos") {
+                $sispatri->exibeEmails();
+            }
+            
+            if ($parametroAfastamento == "Férias") {    
+                $sispatri->exibeEmailsFerias();
+            }
+            
+            if ($parametroAfastamento == "Licença Prêmio") {
+                $sispatri->exibeEmailsLicPremio();
+            }
+            
+            if ($parametroAfastamento == "Licença Médica") {
+                $sispatri->exibeEmailsLicMedica();
+            }
             break;
 
         ################################################################

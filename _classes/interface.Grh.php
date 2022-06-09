@@ -817,7 +817,7 @@ class Grh {
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
         $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "pessoal", null, "pessoal", "pessoal"]);
-        $relatorio->set_metodo([null, null, null, "get_cargoCompleto", null, "get_Lotacao", "get_Situacao"]);
+        $relatorio->set_metodo([null, null, null, "get_cargo", null, "get_Lotacao", "get_Situacao"]);
         $relatorio->set_align(['center']);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);

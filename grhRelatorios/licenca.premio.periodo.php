@@ -67,7 +67,6 @@ if ($acesso) {
             'title' => 'Insira a data inicial',
             'col' => 3,
             'padrao' => $relatorioDtInicial,
-            'onChange' => 'formPadrao.submit();',
             'linha' => 1),
         array('nome' => 'dtFinal',
             'label' => 'Término:',
@@ -76,9 +75,17 @@ if ($acesso) {
             'title' => 'Insira a data final',
             'col' => 3,
             'padrao' => $relatorioDtfinal,
-            'onChange' => 'formPadrao.submit();',
+            'linha' => 1),
+        array('nome' => 'submit',
+            'valor' => 'Atualiza',
+            'label' => '-',
+            'size' => 4,
+            'col' => 3,
+            'tipo' => 'submit',
+            'title' => 'Atualiza a tabela',
             'linha' => 1),
     ));
+
 
     $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');

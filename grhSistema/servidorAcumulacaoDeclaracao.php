@@ -26,7 +26,7 @@ if ($acesso) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Controle de entrega de declaração de acumulações de cargos públicos";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
     # Verifica a fase do programa
@@ -34,7 +34,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
 
@@ -62,10 +62,10 @@ if ($acesso) {
     } else {
         $voltar = $origem;
     }
-    
+
     # botão de voltar da lista
     $objeto->set_voltarLista($voltar);
-    
+
     # select da lista
     $objeto->set_selectLista("SELECT anoReferencia,
                        dtEntrega, 
@@ -193,6 +193,7 @@ if ($acesso) {
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+    $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     ################################################################
     switch ($fase) {

@@ -57,6 +57,7 @@ if ($acesso) {
     $relatorio->set_label(['IdFuncional', 'Nome', 'Data Inicial', 'Dias', 'Data Final', 'Período', 'Publicação']);
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
 
     $relatorio->set_formCampos(array(

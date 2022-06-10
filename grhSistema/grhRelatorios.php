@@ -94,6 +94,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
+            $menu->add_item('linkAjax','Licença Prêmio','?fase=licencaPremio','','','divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Outros', '?fase=outros', '', '', 'divMenuRelatorioGrh');
@@ -416,6 +417,16 @@ if ($acesso) {
 
          * 
          */
+         ######################################
+
+          case "licencaPremio";
+          $menu = new Menu();
+          $menu->add_item('titulo','Licença Prêmio');
+          $menu->add_item('linkWindow','Relatório de Licença Prêmio Fruídas - Anual','../grhRelatorios/licenca.premio.anual.php');
+          $menu->add_item('linkWindow','Relatório de Licença Prêmio Fruídas - Período','../grhRelatorios/licenca.premio.periodo.php');
+          $menu->show();
+          break;
+          
         ######################################
 
         case "lotacao";

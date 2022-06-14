@@ -233,12 +233,7 @@ if ($acesso) {
 
                 # Cria um menu
                 $menu1 = new MenuBar();
-
-//                # Relatório
-//                $botaoVoltar = new Link("Imprimir", "?fase=imprimir");
-//                $botaoVoltar->set_class('button');
-//                $botaoVoltar->set_title('Imprimir a tabela do plano');
-//                $menu1->add_link($botaoVoltar, "right");
+                
                 # Editar
                 $botaoVoltar = new Link("Editar", "cadastroTabelaSalarial.php");
                 $botaoVoltar->set_class('button');
@@ -251,7 +246,7 @@ if ($acesso) {
             }
 
             $plano = new PlanoCargos();
-            $plano->exibeTabela($id, true);
+            $plano->exibeTabela($id, false);
 
             # guarda na sessio o plano caso deseje editar
             set_session('parametroPlano', $id);

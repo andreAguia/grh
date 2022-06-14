@@ -36,9 +36,11 @@ if ($acesso) {
 
     # Pega os parâmetros  
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroAno', $parametroAno);
 
     # Começa uma nova página
     $page = new Page();
@@ -84,10 +86,37 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel, "right");
+
             $menu1->show();
 
             # Formulário de Pesquisa
             $form = new Form('?');
+
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anoRef = arrayPreenche($anoInicial, $anoAtual + 2, "d");
+            array_unshift($anoRef, array("*", 'Todos'));
+
+            $controle = new Input('parametroAno', 'combo', 'Ano Referência:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por ano de referência');
+            $controle->set_array($anoRef);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
 
             # Lotação    
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -106,16 +135,19 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
-            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             $form->show();
 
             ##############
-            # Pega os dados
+            # Monta o select
+            if ($parametroAno <> "*") {
+                $select = "(SELECT tbservidor.idfuncional, ";
+            } else {
+                $select = "SELECT tbservidor.idfuncional, ";
+            }
 
-            $select = "SELECT tbservidor.idfuncional,
-                              tbservidor.idServidor,
+            $select .= "      tbservidor.idServidor,
                               tbservidor.idServidor,
                               CASE tipo
                                     WHEN 1 THEN 'Estágio' 
@@ -124,7 +156,8 @@ if ($acesso) {
                                referencia,
                                CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
                                idAvaliacao,
-                               tbservidor.idServidor
+                               tbservidor.idServidor,
+                               tbpessoa.nome
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbavaliacao USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
@@ -141,13 +174,70 @@ if ($acesso) {
                 }
             }
 
-            $select .= "ORDER BY tbpessoa.nome, tbavaliacao.dtPeriodo1 DESC";
+            # Quando se informa o ano de referência
+            if ($parametroAno <> "*") {
+                # Filtra pelo ano de referência
+                $select .= " AND referencia = '{$parametroAno}'";
+
+                # Informa os servidores que não tem cadastrado esse ano específico
+                $select .= ") UNION (
+                    SELECT tbservidor.idfuncional,
+                           tbservidor.idServidor,
+                           tbservidor.idServidor,
+                           '---',
+                           '---',
+                           '---',
+                           '',
+                           tbservidor.idServidor,
+                           tbpessoa.nome
+                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                      WHERE situacao = 1
+                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "*") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                # Retirando os que tem
+                $select .= " AND idServidor NOT IN (";
+
+                $select .= "SELECT tbservidor.idServidor
+                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbavaliacao USING (idServidor)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                              WHERE situacao = 1
+                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "*") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                $select .= " AND referencia = '{$parametroAno}'))";
+            }
+
+            if ($parametroAno <> "*") {
+                $select .= " ORDER BY 9";
+            } else {
+                $select .= " ORDER BY 9, 7 DESC";
+            }
 
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo('Controle de Avaliação Funcional');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["IdFuncional", "Servidor", "Processo", "Tipo", "Referencia", "Período", "Obs"]);
             #$tabela->set_width([10, 40, 40]);
             $tabela->set_conteudo($result);
@@ -155,6 +245,7 @@ if ($acesso) {
             $tabela->set_classe([null, "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
             $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeProcesso", null, null, null, "exibeObs"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
+
             $tabela->set_rowspan([0, 1, 2]);
             $tabela->set_grupoCorColuna(1);
 
@@ -186,21 +277,64 @@ if ($acesso) {
         # Relatório
         case "relatorio" :
 
-            if ($parametroVacinado == "Sim") {
+            # Monta o select
+            if ($parametroAno <> "*") {
+                $select = "(SELECT tbservidor.idfuncional, ";
+            } else {
+                $select = "SELECT tbservidor.idfuncional, ";
+            }
 
-                $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
-                      tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+            $select .= "      tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              CASE tipo
+                                    WHEN 1 THEN 'Estágio' 
+                                    WHEN 2 THEN 'Anual'
+                               END,
+                               referencia,
+                               CONCAT(DATE_FORMAT(dtPeriodo1,'%d/%m/%Y'),' - ',DATE_FORMAT(dtPeriodo2,'%d/%m/%Y')),
+                               idAvaliacao,
+                               tbservidor.idServidor,
+                               tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbavaliacao USING (idServidor)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "*") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            # Quando se informa o ano de referência
+            if ($parametroAno <> "*") {
+                # Filtra pelo ano de referência
+                $select .= " AND referencia = '{$parametroAno}'";
+
+                # Informa os servidores que não tem cadastrado esse ano específico
+                $select .= ") UNION (
+                    SELECT tbservidor.idfuncional,
+                           tbservidor.idServidor,
+                           tbservidor.idServidor,
+                           '---',
+                           '---',
+                           '---',
+                           '',
+                           tbservidor.idServidor,
+                           tbpessoa.nome
+                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                      WHERE situacao = 1
+                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
-                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if ($parametroLotacao <> "*") {  // senão verifica o da classe
                     if (is_numeric($parametroLotacao)) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
@@ -208,46 +342,19 @@ if ($acesso) {
                     }
                 }
 
-                $select .= " AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina)
-                ORDER BY lotacao, tbpessoa.nome";
+                # Retirando os que tem
+                $select .= " AND idServidor NOT IN (";
 
-                $result = $pessoal->select($select);
-
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Servidores Vacinados');
-                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Vacinas"]);
-                $relatorio->set_width([10, 30, 30, 0, 30]);
-                $relatorio->set_align(["center", "left", "left", "left", "left"]);
-
-                $relatorio->set_classe([null, null, "pessoal", null, "Vacina"]);
-                $relatorio->set_metodo([null, null, "get_cargoSimples", null, "exibeVacinas"]);
-
-                $relatorio->set_conteudo($result);
-                $relatorio->set_numGrupo(3);
-                $relatorio->set_bordaInterna(true);
-                $relatorio->show();
-            }
-
-            ######
-
-            /*
-             * Não Vacinados
-             */
-
-            if ($parametroVacinado == "Não") {
-
-                $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
-                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                $select .= "SELECT tbservidor.idServidor
+                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbavaliacao USING (idServidor)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                              WHERE situacao = 1
+                                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
-                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if ($parametroLotacao <> "*") {
                     if (is_numeric($parametroLotacao)) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
@@ -255,72 +362,44 @@ if ($acesso) {
                     }
                 }
 
-                $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbvacina)
-                ORDER BY lotacao, tbpessoa.nome";
-
-                $result = $pessoal->select($select);
-
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Servidores Não Vacinados');
-                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação"]);
-                $relatorio->set_width([10, 45, 45, 0]);
-                $relatorio->set_align(["center", "left", "left"]);
-
-                $relatorio->set_classe([null, null, "pessoal"]);
-                $relatorio->set_metodo([null, null, "get_cargoSimples"]);
-
-                $relatorio->set_conteudo($result);
-                $relatorio->set_numGrupo(3);
-                $relatorio->show();
+                $select .= " AND referencia = '{$parametroAno}'))";
             }
 
-            ######
+            if ($parametroAno <> "*") {
+                $select .= " ORDER BY 9";
+            } else {
+                $select .= " ORDER BY 9, 7 DESC";
+            }
 
-            /*
-             * Todos
-             */
+            $result = $pessoal->select($select);
 
-            if ($parametroVacinado == "Todos") {
+            $relatorio = new Relatorio();
+            $relatorio->set_conteudo($result);
+            $relatorio->set_titulo('Relatório de Avaliações');
 
-                $select = "SELECT tbservidor.idfuncional,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
-                      tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-
-                # Verifica se tem filtro por lotação
-                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                    if (is_numeric($parametroLotacao)) {
-                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                    } else { # senão é uma diretoria genérica
-                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                    }
+            # Informa a lotação
+            if ($parametroLotacao <> "*") {
+                if (is_numeric($parametroLotacao)) {
+                    $relatorio->set_subtitulo($pessoal->get_nomeLotacao($parametroLotacao));
+                } else {
+                    $relatorio->set_subtitulo($parametroLotacao);
                 }
-
-                $select .= " ORDER BY lotacao, tbpessoa.nome";
-
-                $result = $pessoal->select($select);
-
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo('Relatório de Vacinação dos Servidores');
-                $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Vacinas"]);
-                $relatorio->set_width([10, 30, 30, 0, 30]);
-                $relatorio->set_align(["center", "left", "left", "left", "left"]);
-
-                $relatorio->set_classe([null, null, "pessoal", null, "Vacina"]);
-                $relatorio->set_metodo([null, null, "get_cargoSimples", null, "exibeVacinas"]);
-
-                $relatorio->set_conteudo($result);
-                $relatorio->set_numGrupo(3);
-                $relatorio->set_bordaInterna(true);
-                $relatorio->show();
             }
 
+            # Informa o ano de referência
+            if ($parametroAno <> "*") {
+                $relatorio->set_tituloLinha2($parametroAno);
+            }else{
+                $relatorio->set_rowspan(1);
+            }
+
+            $relatorio->set_label(["IdFuncional", "Servidor", "Processo", "Tipo", "Referencia", "Período"]);
+            $relatorio->set_align(["center", "left"]);
+            $relatorio->set_classe([null, "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
+            $relatorio->set_metodo([null, "get_nomeECargoELotacao", "exibeProcesso"]);
+
+            $relatorio->set_bordaInterna(true);
+            $relatorio->show();
             break;
     }
 

@@ -25,7 +25,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    $lotacao = get('lotacao', post('lotacao',66));
+    $lotacao = get('lotacao', post('lotacao', 66));
 
     ######
 
@@ -41,7 +41,7 @@ if ($acesso) {
                  WHERE tbservidor.situacao = 1
                    AND idPerfil = 1
                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-    
+
     # lotacao
     if (!is_null($lotacao)) {
         # Verifica se o que veio é numérico
@@ -53,26 +53,26 @@ if ($acesso) {
             $subTitulo = "Lotação: " . $lotacao . "<br/>";
         }
     }
-                  
+
     $select .= " ORDER BY tblotacao.GER, tbpessoa.nome";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos');
-    if(!is_null($subTitulo)){
-    $relatorio->set_subtitulo($subTitulo);
+    if (!is_null($subTitulo)) {
+        $relatorio->set_subtitulo($subTitulo);
     }
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Nascimento','Cargo','Nivel Faixa Padrao','Lotaçao']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Nascimento', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
     #$relatorio->set_width([10, 90]);
-    $relatorio->set_align(["center", "left","center", "left", "left"]);
-    $relatorio->set_classe([null,null,null,"Pessoal","Progressao"]);
-    $relatorio->set_metodo([null,null,null,"get_cargoSimples","get_FaixaAtual"]);    
+    $relatorio->set_align(["center", "left", "center", "left", "left"]);
+    $relatorio->set_classe([null, null, null, "Pessoal", "Progressao"]);
+    $relatorio->set_metodo([null, null, null, "get_cargoSimples", "get_FaixaAtual"]);
     $relatorio->set_funcao([null, null, "date_to_php"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);
-    
-   $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao

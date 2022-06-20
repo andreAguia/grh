@@ -40,7 +40,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Professores Ativos');
-    $relatorio->set_subtitulo('(Com CPF, Data de Nascimento e Emails');
+    $relatorio->set_subtitulo('Com CPF, Data de Nascimento e Emails');
     $relatorio->set_label(['Nome', 'CPF', 'Nascimento', 'Emails']);
     #$relatorio->set_width(array(35, 15, 10, 20, 10));
     $relatorio->set_bordaInterna(true);

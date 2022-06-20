@@ -605,9 +605,12 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Professores Com Data de Nascimento e Sexo', '../grhRelatorios/professorIdadeSexo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Lotaçao', '../grhRelatorios/professorporLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Com Email A Partir do Ano de Admissão', '../grhRelatorios/professores.email.porAnoAdmissao.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Com CPF, Nascimento e Email', '../grhRelatorios/professor.cpf.email.nascimento.php');
+            
             $menu->add_item('titulo1', 'A Pedido da PROPPG');
             $menu->add_item('linkWindow', 'Relatório da Professores Ativos', '../grhRelatorios/professoresPROPPG.php');
             $menu->add_item('linkWindow', 'Relatório da Professores Não-Ativos', '../grhRelatorios/professoresPROPPGInativos.php');
+            
             $menu->add_item('titulo1', 'A pedido da SECACAD - Censo Anual');
             $menu->add_item('linkWindow', 'Censo 2020 - Relatório da Professores', '../grhRelatorios/professoresCenso2020.php');
             $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Ativos', '../grhRelatorios/professoresCenso2021.php');

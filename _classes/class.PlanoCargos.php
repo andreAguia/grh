@@ -208,29 +208,11 @@ class PlanoCargos {
                     echo "<td align='center'>$faixaRomanos</td>";
 
                     echo "<td align='right'>";
-
-                    # Coloca o link de edição
-                    if ($editavel) {
-                        $link = new Link(formataMoeda($valor), 'cadastroTabelaSalarial.php?fase=editar&pcv=' . $idPlano . '&id=' . $url);
-                        $link->set_id("aLinkTabela");
-                        $link->show();
-                    } else {
-                        echo formataMoeda($valor);
-                    }
-
+                    echo formataMoeda($valor);
                     echo "</td>";
                 } else {
                     echo "<td align='right'>";
-
-                    # Coloca o link de edição
-                    if ($editavel) {
-                        $link = new Link(formataMoeda($valor), 'cadastroTabelaSalarial.php?fase=editar&pcv=' . $idPlano . '&id=' . $url);
-                        $link->set_id("aLinkTabela");
-                        $link->show();
-                    } else {
-                        echo formataMoeda($valor);
-                    }
-
+                    echo formataMoeda($valor);
                     echo "</td>";
                 }
             }

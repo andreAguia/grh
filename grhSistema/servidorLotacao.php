@@ -77,7 +77,7 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
-    
+
     # Caminhos
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkEditar('?fase=editar');
@@ -86,7 +86,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(array("Data", "Lotação", "Motivo"));
-    $objeto->set_width(array(10,30,50));	
+    $objeto->set_width(array(10, 30, 50));
     $objeto->set_align(array("center", "left", "left"));
     $objeto->set_funcao(array("date_to_php"));
     $objeto->set_classe(array(null, "pessoal"));
@@ -110,7 +110,8 @@ if ($acesso) {
                         FROM tblotacao ORDER BY ativo desc, lotacao';
 
     $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(null, null)); # Adiciona o valor de nulo
+    array_unshift($result, array(null, null));
+
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'data',
             'label' => 'Data:',

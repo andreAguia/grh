@@ -231,7 +231,7 @@ if ($acesso) {
             if ($parametroAno <> "*") {
                 $select .= " ORDER BY 9";
             } else {
-                $select .= " ORDER BY 9, 7 DESC";
+                $select .= " ORDER BY 9, 4, 7 DESC";
             }
 
             $result = $pessoal->select($select);
@@ -368,7 +368,7 @@ if ($acesso) {
             if ($parametroAno <> "*") {
                 $select .= " ORDER BY 9";
             } else {
-                $select .= " ORDER BY 9, 7 DESC";
+                $select .= " ORDER BY 9, 4, 7 DESC";
             }
 
             $result = $pessoal->select($select);

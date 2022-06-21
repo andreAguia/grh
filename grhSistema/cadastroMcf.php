@@ -39,13 +39,13 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
-    } else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
-    }
+    # Pega os parâmetros
+    $parametroAno = post('parametroAno', get_session('parametroAno', date('Y')));
+    $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
+
+    # Joga os parâmetros par as sessions
+    set_session('parametroAno', $parametroAno);
+    set_session('parametroMes', $parametroMes);
 
     # Começa uma nova página
     $page = new Page();
@@ -66,30 +66,34 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo
-    $objeto->set_nome('Mapa de Controle de Frequência - MCF');
+    $objeto->set_nome('Controle de MCF (Mapa de Controle de Frequência)');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
-    # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
-    $objeto->set_parametroValue($parametro);
+    $select = "SELECT idMcf,
+                      ano,
+                      mes,
+                      idLotacao,
+                      pagina,
+                      idMcf,
+                      idMcf
+                 FROM tbmcf
+                WHERE ano = '{$parametroAno}'";
+
+    if ($parametroMes <> "*") {
+        $select .= " AND mes = '{$parametroMes}'";
+    }
+    $select .= " ORDER BY ano desc,mes desc, pagina";
 
     # select da lista
-    $objeto->set_selectLista('SELECT idMcf,
-                                      ano,
-                                      mes,
-                                      obs,
-                                      idMcf,
-                                      idMcf
-                                 FROM tbmcf
-                                WHERE ano LIKE "%' . $parametro . '%"
-                                   OR obs LIKE "%' . $parametro . '%" 
-                             ORDER BY ano desc,mes desc');
+    $objeto->set_selectLista($select);
 
     # select do edita
     $objeto->set_selectEdita('SELECT ano,
                                      mes,
+                                     idLotacao,
+                                     pagina,
                                      obs
                                 FROM tbmcf
                                WHERE idMcf = ' . $id);
@@ -106,13 +110,16 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Ano", "Mês", "Obs", " Ver"]);
-    $objeto->set_width([5, 10, 10, 65, 5]);
+    $objeto->set_label(["Id", "Ano", "Mês", "Lotação", "Página", "Obs", " Ver"]);
+    $objeto->set_width([8, 8, 10, 38, 8, 8, 8]);
     $objeto->set_align(["center", "center", "center", "left"]);
     $objeto->set_funcao([null, null, "get_nomeMes"]);
 
-    $objeto->set_classe([null, null, null, null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, "exibeMcf"]);
+    $objeto->set_classe([null, null, null, "Pessoal", null, "Mcf", "Pessoal"]);
+    $objeto->set_metodo([null, null, null, "get_nomeLotacao2", null, "exibeObs", "exibeMcf"]);
+
+    $objeto->set_rowspan([1, 2]);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -125,20 +132,17 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
-    # Pega o ultimo mês cadastrado
-    $mcf = new Mcf();
-    $ultimoMes = $mcf->getUltimoMesCadastrado();
-    $ultimoAno = $mcf->getUltimoAnoCadastrado();
-    
-    # Acerta o mês
-    if($ultimoMes < "12"){
-        $ultimoMes++;
-    }else{
-        $ultimoMes = "1";
-        $ultimoAno++;
-    }            
-    
+
+    # Pega os dados da combo lotacao
+    $selectLotacao = 'SELECT idlotacao, 
+                             concat(IFnull(UADM,"")," - ",IFnull(DIR,"")," - ",IFnull(GER,"")," - ",IFnull(nome,"")) as lotacao
+                        FROM tblotacao 
+                       WHERE ativo     
+                     ORDER BY lotacao';
+
+    $result = $pessoal->select($selectLotacao);
+    array_unshift($result, array(null, null));
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -148,7 +152,7 @@ if ($acesso) {
             'array' => $ano,
             'required' => true,
             'autofocus' => true,
-            'padrao' => $ultimoAno,
+            'padrao' => $parametroAno,
             'col' => 3,
             'size' => 30),
         array('linha' => 1,
@@ -157,15 +161,31 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $mes,
             'required' => true,
-            'padrao' => $ultimoMes,
+            'padrao' => $parametroMes == "*" ? date('m') : $parametroMes,
             'col' => 3,
             'size' => 30),
-        array('linha' => 1,
-            'nome' => 'obs',
-            'label' => 'Obs:',
+        array('linha' => 2,
+            'nome' => 'idLotacao',
+            'label' => 'Lotacão:',
+            'tipo' => 'combo',
+            'required' => true,
+            'array' => $result,
+            'size' => 20,
+            'col' => 10,
+            'title' => 'qual a lotação do MCF'),
+        array('linha' => 2,
+            'nome' => 'pagina',
+            'label' => 'Página:',
             'tipo' => 'texto',
-            'col' => 6,
-            'size' => 80)));
+            'col' => 2,
+            'size' => 25,
+            'title' => 'Número da página.'),
+        array('linha' => 2,
+            'col' => 12,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5))));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -190,6 +210,73 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+
+            # Retira so botões da classe modelo
+            $objeto->set_botaoVoltarLista(false);
+            $objeto->set_botaoIncluir(false);
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "grh.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            # Incluir
+            $botaoIncluir = new Link("Incluir", "?fase=editar");
+            $botaoIncluir->set_class('button');
+            $botaoIncluir->set_title('Inclui um novo resgistro');
+            $menu1->add_link($botaoIncluir, "right");
+
+            $menu1->show();
+
+            ################################################################
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
+
+            $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano exercício');
+            $controle->set_array($anoExercicio);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            # Mês
+            array_unshift($mes, array('*', '-- Todos --'));
+            $controle = new Input('parametroMes', 'combo', 'Mês:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra pelo Mês');
+            $controle->set_array($mes);
+            $controle->set_valor($parametroMes);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            ################################################################
+
             $objeto->listar();
             break;
 
@@ -199,12 +286,13 @@ if ($acesso) {
             break;
 
         case "excluir" :
-
-            # Verifica se tem PDF e apaga o PDF
+            # apaga o Bim relacionado
             if (file_exists(PASTA_MCF . "{$id}.pdf")) {
-                unlink(PASTA_MCF . "{$id}.pdf");
+                rename(PASTA_MCF . "{$id}.pdf", PASTA_MCF . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf");
             }
-            $objeto->$fase($id);
+
+            # Exclui o registro
+            $objeto->excluir($id);
             break;
 
         ################################################################
@@ -299,7 +387,7 @@ if ($acesso) {
                     loadPage("?fase=uploadTerminado");
                 } else {
                     # volta a tela de upload
-                    loadPage("?fase=uploadBim&id=$id");
+                    loadPage("?fase=uploadMcf&id=$id");
                 }
             }
 
@@ -328,7 +416,7 @@ if ($acesso) {
         case "apagaMcf" :
 
             # Apaga o arquivo
-            if (unlink(PASTA_MCF . "{$id}.pdf")) {
+            if (rename(PASTA_MCF . "{$id}.pdf", PASTA_MCF . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf")) {
                 alert("Arquivo Excluído !!");
 
                 # Registra log

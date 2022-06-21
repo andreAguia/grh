@@ -128,7 +128,7 @@ if ($acesso) {
 
         # Exibe o idServidor somente para o administrador
         if (Verifica::acesso($idUsuario, 1)) {
-            p($idServidorPesquisado, "idServidor2");
+            p("S:".$idServidorPesquisado, "idServidor2");
         }
     }
 

@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -91,13 +92,6 @@ if ($acesso) {
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
 
-    # ordenação
-    if (is_null($orderCampo))
-        $orderCampo = "1";
-
-    if (is_null($orderTipo))
-        $orderTipo = 'desc';
-
     # select da lista
     $objeto->set_selectLista('SELECT dtInicio,
                                      numDias,
@@ -110,7 +104,7 @@ if ($acesso) {
                                      idAtestado
                                 FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
                                WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+                            ORDER BY 1 desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT dtInicio,
@@ -128,11 +122,6 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -167,7 +156,8 @@ if ($acesso) {
                                      Parentesco
                                 FROM tbparentesco
                             ORDER BY parentesco');
-    array_push($result, array(0, null)); # Adiciona o valor de nulo
+    array_push($result, array(0, null));
+    
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'dtInicio',
             'label' => 'Data Inicial:',
@@ -228,6 +218,7 @@ if ($acesso) {
             'size' => 5,
             'title' => 'Matrícula',
             'linha' => 6)));
+    
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -240,11 +231,7 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
+    
     ################################################################
 
     switch ($fase) {

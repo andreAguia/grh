@@ -616,8 +616,17 @@ if ($acesso) {
             case "" :
             case "listar" :
             case "editar" :
-            case "excluir" :
                 $objeto->$fase($id);
+                break;
+
+            case "excluir" :
+                # apaga o Bim relacionado
+                if (file_exists(PASTA_BIM . "{$id}.pdf")) {
+                    rename(PASTA_BIM . "{$id}.pdf", PASTA_BIM . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf");
+                }
+
+                # Exclui o registro
+                $objeto->excluir($id);
                 break;
 
             case "gravar" :
@@ -755,12 +764,12 @@ if ($acesso) {
 
             case "apagaBim" :
 
-                # Apaga o arquivo
-                if (unlink(PASTA_BIM . "{$id}.pdf")) {
+                # Apaga o arquivo (na verdade renomeia)
+                if (rename(PASTA_BIM . "{$id}.pdf", PASTA_BIM . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf")) {
                     alert("Arquivo Excluído !!");
 
                     # Registra log
-                    $atividade = "Excluiu o arquivo PDF do Bim";
+                    $atividade = "Excluiu o arquivo PDF do Bim: {$id}.pdf";
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);

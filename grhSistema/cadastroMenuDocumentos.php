@@ -98,7 +98,7 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idMenuDocumentos');
-    
+
     # Pega os dados da datalist categorias
     $valoresCategorias = $pessoal->select('SELECT distinct categoria
                                       FROM tbmenudocumentos
@@ -178,7 +178,7 @@ if ($acesso) {
             }
 
             # Extensões possíveis
-            $extensoes = ["pdf","doc"];
+            $extensoes = ["pdf", "doc", "docx"];
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));

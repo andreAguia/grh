@@ -178,7 +178,7 @@ if ($acesso) {
             }
 
             # Extensões possíveis
-            $extensoes = ["pdf", "doc", "docx"];
+            $extensoes = ["pdf", "doc"];
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));

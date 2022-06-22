@@ -95,7 +95,7 @@ class Mcf {
             $link->set_target("_blank");
             $link->show();
         } else {
-            echo "-";
+            echo "---";
         }
     }
 

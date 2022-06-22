@@ -31,4 +31,30 @@ class Atestado {
     }
 
 ###########################################################
+
+    public function exibeAtestado($id) {
+        /**
+         * Exibe um link para a publicação
+         * 
+         * @param $idConcursoPublicacao integer null O id do Concurso
+         * 
+         * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
+         */
+        # Monta o arquivo
+        $arquivo = PASTA_ATESTADO . $id . ".pdf";
+
+        # Verifica se ele existe
+        if (file_exists($arquivo)) {
+
+            # Monta o link
+            $link = new Link(null, $arquivo, "Exibe o atestado");
+            $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+            $link->set_target("_blank");
+            $link->show();
+        } else {
+            echo "---";
+        }
+    }
+
+    ###########################################################
 }

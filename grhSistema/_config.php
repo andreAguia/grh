@@ -51,6 +51,7 @@ define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");       # Fotos dos 
 define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");       # Fotos dos certificados de cursos
 define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos Gerais
 define("PASTA_BIM", "../../_arquivos/bim/");                        # BIM
+define("PASTA_ATESTADO", "../../_arquivos/atestados/");             # atestados
 
 /*
  *  Tags aceitas em campos com htmlTag = true

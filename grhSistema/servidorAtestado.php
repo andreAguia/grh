@@ -72,7 +72,15 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_ready($jscript);
+    if ($fase == "upload") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    } else {
+        $page->set_ready($jscript);
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -101,6 +109,7 @@ if ($acesso) {
                                      tipo,
                                      tbparentesco.Parentesco,
                                      idAtestado,
+                                     idAtestado,
                                      idAtestado
                                 FROM tbatestado LEFT JOIN tbparentesco ON (tbatestado.parentesco = tbparentesco.idParentesco)
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -117,7 +126,7 @@ if ($acesso) {
                                      idServidor
                                 FROM tbatestado
                                WHERE idAtestado = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -130,13 +139,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial", "Dias", "Data Término", "Médico", "Especialidade", "Tipo", "Parentesco", "Obs"));
-    #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center", "center", "center", "left"));
-    $objeto->set_funcao(array("date_to_php", null, "date_to_php"));
+    $objeto->set_label(["Data Inicial", "Dias", "Data Término", "Médico", "Especialidade", "Tipo", "Parentesco", "Obs", "Atestado"]);
+    $objeto->set_width([10, 5, 10, 20, 20, 5, 15, 5, 5]);
+    $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", null, "date_to_php"]);
 
-    $objeto->set_classe(array(null, null, null, null, null, null, null, "Atestado"));
-    $objeto->set_metodo(array(null, null, null, null, null, null, null, "exibeObs"));
+    $objeto->set_classe([null, null, null, null, null, null, null, "Atestado", "Atestado"]);
+    $objeto->set_metodo([null, null, null, null, null, null, null, "exibeObs", "exibeAtestado"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -157,7 +166,7 @@ if ($acesso) {
                                 FROM tbparentesco
                             ORDER BY parentesco');
     array_push($result, array(0, null));
-    
+
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'dtInicio',
             'label' => 'Data Inicial:',
@@ -218,7 +227,7 @@ if ($acesso) {
             'size' => 5,
             'title' => 'Matrícula',
             'linha' => 6)));
-    
+
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -231,20 +240,190 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-    
+
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Monta o arquivo
+        $arquivo = PASTA_ATESTADO . "{$id}.pdf";
+
+        # Botão de Upload
+        $botao = new Button("Arquivo PDF");
+        $botao->set_url("?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
+
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
         case "editar" :
-        case "excluir" :
             $objeto->$fase($id);
             break;
 
         case "gravar" :
             $objeto->gravar($id, 'servidorAtestadoExtra.php');
             break;
+
+        case "excluir" :
+            # apaga o Documento relacionado
+            if (file_exists(PASTA_ATESTADO . "{$id}.pdf")) {
+                rename(PASTA_ATESTADO . "{$id}.pdf", PASTA_ATESTADO . "apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
+            }
+
+            # Exclui o registro
+            $objeto->excluir($id);
+            break;
+
+        ################################################################
+
+        case "upload" :
+            # Limita a tela
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+
+            # dados a serem mudados
+            $pasta = PASTA_ATESTADO;
+            $nome = "Atestado";
+            $tabela = "tbatestado";
+
+            # Extensões possíveis
+            $extensoes = ["pdf"];
+
+            # Exibe o Título
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+                br();
+
+                # Título
+                tituloTable("Upload do Arquivo PDF ({$nome})");
+
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
+            } else {
+                # Monta o Menu
+                $menu = new MenuBar();
+
+                $botaoApaga = new Button("Excluir o Arquivo PDF");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
+                $menu->add_link($botaoApaga, "right");
+                $menu->show();
+
+                # Título
+                tituloTable("Substituir o Arquivo PDF Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo PDF do {$nome}";
+            }
+
+            #####
+            # Limita a tela
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+            # Monta o formulário
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
+
+            $texto = "Extensões Permitidas:";
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+            br();
+            p($texto, "f14", "center");
+
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
+
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
+
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
+
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
+                } else {
+                    # volta a tela de upload
+                    loadPage("?fase=upload&id=$id");
+                }
+            }
+
+            # Informa caso exista um arquivo com o mesmo nome
+            $arquivoDocumento = $pasta . $id . ".pdf";
+            if (file_exists($arquivoDocumento)) {
+                p("Já existe um documento para este registro!!<br/>"
+                        . "O novo documento irá substituir o antigo !", "puploadMensagem");
+                br();
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("PDF Cadastrado !!");
+
+            # Fecha a janela
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            break;
+
+        case "apagaDocumento" :
+
+            # dados a serem mudados
+            $pasta = PASTA_ATESTADO;
+            $nome = "Atestado";
+            $tabela = "tbatestado";
+
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                alert("Arquivo Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo PDF do {$nome}";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            }
+
+            break;
+
+        ##################################################################
     }
 
     $page->terminaPagina();

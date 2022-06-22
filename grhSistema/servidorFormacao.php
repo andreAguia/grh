@@ -99,7 +99,7 @@ if ($acesso) {
                                      idPessoa
                                 FROM tbformacao
                                WHERE idFormacao = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -112,12 +112,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Ver", "Upload"]);
-    $objeto->set_width([10, 30, 30, 10, 5, 5]);
+    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Ver"]);
+    $objeto->set_width([10, 30, 35, 10, 5]);
     $objeto->set_align(["center", "left", "left"]);
 
-    $objeto->set_classe([null, null, null, null, "Formacao", "Formacao"]);
-    $objeto->set_metodo([null, null, null, null, "exibeCertificado", "exibeBotaoUpload"]);
+    $objeto->set_classe([null, null, null, null, "Formacao"]);
+    $objeto->set_metodo([null, null, null, null, "exibeCertificado"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -221,28 +221,88 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Monta o arquivo
+        $arquivo = PASTA_CERTIFICADO . "{$id}.pdf";
+
+        # Botão de Upload
+        $botao = new Button("Arquivo PDF");
+        $botao->set_url("?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
+
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;
+
+        case "excluir" :
+            # apaga o Documento relacionado
+            if (file_exists(PASTA_CERTIFICADO . "{$id}.pdf")) {
+                rename(PASTA_CERTIFICADO . "{$id}.pdf", PASTA_CERTIFICADO . "apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
+            }
+
+            # Exclui o registro
+            $objeto->excluir($id);
+            break;
+
         ################################################################
 
         case "upload" :
+            # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Botão voltar
-            botaoVoltar('?');
+            # dados a serem mudados
+            $pasta = PASTA_CERTIFICADO;
+            $nome = "Certificado";
+            $tabela = "tbformacao";
 
-            # Título
-            tituloTable("Upload de Certificado / Diploma de Curso");
+            # Extensões possíveis
+            $extensoes = ["pdf"];
 
+            # Exibe o Título
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+                br();
+
+                # Título
+                tituloTable("Upload do Arquivo PDF ({$nome})");
+
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
+            } else {
+                # Monta o Menu
+                $menu = new MenuBar();
+
+                $botaoApaga = new Button("Excluir o Arquivo PDF");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
+                $menu->add_link($botaoApaga, "right");
+                $menu->show();
+
+                # Título
+                tituloTable("Substituir o Arquivo PDF Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo PDF do {$nome}";
+            }
+
+            #####
             # Limita a tela
             $grid->fechaColuna();
             $grid->abreColuna(6);
@@ -254,16 +314,10 @@ if ($acesso) {
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-            # Pasta onde será guardado o arquivo
-            $pasta = PASTA_CERTIFICADO;
-
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);
             }
-
-            # Extensões possíveis
-            $extensoes = array("pdf");
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));
@@ -288,12 +342,12 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload de publicação de concurso";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
 
-                    # Volta para o menu
-                    loadPage("?fase=listar");
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
                 } else {
+                    # volta a tela de upload
                     loadPage("?fase=upload&id=$id");
                 }
             }
@@ -301,7 +355,8 @@ if ($acesso) {
             # Informa caso exista um arquivo com o mesmo nome
             $arquivoDocumento = $pasta . $id . ".pdf";
             if (file_exists($arquivoDocumento)) {
-                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!", "puploadMensagem");
+                p("Já existe um documento para este registro!!<br/>"
+                        . "O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
 
@@ -309,6 +364,42 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("PDF Cadastrado !!");
+
+            # Fecha a janela
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            break;
+
+        case "apagaDocumento" :
+
+            # dados a serem mudados
+            $pasta = PASTA_CERTIFICADO;
+            $nome = "Certificado";
+            $tabela = "tbformacao";
+
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                alert("Arquivo Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo PDF do {$nome}";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            }
+
+            break;
+            
         ##################################################################
     }
 

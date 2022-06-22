@@ -36,12 +36,12 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroNivel = post('parametroNivel', get_session('parametroNivel', 'Todos'));
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
     $parametroCurso = post('parametroCurso', get_session('parametroCurso'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao'));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'Todos'));
-    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
-    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
@@ -108,13 +108,6 @@ if ($acesso) {
             $menu1->show();
 
             ##############
-            # Pega os dados da combo escolaridade
-            $result = $pessoal->select('SELECT idEscolaridade, 
-                                               escolaridade
-                                          FROM tbescolaridade
-                                      ORDER BY idEscolaridade');
-            array_unshift($result, array("Todos", "Todos"));
-            
             # Formulário de Pesquisa
             $form = new Form('?');
 
@@ -126,7 +119,7 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(2);
-            $controle->set_array(array("Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"));
+            $controle->set_array(["Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"]);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -181,6 +174,13 @@ if ($acesso) {
             $controle->set_col(5);
             $form->add_item($controle);
 
+            # Pega os dados da combo escolaridade
+            $escolaridade = $pessoal->select('SELECT idEscolaridade, 
+                                               escolaridade
+                                          FROM tbescolaridade
+                                      ORDER BY idEscolaridade');
+            array_unshift($escolaridade, array("Todos", "Todos"));
+
             # Escolaridade do Servidor    
             $controle = new Input('parametroEscolaridade', 'combo', 'Formação:', 1);
             $controle->set_size(20);
@@ -189,27 +189,44 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
             $controle->set_col(2);
-            $controle->set_array($result);
+            $controle->set_array($escolaridade);
             $form->add_item($controle);
 
+            # Pega os dados da combo curso
+            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
+                                              habilitacao
+                                         FROM tbformacao
+                                     ORDER BY habilitacao');
+            array_unshift($curso, array("Todos", "Todos"));
+
             # Curso
-            $controle = new Input('parametroCurso', 'texto', 'Curso:', 1);
+            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
             $controle->set_size(100);
             $controle->set_title('Curso');
             $controle->set_valor($parametroCurso);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
             $controle->set_col(5);
+            $controle->set_array($curso);
             $form->add_item($controle);
 
+            # Pega os dados da combo instituição
+            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
+                                              instEnsino
+                                         FROM tbformacao
+                                        WHERE instEnsino <> ""
+                                     ORDER BY instEnsino');
+            array_unshift($instEnsino, array("Todos", "Todos"));
+
             # Instituição
-            $controle = new Input('parametroInstituicao', 'texto', 'Instituição:', 1);
+            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
             $controle->set_size(100);
             $controle->set_title('Instituiçlão de Ensino');
             $controle->set_valor($parametroInstituicao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
             $controle->set_col(5);
+            $controle->set_array($instEnsino);
             $form->add_item($controle);
 
             $form->show();
@@ -219,6 +236,7 @@ if ($acesso) {
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
+                              idFormacao,
                               idFormacao
                          FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbservidor USING (idPessoa)
@@ -245,11 +263,11 @@ if ($acesso) {
                 $select .= " AND tbformacao.idEscolaridade = {$parametroEscolaridade}";
             }
 
-            if (!empty($parametroCurso)) {
+            if ($parametroCurso <> "Todos") {
                 $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
             }
 
-            if (!empty($parametroInstituicao)) {
+            if ($parametroInstituicao <> "Todos") {
                 $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
             }
 
@@ -270,12 +288,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Escolaridade", "Curso"]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Escolaridade", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "center", "left"]);
-            $tabela->set_classe([null, "pessoal", null, "Formacao"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "exibeCurso"]);
-            $tabela->set_rowspan([0,1]);
+            $tabela->set_classe([null, "pessoal", null, "Formacao", "Formacao"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, "exibeCurso", "exibeCertificado"]);
+            $tabela->set_rowspan([0, 1]);
             $tabela->set_grupoCorColuna(1);
 
             $tabela->set_idCampo('idServidor');

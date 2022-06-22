@@ -49,7 +49,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    if ($fase == "uploadMcf") {
+    if ($fase == "upload") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -115,7 +115,7 @@ if ($acesso) {
     $objeto->set_align(["center", "center", "center", "left"]);
     $objeto->set_funcao([null, null, "get_nomeMes"]);
 
-    $objeto->set_classe([null, null, null, "Pessoal", null, "Mcf", "Pessoal"]);
+    $objeto->set_classe([null, null, null, "Pessoal", null, "Mcf", "Mcf"]);
     $objeto->set_metodo([null, null, null, "get_nomeLotacao2", null, "exibeObs", "exibeMcf"]);
 
     $objeto->set_rowspan([1, 2]);
@@ -198,7 +198,7 @@ if ($acesso) {
 
         # Botão de Upload
         $botao = new Button("Arquivo PDF");
-        $botao->set_url("?fase=uploadMcf&id={$id}");
+        $botao->set_url("?fase=upload&id={$id}");
         $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
         $botao->set_target("_blank");
 
@@ -288,7 +288,7 @@ if ($acesso) {
         case "excluir" :
             # apaga o Bim relacionado
             if (file_exists(PASTA_MCF . "{$id}.pdf")) {
-                rename(PASTA_MCF . "{$id}.pdf", PASTA_MCF . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf");
+                rename(PASTA_MCF . "{$id}.pdf", PASTA_MCF . "apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
             }
 
             # Exclui o registro
@@ -297,34 +297,34 @@ if ($acesso) {
 
         ################################################################
 
-        case "uploadMcf" :
+        case "upload" :
+            # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Pasta onde será guardado o arquivo
+            # Dados a serem mudados
             $pasta = PASTA_MCF;
-
-            # Nome da rotina de upload
-            $rotinaUpload = "?fase=uploadMcf&id={$id}";
+            $nome = "Mcf";
+            $tabela = "tbmcf";
 
             # Extensões possíveis
             $extensoes = ["pdf"];
 
-            # Botão voltar
+            # Exibe o Título
             if (!file_exists("{$pasta}{$id}.pdf")) {
                 br();
 
                 # Título
-                tituloTable("Upload do Arquivo PDF");
+                tituloTable("Upload do Arquivo PDF ({$nome})");
 
                 # do Log
-                $atividade = "Fez o upload do arquivo PDF do MCF";
+                $atividade = "Fez o upload do {$nome}";
             } else {
                 # Monta o Menu
                 $menu = new MenuBar();
 
-                $botaoApaga = new Button("Excluir Arquivo PDF");
-                $botaoApaga->set_url("?fase=apagaMcf&id={$id}");
+                $botaoApaga = new Button("Excluir o Arquivo PDF");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
                 $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                 $botaoApaga->set_class("button alert");
                 $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
@@ -338,7 +338,7 @@ if ($acesso) {
                 $voltarsalvar = "?fase=uploadTerminado";
 
                 # do Log
-                $atividade = "Substituiu o arquivo PDF do MCF";
+                $atividade = "Substituiu o arquivo PDF do {$nome}";
             }
 
             #####
@@ -381,13 +381,13 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, "tbmcf", $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
 
                     # Fecha a janela aberta
                     loadPage("?fase=uploadTerminado");
                 } else {
                     # volta a tela de upload
-                    loadPage("?fase=uploadMcf&id=$id");
+                    loadPage("?fase=upload&id=$id");
                 }
             }
 
@@ -411,19 +411,22 @@ if ($acesso) {
             echo '<script type="text/javascript" language="javascript">window.close();</script>';
             break;
 
-        ################################################################
+        case "apagaDocumento" :
 
-        case "apagaMcf" :
+            # Dados a serem mudados
+            $pasta = PASTA_MCF;
+            $nome = "Mcf";
+            $tabela = "tbmcf";
 
-            # Apaga o arquivo
-            if (rename(PASTA_MCF . "{$id}.pdf", PASTA_MCF . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf")) {
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
                 alert("Arquivo Excluído !!");
 
                 # Registra log
-                $atividade = "Excluiu o arquivo PDF do MCF";
+                $atividade = "Excluiu o arquivo PDF do {$nome}";
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
-                $Objetolog->registraLog($idUsuario, $data, $atividade, "tbmcf", $id, 3);
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
 
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
@@ -436,7 +439,7 @@ if ($acesso) {
 
             break;
 
-        ################################################################
+        ##################################################################
     }
 
     $page->terminaPagina();

@@ -5589,32 +5589,6 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-    public function exibeMcf($id) {
-        /**
-         * Exibe um link para a publicação
-         * 
-         * @param $idConcursoPublicacao integer null O id do Concurso
-         * 
-         * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
-         */
-        # Monta o arquivo
-        $arquivo = PASTA_MCF . $id . ".pdf";
-
-        # Verifica se ele existe
-        if (file_exists($arquivo)) {
-
-            # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o MCF");
-            $link->set_imagem(PASTA_FIGURAS . "olho.png", 20, 20);
-            $link->set_target("_blank");
-            $link->show();
-        } else {
-            echo "-";
-        }
-    }
-
-    ###########################################################
-
     public function get_siglaNomeLotacao($idServidor) {
         /**
          * Exibe a sigla do cargo efetivo, o nome somente com 2 nomes e a lotação reduzida

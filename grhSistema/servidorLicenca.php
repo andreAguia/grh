@@ -289,7 +289,7 @@ if ($acesso) {
     }
 
     # Jascript do upload
-    if ($fase == "uploadBim") {
+    if ($fase == "upload") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -602,7 +602,7 @@ if ($acesso) {
 
                 # Botão de Upload
                 $botao = new Button("Arquivo PDF");
-                $botao->set_url("?fase=uploadBim&id={$id}");
+                $botao->set_url("?fase=upload&id={$id}");
                 $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
                 $botao->set_target("_blank");
 
@@ -620,9 +620,9 @@ if ($acesso) {
                 break;
 
             case "excluir" :
-                # apaga o Bim relacionado
+                # apaga o Documento relacionado
                 if (file_exists(PASTA_BIM . "{$id}.pdf")) {
-                    rename(PASTA_BIM . "{$id}.pdf", PASTA_BIM . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf");
+                    rename(PASTA_BIM . "{$id}.pdf", PASTA_BIM . "apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
                 }
 
                 # Exclui o registro
@@ -646,15 +646,14 @@ if ($acesso) {
 
             ################################################################
 
-            case "uploadBim" :
+            case "upload" :
                 $grid = new Grid("center");
                 $grid->abreColuna(12);
 
-                # Pasta onde será guardado o arquivo
+                # dados a serem mudados
                 $pasta = PASTA_BIM;
-
-                # Nome da rotina de upload
-                $rotinaUpload = "?fase=uploadBim&id={$id}";
+                $nome = "Bim";
+                $tabela = "tblicenca";
 
                 # Extensões possíveis
                 $extensoes = ["pdf"];
@@ -664,16 +663,16 @@ if ($acesso) {
                     br();
 
                     # Título
-                    tituloTable("Upload do Arquivo PDF (Bim)");
+                    tituloTable("Upload do Arquivo PDF ({$nome})");
 
                     # do Log
-                    $atividade = "Fez o upload do Bim de uma licença médica";
+                    $atividade = "Fez o upload do {$nome}";
                 } else {
                     # Monta o Menu
                     $menu = new MenuBar();
 
                     $botaoApaga = new Button("Excluir o Arquivo PDF");
-                    $botaoApaga->set_url("?fase=apagaBim&id={$id}");
+                    $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
                     $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                     $botaoApaga->set_class("button alert");
                     $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
@@ -687,7 +686,7 @@ if ($acesso) {
                     $voltarsalvar = "?fase=uploadTerminado";
 
                     # do Log
-                    $atividade = "Substituiu o arquivo PDF do Bim de uma licença médica";
+                    $atividade = "Substituiu o arquivo PDF do {$nome}";
                 }
 
                 #####
@@ -730,13 +729,13 @@ if ($acesso) {
                         # Registra log
                         $Objetolog = new Intra();
                         $data = date("Y-m-d H:i:s");
-                        $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8, $idServidorPesquisado);
+                        $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
 
                         # Fecha a janela aberta
                         loadPage("?fase=uploadTerminado");
                     } else {
                         # volta a tela de upload
-                        loadPage("?fase=uploadBim&id=$id");
+                        loadPage("?fase=upload&id=$id");
                     }
                 }
 
@@ -760,19 +759,22 @@ if ($acesso) {
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
                 break;
 
-            ################################################################
+            case "apagaDocumento" :
 
-            case "apagaBim" :
+                # dados a serem mudados
+                $pasta = PASTA_BIM;
+                $nome = "Bim";
+                $tabela = "tblicenca";
 
                 # Apaga o arquivo (na verdade renomeia)
-                if (rename(PASTA_BIM . "{$id}.pdf", PASTA_BIM . "apagado_{$id}_".$intra->get_usuario($idUsuario)."_".date("Y.m.d_H:i").".pdf")) {
+                if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
                     alert("Arquivo Excluído !!");
 
                     # Registra log
-                    $atividade = "Excluiu o arquivo PDF do Bim: {$id}.pdf";
+                    $atividade = "Excluiu o arquivo PDF do {$nome}";
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 3, $idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
 
                     # Fecha a janela
                     echo '<script type="text/javascript" language="javascript">window.close();</script>';

@@ -241,16 +241,19 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+    # Dados da rotina de Upload
+    $pasta = PASTA_ATESTADO;
+    $nome = "Atestado";
+    $tabela = "tbatestado";
+    $extensoes = ["pdf"];
+
     # Botão de Upload
     if (!empty($id)) {
 
-        # Monta o arquivo
-        $arquivo = PASTA_ATESTADO . "{$id}.pdf";
-
         # Botão de Upload
-        $botao = new Button("Arquivo PDF");
+        $botao = new Button("{$nome}");
         $botao->set_url("?fase=upload&id={$id}");
-        $botao->set_title("Faz o Upload, substitui ou exclui o arquivo PDF");
+        $botao->set_title("Faz o Upload do {$nome}");
         $botao->set_target("_blank");
 
         $objeto->set_botaoEditarExtra([$botao]);
@@ -271,8 +274,8 @@ if ($acesso) {
 
         case "excluir" :
             # apaga o Documento relacionado
-            if (file_exists(PASTA_ATESTADO . "{$id}.pdf")) {
-                rename(PASTA_ATESTADO . "{$id}.pdf", PASTA_ATESTADO . "apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
             }
 
             # Exclui o registro
@@ -286,20 +289,12 @@ if ($acesso) {
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # dados a serem mudados
-            $pasta = PASTA_ATESTADO;
-            $nome = "Atestado";
-            $tabela = "tbatestado";
-
-            # Extensões possíveis
-            $extensoes = ["pdf"];
-
             # Exibe o Título
             if (!file_exists("{$pasta}{$id}.pdf")) {
                 br();
 
                 # Título
-                tituloTable("Upload do Arquivo PDF ({$nome})");
+                tituloTable("Upload do {$nome}");
 
                 # do Log
                 $atividade = "Fez o upload do {$nome}";
@@ -307,22 +302,22 @@ if ($acesso) {
                 # Monta o Menu
                 $menu = new MenuBar();
 
-                $botaoApaga = new Button("Excluir o Arquivo PDF");
+                $botaoApaga = new Button("Excluir o Arquivo");
                 $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
                 $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                 $botaoApaga->set_class("button alert");
-                $botaoApaga->set_confirma('Tem certeza que você deseja excluir o arquivo PDF?');
+                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
                 $menu->add_link($botaoApaga, "right");
                 $menu->show();
 
                 # Título
-                tituloTable("Substituir o Arquivo PDF Cadastrado");
+                tituloTable("Substituir o Arquivo Cadastrado");
 
                 # Define o link de voltar após o salvar
                 $voltarsalvar = "?fase=uploadTerminado";
 
                 # do Log
-                $atividade = "Substituiu o arquivo PDF do {$nome}";
+                $atividade = "Substituiu o arquivo do {$nome}";
             }
 
             #####
@@ -376,10 +371,8 @@ if ($acesso) {
             }
 
             # Informa caso exista um arquivo com o mesmo nome
-            $arquivoDocumento = $pasta . $id . ".pdf";
-            if (file_exists($arquivoDocumento)) {
-                p("Já existe um documento para este registro!!<br/>"
-                        . "O novo documento irá substituir o antigo !", "puploadMensagem");
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
 
@@ -389,7 +382,7 @@ if ($acesso) {
 
         case "uploadTerminado" :
             # Informa que o bim foi substituído
-            alert("PDF Cadastrado !!");
+            alert("Arquivo do {$nome} Cadastrado !!");
 
             # Fecha a janela
             echo '<script type="text/javascript" language="javascript">window.close();</script>';
@@ -397,17 +390,12 @@ if ($acesso) {
 
         case "apagaDocumento" :
 
-            # dados a serem mudados
-            $pasta = PASTA_ATESTADO;
-            $nome = "Atestado";
-            $tabela = "tbatestado";
-
             # Apaga o arquivo (na verdade renomeia)
             if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
                 alert("Arquivo Excluído !!");
 
                 # Registra log
-                $atividade = "Excluiu o arquivo PDF do {$nome}";
+                $atividade = "Excluiu o arquivo do {$nome}";
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
                 $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
@@ -420,10 +408,9 @@ if ($acesso) {
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
             }
-
             break;
 
-        ##################################################################
+        ################################################################
     }
 
     $page->terminaPagina();

@@ -251,7 +251,7 @@ if ($acesso) {
     if (!empty($id)) {
 
         # Botão de Upload
-        $botao = new Button("{$nome}");
+        $botao = new Button("Upload {$nome}");
         $botao->set_url("?fase=upload&id={$id}");
         $botao->set_title("Faz o Upload do {$nome}");
         $botao->set_target("_blank");

@@ -30,10 +30,10 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Começa uma nova página
     $page = new Page();
-    if ($fase == "uploadPublicacao") {
+    if ($fase == "upload") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -84,7 +84,7 @@ if ($acesso) {
                                      obs
                                 FROM tbconcursopublicacao
                                WHERE idConcursoPublicacao = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -99,23 +99,14 @@ if ($acesso) {
     $objeto->set_numeroOrdem(true);
     $objeto->set_numeroOrdemTipo('d');
 
-    $objeto->set_classe(array("ConcursoPublicacao", null, null, "ConcursoPublicacao"));
-    $objeto->set_metodo(array("exibeDescricao", null, null, "exibePublicacao"));
+    $objeto->set_classe(array("ConcursoPublicacao", null, null, "ConcursoPublicacao", "ConcursoPublicacao"));
+    $objeto->set_metodo(array("exibeDescricao", null, null, "exibeObs", "exibePublicacao"));
 
     # Parametros da tabela
-    $objeto->set_label(["Descrição", "Data", "Pag", "Ver", "Upload"]);
+    $objeto->set_label(["Descrição", "Data", "Pag", "Obs", "Ver"]);
     $objeto->set_width([50, 10, 10, 10, 10]);
     $objeto->set_align(["left"]);
     $objeto->set_funcao([null, "date_to_php"]);
-
-    # Botão de Upload
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    $botao->set_url("?fase=uploadPublicacao&id=");
-    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, $botao));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -149,7 +140,7 @@ if ($acesso) {
             'size' => 30),
         array('linha' => 1,
             'nome' => 'descricao',
-            'label' => 'Descrição:',            
+            'label' => 'Descrição:',
             'autofocus' => true,
             'tipo' => 'texto',
             'required' => true,
@@ -177,6 +168,24 @@ if ($acesso) {
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+
+    # Dados da rotina de Upload
+    $pasta = PASTA_CONCURSO;
+    $nome = "Publicacao";
+    $tabela = "tbconcursopublicacao";
+    $extensoes = ["pdf"];
+
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Botão de Upload
+        $botao = new Button("Upload {$nome}");
+        $botao->set_url("?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload do {$nome}");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
 
     ################################################################
 
@@ -208,23 +217,58 @@ if ($acesso) {
             break;
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
+            break;
+        case "excluir" :
+            # apaga o Documento relacionado
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
+            }
+
+            # Exclui o registro
+            $objeto->excluir($id);
             break;
 
         ################################################################
 
-        case "uploadPublicacao" :
+        case "upload" :
+            # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Botão voltar
-            botaoVoltar('?');
+            # Exibe o Título
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+                br();
 
-            # Título
-            tituloTable("Upload de Publicações");
+                # Título
+                tituloTable("Upload do {$nome}");
 
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
+            } else {
+                # Monta o Menu
+                $menu = new MenuBar();
+
+                $botaoApaga = new Button("Excluir o Arquivo");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                $menu->add_link($botaoApaga, "right");
+                $menu->show();
+
+                # Título
+                tituloTable("Substituir o Arquivo Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo do {$nome}";
+            }
+
+            #####
             # Limita a tela
             $grid->fechaColuna();
             $grid->abreColuna(6);
@@ -236,16 +280,10 @@ if ($acesso) {
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-            # Pasta onde será guardado o arquivo
-            $pasta = PASTA_CONCURSO;
-
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);
             }
-
-            # Extensões possíveis
-            $extensoes = array("pdf");
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));
@@ -270,20 +308,19 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload de publicação de concurso";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, $id, 8);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8);
 
-                    # Volta para o menu
-                    loadPage("?fase=listar");
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
                 } else {
-                    loadPage("?fase=uploadPublicacao&id=$id");
+                    # volta a tela de upload
+                    loadPage("?fase=upload&id=$id");
                 }
             }
-            
+
             # Informa caso exista um arquivo com o mesmo nome
-            $arquivoDocumento = $pasta.$id.".pdf";
-            if (file_exists($arquivoDocumento)) {
-                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!","puploadMensagem");
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
 
@@ -291,7 +328,37 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ##################################################################
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("Arquivo do {$nome} Cadastrado !!");
+
+            # Fecha a janela
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            break;
+
+        case "apagaDocumento" :
+
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                alert("Arquivo Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo do {$nome}";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3);
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            }
+            break;
+
+        ################################################################
     }
 
     $page->terminaPagina();

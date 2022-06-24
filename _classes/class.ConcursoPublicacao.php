@@ -79,7 +79,7 @@ class ConcursoPublicacao {
 
             # Monta o link
             $link = new Link(null, $arquivo, "Exibe a Publicação");
-            $link->set_imagem(PASTA_FIGURAS . "olho.png", 20, 20);
+            $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
         } else {
@@ -122,6 +122,34 @@ class ConcursoPublicacao {
             p($dados["obs"],"pObservacaoConcurso");
 //            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
 //            toolTip("(Obs)", $dados["obs"]);
+        }
+    }
+
+###########################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (empty($id)) {
+            echo "---";
+        } else {
+
+            # Pega array com os dias publicados
+            $select = "SELECT obs
+                     FROM tbconcursopublicacao
+                    WHERE idConcursoPublicacao = {$id}";
+
+            $retorno = $pessoal->select($select, false);
+            if (empty($retorno[0])) {
+                echo "---";
+            } else {
+                toolTip("Obs", $retorno[0]);
+            }
         }
     }
 

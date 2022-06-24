@@ -250,7 +250,7 @@ if ($acesso) {
             $tabela->set_classe(array("Pessoal", null, null, "PastaFuncional"));
             $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, "exibePasta"));
 
-            $tabela->set_titulo("Cobtrole de Pasta Funcional");
+            $tabela->set_titulo("Controle de Pasta Funcional");
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

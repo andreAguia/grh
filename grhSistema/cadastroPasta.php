@@ -65,7 +65,7 @@ if ($acesso) {
 
         case "" :
         case "lista" :
-            
+
             br(4);
             aguarde();
             br();
@@ -131,8 +131,10 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Situação
-            $situacao = array(array(true, "Ativo"),
-                array(false, "Não Ativo"));
+            $situacao = array(
+                array(1, "Ativo"),
+                array(2, "Não Ativo")
+            );
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(8);
@@ -217,7 +219,7 @@ if ($acesso) {
             if (!vazio($parametroNome)) {
                 $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
-            
+
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
@@ -225,10 +227,10 @@ if ($acesso) {
                 } else { # senão é uma diretoria genérica
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
-            }          
+            }
 
             # Situação
-            if ($parametroSituacao) {
+            if ($parametroSituacao == 1) {
                 $select .= " AND tbservidor.situacao = 1";
             } else {
                 $select .= " AND tbservidor.situacao <> 1";

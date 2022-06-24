@@ -37,14 +37,14 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega os parâmetros
+    $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));# passa o parametro da session para a variavel parametro retirando as aspas
-    else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
-    }
+    # Joga os parâmetros par as sessions    
+    set_session('parametroNome', $parametroNome);
+    set_session('parametroLotacao', $parametroLotacao);
 
     # Começa uma nova página
     $page = new Page();
@@ -116,14 +116,33 @@ if ($acesso) {
             $form = new Form('?');
 
             # Nome    
-            $controle = new Input('parametro', 'texto', 'Pesquisar:', 1);
-            $controle->set_size(100);
+            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
+            $controle->set_size(30);
             $controle->set_title('Pesquisa');
-            $controle->set_valor($parametro);
+            $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
             $controle->set_autofocus(true);
+            $form->add_item($controle);
+            
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                                      FROM tblotacao
+                                                     WHERE ativo)
+                                                  ORDER BY 2');
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             $form->show();
@@ -137,9 +156,22 @@ if ($acesso) {
                               idServidor,
                               idPessoa
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                        WHERE situacao = 1
-                          AND tbpessoa.nome LIKE '%$parametro%'
-                     ORDER BY tbpessoa.nome";
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND situacao = 1
+                          AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                          
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }              
+                   
+            $select .= "  ORDER BY tbpessoa.nome";
 
             $resumo = $pessoal->select($select);
 
@@ -149,16 +181,11 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
                 $tabela->set_titulo("Área de Fotografias dos Servidores");
-                $tabela->set_label(array("IdFuncional", "Servidor", "Foto"));
-                $tabela->set_align(array("center", "left"));
-
-                if (!is_null($parametro)) {
-                    $tabela->set_textoRessaltado($parametro);
-                }
-
-                $tabela->set_funcao(array(null, null, "exibeFoto"));
-                $tabela->set_classe(array(null, "Pessoal"));
-                $tabela->set_metodo(array(null, "get_nomeECargoELotacao"));
+                $tabela->set_label(["IdFuncional", "Servidor", "Foto"]);
+                $tabela->set_align(["center", "left"]);
+                $tabela->set_funcao([null, null, "exibeFoto"]);
+                $tabela->set_classe([null, "Pessoal"]);
+                $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
                 $tabela->show();
             }
 

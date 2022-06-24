@@ -253,7 +253,7 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $tabela->set_align(["center", "left"]);
-            $tabela->set_width(array(5, 25, 8, 13, 18, 18, 8));
+            $tabela->set_width([5, 25, 8, 13, 18, 18, 8]);
             $tabela->set_funcao([null, null, "date_to_php", null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
             $tabela->set_classe(["pessoal", "pessoal"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);

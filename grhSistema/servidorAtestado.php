@@ -250,13 +250,16 @@ if ($acesso) {
     # Botão de Upload
     if (!empty($id)) {
 
-        # Botão de Upload
-        $botao = new Button("Upload {$nome}");
-        $botao->set_url("?fase=upload&id={$id}");
-        $botao->set_title("Faz o Upload do {$nome}");
-        $botao->set_target("_blank");
+        if (Verifica::acesso($idUsuario, [1, 15])) {
 
-        $objeto->set_botaoEditarExtra([$botao]);
+            # Botão de Upload
+            $botao = new Button("Upload {$nome}");
+            $botao->set_url("?fase=upload&id={$id}");
+            $botao->set_title("Faz o Upload do {$nome}");
+            $botao->set_target("_blank");
+
+            $objeto->set_botaoEditarExtra([$botao]);
+        }
     }
 
     ################################################################
@@ -289,91 +292,95 @@ if ($acesso) {
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Exibe o Título
-            if (!file_exists("{$pasta}{$id}.pdf")) {
-                br();
+            # Verifica se o usuário tem acesso
+            if (Verifica::acesso($idUsuario, [1, 15])) {
 
-                # Título
-                tituloTable("Upload do {$nome}");
+                # Exibe o Título
+                if (!file_exists("{$pasta}{$id}.pdf")) {
+                    br();
 
-                # do Log
-                $atividade = "Fez o upload do {$nome}";
-            } else {
-                # Monta o Menu
-                $menu = new MenuBar();
+                    # Título
+                    tituloTable("Upload do {$nome}");
 
-                $botaoApaga = new Button("Excluir o Arquivo");
-                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
-                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
-                $botaoApaga->set_class("button alert");
-                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
-                $menu->add_link($botaoApaga, "right");
-                $menu->show();
+                    # do Log
+                    $atividade = "Fez o upload do {$nome}";
+                } else {
+                    # Monta o Menu
+                    $menu = new MenuBar();
 
-                # Título
-                tituloTable("Substituir o Arquivo Cadastrado");
+                    $botaoApaga = new Button("Excluir o Arquivo");
+                    $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                    $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                    $botaoApaga->set_class("button alert");
+                    $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                    $menu->add_link($botaoApaga, "right");
+                    $menu->show();
 
-                # Define o link de voltar após o salvar
-                $voltarsalvar = "?fase=uploadTerminado";
+                    # Título
+                    tituloTable("Substituir o Arquivo Cadastrado");
 
-                # do Log
-                $atividade = "Substituiu o arquivo do {$nome}";
-            }
+                    # Define o link de voltar após o salvar
+                    $voltarsalvar = "?fase=uploadTerminado";
 
-            #####
-            # Limita a tela
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
+                    # do Log
+                    $atividade = "Substituiu o arquivo do {$nome}";
+                }
 
-            # Monta o formulário
-            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                #####
+                # Limita a tela
+                $grid->fechaColuna();
+                $grid->abreColuna(6);
+
+                # Monta o formulário
+                echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-            # Se não existe o programa cria
-            if (!file_exists($pasta) || !is_dir($pasta)) {
-                mkdir($pasta, 0755);
-            }
-
-            # Pega os valores do php.ini
-            $postMax = limpa_numero(ini_get('post_max_size'));
-            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
-            $limite = menorValor(array($postMax, $uploadMax));
-
-            $texto = "Extensões Permitidas:";
-            foreach ($extensoes as $pp) {
-                $texto .= " $pp";
-            }
-            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
-
-            br();
-            p($texto, "f14", "center");
-
-            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
-                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
-
-                # Salva e verifica se houve erro
-                if ($upload->salvar()) {
-
-                    # Registra log
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
-
-                    # Fecha a janela aberta
-                    loadPage("?fase=uploadTerminado");
-                } else {
-                    # volta a tela de upload
-                    loadPage("?fase=upload&id=$id");
+                # Se não existe o programa cria
+                if (!file_exists($pasta) || !is_dir($pasta)) {
+                    mkdir($pasta, 0755);
                 }
-            }
 
-            # Informa caso exista um arquivo com o mesmo nome
-            if (file_exists("{$pasta}{$id}.pdf")) {
-                p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
+                # Pega os valores do php.ini
+                $postMax = limpa_numero(ini_get('post_max_size'));
+                $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+                $limite = menorValor(array($postMax, $uploadMax));
+
+                $texto = "Extensões Permitidas:";
+                foreach ($extensoes as $pp) {
+                    $texto .= " $pp";
+                }
+                $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
                 br();
+                p($texto, "f14", "center");
+
+                if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                    $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
+
+                    # Salva e verifica se houve erro
+                    if ($upload->salvar()) {
+
+                        # Registra log
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
+
+                        # Fecha a janela aberta
+                        loadPage("?fase=uploadTerminado");
+                    } else {
+                        # volta a tela de upload
+                        loadPage("?fase=upload&id=$id");
+                    }
+                }
+
+                # Informa caso exista um arquivo com o mesmo nome
+                if (file_exists("{$pasta}{$id}.pdf")) {
+                    p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
+                    br();
+                }
             }
 
             $grid->fechaColuna();
@@ -390,23 +397,27 @@ if ($acesso) {
 
         case "apagaDocumento" :
 
-            # Apaga o arquivo (na verdade renomeia)
-            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
-                alert("Arquivo Excluído !!");
+            # Verifica se o usuário tem acesso
+            if (Verifica::acesso($idUsuario, [1, 15])) {
+                
+                # Apaga o arquivo (na verdade renomeia)
+                if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                    alert("Arquivo Excluído !!");
 
-                # Registra log
-                $atividade = "Excluiu o arquivo do {$nome}";
-                $Objetolog = new Intra();
-                $data = date("Y-m-d H:i:s");
-                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
+                    # Registra log
+                    $atividade = "Excluiu o arquivo do {$nome}";
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
 
-                # Fecha a janela
-                echo '<script type="text/javascript" language="javascript">window.close();</script>';
-            } else {
-                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+                    # Fecha a janela
+                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                } else {
+                    alert("Houve algum problema, O arquivo não pode ser excluído !!");
 
-                # Fecha a janela
-                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                    # Fecha a janela
+                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                }
             }
             break;
 

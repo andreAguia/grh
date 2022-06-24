@@ -87,7 +87,24 @@ if ($acesso) {
 ################################################################
 
         case "lista" :
+            
+            br(4);
+            aguarde();
+            br();
 
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+
+################################################################
+
+        case "exibeLista" :
             br();
 
             # Cria um menu

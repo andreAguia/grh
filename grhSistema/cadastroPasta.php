@@ -37,11 +37,13 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroNome = retiraAspas(post('parametroNome', get_session('parametroNome')));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroSituacao = retiraAspas(post('parametroSituacao', get_session('parametroSituacao', true)));
     $parametroPasta = retiraAspas(post('parametroPasta', get_session('parametroPasta', "TD")));
 
     # Joga os parâmetros par as sessions
     set_session('parametroNome', $parametroNome);
+    set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroPasta', $parametroPasta);
 
@@ -63,6 +65,24 @@ if ($acesso) {
 
         case "" :
         case "lista" :
+            
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+
+################################################################
+
+        case "exibeLista" :
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -81,14 +101,33 @@ if ($acesso) {
             $form = new Form('?');
 
             # Nome    
-            $controle = new Input('parametroNome', 'texto', 'Servidor:', 1);
+            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
             $controle->set_size(100);
             $controle->set_title('Filtra por Nome');
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(3);
             $controle->set_autofocus(true);
+            $form->add_item($controle);
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                                      FROM tblotacao
+                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                                      FROM tblotacao
+                                                     WHERE ativo)
+                                                  ORDER BY 2');
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(5);
             $form->add_item($controle);
 
             # Situação
@@ -102,7 +141,7 @@ if ($acesso) {
             $controle->set_valor($parametroSituacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             #Com ou sem pasta
@@ -117,7 +156,7 @@ if ($acesso) {
             $controle->set_valor($parametroPasta);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();
@@ -137,8 +176,10 @@ if ($acesso) {
                               tbpasta.idPasta,
                               tbpasta.idPasta
                          FROM tbpasta right JOIN tbservidor USING (idServidor)
-                                            JOIN tbpessoa USING (idPessoa)
-                        WHERE true";
+                                            JOIN tbpessoa USING (idPessoa)                                            
+                                            JOIN tbhistlot USING (idServidor)
+                                            JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
             }
 
             # Se for SEM pasta
@@ -153,7 +194,9 @@ if ($acesso) {
                                   tbpasta.idPasta
                              FROM tbpasta JOIN tbservidor USING (idServidor)
                                           JOIN tbpessoa USING (idPessoa)
-                             WHERE true";
+                                          JOIN tbhistlot USING (idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                            WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
             }
 
             # Se for SEM pasta
@@ -164,13 +207,25 @@ if ($acesso) {
                                   null,
                                   null
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                             WHERE idServidor NOT IN (Select idServidor FROM tbpasta)";
+                                             JOIN tbhistlot USING (idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                            WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                              AND idServidor NOT IN (Select idServidor FROM tbpasta)";
             }
 
             # nome
             if (!vazio($parametroNome)) {
                 $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
+            
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }          
 
             # Situação
             if ($parametroSituacao) {

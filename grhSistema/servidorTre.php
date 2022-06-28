@@ -161,10 +161,11 @@ if ($acesso) {
             $tabela = new Tabela("tabelaTre");
             $tabela->set_titulo('Dias Trabalhados e Folgas Concedidas');
             $tabela->set_conteudo($row);
-            $tabela->set_label(array("Início", "Término", "Dias", "Folgas Concedidas"));
-            #$tabela->set_width(array(10,10,10,10,30,20));	
-            $tabela->set_align(array('center'));
-            $tabela->set_funcao(array("date_to_php", "date_to_php"));
+            $tabela->set_label(["Início", "Término", "Dias", "Folgas Concedidas"]);
+            $tabela->set_align(['center']);
+            $tabela->set_funcao(["date_to_php", "date_to_php"]);
+            $tabela->set_colunaSomatorio([2, 3]);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
             $grid->fechaColuna();
 
@@ -184,10 +185,10 @@ if ($acesso) {
             $tabela = new Tabela("tabelaTre");
             $tabela->set_titulo('Folgas Fruídas');
             $tabela->set_conteudo($row);
-            $tabela->set_label(array("Início", "Término", "Folgas Fruídas"));
-            $tabela->set_width(array(30, 30, 30));
-            $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("date_to_php", "date_to_php", null));
+            $tabela->set_label(["Início", "Término", "Folgas Fruídas"]);
+            $tabela->set_funcao(["date_to_php", "date_to_php"]);
+            $tabela->set_colunaSomatorio(2);
+            $tabela->set_totalRegistro(false);
             $tabela->show();
             $grid->fechaColuna();
             $grid->fechaGrid();

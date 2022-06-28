@@ -21,7 +21,9 @@ class Aposentadoria {
         $intra = new Intra();
         $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
         $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
-
+        
+        
+        tituloTable("Menu");
         $menu = new Menu("menuAposentadoria", $itemBold);
 
         $menu->add_item("titulo", "Servidores Aposentados");

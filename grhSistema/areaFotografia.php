@@ -37,7 +37,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
@@ -87,7 +87,7 @@ if ($acesso) {
 ################################################################
 
         case "lista" :
-            
+
             br(4);
             aguarde();
             br();
@@ -142,7 +142,7 @@ if ($acesso) {
             $controle->set_col(6);
             $controle->set_autofocus(true);
             $form->add_item($controle);
-            
+
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
@@ -178,7 +178,7 @@ if ($acesso) {
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
                           AND tbpessoa.nome LIKE '%{$parametroNome}%'";
-                          
+
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
@@ -186,8 +186,8 @@ if ($acesso) {
                 } else { # senão é uma diretoria genérica
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
-            }              
-                   
+            }
+
             $select .= "  ORDER BY tbpessoa.nome";
 
             $resumo = $pessoal->select($select);
@@ -216,8 +216,24 @@ if ($acesso) {
 
         case "exibeFoto" :
 
-            # Botão de Voltar
-            botaoVoltar("?");
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $menu1->add_link($botaoVoltar, "left");
+
+            # Alterar Foto
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $botaoalterar = new Link("Alterar Foto", "?fase=uploadFoto&idPessoa={$idPessoa}");
+                $botaoalterar->set_class('button');
+                $botaoalterar->set_title('Altera a foto do Servidor');
+                $menu1->add_link($botaoalterar, "right");
+            }
+
+            $menu1->show();
 
             # Dados do Servidor
             get_DadosServidor($idServidor);
@@ -234,12 +250,6 @@ if ($acesso) {
             $foto->set_fotoLargura(300);
             $foto->set_fotoAltura(400);
             $foto->show($idPessoa);
-
-            if (Verifica::acesso($idUsuario, [1, 2])) {
-                $link = new Link("Alterar Foto", "?fase=uploadFoto&idPessoa=$idPessoa");
-                $link->set_id("alteraFoto");
-                $link->show();
-            }
 
             $painel->fecha();
 

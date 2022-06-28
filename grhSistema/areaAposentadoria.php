@@ -110,12 +110,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(1);
-
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
@@ -179,12 +174,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(2);
-
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
@@ -249,12 +239,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(3);
-
-            $painel->fecha();
 
             $grid->fechaColuna();
 
@@ -368,12 +353,8 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 4);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(6);
-
-            $painel->fecha();
+            hr();
 
             $permanente = new AposentadoriaPermanente1();
             $permanente->exibeRegras();
@@ -561,12 +542,8 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 4);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(7);
-
-            $painel->fecha();
+            hr();
 
             $permanente = new AposentadoriaPermanente2();
             $permanente->exibeRegras();
@@ -755,15 +732,11 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(9);
+            hr();
 
             $compulsoria = new AposentadoriaCompulsoria();
             $compulsoria->exibeRegras();
-
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
@@ -871,15 +844,11 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
-            $aposentadoria->exibeMenu(8);
+            $aposentadoria->exibeMenu(8);                        
+            hr();
 
             $compulsoria = new AposentadoriaCompulsoria();
             $compulsoria->exibeRegras();
-
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
@@ -1059,12 +1028,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
             $aposentadoria->exibeMenu(10);
-
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 9);
@@ -1158,7 +1122,6 @@ if ($acesso) {
             break;
 
         ################################################################
-        ################################################################
 
         /*
          * EC nº 41/2003
@@ -1187,13 +1150,9 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
-            $aposentadoria->exibeMenu(11);
-
-            $painel->fecha();
-
+            $aposentadoria->exibeMenu(11);                        
+            hr();
+            
             $permanente = new AposentadoriaTransicao1();
             $permanente->exibeRegras();
 
@@ -1395,12 +1354,8 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $painel = new Callout();
-            $painel->abre();
-
-            $aposentadoria->exibeMenu(12);
-
-            $painel->fecha();
+            $aposentadoria->exibeMenu(12);            
+            hr();
 
             $permanente = new AposentadoriaTransicao2();
             $permanente->exibeRegras();

@@ -24,122 +24,98 @@ if ($acesso) {
 
     ######
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de Folgas Fruídas do TRE');
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório Geral do TRE');
 
     br();
 
     #####################################
     $grid = new Grid();
+
+    # Resumo
     $grid->abreColuna(4);
 
+    # Pegas os valores
+    $diasTrabalhados = $pessoal->get_treDiasTrabalhados($idServidorPesquisado);
     $folgasConcedidas = $pessoal->get_treFolgasConcedidas($idServidorPesquisado);
     $folgasFruidas = $pessoal->get_treFolgasFruidas($idServidorPesquisado);
     $folgasPendentes = $folgasConcedidas - $folgasFruidas;
 
-    $select = "SELECT YEAR(data) as ano,
-                       IFnull(sum(folgas),0)
-                  FROM tbtrabalhotre
-                 WHERE idServidor = $idServidorPesquisado
-                GROUP BY ano ORDER BY ano";
+    $resumo = Array(
+        Array('Dias Trabalhados', $diasTrabalhados),
+        Array('Folgas Concedidas', $folgasConcedidas),
+        Array('Folgas Fruídas', $folgasFruidas),
+        Array('Folgas Pendentes', $folgasPendentes)
+    );
 
-    $result = $pessoal->select($select);
-
+    tituloRelatorio('Resumo');
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_subtitulo('Folgas Concedidas');
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
-    $relatorio->set_label(array('Ano', 'Folgas Concedidas'));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_conteudo($result);
+    $relatorio->set_label(["Folgas", "Dias"]);
+    $relatorio->set_align(['left']);
+    $relatorio->set_conteudo($resumo);
     $relatorio->show();
-    p($folgasConcedidas . " dias", "f11", "center");
 
     $grid->fechaColuna();
     #####################################
-    $grid->abreColuna(4);
+    # Dias Trabalhados e Folgas Concedidas
+    $grid->abreColuna(8);
 
+    $select = 'SELECT data,
+                      ADDDATE(data,dias-1),
+                      dias,
+                      folgas
+                 FROM tbtrabalhotre
+                WHERE idServidor=' . $idServidorPesquisado . '
+             ORDER BY data desc';
 
-    $select = "SELECT YEAR(data) as ano,
-                       IFnull(sum(dias),0)
-                  FROM tbfolga
-                 WHERE idServidor = $idServidorPesquisado
-                GROUP BY ano ORDER BY ano";
+    $dtrab = $pessoal->select($select);
 
-    $result = $pessoal->select($select);
-
+    tituloRelatorio('Dias Trabalhados e Folgas Concedidas');
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_subtitulo('Folgas Fruidas');
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
-    $relatorio->set_label(array('Ano', 'Folgas Fruidas'));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_conteudo($result);
+    $relatorio->set_label(["Início", "Término", "Dias Trabalhados", "Folgas Concedidas"]);
+    $relatorio->set_funcao(["date_to_php", "date_to_php"]);
+    $relatorio->set_colunaSomatorio([2, 3]);
+    $relatorio->set_conteudo($dtrab);
     $relatorio->show();
-    p($folgasFruidas . " dias", "f11", "center");
 
-    $grid->fechaColuna();
     #####################################
-    $grid->abreColuna(4);
+    #  Folgas Fruídas
 
-    $folgas = Array(Array('Folgas Concedidas', $folgasConcedidas),
-        Array('Folgas Fruídas', $folgasFruidas));
+    $select = 'SELECT data,
+                    ADDDATE(data,dias-1),                                 
+                    dias,
+                    idFolga
+               FROM tbfolga
+              WHERE idServidor=' . $idServidorPesquisado . '
+           ORDER BY data desc';
 
+    $folgas = $pessoal->select($select);
+    
+    
+    tituloRelatorio('Folgas Fruídas');
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_subtitulo('Resumo Geral');
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
-    $relatorio->set_label(array("Folgas", "Dias"));
-    $relatorio->set_align(array('left'));
+    $relatorio->set_label(["Início", "Término", "Folgas Fruídas"]);
+    $relatorio->set_funcao(["date_to_php", "date_to_php"]);
+    $relatorio->set_colunaSomatorio(2);
     $relatorio->set_conteudo($folgas);
     $relatorio->show();
-    p($folgasPendentes . " dias", "f11", "center");
 
     $grid->fechaColuna();
     $grid->fechaGrid();
-    ############################################################
-
-    $select = "SELECT data,                                    
-                      dias,
-                      ADDDATE(data,dias-1),
-                      year(data)
-                 FROM tbfolga
-                WHERE idServidor = $idServidorPesquisado
-             ORDER BY data";
-
-
-    $result = $pessoal->select($select);
-
-    $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    #$relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
-    #$relatorio->set_tituloLinha2($relatorioAno);
-    #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
-
-    $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final'));
-    #$relatorio->set_width(array(10,30,20,10,10,10));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", null, "date_to_php"));
-    #$relatorio->set_classe(array(null,null,"pessoal"));
-    #$relatorio->set_metodo(array(null,null,"get_lotacao"));  
-
-    $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(3);
-    $relatorio->show();
-
-
-
-
 
     $page->terminaPagina();
 }

@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -119,7 +120,6 @@ if ($acesso) {
             $width = array(70, 30);
             $align = array("left");
 
-
             $tabela = new Tabela("tabelaTre");
             $tabela->set_titulo('Resumo');
             $tabela->set_conteudo($folgas);
@@ -136,6 +136,7 @@ if ($acesso) {
             # Relatórios
             $menu = new Menu();
             $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Relatório Geral', '../grhRelatorios/servidorTre.php');
             $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Geral', '../grhRelatorios/servidorTreAfastamento.php');
             $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Por Ano', '../grhRelatorios/servidorTreAfastamentoPorAno.php');
             $menu->add_item('linkWindow', 'Folgas Fruídas Geral', '../grhRelatorios/servidorTreFolga.php');

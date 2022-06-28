@@ -39,14 +39,13 @@ if ($acesso) {
                 WHERE idServidor = $idServidorPesquisado
              ORDER BY data desc";
 
-
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
-    $relatorio->set_label(array('Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Documentaçao'));
+    $relatorio->set_label(array('Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Documentaçao','Ano'));
     $relatorio->set_align(array('center', 'center', 'center', 'center', 'left', 'left'));
     $relatorio->set_funcao(array("date_to_php", "date_to_php"));
     $relatorio->set_colunaSomatorio(3);

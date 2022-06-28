@@ -51,7 +51,7 @@ if ($acesso) {
     #$relatorio->set_tituloLinha2($relatorioAno);
     #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
 
-    $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final'));
+    $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final','Ano'));
     #$relatorio->set_width(array(10,30,20,10,10,10));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("date_to_php", null, "date_to_php"));

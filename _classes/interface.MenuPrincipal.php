@@ -48,7 +48,8 @@ class MenuPrincipal {
         }
 
         # Sispatri        
-        $this->moduloSispatri();
+        #$this->moduloSispatri();
+        
         # sistemas
         $this->moduloSistemas();
 

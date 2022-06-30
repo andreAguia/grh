@@ -318,7 +318,7 @@ class CargoComissao {
         $menu = new Menu("menuBeneficios");
 
         # Ato de Nomeação
-        $menu->add_item('link', "\u{1F5A8} Ato de Nomeação", '?fase=atoNomeacao2&id=' . $idComissao, "Imprime o Ato de Nomeação");
+        $menu->add_item('link', "\u{1F5A8} Ato de Nomeação", '?fase=atoNomeacao&id=' . $idComissao, "Imprime o Ato de Nomeação");
 
         # Termo de Posse
         $menu->add_item('link', "\u{1F5A8} Termo de Posse", '?fase=termoPosse&id=' . $idComissao, "Imprime o Termo de Posse");
@@ -695,7 +695,30 @@ class CargoComissao {
         if (is_null($row[0])) {
             echo "---";
         } else {
-            toolTip("Obs", $row[0]);http://localhost/areaServidor/sistema/administracao.php
+            toolTip("Obs", $row[0]);
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibeObs
+     * 
+     * Exibe a observação
+     */
+    public function exibeObsCargo($idComissao) {
+
+        $select = "SELECT obs                             
+                     FROM tbcomissao
+                    WHERE idComissao = {$idComissao}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (is_null($row[0])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $row[0]);
         }
     }
 

@@ -7,6 +7,13 @@
  *   
  * By Alat
  */
+
+# Inicia as variáveis que receberão as sessions
+$idUsuario = null;
+$idServidorPesquisado = null;
+
+# Configuração
+include ("../grhSistema/_config.php");
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -27,19 +34,23 @@ if ($acesso) {
     $cargoComissao = new CargoComissao();
 
     # pega os dados da comissao
-    $dadosComissao = $cargoComissao->get_dados($idComissao);           // dados da comissao
+    $dadosComissao = $cargoComissao->get_dados($idComissao); 
     $idTipoComissao = $dadosComissao['idTipoComissao'];
-
-    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
+    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);
+    
     # Preenche as variaveis da comissao
     $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
     $dtInicial = dataExtenso(date_to_php($dadosComissao['dtNom']));
-    $ocupanteAnterior = $dadosComissao['ocupanteAnterior'];
     $tipo = $dadosComissao['tipo'];
     $publicacao = date_to_php($dadosComissao['dtPublicNom']);
     $dtAtoNom = date_to_php($dadosComissao['dtAtoNom']);
     $descricao = $cargoComissao->get_descricaoCargo($idComissao);
+    
+    # Ocupante anterior    
+    $idComissaoAnterior = $dadosComissao['idAnterior'];
+    $ocupanteAnteriorDados = $cargoComissao->get_dados($idComissaoAnterior); 
+    $ocupanteAnterior = $pessoal->get_nome($ocupanteAnteriorDados["idServidor"]);
 
     # Preenche as variaveis do tipo de comissao
     $cargo = $tipoComissao['descricao'];
@@ -48,6 +59,11 @@ if ($acesso) {
 
     # Outras variaveis
     $reitor = $pessoal->get_nomeReitor();
+    
+    
+    
+    
+    
 
     # Limita a página
     $grid = new Grid();
@@ -99,7 +115,7 @@ if ($acesso) {
     }
 
     # Preenche o ocupante anterior
-    if (vazio($ocupanteAnterior)) {
+    if (empty($ocupanteAnterior)) {
         $principal .= ".";
     } else {
         $principal .= ", em vaga anteriormente ocupada por $ocupanteAnterior.";
@@ -119,7 +135,7 @@ if ($acesso) {
     $grid->abreColuna(8);
     $grid->fechaColuna();
     $grid->abreColuna(4);
-    if (!vazio($publicacao)) {
+    if (!empty($publicacao)) {
         callout("Publicado no DOERJ<br/>" . dataExtenso($publicacao), "secondary");
     }
     $grid->fechaColuna();

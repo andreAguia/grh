@@ -168,10 +168,10 @@ class Grh {
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
-            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
+            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
             $function = array(null, null, null, null, null, "date_to_php");
         } else {
-            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
+            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
             $function = array(null, null, null, null, null, "date_to_php", null, "date_to_php");
         }
         #$align = array("center");
@@ -364,7 +364,7 @@ class Grh {
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo($titulo);
-        $relatorio->set_label(["Id", "Servidor", "Perfil", "Cargo", "Admissão", "Lotação", "Situação"]);
+        $relatorio->set_label(["Id", "Servidor", "Perfil", "Cargo - Área - Função (Comissão)", "Admissão", "Lotação", "Situação"]);
         #$relatorio->set_width(array(8,20,10,20,10,20,5));
         $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "pessoal", null, "pessoal", "pessoal"]);

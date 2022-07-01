@@ -905,6 +905,44 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoEfetivo($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbtipocargo.sigla,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if ($row["idPerfil"] == 2) {
+            p("Exercendo função equivalente ao", "pLinha3");
+            p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+        } else {
+            if ($row["idTipoCargo"] == 1 OR $row["idTipoCargo"] == 2) {
+                echo $row["cargo"];
+            } else {
+                echo $row["sigla"], " - ", $row["nome"];
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_cargoRel
      * Informa o cargo do servidor versao para impressao
      * 
@@ -2460,6 +2498,83 @@ class Pessoal extends Bd {
 
                 # Coloca na variável retorno
                 $retorno .= '<span title="' . $descricao . '" id="orgaoCedido">[' . $tipoCargo . ']</span>';
+                #$retorno .= "<span id='orgaoCedido'>[{$descricao}]</span>";
+            }
+
+            if ($contador < $num) {
+                $contador++;
+                $retorno .= "<br/>";
+            }
+        }
+
+        return $retorno;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoComissao
+     * Informa o cargo em Comiss�o do Servidor (se tiver)
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    function get_cargoComissao2($idServidor) {
+
+        # Classe CargoComissão
+        $cargoComissao = new CargoComissao();
+
+        # Pega o id do cargo em comissão (se houver)		 
+        $select = 'SELECT idComissao, tipo
+                     FROM tbcomissao
+                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                       OR (dtExo is null))
+                    AND idServidor = ' . $idServidor;
+
+        $row = parent::select($select);
+        $num = parent::count($select);
+
+        $tipo = null;
+        $retorno = null;
+        $contador = 1;
+
+        # Percorre os cargos
+        foreach ($row as $rr) {
+
+            # Pega o $idComissao
+            $idComissao = $rr[0];
+
+            # Verifica se é designado ou protempore
+            if ($rr[1] == 1) {
+                $tipo = " - Pro Tempore";
+            }
+
+            if ($rr[1] == 2) {
+                $tipo = " - Designado";
+            }
+
+            # Verifica se tem cargo
+            if (!is_null($idComissao)) {
+
+                # Pega o nome do cargo em comissão
+                $select = 'SELECT tbtipocomissao.descricao 
+                            FROM tbcomissao 
+                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                           WHERE idcomissao = ' . $idComissao;
+
+                $row2 = parent::select($select, false);
+                $tipoCargo = $row2[0];
+
+                # Pega a descrição do cargo
+                $descricao = $cargoComissao->get_descricaoCargo($idComissao);
+
+                # Verifica se tem tipo
+                if (!vazio($tipo)) {
+                    $tipoCargo .= $tipo;
+                    #$descricao .= $tipo;
+                }
+
+                # Coloca na variável retorno
+                $retorno .= "{$descricao}<br/>({$tipoCargo})";
                 #$retorno .= "<span id='orgaoCedido'>[{$descricao}]</span>";
             }
 

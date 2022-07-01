@@ -340,7 +340,7 @@ if ($acesso) {
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Admissão', 'Cargo', 'Concurso', 'Data de Saída', 'Motivo'));
+    $relatorio->set_label(array('Admissão', 'Cargo - Área - Função (Comissão)', 'Concurso', 'Data de Saída', 'Motivo'));
     $relatorio->set_width(array(12, 30, 20, 12, 26));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));

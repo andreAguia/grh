@@ -30,6 +30,7 @@ if ($acesso) {
 
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
+    $sispatri->set_ordenacao("lotacao");
 
     ######
     
@@ -65,9 +66,7 @@ if ($acesso) {
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Licença Médica");
         }
-    }
-
-    
+    }    
     
     if (!is_numeric($parametroLotacao)) {
         $relatorio->set_tituloLinha2($parametroLotacao);
@@ -76,7 +75,7 @@ if ($acesso) {
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situação']);
     $relatorio->set_align(array("center", "left", "left", "left"));
     $relatorio->set_classe(array(null, null, "pessoal", null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_Cargo", null, "get_situacao"));
+    $relatorio->set_metodo(array(null, null, "get_CargoSimples", null, "get_situacao"));
     $relatorio->set_conteudo($lista);
     $relatorio->set_numGrupo(3);
     $relatorio->show();

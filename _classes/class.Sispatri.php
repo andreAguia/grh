@@ -9,6 +9,7 @@ class Sispatri {
      */
     private $lotacao = null;
     private $situacao = null;
+    private $ordenacao = "nome";
 
 ###########################################################
 
@@ -38,6 +39,17 @@ class Sispatri {
 
 ###########################################################
 
+    /**
+     * Método set_ordenacao
+     * 
+     * @param  	$ordenacao
+     */
+    public function set_ordenacao($ordenacao) {
+        $this->ordenacao = $ordenacao;
+    }
+
+###########################################################
+
     public function get_servidoresEntregaramAtivos() {
 
         # Pega os dados
@@ -54,7 +66,7 @@ class Sispatri {
                    AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -63,7 +75,12 @@ class Sispatri {
             }
         }
 
-        $select .= ' ORDER BY 4,2';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ' ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ' ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -110,7 +127,7 @@ class Sispatri {
                                                AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -119,8 +136,13 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY tbpessoa.nome';
-
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ') ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ') ORDER BY 4, 2';
+        }
+        
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
 
@@ -152,7 +174,7 @@ class Sispatri {
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
                      ';
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -169,7 +191,7 @@ class Sispatri {
                                                AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -178,7 +200,12 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY tbpessoa.nome';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ') ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ') ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -211,7 +238,7 @@ class Sispatri {
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
                      ';
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -228,7 +255,7 @@ class Sispatri {
                                                AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -237,7 +264,12 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY tbpessoa.nome';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ') ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ') ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -272,7 +304,7 @@ class Sispatri {
                      AND (idTpLicenca = 1 OR idTpLicenca = 30)
                      ';
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -289,7 +321,7 @@ class Sispatri {
                                                AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -298,7 +330,12 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY tbpessoa.nome';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ') ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ') ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -331,7 +368,7 @@ class Sispatri {
                      AND (CURDATE() < dtInicial OR CURDATE() > ADDDATE(dtInicial,numDias-1))
                      ';
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -348,7 +385,7 @@ class Sispatri {
                                                AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -357,7 +394,12 @@ class Sispatri {
             }
         }
 
-        $select .= ') ORDER BY tbpessoa.nome';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ') ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ') ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -383,7 +425,7 @@ class Sispatri {
                    AND tbservidor.situacao <> 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -392,7 +434,12 @@ class Sispatri {
             }
         }
 
-        $select .= ' ORDER BY tbpessoa.nome';
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ' ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ' ORDER BY 4, 2';
+        }
 
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
@@ -413,7 +460,7 @@ class Sispatri {
                    AND tbservidor.situacao = 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -441,7 +488,7 @@ class Sispatri {
                    AND tbservidor.situacao <> 1';
 
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
@@ -470,7 +517,7 @@ class Sispatri {
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1';
         # Lotacao
-        if (!vazio($this->lotacao)) {
+        if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
             if (is_numeric($this->lotacao)) {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';

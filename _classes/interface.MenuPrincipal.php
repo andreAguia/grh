@@ -49,7 +49,6 @@ class MenuPrincipal {
 
         # Sispatri        
         #$this->moduloSispatri();
-        
         # sistemas
         $this->moduloSistemas();
 
@@ -641,12 +640,14 @@ class MenuPrincipal {
 //        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
 //        $botao->set_title('Área das publicações no DOERJ');
 //        $menu->add_item($botao);
+//        
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Vacina');
 //        $botao->set_url('areaVacina.php?grh=1');
 //        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
 //        $botao->set_title('Controle da vacinação de servidores');
 //        $menu->add_item($botao);
+//        
 //        $botao = new BotaoGrafico();
 //        $botao->set_label('Abono Permanência');
 //        $botao->set_url('areaAbonoPermanencia.php?grh=1');
@@ -813,12 +814,15 @@ class MenuPrincipal {
         $botao->set_title('Controle de Emissão de RPA');
         #$menu->add_item($botao); ### retirado por falta de uso
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Publicações');
-        $botao->set_url('publicacoes.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'publicacao.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Publicações no DOERJ');
-        #$menu->add_item($botao);
+        # Por enquanto somente pra mim
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Auxílio Transporte');
+            $botao->set_url('areaAuxilioTransporte.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle de servidores com direito ao auxílio transporte');
+            $menu->add_item($botao);
+        }
 
         $menu->show();
         $painel->fecha();

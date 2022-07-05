@@ -629,12 +629,12 @@ function get_situacao($idServidor) {
         if ($verifica->verifica()) {
             $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
         }
-        
+
         # Verifica se está em vias de aposentadoria Compulsória
         $idade = $pessoal->get_idade($idServidor);
         $idPerfil = $pessoal->get_idPerfil($idServidor);
-        
-        if($idade >= 75 AND $idPerfil == 1){
+
+        if ($idade >= 75 AND $idPerfil == 1) {
             $retorno .= "<br/><span title='Servidor com {$idade} anos. Deverá aposentar Compulsoriamente.' class='primary label'>Aguardando<br/>Aposentadoria<br/>Compulsória</span>";
         }
     }
@@ -671,7 +671,7 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
                WHERE ano = ' . $ano . '
                  AND mes = ' . $mes . ' 
                  AND dia = ' . $dia;
-    
+
     $row = $pessoal->select($select, false);
     $count = $pessoal->count($select, false);
 
@@ -696,7 +696,7 @@ function get_servidorBalcao($ano, $mes, $dia, $turno) {
             } else {
                 return $row[2];
             }
-       } elseif ($turno == "to") {
+        } elseif ($turno == "to") {
             if (vazio($row[3])) {
                 return null;
             } else {
@@ -1271,4 +1271,23 @@ function exibeObsLicenca($texto) {
     }
 }
 
-##########################################################
+###########################################################
+
+/**
+ * Função que retorna o afastamento atual de um servidor (se houver)
+ * Obs esta função acessa a classe verifica afastamento
+ */
+function get_afastamento($idServidor) {
+
+    # Verifica se o id foi informado
+    if (empty($idServidor)) {
+        return null;
+    } else {
+        $verifica = new VerificaAfastamentos($idServidor);
+        $verifica->verifica();
+
+        return $verifica->getAfastamento() . " - " . $verifica->getDetalhe();
+    }
+}
+
+##################################################################

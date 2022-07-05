@@ -35,42 +35,9 @@ if ($acesso) {
     $grid->abreColuna(12);
     
     /*
-     * Dados Principais
-     */
-
-    $select = 'SELECT tbservidor.idFuncional,
-                      tbservidor.matricula,
-                      tbpessoa.nome,
-                      tbservidor.idServidor,
-                      tbperfil.nome,
-                      tbsituacao.situacao 
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-                                 LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
-
-    $result = $pessoal->select($select);
-
-    $relatorio = new Relatorio('relatorioFichaCadastral');
-    $relatorio->set_titulo('Relatório Para o Cadastro de Responsáveis');
-    $relatorio->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Lotaçao', 'Perfil', 'Situação']);
-    $relatorio->set_funcao(array(null, "dv"));
-    $relatorio->set_classe(array(null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, "get_lotacao"));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_conteudo($result);
-    $relatorio->set_subTotal(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-    $relatorio->set_linhaNomeColuna(false);
-    $relatorio->set_brHr(0);
-    $relatorio->show();
-    br(2);
-    
-    /*
      * Qualificação
      */
-    tituloRelatorio('1 - Qualificação');
+    
     $select = 'SELECT tbpessoa.nome,
                       nomePai,
                       nomeMae,
@@ -84,6 +51,8 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
+    $relatorio->set_titulo('Relatório Para o Cadastro de Responsáveis');
+    $relatorio->set_topico("1 - Qualificação");
     $relatorio->set_label(['Nome', 'Pai', 'Mãe', 'Nascimento', 'Naturalidade']);
     $relatorio->set_funcao([null, null, null, "date_to_php"]);
     #$relatorio->set_classe([null, null, "pessoal"]);
@@ -97,10 +66,11 @@ if ($acesso) {
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
+    #$relatorio->set_cabecalhoRelatorio(false);
+    #$relatorio->set_menuRelatorio(false);
     $relatorio->set_log(false);
     $relatorio->show();
+    br();
 
     /*
      * Documentação
@@ -108,8 +78,7 @@ if ($acesso) {
 
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-
-    tituloRelatorio('2 - Documentação');
+    
     $select = 'SELECT concat(identidade," - ",
                       orgaoId," - ",
                       date_format(tbdocumentacao.dtId,"%d/%m/%Y")),
@@ -121,8 +90,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-    #$relatorio->set_titulo(null);
-    #$relatorio->set_subtitulo($subtitulo);
+    $relatorio->set_topico("2 - Documentação");
     $relatorio->set_label(['Identidade - Órgão - Emissão', 'CPF', 'Título de Eleitor - Zona - Seção']);
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);
@@ -132,11 +100,12 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_log(false);
     $relatorio->show();
+    br();
 
     /*
      * Se Servidor
      */
-    tituloRelatorio('3 - Se Servidor');
+    
     $select = 'SELECT matricula,
                       tbservidor.idFuncional,
                       tbservidor.idServidor,
@@ -150,7 +119,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
-
+    $relatorio->set_topico("3 - Dados do Servidor");
     $relatorio->set_label(['Matrícula', 'IdFuncional', 'Cargo Efetivo', 'Cargo em Comissão', 'Lotaçao']);
     $relatorio->set_funcao(["dv"]);
     $relatorio->set_classe([null, null, "pessoal", "pessoal", "pessoal"]);
@@ -168,12 +137,11 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_log(false);
     $relatorio->show();
+    br();
 
     /*
      * Endereço
      */
-
-    tituloRelatorio('4.1 - Endereço Residencial');
 
     $select = 'SELECT endereco,
                       bairro,
@@ -189,6 +157,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
+    $relatorio->set_topico("4 - Endereço Residencial");
     $relatorio->set_label(['Endereço', 'Bairro', 'Cidade', 'UF', 'Cep', 'Telefone', 'Celular']);
     $relatorio->set_align(['left', 'center']);
     $relatorio->set_conteudo($result);

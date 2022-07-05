@@ -232,10 +232,10 @@ class VerificaAfastamentos {
                         $this->afastamento = "Licença Em Aberto";
                         $this->detalhe = "Licença Médica Sem Alta";
 
-                        if (empty($afast['numDias'])) {
+                        if (empty($row2['numDias'])) {
                             $this->periodo = date_to_php($row2['dtInicial']) . " a ???";
                         } else {
-                            $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+                            $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
                         }
                         return true;
                     }

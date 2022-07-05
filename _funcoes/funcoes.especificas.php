@@ -1286,7 +1286,11 @@ function get_afastamento($idServidor) {
         $verifica = new VerificaAfastamentos($idServidor);
         $verifica->verifica();
 
-        return $verifica->getAfastamento() . " - " . $verifica->getDetalhe();
+        pLista(
+                $verifica->getAfastamento(),
+                $verifica->getDetalhe(),
+                $verifica->getPeriodo()
+        );
     }
 }
 

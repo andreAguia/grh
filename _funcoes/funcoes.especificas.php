@@ -1277,13 +1277,20 @@ function exibeObsLicenca($texto) {
  * Função que retorna o afastamento atual de um servidor (se houver)
  * Obs esta função acessa a classe verifica afastamento
  */
-function get_afastamento($idServidor) {
+function get_afastamento($dados) {
 
     # Verifica se o id foi informado
-    if (empty($idServidor)) {
+    if (empty($dados)) {
         return null;
     } else {
+        # Separa os dados
+        $valores = explode("-",$dados);
+        $idServidor = $valores[0];
+        $dtInicial = "01/{$valores[1]}/{$valores[2]}";
+        $dtFinal = ultimoDiaMes($dtInicial);
+        
         $verifica = new VerificaAfastamentos($idServidor);
+        $verifica->setPeriodo($dtInicial, $dtFinal);
         $verifica->verifica();
 
         pLista(

@@ -76,6 +76,7 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Auxílio Transporte', '?fase=transporte', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
@@ -162,6 +163,16 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Sem Tempo Averbado', '../grhRelatorios/servidores.ativos.semTempoAverbado.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "transporte";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Auxílio Transporte');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
 
             $menu->show();
             break;
@@ -356,7 +367,6 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Emails e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf2.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Check', '../grhRelatorios/geralServidoresAtivosCheck.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Check - Com Afastamentos', '../grhRelatorios/geralServidoresAtivosCheck.situacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimento.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geralServidoresNomeCpfNascimentoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geralServidoresNomeCpfCargoIdade.php');

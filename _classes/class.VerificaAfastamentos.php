@@ -29,6 +29,7 @@ class VerificaAfastamentos {
      */
     private $afastamento = false;
     private $detalhe = null;
+    private $periodo = null;
 
     ###########################################################
 
@@ -103,6 +104,10 @@ class VerificaAfastamentos {
         return $this->detalhe;
     }
 
+    function getPeriodo() {
+        return $this->periodo;
+    }
+
     ###########################################################
 
     public function verifica() {
@@ -126,12 +131,16 @@ class VerificaAfastamentos {
         /*
          *  Férias
          */
-        $select = "SELECT idFerias, anoExercicio
-                 FROM tbferias
-                WHERE idServidor = {$this->idServidor}
-                  AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
+        $select = "SELECT idFerias, 
+                          anoExercicio,
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal
+                     FROM tbferias
+                    WHERE idServidor = {$this->idServidor}
+                      AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
+                       OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
+                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
         if ($this->tabela == "tbferias" AND!empty($this->id)) {
@@ -145,13 +154,18 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Férias";
             $this->detalhe = "Exercício {$afast['anoExercicio']}";
+            $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             return true;
         }
 
         /*
          *  Licenças e Afastamentos gerais
          */
-        $select = "SELECT idLicenca, tbtipolicenca.nome
+        $select = "SELECT idLicenca, 
+                          tbtipolicenca.nome,
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal
                  FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -176,6 +190,12 @@ class VerificaAfastamentos {
                 $this->afastamento = "Afastamento";
             }
             $this->detalhe = $afast['nome'];
+
+            if (empty($afast['numDias'])) {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+            }
             return true;
         }
 
@@ -184,7 +204,11 @@ class VerificaAfastamentos {
          */
 
         # Verifica se o servidor está em licença médica vencida sem alta
-        $select = "SELECT idLicenca, alta, dtInicial
+        $select = "SELECT idLicenca, 
+                          alta, 
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal
                       FROM tblicenca
                      WHERE idServidor = {$this->idServidor}
                        AND (idTpLicenca = 1 OR idTpLicenca = 30)
@@ -207,6 +231,12 @@ class VerificaAfastamentos {
                         # Se não for é uma outra licença sendo incluída sem que a licença anterior tenha alta
                         $this->afastamento = "Licença Em Aberto";
                         $this->detalhe = "Licença Médica Sem Alta";
+
+                        if (empty($afast['numDias'])) {
+                            $this->periodo = date_to_php($row2['dtInicial']) . " a ???";
+                        } else {
+                            $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+                        }
                         return true;
                     }
                 }
@@ -215,6 +245,12 @@ class VerificaAfastamentos {
                 if (entre(date_to_php($row2[2]), date_to_php($this->dtInicial), date_to_php($this->dtFinal))) {
                     $this->afastamento = "Licença Em Aberto";
                     $this->detalhe = "Licença Médica Sem Alta";
+
+                    if (empty($row2['numDias'])) {
+                        $this->periodo = date_to_php($row2['dtInicial']) . " a ???";
+                    } else {
+                        $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
+                    }
                     return true;
                 } else {
                     return false;
@@ -225,7 +261,10 @@ class VerificaAfastamentos {
         /*
          *  Licenças prêmio
          */
-        $select = "SELECT idLicencaPremio
+        $select = "SELECT idLicencaPremio,
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal
                  FROM tblicencapremio
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -244,13 +283,23 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Licença";
             $this->detalhe = "Licença Prêmio";
+
+            if (empty($afast['numDias'])) {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+            }
             return true;
         }
 
         /*
          *  Licenças sem vencimentos
          */
-        $select = "SELECT idLicencaSemVencimentos, tbtipolicenca.nome
+        $select = "SELECT idLicencaSemVencimentos, 
+                          tbtipolicenca.nome,
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal
                      FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE idServidor = {$this->idServidor}                      
                       AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -269,13 +318,22 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Licença";
             $this->detalhe = $afast['nome'];
+            
+            if (empty($afast['numDias'])) {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+            }
             return true;
         }
 
         /*
          *  Faltas Abonadas por atestado
          */
-        $select = "SELECT idAtestado
+        $select = "SELECT idAtestado,
+                          dtInicio,
+                          numDias,
+                          ADDDATE(dtInicio,numDias-1) as dtFinal
                  FROM tbatestado
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicio AND ADDDATE(dtInicio,numDias-1)) 
@@ -294,14 +352,23 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Falta Abonada";
             $this->detalhe = "Atestado Médico";
+            
+            if (empty($afast['numDias'])) {
+                $this->periodo = date_to_php($afast['dtInicio']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['dtInicio']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+            }
             return true;
         }
 
         /*
          *  Trabalho TRE
          */
-        $select = "SELECT idTrabalhoTre
-                 FROM tbtrabalhotre
+        $select = "SELECT idTrabalhoTre,
+                          data,
+                          dias,
+                          ADDDATE(data,dias-1) as dtFinal
+                    FROM tbtrabalhotre
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN data AND ADDDATE(data,dias-1)) 
@@ -319,13 +386,22 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "TRE";
             $this->detalhe = "Trabalhando no TRE";
+            
+            if (empty($afast['dias'])) {
+                $this->periodo = date_to_php($afast['data']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['data']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['dias'] . " dias";
+            }
             return true;
         }
 
         /*
          *  Folgas TRE
          */
-        $select = "SELECT idFolga
+        $select = "SELECT idFolga,
+                          data,
+                          dias,
+                          ADDDATE(data,dias-1) as dtFinal
                  FROM tbfolga
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN data AND ADDDATE(data,dias-1)) 
@@ -344,6 +420,12 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Folga";
             $this->detalhe = "Em folga do TRE";
+            
+            if (empty($afast['dias'])) {
+                $this->periodo = date_to_php($afast['data']) . " a ???";
+            } else {
+                $this->periodo = date_to_php($afast['data']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['dias'] . " dias";
+            }
             return true;
         }
 

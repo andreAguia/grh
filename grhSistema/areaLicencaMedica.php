@@ -144,7 +144,7 @@ if ($acesso) {
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
+                          AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (tblicenca.idTpLicenca = 1 OR tblicenca.idTpLicenca = 2 OR tblicenca.idTpLicenca = 30))
                           AND situacao = 1
                           AND (tblicenca.idTpLicenca = 1 OR tblicenca.idTpLicenca = 2 OR tblicenca.idTpLicenca = 30)                          
                           AND idPerfil = 1";

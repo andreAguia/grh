@@ -259,7 +259,7 @@ if ($acesso) {
             $linkVoltar->set_class('button');
             $menu1->add_link($linkVoltar, "left");
 
-            $botaoAfast = new Button('Todos os Afastamentos', 'servidorAfastamentos.php?volta=0');
+            $botaoAfast = new Button('Afastamentos', 'servidorAfastamentos.php?volta=0');
             $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
             $botaoAfast->set_target("_blank");
             $menu1->add_link($botaoAfast, "right");

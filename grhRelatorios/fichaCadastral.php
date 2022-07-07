@@ -1494,7 +1494,7 @@ if ($acesso) {
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
         $relatorio->set_log(false);
-        $relatorio->set_textoMensagemSemRegistro("Não existem elogios para esse servidor !");
+        $relatorio->set_textoMensagemSemRegistro("Não existe acumulação de cargos cadastrados para esse servidor !");
         $relatorio->show();
     }
 

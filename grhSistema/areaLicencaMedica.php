@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $licenca = new Licenca();
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -133,6 +134,9 @@ if ($acesso) {
 
         case "lista" :
 
+            # Define as licenças consideradas
+            $arrayLicencas = [1, 2, 30];
+
             # Pega os dados
             $select = "SELECT tbservidor.idServidor,
                               tblicenca.idLicenca,
@@ -144,20 +148,51 @@ if ($acesso) {
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (tblicenca.idTpLicenca = 1 OR tblicenca.idTpLicenca = 2 OR tblicenca.idTpLicenca = 30))
+                          AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (";
+
+            $contador1 = count($arrayLicencas);
+            foreach ($arrayLicencas as $item) {
+                $contador1--;
+                if ($contador1 > 0) {
+                    $select .= "tblicenca.idTpLicenca = {$item} OR ";
+                } else {
+                    $select .= "tblicenca.idTpLicenca = {$item}";
+                }
+            }
+
+            # Continua
+            $select .= "))
                           AND situacao = 1
-                          AND (tblicenca.idTpLicenca = 1 OR tblicenca.idTpLicenca = 2 OR tblicenca.idTpLicenca = 30)                          
-                          AND idPerfil = 1";
+                          AND (";
+
+            $contador2 = count($arrayLicencas);
+            foreach ($arrayLicencas as $item) {
+                $contador2--;
+                if ($contador2 > 0) {
+                    $select .= "tblicenca.idTpLicenca = {$item} OR ";
+                } else {
+                    $select .= "tblicenca.idTpLicenca = {$item}";
+                }
+            }
+
+            # Continua
+            $select .= ") AND idPerfil = 1";
 
             # Alta
             if ($parametroAlta == "Sem Alta") {
                 $select .= " AND alta <> 1";
                 $titulo = "Servidores Com a Última Licença Médica SEM ALTA";
-                $mensagem = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
+                $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
             } else {
                 $select .= " AND alta = 1";
                 $titulo = "Servidores Com a Última Licença Médica COM ALTA";
-                $mensagem = "Servidores devem retornar ao seus setores no dia imediatamente após ao término da licença.";
+                $mensagem1 = "Servidores devem retornar ao seus setores no dia imediatamente após ao término da licença. ";
+            }
+
+            # Licenças consideradas
+            $mensagem2 = "As licenças consideradas são:<br/>";
+            foreach ($arrayLicencas as $item) {
+                $mensagem2 .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$licenca->exibeNomeSimples($item)}<br/>";
             }
 
             # Matrícula, nome ou id
@@ -196,7 +231,18 @@ if ($acesso) {
 
             $resumo = $pessoal->select($select);
 
-            callout($mensagem);
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+            
+            callout($mensagem1,"alert");
+
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+            
+            callout($mensagem2);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -220,7 +266,7 @@ if ($acesso) {
         ################################################################
         # Chama o menu do Servidor que se quer editar
         case "editaServidor" :
-            
+
             # Informa o $id Servidor
             set_session('idServidorPesquisado', $id);
 
@@ -228,7 +274,7 @@ if ($acesso) {
             set_session('origem', 'areaLicencaMedica.php');
 
             # Carrega a página específica
-            loadPage('servidorLicenca.php');            
+            loadPage('servidorLicenca.php');
             break;
 
         ################################################################

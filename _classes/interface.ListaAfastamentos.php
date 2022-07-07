@@ -231,20 +231,20 @@ class ListaAfastamentos {
 
         #######################
         # Licença geral
-        $select .= '       tblicenca.dtInicial,
-                           tblicenca.numDias,
-                           ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
-                           CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
-                           CONCAT("tblicenca","&",idLicenca),
-                          tbservidor.idServidor,
-                          tbpessoa.nome
-                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                           JOIN tbhistlot USING (idServidor)
-                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                      LEFT JOIN tblicenca USING (idServidor)
-                                      LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                                      LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                      LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+        $select .= '     tblicenca.dtInicial,
+                         tblicenca.numDias,
+                         ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
+                         CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
+                         CONCAT("tblicenca","&",idLicenca),
+                         tbservidor.idServidor,
+                         tbpessoa.nome
+                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                    LEFT JOIN tblicenca USING (idServidor)
+                                    LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                                    LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
         # Tipo de afastamento
@@ -926,7 +926,6 @@ class ListaAfastamentos {
         $select = $this->montaSelect();
 
         $result = $pessoal->select($select);
-        $cont = $pessoal->count($select);
 
         $tabela = new Tabela();
         if (empty($this->idServidor)) {
@@ -953,14 +952,14 @@ class ListaAfastamentos {
                 $tabela->set_classe([null, null, "pessoal"]);
                 $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
                 $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
-                $tabela->set_width([10, 20, 10, 8, 5, 8, 30, 5]);
+                $tabela->set_width([10, 25, 10, 8, 5, 8, 25, 5]);
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe([null, "pessoal", "pessoal"]);
                     $tabela->set_metodo([null, "get_nomeSimples", "get_lotacaoSimples"]);
                 } else {
                     $tabela->set_classe([null, "pessoal", "pessoal"]);
-                    $tabela->set_metodo([null, "get_nomeECargo", "get_lotacaoSimples"]);
+                    $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
                 $tabela->set_rowspan(1);
@@ -976,7 +975,7 @@ class ListaAfastamentos {
                     $tabela->set_metodo(["get_nomeSimples", "get_lotacaoSimples"]);
                 } else {
                     $tabela->set_classe(["pessoal", "pessoal"]);
-                    $tabela->set_metodo(["get_nomeECargo", "get_lotacaoSimples"]);
+                    $tabela->set_metodo(["get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
                 $tabela->set_rowspan(0);

@@ -211,7 +211,7 @@ class VerificaAfastamentos {
                           ADDDATE(dtInicial,numDias-1) as dtFinal
                       FROM tblicenca
                      WHERE idServidor = {$this->idServidor}
-                       AND (idTpLicenca = 1 OR idTpLicenca = 30)
+                       AND (idTpLicenca = 1 OR idTpLicenca = 2 OR idTpLicenca = 30)
                   ORDER BY dtInicial DESC LIMIT 1";
         $row2 = $pessoal->select($select, false);
 
@@ -270,7 +270,7 @@ class VerificaAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
-
+                      
         // se tiver isenção
         if ($this->tabela == "tblicencapremio" AND!empty($this->id)) {
             $select .= " AND idLicencaPremio <> {$this->id}";
@@ -304,10 +304,11 @@ class VerificaAfastamentos {
                     WHERE idServidor = {$this->idServidor}                      
                       AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                        OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
+                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1))
+                       OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicencasemvencimentos" AND!empty($this->id)) {
+        if ($this->tabela == "tblicencasemvencimentos" AND !empty($this->id)) {
             $select .= " AND idLicencaSemVencimentos <> {$this->id}";
         }
 

@@ -327,8 +327,7 @@ if ($acesso) {
             $subTitulo = null;
 
             # Pega os dados
-            $select = "SELECT tbservidor.idfuncional,
-                      tbservidor.idServidor,
+            $select = "SELECT tbservidor.idServidor,
                       tbescolaridade.escolaridade,
                       idFormacao,
                       instEnsino
@@ -362,12 +361,12 @@ if ($acesso) {
                 $subTitulo .= "Filtro Curso de Nível: {$pessoal->get_escolaridade($parametroEscolaridade)}<br/>";
             }
 
-            if (!empty($parametroCurso)) {
+            if ($parametroCurso <> "Todos") {
                 $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
                 $subTitulo .= "Filtro Curso: {$parametroCurso}<br/>";
             }
-
-            if (!empty($parametroInstituicao)) {
+            
+            if ($parametroInstituicao <> "Todos") {
                 $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
                 $subTitulo .= "Filtro Instituição: {$parametroInstituicao}<br/>";
             }
@@ -395,11 +394,13 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            $relatorio->set_label(array("IdFuncional", "Servidor", "Escolaridade", "Curso", "Instituição"));
+            $relatorio->set_label(["Servidor", "Escolaridade", "Curso", "Instituição"]);
             $relatorio->set_conteudo($result);
-            $relatorio->set_align(array("center", "left", "center", "left", "left"));
-            $relatorio->set_classe(array(null, "pessoal", null, "Formacao"));
-            $relatorio->set_metodo(array(null, "get_nomeECargo", null, "exibeCurso"));
+            $relatorio->set_align(["left", "center", "left", "left"]);
+            $relatorio->set_classe(["pessoal", null, "Formacao"]);
+            $relatorio->set_metodo(["get_nomeECargoELotacaoEId", null, "exibeCurso"]);
+            $relatorio->set_rowspan(0);
+            $relatorio->set_bordaInterna(true);
             $relatorio->show();
             break;
     }

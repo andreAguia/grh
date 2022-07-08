@@ -911,6 +911,43 @@ class Pessoal extends Bd {
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
+    public function get_cargoCompleto3($idServidor, $exibeComissao = true) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbtipocargo.sigla,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if ($row["idPerfil"] == 2) {
+            p("Exercendo função equivalente ao", "pLinha3");
+            p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+        } else {
+            plista(
+                    $row["sigla"]." - ".$row["nome"],
+                    $comissao
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
     public function get_cargoEfetivo($idServidor) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,

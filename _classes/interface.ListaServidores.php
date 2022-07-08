@@ -474,7 +474,7 @@ class ListaServidores {
 
         $align = array("center", "left", "center", "left");
         $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_lotacao", "get_perfil");
+        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil");
 
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);
@@ -542,18 +542,18 @@ class ListaServidores {
         $conteudo = $servidor->select($this->select, true);
 
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação");
-            $width = array(8, 20, 25, 23, 14, 5, 5);
-            $function = array(null, null, null, null, null, "date_to_php", "get_situacaoRel");
+            $label = ["IdFuncional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação"];
+            $width = [8, 30, 30, 15, 10, 5, 5];
+            $function = [null, null, null, null, null, "date_to_php", "get_situacaoRel"];
         } else {
-            $label = array("ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
-            $width = array(8, 20, 25, 20, 14, 5, 5, 5);
-            $function = array(null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel");
+            $label = ["IdFuncional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Saída", "Situação"];
+            $width = [8, 30, 25, 15, 10, 5, 5, 5];
+            $function = [null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel"];
         }
 
-        $align = array("center", "left", "left", "left");
-        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_lotacao", "get_perfil");
+        $align = ["center", "left", "left", "left"];
+        $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal"];
+        $metodo = ["get_matricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil"];
 
         # Relatório
         $relatorio = new Relatorio();
@@ -569,6 +569,7 @@ class ListaServidores {
         $relatorio->set_classe($classe);
         $relatorio->set_metodo($metodo);
         $relatorio->set_subTotal(false);
+        $relatorio->set_bordaInterna(true);
         $relatorio->set_conteudo($conteudo);
         $relatorio->show();
     }

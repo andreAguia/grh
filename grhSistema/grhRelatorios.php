@@ -370,8 +370,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimento.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geralServidoresNomeCpfNascimentoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geralServidoresNomeCpfCargoIdade.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Idade', '../grhRelatorios/geral.servidores.idade.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');            
             $menu->show();
             break;
 
@@ -542,6 +541,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Estatutários Agrupados pelo Cargo', '../grhRelatorios/estatutariosCargo.php');
             $menu->add_item('linkWindow', 'Estatutários Com CPF e Data de Nascimento', '../grhRelatorios/estatutariosCpfNascimento.php');
             $menu->add_item('linkWindow', 'Estatutários Inativos Por Lotação', '../grhRelatorios/lotacaoEstatutariosInativos.php');
+            $menu->add_item('linkWindow', 'Estatutários Ativos com Idade', '../grhRelatorios/estatutarios.idade.php');
 
             $menu->show();
             break;

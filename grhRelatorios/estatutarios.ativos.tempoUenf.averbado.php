@@ -38,8 +38,10 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional, 
                       tbpessoa.nome,
                       tbservidor.dtAdmissao,
-                     DATE_FORMAT(tbpessoa.dtNasc, "%d/%m/%Y")             
-                FROM tbservidor JOIN tbpessoa USING (idpessoa)
+                      DATE_FORMAT(tbpessoa.dtNasc, "%d/%m/%Y") ,
+                      tbservidor.idservidor,
+                      tbservidor.idservidor
+                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
                                 JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
@@ -63,13 +65,13 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pela Idade');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Idade']);
+    $relatorio->set_subtitulo($subTitulo . 'Com Tempo Averbado e de Uenf - Ordenados pela Idade');
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Idade', 'Averbado (dias)', 'Uenf (dias)']);
     #$relatorio->set_width([30, 20, 25, 15, 10]);
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php", "idade"]);
-//    $relatorio->set_classe(array(null, "pessoal", "pessoal"));
-//    $relatorio->set_metodo(array(null, "get_lotacao", "get_cargoSimples"));
+    $relatorio->set_classe([null, null, null, null, "Averbacao", "Aposentadoria"]);
+    $relatorio->set_metodo([null, null, null, null, "get_tempoAverbadoTotal", "get_tempoServicoUenf"]);
     $relatorio->set_conteudo($result);
 
 //    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

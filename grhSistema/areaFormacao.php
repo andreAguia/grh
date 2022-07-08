@@ -399,7 +399,7 @@ if ($acesso) {
             $relatorio->set_conteudo($result);
             $relatorio->set_align(array("center", "left", "center", "left", "left"));
             $relatorio->set_classe(array(null, "pessoal", null, "Formacao"));
-            $relatorio->set_metodo(array(null, "get_nomeECargo", null, "get_curso"));
+            $relatorio->set_metodo(array(null, "get_nomeECargo", null, "exibeCurso"));
             $relatorio->show();
             break;
     }

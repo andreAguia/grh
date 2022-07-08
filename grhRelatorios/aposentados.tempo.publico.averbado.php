@@ -43,9 +43,9 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Aposentados');
     $relatorio->set_subtitulo('Com Tempo Publico Averbado');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF','Empresa Publica'));
-    #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center", "left", "center","left"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Empresa Publica']);
+    $relatorio->set_width([10, 30, 20, 40]);
+    $relatorio->set_align(["center", "left", "center", "left"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

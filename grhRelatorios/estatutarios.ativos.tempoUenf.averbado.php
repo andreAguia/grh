@@ -62,7 +62,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ativos');
+    $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pela Idade');
     $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Idade']);
     #$relatorio->set_width([30, 20, 25, 15, 10]);

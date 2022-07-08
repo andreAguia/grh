@@ -36,10 +36,11 @@ $postAbono = post('abono');
 $postDireito = post('direito');
 $postPenalidade = post('penalidade');
 $postElogio = post('elogio');
+$postAcumulacao = post('acumulacao');
 $postDadosUsuario = post('dadosUsuario');
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados    
@@ -232,6 +233,15 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 3),
+        array('nome' => 'acumulacao',
+            'label' => 'Acumulação',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe se o servidor teve Acumulação de Cargos',
+            'valor' => $postAcumulacao,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 4),
         array('nome' => 'dadosUsuario',
             'label' => 'Dados Usuário',
             'tipo' => 'simnao',
@@ -364,7 +374,7 @@ if ($acesso) {
      */
 
     tituloRelatorio('Dados Financeiros');
-    
+
     $trienioClasse = new Trienio();
 
     # pega os valores
@@ -1452,6 +1462,39 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         $relatorio->set_log(false);
         $relatorio->set_textoMensagemSemRegistro("Não existem elogios para esse servidor !");
+        $relatorio->show();
+    }
+
+    /*
+     * Acumulação de Cargos
+     */
+
+    if ($postAcumulacao) {
+        tituloRelatorio('Acumulação de Cargos');
+
+        $select = "SELECT instituicao,
+                          matricula,
+                          cargo
+                     FROM tbacumulacao
+                    WHERE idServidor={$idServidorPesquisado}";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Órgão", "Matricula", "Cargo"]);
+        #$relatorio->set_width([40, 20, 40]);
+        $relatorio->set_align(["left", "center", "left"]);
+        #$relatorio->set_funcao(["date_to_php"]);
+        $relatorio->set_conteudo($result);
+
+        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existe acumulação de cargos cadastrados para esse servidor !");
         $relatorio->show();
     }
 

@@ -814,7 +814,6 @@ class MenuPrincipal {
         $botao->set_title('Controle de Emissão de RPA');
         #$menu->add_item($botao); ### retirado por falta de uso
         
-        # Por enquanto somente pra mim
         $botao = new BotaoGrafico();
         $botao->set_label('Auxílio Transporte');
         $botao->set_url('areaAuxilioTransporte.php?grh=1');

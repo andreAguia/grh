@@ -27,6 +27,7 @@ if ($acesso) {
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $situacao = $pessoal->get_idSituacao($idServidorPesquisado);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Começa uma nova página
     $page = new Page();
@@ -38,10 +39,17 @@ if ($acesso) {
     $dec->set_assinatura(true);
     $dec->set_data(date("d/m/Y"));
 
-    $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
-            . " {$lotacao} vem cumprindo normalmente sua carga"
-            . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+    # Somente se for estatutário
+    if ($idPerfil == 1) {
+        $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
+                . " {$lotacao} vem cumprindo normalmente sua carga"
+                . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+    }else{
+        $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, lotado(a) no(a) {$lotacao} vem cumprindo"
+                . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+    }
 
     if ($situacao == 1) {
         $dec->show();

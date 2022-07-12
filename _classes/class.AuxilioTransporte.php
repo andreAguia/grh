@@ -387,7 +387,7 @@ class AuxilioTransporte {
                 if (empty($acumulacao["instituicao"])) {
                     return null;
                 } else {
-                    
+
                     # Verifica se tem que colocar o hr
                     if ($contador > 0) {
                         hr("alerta");
@@ -412,6 +412,82 @@ class AuxilioTransporte {
                     );
                     $contador++;
                 }
+            }
+
+            /*
+             * Cessão
+             */
+
+            # Verifica se o servidor tem acumulação
+            $select = "SELECT idHistCessao,
+                              dtInicio,
+                              dtFim,
+                              orgao,
+                              idHistCessao,
+                              processo,
+                              obs
+                         FROM tbhistcessao
+                        WHERE idServidor = {$idServidor}
+                          AND (('{$data}' BETWEEN dtInicio AND dtFim)
+                           OR  (LAST_DAY('{$data}') BETWEEN dtInicio AND dtFim)
+                           OR  ('{$data}' < dtInicio AND LAST_DAY('{$data}') > dtFim)
+                           OR  (LAST_DAY('{$data}') > dtInicio AND dtFim IS NULL)    
+                             )";
+
+            # Pega os dados
+            $cessao = $pessoal->select($select, false);
+
+            # Verifica se tem dados
+            if (!empty($cessao)) {
+
+                # Verifica se tem que colocar o hr
+                if ($contador > 0) {
+                    hr("alerta");
+                }
+
+                pLista(
+                        "Servidor Cedido",
+                        $cessao["orgao"],
+                        date_to_php($cessao["dtInicio"]) . " a " . date_to_php($cessao["dtFim"]),
+                        $cessao["processo"]
+                );
+                $contador++;
+            }
+            
+             /*
+             * cedido que retornou mês anterior
+             */
+
+            # Verifica se o servidor tem acumulação
+            $select = "SELECT idHistCessao,
+                              dtInicio,
+                              dtFim,
+                              orgao,
+                              idHistCessao,
+                              processo,
+                              obs
+                         FROM tbhistcessao
+                        WHERE idServidor = {$idServidor}
+                          AND dtFim BETWEEN DATE_SUB('{$data}', INTERVAL 1 MONTH) AND '{$data}'";
+
+            # Pega os dados
+            $cessao = $pessoal->select($select, false);
+
+            # Verifica se tem dados
+            if (!empty($cessao)) {
+
+                # Verifica se tem que colocar o hr
+                if ($contador > 0) {
+                    hr("alerta");
+                }
+
+                pLista(
+                        "Servidor Terminou cessão a menos de 1 mês",
+                        $cessao["orgao"],
+                        date_to_php($cessao["dtInicio"]) . " a " . date_to_php($cessao["dtFim"]),
+                        $cessao["processo"]
+                );
+                $contador++;
             }
         }
     }

@@ -100,7 +100,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a declaração de horário';
+    $atividades = 'Visualizou a declaração de férias';
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 

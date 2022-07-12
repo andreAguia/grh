@@ -482,7 +482,7 @@ class AuxilioTransporte {
                 }
 
                 pLista(
-                        "Servidor Terminou cessão a menos de 1 mês",
+                        "Servidor terminou cessão a menos de 1 mês",
                         $cessao["orgao"],
                         date_to_php($cessao["dtInicio"]) . " a " . date_to_php($cessao["dtFim"]),
                         $cessao["processo"]

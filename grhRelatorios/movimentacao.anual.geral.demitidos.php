@@ -62,7 +62,7 @@ if ($acesso) {
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(11);
-    ;
+    
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',
             'label' => 'Ano:',

@@ -505,6 +505,7 @@ class MenuServidor {
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
+        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Horário', '../grhRelatorios/declaracao.Horario.php');

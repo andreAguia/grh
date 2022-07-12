@@ -117,8 +117,8 @@ class Ferias {
         if (is_numeric($lotacao)) {
             $pessoal = new Pessoal();
             $lotacao = $pessoal->get_lotacaoDiretoria($lotacao);
-        } 
-        
+        }
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
@@ -149,6 +149,36 @@ class Ferias {
         $painel->abre();
         p(trataNulo($this->getProcesso($lotacao)), "f16", "center");
         $painel->fecha();
+    }
+
+###########################################################
+
+    public function get_feriasFruidasServidorExercicio($idServidor, $ano = null) {
+
+        /**
+         * retorna um array com os dias fruidos, solicitados, etc para um servidor em um exercicio determinado
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata os parêmetros
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if (empty($ano)) {
+            $ano = date('Y');
+        }
+
+        # Pega array com os dias publicados
+        $select = "SELECT SUM(numDias) as dias
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                      AND anoExercicio = '{$ano}'
+                      AND status = 'fruída'";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno["dias"];
     }
 
 ###########################################################

@@ -26,6 +26,10 @@ class Declaracao {
     private $rodapeSoUntimaPag = false;
     private $assinatura = false;
     private $declaracaoNome = "DECLARAÇÃO";
+    
+    private $formCampos = null;    // array com campos para o formulario
+    private $formFocus = null;     // Campos a receber foco no form
+    private $formLink = null;    // para onde vai o post
 
     ###########################################################
 
@@ -129,6 +133,9 @@ class Declaracao {
         # Menu
         $menuRelatorio = new menuRelatorio();
         $menuRelatorio->set_botaoVoltar(null);
+        $menuRelatorio->set_formCampos($this->formCampos);
+        $menuRelatorio->set_formFocus($this->formFocus);
+        $menuRelatorio->set_formLink($this->formLink);
         $menuRelatorio->set_aviso($this->aviso);
         $menuRelatorio->show();
 

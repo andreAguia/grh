@@ -148,7 +148,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label();
-        $botao->set_url("https://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
+        $botao->set_url("https://www.sigrh.rj.gov.br/Ergon/Administracao/ERGadm_mnu001.tp");
         $botao->set_imagem(PASTA_FIGURAS . 'sigrh.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Sistema Integrado de Gestão de Recursos Humanos');
         $botao->set_target("_blank");
@@ -215,7 +215,7 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label();
         #$botao->set_url("https://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
-        $botao->set_url("http://sigrh.rj.gov.br/gerj/Ergon/Administracao/ERGadm_mnu001.tp");
+        $botao->set_url("https://www.sigrh.rj.gov.br/Ergon/Administracao/ERGadm_mnu001.tp");
         $botao->set_imagem(PASTA_FIGURAS . 'sigrh.png', 80, 80);
         $botao->set_title('Sistema Integrado de Gestão de Recursos Humanos');
         $botao->set_target("_blank");

@@ -933,7 +933,7 @@ class Pessoal extends Bd {
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
             plista(
-                    $row["sigla"]." - ".$row["nome"],
+                    $row["sigla"] . " - " . $row["nome"],
                     $comissao
             );
         }
@@ -4616,7 +4616,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################

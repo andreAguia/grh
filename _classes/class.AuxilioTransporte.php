@@ -21,16 +21,9 @@ class AuxilioTransporte {
             # Inicia o banco de Dados
             $pessoal = new Pessoal();
 
-            # Prepara os dados
-            if (empty($mes)) {
-                $mes = date("m");
-            }
+            $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
 
-            if (empty($Ano)) {
-                $Ano = date("Y");
-            }
-
-            $data = "{$Ano}-{$mes}-01";
+            $data = "{$ano}-{$mes}-01";
             $contador = 0;
 
             /*
@@ -453,8 +446,8 @@ class AuxilioTransporte {
                 );
                 $contador++;
             }
-            
-             /*
+
+            /*
              * cedido que retornou mês anterior
              */
 
@@ -490,6 +483,121 @@ class AuxilioTransporte {
                 $contador++;
             }
         }
+    }
+
+    ###########################################################
+
+    /**
+     * Função que informa se o servidor recebeu ou não o auxílio
+     */
+    public function exibeRecebeu($idServidor, $mes, $ano) {
+
+        # Verifica se o id foi informado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Inicia o banco de Dados
+            $pessoal = new Pessoal();
+
+            $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+
+            # Pega os dasos
+            $select = "SELECT idtransporte
+                         FROM tbtransporte
+                        WHERE idServidor = {$idServidor}
+                          AND ano = '{$ano}'
+                          AND mes = '{$mes}'";
+
+            # Pega os dados
+            $count = $pessoal->count($select);
+
+            # Return
+            if ($count > 0) {
+                label("Sim", "success", null, "O Nome desse servidor FOI informado na listagem dos que receberam o auxílio este mês");
+            } else {
+                label("Não", "alert", null, "O Nome desse servidor NÃO foi informado na listagem dos que receberam o auxílio este mês");
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Informa se houve upload deste mês
+     */
+    public function houveUpload($mes, $ano) {
+
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+
+        $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+
+        # Pega os dasos
+        $select = "SELECT idtransporte
+                         FROM tbtransporte
+                        WHERE ano = '{$ano}'
+                          AND mes = '{$mes}'";
+
+        # Return
+        if ($pessoal->count($select) > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Informa se houve upload deste mês
+     */
+    public function exibeResumo($lotacao = null, $mes = null, $ano = null) {
+
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+
+        $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+
+        # Pega os dasos
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor JOIN tbtransporte USING (idServidor)
+                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND ano = '{$ano}'
+                      AND mes = '{$mes}'";
+                      
+        # lotacao
+        if (!empty($lotacao) and $lotacao <> "todos") {
+            $servidores = $pessoal->get_numServidoresAtivos($lotacao);
+            # Verifica se o que veio é numérico
+            if (is_numeric($lotacao)) {
+                $select .= " AND (tblotacao.idlotacao = '{$lotacao}')";
+                $titulo = $pessoal->get_nomeLotacao($lotacao);
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$lotacao}')";
+                $titulo = $lotacao;
+            }
+        }else{
+            $titulo = "Resumo Geral";
+            $servidores = $pessoal->get_numServidoresAtivos();
+        }
+
+        $receberam = $pessoal->count($select);        
+        $nreceberam = $servidores - $receberam;
+        
+        $array[] = ["Receberam", $receberam];
+        $array[] = ["Não Receberam", $nreceberam];
+        
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Nº de Servidores"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_align(["left"]);
+        $tabela->set_titulo($titulo);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
     }
 
     ###########################################################

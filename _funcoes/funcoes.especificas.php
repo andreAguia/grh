@@ -1283,13 +1283,42 @@ function exibeSituacaoAuxilioTransporte($dados) {
     if (empty($dados)) {
         return null;
     } else {
-        
+
         # Separa os dados
         $valores = explode("-", $dados);
         $idServidor = $valores[0];
-        
+
         $transporte = new AuxilioTransporte();
         $transporte->exibeSituacao($valores[0], $valores[1], $valores[2]);
+    }
+}
+
+###########################################################
+
+/**
+ * Função que retorna o afastamento atual de um servidor (se houver)
+ * Obs esta função acessa a classe verifica afastamento
+ */
+function exibeRecebeuAuxilioTransporte($dados) {
+
+    # Verifica se o id foi informado
+    if (empty($dados)) {
+        return null;
+    } else {
+
+        # Separa os dados
+        $valores = explode("-", $dados);
+        $idServidor = $valores[0];
+
+        # Verifica se houve upload
+        $auxilio = new AuxilioTransporte();
+        $houveUpload = $auxilio->houveUpload($valores[1], $valores[2]);
+
+        if ($houveUpload) {
+            $auxilio->exibeRecebeu($valores[0], $valores[1], $valores[2]);
+        } else {
+            return null;
+        }
     }
 }
 

@@ -194,13 +194,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Status", "Tipo", "Tipo", "Dados", "Período", "Entregou CRP?", "Documentos"));
-    $objeto->set_width(array(10, 5, 15, 20, 20, 5, 20));
-    $objeto->set_align(array("center", "center", "left", "left", "left"));
-    #$objeto->set_funcao(array(null,null,null,"date_to_php"));
-
-    $objeto->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $objeto->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp", "exibeBotaoDocumentos"));
+    $objeto->set_label(["Status", "Tipo", "Tipo", "Dados", "Período", "Entregou CRP?", "Documentos"]);
+    $objeto->set_width([10, 5, 15, 20, 20, 5, 20]);
+    $objeto->set_align(["center", "center", "left", "left", "left"]);
+    $objeto->set_classe(["LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+    $objeto->set_metodo(["exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp", "exibeBotaoDocumentos"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 0,
@@ -322,7 +320,6 @@ if ($acesso) {
             'nome' => 'optouContribuir',
             'title' => 'Informa se o servidor optou em contribuir para o Rioprevidência',
             'label' => 'Optou Pagar o Rioprevidência?',
-            'required' => true,
             'tipo' => 'combo',
             'array' => [[null, null], [1, "Sim"], [2, "Não"]],
             'size' => 20),

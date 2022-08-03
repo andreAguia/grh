@@ -1236,6 +1236,11 @@ if ($acesso) {
         tituloRelatorio('Histórico de Licença Sem Vencimentos');
 
         $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
+                          CASE
+                               WHEN optouContribuir = 1 THEN "Optou Pagar" 
+                               WHEN optouContribuir = 2 THEN "Optou NÃO Pagar" 
+                               ELSE "---"
+                            END,
                             tblicencasemvencimentos.dtInicial,
                             tblicencasemvencimentos.numDias,
                             ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
@@ -1249,9 +1254,9 @@ if ($acesso) {
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        $relatorio->set_label(array("Tipo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
-        $relatorio->set_align(array('left', 'center', 'center', 'center', 'left'));
+        $relatorio->set_label(["Tipo", "RioPrevidência", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
+        $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php']);
+        $relatorio->set_align(['left', 'center', 'center', 'center', 'center', 'left']);
         $relatorio->set_conteudo($result);
         $relatorio->set_botaoVoltar(false);
         $relatorio->set_subTotal(false);

@@ -11,8 +11,8 @@ $pessoal = new Pessoal();
 $dtInicial = date_to_php($campoValor[6]);
 $numDias = $campoValor[7];
 $dtTermino = $campoValor[8];
-$dtRetorno = $campoValor[9];
-$idServidor = $campoValor[17];
+$dtRetorno = $campoValor[11];
+$idServidor = $campoValor[19];
 
 # Preenche a data de término quando for nula
 if (empty($dtTermino)) {

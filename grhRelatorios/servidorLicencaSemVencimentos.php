@@ -65,7 +65,7 @@ if ($acesso) {
     $relatorio->set_align(array("center", "center", "left", "left", "left"));
 
     $relatorio->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
+    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

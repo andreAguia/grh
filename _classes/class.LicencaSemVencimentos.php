@@ -1,7 +1,6 @@
 <?php
 
-class LicencaSemVencimentos
-{
+class LicencaSemVencimentos {
 
     /**
      * Abriga as várias rotina referentes ao afastamento do servidor
@@ -14,8 +13,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function get_dados($idLicencaSemVencimentos)
-    {
+    function get_dados($idLicencaSemVencimentos) {
 
         /**
          * Informe o número do processo de solicitação de redução de carga horária de um servidor
@@ -42,8 +40,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function exibeStatus($idLicencaSemVencimentos)
-    {
+    function exibeStatus($idLicencaSemVencimentos) {
 
         /**
          * Informe o status de uma solicitação de redução de carga horária específica
@@ -120,8 +117,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function exibePeriodo($idLicencaSemVencimentos)
-    {
+    function exibePeriodo($idLicencaSemVencimentos) {
 
         /**
          * Informe os dados da período de uma solicitação de redução de carga horária específica
@@ -185,8 +181,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function exibeProcessoPublicacao($idLicencaSemVencimentos)
-    {
+    function exibeDados($idLicencaSemVencimentos) {
 
         /**
          * Informe o número do processo e a data da publicação de uma licença sem vencimentos
@@ -201,14 +196,16 @@ class LicencaSemVencimentos
         $dtPublicacao = $dados["dtPublicacao"];
         $pgPublicacao = $dados["pgPublicacao"];
         $dtSolicitacao = $dados["dtSolicitacao"];
+        $optouContribuir = $dados["optouContribuir"];
+        $estaQuite = $dados["estaQuite"];
 
         # Trata a data de retorno
-        if (!vazio($dtPublicacao)) {
+        if (!empty($dtPublicacao)) {
             $dtPublicacao = date_to_php($dtPublicacao);
         }
 
         # Trata a data de $dtSolicitacao
-        if (!vazio($dtSolicitacao)) {
+        if (!empty($dtSolicitacao)) {
             $dtSolicitacao = date_to_php($dtSolicitacao);
         }
 
@@ -216,8 +213,19 @@ class LicencaSemVencimentos
                 . "Processo : " . trataNulo($processo) . "<br/>"
                 . "Publicação: " . trataNulo($dtPublicacao);
 
-        if (!vazio($pgPublicacao)) {
+        if (!empty($pgPublicacao)) {
             $retorno .= " Pag. " . $pgPublicacao;
+        }
+
+        # Verifica Dados do Rioprevidência
+        if ($optouContribuir == 1) {            
+            if($estaQuite == 1){
+                $retorno .= "<br/>Rioprevidência: Optou pagar (Quitado)";
+            }else{
+                $retorno .= "<br/>Rioprevidência: Optou pagar";
+            }
+        } elseif ($optouContribuir == 2) {
+            $retorno .= "<br/>Rioprevidência: <b><span id='naoPagar'>Optou em NÃO pagar</span></b>";
         }
 
         return $retorno;
@@ -225,8 +233,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function exibeCrp($idLicencaSemVencimentos)
-    {
+    function exibeCrp($idLicencaSemVencimentos) {
 
         /**
          * Informe se o servidor entregou o CRp e o prazo de entrega
@@ -312,8 +319,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function set_linkEditar($linkEditar)
-    {
+    public function set_linkEditar($linkEditar) {
         /**
          * Informa a rotina de edição (se houver)
          *
@@ -326,8 +332,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function get_nomeLicenca($idTpLicenca)
-    {
+    public function get_nomeLicenca($idTpLicenca) {
         /**
          * Informa o nome da licença de forma compacta para ser exibida na tabela
          *
@@ -352,8 +357,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function exibeLista($nome = null)
-    {
+    public function exibeLista($nome = null) {
 
         /**
          * Exibe uma tabela com a relação dos servidores comafastamento
@@ -375,18 +379,18 @@ class LicencaSemVencimentos
                          idServidor,
                          idTpLicenca,
                          idLicencaSemVencimentos,
-                         idLicencaSemVencimentos, 
+                         idLicencaSemVencimentos,
                          idLicencaSemVencimentos,
                          idServidor
                     FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                  JOIN tbpessoa USING (idPessoa)
                     WHERE TRUE';
-        
+
         # Matrícula, nome ou id ou cpf
-        if (!empty($nome)){
-                $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+        if (!empty($nome)) {
+            $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
         }
-        
+
         $select .= ' ORDER BY dtSolicitacao desc, dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -398,15 +402,13 @@ class LicencaSemVencimentos
         $tabela->set_titulo($titulo);
         $tabela->set_conteudo($result);
 
-        $tabela->set_label(array("Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
-        $tabela->set_width(array(10, 5, 20, 12, 25, 18, 5));
-        $tabela->set_align(array("center", "center", "left", "left", "left", "left"));
-        #$tabela->set_funcao(array(null,null,null,null,"date_to_php"));
+        $tabela->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"]);
+        $tabela->set_align(["center", "center", "left", "left", "left", "left"]);
+        $tabela->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+        $tabela->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"]);
 
-        $tabela->set_classe(array("LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-        $tabela->set_metodo(array("exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
-
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => 'Em Aberto',
                 'operador' => '=',
                 'id' => 'emAberto'),
@@ -433,8 +435,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    public function exibeRelatorio($nome = null)
-    {
+    public function exibeRelatorio($nome = null) {
 
         /**
          * Exibe uma tabela com a relação dos servidores comafastamento
@@ -443,8 +444,7 @@ class LicencaSemVencimentos
          */
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
-        
-        
+
         $relatorio = new Relatorio();
 
         # Licença
@@ -463,13 +463,13 @@ class LicencaSemVencimentos
                     FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                  JOIN tbpessoa USING (idPessoa)
                     WHERE TRUE';
-        
+
         # Matrícula, nome ou id ou cpf
-        if (!empty($nome)){
-                $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
-                $relatorio->set_subtitulo("Pesquisa: {$nome}");
+        if (!empty($nome)) {
+            $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+            $relatorio->set_subtitulo("Pesquisa: {$nome}");
         }
-        
+
         $select .= ' ORDER BY dtSolicitacao desc, dtInicial desc';
 
         $result = $pessoal->select($select);
@@ -479,13 +479,11 @@ class LicencaSemVencimentos
 
         # Monta o Relatório        
         $relatorio->set_titulo($titulo);
-
-        $relatorio->set_label(array("Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
-        $relatorio->set_align(array("center", "center", "left", "left", "left", "left"));
-
-        $relatorio->set_classe(array("LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-        $relatorio->set_metodo(array("exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeProcessoPublicacao", "exibePeriodo", "exibeCrp"));
-
+        $relatorio->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"]);
+        $relatorio->set_align(["center", "center", "left", "left", "left", "left"]);
+        $relatorio->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+        $relatorio->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"]);
+        $relatorio->set_bordaInterna(true);
         $relatorio->set_conteudo($result);
 
         $relatorio->show();
@@ -493,8 +491,7 @@ class LicencaSemVencimentos
 
     ###########################################################
 
-    function exibeBotaoDocumentos($idLicencaSemVencimentos)
-    {
+    function exibeBotaoDocumentos($idLicencaSemVencimentos) {
 
         /**
          * Exibe o botão de imprimir os documentos

@@ -215,13 +215,13 @@ if ($acesso) {
 
             ###########################33
             # Pega os dados
-            $select = "SELECT tbservidor.idfuncional,
+            $select = "SELECT DISTINCT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}') 
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbtransporte USING (idServidor)
+                         FROM tbservidor LEFT JOIN tbtransporte USING (idServidor)
+                                              JOIN tbpessoa USING (idPessoa)                                         
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)

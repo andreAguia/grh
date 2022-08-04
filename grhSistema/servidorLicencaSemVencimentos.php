@@ -168,11 +168,10 @@ if ($acesso) {
                                      dtInicial,
                                      numDias,
                                      dtTermino,
-                                     optouContribuir,
-                                     estaQuite,
                                      dtRetorno,
                                      dtPublicacaoRetorno,
                                      pgPublicacaoRetorno,
+                                     optouContribuir,
                                      crp,
                                      dtCrp,
                                      numCrp,
@@ -194,11 +193,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Status", "Tipo", "Tipo", "Dados", "Período", "Entregou CRP?", "Documentos"]);
-    $objeto->set_width([10, 5, 15, 20, 20, 5, 20]);
+    $objeto->set_label(["Status", "Tipo", "Tipo", "Dados", "Período", "Rioprevidência", "Documentos"]);
+    #$objeto->set_width([10, 5, 15, 20, 20, 5, 20]);
     $objeto->set_align(["center", "center", "left", "left", "left"]);
     $objeto->set_classe(["LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
-    $objeto->set_metodo(["exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp", "exibeBotaoDocumentos"]);
+    $objeto->set_metodo(["exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia", "exibeBotaoDocumentos"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 0,
@@ -315,22 +314,6 @@ if ($acesso) {
             'col' => 3,
             'title' => 'Data de Termino.',
             'linha' => 4),
-        array('linha' => 5,
-            'col' => 3,
-            'nome' => 'optouContribuir',
-            'title' => 'Informa se o servidor optou em contribuir para o Rioprevidência',
-            'label' => 'Optou Pagar o Rioprevidência?',
-            'tipo' => 'combo',
-            'array' => [[null, null], [1, "Sim"], [2, "Não"]],
-            'size' => 20),
-        array('linha' => 5,
-            'col' => 3,
-            'nome' => 'estaQuite',
-            'title' => 'Informa se o servidor está quite com o Rioprevidência',
-            'label' => 'Está Quite com o Rioprevidência?',
-            'tipo' => 'combo',
-            'array' => [[null, null], [1, "Sim"], [2, "Não"]],
-            'size' => 20),
         array('nome' => 'dtRetorno',
             'label' => 'Data de Retorno (antecipado):',
             'tipo' => 'data',
@@ -353,6 +336,14 @@ if ($acesso) {
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 6),
         array('linha' => 7,
+            'col' => 3,
+            'nome' => 'optouContribuir',
+            'title' => 'Informa se o servidor optou em contribuir para o Rioprevidência',
+            'label' => 'Optou Pagar o Rioprevidência?',
+            'tipo' => 'combo',
+            'array' => [[null, null], [1, "Sim"], [2, "Não"]],
+            'size' => 20),
+        array('linha' => 8,
             'col' => 2,
             'nome' => 'crp',
             'title' => 'informa se entregou CRP',
@@ -367,22 +358,22 @@ if ($acesso) {
             'size' => 10,
             'col' => 3,
             'title' => 'Data do início.',
-            'linha' => 7),
+            'linha' => 8),
         array('nome' => 'numCrp',
             'label' => 'Número do CRP:',
             'tipo' => 'texto',
             'size' => 10,
             'col' => 3,
             'title' => 'Número CRP.',
-            'linha' => 7),
+            'linha' => 8),        
         array('nome' => 'numSeiCrp',
             'label' => 'Número do documento CRP no SEI:',
             'tipo' => 'texto',
             'size' => 10,
             'col' => 3,
             'title' => 'Número do documento no SEI.',
-            'linha' => 7),
-        array('linha' => 8,
+            'linha' => 8),
+        array('linha' => 12,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

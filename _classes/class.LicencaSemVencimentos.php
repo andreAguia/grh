@@ -196,8 +196,6 @@ class LicencaSemVencimentos {
         $dtPublicacao = $dados["dtPublicacao"];
         $pgPublicacao = $dados["pgPublicacao"];
         $dtSolicitacao = $dados["dtSolicitacao"];
-        $optouContribuir = $dados["optouContribuir"];
-        $estaQuite = $dados["estaQuite"];
 
         # Trata a data de retorno
         if (!empty($dtPublicacao)) {
@@ -217,23 +215,12 @@ class LicencaSemVencimentos {
             $retorno .= " Pag. " . $pgPublicacao;
         }
 
-        # Verifica Dados do Rioprevidência
-        if ($optouContribuir == 1) {            
-            if($estaQuite == 1){
-                $retorno .= "<br/>Rioprevidência: Optou pagar (Quitado)";
-            }else{
-                $retorno .= "<br/>Rioprevidência: Optou pagar";
-            }
-        } elseif ($optouContribuir == 2) {
-            $retorno .= "<br/>Rioprevidência: <b><span id='naoPagar'>Optou em NÃO pagar</span></b>";
-        }
-
         return $retorno;
     }
 
     ###########################################################
 
-    function exibeCrp($idLicencaSemVencimentos) {
+    function exibeRioprevidencia($idLicencaSemVencimentos) {
 
         /**
          * Informe se o servidor entregou o CRp e o prazo de entrega
@@ -245,17 +232,25 @@ class LicencaSemVencimentos {
 
         # Pega os campos necessários
         $crp = $dados["crp"];
+        $optouContribuir = $dados["optouContribuir"];
         $dtRetorno = $dados["dtRetorno"];
         $dttermino = $dados["dtTermino"];
 
+        # Verifica Dados do Rioprevidência
+        if ($optouContribuir == 1) {
+            p("Optou pagar");
+        } elseif ($optouContribuir == 2) {
+            p("Optou NÃO pagar", "naoPagar");
+        }
+
         # Verifica o CRP
         if ($crp) {
-            echo "Sim";
+            echo "Entregou CRP";
         } else {
-            echo "Não";
+            echo "Não Entregou CRP";
 
             # Verifica se estamos a 90 dias da data Termino
-            if (!vazio($dtRetorno)) {
+            if (!empty($dtRetorno)) {
                 # Passa para o formato brasileiro
                 $dtRetorno = date_to_php($dtRetorno);
 
@@ -263,7 +258,7 @@ class LicencaSemVencimentos {
                 $dtLimite = addDias($dtRetorno, 90);
 
                 if (jaPassou($dtLimite)) {
-                    echo "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
+                    p("Data já Passou!", "jaPassou");
                 } else {
                     p("Entregar até: $dtLimite", "plsvPassou");
                 }
@@ -282,7 +277,7 @@ class LicencaSemVencimentos {
                     echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
                 }
             } else {
-                if (!vazio($dttermino)) {
+                if (!empty($dttermino)) {
                     # Passa para o formato brasileiro
                     $dttermino = date_to_php($dttermino);
 
@@ -293,7 +288,7 @@ class LicencaSemVencimentos {
                         $dtLimite = addDias($dttermino, 90);
 
                         if (jaPassou($dtLimite)) {
-                            echo "<br/><br/><span title='Já passou a data da entrega do CRP' class='warning label'>Data já Passou!</span>";
+                            p("Data já Passou!", "jaPassou");
                         } else {
                             p("Entregar até: $dtLimite", "plsvPassou");
                         }
@@ -402,10 +397,10 @@ class LicencaSemVencimentos {
         $tabela->set_titulo($titulo);
         $tabela->set_conteudo($result);
 
-        $tabela->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"]);
+        $tabela->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Rioprevidência"]);
         $tabela->set_align(["center", "center", "left", "left", "left", "left"]);
         $tabela->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
-        $tabela->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"]);
+        $tabela->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
 
         $tabela->set_formatacaoCondicional(array(
             array('coluna' => 0,
@@ -482,7 +477,7 @@ class LicencaSemVencimentos {
         $relatorio->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"]);
         $relatorio->set_align(["center", "center", "left", "left", "left", "left"]);
         $relatorio->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
-        $relatorio->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"]);
+        $relatorio->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
         $relatorio->set_bordaInterna(true);
         $relatorio->set_conteudo($result);
 

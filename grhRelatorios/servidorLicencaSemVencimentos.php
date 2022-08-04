@@ -61,11 +61,11 @@ if ($acesso) {
     $relatorio->set_totalRegistro(false);
     $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_label(array("Status", "Tipo", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"));
+    $relatorio->set_label(array("Status", "Tipo", "Licença Sem Vencimentos", "Dados", "Período", "Rioprevidência"));
     $relatorio->set_align(array("center", "center", "left", "left", "left"));
 
     $relatorio->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeCrp"));
+    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"));
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

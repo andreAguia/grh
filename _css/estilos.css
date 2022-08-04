@@ -838,15 +838,23 @@ p#plsvPassou{
     padding: 0px;
     margin: 10px 0px 10px 0px;
     font-size: 11px;
-    color: #cc3300;
+    color: red;
+}
+
+p#jaPassou{
+    padding: 0px;
+    margin: 0px 0px 0px 0px;
+    color: red;
+    font-weight: bold;  
+}
+
+p#naoPagar{
+    color: red;
+    font-weight: bold;  
 }
 
 div#divRegrasLsv{
     display: none;
-}
-
-span#naoPagar{
-    color: red;
 }
 /*******************************************
  * Atualização

@@ -125,15 +125,7 @@ if ($acesso) {
 
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
-
-        # Exibe o idServidor somente para o administrador
-        if (Verifica::acesso($idUsuario, 1)) {
-            p("S:".$idServidorPesquisado, "idServidor2");
-        }
     }
-
-    $grid->fechaColuna();
-    $grid->fechaGrid();
 
     switch ($fase) {
         # Exibe o Menu Inicial

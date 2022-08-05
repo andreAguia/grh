@@ -559,11 +559,12 @@ class AuxilioTransporte {
         $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
 
         # Pega os dasos
-        $select = "SELECT tbservidor.idServidor
-                     FROM tbservidor JOIN tbtransporte USING (idServidor)
-                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+        $select = "SELECT tbtransporte.idServidor
+                     FROM tbtransporte LEFT JOIN tbservidor USING (idServidor)
+                                       JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbtransporte.idServidor IS NOT NULL 
                       AND ano = '{$ano}'
                       AND mes = '{$mes}'";
                       
@@ -581,8 +582,8 @@ class AuxilioTransporte {
         }else{
             $titulo = "Resumo Geral";
             $servidores = $pessoal->get_numServidoresAtivos();
-        }
-
+        }        
+        
         $receberam = $pessoal->count($select);        
         $nreceberam = $servidores - $receberam;
         

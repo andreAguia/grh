@@ -411,10 +411,24 @@ class Grh {
         # Exibe a versão do sistema
         $intra = new Intra();
         $grid = new Grid();
-        $grid->abreColuna(6);
+        $grid->abreColuna(4);
         p('Usuário : ' . $intra->get_usuario($idUsuario), 'usuarioLogado');
+
         $grid->fechaColuna();
-        $grid->abreColuna(6);
+        $grid->abreColuna(4);
+
+        # Exibe o idServidor somente para o administrador
+        if (Verifica::acesso($idUsuario, 1)) {
+            if (!empty($idServidor)) {
+                # Conecta com o banco de dados
+                $pessoal = new Pessoal();
+
+                $idPessoa = $pessoal->get_idPessoa($idServidor);
+                p("idServidor: {$idServidor} / idPessoa:{$idPessoa}", "pidServidor");
+            }
+        }
+        $grid->fechaColuna();
+        $grid->abreColuna(4);
         #p("Desenvolvido por André Águia", 'pauthor');
         p("UENF - Universidade Estadual do Norte Fluminense Darcy Ribeiro", 'pauthor');
         $grid->fechaColuna();
@@ -486,7 +500,7 @@ class Grh {
         $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $botao->show();
     }
-    
+
     ###########################################################
 
     /**
@@ -498,10 +512,10 @@ class Grh {
     public function exibeMapaFuncao($idCargo) {
 
         # Mapa da Função
-        $botaoMapa = new Link(null,"../grhRelatorios/mapaCargo.php?cargo={$idCargo}");
+        $botaoMapa = new Link(null, "../grhRelatorios/mapaCargo.php?cargo={$idCargo}");
         $botaoMapa->set_imagem(PASTA_FIGURAS . 'lista.png', 20, 20);
         $botaoMapa->set_title("Exibe o mapa do Cargo/Função");
-        $botaoMapa->set_target("_blank");        
+        $botaoMapa->set_target("_blank");
         $botaoMapa->show();
     }
 

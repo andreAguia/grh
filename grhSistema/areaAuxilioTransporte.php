@@ -27,29 +27,50 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Calcula a data oadrão
+    $anoPadrao = date('Y');
+    $mesPadrao = date('m');
+
+    if ($mesPadrao == 1) {
+        $mesPadrao = 12;
+        $anoPadrao--;
+    } else {
+        $mesPadrao--;
+    }
+
     # Pega os parâmetros
-    $parametroAno = post('parametroAno', get_session('parametroAno', date('Y')));
-    $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
+    $parametroAno = post('parametroAno', get_session('parametroAno', $anoPadrao));
+    $parametroMes = post('parametroMes', get_session('parametroMes', $mesPadrao));
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
-    
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
+    $parametroRecebeu = post('parametroRecebeu', get_session('parametroRecebeu', 'Todos'));
+
     # Coloca o mês com 2 digitos
-    $parametroMes = str_pad($parametroMes , 2 , '0' , STR_PAD_LEFT);
+    $parametroMes = str_pad($parametroMes, 2, '0', STR_PAD_LEFT);
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroMes', $parametroMes);
     set_session('parametroNome', $parametroNome);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroPerfil', $parametroPerfil);
+    set_session('parametroRecebeu', $parametroRecebeu);
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
-    if ($grh) {
-        # Grava no log a atividade
-        $atividade = "Visualizou a área de auxílio transporte";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+
+    # Pega o nome da lotação
+    if (is_numeric($parametroLotacao)) {
+        $lotacao = $pessoal->get_nomeLotacao($parametroLotacao);
+    } else { # senão é uma diretoria genérica
+        $lotacao = $parametroLotacao;
     }
+
+    # Grava no log a atividade
+    $atividade = "Visualizou a área de auxílio transporte<br/>de {$parametroMes}/{$parametroAno} da lotação {$lotacao}";
+    $data = date("Y-m-d H:i:s");
+    $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
 
     # Começa uma nova página
     $page = new Page();
@@ -69,7 +90,7 @@ if ($acesso) {
     $pasta = PASTA_TRANSPORTE;
     $nome = "Listagem Auxilio Transporte - " . get_nomeMes($parametroMes) . " / {$parametroAno}";
     $extensoes = ["csv"];
-    $arquivo = "{$pasta}{$parametroAno}".str_pad($parametroMes , 2 , '0' , STR_PAD_LEFT).".csv";
+    $arquivo = "{$pasta}{$parametroAno}" . str_pad($parametroMes, 2, '0', STR_PAD_LEFT) . ".csv";
 
     # Limita a página
     $grid = new Grid();
@@ -108,9 +129,10 @@ if ($acesso) {
             $menu->add_link($botaoVoltar, "left");
 
             if (file_exists($arquivo)) {
-                $informa = new Link("Já Existe Arquivo");
-                $informa->set_class('hollow button alert');
-                $informa->set_title("Já existe um arquivo CSV com a listagem de servidores que receberam auxílio transporte neste mês");
+                $informa = new Link("Apagar os Dados", "?fase=apagar");
+                $informa->set_class('button alert');
+                $informa->set_title("Apaga os dados deste mês");
+                $informa->set_confirma("Deseja Realmente apagar os dados de {$parametroMes}/{$parametroAno}!!");
                 $menu->add_link($informa, "right");
             }
 
@@ -133,7 +155,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(5);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -154,7 +176,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(5);
+            $controle->set_col(7);
             $form->add_item($controle);
 
             # Cria um array com os anos possíveis
@@ -169,8 +191,8 @@ if ($acesso) {
             $controle->set_valor(date("Y"));
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
+            $controle->set_linha(2);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $controle = new Input('parametroMes', 'combo', 'Mês:', 1);
@@ -179,7 +201,33 @@ if ($acesso) {
             $controle->set_array($mes);
             $controle->set_valor($parametroMes);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
+            $controle->set_linha(2);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            # Perfil
+            $result = $pessoal->select('SELECT idperfil, nome
+                                          FROM tbperfil                                
+                                      ORDER BY 1');
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroRecebeu', 'combo', 'Recebeu?:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por recebimento do auxílio');
+            $controle->set_array(["Todos", "Sim", "Não"]);
+            $controle->set_valor($parametroRecebeu);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
             $controle->set_col(2);
             $form->add_item($controle);
 
@@ -219,9 +267,16 @@ if ($acesso) {
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}') 
-                         FROM tbservidor LEFT JOIN tbtransporte USING (idServidor)
-                                              JOIN tbpessoa USING (idPessoa)                                         
+                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')";
+
+            if ($parametroRecebeu == "Todos") {
+                $select .= " FROM tbservidor LEFT JOIN tbtransporte USING (idServidor) ";
+            } elseif ($parametroRecebeu == "Não") {
+                $select .= " FROM tbservidor ";
+            } elseif ($parametroRecebeu == "Sim") {
+                $select .= " FROM tbservidor JOIN tbtransporte USING (idServidor) ";
+            }
+            $select .= "                      JOIN tbpessoa USING (idPessoa)                                         
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -240,6 +295,15 @@ if ($acesso) {
                 } else { # senão é uma diretoria genérica
                     $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
                 }
+            }
+
+            # perfil
+            if ($parametroPerfil <> "*") {
+                $select .= " AND idperfil = {$parametroPerfil}";
+            }
+
+            if ($parametroRecebeu == "Não") {
+                $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
             }
 
             $select .= " ORDER BY tbpessoa.nome";
@@ -284,10 +348,10 @@ if ($acesso) {
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
-            
+
             # Cria um menu
             $menu = new MenuBar();
-            
+
             # Voltar
             $botaoVoltar = new Link("Voltar", "?");
             $botaoVoltar->set_class('button');
@@ -348,8 +412,8 @@ if ($acesso) {
             p($texto, "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
-                $upload = new UploadDoc($_FILES['doc'], $pasta, $parametroAno.str_pad($parametroMes , 2 , '0' , STR_PAD_LEFT), $extensoes);
-               
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $parametroAno . str_pad($parametroMes, 2, '0', STR_PAD_LEFT), $extensoes);
+
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
 
@@ -433,7 +497,7 @@ if ($acesso) {
 
                     # Divide as colunas
                     $parte = explode(",", $linha);
-                    
+
                     # Verifica se é linha de dados
                     if ($linhaDados) {
                         # IdServidor
@@ -446,7 +510,7 @@ if ($acesso) {
                         # Verifica se houve problemas
                         if (empty($idServidor)) {
                             if (!empty($parte[3])) {
-                                $obs = $parte[0] . " - " . $parte[3]." - Servidor não encontrado! Verifique se a Id Funcional está correta.";
+                                $obs = $parte[0] . " - " . $parte[3] . " - Servidor não encontrado! Verifique se a Id Funcional está correta.";
                                 $problemas++;
                             }
                         }
@@ -478,6 +542,40 @@ if ($acesso) {
                 alert("A importação foi concluída SEM problemas");
             }
             #echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            loadPage("?");
+            break;
+
+        case "apagar" :
+            br(5);
+            aguarde("Apagando os dados de " . get_nomeMes($parametroMes) . " / {$parametroAno}");
+
+            loadPage("?fase=apagar2");
+            break;
+
+        case "apagar2" :
+            # Apaga os dados da tabela
+            $select = "SELECT idTransporte
+                         FROM tbtransporte
+                        WHERE ano = {$parametroAno}
+                          AND mes = {$parametroMes}";
+
+            $row = $pessoal->select($select);
+
+            $pessoal->set_tabela("tbtransporte");
+            $pessoal->set_idCampo("idTransporte");
+
+            foreach ($row as $tt) {
+                $pessoal->excluir($tt[0]);
+            }
+            
+            # Apaga o arquivo cvs
+            unlink($arquivo);
+
+            loadPage("?fase=apagar3");
+            break;
+
+        case "apagar3" :
+            alert("Dados Excluídos com Sucesso!");
             loadPage("?");
             break;
 

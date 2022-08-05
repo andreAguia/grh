@@ -4610,9 +4610,33 @@ class Pessoal extends Bd {
      */
     public function get_idServidoridFuncional($idFuncional) {
         # Pega o cargo do servidor
+        $select = "SELECT idServidor
+                     FROM tbservidor
+                    WHERE idFuncional = {$idFuncional}
+                 ORDER BY dtAdmissao DESC";
+
+        $row = parent::select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_idServidoridFuncional
+     * Informa a idServidor de um idFuncional Ativo
+     * 
+     * @param	string $idFuncional  idFuncional do servidor
+     */
+    public function get_idServidoridFuncionalAtivo($idFuncional) {
+        # Pega o cargo do servidor
         $select = 'SELECT idServidor
                          FROM tbservidor
-                        WHERE idFuncional = ' . $idFuncional;
+                        WHERE situacao = 1 AND idFuncional = ' . $idFuncional;
 
         $row = parent::select($select, false);
 

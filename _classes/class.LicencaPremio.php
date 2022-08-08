@@ -698,62 +698,62 @@ class LicencaPremio {
          * Exibe o número de publicação
          */
 
-        # Verifica qual rotina vai executar
-        if ($numVinculos > 1) {
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor, false);
-
-            # Percorre os vinculos
-            foreach ($vinculos as $tt) {
-                # Insere no array o vinculo e o processo
-                $conteudo2[] = [
-                    $pessoal->get_cargoSigla($tt[0]),
-                    $this->get_numPublicacoesPossiveis($tt[0]),
-                    $this->get_numPublicacoes($tt[0]),
-                    $this->get_numPublicacoesFaltantes($tt[0])
-                ];
-            }
-
-            tituloRelatorio('"N° de Publicações"');
-
-            $relatorio = new Relatorio();
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
-            $relatorio->set_colunaSomatorio([1, 2, 3]);
-            $relatorio->set_align(["left"]);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_conteudo($conteudo2);
-            $relatorio->set_botaoVoltar(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        } else {
-
-            $conteudo[] = [
-                $this->get_numPublicacoesPossiveis($idServidor),
-                $this->get_numPublicacoes($idServidor),
-                $this->get_numPublicacoesFaltantes($idServidor)
-            ];
-
-            tituloRelatorio("N° de Publicações");
-
-            $relatorio = new Relatorio();
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_label(["Possíveis", "Publicadas", "Pendentes"]);
-            $relatorio->set_align(["center"]);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_conteudo($conteudo);
-            $relatorio->set_botaoVoltar(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+//        # Verifica qual rotina vai executar
+//        if ($numVinculos > 1) {
+//            # Carrega um array com os idServidor de cada vinculo
+//            $vinculos = $pessoal->get_vinculos($idServidor, false);
+//
+//            # Percorre os vinculos
+//            foreach ($vinculos as $tt) {
+//                # Insere no array o vinculo e o processo
+//                $conteudo2[] = [
+//                    $pessoal->get_cargoSigla($tt[0]),
+//                    $this->get_numPublicacoesPossiveis($tt[0]),
+//                    $this->get_numPublicacoes($tt[0]),
+//                    $this->get_numPublicacoesFaltantes($tt[0])
+//                ];
+//            }
+//
+//            tituloRelatorio('"N° de Publicações"');
+//
+//            $relatorio = new Relatorio();
+//            $relatorio->set_cabecalhoRelatorio(false);
+//            $relatorio->set_menuRelatorio(false);
+//            $relatorio->set_subTotal(false);
+//            $relatorio->set_totalRegistro(false);
+//            $relatorio->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
+//            $relatorio->set_colunaSomatorio([1, 2, 3]);
+//            $relatorio->set_align(["left"]);
+//            $relatorio->set_totalRegistro(false);
+//            $relatorio->set_dataImpressao(false);
+//            $relatorio->set_conteudo($conteudo2);
+//            $relatorio->set_botaoVoltar(false);
+//            $relatorio->set_log(false);
+//            $relatorio->show();
+//        } else {
+//
+//            $conteudo[] = [
+//                $this->get_numPublicacoesPossiveis($idServidor),
+//                $this->get_numPublicacoes($idServidor),
+//                $this->get_numPublicacoesFaltantes($idServidor)
+//            ];
+//
+//            tituloRelatorio("N° de Publicações");
+//
+//            $relatorio = new Relatorio();
+//            $relatorio->set_cabecalhoRelatorio(false);
+//            $relatorio->set_menuRelatorio(false);
+//            $relatorio->set_subTotal(false);
+//            $relatorio->set_totalRegistro(false);
+//            $relatorio->set_label(["Possíveis", "Publicadas", "Pendentes"]);
+//            $relatorio->set_align(["center"]);
+//            $relatorio->set_totalRegistro(false);
+//            $relatorio->set_dataImpressao(false);
+//            $relatorio->set_conteudo($conteudo);
+//            $relatorio->set_botaoVoltar(false);
+//            $relatorio->set_log(false);
+//            $relatorio->show();
+//        }
 
         /*
          * Exibe a lista de publicações

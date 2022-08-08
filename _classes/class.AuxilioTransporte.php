@@ -557,16 +557,41 @@ class AuxilioTransporte {
         $pessoal = new Pessoal();
 
         $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
-
-        # Pega os dasos
-        $select = "SELECT tbtransporte.idServidor
+        
+        # Verifica se tem algum inativo que recebeu
+        $selectInativos = "SELECT tbtransporte.idServidor
                      FROM tbtransporte LEFT JOIN tbservidor USING (idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbtransporte.idServidor IS NOT NULL 
+                      AND situacao <> 1
                       AND ano = '{$ano}'
                       AND mes = '{$mes}'";
+                      
+        # lotacao
+        if (!empty($lotacao) and $lotacao <> "todos") {
+            if (is_numeric($lotacao)) {
+                $selectInativos .= " AND (tblotacao.idlotacao = '{$lotacao}')";
+            } else {
+                $selectInativos .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+        
+        $receberamInativos = $pessoal->count($selectInativos);             
+
+        # Pega os dasos
+        $select = "SELECT tbtransporte.idServidor
+                     FROM tbtransporte JOIN tbservidor USING (idServidor)
+                                       JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbtransporte.idServidor IS NOT NULL 
+                      AND situacao = 1
+                      AND ano = '{$ano}'
+                      AND mes = '{$mes}'";
+                      
+             
                       
         # lotacao
         if (!empty($lotacao) and $lotacao <> "todos") {
@@ -584,11 +609,12 @@ class AuxilioTransporte {
             $servidores = $pessoal->get_numServidoresAtivos();
         }        
         
-        $receberam = $pessoal->count($select);        
-        $nreceberam = $servidores - $receberam;
+        $receberamAtivos = $pessoal->count($select);        
+        $nreceberam = $servidores - $receberamAtivos;
         
-        $array[] = ["Receberam", $receberam];
         $array[] = ["Não Receberam", $nreceberam];
+        $array[] = ["Receberam - Ativos", $receberamAtivos];
+        $array[] = ["Receberam - Inativos", $receberamInativos];
         
         # Monta a tabela
         $tabela = new Tabela();

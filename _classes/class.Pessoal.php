@@ -2229,6 +2229,38 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */
+    function get_nomeECargoEPerfilESituacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            if ($this->get_situacao($idServidor) == "Ativo") {
+
+                pLista(
+                        $this->get_nome($idServidor),
+                        $this->get_cargo($idServidor),
+                        $this->get_perfil($idServidor),
+                        $this->get_situacao($idServidor)
+                );
+            } else {
+                pLista(
+                        $this->get_nome($idServidor),
+                        $this->get_cargo($idServidor),
+                        $this->get_perfil($idServidor)
+                );
+                p($this->get_situacao($idServidor), "pInativo");
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoEPerfil
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
     function get_nomeECargoSimplesEPerfil($idServidor) {
         if (empty($idServidor)) {
             return null;

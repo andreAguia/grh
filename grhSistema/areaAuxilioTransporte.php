@@ -261,52 +261,157 @@ if ($acesso) {
             $tabela->set_bordaInterna(true);
             $tabela->show();
 
-            ###########################33
-            # Pega os dados
-            $select = "SELECT DISTINCT tbservidor.idfuncional,
+            #################################################################################
+            # Receberam
+            if ($parametroRecebeu == "Sim") {
+                $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')";
+                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')
+                         FROM tbtransporte JOIN tbservidor USING (idServidor) 
+                                           JOIN tbpessoa USING (idPessoa)                                         
+                                           JOIN tbhistlot USING (idServidor)
+                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                        
+                          AND ano = '{$parametroAno}'
+                          AND mes = '{$parametroMes}'";
 
-            if ($parametroRecebeu == "Todos") {
-                $select .= " FROM tbservidor LEFT JOIN tbtransporte USING (idServidor) ";
-            } elseif ($parametroRecebeu == "Não") {
-                $select .= " FROM tbservidor ";
-            } elseif ($parametroRecebeu == "Sim") {
-                $select .= " FROM tbservidor JOIN tbtransporte USING (idServidor) ";
-            }
-            $select .= "                      JOIN tbpessoa USING (idPessoa)                                         
-                                              JOIN tbhistlot USING (idServidor)
-                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND situacao = 1";
-
-            # Pesquisa por nome
-            if (!empty($parametroNome)) {
-                $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
-            }
-
-            # lotacao
-            if ($parametroLotacao <> "todos") {
-                # Verifica se o que veio é numérico
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
                 }
+
+                # lotacao
+                if ($parametroLotacao <> "todos") {
+                    # Verifica se o que veio é numérico
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
+                    }
+                }
+
+                # perfil
+                if ($parametroPerfil <> "*") {
+                    $select .= " AND idperfil = {$parametroPerfil}";
+                }
+
+                $select .= " ORDER BY tbpessoa.nome";
             }
 
-            # perfil
-            if ($parametroPerfil <> "*") {
-                $select .= " AND idperfil = {$parametroPerfil}";
-            }
-
+            #################################################################################
             if ($parametroRecebeu == "Não") {
-                $select .= " AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
+
+                $select = "SELECT tbservidor.idfuncional,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
+                              CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')
+                             AND situacao = 1";
+
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+
+                # lotacao
+                if ($parametroLotacao <> "todos") {
+                    # Verifica se o que veio é numérico
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
+                    }
+                }
+
+                # perfil
+                if ($parametroPerfil <> "*") {
+                    $select .= " AND idperfil = {$parametroPerfil}";
+                }
+
+                $select .= " ORDER BY tbpessoa.nome";
             }
 
-            $select .= " ORDER BY tbpessoa.nome";
+            #################################################################################
+            # Receberam
+            if ($parametroRecebeu == "Todos") {
+                $select = "(SELECT tbservidor.idfuncional,
+                                  tbservidor.idServidor,
+                                  tbservidor.idServidor,
+                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
+                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
+                                  tbpessoa.nome
+                             FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
+                                             JOIN tbhistlot USING (idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
+                           WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')
+                             AND situacao = 1";
+
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+
+                # lotacao
+                if ($parametroLotacao <> "todos") {
+                    # Verifica se o que veio é numérico
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
+                    }
+                }
+
+                # perfil
+                if ($parametroPerfil <> "*") {
+                    $select .= " AND idperfil = {$parametroPerfil}";
+                }
+                
+                $select .= ") UNION (SELECT tbservidor.idfuncional,
+                                  tbservidor.idServidor,
+                                  tbservidor.idServidor,
+                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
+                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
+                                  tbpessoa.nome    
+                             FROM tbtransporte JOIN tbservidor USING (idServidor) 
+                                               JOIN tbpessoa USING (idPessoa)                                         
+                                               JOIN tbhistlot USING (idServidor)
+                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                        
+                          AND ano = '{$parametroAno}'
+                          AND mes = '{$parametroMes}'";
+
+                # Pesquisa por nome
+                if (!empty($parametroNome)) {
+                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                }
+
+                # lotacao
+                if ($parametroLotacao <> "todos") {
+                    # Verifica se o que veio é numérico
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
+                    }
+                }
+
+                # perfil
+                if ($parametroPerfil <> "*") {
+                    $select .= " AND idperfil = {$parametroPerfil}";
+                }
+
+                $select .= ") ORDER BY 6";
+            }
+            
+            #################################################################################
 
             $result = $pessoal->select($select);
 
@@ -317,7 +422,7 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "left", "left"]);
             $tabela->set_classe([null, "pessoal", "pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacao"]);
+            $tabela->set_metodo([null, "get_nomeECargoEPerfilESituacao", "get_lotacao"]);
             $tabela->set_funcao([null, null, null, "exibeSituacaoAuxilioTransporte", "exibeRecebeuAuxilioTransporte"]);
             $tabela->set_bordaInterna(true);
 //            $tabela->set_rowspan(0);
@@ -504,7 +609,13 @@ if ($acesso) {
                         if (empty($parte[0])) {
                             $idServidor = null;
                         } else {
-                            $idServidor = $pessoal->get_idServidoridFuncional($parte[0]);
+                            # Verifica se é servidor ativo primeiro
+                            $idServidor = $pessoal->get_idServidoridFuncionalAtivo($parte[0]);
+                            
+                            # se não achar verifica se é inativo
+                            if(empty($idServidor)){
+                                $idServidor = $pessoal->get_idServidoridFuncional($parte[0]);
+                            }
                         }
 
                         # Verifica se houve problemas
@@ -567,7 +678,7 @@ if ($acesso) {
             foreach ($row as $tt) {
                 $pessoal->excluir($tt[0]);
             }
-            
+
             # Apaga o arquivo cvs
             unlink($arquivo);
 

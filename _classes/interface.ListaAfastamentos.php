@@ -894,17 +894,17 @@ class ListaAfastamentos {
         ####################### 
         $order1 = 7;
         $order2 = 1;
-        
+
         if ($this->idFuncional) {
-            $order1 ++;
-            $order2 ++;
+            $order1++;
+            $order2++;
         }
-        
+
         if (empty($this->idServidor)) {
-            $order1 ++;
-            $order2 ++;
-            $order1 ++;
-            $order2 ++;
+            $order1++;
+            $order2++;
+            $order1++;
+            $order2++;
         }
 
         $select .= ') ORDER BY ' . $order1 . ', ' . $order2;
@@ -1009,6 +1009,7 @@ class ListaAfastamentos {
          */
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
+        $licenca = new Licenca();
 
         $select = $this->montaSelect();
 
@@ -1016,11 +1017,10 @@ class ListaAfastamentos {
         $relatorio->set_titulo('Servidores com Afastamentos');
 
         if (is_numeric($this->lotacao)) {
-            $tt = $pessoal->get_nomeLotacao($this->lotacao);
+            $relatorio->set_tituloLinha3($pessoal->get_nomeLotacao($this->lotacao));
         } else {
-            $tt = $this->lotacao;
-        }
-        $relatorio->set_subtitulo("Ordenado por Nome");
+            $relatorio->set_tituloLinha3($this->lotacao);
+        }       
 
         $nomeMes = get_nomeMes($this->mes);
 
@@ -1029,36 +1029,40 @@ class ListaAfastamentos {
         } else {
             $relatorio->set_tituloLinha2($this->ano);
         }
-        $relatorio->set_tituloLinha3($tt);
+
+        # Exibe o tipo de afastamento (quando tiver)
+        if (!empty($this->tipo)) {
+            if (is_numeric($this->tipo)) {
+                $relatorio->set_subtitulo($licenca->getNome($this->tipo));
+            } else {
+                $relatorio->set_subtitulo(plm($this->tipo));
+            }
+        }
 
         if ($this->idFuncional) {
-            $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
-            $relatorio->set_align(array('center', 'left', 'left', 'center', 'center', 'center', 'left'));
-
-            $relatorio->set_funcao(array(null, null, null, "date_to_php", null, "date_to_php"));
-            #$relatorio->set_rowspan(1);
+            $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
+            $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php"]);
 
             if ($this->nomeSimples) {
-                $relatorio->set_classe(array(null, "pessoal", "pessoal"));
-                $relatorio->set_metodo(array(null, "get_nomeSimples", "get_lotacaoSimples"));
+                $relatorio->set_classe([null, "pessoal", "pessoal"]);
+                $relatorio->set_metodo([null, "get_nomeSimples", "get_lotacaoSimples"]);
             } else {
-                $relatorio->set_classe(array(null, "pessoal", "pessoal"));
-                $relatorio->set_metodo(array(null, "get_nomeECargo", "get_lotacaoSimples"));
+                $relatorio->set_classe([null, "pessoal", "pessoal"]);
+                $relatorio->set_metodo([null, "get_nomeECargo", "get_lotacaoSimples"]);
             }
         } else {
-
-            $relatorio->set_label(array('Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição'));
-            $relatorio->set_align(array('left', 'left', 'center', 'center', 'center', 'left'));
-
-            $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php"));
+            $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
+            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
             #$relatorio->set_rowspan(0);
 
             if ($this->nomeSimples) {
-                $relatorio->set_classe(array("pessoal", "pessoal"));
-                $relatorio->set_metodo(array("get_nomeSimples", "get_lotacaoSimples"));
+                $relatorio->set_classe(["pessoal", "pessoal"]);
+                $relatorio->set_metodo(["get_nomeSimples", "get_lotacaoSimples"]);
             } else {
-                $relatorio->set_classe(array("pessoal", "pessoal"));
-                $relatorio->set_metodo(array("get_nomeECargo", "get_lotacaoSimples"));
+                $relatorio->set_classe(["pessoal", "pessoal"]);
+                $relatorio->set_metodo(["get_nomeECargo", "get_lotacaoSimples"]);
             }
         }
 
@@ -1078,7 +1082,8 @@ class ListaAfastamentos {
             array_unshift($lotacao, array('*', '-- Todos --'));
 
             # Cria array dos meses
-            $mes = array(array("1", "Janeiro"),
+            $mes = array(
+                array("1", "Janeiro"),
                 array("2", "Fevereiro"),
                 array("3", "Março"),
                 array("4", "Abril"),

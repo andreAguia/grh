@@ -31,6 +31,26 @@ class Licenca {
 
 ##############################################################
 
+    public function getNome($idTpLicenca = null) {
+        # Verifica se o id foi informado
+        if (empty($idTpLicenca)) {
+            alert("É necessário informar o id.");
+            return;
+        }
+
+        # Pega os dados
+        $servidor = new Pessoal();
+        $select = "SELECT nome
+                     FROM tbtipolicenca
+                    WHERE idTpLicenca = {$idTpLicenca}";
+
+        $licenca = $servidor->select($select, false);
+        return $licenca[0];
+    }
+
+##############################################################
+
+
     public function exibeNomeSimples($idTpLicenca = null) {
         # Verifica se o id foi informado
         if (vazio($idTpLicenca)) {

@@ -463,18 +463,18 @@ class ListaServidores {
 
         # Dados da Tabela
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
-            $width = array(8, 20, 20, 18, 14, 5, 5);
-            $function = array(null, null, null, null, null, "date_to_php", $situacao);
+            $label = ["ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação"];
+            $width = [8, 20, 20, 18, 14, 5, 5];
+            $function = [null, null, null, null, null, "date_to_php", $situacao];
         } else {
-            $label = array("ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação");
-            $width = array(8, 20, 20, 18, 14, 5, 5, 5);
-            $function = array(null, null, null, null, null, "date_to_php", "date_to_php", $situacao);
+            $label = ["ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação"];
+            $width = [8, 20, 20, 18, 14, 5, 5, 5];
+            $function = [null, null, null, null, null, "date_to_php", "date_to_php", $situacao];
         }
 
-        $align = array("center", "left", "center", "left");
-        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil");
+        $align = ["center", "left", "center", "left"];
+        $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal"];
+        $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil"];
 
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);

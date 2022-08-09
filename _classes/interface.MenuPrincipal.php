@@ -813,14 +813,14 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de Emissão de RPA');
         #$menu->add_item($botao); ### retirado por falta de uso
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Auxílio Transporte');
         $botao->set_url('areaAuxilioTransporte.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de servidores com direito ao auxílio transporte');
         $menu->add_item($botao);
-        
+
         $menu->show();
         $painel->fecha();
     }
@@ -866,13 +866,28 @@ class MenuPrincipal {
         $numServidores = $pessoal->get_numAniversariantes();
         $numHoje = $pessoal->get_numAniversariantesHoje();
 
-        # Exibe os valores
+        # Na GRH
+        p("Na GRH", "aniversariante");
+        hr("geral");
+        # Percorre a relação
+        foreach ($pessoal->get_aniversariantes(null, 66) as $item) {
+            if ($item[0] == date("d/m")) {
+                p("Hoje - ".$item[1], "aniversarianteHoje");
+            } else {
+                p($item[0]." - ".$item[1], "aniversariante");
+            }
+        }
+        br();
+
+        # Na Universidade
+        p("Na Universidade", "aniversariante");
+        hr("geral");
         p("Aniversariantes do mês: " . $numServidores, "aniversariante");
         p("Aniversariantes de hoje: " . $numHoje, "aniversariante");
 
         $div = new Div("divAniversariante");
         $div->abre();
-        $link = new Link("Saiba mais", "?fase=aniversariantes");
+        $link = new Link("Saiba Mais", "?fase=aniversariantes");
         #$link->set_class('small button');
         $link->set_id('linkAniversariante');
         $link->set_title('Aniversarintes do mês');

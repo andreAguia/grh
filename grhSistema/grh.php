@@ -318,17 +318,17 @@ if ($acesso) {
             $numServidores = $pessoal->get_numServidoresAtivos();
 
             # Exibe os valores            
-            $dados[] = array("Aniversariantes do Mês", $numAniversdariantes);
-            $dados[] = array("Aniversariantes de Hoje", $numHoje);
+            $dados[] = ["Aniversariantes do Mês", $numAniversdariantes];
+            $dados[] = ["Aniversariantes de Hoje", $numHoje];
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
             $tabela->set_titulo("Resumo");
-            $tabela->set_label(array("", ""));
-            $tabela->set_width(array(70, 30));
+            $tabela->set_label(["", ""]);
+            $tabela->set_width([70, 30]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_align(["left", "center"]);
             $tabela->show();
 
             # Calendário

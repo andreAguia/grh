@@ -275,7 +275,7 @@ class Pessoal extends Bd {
      * 
      * @param	$mes	string	valor de 1 a 12 que informa o m�s
      */
-    public function get_aniversariantes($mes = null) {
+    public function get_aniversariantes($mes = null, $lotacao = null) {
 
         # Se o mês não for definido pega-se o mês atual
         if (is_null($mes)) {
@@ -283,12 +283,26 @@ class Pessoal extends Bd {
         }
 
         # Monta o select
-        $select = 'SELECT concat(date_format(tbpessoa.dtNasc,"%d/%m")," - ",tbpessoa.nome) as nasc,
-                          date_format(tbpessoa.dtNasc,"%d")	
+        $select = "SELECT date_format(tbpessoa.dtNasc,'%d/%m') as nasc,
+                          tbpessoa.nome
                      FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                    WHERE month(dtNasc) = ' . $mes . ' 
-                      AND tbservidor.situacao = 1
-                 ORDER BY nasc';
+                              LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE month(dtNasc) = {$mes} 
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)  
+                      AND tbservidor.situacao = 1";
+                      
+        # lotacao
+        if (!is_null($lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($lotacao)) {
+                $select .= " AND (tblotacao.idlotacao = '{$lotacao}')";
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+        
+        $select .= " ORDER BY nasc";
 
         # Pega o resultado do select
         $result = parent::select($select);

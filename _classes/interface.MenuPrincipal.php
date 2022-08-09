@@ -865,16 +865,22 @@ class MenuPrincipal {
         $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numAniversariantes();
         $numHoje = $pessoal->get_numAniversariantesHoje();
+        $servidoresGrh = $pessoal->get_aniversariantes(null, 66);
 
         # Na GRH
         p("Na GRH", "aniversariante");
         hr("geral");
+
         # Percorre a relação
-        foreach ($pessoal->get_aniversariantes(null, 66) as $item) {
-            if ($item[0] == date("d/m")) {
-                p("Hoje - ".$item[1], "aniversarianteHoje");
-            } else {
-                p($item[0]." - ".$item[1], "aniversariante");
+        if (count($servidoresGrh) == 0) {
+            p("---", "aniversariante");
+        } else {
+            foreach ($servidoresGrh as $item) {
+                if ($item[0] == date("d/m")) {
+                    p("Hoje - " . $item[1], "aniversarianteHoje");
+                } else {
+                    p($item[0] . " - " . $item[1], "aniversariante");
+                }
             }
         }
         br();

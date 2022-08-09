@@ -125,7 +125,7 @@ if ($acesso) {
     $objeto->set_align(["center", "center", "center", "center", "left"]);
 
     $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, null, null, "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);

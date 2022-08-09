@@ -79,7 +79,6 @@ if ($acesso) {
                                       IF(ativo = 1,DIR,CONCAT(DIR,"<br/>","(",UADM,")")),
                                       campus,
                                       GER,
-                                      siglaSei,
                                       nome,
                                       idLotacao,
                                       idLotacao,
@@ -102,7 +101,6 @@ if ($acesso) {
                                      DIR,
                                      idCampus,
                                      GER,
-                                     siglaSei,
                                      nome,
                                      ativo,
                                      obs
@@ -121,18 +119,18 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Sigla Sei", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Lotação<br/>Ativa?"]);
+    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Lotação<br/>Ativa?"]);
     $objeto->set_colspanLabel([null, null, null, null, null, null, 2, null, 2]);
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
-    $objeto->set_align(["center", "center", "center", "center", "center", "left"]);
+    $objeto->set_align(["center", "center", "center", "center", "left"]);
 
-    $objeto->set_classe([null, null, null, null, null, null, "Pessoal", null, "Pessoal"]);
+    $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal"]);
     $objeto->set_metodo([null, null, null, null, null, null, "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([6, 8]);
+    $objeto->set_colunaSomatorio([5, 7]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -145,7 +143,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, null, null, $servAtivos, null, $servInativos]);
+    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -192,7 +190,7 @@ if ($acesso) {
             'required' => true,
             'size' => 15),
         array('linha' => 1,
-            'col' => 2,
+            'col' => 4,
             'nome' => 'idCampus',
             'label' => 'Campus:',
             'tipo' => 'combo',
@@ -204,13 +202,6 @@ if ($acesso) {
             'nome' => 'GER',
             'label' => 'Sigla da Gerência:',
             'title' => 'Sigla da Gerência',
-            'tipo' => 'texto',
-            'size' => 15),
-        array('linha' => 1,
-            'col' => 2,
-            'nome' => 'siglaSei',
-            'label' => 'Sigla no Sei:',
-            'title' => 'Sigla no Sei',
             'tipo' => 'texto',
             'size' => 15),
         array('linha' => 2,

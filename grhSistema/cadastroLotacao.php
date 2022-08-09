@@ -120,7 +120,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Lotação<br/>Ativa?"]);
-    $objeto->set_colspanLabel([null, null, null, null, null, null, 2, null, 2]);
+    $objeto->set_colspanLabel([null, null, null, null, null, 2, null, 2]);
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(["center", "center", "center", "center", "left"]);
 

@@ -6,17 +6,26 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
+# Pega o parametro de pesquisa (se tiver)
+if (is_null(post('parametro')))
+    $parametro = retiraAspas(get_session('sessionParametro'));
+else {
+    $parametro = post('parametro');
+    set_session('sessionParametro', $parametro);
+}
+
 if ($acesso) {
     # Verifica a fase do programa
-    $fase = get('fase', 'exibe');
+    $fase = get('fase', 'listar');
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -33,9 +42,6 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-
-    # Verifica a origem 
-    $origem = get_session("origem");
 
     # Começa uma nova página
     $page = new Page();
@@ -63,39 +69,44 @@ if ($acesso) {
     $objeto->set_nome('Documentos da Pasta Funcional');
 
     # Botão de voltar da lista
-    if (vazio($origem)) {
-        $caminhoVolta = '?fase=exibe&id=' . $id;
-    } else {
-        $caminhoVolta = $origem;
-    }
-
-    $objeto->set_voltarLista($caminhoVolta);
+    $objeto->set_voltarLista("servidorMenu.php");
     $objeto->set_voltarForm('?fase=listar');
 
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
+
     # select da lista
-    $objeto->set_selectLista('SELECT CASE tipo
-                                        WHEN 1 THEN "Documento"
-                                        WHEN 2 THEN "Processo"
+    $objeto->set_selectLista("SELECT CASE tipo
+                                        WHEN 1 THEN 'Documentos'
+                                        WHEN 2 THEN 'Processos'
                                      END,
-                                     descricao,
                                      idPasta,
+                                     descricao,
                                      idPasta
                                 FROM tbpasta
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                       ORDER BY descricao');
+                          WHERE idServidor={$idServidorPesquisado}
+                            AND descricao LIKE '%{$parametro}%'  
+                       ORDER BY tipo, descricao");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT tipo,
+    $objeto->set_selectEdita("SELECT tipo,
                                      descricao,
+                                     obs,
                                      idServidor
                                 FROM tbpasta
-                               WHERE idPasta = ' . $id);
+                               WHERE idPasta = {$id}");
 
     # Caminhos
-    $objeto->set_linkEditar('?fase=editar');
-    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+
+    if (Verifica::acesso($idUsuario, [1, 4])) {
+        $objeto->set_linkEditar('?fase=editar');
+        $objeto->set_linkExcluir('?fase=excluir');
+    } else {
+        $objeto->set_botaoIncluir(false);
+    }
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -103,21 +114,13 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo", "Descrição", "Ver", "Upload"));
-    $objeto->set_width(array(15, 65, 5, 5));
-    $objeto->set_align(array("center", "left"));
-
-    $objeto->set_classe(array(null, null, "PastaFuncional"));
-    $objeto->set_metodo(array(null, null, "exibePasta"));
-
-    # Botão de Upload
-    $botao = new BotaoGrafico();
-    $botao->set_label('');
-    $botao->set_url('?fase=upload&id=');
-    $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
-
-    # Coloca o objeto link na tabela			
-    $objeto->set_link(array("", "", "", $botao));
+    $objeto->set_label(["Tipo", "Ver", "Descrição", "Obs"]);
+    $objeto->set_width([15, 5, 60, 5, 5, 5]);
+    $objeto->set_align(["center", "center", "left"]);
+    $objeto->set_classe([null, "PastaFuncional", null, "PastaFuncional"]);
+    $objeto->set_metodo([null, "exibePasta", null, "exibeObs"]);
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -150,8 +153,13 @@ if ($acesso) {
             'label' => 'Descrição:',
             'tipo' => 'texto',
             'required' => true,
-            'col' => 8,
+            'col' => 9,
             'size' => 250),
+        array('linha' => 2,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 4)),
         array('linha' => 3,
             'nome' => 'idServidor',
             'label' => 'Servidor:',
@@ -160,173 +168,115 @@ if ($acesso) {
             'col' => 9,
             'size' => 10)));
 
-    # idUsuário para o Log
+    # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+    # Dados da rotina de Upload
+    $pasta = PASTA_FUNCIONAL;
+    $nome = "Documento";
+    $tabela = "tbpasta";
+    $extensoes = ["pdf"];
+
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Botão de Upload
+        $botao = new Button("Upload {$nome}");
+        $botao->set_url("?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload do {$nome}");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
+
     ################################################################
+
     switch ($fase) {
         case "" :
-        case "exibe" :
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Cria um menu
-            $menu = new MenuBar();
-
-            $linkBotao1 = new Link("Voltar", "servidorMenu.php");
-            $linkBotao1->set_class('button');
-            $linkBotao1->set_title('Volta para a página anterior');
-            $linkBotao1->set_accessKey('V');
-            $menu->add_link($linkBotao1, "left");
-
-            if (Verifica::acesso($idUsuario, [1, 4])) {
-
-                # Editar
-                $linkBotao5 = new Link("Editar", "?fase=listar");
-                $linkBotao5->set_class('button');
-                $linkBotao5->set_title('Editar Documentos da Pasta do Servidor');
-                $menu->add_link($linkBotao5, "right");
-            }
-
-            $menu->show();
-
-            # Dados do Servidor
-            get_DadosServidor($idServidorPesquisado);
-
-            $grid->fechaColuna();
-
-            ###############################################################
-            # Documentos
-            $grid->abreColuna(6);
-
-            # Painel
-            $painel = new Callout();
-            $painel->abre();
-
-            # Pega os documentos
-            $select = "SELECT idPasta, 
-                              descricao,
-                              tipo
-                         FROM tbpasta
-                        WHERE tipo = 1 AND idServidor = $idServidorPesquisado";
-
-            $dados = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            if ($count > 0) {
-
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($dados);
-                $tabela->set_align(array('center', 'left'));
-                $tabela->set_label(array("Ver", "Descrição"));
-                $tabela->set_width(array(10, 90));
-                $tabela->set_titulo('Documentos');
-                $tabela->set_funcao(array("exibeDocumentoPasta"));
-                $tabela->set_totalRegistro(false);
-                $tabela->show();
-            } else {
-                tituloTable('Documentos');
-                br(2);
-
-                p("Nenhum arquivo encontrado.", "f14", "center");
-                br(2);
-            }
-
-            $painel->fecha();
-            $grid->fechaColuna();
-
-            ###################################################33
-            # Processos            
-            $grid->abreColuna(6);
-
-            # Painel
-            $painel = new Callout();
-            $painel->abre();
-
-            # Pega os documentos
-            $select = "SELECT idPasta, 
-                              descricao,
-                              tipo
-                         FROM tbpasta
-                        WHERE tipo = 2 AND idServidor = $idServidorPesquisado";
-
-            $dados = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            if ($count > 0) {
-
-                # Exibe a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($dados);
-                $tabela->set_align(array('center', 'left'));
-                $tabela->set_label(array("Ver", "Descrição"));
-                $tabela->set_width(array(10, 90));
-                $tabela->set_titulo('Processos');
-                $tabela->set_funcao(array("exibeProcessoPasta"));
-                $tabela->set_totalRegistro(false);
-                $tabela->show();
-            } else {
-                tituloTable('Processos');
-                br(2);
-
-                p("Nenhum arquivo encontrado.", "f14", "center");
-                br(2);
-            }
-
-            $painel->fecha();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
         case "listar" :
             $objeto->listar();
             break;
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
-            $objeto->$fase($id);
+            if (Verifica::acesso($idUsuario, [1, 4])) {
+                $objeto->$fase($id);
+            } else {
+                # Acesso não autorizado
+                loadPage("?");
+            }
             break;
 
-        ##################################################################
+        case "excluir" :
+            if (Verifica::acesso($idUsuario, [1, 4])) {
+                # apaga o Documento relacionado
+                if (file_exists("{$pasta}{$id}.pdf")) {
+                    rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
+                }
+
+                # Exclui o registro
+                $objeto->excluir($id);
+            } else {
+                # Acesso não autorizado
+                loadPage("?");
+            }
+            break;
+
+        ################################################################
 
         case "upload" :
+            # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            # Botão voltar
-            botaoVoltar('?fase=listar');
+            # Exibe o Título
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+                br();
 
-            # Dados do Servidor
-            get_DadosServidor($idServidorPesquisado);
+                # Título
+                tituloTable("Upload do {$nome}");
 
-            # Exibe o nome do processo/documento para informar na tela de upload
-            $ClassePasta = new PastaFuncional();
-            $dadosPasta = $ClassePasta->get_dados($id);
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
+            } else {
+                # Monta o Menu
+                $menu = new MenuBar();
 
-            tituloTable("Upload de Documento para Pasta Funcional<br/>".$dadosPasta["descricao"]);
+                $botaoApaga = new Button("Excluir o Arquivo");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                $menu->add_link($botaoApaga, "right");
+                $menu->show();
 
+                # Título
+                tituloTable("Substituir o Arquivo Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo do {$nome}";
+            }
+
+            #####
+            # Limita a tela
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
-            echo "<form class='upload1' method='post' enctype='multipart/form-data'><br>
+            # Monta o formulário
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
                         <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
 
-            $pasta = PASTA_FUNCIONAL;
-
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);
             }
-
-            # Extensões possíveis
-            $extensoes = ["pdf"];
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));
@@ -334,12 +284,11 @@ if ($acesso) {
             $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
-
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
-            
             $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
             br();
             p($texto, "f14", "center");
 
@@ -348,24 +297,23 @@ if ($acesso) {
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
+
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Fez o upload de documento para pasta funcional";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, "tbpasta", $id, 8, $idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 8, $idServidorPesquisado);
 
-                    # Volta para o menu
-                    loadPage("?fase=listar");
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
                 } else {
-                    loadPage("?fase=upload&id=.$id");
+                    # volta a tela de upload
+                    loadPage("?fase=upload&id=$id");
                 }
             }
 
             # Informa caso exista um arquivo com o mesmo nome
-            $arquivoDocumento = $pasta . $id . ".pdf";
-            if (file_exists($arquivoDocumento)) {
-                br();
-                p("Já existe um documento para este registro no servidor!!<br/>O novo documento irá sobrescrevê-lo e o antigo será apagado !!", "puploadMensagem");
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
 
@@ -373,7 +321,37 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ##################################################################
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("Arquivo do {$nome} Cadastrado !!");
+
+            # Fecha a janela
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            break;
+
+        case "apagaDocumento" :
+
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                alert("Arquivo Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo do {$nome}";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            }
+            break;
+
+        ################################################################
     }
 
     $page->terminaPagina();

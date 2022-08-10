@@ -43,6 +43,9 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Verifica a origem 
+    $origem = get_session("origem","servidorMenu.php");
+
     # Começa uma nova página
     $page = new Page();
     if ($fase == "upload") {
@@ -68,8 +71,7 @@ if ($acesso) {
     # Nome do Modelo
     $objeto->set_nome('Documentos da Pasta Funcional');
 
-    # Botão de voltar da lista
-    $objeto->set_voltarLista("servidorMenu.php");
+    $objeto->set_voltarLista($origem);
     $objeto->set_voltarForm('?fase=listar');
 
     # controle de pesquisa

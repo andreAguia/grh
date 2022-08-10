@@ -216,8 +216,8 @@ if ($acesso) {
             }
 
             # nome
-            if (!vazio($parametroNome)) {
-                $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+            if (!empty($parametroNome)) {
+                $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%' OR tbpasta.descricao LIKE '%{$parametroNome}%')";
             }
 
             # Lotação

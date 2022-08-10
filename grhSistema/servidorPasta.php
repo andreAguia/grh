@@ -143,7 +143,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'autofocus' => true,
             'required' => true,
-            'array' => array(array(null, null),
+            'array' => array(                
                 array(1, 'Documento'),
                 array(2, 'Processo')),
             'size' => 20,

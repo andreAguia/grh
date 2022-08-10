@@ -53,6 +53,7 @@ define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos
 define("PASTA_BIM", "../../_arquivos/bim/");                        # BIM
 define("PASTA_ATESTADO", "../../_arquivos/atestados/");             # atestados
 define("PASTA_TRANSPORTE", "../../_arquivos/transporte/");          # servidores que receberam auxílio transporte naquele mês
+define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");          # servidores que receberam auxílio transporte naquele mês
 
 /*
  *  Tags aceitas em campos com htmlTag = true

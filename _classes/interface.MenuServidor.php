@@ -214,6 +214,25 @@ class MenuServidor {
             }
         }
 
+
+        # Pasta Funcional
+        $botao = new BotaoGrafico();
+        $botao->set_label('Pasta Funcional');
+        $botao->set_url('servidorPasta.php?grh=1');
+        #$botao->set_url('servidorPasta2.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Pasta funcional do servidor');
+        $menu->add_item($botao);
+
+        # Ato de Investidura
+        $botao = new BotaoGrafico();
+        $botao->set_label('Ato de Investidura');
+        $botao->set_url('servidorAto.php?grh=1');
+        $botao->set_target("_blank");
+        $botao->set_imagem(PASTA_FIGURAS . 'ato.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Ato de Investidura do servidor');
+        $menu->add_item($botao);
+
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
             $botao = new BotaoGrafico();
@@ -230,16 +249,6 @@ class MenuServidor {
             $botao->set_title('Dados da Cessão do Servidor');
             $menu->add_item($botao);
         }
-
-
-        # Pasta Funcional
-        $botao = new BotaoGrafico();
-        $botao->set_label('Pasta Funcional');
-        $botao->set_url('servidorPasta.php?grh=1');
-        #$botao->set_url('servidorPasta2.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Pasta funcional do servidor');
-        $menu->add_item($botao);
 
         # Acumulação
         $botao = new BotaoGrafico();

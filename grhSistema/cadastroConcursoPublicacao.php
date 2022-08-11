@@ -49,7 +49,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "ver") {
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -171,21 +173,9 @@ if ($acesso) {
 
     # Dados da rotina de Upload
     $pasta = PASTA_CONCURSO;
-    $nome = "Publicacao";
+    $nome = "Publicação";
     $tabela = "tbconcursopublicacao";
     $extensoes = ["pdf"];
-
-    # Botão de Upload
-    if (!empty($id)) {
-
-        # Botão de Upload
-        $botao = new Button("Upload {$nome}");
-        $botao->set_url("?fase=upload&id={$id}");
-        $botao->set_title("Faz o Upload do {$nome}");
-        $botao->set_target("_blank");
-
-        $objeto->set_botaoEditarExtra([$botao]);
-    }
 
     ################################################################
 
@@ -231,6 +221,39 @@ if ($acesso) {
             break;
 
         ################################################################
+        case "ver":
+            $grid = new Grid("center");
+            $grid->abreColuna(12);
+
+            if (file_exists("{$pasta}{$id}.pdf")) {                
+                br();
+
+                # Cria um menu
+                $menu = new MenuBar();
+
+                # Botão de Upload
+                $botao = new Button("Trocar o {$nome}");
+                $botao->set_url("?fase=upload&id={$id}");
+                $botao->set_title("Faz o Upload do {$nome}");
+                $menu->add_link($botao, "left");
+
+                $botaoApaga = new Button("Excluir o Arquivo");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                $menu->add_link($botaoApaga, "right");
+
+                $menu->show();
+
+                tituloTable($nome);                
+                iframe("{$pasta}{$id}.pdf");
+            } else {
+                loadPage("?fase=upload");
+            }
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
 
         case "upload" :
             # Limita a tela
@@ -238,15 +261,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Exibe o Título
-            if (!file_exists("{$pasta}{$id}.pdf")) {
-                br();
-
-                # Título
-                tituloTable("Upload do {$nome}");
-
-                # do Log
-                $atividade = "Fez o upload do {$nome}";
-            } else {
+            if (file_exists("{$pasta}{$id}.pdf")) {
                 # Monta o Menu
                 $menu = new MenuBar();
 
@@ -266,6 +281,14 @@ if ($acesso) {
 
                 # do Log
                 $atividade = "Substituiu o arquivo do {$nome}";
+            } else {
+                br();
+
+                # Título
+                tituloTable("Upload do {$nome}");
+
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
             }
 
             #####
@@ -333,7 +356,9 @@ if ($acesso) {
             alert("Arquivo do {$nome} Cadastrado !!");
 
             # Fecha a janela
-            echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            #echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            loadPage("?fase=ver");
+            echo '<script type="text/javascript" language="javascript">location.reload();</script>';
             break;
 
         case "apagaDocumento" :

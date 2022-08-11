@@ -78,39 +78,22 @@ class ConcursoPublicacao {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(null, $arquivo, "Exibe a Publicação");
+            $link = new Link(null, "?fase=ver&id=$idConcursoPublicacao", "Exibe a Publicação");
             $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
         } else {
-            echo "-";
+            $link = new Link(null, "?fase=upload&id=$idConcursoPublicacao", "Faz o Upload da Publicação");
+            $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
+            $link->set_target("_blank");
+            $link->show();
         }
     }
 
 ###########################################################
 
-    public function exibeBotaoUpload($idConcursoPublicacao) {
-        /**
-         * Exibe um link para exibir o edital
-         * 
-         * @param $idconcurso integer null O id do plano
-         * 
-         * @syntax $plano->exibeLei($idPlano);
-         */
-        # Pega o idConcurso
-        $dados = $this->get_dados($idConcursoPublicacao);
-        $idConcurso = $dados["idConcurso"];
-
-        $link = new Link(null, "?fase=uploadPublicacao&id=$idConcurso&idConcursoPublicacao=$idConcursoPublicacao", "Upload a Publicação");
-        $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
-        #$link->set_target("_blank");
-        $link->show();
-    }
-
-    ###########################################################
-
     public function exibeDescricao($idConcursoPublicacao) {
-        
+
         # Pega os dados
         $dados = $this->get_dados($idConcursoPublicacao);
 
@@ -119,7 +102,7 @@ class ConcursoPublicacao {
 
         # Verifica se tem observação, se tiver exibe uma figura com mouseover
         if (!empty($dados["obs"])) {
-            p($dados["obs"],"pObservacaoConcurso");
+            p($dados["obs"], "pObservacaoConcurso");
 //            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
 //            toolTip("(Obs)", $dados["obs"]);
         }

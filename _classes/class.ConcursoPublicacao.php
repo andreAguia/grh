@@ -78,15 +78,12 @@ class ConcursoPublicacao {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(null, "?fase=ver&id=$idConcursoPublicacao", "Exibe a Publicação");
+            $link = new Link(null, $arquivo, "Exibe a Publicação");
             $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
         } else {
-            $link = new Link(null, "?fase=upload&id=$idConcursoPublicacao", "Faz o Upload da Publicação");
-            $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
-            $link->set_target("_blank");
-            $link->show();
+            echo "---";
         }
     }
 

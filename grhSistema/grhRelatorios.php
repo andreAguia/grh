@@ -74,9 +74,9 @@ if ($acesso) {
             $menu->add_item('titulo', 'Categorias de Relatórios');
             $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Afastamentos', '?fase=afastamentos', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Auxílio Transporte', '?fase=transporte', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
@@ -173,20 +173,21 @@ if ($acesso) {
 
         ######################################
 
-        case "transporte";
+        case "aniversariantes";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Auxílio Transporte');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
+            $menu->add_item('titulo', 'Aniversariantes');
+            $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantesAnualLotacao.php');
 
             $menu->show();
             break;
 
         ######################################
 
-        case "aniversariantes";
+        case "afastamentos";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Aniversariantes');
-            $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantesAnualLotacao.php');
+            $menu->add_item('titulo', 'Afastamentos');
+            $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
+            #$menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
 
             $menu->show();
             break;

@@ -31,6 +31,7 @@ class Aposentadoria {
 
 
         $menu->add_item("link", "Aposentados por Ano", "areaAposentadoria.php?fase=porAno", "Servidores Aposentados por Ano de Aposentadoria");
+        $menu->add_item("link", "Aposentados por Período", "areaAposentadoria.php?fase=porPeriodo", "Servidores Aposentados em um Período");
         $menu->add_item("link", "Aposentados por Tipo", "areaAposentadoria.php?fase=motivo", "Servidores Aposentados por Tipo de Aposentadoria");
         $menu->add_item("link", "Estatística", "areaAposentadoria.php?fase=anoEstatistica", "Estatística dos Servidores Aposentados");
 
@@ -102,6 +103,56 @@ class Aposentadoria {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Estatutários / Celetistas Aposentados em ' . $parametroAno);
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
+        $tabela->set_subtitulo('Ordenado pela Data de Saída');
+
+        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));
+        $tabela->set_align(array('center', 'left', 'center', 'center', 'left'));
+        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
+
+        $tabela->set_classe(array(null, "pessoal"));
+        $tabela->set_metodo(array(null, "get_nomeECargo"));
+
+        $tabela->set_conteudo($result);
+
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editarAno');
+        $tabela->show();
+    }
+
+    ############################################################################ 
+
+    function exibeAposentadosPorPeriodo($dtInicial = null, $dtFinal = null) {
+
+        /**
+         * Exibe tabela com os aposentados por ano de aposentadoria
+         * 
+         * @param integer $parametroAno da aposentadoria
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata o parametro do ano
+        if (is_null($parametroAno)) {
+            $parametroAno = date('Y');
+        }
+
+        # Monta o select
+        $select = "SELECT tbservidor.idfuncional,
+                              tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
+                              tbservidor.dtDemissao,
+                              tbmotivo.motivo
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                        WHERE (tbservidor.dtDemissao >= '{$dtInicial}' AND tbservidor.dtDemissao <= '{$dtFinal})'
+                          AND situacao = 2
+                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                     ORDER BY dtDemissao";
+
+        $result = $pessoal->select($select);
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Servidores Aposentados no Período de " . date_to_php($dtInicial) . " a " . date_to_php($dtFinal));
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
         $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));

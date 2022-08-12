@@ -50,7 +50,7 @@ if ($acesso) {
     $relatorio->set_tituloLinha2("Período de " . date_to_php($relatorioDtInicial) . " a " . date_to_php($relatorioDtfinal));
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(['IdFuncional', 'Servidor', 'Telefones', 'E-mail', 'Saída', 'Motivo']);
+    $relatorio->set_label(['IdFuncional', 'Servidor', 'Telefones', 'E-mail', 'Aposentado em']);
     $relatorio->set_align(['center', 'left', 'center', 'center', 'center', 'left']);
     $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
 

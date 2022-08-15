@@ -166,6 +166,7 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Servidores Aposentados');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Professores', '../grhRelatorios/professor.aposentadoPorCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentadoria.periodo.php');
 
             $menu->show();
             break;

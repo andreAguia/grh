@@ -642,13 +642,6 @@ class MenuPrincipal {
 //        $menu->add_item($botao);
 //        
 //        $botao = new BotaoGrafico();
-//        $botao->set_label('Vacina');
-//        $botao->set_url('areaVacina.php?grh=1');
-//        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
-//        $botao->set_title('Controle da vacinação de servidores');
-//        $menu->add_item($botao);
-//        
-//        $botao = new BotaoGrafico();
 //        $botao->set_label('Abono Permanência');
 //        $botao->set_url('areaAbonoPermanencia.php?grh=1');
 //        $botao->set_imagem(PASTA_FIGURAS . 'dinheiro.jpg', $tamanhoImage, $tamanhoImage);
@@ -804,6 +797,13 @@ class MenuPrincipal {
             $botao->set_url('areaRecadastramento.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Vacina');
+            $botao->set_url('areaVacina.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Controle da vacinação de servidores');
             $menu->add_item($botao);
         }
 

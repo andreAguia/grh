@@ -38,11 +38,13 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroVacinado = post('parametroVacinado', get_session('parametroVacinado', 'Sim'));
     $parametroJustificativa = post('parametroJustificativa', get_session('parametroJustificativa', 'Não'));
+    $parametroDose = post('parametroDose', get_session('parametroDose', 'Ma3'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroVacinado', $parametroVacinado);
     set_session('parametroJustificativa', $parametroJustificativa);
+    set_session('parametroDose', $parametroDose);
 
     # Começa uma nova página
     $page = new Page();
@@ -149,6 +151,17 @@ if ($acesso) {
                 $controle->set_linha(1);
                 $controle->set_col(2);
                 $form->add_item($controle);
+            } else {
+                # Doses
+                $controle = new Input('parametroDose', 'combo', 'Número de Doses:', 1);
+                $controle->set_size(30);
+                $controle->set_title('Filtra Vacinados /  não Vacinados');
+                $controle->set_array([["Ma3", "3 ou Mais"], ["SimMe3", "Menos de 3"]]);
+                $controle->set_valor($parametroDose);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(1);
+                $controle->set_col(2);
+                $form->add_item($controle);
             }
 
             $form->show();
@@ -173,15 +186,21 @@ if ($acesso) {
 
             if ($parametroVacinado == "Sim") {
 
-                $select = "SELECT tbservidor.idServidor,
-                                  tbservidor.idServidor                    
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                         
-                                         
+                $select = "SELECT rr.idServidor,
+                                  rr.idServidor
+                            FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                  JOIN tbhistlot USING (idServidor)
+                                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
+                          AND rr.idServidor IN (SELECT idServidor FROM tbvacina)";
+
+                # Número de Doses
+                if ($parametroDose == "Ma3") {
+                    $select .= " AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2";
+                } else {
+                    $select .= " AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                }
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "Todos") {
@@ -192,7 +211,7 @@ if ($acesso) {
                     }
                 }
 
-                $select .= "ORDER BY tbpessoa.nome";
+                $select .= " ORDER BY tbpessoa.nome";
 
                 $result = $pessoal->select($select);
 
@@ -331,18 +350,25 @@ if ($acesso) {
             # Verifica se é ou não de vacinados
             if ($parametroVacinado == "Sim") {
 
-
                 $select = "SELECT tbpessoa.nome,
-                                  tbservidor.idServidor,
+                                  rr.idServidor,
                                   concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
-                                  tbservidor.idServidor
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                         
-                                         
+                                  rr.idServidor
+                            FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                  JOIN tbhistlot USING (idServidor)
+                                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbservidor.idServidor IN (SELECT idServidor FROM tbvacina) ";
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
+                          AND rr.idServidor IN (SELECT idServidor FROM tbvacina)";
+
+                # Número de Doses
+                if ($parametroDose == "Ma3") {
+                    $select .= " AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2";
+                    $subtitulo = "3 Doses ou Mais";
+                } else {
+                    $select .= " AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                    $subtitulo = "Menos de 3 Doses";
+                }
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "Todos") {
@@ -359,6 +385,7 @@ if ($acesso) {
 
                 $relatorio = new Relatorio();
                 $relatorio->set_titulo('Servidores que Entregaram Comprovante de Vacinação');
+                $relatorio->set_subtitulo($subtitulo);
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
                     $relatorio->set_tituloLinha3($parametroLotacao);

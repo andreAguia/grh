@@ -412,8 +412,13 @@ if ($acesso) {
 
                 $select = "SELECT tbpessoa.nome,
                                   tbservidor.idServidor,
-                                  concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
-                             FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                  concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao";
+
+                if ($parametroJustificativa == "Sim") {
+                    $select .= ",tbservidor.justificativaVacina";
+                }
+
+                $select .= " FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                              JOIN tbhistlot USING (idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
@@ -449,10 +454,17 @@ if ($acesso) {
                     $relatorio->set_tituloLinha3($parametroLotacao);
                 }
 
-                $relatorio->set_label(["Servidor", "Cargo", "Lotação"]);
-                #$relatorio->set_width([30, 30, 0, 40]);
+                if ($parametroJustificativa == "Sim") {
+                    $relatorio->set_label(["Servidor", "Cargo", "Lotação", "Motivo"]);
+                    $relatorio->set_align(["left", "left", "left", "left", "left"]);
+                    $relatorio->set_width([30, 30, 0, 40]);
+                } else {
+                    $relatorio->set_label(["Servidor", "Cargo", "Lotação"]);
+                    $relatorio->set_align(["left", "left", "left", "left"]);
+                    $relatorio->set_width([50, 50]);
+                }
+                
                 $relatorio->set_conteudo($result);
-                $relatorio->set_align(["left", "left", "left", "left"]);
                 $relatorio->set_classe([null, "pessoal"]);
                 $relatorio->set_metodo([null, "get_cargo"]);
                 $relatorio->set_numGrupo(2);

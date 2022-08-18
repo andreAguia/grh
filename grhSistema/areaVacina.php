@@ -441,7 +441,7 @@ if ($acesso) {
 
                 if ($parametroJustificativa == "Não") {
                     $select .= " AND (tbservidor.justificativaVacina = '' OR tbservidor.justificativaVacina is null)";
-                    $relatorio->set_tituloLinha2("Lista de Não Aptos - Portaria Reitoria 115/2022");
+                    $relatorio->set_tituloLinha2("Lista de Não Aptos");
                 }
 
                 $select .= "ORDER BY lotacao, tbpessoa.nome";

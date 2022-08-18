@@ -180,6 +180,43 @@ class Vacina {
 
     ###########################################################
 
+    public function exibeQuadroAptidao($idLotacao = null) {
+
+        # Trata os dados
+        if ($idLotacao == "Todos") {
+            $idLotacao = null;
+        }
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
+        $aptos = $this->getNumServidoresAptos($idLotacao);
+
+        $porcentagemAptos = number_format(($aptos * 100) / $numServidores, 1, '.', '');
+        $porcentagemNaoAptos = number_format(100 - $porcentagemAptos, 1, '.', '');
+
+        $array = [
+            ["Sim", $aptos, "{$porcentagemAptos} %"],
+            ["Nâo", $numServidores - $aptos, "{$porcentagemNaoAptos} %"],
+        ];
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($array);
+        $tabela->set_titulo("Acessar o Compi da Uenf");
+        $tabela->set_label(["Aptos", "Servidores", "%"]);
+        $tabela->set_width([33, 33, 33]);
+        #$tabela->set_align(["left"]);
+
+        $tabela->set_colunaSomatorio(1);
+        $tabela->set_textoSomatorio("Total:");
+        $tabela->set_totalRegistro(false);
+
+        $tabela->show();
+    }
+
+    ###########################################################
+
     public function exibeQuadroDosesPorVacina($idLotacao = null) {
 
         # Trata os dados
@@ -361,6 +398,37 @@ class Vacina {
                 $painel->fecha();
             }
         }
+    }
+
+    ###########################################################
+
+    public function getNumServidoresAptos($idLotacao = null) {
+        /**
+         * Retorna o nome da lotação
+         * 
+         * @syntax $this->get_dados($idRpa);
+         */
+        # Monta o select
+        $select = "SELECT DISTINCT rr.idServidor
+                     FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                           JOIN tbhistlot USING (idServidor)
+                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2"; 
+        
+        # Verifica se tem filtro por lotação
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else {
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+        }
+
+        $pessoal = new Pessoal();
+        $num = $pessoal->count($select);
+        return $num;
     }
 
     ###########################################################

@@ -93,7 +93,7 @@ if ($acesso) {
     set_session('sessionCpfPrestador');
 
     # Vacina
-    set_session('parametroVacinado');
+    set_session('parametroApto');
     set_session('parametroJustificativa');
 
     /*

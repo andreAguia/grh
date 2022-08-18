@@ -167,7 +167,7 @@ if ($acesso) {
             $form->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(3);
+            $grid->abreColuna(12, 4, 3);
 
             $vacina = new Vacina();
             $vacina->exibeQuadroVacinas($parametroLotacao);
@@ -177,7 +177,7 @@ if ($acesso) {
             }
 
             $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid->abreColuna(12, 8, 9);
 
             ##############
             /*
@@ -380,7 +380,7 @@ if ($acesso) {
                 }
 
                 $select .= " ORDER BY lotacao, tbpessoa.nome";
-                
+
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
@@ -463,7 +463,7 @@ if ($acesso) {
                     $relatorio->set_align(["left", "left", "left", "left"]);
                     $relatorio->set_width([50, 50]);
                 }
-                
+
                 $relatorio->set_conteudo($result);
                 $relatorio->set_classe([null, "pessoal"]);
                 $relatorio->set_metodo([null, "get_cargo"]);

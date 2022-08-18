@@ -379,8 +379,8 @@ if ($acesso) {
                     }
                 }
 
-                $select .= "ORDER BY lotacao, tbpessoa.nome";
-
+                $select .= " ORDER BY lotacao, tbpessoa.nome";
+                
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();

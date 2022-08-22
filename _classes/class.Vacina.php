@@ -203,7 +203,7 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo("Acessar o Compi da Uenf");
+        $tabela->set_titulo("Acessar os Compi da Uenf");
         $tabela->set_label(["Aptos", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         #$tabela->set_align(["left"]);

@@ -160,8 +160,8 @@ if ($acesso) {
             $grid->abreColuna(12, 4, 3);
 
             $vacina = new Vacina();
-            $vacina->exibeQuadroVacinas($parametroLotacao);
             $vacina->exibeQuadroAptidao($parametroLotacao);
+            $vacina->exibeQuadroVacinas($parametroLotacao);
 
             if ($parametroApto == "Sim") {
                 $vacina->exibeQuadroQuantidadeDoses($parametroLotacao);

@@ -113,11 +113,11 @@ if ($acesso) {
 
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
+                                           FROM tblotacao
+                                          WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                           FROM tblotacao
+                                          WHERE ativo)
+                                       ORDER BY 2');
             array_unshift($result, array("Todos", 'Todas'));
 
             $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
@@ -180,9 +180,9 @@ if ($acesso) {
 
                 $select = "SELECT rr.idServidor,
                                   rr.idServidor
-                            FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
-                                                  JOIN tbhistlot USING (idServidor)
-                                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                             FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbhistlot USING (idServidor)
+                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2
@@ -204,12 +204,12 @@ if ($acesso) {
                 $tabela = new Tabela();
                 if ($parametroLotacao <> "Todos") {
                     if (is_numeric($parametroLotacao)) {
-                        $tabela->set_titulo("Servidores Aptos a Acessar o Campi da Uenf - {$pessoal->get_nomeLotacao($parametroLotacao)}");
+                        $tabela->set_titulo("Servidores Aptos a Acessar os Campi da Uenf - {$pessoal->get_nomeLotacao($parametroLotacao)}");
                     } else {
-                        $tabela->set_titulo("Servidores Aptos a Acessar o Campi da Uenf - {$parametroLotacao}");
+                        $tabela->set_titulo("Servidores Aptos a Acessar os Campi da Uenf - {$parametroLotacao}");
                     }
                 } else {
-                    $tabela->set_titulo('Servidores Aptos a Acessar o Campi da Uenf');
+                    $tabela->set_titulo('Servidores Aptos a Acessar os Campi da Uenf');
                 }
                 $tabela->set_label(["Servidor", "Vacinas"]);
                 $tabela->set_width([50, 45]);
@@ -243,7 +243,7 @@ if ($acesso) {
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
                 } else {
                     # Título
-                    $titulo = "Servidores NÃO Aptos a Acessar o Campi da Uenf";
+                    $titulo = "Servidores NÃO Aptos a Acessar os Campi da Uenf";
 
                     # select
                     $select = "SELECT rr.idServidor,
@@ -371,7 +371,7 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo('Servidores Aptos a Acessar o Campi da Uenf');
+                $relatorio->set_titulo('Servidores Aptos a Acessar os Campi da Uenf');
                 $relatorio->set_subtitulo("De Acordo com a {$portaria}");
 
                 if (!is_numeric($parametroLotacao) AND $parametroLotacao <> "Todos") {
@@ -438,7 +438,7 @@ if ($acesso) {
 
                 if ($parametroJustificativa == "Não") {
                     $select .= " AND (rr.justificativaVacina = '' OR rr.justificativaVacina is null)";
-                    $relatorio->set_titulo('Servidores NÃO Aptos a Acessar o Campi da Uenf');
+                    $relatorio->set_titulo('Servidores NÃO Aptos a Acessar os Campi da Uenf');
                     $relatorio->set_subtitulo("De Acordo com a {$portaria}");
                 }
 

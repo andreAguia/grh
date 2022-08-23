@@ -227,7 +227,7 @@ if ($acesso) {
 
             $select .= "  ORDER BY ADDDATE(dtInicial,numDias-1)";
 
-            if ($parametroAlta <> "Sem Alta") {
+            if ($parametroAlta <> "Sem Alta - Todos") {
                 $select .= " DESC";
             }
 

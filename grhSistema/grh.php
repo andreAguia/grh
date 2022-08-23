@@ -95,6 +95,9 @@ if ($acesso) {
     # Vacina
     set_session('parametroApto');
     set_session('parametroJustificativa');
+    
+    # Area de Licença Médica
+    set_session('parametroAlta');
 
     /*
      *  Menu

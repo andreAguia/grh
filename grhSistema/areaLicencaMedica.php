@@ -270,7 +270,7 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Servidor", "Período", "Análise", "Tipo"]);
+            $tabela->set_label(["Servidor", "Período", "Situação", "Tipo"]);
             $tabela->set_align(["left", "left", "center", "left"]);
             $tabela->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
             $tabela->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
@@ -332,7 +332,7 @@ if ($acesso) {
                 $relatorio->set_subtitulo($subtitulo);
             }
 
-            $relatorio->set_label(["Servidor", "Período", "Análise", "Tipo"]);
+            $relatorio->set_label(["Servidor", "Período", "Situação", "Tipo"]);
             $relatorio->set_align(["left", "left", "center", "left"]);
             $relatorio->set_width([30, 20, 30, 20]);
             $relatorio->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);

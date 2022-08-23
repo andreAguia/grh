@@ -38,79 +38,95 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
-    $parametroAlta = post('parametroAlta', get_session('parametroAlta', "Em Aberto"));
+    $parametroAlta = post('parametroAlta', get_session('parametroAlta', "Sem Alta - Em Aberto"));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat', $parametroNomeMat);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroAlta', $parametroAlta);
 
+    # Relatório
+    $selectRelatorio = get_session("selectRelatorio");
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     $grid = new Grid();
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu1 = new MenuBar();
+    if ($fase <> "relatorio") {
+        $menu1 = new MenuBar();
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu1->add_link($botaoVoltar, "left");
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu1->add_link($botaoVoltar, "left");
 
-    $menu1->show();
+        # Relatórios
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório dessa pesquisa");
+        $botaoRel->set_url("?fase=relatorio");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem);
+        $menu1->add_link($botaoRel, "right");
 
-    ################################################################
-    # Formulário de Pesquisa
-    $form = new Form('?');
+        $menu1->show();
 
-    $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
-    $controle->set_size(100);
-    $controle->set_title('Nome do servidor');
-    $controle->set_valor($parametroNomeMat);
-    $controle->set_autofocus(true);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(3);
-    $form->add_item($controle);
+        ################################################################
+        # Formulário de Pesquisa
+        $form = new Form('?');
 
-    # Lotação
-    $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+        $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
+        $controle->set_size(100);
+        $controle->set_title('Nome do servidor');
+        $controle->set_valor($parametroNomeMat);
+        $controle->set_autofocus(true);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
+        $form->add_item($controle);
+
+        # Lotação
+        $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
                                                      WHERE ativo) UNION (SELECT distinct DIR, DIR
                                                       FROM tblotacao
                                                      WHERE ativo)
                                                   ORDER BY 2');
-    array_unshift($result, array('*', '-- Todos --'));
+        array_unshift($result, array('*', '-- Todos --'));
 
-    $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
-    $controle->set_size(30);
-    $controle->set_title('Filtra por Lotação');
-    $controle->set_array($result);
-    $controle->set_valor($parametroLotacao);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(6);
-    $form->add_item($controle);
+        $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Lotação');
+        $controle->set_array($result);
+        $controle->set_valor($parametroLotacao);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(6);
+        $form->add_item($controle);
 
-    $controle = new Input('parametroAlta', 'combo', 'Alta:', 1);
-    $controle->set_size(30);
-    $controle->set_title('Filtra por Alta');
-    $controle->set_array(["Com Alta", "Sem Alta - A Vencer", "Sem Alta - Em Aberto"]);
-    $controle->set_valor($parametroAlta);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(3);
-    $form->add_item($controle);
+        $controle = new Input('parametroAlta', 'combo', 'Alta:', 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Alta');
+        $controle->set_array(["Com Alta", "Sem Alta - A Vencer", "Sem Alta - Em Aberto"]);
+        $controle->set_valor($parametroAlta);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
+        $form->add_item($controle);
 
-    $form->show();
+        $form->show();
+    }
 
 ################################################################
 
@@ -231,9 +247,8 @@ if ($acesso) {
             if ($parametroAlta == "Com Alta") {
                 $select .= " DESC";
             }
-            
-            #echo $select;
 
+            #echo $select;
             # Guarde o select para o relatório
             set_session('selectRelatorio', $select);
 
@@ -257,12 +272,9 @@ if ($acesso) {
             $tabela->set_conteudo($resumo);
             $tabela->set_label(["Servidor", "Período", "Análise", "Tipo"]);
             $tabela->set_align(["left", "left", "center", "left"]);
-            #$tabela->set_width([15, 15, 15, 7, 5, 8, 15, 15]);
-            #$tabela->set_funcao([ null, "date_to_php", null, "date_to_php"]);
             $tabela->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
             $tabela->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
             $tabela->set_titulo($titulo);
-            #$tabela->set_mensagemPreTabela($mensagem);
 
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->set_nomeColunaEditar("Acessar");
@@ -283,6 +295,51 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorLicenca.php');
+            break;
+
+        ################################################################
+        # Relatório
+        case "relatorio" :
+            $result = $pessoal->select($selectRelatorio);
+
+            # Inicia a variável do subtítulo
+            $subtitulo = null;
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+            }
+
+            # Alta
+            if ($parametroAlta == "Sem Alta - A Vencer") {
+                $titulo = "Servidores Com a Última Licença Médica<br/>Sem Alta - A Vencer";
+            } elseif ($parametroAlta == "Sem Alta - Em Aberto") {
+                $titulo = "Servidores Com a Última Licença Médica<br/>Sem Alta - Em Aberto";
+            } else {
+                $titulo = "Servidores Com a Última Licença Médica<br>Com Alta";
+            }
+
+            # Nome, MAtricula e id
+            if (!is_null($parametroNomeMat)) {
+                $subtitulo .= "Pesquisa: " . $parametroNomeMat;
+            }
+
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo($titulo);
+
+            # Acrescenta o subtítulo de tiver filtro
+            if ($subtitulo <> null) {
+                $relatorio->set_subtitulo($subtitulo);
+            }
+
+            $relatorio->set_label(["Servidor", "Período", "Análise", "Tipo"]);
+            $relatorio->set_align(["left", "left", "center", "left"]);
+            $relatorio->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
+            $relatorio->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
+            $relatorio->set_bordaInterna(true);
+
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
             break;
 
         ################################################################

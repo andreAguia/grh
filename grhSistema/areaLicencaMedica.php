@@ -334,6 +334,7 @@ if ($acesso) {
 
             $relatorio->set_label(["Servidor", "Período", "Análise", "Tipo"]);
             $relatorio->set_align(["left", "left", "center", "left"]);
+            $relatorio->set_width([30, 20, 30, 20]);
             $relatorio->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
             $relatorio->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
             $relatorio->set_bordaInterna(true);

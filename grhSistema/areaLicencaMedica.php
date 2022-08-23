@@ -103,7 +103,7 @@ if ($acesso) {
     $controle = new Input('parametroAlta', 'combo', 'Alta:', 1);
     $controle->set_size(30);
     $controle->set_title('Filtra por Alta');
-    $controle->set_array(["Com Alta", "Sem Alta"]);
+    $controle->set_array(["Com Alta", "Sem Alta - Todos", "Sem Alta - Em Aberto"]);
     $controle->set_valor($parametroAlta);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
@@ -179,8 +179,13 @@ if ($acesso) {
             $select .= ") AND idPerfil = 1";
 
             # Alta
-            if ($parametroAlta == "Sem Alta") {
+            if ($parametroAlta == "Sem Alta - Todos") {
                 $select .= " AND alta <> 1";
+                $titulo = "Servidores Com a Última Licença Médica SEM ALTA";
+                $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
+            } elseif ($parametroAlta == "Sem Alta - Em Aberto") {
+                $select .= " AND alta <> 1 
+                             AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) < 0";
                 $titulo = "Servidores Com a Última Licença Médica SEM ALTA";
                 $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
             } else {
@@ -233,12 +238,12 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
-            
-            callout($mensagem1,"alert");
+
+            callout($mensagem1, "alert");
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
-            
+
             callout($mensagem2);
 
             $grid->fechaColuna();

@@ -197,7 +197,7 @@ if ($acesso) {
             # Alta
             if ($parametroAlta == "Sem Alta - A Vencer") {
                 $select .= " AND alta <> 1 
-                             AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) > 0";
+                             AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
                 $titulo = "Servidores Com a Última Licença Médica SEM ALTA - A VENCER";
                 $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
             } elseif ($parametroAlta == "Sem Alta - Em Aberto") {

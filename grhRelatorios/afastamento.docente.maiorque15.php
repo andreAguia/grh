@@ -77,7 +77,9 @@ if ($acesso) {
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                             LEFT JOIN tbferias USING (idServidor)
                 WHERE situacao = 1
-                  AND (idCargo = 128 OR idCargo = 129) 
+                  AND (idCargo = 128 OR idCargo = 129)
+                  AND month(tbferias.dtInicial) <> 1
+                  AND month(tbferias.dtInicial) <> 2
                   AND numDias > 15
                   AND ((tbferias.dtInicial <= '{$relatorioDtInicial}' AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1) >= '{$relatorioDtInicial}')
                    OR (tbferias.dtInicial BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}')  
@@ -184,7 +186,7 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Professores com Mais de 15 Dias de Afastamento');
     $relatorio->set_tituloLinha2("Período de " . date_to_php($relatorioDtInicial) . " a " . date_to_php($relatorioDtfinal));
-    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_subtitulo('Descartando as Férias com Data Inicial em Janeiro e Fevereiro<br/>Ordenado pelo Nome');
     $relatorio->set_width([10, 30, 20, 10, 5, 10, 25]);
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
     $relatorio->set_align(["center", "left", "left", "center", "center", "center", "center"]);

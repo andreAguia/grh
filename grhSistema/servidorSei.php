@@ -82,8 +82,8 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita('SELECT idSeiCategoria,
-                                     descricao,
                                      numero,
+                                     descricao,
                                      idServidor
                                 FROM tbsei
                                WHERE idSei = ' . $id);
@@ -132,15 +132,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $categorias,
             'size' => 100,
-            'col' => 4,
-            'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
-        array('nome' => 'descricao',
-            'label' => 'Descrição:',
-            'tipo' => 'texto',
-            'size' => 200,
-            'col' => 8,
+            'col' => 3,
             'required' => true,
             'title' => 'Descrição do Elogio ou Advertência.',
             'linha' => 2),
@@ -149,6 +141,14 @@ if ($acesso) {
             'tipo' => 'sei',
             'size' => 50,
             'col' => 6,
+            'required' => true,
+            'title' => 'Descrição do Elogio ou Advertência.',
+            'linha' => 2),        
+        array('nome' => 'descricao',
+            'label' => 'Descrição:',
+            'tipo' => 'texto',
+            'size' => 200,
+            'col' => 12,
             'required' => true,
             'title' => 'Descrição do Elogio ou Advertência.',
             'linha' => 2),
@@ -165,7 +165,7 @@ if ($acesso) {
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
     # Cadastro de Categoria
-    if (Verifica::acesso($idUsuario, [1, 2])) {
+    if (Verifica::acesso($idUsuario, 1)) {
         $botaoCat = new Button("Categorias");
         $botaoCat->set_title("Acessa o Cadastro de Categorias");
         $botaoCat->set_url('cadastroSeiCategoria.php');

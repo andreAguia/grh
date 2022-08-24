@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, 1);
 
 if ($acesso) {
     # Verifica a fase do programa
@@ -101,6 +101,7 @@ if ($acesso) {
     $objeto->set_campos(array(
         array('nome' => 'categoria',
             'label' => 'Categoria:',
+            'autofocus' => true,
             'tipo' => 'texto',
             'size' => 100,
             'col' => 4,

@@ -214,7 +214,6 @@ class MenuServidor {
             }
         }
 
-
         # Pasta Funcional
         $botao = new BotaoGrafico();
         $botao->set_label('Pasta Funcional');
@@ -277,10 +276,10 @@ class MenuServidor {
 
         # Sei
         $botao = new BotaoGrafico();
-        $botao->set_label('Documentos no Sei');
+        $botao->set_label('Processos no Sei');
         $botao->set_url('servidorSei.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de documentos com os respectivos números no Sei');
+        $botao->set_title('Cadastro de processos no Sei');
         $menu->add_item($botao);
 
         # Elogios

@@ -110,6 +110,7 @@ if ($acesso) {
     $objeto->set_campos(array(
         array('nome' => 'dtPublicacao',
             'label' => 'Data da Pub. no DOERJ:',
+            'autofocus' => true,
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,

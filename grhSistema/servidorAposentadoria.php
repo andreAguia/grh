@@ -39,7 +39,7 @@ if ($acesso) {
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
-##############################################################################################################################################
+####################################################
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -87,22 +87,22 @@ if ($acesso) {
 
     ###
 
-    $tab = new Tab(["Dados do Servidor", "Regras Permanentes", "Regras de Transição"]);
+    $tab = new Tab(["Dados do Servidor", "Tempo Averbado", "Vínculos Anteriores", "Afastamentos","Regras Permanentes", "Regras de Transição"]);
 
-    ###
+    ####################################################
+    /*
+     *  Dados do Servidor
+     */
 
     $tab->abreConteudo();
 
     $grid1 = new Grid();
     $grid1->abreColuna(12, 4);
 
-    /*
-     *  Dados do Servidor
-     */
     $array = [
         ["Idade", $pessoal->get_idade($idServidorPesquisado)],
         ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) . " dias"],
-        ["Tempo Averbado + Tempo de Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoTotal($idServidorPesquisado). " dias"],
+        ["Tempo Averbado + Tempo de Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoTotal($idServidorPesquisado) . " dias"],
         ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
     ];
 
@@ -160,11 +160,20 @@ if ($acesso) {
     $tabela->show();
 
     $grid1->fechaColuna();
+    $grid1->fechaGrid();
+
+    $tab->fechaConteudo();
+
+    ####################################################
+    /*
+     *  Tempo Averbado Detalhado
+     */
+
+    $tab->abreConteudo();
+
+    $grid1 = new Grid();
     $grid1->abreColuna(12);
 
-    /*
-     *  Resumo do Tempo Averbado
-     */
     $select = 'SELECT dtInicial,
                       dtFinal,
                       dias,
@@ -203,10 +212,22 @@ if ($acesso) {
     $tabela->set_totalRegistro(false);
     $tabela->set_colunaSomatorio([2, 3]);
     $tabela->show();
+    
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
+    $tab->fechaConteudo();
+
+    ####################################################
     /*
-     *  Vinculos do servidor
+     *  Vinculos Anteriores do servidor
      */
+    
+    $tab->abreConteudo();
+
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
+    
     # Pega o idPessoa desse idServidor
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -241,8 +262,23 @@ if ($acesso) {
     $grid1->fechaGrid();
 
     $tab->fechaConteudo();
+    
+    ####################################################
+    /*
+     *  Afastamentos
+     */
 
-    ###
+    $tab->abreConteudo();
+    
+    br(2);
+    p("Rotina Em Desenvolvimento","f14","center");
+    
+    $tab->fechaConteudo();
+
+    ####################################################
+    /*
+     *  Regras Permanentes
+     */
 
     $tab->abreConteudo();
 
@@ -265,7 +301,10 @@ if ($acesso) {
 
     $tab->fechaConteudo();
 
-    ###
+    ####################################################
+    /*
+     *  Regras de Transição
+     */
 
     $tab->abreConteudo();
 
@@ -288,10 +327,9 @@ if ($acesso) {
 
     $tab->show();
     br();
-    
+
     $grid->fechaColuna();
     $grid->fechaGrid();
-    
 
     $page->terminaPagina();
 } else {

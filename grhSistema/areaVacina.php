@@ -50,6 +50,7 @@ if ($acesso) {
 
     # Variáveis
     $portaria = "Portaria 161 de 28 de Julho de 2022";
+    $dosesAptidao = 3;
 
     # Cabeçalho da Página
     if ($fase <> "relatorio") {
@@ -161,12 +162,9 @@ if ($acesso) {
 
             $vacina = new Vacina();
             $vacina->exibeQuadroAptidao($parametroLotacao);
+            $vacina->exibeQuadroQuantidadeDoses($parametroLotacao, $dosesAptidao);
             $vacina->exibeQuadroVacinas($parametroLotacao);
-
-            if ($parametroApto == "Sim") {
-                $vacina->exibeQuadroQuantidadeDoses($parametroLotacao);
-                $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
-            }
+            $vacina->exibeQuadroDosesPorVacina($parametroLotacao);
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 8, 9);
@@ -185,7 +183,7 @@ if ($acesso) {
                                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
                           ";
 
                 # Verifica se tem filtro por lotação
@@ -240,7 +238,7 @@ if ($acesso) {
                                                    JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 } else {
                     # Título
                     $titulo = "Servidores NÃO Aptos a Acessar os Campi da Uenf";
@@ -255,7 +253,7 @@ if ($acesso) {
                                                        JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 }
 
                 # Verifica se tem filtro por lotação
@@ -354,7 +352,7 @@ if ($acesso) {
                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
                           ";
 
                 # Verifica se tem filtro por lotação
@@ -408,7 +406,7 @@ if ($acesso) {
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                  WHERE situacao = 1
                                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                                   AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                                   AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 } else {
                     $select = "SELECT tbpessoa.nome,
                                       rr.idServidor,
@@ -419,7 +417,7 @@ if ($acesso) {
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                  WHERE situacao = 1
                                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                                   AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < 3";
+                                   AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 }
 
                 # Verifica se tem filtro por lotação

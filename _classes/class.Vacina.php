@@ -169,7 +169,15 @@ class Vacina {
         $tabela->set_titulo("Entrega de Comprovantes");
         $tabela->set_label(["Entregaram", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
-        #$tabela->set_align(["left"]);
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
+                'valor' => "Sim",
+                'operador' => '=',
+                'id' => 'apto'),
+            array('coluna' => 0,
+                'valor' => "Nâo",
+                'operador' => '=',
+                'id' => 'naoApto')));
 
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
@@ -206,7 +214,15 @@ class Vacina {
         $tabela->set_titulo("Acessar os Campi da Uenf");
         $tabela->set_label(["Aptos", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
-        #$tabela->set_align(["left"]);
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
+                'valor' => "Sim",
+                'operador' => '=',
+                'id' => 'apto'),
+            array('coluna' => 0,
+                'valor' => "Nâo",
+                'operador' => '=',
+                'id' => 'naoApto')));
 
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
@@ -268,7 +284,7 @@ class Vacina {
 
     ###########################################################
 
-    public function exibeQuadroQuantidadeDoses($idLotacao = null) {
+    public function exibeQuadroQuantidadeDoses($idLotacao = null, $dosesAptidao = null) {
 
         # Trata os dados
         if ($idLotacao == "Todos") {
@@ -296,27 +312,38 @@ class Vacina {
         $select .= " 
                 GROUP BY idServidor
                 ORDER BY 1 DESC ";
-        
+
         $pessoal = new Pessoal();
         $servidores = $pessoal->select($select);
-        
-        foreach($servidores as $tt){
+
+        # Pega os dados
+        $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
+
+        foreach ($servidores as $tt) {
             $arraySimples[] = $tt[0];
-        }        
-        
+        }
+
         $arraySimples2 = array_count_values($arraySimples);
-        
-        foreach($arraySimples2 as $key => $value){
-            $arraySimples3[] = [$key." dose(s)",$value];
+
+        foreach ($arraySimples2 as $key => $value) {
+            $arraySimples3[] = [$key . " dose(s)", $value, number_format(($value * 100) / $numServidores, 1, '.', '')." %"];
         }
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($arraySimples3);
         $tabela->set_titulo("Quantidade de Doses");
-        $tabela->set_label(["Doses", "Servidores"]);
-        #$tabela->set_width(array(30, 15, 15, 15, 15));
-        
+        $tabela->set_label(["Doses", "Servidores","%"]);
+
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
+                'valor' => $dosesAptidao,
+                'operador' => '>=',
+                'id' => 'apto'),
+            array('coluna' => 0,
+                'valor' => $dosesAptidao,
+                'operador' => '<',
+                'id' => 'naoApto')));
 
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
@@ -415,8 +442,8 @@ class Vacina {
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
-                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2"; 
-        
+                          AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2";
+
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {

@@ -1028,6 +1028,14 @@ p#pVacinaUmaDose{
     color: red;
 }
 
+tr#apto{
+    background-color:#cdf3d3;
+}
+
+tr#naoApto{
+    background-color:#ffcccc;
+}
+
 /*******************************************
  * Área Licença Médica
  *******************************************/

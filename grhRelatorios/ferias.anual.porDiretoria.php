@@ -78,7 +78,7 @@ if ($acesso) {
 
     $relatorio->set_formCampos(array(
         array('nome' => 'parametroAno',
-            'label' => 'Ano:',
+            'label' => 'Ano Exercício:',
             'tipo' => 'combo',
             'array' => $anoExercicio,
             'size' => 10,

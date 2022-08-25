@@ -325,18 +325,20 @@ if ($acesso) {
 
         case "ferias";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Férias');
-            $menu->add_item('titulo1', 'Novos Relatórios');
-            $menu->add_item('linkWindow', 'Relatório de Servidores por Diretoria para Solicitação de Férias', '../grhRelatorios/ferias.anual.porDiretoria.php');
-            $menu->add_item('titulo1', 'Antigas Escalas');
-            $menu->add_item('linkWindow', 'Escala Anual de Férias de Servidores Tecnicos Estatutarios', '../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
-            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao', '../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
-            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Com Regencia de Turma', '../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
-            $menu->add_item('titulo1', 'Outros');
+            $menu->add_item('titulo', 'Férias');            
+            $menu->add_item('titulo1', 'Para o Recesso');
+            $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
+            $menu->add_item('titulo1', 'Férias Fruídas');
+            $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício', '../grhRelatorios/ferias.anual.porDiretoria.php');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.professor.php');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.adm.php');
             $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.fruidas.professor.php');
             $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.fruidas.adm.php');
+            $menu->add_item('titulo1', 'Antigas Escalas');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias de Servidores Tecnicos Estatutarios', '../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao', '../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Com Regencia de Turma', '../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
+            
 
             $menu->show();
 
@@ -568,23 +570,20 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Contatos');
             $menu->add_item('titulo1', 'Email');
-            $menu->add_item('linkWindow', 'Email dos Servidores', '../grhRelatorios/email.php');
-            $menu->add_item('linkWindow', 'Email dos Servidores 2', '../grhRelatorios/email2.php');
-            $menu->add_item('linkWindow', 'Email dos Servidores 3', '../grhRelatorios/email3.php');
-            $menu->add_item('linkWindow', 'Email dos Servidores 4', '../grhRelatorios/email4.php');
+            $menu->add_item('linkWindow', 'Email Institucional dos Servidores Ativos', '../grhRelatorios/email.php');
+            $menu->add_item('linkWindow', 'Email Pessoal dos Servidores Ativos', '../grhRelatorios/email2.php');
+            $menu->add_item('linkWindow', 'Emails dos Servidores Ativos', '../grhRelatorios/email3.php');
+            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional Cadastrado', '../grhRelatorios/contatos.servidoresSemEmail.php');
 
             $menu->add_item('titulo1', 'Telefone');
-            $menu->add_item('linkWindow', 'Telefones dos Servidores', '../grhRelatorios/telefone.php');
-            $menu->add_item('linkWindow', 'Telefones dos Servidores 2', '../grhRelatorios/telefone2.php');
+            $menu->add_item('linkWindow', 'Telefones dos Servidores Ativos', '../grhRelatorios/telefone.php');
+            $menu->add_item('linkWindow', 'Servidores sem Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemCelular.php');
 
             $menu->add_item('titulo1', 'Contatos');
-            $menu->add_item('linkWindow', 'Contatos dos Servidores 1', '../grhRelatorios/contatos.php');
-            $menu->add_item('linkWindow', 'Contatos dos Servidores 2', '../grhRelatorios/contatos2.php');
-            $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');
-            #$menu->add_item('linkWindow', 'Servidores sem Algum dos Contatos', '../grhRelatorios/contatos.servidoresSemContatos.php');
-            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional Cadastrado', '../grhRelatorios/contatos.servidoresSemEmail.php');
+            $menu->add_item('linkWindow', 'Contatos (Todos) dos Servidores Ativos', '../grhRelatorios/contatos1.php');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');            
             $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional ou Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemEmailECelular.php');
-            $menu->add_item('linkWindow', 'Servidores sem Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemCelular.php');
+            
 
             $menu->show();
             break;

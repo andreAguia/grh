@@ -35,18 +35,14 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idFuncional,
-                      tbservidor.idServidor,
-                      CONCAT(tbtipocargo.sigla," - ",tbcargo.nome),
+    $select = 'SELECT tbpessoa.nome,
+                      tbservidor.idservidor,
                       concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                      tbpessoa.emailUenf,
-                      tbpessoa.emailPessoal,
-                      tbpessoa.emailOutro
+                      tbservidor.idservidor,
+                      tbservidor.idservidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                                 JOIN tbcargo USING (idCargo)
-                                 JOIN tbtipocargo USING (idTipoCargo)
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
+                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
@@ -54,34 +50,26 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $relatorio->set_numGrupo(2);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
             $subTitulo .= "Lotação: " . $lotacao . "<br/>";
-            $relatorio->set_numGrupo(2);
         }
     }
 
-    if (is_null($lotacao)) {
-        $select .= ' ORDER BY idTipoCargo, tbtipocargo.sigla, tbcargo.nome, tbpessoa.nome';
-    } else {
-        $select .= ' ORDER BY DIR, GER, idTipoCargo, tbtipocargo.sigla, tbcargo.nome, tbpessoa.nome';
-    }
-
+    $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
-    $relatorio->set_titulo('Relatório de Emails dos Servidores Ativos');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Cargo');
-    $relatorio->set_label(array('IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'E-mail UENF', 'E-mail Pessoal', 'Outro E-mail'));
-    $relatorio->set_width(array(10,15,15,15,15,15,15));
-    $relatorio->set_align(array("center", "left", "left", "left", "left", "left", "left"));
+    $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
+    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
+    $relatorio->set_label(['Servidor', 'Cargo', 'Lotação', 'Emails','Telefones']);
+    $relatorio->set_align(["left", "left", "left"]);
+    $relatorio->set_classe([null, "pessoal", null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, "get_cargoSimples", null, "get_telefones", "get_emails"]);
+    $relatorio->set_numGrupo(2);
+    #$relatorio->set_width(array(10,40,50));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_bordaInterna(true);
-
-    $relatorio->set_classe(array(null, "pessoal"));
-    $relatorio->set_metodo(array(null, "get_nome"));
-
+    $relatorio->set_bordaInterna(true);
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR

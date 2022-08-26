@@ -307,12 +307,18 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Incluir
-            if ($statusVaga == "Disponível") {
-                $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
-                $botaoVoltar->set_class('button');
-                $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
-                $menu1->add_link($botaoVoltar, "right");
-            }
+            $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+            $menu1->add_link($botaoVoltar, "right");
+            # Retirada a limitação de inclusão somente quando vaga estivesse disponível
+            # a pedido de ana terezinha
+//            if ($statusVaga == "Disponível") {
+//                $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
+//                $botaoVoltar->set_class('button');
+//                $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+//                $menu1->add_link($botaoVoltar, "right");
+//            }
 
             $menu1->show();
 
@@ -332,9 +338,9 @@ if ($acesso) {
             $grid->abreColuna(9);
             
             # Informa sobre o botão incluir
-            if ( $statusVaga == "Ocupada") {
-                callout("Observe que o botão de inclusão de novo concurso somente aparecerá para vagas que estiverem disponíveis. Como esta vaga está ocupada o botão não aparece.");
-            }
+//            if ($statusVaga == "Ocupada") {
+//                callout("Observe que o botão de inclusão de novo concurso somente aparecerá para vagas que estiverem disponíveis. Como esta vaga está ocupada o botão não aparece.");
+//            }
 
             # Alerta de laboratório
             $msn = $vaga->verificaProblemaVaga($idVaga);

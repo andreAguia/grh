@@ -367,7 +367,7 @@ class AuxilioTransporte {
                               cargo,                                     
                               matricula,
                               dtAdmissao,
-                              dtAposentadoria
+                              dtSaida
                          FROM tbacumulacao
                         WHERE idServidor = {$idServidor}";
 
@@ -393,8 +393,8 @@ class AuxilioTransporte {
                         $tercLinha .= " / Admissão: " . date_to_php($acumulacao['dtAdmissao']);
                     }
 
-                    if (!empty($acumulacao['dtAposentadoria'])) {
-                        $tercLinha .= " / Aposentadoria: " . date_to_php($acumulacao['dtAposentadoria']);
+                    if (!empty($acumulacao['dtSaida'])) {
+                        $tercLinha .= " / Aposentadoria: " . date_to_php($acumulacao['dtSaida']);
                     }
 
                     pLista(

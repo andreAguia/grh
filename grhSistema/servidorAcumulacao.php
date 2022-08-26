@@ -34,7 +34,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
 
@@ -66,7 +66,7 @@ if ($acesso) {
     } else {
         $voltar = $origem;
     }
-    
+
     # botão de voltar da lista
     $objeto->set_voltarLista($voltar);
 
@@ -93,11 +93,11 @@ if ($acesso) {
                                      cargo,                                     
                                      matricula,
                                      dtAdmissao,
-                                     dtAposentadoria,
+                                     dtSaida,
+                                     motivoSaida,
                                      resultado,
                                      dtPublicacao,
                                      pgPublicacao,
-                                     conclusao,
                                      resultado1,
                                      dtPublicacao1,
                                      pgPublicacao1,
@@ -106,7 +106,8 @@ if ($acesso) {
                                      pgPublicacao2,
                                      resultado3,
                                      dtPublicacao3,
-                                     pgPublicacao3,
+                                     pgPublicacao3,                                     
+                                     conclusao,
                                      obs,
                                      idServidor
                                 FROM tbacumulacao
@@ -123,7 +124,8 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $objeto->set_formatacaoCondicional(array(array('coluna' => 0,
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 0,
             'valor' => 'Resolvido',
             'operador' => '=',
             'id' => 'emAberto'),
@@ -134,11 +136,10 @@ if ($acesso) {
     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Cargo Acumulado"));
-    $objeto->set_align(array("center", "center", "center", "center", "left"));
-    #$objeto->set_funcao(array(null, null, "date_to_php"));
-    $objeto->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"));
-    $objeto->set_metodo(array(null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo"));
+    $objeto->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo"]);
+    $objeto->set_align(["center", "center", "center", "center", "left"]);
+    $objeto->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
+    $objeto->set_metodo([null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -151,9 +152,18 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
+    
+    # Pega os dados da combo motivo de Saída do servidor
+    $motivo = $pessoal->select('SELECT idmotivo,
+                                       motivo
+                                  FROM tbmotivo
+                              ORDER BY motivo');
+
+    array_unshift($motivo, array(null, null));
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'processo',
+    $objeto->set_campos(array(
+        array('nome' => 'processo',
             'label' => 'Processo:',
             'tipo' => 'texto',
             'size' => 30,
@@ -212,18 +222,27 @@ if ($acesso) {
             'col' => 3,
             'title' => 'Data de admissão da outra instituição',
             'linha' => 3),
-        array('nome' => 'dtAposentadoria',
-            'label' => 'Data da Aposentadoria:',
+        array('nome' => 'dtSaida',
+            'label' => 'Data da Saída:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data de aposentadoria na outra instituição',
             'linha' => 3),
+        array('linha' => 3,
+            'nome' => 'motivoSaida',
+            'label' => 'Motivo:',
+            'tipo' => 'combo',
+            'array' => $motivo,
+            'col' => 4,
+            'size' => 30,
+            'title' => 'Motivo da saida do servidor no outro vínculo.'),
         array('nome' => 'resultado',
             'fieldset' => 'fecha',
             'label' => 'Resultado:',
             'tipo' => 'combo',
-            'array' => array(array(null, null),
+            'array' => array(
+                array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
@@ -245,23 +264,12 @@ if ($acesso) {
             'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 4),
-        array('nome' => 'conclusao',
-            'label' => 'Conclusão:',
-            'tipo' => 'combo',
-            'array' => array(array(null, null),
-                array(1, "Pendente"),
-                array(2, "Resolvido")),
-            'size' => 2,
-            'required' => true,
-            'valor' => null,
-            'col' => 2,
-            'title' => 'Conclusão.',
-            'linha' => 4),
         array('nome' => 'resultado1',
             'fieldset' => 'Recursos:',
             'label' => 'Recurso 1:',
             'tipo' => 'combo',
-            'array' => array(array(null, null),
+            'array' => array(
+                array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
@@ -286,7 +294,8 @@ if ($acesso) {
         array('nome' => 'resultado2',
             'label' => 'Recurso 2:',
             'tipo' => 'combo',
-            'array' => array(array(null, null),
+            'array' => array(
+                array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
@@ -311,7 +320,8 @@ if ($acesso) {
         array('nome' => 'resultado3',
             'label' => 'Recurso 3:',
             'tipo' => 'combo',
-            'array' => array(array(null, null),
+            'array' => array(
+                array(null, null),
                 array(1, "Lícito"),
                 array(2, "Ilícito")),
             'size' => 2,
@@ -333,8 +343,20 @@ if ($acesso) {
             'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
             'linha' => 7),
-        array('linha' => 8,
+        array('nome' => 'conclusao',
+            'label' => 'Conclusão:',
             'fieldset' => 'fecha',
+            'tipo' => 'combo',
+            'array' => array(array(null, null),
+                array(1, "Pendente"),
+                array(2, "Resolvido")),
+            'size' => 2,
+            'required' => true,
+            'valor' => null,
+            'col' => 4,
+            'title' => 'Conclusão.',
+            'linha' => 8),
+        array('linha' => 9,            
             'col' => 12,
             'nome' => 'obs',
             'label' => 'Observação:',
@@ -346,7 +368,7 @@ if ($acesso) {
             'padrao' => $idServidorPesquisado,
             'size' => 5,
             'title' => 'Matrícula',
-            'linha' => 5)));
+            'linha' => 10)));
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -386,7 +408,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->$fase($id);
+            $objeto->gravar($id, "servidorAcumulacaoExtra.php");
             break;
 
         case "regras" :

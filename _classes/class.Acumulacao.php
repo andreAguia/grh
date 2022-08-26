@@ -64,41 +64,53 @@ class Acumulacao {
         $resultado1 = $dados["resultado1"];
         $resultado2 = $dados["resultado2"];
         $resultado3 = $dados["resultado3"];
+        $motivo = $dados["motivoSaida"];
 
-        # Verifica o primeiro resultado
-        if (!vazio($resultado)) {
-            $retorno = $resultado;
+        # Verifica se é nulo ou aposentadoria
+        # Quando a saída é aposentadoria o sitema continua a exibir ilícito pois o vínculo ainda existe
+        # Já que o servidor ainda recebe pelo outro vínculo
+        # ---
+        # Quando A saída não é de Aposentadoria, o ilícito deixa de ser exibido, pois o vínculo foi desfeito
+        # Dessa forma entende-se que o servidor optou pela Uenf
+        #---
+        if ($motivo == null OR $motivo == 3 OR $motivo == 4 OR $motivo == 5 OR $motivo == 6) {
+            # Verifica o primeiro resultado
+            if (!vazio($resultado)) {
+                $retorno = $resultado;
+            }
+
+            # Verifica o primeiro recurso
+            if (!vazio($resultado1)) {
+                $retorno = $resultado1;
+                $recurso = "(1° recurso)";
+            }
+
+            # Verifica o segundo recurso
+            if (!vazio($resultado2)) {
+                $retorno = $resultado2;
+                $recurso = "(2° recurso)";
+            }
+
+            # Verifica o último recurso
+            if (!vazio($resultado3)) {
+                $retorno = $resultado3;
+                $recurso = "(3° recurso)";
+            }
+
+            # Trata o retorno
+            if ($retorno == 1) {
+                $retorno = "<span class='label success'>Lícito</span>";
+            } elseif ($retorno == 2) {
+                $retorno = "<span class='label alert'>Ilícito</span>";
+            } else {
+                $retorno = "---";
+            }
+
+            echo $retorno;
+            p($recurso, "pgetCargo");
+        }else{
+            echo "---";
         }
-
-        # Verifica o primeiro recurso
-        if (!vazio($resultado1)) {
-            $retorno = $resultado1;
-            $recurso = "(1° recurso)";
-        }
-
-        # Verifica o segundo recurso
-        if (!vazio($resultado2)) {
-            $retorno = $resultado2;
-            $recurso = "(2° recurso)";
-        }
-
-        # Verifica o último recurso
-        if (!vazio($resultado3)) {
-            $retorno = $resultado3;
-            $recurso = "(3° recurso)";
-        }
-
-        # Trata o retorno
-        if ($retorno == 1) {
-            $retorno = "<span class='label success'>Lícito</span>";
-        } elseif ($retorno == 2) {
-            $retorno = "<span class='label alert'>Ilícito</span>";
-        } else {
-            $retorno = "---";
-        }
-
-        echo $retorno;
-        p($recurso, "pgetCargo");
     }
 
 ##############################################################
@@ -207,7 +219,8 @@ class Acumulacao {
                           cargo,                                     
                           matricula,
                           dtAdmissao,
-                          dtAposentadoria
+                          dtSaida,
+                          motivoSaida
                      FROM tbacumulacao
                     WHERE idAcumulacao = {$idAcumulacao}";
 
@@ -218,21 +231,23 @@ class Acumulacao {
         if (empty($row["instituicao"])) {
             return null;
         } else {
-            # Monta a terceira linha
-            $tercLinha =  "Matrícula: {$row['matricula']}";
-            
-            if(!empty($row['dtAdmissao'])){
-                $tercLinha .=  " / Admissão: ".date_to_php($row['dtAdmissao']);
+            # Variáveis
+            $linha4 = null;
+
+            if (!empty($row['dtAdmissao'])) {
+                $linha4 .= "Admissão: " . date_to_php($row['dtAdmissao']);
             }
-            
-            if(!empty($row['dtAposentadoria'])){
-                $tercLinha .=  " / Aposentadoria: ".date_to_php($row['dtAposentadoria']);
+
+            if (!empty($row['dtSaida'])) {
+                $linha4 .= " / Saída: " . date_to_php($row['dtSaida']);
+                $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivoNome($row['motivoSaida']) . "</span>";
             }
-                    
+
             pLista(
                     $row["instituicao"],
                     $row["cargo"],
-                    $tercLinha
+                    "Matrícula: {$row['matricula']}",
+                    $linha4
             );
         }
     }
@@ -256,7 +271,8 @@ class Acumulacao {
             pLista(
                     $pessoal->get_lotacao($idServidor),
                     $pessoal->get_cargo($idServidor),
-                    "Matrícula: {$pessoal->get_matricula($idServidor)} / Admissão: {$pessoal->get_dtAdmissao($idServidor)}"
+                    "Matrícula: {$pessoal->get_matricula($idServidor)}",
+                    "Admissão: {$pessoal->get_dtAdmissao($idServidor)}"
             );
         }
     }

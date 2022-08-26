@@ -74,7 +74,7 @@ if ($acesso) {
             break;
 
 ################################################################
-        
+
         case "listaAcumulacao" :
 
             # Cria um menu
@@ -162,11 +162,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculo da Uenf", "Outro Vínculo"));
-            $tabela->set_align(array("center", "center", "center", "left", "center", "left", "left"));
-            #$tabela->set_funcao(array(null, null, "date_to_php"));
-            $tabela->set_classe(array(null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"));
-            $tabela->set_metodo(array(null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"));
+            $tabela->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Dados do Vínculo da Uenf", "Dados do Segundo Vínculo"]);
+            $tabela->set_align(["center", "center", "center", "left", "center", "left", "left"]);
+            $tabela->set_width([8, 8, 8, 17, 15, 20, 20]);
+            $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"]);
+            $tabela->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"]);
 
             $tabela->set_titulo("Área de Acumulação");
 

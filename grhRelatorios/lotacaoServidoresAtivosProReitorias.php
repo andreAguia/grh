@@ -54,9 +54,10 @@ if ($acesso) {
     $relatorio->set_width(array(10, 30, 30, 0, 10, 10, 10));
     $relatorio->set_align(array("center", "left", "left"));
     $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
+    $relatorio->set_bordaInterna(true);    
 
     $relatorio->set_classe(array(null, null, "pessoal", null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_CargoSimples", null, null, null, "get_Situacao"));
+    $relatorio->set_metodo(array(null, null, "get_CargoCompleto3", null, null, null, "get_Situacao"));
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);

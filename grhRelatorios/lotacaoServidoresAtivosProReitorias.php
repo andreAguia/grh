@@ -42,7 +42,7 @@ if ($acesso) {
                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  AND situacao = 1
-                 AND (idLotacao = 56 OR idLotacao = 57 OR idLotacao = 58)
+                 AND (idLotacao = 56 OR idLotacao = 57 OR idLotacao = 58 OR idLotacao = 131)
                  AND tbtipocargo.tipo = "Adm/Tec"
             ORDER BY lotacao, tbpessoa.nome';
 

@@ -99,7 +99,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Referência", "Entregue em", "Declarou Acumular", "Processo", "Obs"));
+    $objeto->set_label(array("Referência", "Entregue em", "Acumula?", "Processo", "Obs"));
     $objeto->set_width(array(10, 15, 10, 20, 35));
     $objeto->set_align(array("center", "center", "center", "left", "left"));
     $objeto->set_funcao(array(null, "date_to_php"));
@@ -171,7 +171,7 @@ if ($acesso) {
         array(
             'linha' => 1,
             'nome' => 'acumula',
-            'label' => 'Declarou que Acumula?:',
+            'label' => 'Acumula?:',
             'tipo' => 'simnao',
             'col' => 3,
             'size' => 5),

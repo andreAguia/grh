@@ -27,6 +27,9 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = post('lotacao',66);
+    
+    # Define variáveis
+    $titulo = null;
 
     ######
 
@@ -48,8 +51,10 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao =  "' . $lotacao . '")';
+            $titulo = null;
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
+            $titulo = $lotacao . "<br/>";
         }
     }
 
@@ -61,6 +66,7 @@ if ($acesso) {
     $relatorio->set_titulo('Histórico de Servidores Ativos Por Lotação');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Data da Transferência','Lotação atual'));
+    $relatorio->set_subtitulo2($titulo);
     #$relatorio->set_width(array(10,30,30,0,10,10,10));
     $relatorio->set_align(array("center", "left", "left"));
     $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));

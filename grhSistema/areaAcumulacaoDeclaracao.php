@@ -241,7 +241,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Ativos que Entregaram a Declaração do Ano {$parametroAno}");
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Entregue em", "Declarou Acumular", "Servidor", "Lotação", "Processo"));
+            $tabela->set_label(array("Entregue em", "Acumula?", "Servidor", "Lotação", "Processo"));
             $tabela->set_align(array("center", "center", "left", "left", "left"));
             $tabela->set_funcao(array("date_to_php"));
             $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
@@ -310,7 +310,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Ativos que NÃO Entregaram a Declaração do Ano {$parametroAno}");
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Entregue em", "Declarou Acumular", "Servidor", "Lotação", "Processo"]);
+            $tabela->set_label(["Entregue em", "Acumula?", "Servidor", "Lotação", "Processo"]);
             $tabela->set_align(["center", "center", "left", "left", "center"]);
             $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, null, "get_nomeECargoEPerfil", "get_Lotacao"]);

@@ -578,7 +578,7 @@ class Vaga {
         $painel = new Callout("primary");
         $painel->abre();
 
-        $btnEditar = new Link("Editar", "areaVagasDocentes.php?fase=editar&id=$idVaga");
+        $btnEditar = new Link("Editar", "cadastroVagas.php?fase=editar&id=$idVaga");
         $btnEditar->set_class('button tiny secondary');
         $btnEditar->set_id('editarVaga');
         $btnEditar->set_title('Editar o Procedimento');

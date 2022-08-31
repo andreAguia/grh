@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -34,13 +35,14 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idServidor,        
-                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao, 
+    $select = 'SELECT tbpessoa.nome,
+                      concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
+                      tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbservidor.idServidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                 JOIN tbhistlot USING (idServidor)
-                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                 JOIN tbhistlot USING (idServidor)
+                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE tbservidor.situacao = 1
                   AND (emailUenf IS NULL OR emailUenf = "")
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
@@ -49,29 +51,26 @@ if ($acesso) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
-            $relatorio->set_numGrupo(1);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
-            $subTitulo .= "Lotação: " . $lotacao . "<br/>";
-            $relatorio->set_numGrupo(1);
+            $subTitulo = $lotacao;
+            
         }
     }
 
-    if (is_null($lotacao)) {
-        $select .= ' ORDER BY tbpessoa.nome';
-    } else {
-        $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
-    }
+    $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Servidores Ativos Sem E-mail Institucional Cadastrado');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(array('Servidor', 'Lotação', 'E-mail Pessoal',));
-    $relatorio->set_classe(array("pessoal", null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_emailPessoal"));
-    $relatorio->set_align(array("left","left","left"));
-    $relatorio->set_bordaInterna(true);
+    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_subtitulo2($subTitulo);
+    $relatorio->set_numGrupo(1);
+    $relatorio->set_label(['Servidor', 'Lotação', 'Cargo', 'E-mail Pessoal']);
+    $relatorio->set_classe([null, null, "pessoal", "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples", "get_emailPessoal"]);
+    $relatorio->set_align(["left", "left", "left", "left"]);
+    #$relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

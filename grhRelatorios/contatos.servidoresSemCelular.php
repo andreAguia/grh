@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -34,8 +35,8 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    $select = 'SELECT tbservidor.idServidor,
-                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao, 
+    $select = 'SELECT tbpessoa.nome,
+                      concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                       tbservidor.idServidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                  JOIN tbhistlot USING (idServidor)
@@ -51,8 +52,8 @@ if ($acesso) {
             $relatorio->set_numGrupo(1);
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
-            $subTitulo .= "Lotação: " . $lotacao . "<br/>";
             $relatorio->set_numGrupo(1);
+            $subTitulo = $lotacao;
         }
     }
 
@@ -65,12 +66,13 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Servidores Ativos Sem Celular Cadastrado');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-   $relatorio->set_label(array('Servidor', 'Lotação', 'Celular'));
-    $relatorio->set_classe(array("pessoal", null, "pessoal"));
-    $relatorio->set_metodo(array("get_nomeECargo", null, "get_telefoneCelular"));
-    $relatorio->set_align(array("left","left","left"));
-    $relatorio->set_bordaInterna(true);
+    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_subtitulo2($subTitulo);
+    $relatorio->set_label(['Servidor', 'Lotação']);
+    $relatorio->set_classe([null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null]);
+    $relatorio->set_align(["left", "left", "left"]);
+    #$relatorio->set_bordaInterna(true);    
     $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

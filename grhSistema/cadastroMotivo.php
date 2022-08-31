@@ -127,7 +127,8 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('linha' => 1,
+        array(
+            'linha' => 1,
             'nome' => 'motivo',
             'label' => 'Motivo:',
             'tipo' => 'texto',
@@ -135,7 +136,8 @@ if ($acesso) {
             'autofocus' => true,
             'col' => 12,
             'size' => 50),
-        array('linha' => 2,
+        array(
+            'linha' => 2,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

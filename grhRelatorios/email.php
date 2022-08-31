@@ -37,7 +37,7 @@ if ($acesso) {
 
     $select = 'SELECT tbpessoa.nome,
                       tbservidor.idservidor,
-                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                      concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                       tbpessoa.emailUenf
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -51,7 +51,7 @@ if ($acesso) {
             $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
-            $subTitulo .= "Lotação: " . $lotacao . "<br/>";
+            $subTitulo = $lotacao;
         }
     }
 
@@ -60,7 +60,8 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Email Institucional dos Servidores Ativos');
-    $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
+    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_subtitulo2($subTitulo);
     $relatorio->set_label(['Servidor', 'Cargo', 'Lotação', 'Email']);
     $relatorio->set_align(["left", "left", "left"]);
     $relatorio->set_classe([null, "pessoal"]);

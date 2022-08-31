@@ -38,7 +38,7 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
-    $parametroAlta = post('parametroAlta', get_session('parametroAlta', "Sem Alta - Em Aberto"));
+    $parametroAlta = post('parametroAlta', get_session('parametroAlta', 3));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNomeMat', $parametroNomeMat);
@@ -78,7 +78,7 @@ if ($acesso) {
         $botaoRel->set_url("?fase=relatorio");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem);
-        $menu1->add_link($botaoRel, "right");
+        #$menu1->add_link($botaoRel, "right");
 
         $menu1->show();
 
@@ -112,17 +112,21 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(6);
+        $controle->set_col(5);
         $form->add_item($controle);
 
-        $controle = new Input('parametroAlta', 'combo', 'Alta:', 1);
+        $controle = new Input('parametroAlta', 'combo', 'Situação da Licença:', 1);
         $controle->set_size(30);
         $controle->set_title('Filtra por Alta');
-        $controle->set_array(["Com Alta", "Sem Alta - A Vencer", "Sem Alta - Em Aberto"]);
+        $controle->set_array([
+            [1, "Última Licença Com Alta"],
+            [2, "Última Licença Sem Alta - A Vencer"],
+            [3, "Última Licença Sem Alta - Em Aberto"],
+            [4, "Todas as Licenças"]]);
         $controle->set_valor($parametroAlta);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(3);
+        $controle->set_col(4);
         $form->add_item($controle);
 
         $form->show();
@@ -163,23 +167,26 @@ if ($acesso) {
                                          JOIN tblicenca USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (";
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-            $contador1 = count($arrayLicencas);
-            foreach ($arrayLicencas as $item) {
-                $contador1--;
-                if ($contador1 > 0) {
-                    $select .= "tblicenca.idTpLicenca = {$item} OR ";
-                } else {
-                    $select .= "tblicenca.idTpLicenca = {$item}";
+            if ($parametroAlta == 2 OR $parametroAlta == 3) {
+                $select .= " AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (";
+
+                $contador1 = count($arrayLicencas);
+                foreach ($arrayLicencas as $item) {
+                    $contador1--;
+                    if ($contador1 > 0) {
+                        $select .= "tblicenca.idTpLicenca = {$item} OR ";
+                    } else {
+                        $select .= "tblicenca.idTpLicenca = {$item}";
+                    }
                 }
+                $select .= "))";
             }
 
             # Continua
-            $select .= "))
-                          AND situacao = 1
-                          AND (";
+            $select .= "AND situacao = 1
+                        AND (";
 
             $contador2 = count($arrayLicencas);
             foreach ($arrayLicencas as $item) {
@@ -195,24 +202,32 @@ if ($acesso) {
             $select .= ") AND idPerfil = 1";
 
             # Alta
-            if ($parametroAlta == "Sem Alta - A Vencer") {
+            if ($parametroAlta == 2) {
+                # Última licença sem alta a vencer
                 $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
                 $titulo = "Servidores Com a Última Licença Médica SEM ALTA - A VENCER";
-                $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
-            } elseif ($parametroAlta == "Sem Alta - Em Aberto") {
+                $mensagem1 = "Servidores devem se apresentar para um novo exame pericial até 5 (cinco) dias antes do término da licença anterior.";
+            } elseif ($parametroAlta == 3) {
+                # Última licença Sem Alta - Em Aberto
                 $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) < 0";
                 $titulo = "Servidores Com a Última Licença Médica <b>SEM ALTA - EM ABERTO</b>";
-                $mensagem1 = "Servidores cuja data de término já passou estão com a licença em aberto. Deverão solicitar a prorrogação ou a alta.";
-            } else {
+                $mensagem1 = "Servidores com a licença em aberto deverão se apresentar com <b>URGÊNCIA</b> para um novo exame pericial.";
+            } elseif ($parametroAlta == 1) {
+                # Última licença com Alta
                 $select .= " AND alta = 1";
                 $titulo = "Servidores Com a Última Licença Médica COM ALTA";
-                $mensagem1 = "Servidores devem retornar ao seus setores no dia imediatamente após ao término da licença. ";
+                $mensagem1 = "Servidores já devem estar em seus setores no dia imediatamente após ao término da licença. ";
+            } elseif ($parametroAlta == 4) {
+                # Todas as Licenças
+                $titulo = "Todas as Licença Médicas";
+                $mensagem1 = "Todas as licenças cadastradas.";
             }
 
+
             # Licenças consideradas
-            $mensagem2 = "As licenças consideradas são:<br/>";
+            $mensagem2 = null;
             foreach ($arrayLicencas as $item) {
                 $mensagem2 .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$licenca->exibeNomeSimples($item)}<br/>";
             }
@@ -257,11 +272,13 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
-            callout($mensagem1, "alert");
+            tituloTable("Procedimento:");
+            callout($mensagem1);
 
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
+            tituloTable("As licenças consideradas são:");
             callout($mensagem2);
 
             $grid->fechaColuna();

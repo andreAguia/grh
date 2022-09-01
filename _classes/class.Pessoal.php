@@ -291,7 +291,7 @@ class Pessoal extends Bd {
                     WHERE month(dtNasc) = {$mes} 
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)  
                       AND tbservidor.situacao = 1";
-                      
+
         # lotacao
         if (!is_null($lotacao)) {
             # Verifica se o que veio é numérico
@@ -301,7 +301,7 @@ class Pessoal extends Bd {
                 $select .= " AND (tblotacao.DIR = '{$lotacao}')";
             }
         }
-        
+
         $select .= " ORDER BY nasc";
 
         # Pega o resultado do select
@@ -2108,7 +2108,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_motivo
@@ -2117,12 +2117,12 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_motivoNome($idMotivo) {
-        
+
         # Verifica o id
         if (empty($idMotivo)) {
             return null;
-        } 
-        
+        }
+
         $select = "SELECT tbmotivo.motivo
                      FROM tbmotivo 
                     WHERE idMotivo = {$idMotivo}";
@@ -2137,7 +2137,6 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
 
     /**
      * Método get_motivoAposentadoria
@@ -5442,6 +5441,11 @@ class Pessoal extends Bd {
          * @param $idLotacao integer o id da lotaçao
          * 
          */
+        # verifica se veio o id
+        if (empty($idLotacao)) {
+            return null;
+        }
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)

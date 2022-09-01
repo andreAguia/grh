@@ -97,15 +97,15 @@ if ($acesso) {
     # Lotação
     if (empty($id)) {
         $result = $pessoal->select('SELECT DISTINCT DIR, DIR
-                                  FROM tblotacao
-                                 WHERE ativo
-                                   AND DIR NOT IN (SELECT lotacao FROM tbferiasprocesso)
-                              ORDER BY DIR');
+                                      FROM tblotacao
+                                     WHERE ativo
+                                       AND DIR NOT IN (SELECT lotacao FROM tbferiasprocesso)
+                                  ORDER BY DIR');
     } else {
         $result = $pessoal->select('SELECT DISTINCT DIR, DIR
-                                  FROM tblotacao
-                                 WHERE ativo
-                              ORDER BY DIR');
+                                      FROM tblotacao
+                                     WHERE ativo
+                                  ORDER BY DIR');
     }
     array_unshift($result, array(null, null));
 

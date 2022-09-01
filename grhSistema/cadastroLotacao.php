@@ -37,6 +37,12 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega os parâmetros da rotina de Organograma
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'DGA'));
+    
+    # Joga os parâmetros par as sessions    
+    set_session('parametroLotacao', $parametroLotacao);
 
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
@@ -270,7 +276,7 @@ if ($acesso) {
     $botaoInativo->set_title("Exibe os Cargos Inativos");
 
     # Cria o array de botões
-    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg);
+    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoOrga);
     if ($tipo) {
         array_unshift($arrayBotoes, $botaoInativo);
     } else {
@@ -484,8 +490,62 @@ if ($acesso) {
 
         case "organograma" :
 
-            $org = new OrganogramaUenf("CCTA");
+            # Limita a Tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Menu 
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            #$menu->add_link($botaoRel, "right");
+
+            $menu->show();
+            
+            # Formulário de Pesquisa
+            $form = new Form('?fase=organograma');
+            
+            # Lotação
+            $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+                                          FROM tblotacao
+                                         WHERE ativo
+                                      ORDER BY DIR');
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_autofocus(true);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            
+            $form->show();
+            
+            # Título
+            tituloTable("Organograma - {$parametroLotacao}");
+            br();
+
+            $org = new Organograma($parametroLotacao);
             $org->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
     }
 

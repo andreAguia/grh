@@ -1044,6 +1044,18 @@ tr#licencaEmAberto{
 }
 
 /*******************************************
+ * Organograma
+ *******************************************/
+
+div#organograma1 td{
+    background-color: #ffffff;    
+}
+
+div#organograma2 td{
+    background-color: #ffffff;    
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

@@ -452,7 +452,7 @@ if ($acesso) {
                                  AND situacao = 1
                                  AND ativo                           
                             GROUP BY tblotacao.dir
-                            ORDER BY tblotacao.dir ';
+                            ORDER BY tblotacao.dir';
 
             $servidores = $pessoal->select($selectGrafico);
 
@@ -493,6 +493,8 @@ if ($acesso) {
             # Limita a Tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            
+            $lotacaoClasse = new Lotacao();
             
             # Menu 
             $menu = new MenuBar();

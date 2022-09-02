@@ -35,22 +35,20 @@ class Organograma {
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
+        $lotacaoClasse = new Lotacao();
 
         # Pega as diretorias
-        if ($this->topo == "Reitoria") {
-            $lotacao = $pessoal->select("SELECT idLotacao, DIR, GER, nome
-                                       FROM tblotacao
-                                      WHERE ativo
-                                        AND GER <> 'Afastados'
-                                        AND GER <> 'Cedidos'
-                                   ORDER BY DIR, GER");
-        } else {
-            $lotacao = $pessoal->select("SELECT idLotacao, DIR, GER, nome
+        $lotacao = $pessoal->select("SELECT idLotacao, DIR, GER, nome
                                        FROM tblotacao
                                       WHERE ativo
                                         AND DIR = '{$this->topo}'
+                                        AND GER <> 'Afastados'
+                                        AND GER <> 'Cedidos'
+                                        AND GER <> 'CCM'
+                                        AND GER <> 'CGAB'
+                                        AND GER <> 'Rio'
+                                        AND GER <> 'SECR'
                                    ORDER BY DIR, GER");
-        }
 
         # Carrega as rotinas do Google
         echo "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>";
@@ -68,41 +66,84 @@ class Organograma {
 
                   // For each orgchart box, provide the name, manager, and tooltip to show.
                   data.addRows([";
-
-        if ($this->topo == "Reitoria") {
-            $diretorias = $pessoal->select("SELECT DISTINCT DIR
-                                              FROM tblotacao
-                                             WHERE ativo
-                                               AND DIR <> 'Reitoria'
-                                               AND GER <> 'SECR'
-                                          ORDER BY DIR");
-            
-            foreach($diretorias as $dd){
-                echo "['{$dd['DIR']}','{$this->topo}','Nome'],";
-            }
-        }
+        
+        
+        
+        echo "[{'v':'{$this->topo}','f':'{$this->topo}<div style=\"color:red; font-style:italic; font-size:10px;\">{$lotacaoClasse->get_nomeDiretoriaSigla($this->topo)}</div>'},'','{$lotacaoClasse->get_nomeDiretoriaSigla($this->topo)}'],";
 
         # Percorre as lotações
         foreach ($lotacao as $item) {
-            #$resp = $pessoal->get_nome($pessoal->get_gerente($item['idLotacao']));
-            echo "['{$item['GER']}<div style=\"color:red; font-style:italic; font-size:11px;\">{$item['nome']}</div>','{$item['DIR']}','{$item['nome']}'],";
+            #$resp = $pessoal->get_gerente($item['idLotacao']);
+            
+            echo "['{$item['GER']}<div style=\"color:red; font-style:italic; font-size:10px;\">{$item['nome']}</div> ','{$item['DIR']}','{$item['nome']}'],";
             #echo "['{$item['GER']}','{$item['DIR']}','{$item['nome']}'],";
             #echo "[{'v':'Mike', 'f':'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],";
         }
 
+
         echo "]);";
 
         echo "        // Create the chart.
-                      var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
+                      var chart = new google.visualization.OrgChart(document.getElementById('organograma1'));
                       // Draw the chart, setting the allowHtml option to true for the tooltips.
                       chart.draw(data, {'allowHtml':true});
                     }
              </script>";
 
         # Abre a div do organograma
-        echo "<div id='chart_div'></div>";
-        
-        
+        echo "<div id='organograma1'></div>";
+
+        ######################################
+        # Para quando for da Reitoria
+        if ($this->topo == "Reitoria") {
+            # Pega as diretorias
+            $lotacao = $pessoal->select("SELECT idLotacao, DIR 
+                                       FROM tblotacao
+                                      WHERE ativo
+                                        AND DIR <> '{$this->topo}'
+                                        AND GER <> 'Afastados'
+                                        AND GER <> 'Cedidos'                                        
+                                   ORDER BY DIR, GER");
+
+            # Carrega as rotinas do Google
+            echo "<script type='text/javascript' src='https://www.gstatic.com/charts/loader.js'></script>";
+
+            # Cria a função
+            echo "<script type='text/javascript'>
+                google.charts.load('current', {packages:['orgchart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                  var data = new google.visualization.DataTable();
+                  data.addColumn('string', 'Name');
+                  data.addColumn('string', 'Manager');
+                  data.addColumn('string', 'ToolTip');
+
+                  // For each orgchart box, provide the name, manager, and tooltip to show.
+                  data.addRows([";
+
+            # Percorre as lotações
+            foreach ($lotacao as $item) {
+                #$resp = $pessoal->get_gerente($item['idLotacao']);
+                $nomeDir = $lotacaoClasse->get_nomeDiretoria($item['idLotacao']);
+                echo "['{$item['DIR']}<div style=\"color:red; font-style:italic; font-size:10px;\">{$nomeDir}</div>','{$this->topo}','{$nomeDir}'],";
+                #echo "['{$item['GER']}','{$item['DIR']}','{$item['nome']}'],";
+                #echo "[{'v':'Mike', 'f':'Mike<div style="color:red; font-style:italic">President</div>'}, '', 'The President'],";
+            }
+
+
+            echo "]);";
+
+            echo "        // Create the chart.
+                      var chart = new google.visualization.OrgChart(document.getElementById('organograma2'));
+                      // Draw the chart, setting the allowHtml option to true for the tooltips.
+                      chart.draw(data, {'allowHtml':true});
+                    }
+             </script>";
+
+            # Abre a div do organograma
+            echo "<div id='organograma2'></div>";
+        }
     }
 
 }

@@ -99,7 +99,7 @@ if ($acesso) {
                  FROM tbaverbacao
                 WHERE idServidor = {$idServidorPesquisado}
              ORDER BY dtInicial desc";
-    echo $select;
+    
     # select da lista
     $objeto->set_selectLista($select);
 

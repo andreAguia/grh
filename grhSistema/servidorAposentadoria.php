@@ -22,6 +22,19 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
     $averbacao = new Averbacao();
 
+    # Variáveis
+    $empresaTipo = [
+        [1, "Pública"],
+        [2, "Privada"]
+    ];
+
+    $regime = [
+        [1, "Celetista"],
+        [2, "Estatutário"],
+        [3, "Próprio"],
+        [4, "Militar"]
+    ];
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -87,7 +100,7 @@ if ($acesso) {
 
     ###
 
-    $tab = new Tab(["Dados do Servidor", "Tempo Averbado", "Vínculos Anteriores", "Afastamentos","Regras Permanentes", "Regras de Transição"]);
+    $tab = new Tab(["Dados do Servidor", "Tempo Averbado", "Vínculos Anteriores", "Afastamentos", "Regras Permanentes", "Regras de Transição"]);
 
     ####################################################
     /*
@@ -174,26 +187,30 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
-    $select = 'SELECT dtInicial,
+    $select = "SELECT dtInicial,
                       dtFinal,
                       dias,
                       idAverbacao,
                       empresa,
-                      CASE empresaTipo
-                         WHEN 1 THEN "Pública"
-                         WHEN 2 THEN "Privada"
-                      END,
-                      CASE regime
-                         WHEN 1 THEN "Celetista"
-                         WHEN 2 THEN "Estatutário"
-                         WHEN 3 THEN "Próprio"
-                      END,
+                      CASE empresaTipo ";
+
+    foreach ($empresaTipo as $tipo) {
+        $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+    }
+
+    $select .= "      END,
+                      CASE regime ";
+    foreach ($regime as $tipo2) {
+        $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+    }
+
+    $select .= "      END,
                       cargo,
                       dtPublicacao,
                       processo
                  FROM tbaverbacao
-                WHERE idServidor = ' . $idServidorPesquisado . '
-             ORDER BY dtInicial desc';
+                WHERE idServidor = {$idServidorPesquisado}
+             ORDER BY dtInicial desc";
 
     $result = $pessoal->select($select);
 
@@ -212,7 +229,7 @@ if ($acesso) {
     $tabela->set_totalRegistro(false);
     $tabela->set_colunaSomatorio([2, 3]);
     $tabela->show();
-    
+
     $grid1->fechaColuna();
     $grid1->fechaGrid();
 
@@ -222,12 +239,12 @@ if ($acesso) {
     /*
      *  Vinculos Anteriores do servidor
      */
-    
+
     $tab->abreConteudo();
 
     $grid1 = new Grid();
     $grid1->abreColuna(12);
-    
+
     # Pega o idPessoa desse idServidor
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -262,17 +279,17 @@ if ($acesso) {
     $grid1->fechaGrid();
 
     $tab->fechaConteudo();
-    
+
     ####################################################
     /*
      *  Afastamentos
      */
 
     $tab->abreConteudo();
-    
+
     br(2);
-    p("Rotina Em Desenvolvimento","f14","center");
-    
+    p("Rotina Em Desenvolvimento", "f14", "center");
+
     $tab->fechaConteudo();
 
     ####################################################

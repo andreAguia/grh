@@ -1276,24 +1276,42 @@ if ($acesso) {
     if ($postAverbacao) {
         tituloRelatorio('Tempo de Serviço Averbado');
 
-        $select = 'SELECT dtInicial,
+        # Variáveis
+        $empresaTipo = [
+            [1, "Pública"],
+            [2, "Privada"]
+        ];
+
+        $regime = [
+            [1, "Celetista"],
+            [2, "Estatutário"],
+            [3, "Próprio"],
+            [4, "Militar"]
+        ];
+
+        $select = "SELECT dtInicial,
                         dtFinal,
                         dias,
                         empresa,
-                        CASE empresaTipo
-                        WHEN 1 THEN "Pública"
-                        WHEN 2 THEN "Privada"
-                        END,
-                        CASE regime
-                        WHEN 1 THEN "Celetista"
-                        WHEN 2 THEN "Estatutário"
-                        END,
+                        CASE empresaTipo ";
+
+        foreach ($empresaTipo as $tipo) {
+            $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+        }
+
+        $select .= "      END,
+                      CASE regime ";
+        foreach ($regime as $tipo2) {
+            $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+        }
+
+        $select .= "      END,
                         cargo,
                         dtPublicacao,
                         processo
                 FROM tbaverbacao
-                    WHERE idServidor=' . $idServidorPesquisado . '
-                    ORDER BY dtInicial desc';
+                    WHERE idServidor= {$idServidorPesquisado}
+                    ORDER BY dtInicial desc";
 
         $result = $pessoal->select($select);
         $relatorio = new Relatorio();

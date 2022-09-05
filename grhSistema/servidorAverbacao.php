@@ -20,6 +20,19 @@ if ($acesso) {
     $pessoal = new Pessoal();
     $averbacao = new Averbacao();
 
+    # Variáveis
+    $empresaTipo = [
+        [1, "Pública"],
+        [2, "Privada"]
+    ];
+
+    $regime = [
+        [1, "Celetista"],
+        [2, "Estatutário"],
+        [3, "Próprio"],
+        [4, "Militar"]
+    ];
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -58,31 +71,35 @@ if ($acesso) {
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
 
-    # botão de voltar da lista
+    # botão de voltar da lista$em
     $objeto->set_voltarLista('servidorMenu.php');
 
-    $select = 'SELECT dtInicial,
+    $select = "SELECT dtInicial,
                       dtFinal,
                       dias,
                       idAverbacao,
                       empresa,
-                      CASE empresaTipo
-                         WHEN 1 THEN "Pública"
-                         WHEN 2 THEN "Privada"
-                      END,
-                      CASE regime
-                         WHEN 1 THEN "Celetista"
-                         WHEN 2 THEN "Estatutário"
-                         WHEN 3 THEN "Próprio"
-                      END,
+                      CASE empresaTipo ";
+
+    foreach ($empresaTipo as $tipo) {
+        $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+    }
+
+    $select .= "      END,
+                      CASE regime ";
+    foreach ($regime as $tipo2) {
+        $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+    }
+
+    $select .= "      END,
                       cargo,
                       dtPublicacao,
                       processo,
                       idAverbacao
                  FROM tbaverbacao
-                WHERE idServidor = ' . $idServidorPesquisado . '
-             ORDER BY dtInicial desc';
-
+                WHERE idServidor = {$idServidorPesquisado}
+             ORDER BY dtInicial desc";
+    echo $select;
     # select da lista
     $objeto->set_selectLista($select);
 
@@ -155,7 +172,7 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'required' => true,
-            'array' => Array(Array(1, "Pública"), Array(2, "Privada")),
+            'array' => $empresaTipo,
             'size' => 20,
             'col' => 2,
             'title' => 'Tipo da Empresa',
@@ -208,7 +225,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'col' => 3,
             'required' => true,
-            'array' => Array(Array(1, "Celetista"), Array(2, "Estatutário"), Array(3, "Próprio")),
+            'array' => $regime,
             'size' => 20,
             'title' => 'Tipo do Regime',
             'linha' => 4),

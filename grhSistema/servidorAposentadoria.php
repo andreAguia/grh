@@ -287,8 +287,8 @@ if ($acesso) {
 
     $tab->abreConteudo();
 
-    br(2);
-    p("Rotina Em Desenvolvimento", "f14", "center");
+    $afast = new ListaAfastamentosServidor($idServidorPesquisado);
+    $afast->exibeTabela();
 
     $tab->fechaConteudo();
 

@@ -264,15 +264,23 @@ class Acumulacao {
          * @syntax $acumulacao->exibeDadosUenf([$idAcumulacao]);
          */
         # Joga o valor informado para a variável da classe
-        if (vazio($idServidor)) {
+        if (empty($idServidor)) {
             return null;
-        } else {
+        } else {           
+            
+            # Variáveis
             $pessoal = new Pessoal();
+            $linha4 = "Admissão: {$pessoal->get_dtAdmissao($idServidor)}";
+            
+             if (!empty($pessoal->get_dtSaida($idServidor))) {
+                 $linha4 .= " / Saída: {$pessoal->get_dtSaida($idServidor)}";
+                 $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivo($idServidor) . "</span>";
+             }
             pLista(
                     $pessoal->get_lotacao($idServidor),
                     $pessoal->get_cargo($idServidor),
                     "Matrícula: {$pessoal->get_matricula($idServidor)}",
-                    "Admissão: {$pessoal->get_dtAdmissao($idServidor)}"
+                    $linha4
             );
         }
     }

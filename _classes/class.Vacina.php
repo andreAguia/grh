@@ -125,7 +125,7 @@ class Vacina {
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
-                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";                
             } else {
                 $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
@@ -143,15 +143,27 @@ class Vacina {
 
     ###########################################################
 
-    public function exibeQuadroVacinas($idLotacao = null) {
-
-        # Trata os dados
-        if ($idLotacao == "Todos") {
+    public function exibeQuadroVacinas($idLotacao = null) { 
+        
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        
+        # Título
+        $titulo = "Entrega de Comprovantes";
+        
+        # Trata a lotação        
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+            } else {
+                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+            }
+        }else{
             $idLotacao = null;
         }
 
-        # Pega os dados
-        $pessoal = new Pessoal();
+        # Pega os dados        
         $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
         $vacinados = $this->getNumServidoresAtivosVacinados($idLotacao);
 
@@ -166,7 +178,7 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo("Entrega de Comprovantes");
+        $tabela->set_titulo($titulo);
         $tabela->set_label(["Entregaram", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         $tabela->set_formatacaoCondicional(array(
@@ -190,13 +202,25 @@ class Vacina {
 
     public function exibeQuadroAptidao($idLotacao = null) {
 
-        # Trata os dados
-        if ($idLotacao == "Todos") {
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        
+        # Título
+        $titulo = "Acessar os Campi da Uenf";
+        
+        # Trata a lotação        
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+            } else {
+                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+            }
+        }else{
             $idLotacao = null;
         }
 
         # Pega os dados
-        $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
         $aptos = $this->getNumServidoresAptos($idLotacao);
 
@@ -211,7 +235,7 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo("Acessar os Campi da Uenf");
+        $tabela->set_titulo($titulo);
         $tabela->set_label(["Aptos", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         $tabela->set_formatacaoCondicional(array(
@@ -235,8 +259,21 @@ class Vacina {
 
     public function exibeQuadroDosesPorVacina($idLotacao = null) {
 
-        # Trata os dados
-        if ($idLotacao == "Todos") {
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        
+        # Título
+        $titulo = "Doses por Vacina";
+        
+        # Trata a lotação        
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+            } else {
+                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+            }
+        }else{
             $idLotacao = null;
         }
 
@@ -270,11 +307,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo("Doses por Vacina");
+        $tabela->set_titulo($titulo);
         $tabela->set_label(["Vacina", "Doses"]);
-        #$tabela->set_width(array(30, 15, 15, 15, 15));
-        #$tabela->set_align(["left"]);
-
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
         $tabela->set_totalRegistro(false);
@@ -286,8 +320,21 @@ class Vacina {
 
     public function exibeQuadroQuantidadeDoses($idLotacao = null, $dosesAptidao = null) {
 
-        # Trata os dados
-        if ($idLotacao == "Todos") {
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        
+        # Título
+        $titulo = "Quantidade de Doses";
+        
+        # Trata a lotação        
+        if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
+            if (is_numeric($idLotacao)) {
+                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";           
+            } else {
+                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+            }
+        }else{
             $idLotacao = null;
         }
 
@@ -313,7 +360,7 @@ class Vacina {
                 GROUP BY idServidor
                 ORDER BY 1 DESC ";
 
-        $pessoal = new Pessoal();
+        
         $servidores = $pessoal->select($select);
 
         # Pega os dados
@@ -326,14 +373,14 @@ class Vacina {
         $arraySimples2 = array_count_values($arraySimples);
 
         foreach ($arraySimples2 as $key => $value) {
-            $arraySimples3[] = [$key . " dose(s)", $value, number_format(($value * 100) / $numServidores, 1, '.', '')." %"];
+            $arraySimples3[] = [$key . " dose(s)", $value, number_format(($value * 100) / $numServidores, 1, '.', '') . " %"];
         }
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($arraySimples3);
-        $tabela->set_titulo("Quantidade de Doses");
-        $tabela->set_label(["Doses", "Servidores","%"]);
+        $tabela->set_titulo($titulo);
+        $tabela->set_label(["Doses", "Servidores", "%"]);
 
         $tabela->set_formatacaoCondicional(array(
             array('coluna' => 0,

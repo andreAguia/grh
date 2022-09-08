@@ -34,12 +34,14 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Pega os parâmetros  
+    # Pega os parâmetros
+    $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroApto = post('parametroApto', get_session('parametroApto', 'Sim'));
     $parametroJustificativa = post('parametroJustificativa', get_session('parametroJustificativa', 'Não'));
 
     # Joga os parâmetros par as sessions
+    set_session('parametroNomeMat', $parametroNomeMat);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroApto', $parametroApto);
     set_session('parametroJustificativa', $parametroJustificativa);
@@ -111,6 +113,16 @@ if ($acesso) {
 
             # Formulário de Pesquisa
             $form = new Form('?');
+            
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
+            $controle->set_size(100);
+            $controle->set_title('Nome do servidor');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
 
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -128,7 +140,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(5);
             $form->add_item($controle);
 
             # Vacinado
@@ -139,19 +151,19 @@ if ($acesso) {
             $controle->set_valor($parametroApto);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             if ($parametroApto == "Não") {
                 # Com justificativa
-                $controle = new Input('parametroJustificativa', 'combo', 'Isento da Entrega do Comprovante?', 1);
+                $controle = new Input('parametroJustificativa', 'combo', 'Isentado?', 1);
                 $controle->set_size(30);
                 $controle->set_title('Filtra Justificado /  não Justificado');
                 $controle->set_array([["Sim", "Sim"], ["Não", "Não"]]);
                 $controle->set_valor($parametroJustificativa);
                 $controle->set_onChange('formPadrao.submit();');
                 $controle->set_linha(1);
-                $controle->set_col(3);
+                $controle->set_col(2);
                 $form->add_item($controle);
             }
 
@@ -185,6 +197,22 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
                           ";
+
+                # Matrícula, nome ou id
+                if (!is_null($parametroNomeMat)) {
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= ' AND ((';
+                    } else {
+                        $select .= ' AND (';
+                    }
+
+                    $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
+
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
+                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    }
+                }
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "Todos") {
@@ -254,6 +282,22 @@ if ($acesso) {
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
+                }
+                
+                # Matrícula, nome ou id
+                if (!is_null($parametroNomeMat)) {
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= ' AND ((';
+                    } else {
+                        $select .= ' AND (';
+                    }
+
+                    $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
+
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
+                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    }
                 }
 
                 # Verifica se tem filtro por lotação

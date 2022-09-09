@@ -149,43 +149,6 @@ function exibeDescricaoStatus($status) {
 }
 
 ##################################################################
-
-function descricaoComissao($idComissao) {
-    /**
-     * Exibe informações sobre a Nome do Laboratório, do Curso, da Gerência, da Diretoria ou da Pró Reitoria	
-     * 
-     * @note Usado na rotina de cadastro de Cargo em comissão de um detrerminado servidor
-     * 
-     * @syntax descricaoComissao($idComissao);
-     * 
-     * @param $idComissao integer null o id do cargo em comissão
-     */
-    # Conecta ao Banco de Dados
-    $comissao = new CargoComissao();
-
-    # Pega os dados da comissão
-    $dados = $comissao->get_dados($idComissao);
-    $descricao = $comissao->get_descricaoCargo($idComissao);
-    $tipo = $dados['tipo'];
-
-    $retorno = $descricao;
-
-    # Informa o tipo
-    switch ($tipo) {
-
-        case 1:
-            $retorno .= " <span id='orgaoCedido'>(Pro Tempore)</span>";
-            break;
-
-        case 2:
-            $retorno .= " <span id='orgaoCedido'>(Designado)</span>";
-            break;
-    }
-
-    return $retorno;
-}
-
-##########################################################
 /**
  * Função que exibe um subtitulo na ficha cadastral
  * 

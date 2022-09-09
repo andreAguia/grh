@@ -205,7 +205,6 @@ class Lotacao {
         if (empty($sigla)) {
             return null;
         } else {
-            $pessoal = new Pessoal();
             $nome = null;
             
             # Cria a função caso não seja PHP 8
@@ -237,7 +236,8 @@ class Lotacao {
                          FROM tblotacao
                         WHERE DIR = '{$sigla}' 
                           AND (GER = 'SECR' OR GER = 'GAB')";
-
+                        
+            $pessoal = new Pessoal();            
             $row2 = $pessoal->select($select, false);
 
             if (!empty($row2['nome'])) {
@@ -252,5 +252,81 @@ class Lotacao {
         }
     }
 
-    ###########################################################
+    ##########################################################################################
+
+    function get_diretorSigla($sigla = null) {
+
+        /**
+         * 
+         * Retorna o idServidor do diretor da lotação fornecida
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
+        # Verifica o id
+        if (empty($sigla)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbcomissao.dtExo is null 
+                     AND (tbtipocomissao.idTipoComissao = 16 OR tbtipocomissao.idTipoComissao = 15)
+                     AND (tblotacao.dir = '$sigla')";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ##########################################################################################
+
+    function get_proReitorSigla($sigla = null) {
+
+        /**
+         * 
+         * Retorna o idServidor do proReitor da lotação fornecida
+         * 
+         * @param $idLotacao integer o id da lotaçao
+         * 
+         */
+        # Verifica o id
+        if (empty($sigla)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                     LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbcomissao.dtExo is null 
+                     AND tbtipocomissao.idTipoComissao = 15
+                     AND (tblotacao.dir = '$sigla')";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ##########################################################################################
 }

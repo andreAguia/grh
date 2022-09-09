@@ -1062,6 +1062,37 @@ div#organograma2 td{
     background-color: #ffffff;    
 }
 
+div#organograma3 td{
+    background-color: #ffffff;    
+}
+
+div#organograma4 td{
+    background-color: #ffffff;    
+}
+
+div#siglaOrga {
+    color: blue;
+    padding-top: 10px; 
+    font-size: 20px; 
+}
+
+div#nomeOrga {
+    color: red;
+    font-size: 12px; 
+}
+
+div#servidorOrga {
+    color: blue;
+    padding: 0px;
+    font-size: 10px; 
+}
+
+div#servidorCargo {
+    color: blue;
+    padding: 0px;
+    font-size: 10px; 
+}
+
 /*******************************************
  * Relatórios
  *******************************************/

@@ -2187,7 +2187,10 @@ class Pessoal extends Bd {
     function get_nome($idServidor) {
         if (empty($idServidor)) {
             return null;
+        } elseif (!is_numeric($idServidor)) {
+            return null;
         } else {
+
             if (is_numeric($idServidor)) {
                 $select = 'SELECT tbpessoa.nome
                             FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -5458,7 +5461,13 @@ class Pessoal extends Bd {
                      AND (tblotacao.idlotacao = $idLotacao)";
 
         $row = parent::select($select, false);
-        return $row[0];
+
+        # trata o retorno
+        if (empty($row[0])) {
+            return "---";
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -5519,6 +5528,11 @@ class Pessoal extends Bd {
          * @param $idLotacao integer o id da lotaçao
          * 
          */
+        # Verifica o id
+        if (empty($idLotacao)) {
+            return null;
+        }
+
         # Pega a diretoria dessa lotação
         $select = "SELECT DIR FROM tblotacao WHERE idLotacao = " . $idLotacao;
         $row = parent::select($select, false);
@@ -5533,11 +5547,16 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is null 
-                     AND tbtipocomissao.idTipoComissao = 16
+                     AND (tbtipocomissao.idTipoComissao = 16 OR tbtipocomissao.idTipoComissao = 15)
                      AND (tblotacao.dir = '$diretoria')";
 
         $row = parent::select($select, false);
-        return $row[0];
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################

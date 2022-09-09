@@ -63,6 +63,7 @@ if ($acesso) {
     set_session('sessionTítulo');                      // Título do relatório
     set_session('sessionSubTítulo');                   // SubTítulo do relatório
     set_session('parametroAno');
+    set_session('parametroAnoLista');
     set_session('parametroMes');
     set_session('idCategoria');
     set_session('idProcedimento');
@@ -72,6 +73,7 @@ if ($acesso) {
     set_session('parametroSexo');
     set_session('parametroAlta');
     set_session('parametroTrimestre');
+    
 
     set_session('concursoTipo');
 

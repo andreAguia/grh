@@ -525,6 +525,10 @@ if ($acesso) {
                                           FROM tblotacao
                                          WHERE ativo
                                       ORDER BY DIR');
+            
+            array_unshift($result, array("Pró Reitorias", "Pró Reitorias"));
+            array_unshift($result, array("Centros", "Centros"));
+            array_unshift($result, array("Administrativo", "Administrativo"));
 
             $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);

@@ -57,6 +57,28 @@ class CargoComissao {
 
     ###########################################################
 
+    function get_descricao($idDescricaoComissao) {
+
+        /**
+         * fornece a próxima tarefa a ser realizada
+         */
+        # Pega os dados
+        $select = "SELECT tbdescricaocomissao.descricao
+                     FROM tbdescricaocomissao
+                    WHERE idDescricaoComissao = {$idDescricaoComissao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            return $dados[0];
+        }
+    }
+
+    ###########################################################
+
     function exibeCargoCompleto($idComissao) {
 
         /**
@@ -417,7 +439,8 @@ class CargoComissao {
         $select = "SELECT dtNom,
                           dtAtoNom,
                           numProcNom,
-                          dtPublicNom
+                          dtPublicNom,
+                          tipo
                      FROM tbcomissao 
                     WHERE idComissao = {$idComissao}";
 
@@ -442,6 +465,18 @@ class CargoComissao {
 
         if (!empty($dados["numProcNom"])) {
             $retorna .= "Processo: " . $dados["numProcNom"];
+        }
+
+        if (!empty($dados["tipo"])) {
+            switch ($dados["tipo"]) {
+                case 1:
+                    $retorna .= "<br/><span id='orgaoCedido'>(Pro Tempore)</span>";
+                    break;
+
+                case 2:
+                    $retorna .= "<br/><span id='orgaoCedido'>(Designado)</span>";
+                    break;
+            }
         }
 
         return $retorna;
@@ -742,11 +777,11 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
 
-        if(empty($row)){
+        if (empty($row)) {
             return null;
-        }else{
+        } else {
             return $row[0];
-        }        
+        }
     }
 
     ###########################################################

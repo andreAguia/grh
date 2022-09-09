@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $lotacao = new Lotacao();
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -228,15 +229,17 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $tabela = new Tabela();
+                $tabela->set_titulo('Servidores Aptos a Acessar os Campi da Uenf');
                 if ($parametroLotacao <> "Todos") {
                     if (is_numeric($parametroLotacao)) {
-                        $tabela->set_titulo("Servidores Aptos a Acessar os Campi da Uenf - {$pessoal->get_nomeLotacao($parametroLotacao)}");
+                        $tabela->set_subtitulo($pessoal->get_nomeLotacao2($parametroLotacao));
                     } else {
-                        $tabela->set_titulo("Servidores Aptos a Acessar os Campi da Uenf - {$parametroLotacao}");
+                        $tabela->set_subtitulo($lotacao->get_nomeDiretoriaSigla($parametroLotacao));
                     }
                 } else {
                     $tabela->set_titulo('Servidores Aptos a Acessar os Campi da Uenf');
                 }
+                
                 $tabela->set_label(["Servidor", "Vacinas"]);
                 $tabela->set_width([50, 45]);
                 $tabela->set_conteudo($result);

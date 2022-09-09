@@ -149,15 +149,15 @@ class Vacina {
         $pessoal = new Pessoal();
         $lotacao = new Lotacao();
         
-        # Título
-        $titulo = "Entrega de Comprovantes";
+        # Subtítulo
+        $subtitulo = null;
         
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
-                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+                $subtitulo = $pessoal->get_nomeLotacao($idLotacao);
             } else {
-                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+                $subtitulo = $lotacao->get_nomeDiretoriaSigla($idLotacao);
             }
         }else{
             $idLotacao = null;
@@ -178,7 +178,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo($titulo);
+        $tabela->set_titulo("Entrega de Comprovantes");
+        $tabela->set_subtitulo($subtitulo);
         $tabela->set_label(["Entregaram", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         $tabela->set_formatacaoCondicional(array(
@@ -206,15 +207,15 @@ class Vacina {
         $pessoal = new Pessoal();
         $lotacao = new Lotacao();
         
-        # Título
-        $titulo = "Acessar os Campi da Uenf";
+        # Subtítulo
+        $subtitulo = null;
         
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
-                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+                $subtitulo = $pessoal->get_nomeLotacao($idLotacao);     
             } else {
-                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+                $subtitulo = $lotacao->get_nomeDiretoriaSigla($idLotacao);
             }
         }else{
             $idLotacao = null;
@@ -235,7 +236,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo($titulo);
+        $tabela->set_titulo("Acessar os Campi da Uenf");
+        $tabela->set_subtitulo($subtitulo);
         $tabela->set_label(["Aptos", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         $tabela->set_formatacaoCondicional(array(
@@ -263,15 +265,15 @@ class Vacina {
         $pessoal = new Pessoal();
         $lotacao = new Lotacao();
         
-        # Título
-        $titulo = "Doses por Vacina";
+        # Subtítulo
+        $subtitulo = null;
         
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
-                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";          
+                $subtitulo = $pessoal->get_nomeLotacao($idLotacao);
             } else {
-                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+                $subtitulo = $lotacao->get_nomeDiretoriaSigla($idLotacao);
             }
         }else{
             $idLotacao = null;
@@ -307,7 +309,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($servidores);
-        $tabela->set_titulo($titulo);
+        $tabela->set_titulo("Doses por Vacina");
+        $tabela->set_subtitulo($subtitulo);
         $tabela->set_label(["Vacina", "Doses"]);
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
@@ -324,15 +327,15 @@ class Vacina {
         $pessoal = new Pessoal();
         $lotacao = new Lotacao();
         
-        # Título
-        $titulo = "Quantidade de Doses";
+        # Subtítulo
+        $subtitulo = null;
         
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
-                $titulo .= "<p id='plotacaoQuadro'>{$pessoal->get_nomeLotacao($idLotacao)}</p>";           
+                $subtitulo = $pessoal->get_nomeLotacao($idLotacao);
             } else {
-                $titulo .= "<p id='plotacaoQuadro'>{$lotacao->get_nomeDiretoriaSigla($idLotacao)}</p>";
+                $subtitulo = $lotacao->get_nomeDiretoriaSigla($idLotacao);
             }
         }else{
             $idLotacao = null;
@@ -379,7 +382,8 @@ class Vacina {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($arraySimples3);
-        $tabela->set_titulo($titulo);
+        $tabela->set_titulo("Quantidade de Doses");
+        $tabela->set_subtitulo($subtitulo);
         $tabela->set_label(["Doses", "Servidores", "%"]);
 
         $tabela->set_formatacaoCondicional(array(

@@ -56,8 +56,10 @@ if ($acesso) {
     # Período
     if (!empty($parametrodtInicial)) {
         $select .= " AND ((tbcomissao.dtNom <= '{$parametrodtInicial}' AND tbcomissao.dtExo >= '{$parametrodtInicial}')
-                   OR (tbcomissao.dtNom BETWEEN '{$parametrodtInicial}' AND '{$parametrodtFinal}')  
-                   OR (tbcomissao.dtExo BETWEEN '{$parametrodtInicial}' AND '{$parametrodtFinal}'))";
+                      OR (tbcomissao.dtNom BETWEEN '{$parametrodtInicial}' AND '{$parametrodtFinal}')  
+                      OR (tbcomissao.dtExo BETWEEN '{$parametrodtInicial}' AND '{$parametrodtFinal}')
+                      OR (tbcomissao.dtNom <= '{$parametrodtInicial}' AND tbcomissao.dtExo IS null)
+                      )";
     }
 
     $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";

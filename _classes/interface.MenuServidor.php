@@ -514,7 +514,7 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
 
         if ($this->situacao == "Ativo") {
-            $menu->add_item('linkWindow', 'Declaração de Horário', '../grhRelatorios/declaracao.Horario.php');
+            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
         }
 
         if ($this->perfil == 1 AND $this->situacao == "Ativo") {

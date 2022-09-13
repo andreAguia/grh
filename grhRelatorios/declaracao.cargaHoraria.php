@@ -29,6 +29,8 @@ if ($acesso) {
     $situacao = $pessoal->get_idSituacao($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
+    $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -41,14 +43,27 @@ if ($acesso) {
 
     # Somente se for estatutário
     if ($idPerfil == 1) {
-        $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
-                . " {$lotacao} vem cumprindo normalmente sua carga"
-                . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
-    }else{
-        $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, lotado(a) no(a) {$lotacao} vem cumprindo"
-                . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+        # Se não estiver cedido para outro orgão
+        if ($idLotacao <> 113) {
+            $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                    . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
+                    . " {$lotacao} vem cumprindo normalmente sua carga"
+                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+        } else {
+            $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                    . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público vem cumprindo normalmente sua carga"
+                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+        }
+    } else {
+        if ($idLotacao <> 113) {
+            $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                    . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, lotado(a) no(a) {$lotacao} vem cumprindo"
+                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+        } else {
+            $dec->set_texto("Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+                    . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin} vem cumprindo"
+                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+        }
     }
 
     if ($situacao == 1) {
@@ -72,4 +87,4 @@ if ($acesso) {
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
-}
+}    

@@ -2565,7 +2565,8 @@ class Pessoal extends Bd {
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is null))
-                    AND idServidor = ' . $idServidor;
+                      AND tipo <> 3 
+                      AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $num = parent::count($select);
@@ -2580,15 +2581,11 @@ class Pessoal extends Bd {
             # Pega o $idComissao
             $idComissao = $rr[0];
 
-            # Verifica se é designado ou protempore
-            if ($rr[1] == 1) {
-                $tipo = " - Pro Tempore";
+            # Informa o tipo
+            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
-
-            if ($rr[1] == 2) {
-                $tipo = " - Designado";
-            }
-
+            
             # Verifica se tem cargo
             if (!is_null($idComissao)) {
 
@@ -2605,7 +2602,7 @@ class Pessoal extends Bd {
                 $descricao = $cargoComissao->get_descricaoCargo($idComissao);
 
                 # Verifica se tem tipo
-                if (!vazio($tipo)) {
+                if (!empty($tipo)) {
                     $tipoCargo .= $tipo;
                     #$descricao .= $tipo;
                 }
@@ -2657,13 +2654,9 @@ class Pessoal extends Bd {
             # Pega o $idComissao
             $idComissao = $rr[0];
 
-            # Verifica se é designado ou protempore
-            if ($rr[1] == 1) {
-                $tipo = " - Pro Tempore";
-            }
-
-            if ($rr[1] == 2) {
-                $tipo = " - Designado";
+            # Informa o tipo
+            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
 
             # Verifica se tem cargo
@@ -2682,7 +2675,7 @@ class Pessoal extends Bd {
                 $descricao = $cargoComissao->get_descricaoCargo($idComissao);
 
                 # Verifica se tem tipo
-                if (!vazio($tipo)) {
+                if (!empty($tipo)) {
                     $tipoCargo .= $tipo;
                     #$descricao .= $tipo;
                 }
@@ -2739,11 +2732,13 @@ class Pessoal extends Bd {
         $comissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao
+        $select = 'SELECT idComissao,
+                          tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is null))
-                    AND idServidor = ' . $idServidor;
+                      AND tipo <> 3
+                      AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $count = parent::count($select);
@@ -2754,13 +2749,18 @@ class Pessoal extends Bd {
 
         foreach ($row as $rr) {
 
-            # Pega o id
-            $idComissao = $rr[0];
-
             # Pega a descrição 
-            if (!is_null($idComissao)) {
-                $retorno .= $comissao->get_descricaoCargo($idComissao);
+            if (!is_null($rr[0])) {
+                $retorno .= $comissao->get_descricaoCargo($rr[0]);
             }
+            
+            if (!empty($rr[1])) {
+            # Informa o tipo
+            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $cargoComissao = new CargoComissao();
+                $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
+            }
+        }
 
             if ($contador < $count) {
                 $contador++;

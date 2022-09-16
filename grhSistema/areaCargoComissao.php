@@ -42,7 +42,7 @@ if ($acesso) {
     $parametroStatus = post('parametroStatus', get_session('parametroStatus', "Vigente"));
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
-    
+
     # Garante que quando se muda de cargo a descrição volta a todos
     if ($parametroCargo <> get_session('parametroCargo')) {
         $parametroDescricao = "Todos";
@@ -65,7 +65,7 @@ if ($acesso) {
 
     # Retira quando for relatório
 
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio" AND $fase <> "exibeQuadro") {
 
         # Cabeçalho da Página
         AreaServidor::cabecalho();
@@ -84,27 +84,34 @@ if ($acesso) {
         $linkVoltar->set_accessKey('V');
         $menu1->add_link($linkVoltar, "left");
 
+        $botao = new Button('Tipos');
+        $botao->set_title('Informa os Tipos de Cargos em Comissão');
+        $botao->set_url("?fase=exibeQuadro");
+        $botao->set_target("_blank2");
+        $menu1->add_link($botao, "right");
+
         # Cadastro de Cargos em Comissão
-        $botao = new Button('Cargos');
-        $botao->set_title('Acessa o Cadastro de Cargos em Comissão');
-        $botao->set_url("cadastroCargoComissao.php");
-        $menu1->add_link($botao, "right");
+        if ($fase == "inicial") {
+            $botao = new Button('Cargos');
+            $botao->set_title('Acessa o Cadastro de Cargos em Comissão');
+            $botao->set_url("cadastroCargoComissao.php");
+            $menu1->add_link($botao, "right");
 
-        # Cadastro de Descrição
-        $botao = new Button('Descrição');
-        $botao->set_title('Acessa o Cadastro de Descrição dos Cargos em Comissão');
-        $botao->set_url("cadastroDescricaoComissao.php");
-        $menu1->add_link($botao, "right");
+            # Cadastro de Descrição
+            $botao = new Button('Descrição');
+            $botao->set_title('Acessa o Cadastro de Descrição dos Cargos em Comissão');
+            $botao->set_url("cadastroDescricaoComissao.php");
+            $menu1->add_link($botao, "right");
 
-        # Relatórios
-        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório dessa pesquisa");
-        $botaoRel->set_url("?fase=relatorio");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem);
-        $menu1->add_link($botaoRel, "right");
-
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel, "right");
+        }
         $menu1->show();
 
         titulo("Cargo em Comissão");
@@ -162,7 +169,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Cargo Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
             $menu->add_item('linkWindow', 'Planilhão Histórico', '../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
             $menu->add_item('linkWindow', 'Planilhão Vigente', '../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
-            $menu->add_item('linkWindow', 'Histórico por Período', '../grhRelatorios/cargoComissao.porPeriodo.php');            
+            $menu->add_item('linkWindow', 'Histórico por Período', '../grhRelatorios/cargoComissao.porPeriodo.php');
             $menu->show();
 
             $painel->fecha();
@@ -233,7 +240,8 @@ if ($acesso) {
                                          LEFT JOIN tbcomissao USING(idServidor)
                                          LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                               JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbtipocomissao.idTipoComissao = {$parametroCargo}";
+                       WHERE tbcomissao.tipo <> 3
+                         AND tbtipocomissao.idTipoComissao = {$parametroCargo}";
 
             # Descrição
             if ($parametroDescricao <> "Todos") {
@@ -279,6 +287,9 @@ if ($acesso) {
             # Informa a origem
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorNomExo');
 
+            # Pega os tipos de nomeação
+            $tiposNomeacao = $comissao->tipos;
+
             $form = new Form('?fase=movimentacaoPorNomExo');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
             $controle->set_size(8);
@@ -303,42 +314,51 @@ if ($acesso) {
             $form->show();
 
             # Nomeações
-            $select = 'SELECT * FROM
-                      (SELECT "Nomeação",
+            $select = "SELECT * FROM
+                      (SELECT CASE";
+
+            foreach ($tiposNomeacao as $tipo) {
+                if ($tipo[0] == 0) {
+                    $tipo[1] = "Nomeação";
+                }
+                $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
+            }
+
+            $select .= "      END,
                               tbcomissao.dtNom,
                               tbcomissao.dtPublicNom,
                               tbcomissao.dtAtoNom,
                               tbservidor.idFuncional,
                               tbpessoa.nome,
-                              CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                              CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                               tbcomissao.numProcNom,
                               tbcomissao.idComissao
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtNom) = ' . $parametroAno . '
-                           AND MONTH(tbcomissao.dtNom) = ' . $parametroMes . '
+                         WHERE YEAR(tbcomissao.dtNom) = {$parametroAno}
+                           AND MONTH(tbcomissao.dtNom) = {$parametroMes}
                      UNION
-                     SELECT "Exoneração",
+                     SELECT 'Exoneração',
                               tbcomissao.dtExo,
                               tbcomissao.dtPublicExo,
                               tbcomissao.dtAtoExo,
                               tbservidor.idFuncional,
                               tbpessoa.nome,
-                              CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                              CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                               tbcomissao.numProcExo,
                               tbcomissao.idComissao
                          FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                          JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
-                         WHERE YEAR(tbcomissao.dtExo) = ' . $parametroAno . '
-                           AND MONTH(tbcomissao.dtExo) = ' . $parametroMes . ') a
-                     ORDER BY 2, 6, 1 asc';
+                         WHERE YEAR(tbcomissao.dtExo) = {$parametroAno}
+                           AND MONTH(tbcomissao.dtExo) = {$parametroMes}) a
+                     ORDER BY 2, 6, 1 asc";
 
             $result = $pessoal->select($select);
-            $label = array('Tipo', 'Data', 'Publicação', 'Ato Reitor', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
-            $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-            $function = array(null, "date_to_php", "date_to_php", "date_to_php");
+            $label = ['Tipo', 'Data', 'Publicação', 'Ato Reitor', 'Id Funcional', 'Nome', 'Cargo', 'Processo'];
+            $align = ["center", "center", "center", "center", "center", "left", "left", "left"];
+            $function = [null, "date_to_php", "date_to_php", "date_to_php"];
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -349,14 +369,16 @@ if ($acesso) {
             $tabela->set_funcao($function);
             $tabela->set_idCampo('idComissao');
             $tabela->set_editar('?fase=editarCargo');
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Exoneração",
                     'operador' => '=',
                     'id' => "comissaoVagasNegativas"),
                 array('coluna' => 0,
-                    'valor' => "Nomeação",
-                    'operador' => '=',
-                    'id' => "comissaoComVagas")));
+                    'valor' => "Exoneração",
+                    'operador' => '<>',
+                    'id' => "comissaoComVagas"),
+            ));
 
             $tabela->show();
             break;
@@ -367,6 +389,9 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorPublicacao');
+
+            # Pega os tipos de nomeação
+            $tiposNomeacao = $comissao->tipos;
 
             $form = new Form('?fase=movimentacaoPorPublicacao');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
@@ -403,40 +428,49 @@ if ($acesso) {
             foreach ($result1 as $dd) {
 
                 # Nomeações
-                $select = 'SELECT * FROM
-                          (SELECT "Nomeação",
+                $select = "SELECT * FROM
+                      (SELECT CASE";
+
+                foreach ($tiposNomeacao as $tipo) {
+                    if ($tipo[0] == 0) {
+                        $tipo[1] = "Nomeação";
+                    }
+                    $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
+                }
+
+                $select .= "      END,
                                   tbcomissao.dtPublicNom,
                                   tbcomissao.dtAtoNom,
                                   tbcomissao.dtNom,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
-                                  CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                                  CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                                   tbcomissao.numProcNom,
                                   tbcomissao.idComissao
                              FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
-                             WHERE tbcomissao.dtPublicNom = "' . $dd[0] . '"
+                             WHERE tbcomissao.dtPublicNom = '{$dd[0]}'
                          UNION
-                         SELECT "Exoneração",
+                         SELECT 'Exoneração',
                                   tbcomissao.dtPublicExo,
                                   tbcomissao.dtAtoExo,
                                   tbcomissao.dtExo,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
-                                  CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                                  CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                                   tbcomissao.numProcExo,
                                   tbcomissao.idComissao
                              FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
-                             WHERE tbcomissao.dtPublicExo = "' . $dd[0] . '") a
-                         ORDER BY 1, 6';
+                             WHERE tbcomissao.dtPublicExo = '{$dd[0]}') a
+                         ORDER BY 1, 6";
 
                 $result = $pessoal->select($select);
-                $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
-                $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-                $function = array(null, "date_to_php", "date_to_php", "date_to_php");
+                $label = ['Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo'];
+                $align = ["center", "center", "center", "center", "center", "left", "left", "left"];
+                $function = [null, "date_to_php", "date_to_php", "date_to_php"];
 
                 # Monta a tabela
                 $tabela = new Tabela();
@@ -453,8 +487,8 @@ if ($acesso) {
                         'operador' => '=',
                         'id' => "comissaoVagasNegativas"),
                     array('coluna' => 0,
-                        'valor' => "Nomeação",
-                        'operador' => '=',
+                        'valor' => "Exoneração",
+                        'operador' => '<>',
                         'id' => "comissaoComVagas")));
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
@@ -468,6 +502,9 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorAto');
+
+            # Pega os tipos de nomeação
+            $tiposNomeacao = $comissao->tipos;
 
             $form = new Form('?fase=movimentacaoPorAto');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
@@ -504,40 +541,49 @@ if ($acesso) {
             foreach ($result1 as $dd) {
 
                 # Nomeações
-                $select = 'SELECT * FROM
-                          (SELECT "Nomeação",
+                $select = "SELECT * FROM
+                      (SELECT CASE";
+
+                foreach ($tiposNomeacao as $tipo) {
+                    if ($tipo[0] == 0) {
+                        $tipo[1] = "Nomeação";
+                    }
+                    $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
+                }
+
+                $select .= "      END,
                                   tbcomissao.dtPublicNom,
                                   tbcomissao.dtAtoNom,
                                   tbcomissao.dtNom,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
-                                  CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                                  CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                                   tbcomissao.numProcNom,
                                   tbcomissao.idComissao
                              FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
-                             WHERE tbcomissao.dtAtoNom = "' . $dd[0] . '"
+                             WHERE tbcomissao.dtAtoNom = '{$dd[0]}'
                          UNION
-                         SELECT "Exoneração",
+                         SELECT 'Exoneração',
                                   tbcomissao.dtPublicExo,
                                   tbcomissao.dtAtoExo,
                                   tbcomissao.dtExo,
                                   tbservidor.idFuncional,
                                   tbpessoa.nome,
-                                  CONCAT(simbolo," - ",tbtipocomissao.descricao),
+                                  CONCAT(simbolo,' - ',tbtipocomissao.descricao),
                                   tbcomissao.numProcExo,
                                   tbcomissao.idComissao
                              FROM tbcomissao JOIN tbtipocomissao USING (idTipoComissao)
                                              JOIN tbservidor USING (idServidor)
                                              JOIN tbpessoa USING (idPessoa)
-                             WHERE tbcomissao.dtAtoExo = "' . $dd[0] . '") a
-                         ORDER BY 1,6';
+                             WHERE tbcomissao.dtAtoExo = '{$dd[0]}') a
+                         ORDER BY 1,6";
 
                 $result = $pessoal->select($select);
-                $label = array('Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo');
-                $align = array("center", "center", "center", "center", "center", "left", "left", "left");
-                $function = array(null, "date_to_php", "date_to_php", "date_to_php");
+                $label = ['Tipo', 'Publicação', 'Ato Reitor', 'Data', 'Id Funcional', 'Nome', 'Cargo', 'Processo'];
+                $align = ["center", "center", "center", "center", "center", "left", "left", "left"];
+                $function = [null, "date_to_php", "date_to_php", "date_to_php"];
 
                 # Monta a tabela
                 $tabela = new Tabela();
@@ -553,8 +599,8 @@ if ($acesso) {
                         'operador' => '=',
                         'id' => "comissaoVagasNegativas"),
                     array('coluna' => 0,
-                        'valor' => "Nomeação",
-                        'operador' => '=',
+                        'valor' => "Exoneração",
+                        'operador' => '<>',
                         'id' => "comissaoComVagas")));
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
@@ -595,7 +641,8 @@ if ($acesso) {
                                          LEFT JOIN tbcomissao USING(idServidor)
                                          LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                               JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbtipocomissao.idTipoComissao = {$parametroCargo}";
+                       WHERE tbcomissao.tipo <> 3
+                         AND tbtipocomissao.idTipoComissao = {$parametroCargo}";
 
             # Descrição
             if ($parametroDescricao <> "Todos") {
@@ -624,6 +671,13 @@ if ($acesso) {
             $relatorio->set_bordaInterna(true);
             $relatorio->set_numGrupo(3);
             $relatorio->show();
+            break;
+
+        ################################################################
+        # Relatório
+        case "exibeQuadro" :
+            $cargoComissao = new CargoComissao();
+            $cargoComissao->exibeQuadroTipoComissao();
             break;
     }
 

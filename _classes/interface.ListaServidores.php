@@ -276,7 +276,7 @@ class ListaServidores {
 
         # cargo em comissão
         if (!is_null($this->cargoComissao)) {
-            $select .= ' AND tbcomissao.dtExo is null AND tbtipocomissao.idTipoComissao = "' . $this->cargoComissao . '"';
+            $select .= ' AND tbcomissao.dtExo is null AND tbcomissao.tipo != 3 AND tbtipocomissao.idTipoComissao = "' . $this->cargoComissao . '"';
             $this->subTitulo .= "Cargo em comissão: " . $servidor->get_nomeCargoComissao($this->cargoComissao) . "<br/>";
         }
 

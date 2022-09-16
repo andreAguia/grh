@@ -47,6 +47,7 @@ if ($acesso) {
                                 LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
               WHERE tbservidor.situacao = 1
+                AND tbcomissao.tipo <> 3
                 AND tbtipocargo.tipo = "Adm/Tec"
                 AND tbcomissao.dtExo is null
            ORDER BY 4, tbcomissao.dtNom';
@@ -56,12 +57,11 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Adm & Téc com Cargos em Comissão');
     $relatorio->set_subtitulo('Ordenados pelo Cargo em Comissão');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo','Comissão', 'Nomeação', 'Perfil'));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
-    #$relatorio->set_width(array(10,30,20,0,25,10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_classe(array(null, null, "Pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo','Comissão', 'Nomeação', 'Perfil']);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+    $relatorio->set_align(["center", "left", "left", "left"]);
+    $relatorio->set_classe([null, null, "Pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples"]);
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

@@ -38,16 +38,17 @@ if ($acesso) {
                                     JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                                     JOIN tbdescricaocomissao  USING (idDescricaoComissao)    
            WHERE tbtipocomissao.ativo IS true
-             AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)                    
+             AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo) 
+             AND tbcomissao.tipo <> 3
            ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);
 
-    $label = array('Id / Matrícula', 'Nome', 'Nomeação', 'Publicação', 'Nome do Cargo', 'Perfil', 'Cargo');
-    $align = array("center", "left", "center", "center", "left", "center");
-    $function = array("idMatricula", null, "date_to_php", "date_to_php", "descricaoComissao");
-    $classe = array(null, null, null, null, null, "Pessoal");
-    $metodo = array(null, null, null, null, null, "get_perfil");
+    $label = ['Id / Matrícula', 'Nome', 'Nomeação', 'Publicação', 'Nome do Cargo', 'Perfil', 'Cargo'];
+    $align = ["center", "left", "center", "center", "left", "center"];
+    $function = ["idMatricula", null, "date_to_php", "date_to_php"];
+    $classe = [null, null, null, null, "CargoComissao", "Pessoal"];
+    $metodo = [null, null, null, null, "get_descricaoCargo", "get_perfil"];
 
     # Monta a tabela
     $relatorio = new Relatorio();

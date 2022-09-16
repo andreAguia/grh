@@ -46,7 +46,8 @@ if ($acesso) {
                                  LEFT JOIN tbcomissao USING(idServidor)
                                  LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                       JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                WHERE tbtipocomissao.idTipoComissao = $parametroCargo";
+                WHERE tbtipocomissao.idTipoComissao = $parametroCargo
+                  AND tbcomissao.tipo <> 3";
 
     # Descrição
     if ($parametroDescricao <> "Todos") {

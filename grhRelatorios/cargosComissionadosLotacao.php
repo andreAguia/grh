@@ -45,6 +45,7 @@ if ($acesso) {
                                      JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)     
                 AND tbservidor.situacao = 1
+                AND tbcomissao.tipo <> 3
                 AND tbcomissao.dtExo is null';
 
     # lotacao
@@ -66,11 +67,11 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Descrição', 'Nomeação', 'Perfil', ''));
-    $relatorio->set_funcao(array(null, null, "descricaoComissao", "date_to_php"));
-    #$relatorio->set_width(array(10,30,20,0,25,10));
-    $relatorio->set_align(array("center", "left", "left", "center", "center"));
-    #$relatorio->set_classe(array(null,null,null,null,"Pessoal"));
-    #$relatorio->set_metodo(array(null,null,null,null,"get_Lotacao"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Descrição', 'Nomeação', 'Perfil', '']);
+    $relatorio->set_funcao([null, null, null, "date_to_php"]);
+    $relatorio->set_align(["center", "left", "left", "center", "center"]);
+    $relatorio->set_classe([null, null, "CargoComissao"]);
+    $relatorio->set_metodo([null, null, "get_descricaoCargo"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

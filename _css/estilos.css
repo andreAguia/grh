@@ -324,11 +324,11 @@ tr#comissaoSemVagas{
 }
 
 tr#comissaoComVagas{
-    background-color:#96ac96;
+    background-color:#bdd3bd;
 }
 
 tr#comissaoVagasNegativas{
-    background-color:#cea4a8;
+    background-color:#e6b2c0;
 }
 
 p#vagaCentro{

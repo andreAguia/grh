@@ -282,7 +282,12 @@ if ($acesso) {
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
-            'array' => array(array(0, "Padrão"), array(1, "Pro Tempore"), array(2, "Designado")),
+            'array' => [
+                [0, "Padrão"],
+                [1, "Pro Tempore"],
+                [2, "Designado"],
+                [3, "Temporário"]
+            ],
             'required' => true,
             'size' => 20,
             'col' => 2,
@@ -394,14 +399,18 @@ if ($acesso) {
     $botaoRel->set_url("../grhRelatorios/servidorComissao.php");
     $botaoRel->set_target("_blank");
 
-    $objeto->set_botaoListarExtra(array($botaoRel, $botaoVagas));
+    $botao = new Button('Tipos');
+    $botao->set_title('Informa os Tipos de Cargos em Comissão');
+    $botao->set_url("areaCargoComissao.php?fase=exibeQuadro");
+    $botao->set_target("_blank2");
+
+    $objeto->set_botaoListarExtra([$botao, $botaoRel, $botaoVagas]);
 
     # Constroi o link de voltar de acordo com a origem
-    if (!vazio($origem)) {
+    if (!empty($origem)) {
         $objeto->set_linkListar($origem);
         $objeto->set_voltarForm($origem);
     }
-
 
     ################################################################
 
@@ -427,7 +436,12 @@ if ($acesso) {
                 $botao1->set_target("_blank");
                 $botao1->set_url("cadastroDescricaoComissao.php?fase=editar&origem=servidor");
 
-                $objeto->set_botaoEditarExtra(array($botao1));
+                $botao = new Button('Tipos');
+                $botao->set_title('Informa os Tipos de Cargos em Comissão');
+                $botao->set_url("areaCargoComissao.php?fase=exibeQuadro");
+                $botao->set_target("_blank2");
+
+                $objeto->set_botaoEditarExtra([$botao, $botao1]);
             }
 
             $objeto->editar($id);

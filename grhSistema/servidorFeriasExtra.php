@@ -10,6 +10,7 @@ $exercicio = $campoValor[0];
 $numDias = $campoValor[2];
 $idServidor = $campoValor[4];
 $dtInicial = $campoValor[1];
+$dtTermino = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
 
 # Conecta ao banco de dados
 $pessoal = new Pessoal();
@@ -102,4 +103,21 @@ $verifica->setIsento("tbferias", $id);
 if ($verifica->verifica()) {
     $erro = 1;
     $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+}
+
+/*
+ *  Verifica a aposentadoria compulsória
+ */
+
+# Pega a data compulsória
+$compulsoria = new AposentadoriaCompulsoria();
+
+if (!is_null($compulsoria->getDataAposentadoriaCompulsoria($idServidor))) {
+    $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($idServidor);
+
+    # Verifica a data de termino
+    if ($dtTermino >= date_to_bd($dataCompulsoria)) {
+        $erro = 1;
+        $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
+    }
 }

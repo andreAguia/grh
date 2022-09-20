@@ -7,7 +7,6 @@ class AposentadoriaCompulsoria {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-   
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações de contribuição";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – LEI 6.244/2012";
@@ -143,6 +142,36 @@ class AposentadoriaCompulsoria {
         $tabela->set_align(array("left"));
         $tabela->set_totalRegistro(false);
         $tabela->show();
+    }
+
+    ###########################################################
+
+    public function getDataAposentadoriaCompulsoria($idServidor) {
+
+        /*
+         * Retorna a data da aposentadoria compulsória do servidor
+         */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+
+        # Pega a idade par aposentadoria compulsória
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
+        $select = "SELECT ADDDATE(dtNasc, INTERVAL {$idade} YEAR)                    
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                    WHERE idPerfil = 1
+                      AND idServidor = {$idServidor}";
+
+        $result = $pessoal->select($select,false);
+        
+        # retorno
+        if(empty($result)){
+            return null;
+        }else{
+            return date_to_php($result[0]);
+        }
     }
 
 }

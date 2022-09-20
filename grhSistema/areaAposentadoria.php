@@ -31,7 +31,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de aposentadoria";
+        $atividade = "Visualizou a área de aposentadoria por ano";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -93,7 +93,7 @@ if ($acesso) {
         $menu->show();
 
         # Título
-        titulo("Área de Aposentadoria");
+        tituloTable("Área de Aposentadoria");
         br();
     }
 
@@ -769,7 +769,7 @@ if ($acesso) {
                           tbservidor.idServidor,
                           tbservidor.idServidor,
                           TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
-                          ADDDATE(dtNasc, INTERVAL 75 YEAR),
+                          ADDDATE(dtNasc, INTERVAL {$idade} YEAR),
                           tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.situacao = 1
@@ -844,7 +844,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $aposentadoria->exibeMenu(8);                        
+            $aposentadoria->exibeMenu(8);
             hr();
 
             $compulsoria = new AposentadoriaCompulsoria();
@@ -881,7 +881,7 @@ if ($acesso) {
             $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Tipo');
-            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer"]);
             $controle->set_valor($parametroTipo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -894,8 +894,8 @@ if ($acesso) {
                           tbservidor.idServidor,
                           tbservidor.idServidor,
                           TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
-                          ADDDATE(dtNasc, INTERVAL 75 YEAR),
-                          TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtNasc, INTERVAL 75 YEAR))
+                          ADDDATE(dtNasc, INTERVAL {$idade} YEAR),
+                          TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtNasc, INTERVAL {$idade} YEAR))
                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -914,17 +914,12 @@ if ($acesso) {
 
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
-                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) >= 75";
+                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) >= {$idade}";
             }
 
             # Os que Ainda Não Podem Requerer
             if ($parametroTipo == "Ainda Não Podem Requerer") {
-                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) < 75";
-            }
-
-            # Os que Não Tem Direito
-            if ($parametroTipo == "Não Tem Direito") {
-                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) > 500";
+                $select .= " AND TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()) < {$idade}";
             }
 
             $select .= " ORDER BY dtNasc";
@@ -1150,9 +1145,9 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $aposentadoria->exibeMenu(11);                        
+            $aposentadoria->exibeMenu(11);
             hr();
-            
+
             $permanente = new AposentadoriaTransicao1();
             $permanente->exibeRegras();
 
@@ -1354,7 +1349,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 3);
 
-            $aposentadoria->exibeMenu(12);            
+            $aposentadoria->exibeMenu(12);
             hr();
 
             $permanente = new AposentadoriaTransicao2();

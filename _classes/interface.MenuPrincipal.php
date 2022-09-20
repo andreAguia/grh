@@ -622,7 +622,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Aposentadoria');
-        $botao->set_url('areaAposentadoria.php?grh=1');
+        $botao->set_url('areaAposentadoria_aposentadosPorAno.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);

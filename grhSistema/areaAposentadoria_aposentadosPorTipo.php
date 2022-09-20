@@ -107,7 +107,7 @@ if ($acesso) {
 
             $motivosPossiveis = $pessoal->select($selectMotivo);
 
-            $controle = new Input('parametroMotivo', 'combo', 'Motivo:', 1);
+            $controle = new Input('parametroMotivo', 'combo', 'Tipo:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Motivo');
             $controle->set_array($motivosPossiveis);

@@ -169,9 +169,9 @@ if ($acesso) {
 
     # Pega os dados da combo tipo de Comissão
     $tipoComissao = $pessoal->select('SELECT idTipoComissao,
-                                         CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
-                                    FROM tbtipocomissao
-                                ORDER BY ativo desc, simbolo');
+                                             CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao
+                                        FROM tbtipocomissao
+                                    ORDER BY ativo desc, simbolo');
 
     array_unshift($tipoComissao, array(null, null));
 
@@ -199,65 +199,71 @@ if ($acesso) {
     } else {
         $comissao = $cargoComissao->get_dados($id);
 
-        # Primeiro select pega os cargos com a mesma descrição do $id
-        $selectOcupante1 = 'SELECT idComissao,
+        # Verifica se tem descrição
+        if (empty($comissao["idDescricaoComissao"])) {
+            $ocupanteAnterior = null;
+        } else {
+
+            # Primeiro select pega os cargos com a mesma descrição do $id
+            $selectOcupante1 = 'SELECT idComissao,
                                   CONCAT(DATE_FORMAT(dtNom,"%d/%m/%Y")," - ",DATE_FORMAT(dtExo,"%d/%m/%Y")," | ",tbpessoa.nome," | ",tbperfil.nome) as ff,
                                   tbdescricaocomissao.descricao
                              FROM tbcomissao as tb1 JOIN tbservidor USING (idServidor) 
                                                     JOIN tbpessoa USING (idPessoa)
                                                     JOIN tbperfil USING (idPerfil)
                                                     JOIN tbdescricaocomissao USING (idDescricaoComissao)';
-        # Seleciona somente os de mesmo cargo
-        $selectOcupante1 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
+            # Seleciona somente os de mesmo cargo
+            $selectOcupante1 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
 
-        # Seleciona somente os exinerados
-        $selectOcupante1 .= ' AND tbdescricaocomissao.idDescricaoComissao = ' . $comissao["idDescricaoComissao"];
+            # Seleciona somente os com a descrição semelhante
+            $selectOcupante1 .= ' AND tbdescricaocomissao.idDescricaoComissao = ' . $comissao["idDescricaoComissao"];
 
-        # Seleciona somente os exinerados
-        $selectOcupante1 .= ' AND dtExo IS NOT null';
+            # Seleciona somente os exinerados
+            $selectOcupante1 .= ' AND dtExo IS NOT null';
 
-        # Não pode o anterior ser o próprio mandato atual
-        $selectOcupante1 .= ' AND idComissao <> ' . $id;
+            # Não pode o anterior ser o próprio mandato atual
+            $selectOcupante1 .= ' AND idComissao <> ' . $id;
 
-        # Impede que o mandato já escolhido apareça
-        $selectOcupante1 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
+            # Impede que o mandato já escolhido apareça
+            $selectOcupante1 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
 
-        # Ordena pela descrição e data de nomeação para facilitar o agrupamento
-        $selectOcupante1 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
-        $ocupanteAnterior1 = $pessoal->select($selectOcupante1);
+            # Ordena pela descrição e data de nomeação para facilitar o agrupamento
+            $selectOcupante1 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
+            $ocupanteAnterior1 = $pessoal->select($selectOcupante1);
 
-        # Segundo select pega os cargos que sao diferentes do $id, pois existe 
-        # remota possibilidade do cargp anterior ser de outra descrição
-        $selectOcupante2 = 'SELECT idComissao,
+            # Segundo select pega os cargos que sao diferentes do $id, pois existe 
+            # remota possibilidade do cargp anterior ser de outra descrição
+            $selectOcupante2 = 'SELECT idComissao,
                                   CONCAT(DATE_FORMAT(dtNom,"%d/%m/%Y")," - ",DATE_FORMAT(dtExo,"%d/%m/%Y")," | ",tbpessoa.nome," | ",tbperfil.nome) as ff,
                                   tbdescricaocomissao.descricao
                              FROM tbcomissao as tb1 JOIN tbservidor USING (idServidor) 
                                                     JOIN tbpessoa USING (idPessoa)
                                                     JOIN tbperfil USING (idPerfil)
                                                     JOIN tbdescricaocomissao USING (idDescricaoComissao)';
-        # Seleciona somente os de mesmo cargo
-        $selectOcupante2 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
+            # Seleciona somente os de mesmo cargo
+            $selectOcupante2 .= ' WHERE tbdescricaocomissao.idTipoComissao = ' . $comissao["idTipoComissao"];
 
-        # Seleciona somente os exinerados
-        $selectOcupante2 .= ' AND tbdescricaocomissao.idDescricaoComissao <> ' . $comissao["idDescricaoComissao"];
+            # Seleciona somente os exinerados
+            $selectOcupante2 .= ' AND tbdescricaocomissao.idDescricaoComissao <> ' . $comissao["idDescricaoComissao"];
 
-        # Seleciona somente os exinerados
-        $selectOcupante2 .= ' AND dtExo IS NOT null';
+            # Seleciona somente os exinerados
+            $selectOcupante2 .= ' AND dtExo IS NOT null';
 
-        # Não pode o anterior ser o próprio mandato atual
-        $selectOcupante2 .= ' AND idComissao <> ' . $id;
+            # Não pode o anterior ser o próprio mandato atual
+            $selectOcupante2 .= ' AND idComissao <> ' . $id;
 
-        # Impede que o mandato já escolhido apareça
-        $selectOcupante2 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
+            # Impede que o mandato já escolhido apareça
+            $selectOcupante2 .= ' AND tb1.idComissao NOT IN (SELECT idAnterior FROM tbcomissao as tb2 WHERE idAnterior IS NOT null AND tb2.idComissao <> ' . $id . ')';
 
-        # Ordena pela descrição e data de nomeação para facilitar o agrupamento
-        $selectOcupante2 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
-        $ocupanteAnterior2 = $pessoal->select($selectOcupante2);
+            # Ordena pela descrição e data de nomeação para facilitar o agrupamento
+            $selectOcupante2 .= ' ORDER BY tbdescricaocomissao.descricao, dtNom desc';
+            $ocupanteAnterior2 = $pessoal->select($selectOcupante2);
 
-        # Junta os arrays
-        $ocupanteAnterior = array_merge($ocupanteAnterior1, $ocupanteAnterior2);
+            # Junta os arrays
+            $ocupanteAnterior = array_merge($ocupanteAnterior1, $ocupanteAnterior2);
 
-        array_unshift($ocupanteAnterior, [null, null]);
+            array_unshift($ocupanteAnterior, [null, null]);
+        }
     }
 
     # Campos para o formulario
@@ -581,4 +587,4 @@ if ($acesso) {
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");
-}
+}    

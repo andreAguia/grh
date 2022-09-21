@@ -33,6 +33,7 @@ class ListaServidores {
     private $permiteEditar = true;
     private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordenação
+    private $comissaoPrimeiro = false;          # Define se os cargos comissionados aparecerão (ou não) primeiro
 
     /*
      *  Outros
@@ -145,6 +146,7 @@ class ListaServidores {
         # Ou seja se for em servidores com PHP anterior
         # Cria uma função str_contains com o mesmo efeito
         if (!function_exists('str_contains')) {
+
             function str_contains($haystack, $needle) {
                 return $needle !== '' && mb_strpos($haystack, $needle) !== false;
             }
@@ -190,7 +192,7 @@ class ListaServidores {
         }
 
         # Cargo em comissão
-        if (!is_null($this->cargoComissao)) {
+        if (!is_null($this->cargoComissao) OR $this->comissaoPrimeiro) {
             $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
                          LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';
         }
@@ -280,6 +282,12 @@ class ListaServidores {
             $this->subTitulo .= "Cargo em comissão: " . $servidor->get_nomeCargoComissao($this->cargoComissao) . "<br/>";
         }
 
+
+        # Comissao Primeiro
+        if ($this->comissaoPrimeiro) {
+            $select .= ' AND tbcomissao.dtExo is null AND tbcomissao.tipo != 3';
+        }
+
         # concurso
         if (!is_null($this->concurso)) {
             if ($tipo == 1) {
@@ -303,7 +311,11 @@ class ListaServidores {
         }
 
         # ordenação
-        $select .= " ORDER BY $this->ordenacao";
+        if ($this->comissaoPrimeiro) {
+            $select .= " ORDER BY tbtipocomissao.simbolo, tbtipocomissao.idTipoComissao, {$this->ordenacao}";
+        } else {
+            $select .= " ORDER BY {$this->ordenacao}";
+        }
 
         # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por nome
         if (($this->ordenacao <> "2 asc") AND ($this->ordenacao <> "2 desc")) {
@@ -314,6 +326,8 @@ class ListaServidores {
 //        if (($this->ordenacao <> "6 asc") AND ($this->ordenacao <> "6 desc")) {
 //            $select .= ", 6 asc";
 //        }
+
+        #echo $select;
 
         foreach ($this->ordenacaoCombo as $value) {
             if ($value[0] == $this->ordenacao) {

@@ -672,14 +672,12 @@ class CargoComissao {
          * 
          * @param $idComissao integer null o id do cargo em comissão
          */
-        # Conecta ao Banco de Dados
-        $comissao = new CargoComissao();
-
+        
         # Pega os dados da comissão
-        $dados = $comissao->get_dados($idComissao);
+        $dados = $this->get_dados($idComissao);
 
         # Exibe o cargo
-        echo $comissao->get_descricaoCargo($idComissao);
+        echo $this->get_descricaoCargo($idComissao);
 
         # Informa o tipo
         if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado

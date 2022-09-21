@@ -34,4 +34,19 @@ class TipoComissao {
     }
 
     ###########################################################
+    
+    function get_descricao($id){
+        /**
+         * fornece a descrição simples do cargo em comissao
+         */
+        # Pega os dados
+        $select = "SELECT descricao
+                   FROM tbtipocomissao
+                  WHERE idTipoComissao = {$id}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        return $dados['descricao'];
+    }
 }

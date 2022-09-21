@@ -2585,7 +2585,7 @@ class Pessoal extends Bd {
             if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
                 $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
-            
+
             # Verifica se tem cargo
             if (!is_null($idComissao)) {
 
@@ -2733,7 +2733,8 @@ class Pessoal extends Bd {
 
         # Pega o id do cargo em comissão (se houver)		 
         $select = 'SELECT idComissao,
-                          tipo
+                          tipo,
+                          idTipoComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is null))
@@ -2751,16 +2752,21 @@ class Pessoal extends Bd {
 
             # Pega a descrição 
             if (!is_null($rr[0])) {
-                $retorno .= $comissao->get_descricaoCargo($rr[0]);
+                if (empty($comissao->get_descricaoCargo($rr[0]))) {
+                    $tipoComissao = new TipoComissao();
+                    $retorno .= $tipoComissao->get_descricao($rr['idTipoComissao']);
+                } else {
+                    $retorno .= $comissao->get_descricaoCargo($rr[0]);
+                }
             }
-            
+
             if (!empty($rr[1])) {
-            # Informa o tipo
-            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-                $cargoComissao = new CargoComissao();
-                $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
+                # Informa o tipo
+                if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                    $cargoComissao = new CargoComissao();
+                    $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
+                }
             }
-        }
 
             if ($contador < $count) {
                 $contador++;

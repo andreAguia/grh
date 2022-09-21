@@ -363,6 +363,7 @@ if ($acesso) {
             $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
             $lista->set_lotacao($id);
+            #$lista->set_comissaoPrimeiro(true);
             $lista->showTabela();
 
             $grid->fechaColuna();

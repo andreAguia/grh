@@ -509,6 +509,11 @@ function exibeFeriasPendentes($texto) {
         if ($i >= $feriasCadastradas) {
             $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
 
+            # resolve temporariamente o problema de Simone Flores
+            if (($idServidor == 15 and $i == 2020) OR ($idServidor == 15 and $i == 2021)) {
+                $dias = 30;
+            }
+            
             # Transforma o nullo em zero
             if (is_null($dias)) {
                 $dias = 0;

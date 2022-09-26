@@ -57,6 +57,9 @@ if ($acesso) {
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    
+    $objeto->set_rotinaExtraEditar("callout");
+    $objeto->set_rotinaExtraEditarParametro("O processo deverá ser no formato: SEI-260009/XXXXXX/XXXX");
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Documentos no Sei');

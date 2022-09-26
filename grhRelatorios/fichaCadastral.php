@@ -275,6 +275,8 @@ if ($acesso) {
         $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
         $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
+        $dadosConcurso = $pessoal->get_idConcurso($idServidorPesquisado);
+        
 
         # Informa se o servidor entrou como CLT
         if ($regime == "CLT") {
@@ -285,13 +287,22 @@ if ($acesso) {
              */
 
             if (strtotime(date_to_bd($dtadmissao)) < strtotime(date_to_bd("01/01/2002"))) {
-                $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                if (empty($dadosConcurso)) {
+                    $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                } else {
+                    $mensagem .= "- Servidor admitido mediante concurso público sob o regime da CLT em {$dtadmissao}.<br/>";
+                }
             }
 
             # Verifica se foi transformado
             if (!empty($dtTranfRegime)) {
                 $mensagem .= "- Transformado em regime estatutário em {$dtTranfRegime}, conforme Lei 4.152 de 08/09/2003, publicada no DOERJ de 09/09/2003.";
             }
+        }
+
+        # Se for estatutário
+        if ($regime == "Estatutário") {
+            $mensagem .= "- Servidor admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
         }
 
         # Informa se servidor optou da transferência FENORTE x UENF em 2002

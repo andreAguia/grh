@@ -266,7 +266,7 @@ if ($acesso) {
 
             # Lista de quem NÃO entregou
             $select = "SELECT '---' as dtEntrega,
-                              '---' as acumula,
+                              year(dtAdmissao),
                               tbservidor.idServidor,
                               dtAdmissao,
                               '-'
@@ -279,9 +279,8 @@ if ($acesso) {
                                              LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND year(tbservidor.dtadmissao) <= '{$parametroAno}'
+                WHERE situacao = 1                  
+                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
                   AND anoReferencia = '{$parametroAno}'";
 
             # lotacao
@@ -310,7 +309,7 @@ if ($acesso) {
                 $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
 
-            $select .= " ORDER BY tbpessoa.nome";
+            $select .= " AND year(tbservidor.dtAdmissao) <= {$parametroAno} ORDER BY tbpessoa.nome";
 
             $resumo = $pessoal->select($select);
 

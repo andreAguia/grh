@@ -1509,7 +1509,7 @@ if ($acesso) {
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Admissão", "Saída", "Motivo"]);
         #$relatorio->set_width([40, 20, 40]);
-        $relatorio->set_align(["left", "center", "left"]);
+        #$relatorio->set_align(["left", "center", "left"]);
         $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
         $relatorio->set_conteudo($result);
 

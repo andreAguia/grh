@@ -1496,18 +1496,21 @@ if ($acesso) {
         tituloRelatorio('Acumulação de Cargos');
 
         $select = "SELECT instituicao,
+                          cargo,                                     
                           matricula,
-                          cargo
-                     FROM tbacumulacao
-                    WHERE idServidor={$idServidorPesquisado}";
+                          dtAdmissao,
+                          dtSaida,
+                          tbmotivo.motivo
+                     FROM tbacumulacao LEFT JOIN tbmotivo ON(tbacumulacao.motivoSaida = tbmotivo.idMotivo)
+                    WHERE idServidor = {$idServidorPesquisado}";
 
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        $relatorio->set_label(["Órgão", "Matricula", "Cargo"]);
+        $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Admissão", "Saída", "Motivo"]);
         #$relatorio->set_width([40, 20, 40]);
         $relatorio->set_align(["left", "center", "left"]);
-        #$relatorio->set_funcao(["date_to_php"]);
+        $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
         $relatorio->set_conteudo($result);
 
         $relatorio->set_botaoVoltar(false);

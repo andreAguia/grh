@@ -288,9 +288,9 @@ if ($acesso) {
 
             if (strtotime(date_to_bd($dtadmissao)) < strtotime(date_to_bd("01/01/2002"))) {
                 if (empty($dadosConcurso)) {
-                    $mensagem .= "- Servidor(a) admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                    $mensagem .= "- Servidor(a) admitido sob o regime CLT em {$dtadmissao}.<br/>";
                 } else {
-                    $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime da CLT em {$dtadmissao}.<br/>";
+                    $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime CLT em {$dtadmissao}.<br/>";
                 }
             }
 

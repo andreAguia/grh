@@ -288,9 +288,9 @@ if ($acesso) {
 
             if (strtotime(date_to_bd($dtadmissao)) < strtotime(date_to_bd("01/01/2002"))) {
                 if (empty($dadosConcurso)) {
-                    $mensagem .= "- Servidor admitido sob o regime da CLT em {$dtadmissao}.<br/>";
+                    $mensagem .= "- Servidor(a) admitido sob o regime da CLT em {$dtadmissao}.<br/>";
                 } else {
-                    $mensagem .= "- Servidor admitido mediante concurso público sob o regime da CLT em {$dtadmissao}.<br/>";
+                    $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime da CLT em {$dtadmissao}.<br/>";
                 }
             }
 
@@ -302,7 +302,7 @@ if ($acesso) {
 
         # Se for estatutário
         if ($regime == "Estatutário") {
-            $mensagem .= "- Servidor admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
+            $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
         }
 
         # Informa se servidor optou da transferência FENORTE x UENF em 2002

@@ -296,12 +296,16 @@ if ($acesso) {
             $lista->set_paginacaoInicial($paginacao);
             $lista->set_paginacaoItens(12);
 
-            if (!vazio($parametroNomeMat)) {
+            if (!empty($parametroNomeMat)) {
+                if (Verifica::acesso($idUsuario, 1)) {
+                    $lista->set_idServidorIdPessoa($parametroNomeMat);
+                }
+                
                 $lista->set_matNomeId($parametroNomeMat);
                 $lista->set_paginacao(false);
             }
 
-            if (!vazio($parametroCpf)) {
+            if (!empty($parametroCpf)) {
                 $lista->set_cpf($parametroCpf);
                 $lista->set_paginacao(false);
             }

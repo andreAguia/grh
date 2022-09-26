@@ -187,4 +187,38 @@ class Ferias {
     }
 
 ###########################################################
+    
+    public function get_diasTrabalhados($idServidor, $ano = null) {
+
+        /**
+         * Retorna os dias trabalhados pelo servidor em um ano
+         */
+        
+        # Trata os parêmetros
+        if (empty($idServidor) OR empty($ano)) {
+            return null;
+        }
+
+        # Verifica se o ano é bissexto
+        if(anoBissexto($ano)){
+            $diasAno = 366;            
+        }else{
+            $diasAno = 365;
+        }
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        
+
+        # Pega array com os dias publicados
+        $select = "SELECT SUM(numDias) as dias
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                      AND anoExercicio = '{$ano}'
+                      AND status = 'fruída'";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno["dias"];
+    }
 }

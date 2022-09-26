@@ -26,6 +26,7 @@ class ListaServidores {
     private $situacaoSinal = "=";
     private $lotacao = null;
     private $cpf = null;
+    private $idServidorIdPessoa = null;
 
     /*
      * da listagem
@@ -216,7 +217,14 @@ class ListaServidores {
 
             if (is_numeric($this->matNomeId)) {
                 $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
-		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%"))';
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+                
+                if(!is_null($this->idServidorIdPessoa)){
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+                
+                $select .= ')';
             }
             $this->subTitulo .= "pesquisa: " . $this->matNomeId . "<br/>";
         }

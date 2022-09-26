@@ -37,7 +37,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroAno = post('parametroAno', get_session('parametroAno',$acumul->getUltimoAnoDeclaracao()));
+    $parametroAno = post('parametroAno', get_session('parametroAno', $acumul->getUltimoAnoDeclaracao()));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
     $parametroNome = retiraAspas(post('parametroNome', get_session('parametroNome')));
 
@@ -109,8 +109,8 @@ if ($acesso) {
 
             # AnoReferencia
             $comboAno = $pessoal->select('SELECT DISTINCT anoReferencia, anoReferencia
-            FROM tbacumulacaodeclaracao
-            ORDER BY anoReferencia');
+                                            FROM tbacumulacaodeclaracao
+                                        ORDER BY anoReferencia');
 
             if (empty($comboAno)) {
                 $comboAno[] = $acumul->getUltimoAnoDeclaracao();
@@ -165,7 +165,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(3);
 
-            
             $acumul->showResumoGeral($parametroAno, $parametroLotacao, $parametroNome);
             $acumul->showResumoAcumula($parametroAno, $parametroLotacao, $parametroNome);
 
@@ -200,23 +199,26 @@ if ($acesso) {
             $grid->abreColuna(9);
 
             ######################################################
-            # Pega o time inicial
-            $time_start = microtime(true);
 
+            $tab = new Tab(["Entregaram", "Não Entregaram"]);
+
+            ###
+
+            $tab->abreConteudo();
             # Lista de quem entregou
             $select = "SELECT dtEntrega,
-                      IF(acumula,'SIM','Não'),
-                      tbservidor.idServidor,
-                      tbacumulacaodeclaracao.idServidor,
-                      processo,
-                      idAcumulacaoDeclaracao
-                 FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
-                                             LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbhistlot USING (idServidor)
-                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND anoReferencia = '{$parametroAno}'";
+                              IF(acumula,'SIM','Não'),
+                              tbservidor.idServidor,
+                              dtAdmissao,
+                              processo,
+                              idAcumulacaoDeclaracao
+                         FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
+                                                     LEFT JOIN tbpessoa USING (idPessoa)
+                                                     LEFT JOIN tbhistlot USING (idServidor)
+                                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND anoReferencia = '{$parametroAno}'";
 
             # nome
             if (!empty($parametroNome)) {
@@ -241,38 +243,45 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Ativos que Entregaram a Declaração do Ano {$parametroAno}");
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Entregue em", "Acumula?", "Servidor", "Lotação", "Processo"));
-            $tabela->set_align(array("center", "center", "left", "left", "left"));
-            $tabela->set_funcao(array("date_to_php"));
-            $tabela->set_classe(array(null, null, "Pessoal", "Pessoal"));
-            $tabela->set_metodo(array(null, null, "get_nomeECargoEPerfil", "get_Lotacao"));
+            $tabela->set_label(["Entregue em", "Acumula?", "Servidor", "Admissão", "Processo"]);
+            $tabela->set_align(["center", "center", "left"]);
+            $tabela->set_funcao(["date_to_php", null, null, "date_to_php"]);
+            $tabela->set_classe([null, null, "Pessoal"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfil"]);
             $tabela->set_formatacaoCondicional(array(
-                array('coluna'   => 1,
-                    'valor'    => 'SIM',
+                array('coluna' => 1,
+                    'valor' => 'SIM',
                     'operador' => '=',
-                    'id'       => 'problemas')));
+                    'id' => 'problemas')));
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
 
+            $tab->fechaConteudo();
+
+            ###
+
+            $tab->abreConteudo();
+
             # Lista de quem NÃO entregou
-            $select = "SELECT '-' as dtEntrega,
-                           '-' as acumula,
-                           tbservidor.idServidor,
-                           tbservidor.idServidor,
-                           '-'
-                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                      LEFT JOIN tbhistlot USING (idServidor)
-                                      LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE situacao = 1
-                     AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
+            $select = "SELECT '---' as dtEntrega,
+                              '---' as acumula,
+                              tbservidor.idServidor,
+                              dtAdmissao,
+                              '-'
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbhistlot USING (idServidor)
+                                         LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                 WHERE situacao = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND year(tbservidor.dtadmissao) <= '{$parametroAno}'
                   AND anoReferencia = '{$parametroAno}'";
 
             # lotacao
@@ -303,25 +312,22 @@ if ($acesso) {
 
             $select .= " ORDER BY tbpessoa.nome";
 
-
             $resumo = $pessoal->select($select);
 
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Ativos que NÃO Entregaram a Declaração do Ano {$parametroAno}");
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Entregue em", "Acumula?", "Servidor", "Lotação", "Processo"]);
-            $tabela->set_align(["center", "center", "left", "left", "center"]);
-            $tabela->set_classe([null, null, "Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null, "get_nomeECargoEPerfil", "get_Lotacao"]);
+            $tabela->set_label(["Entregue em", "Acumula?", "Servidor", "Admissão", "Processo"]);
+            $tabela->set_align(["center", "center", "left"]);
+            $tabela->set_classe([null, null, "Pessoal"]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfil"]);
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
 
-            # Pega o time final
-            $time_end = microtime(true);
-            $time = $time_end - $time_start;
-            p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
+            $tab->fechaConteudo();
             break;
 
         ################################################################

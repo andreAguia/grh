@@ -161,6 +161,7 @@ if ($acesso) {
             $tabela->set_titulo('Cadastro de Processos Cadastrados no SEI');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["IdFuncional", "Servidor", "Processo", "Descrição"]);
+            $tabela->set_width([10, 20, 20, 40]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "left", "left"]);
             $tabela->set_classe([null, "pessoal"]);

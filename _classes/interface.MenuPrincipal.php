@@ -697,6 +697,13 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Processos no SEI');
+        $botao->set_url('areaProcessosSei.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de processos cadastrados no SEI');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Avaliação');

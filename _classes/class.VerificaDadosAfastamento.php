@@ -5,6 +5,8 @@ class VerificaDadosAfastamento{
     /*
      * Classe que verifica se o servidor $idServidor teve algum afastamento 
      * no período informado: $dtInicial e $dtFinal
+     * 
+     * A princípio somente usado na classe de cessao
      */
 
     private $idServidor;

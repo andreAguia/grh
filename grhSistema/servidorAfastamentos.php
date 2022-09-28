@@ -54,12 +54,27 @@ if ($acesso) {
         $linkBotaoVoltar->set_accessKey('V');
         $menu->add_link($linkBotaoVoltar, "left");
         $menu->show();
-    }else{
+    } else {
         br();
     }
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
+
+    for ($x = 2004; $x <= 2022; $x++) {
+        $verificadias = new VerificaDiasAfastados($idServidorPesquisado);
+        $verificadias->setAno($x);
+        $verificadias->verifica();
+
+        if (anoBissexto($x)) {
+            echo $x . " (Bissexto) -> " . $verificadias->getDiasAfastados();
+            echo " dias afastados | " . (366 - $verificadias->getDiasAfastados()) . " dias trabalhados<br/>";
+            hr();
+        } else {
+            echo $x . "            -> " . $verificadias->getDiasAfastados();
+            echo " dias afastados | " .(365 - $verificadias->getDiasAfastados()) . " dias trabalhados<br/>";
+        }
+    }
 
     $afast = new ListaAfastamentosServidor($idServidorPesquisado);
     $afast->exibeTabela();

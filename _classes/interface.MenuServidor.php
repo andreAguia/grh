@@ -43,11 +43,12 @@ class MenuServidor {
 
         $grid = new Grid();
 
-        if (!is_null($this->cargoComissao)) {
-            $grid->abreColuna(12);
-            $this->moduloCargoComissao();
-            $grid->fechaColuna();
-        }
+//        Retirado pois ocargo atual já aparece nos dados do servidor  
+//        if (!is_null($this->cargoComissao)) {
+//            $grid->abreColuna(12);
+//            $this->moduloCargoComissao();
+//            $grid->fechaColuna();
+//        }
 
         if (!is_null($this->orgaoCedido)) {
             $grid->abreColuna(12);
@@ -514,7 +515,7 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
 
         if ($this->situacao == "Ativo") {
-            $menu->add_item('linkWindow', 'Declaração de Horário', '../grhRelatorios/declaracao.Horario.php');
+            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
         }
 
         if ($this->perfil == 1 AND $this->situacao == "Ativo") {
@@ -835,8 +836,7 @@ class MenuServidor {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        $descricao = $pessoal->get_cargoComissaoDescricao($this->idServidor);
-        p($descricao, "center");
+        p($pessoal->get_cargoComissaoDescricao($this->idServidor), "f14", "center");
 
         $painel->fecha();
     }

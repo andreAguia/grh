@@ -15,11 +15,8 @@ $idServidor = $campoValor[5];
 
 # Preenche a data de término quando for nula
 if (empty($dtTermino)) {
-    if (!empty($dtInicial)) {
-        $campoValor[2] = date_to_bd(addDias($dtInicial, $numDias));
-        echo $campoValor[2];
-        $dtTermino = $campoValor[2];
-    }
+    $campoValor[2] = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
+    $dtTermino = $campoValor[2];
 }
 
 # Verifica se a data Inicial é anterior a data de admissão
@@ -64,4 +61,21 @@ $verifica->setIsento("tblicencapremio", $id);
 if ($verifica->verifica()) {
     $erro = 1;
     $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
+}
+
+/*
+ *  Verifica a aposentadoria compulsória
+ */
+
+# Pega a data compulsória
+$compulsoria = new AposentadoriaCompulsoria();
+
+if (!is_null($compulsoria->getDataAposentadoriaCompulsoria($idServidor))) {
+    $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($idServidor);
+
+    # Verifica a data de termino
+    if ($dtTermino >= date_to_bd($dataCompulsoria)) {
+        $erro = 1;
+        $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
+    }
 }

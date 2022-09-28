@@ -622,7 +622,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Aposentadoria');
-        $botao->set_url('areaAposentadoria.php?grh=1');
+        $botao->set_url('areaAposentadoria_aposentadosPorAno.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área das rotinas de aposentadoria do serviodor');
         $menu->add_item($botao);
@@ -696,6 +696,13 @@ class MenuPrincipal {
         $botao->set_url('areaCedidos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Processos no SEI');
+        $botao->set_url('areaProcessosSei.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de processos cadastrados no SEI');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

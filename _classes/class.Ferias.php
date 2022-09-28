@@ -40,6 +40,11 @@ class Ferias {
         for ($i = $anoAdmissao + 1; $i <= $anoPesquisado; $i++) {
             if ($i >= $feriasCadastradas) {
                 $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
+                
+                # resolve temporariamente o problema de Simone Flores
+                if(($idServidor == 15 and $i == 2020) OR ($idServidor == 15 and $i == 2021)){
+                    $dias = 30;
+                }
 
                 # Transforma o nullo em zero
                 if (is_null($dias)) {
@@ -182,4 +187,38 @@ class Ferias {
     }
 
 ###########################################################
+    
+    public function get_diasTrabalhados($idServidor, $ano = null) {
+
+        /**
+         * Retorna os dias trabalhados pelo servidor em um ano
+         */
+        
+        # Trata os parêmetros
+        if (empty($idServidor) OR empty($ano)) {
+            return null;
+        }
+
+        # Verifica se o ano é bissexto
+        if(anoBissexto($ano)){
+            $diasAno = 366;            
+        }else{
+            $diasAno = 365;
+        }
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        
+
+        # Pega array com os dias publicados
+        $select = "SELECT SUM(numDias) as dias
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                      AND anoExercicio = '{$ano}'
+                      AND status = 'fruída'";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno["dias"];
+    }
 }

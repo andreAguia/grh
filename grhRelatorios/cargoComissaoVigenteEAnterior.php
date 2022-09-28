@@ -35,7 +35,8 @@ if ($acesso) {
                                       JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                                       JOIN tbdescricaocomissao  USING (idDescricaoComissao)    
            WHERE tbtipocomissao.ativo IS true
-             AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)                    
+             AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
+             AND tbcomissao.tipo <> 3
            ORDER BY tbtipocomissao.simbolo, tbtipocomissao.descricao, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 
     $result = $pessoal->select($select);

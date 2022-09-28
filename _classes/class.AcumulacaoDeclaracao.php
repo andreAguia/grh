@@ -100,26 +100,31 @@ class AcumulacaoDeclaracao {
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
 
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dados
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
-        $servidores = $this->getnumServidoresAtivos($idLotacao, $parametroNome);
-
+        $servidores = $this->getnumServidoresAtivos($ano, $idLotacao, $parametroNome);
+        
+        # Preenche a tabela
         $array[] = array("Entregaram", $entregaram);
         $array[] = array("NÃO Entregaram", $servidores - $entregaram);
-
-        if (!empty($idLotacao) AND $idLotacao <> "*") {
-            $pessoal = new Pessoal();
-            $titulo = $pessoal->get_nomeLotacao($idLotacao)." ({$ano}}";
-        } else {
-            $titulo = "Resumo Geral ({$ano}}";
-        }
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
+
+        if (!empty($idLotacao) AND $idLotacao <> "*") {
+            $tabela->set_titulo("Declaração ({$ano})");
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao($idLotacao));
+        } else {
+            $tabela->set_titulo("Declaração ({$ano})");
+        }
+        
         $tabela->set_label(array("Descrição", "Nº de Servidores"));
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo($titulo);
         $tabela->set_rodape("Total de Servidores: " . $servidores);
         $tabela->show();
     }
@@ -136,26 +141,32 @@ class AcumulacaoDeclaracao {
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
         
+        # Acessa o banco de dados
+        $pessoal = new Pessoal();
+        
+        # Pega os dados
         $acumulam = $this->getNumAcumula($ano, $idLotacao, $parametroNome);
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
-        $pessoal = new Pessoal();
-
+        
+        # Preenche a tabela
         $array[] = array("Acumulam", $acumulam);
         $array[] = array("NÃO Acumulam", $entregaram - $acumulam);
-
-        if (!empty($idLotacao) AND $idLotacao <> "*") {
-            $titulo = "Declaração - " . $pessoal->get_nomeLotacao($idLotacao)."  ({$ano}}";
-        } else {
-            $titulo = "Declaração ({$ano}}";
-        }
-
+        
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
+
+        if (!empty($idLotacao) AND $idLotacao <> "*") {
+            $tabela->set_titulo("Declaração ({$ano})");
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao($idLotacao));
+        } else {
+            $tabela->set_titulo("Declaração ({$ano})");
+        }
+        
         $tabela->set_label(array("Descrição", "Nº de Servidores"));
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
-        $tabela->set_titulo($titulo);
+        
         $tabela->set_rodape("Total que Entregaram: " . $entregaram);
         $tabela->show();
     }
@@ -182,19 +193,22 @@ class AcumulacaoDeclaracao {
 
     ###########################################################
 
-    function getnumServidoresAtivos($idLotacao = null, $parametroNome = null) {
+    function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNome = null ) {
 
         /**
          * informa o número de Servidores Ativos
          * 
-         * @param integer $idPessoa do servidor
+         * @param integer $parametroAno A partir de que ano
+         * @param integer $idLotacao o idLotacao do servidor
+         * @param integer $parametroNome O nome do Servidor
          */
-        $select = 'SELECT idServidor
+        $select = "SELECT idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND situacao = 1';
+                      AND situacao = 1
+                      AND year(tbservidor.dtadmissao) <= '{$parametroAno}'";
         # nome
         if (!empty($parametroNome)) {
             $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
@@ -208,7 +222,7 @@ class AcumulacaoDeclaracao {
                 $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
             }
         }
-
+        
         $pessoal = new Pessoal();
         $count = $pessoal->count($select);
         return $count;

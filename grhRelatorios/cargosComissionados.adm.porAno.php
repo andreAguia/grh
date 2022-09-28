@@ -47,6 +47,7 @@ if ($acesso) {
                 AND (tbcomissao.dtExo IS null OR year(tbcomissao.dtExo) >= "' . $parametroAno . '")                       
                 AND tbservidor.situacao = 1
                 AND tbtipocargo.tipo = "Adm/Tec"
+                AND tbcomissao.tipo <> 3
            ORDER BY 4, tbcomissao.dtNom';
 
     $result = $servidor->select($select);
@@ -55,12 +56,11 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2("Com Cargos em Comissão em  {$parametroAno}");
     $relatorio->set_subtitulo('Ordenados pelo Cargo em Comissão');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo','Comissão', 'Nomeação', 'Exoneração'));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php"));
-    #$relatorio->set_width(array(10,30,20,0,25,10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_classe(array(null, null, "Pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo','Comissão', 'Nomeação', 'Exoneração']);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_align(["center", "left", "left", "left"]);
+    $relatorio->set_classe([null, null, "Pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples"]);
     $relatorio->set_conteudo($result);
     
     # Cria um array com os anos possíveis

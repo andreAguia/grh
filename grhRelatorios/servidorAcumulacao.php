@@ -55,11 +55,11 @@ if ($acesso) {
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
 
-    $relatorio->set_label(array("Conclusão", "Resultado", "Publicação", "Processo", "Outro Vínculo"));
-    $relatorio->set_align(array("center", "center", "center", "left", "left", "left"));
-    #$relatorio->set_funcao(array(null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"));
-    $relatorio->set_metodo(array(null, "get_resultado","exibePublicacao","exibeProcesso", "exibeDadosOutroVinculo"));
+    $relatorio->set_label(["Conclusão", "Resultado", "Publicação", "Processo", "Outro Vínculo"]);
+    $relatorio->set_align(["center", "center", "center", "left", "left", "left"]);
+    #$relatorio->set_funcao([null, null, "date_to_php"]);
+    $relatorio->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
+    $relatorio->set_metodo([null, "get_resultado","exibePublicacao","exibeProcesso", "exibeDadosOutroVinculo"]);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

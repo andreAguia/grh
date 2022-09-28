@@ -44,7 +44,8 @@ if ($acesso) {
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)';
 
     if (!is_null($cargo)) {
-        $select .= ' WHERE tbtipocomissao.idTipoComissao = ' . $cargo;
+        $select .= ' WHERE tbcomissao.tipo <> 3
+                       AND tbtipocomissao.idTipoComissao = ' . $cargo;
     }
 
     $select .= ' ORDER BY 7, tbdescricaocomissao.descricao,tbcomissao.dtNom desc';

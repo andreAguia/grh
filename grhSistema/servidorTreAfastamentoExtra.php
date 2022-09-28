@@ -8,14 +8,14 @@
 $dtInicial = $campoValor[0];
 $numDias = $campoValor[1];
 $idServidor = $campoValor[5];
+$dtTermino = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
 
 $pessoal = new Pessoal();
 
 /*
  *  Verifica se a data Inicial é anterior a data de admissão
  */
-$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
+$dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
 if ($dtInicial < $dtAdmissao) {
     $erro = 1;
     $msgErro .= 'A data Inicial não pode ser antes de ser admitido!\n A data está errada!';
@@ -50,5 +50,23 @@ if (!empty($dtInicial) AND!empty($numDias)) {
             $erro = 1;
             $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n';
         }
+    }
+}
+
+
+/*
+ *  Verifica a aposentadoria compulsória
+ */
+
+# Pega a data compulsória
+$compulsoria = new AposentadoriaCompulsoria();
+
+if (!is_null($compulsoria->getDataAposentadoriaCompulsoria($idServidor))) {
+    $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($idServidor);
+
+    # Verifica a data de termino
+    if ($dtTermino >= date_to_bd($dataCompulsoria)) {
+        $erro = 1;
+        $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
     }
 }

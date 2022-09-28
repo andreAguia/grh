@@ -1,11 +1,26 @@
 <?php
 
 class CargoComissao {
+
     /**
      * Abriga as várias rotina do Cadastro de cargo em Comissao
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
+    ###########################################################
+    /*
+     *  Variáveis
+     */
+
+    # Tipos de Nomeação
+    # Ordem: número, nome, descrição, Remunerado?, Vicibilidade
+    public $tipos = [
+        [0, "Padrão", "Nomeação padrão.", "Sim", "Em todas as listagens"],
+        [1, "Pro Tempore", "Nomeação Temporária até final do mandato.", "Sim", "Em todas as listagens"],
+        [2, "Designado", "Designado para ocupar um cargo que ainda não existe oficialmente.", "Não", "Em todas as listagens"],
+        [3, "Designação Temporária", "Responde pelo cargo temporariamente enquanto o nomeado está em algum afastamento", "Não", "Somente na cadastro do servidor"],
+    ];
+
     ###########################################################
 
     /**
@@ -35,6 +50,34 @@ class CargoComissao {
 
     ###########################################################
 
+    function get_tipo($idComissao) {
+
+        /**
+         * Informa o tipo de nomeação
+         */
+        # Pega os dados
+        $select = "SELECT tipo
+                   FROM tbcomissao
+                  WHERE idComissao = $idComissao";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (empty($dados["tipo"])) {
+            return null;
+        } else {
+            # Informa o tipo
+            if ($dados['tipo'] == 0) {
+                // O tipo 0 (padrão) não precisa ser ressaltado
+                return null;
+            } else {
+                return $this->tipos[$dados['tipo']][1];
+            }
+        }
+    }
+
+    ###########################################################
+
     function get_descricaoCargo($idComissao) {
 
         /**
@@ -44,6 +87,28 @@ class CargoComissao {
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao JOIN tbcomissao USING (idDescricaoComissao)
                     WHERE idComissao = $idComissao";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            return $dados[0];
+        }
+    }
+
+    ###########################################################
+
+    function get_descricao($idDescricaoComissao) {
+
+        /**
+         * fornece a próxima tarefa a ser realizada
+         */
+        # Pega os dados
+        $select = "SELECT tbdescricaocomissao.descricao
+                     FROM tbdescricaocomissao
+                    WHERE idDescricaoComissao = {$idDescricaoComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -69,7 +134,7 @@ class CargoComissao {
                           tbcomissao.tipo
                      FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
                                      LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
-                    WHERE tbcomissao.idComissao = $idComissao";
+                    WHERE tbcomissao.idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -84,15 +149,51 @@ class CargoComissao {
         }
 
         # Informa o tipo
-        switch ($dados['tipo']) {
+        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+            if ($dados['tipo'] == 3) {
+                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);
+                label("Esta designação temporária não será<br/>exibida nos relatórios ordinários");                
+            } else {
+                label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
+            }
+        }
+    }
 
-            case 1:
-                label("Pro Tempore");
-                break;
+    ###########################################################
 
-            case 2:
-                label("Designado");
-                break;
+    function exibeCargoCompletoRel($idComissao) {
+
+        /**
+         * fornece a próxima tarefa a ser realizada
+         */
+        # Pega os dados
+        $select = "SELECT tbtipocomissao.simbolo,
+                          tbtipocomissao.descricao,
+                          tbdescricaocomissao.descricao,
+                          tbcomissao.tipo
+                     FROM tbcomissao LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                                     LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                    WHERE tbcomissao.idComissao = {$idComissao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            pLista(
+                    "{$dados[0]} - {$dados[1]}",
+                    $dados[2]
+            );
+        }
+
+        # Informa o tipo
+        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+            if ($dados['tipo'] == 3) {
+                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);      
+            } else {
+                label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
+            }
         }
     }
 
@@ -142,6 +243,28 @@ class CargoComissao {
 
     ###########################################################
 
+    function get_numServidoresDesignadosTemporario($idTipoCargo) {
+
+        /**
+         * 
+         * Informa o número de servidores ativos nomeados para esse cargo
+         * 
+         */
+        # Pega os dados
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
+                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                      AND situacao = 1
+                      AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
+                      AND tbcomissao.tipo = 3";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->count($select);
+        return $dados;
+    }
+
+    ###########################################################
+
     function get_numServidoresProTempore($idTipoCargo) {
 
         /**
@@ -170,9 +293,9 @@ class CargoComissao {
      * Exibe o número de vagas em um determinado cargo em comissao
      */
     public function get_vagas($idTipoCargo) {
-        $select = 'SELECT vagas                             
+        $select = "SELECT vagas                             
                      FROM tbtipocomissao 
-                    WHERE idTipoComissao = ' . $idTipoCargo;
+                    WHERE idTipoComissao = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -380,7 +503,7 @@ class CargoComissao {
                                      LEFT JOIN tbcomissao USING(idServidor)
                                      LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                           JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                   WHERE tbcomissao.idDescricaoComissao = $idDescricaoComissao
+                   WHERE tbcomissao.idDescricaoComissao = {$idDescricaoComissao}
                 ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
 
         $pessoal = new Pessoal();
@@ -417,7 +540,8 @@ class CargoComissao {
         $select = "SELECT dtNom,
                           dtAtoNom,
                           numProcNom,
-                          dtPublicNom
+                          dtPublicNom,
+                          tipo
                      FROM tbcomissao 
                     WHERE idComissao = {$idComissao}";
 
@@ -442,6 +566,13 @@ class CargoComissao {
 
         if (!empty($dados["numProcNom"])) {
             $retorna .= "Processo: " . $dados["numProcNom"];
+        }
+
+        if (!empty($dados["tipo"])) {
+            # Informa o tipo
+            if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $retorna .= "<br/><span id='orgaoCedido'>({$this->tipos[$dados['tipo']][1]})</span>";
+            }
         }
 
         return $retorna;
@@ -491,32 +622,21 @@ class CargoComissao {
 
     ###########################################################
 
-    function exibeDadosVagas($idTipoCargo) {
+    function exibeDadosVagas($idTipoCargo) {  #############################33   ver!!!
 
         /**
          * Exibe todos os dados de vagas de um cargo
          */
         $vagas = $this->get_vagas($idTipoCargo);
         $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
-        $protempore = $this->get_numServidoresProTempore($idTipoCargo);
+        #$protempore = $this->get_numServidoresProTempore($idTipoCargo);
         $designado = $this->get_numServidoresDesignados($idTipoCargo);
         $disponiveis = $this->get_vagasDisponiveis($idTipoCargo);
         $simbolo = $this->get_simbolo($idTipoCargo);
         $descricao = $this->get_descricaoTipoCargo($idTipoCargo);
 
-        echo "{$simbolo} - {$descricao}";
-        br();
-        echo "{$vagas} vaga(s) | {$nomeados} nomeado(s) | {$disponiveis} disponível(is)";
-        br();
-        if (!empty($designado)) {
-            echo "{$designado} designado(s)";
-        }
-        if (!empty($protempore)) {
-            if (!empty($designado)) {
-                echo " | ";
-            }
-            echo "{$protempore} pro tempore";
-        }
+        p("{$simbolo} - {$descricao}", "pRelatorioSubtitulo");
+        p("{$vagas} vaga(s) | {$nomeados} nomeado(s) | {$designado} designado(s) | {$disponiveis} disponível(is)", "f14", "center");
     }
 
     ###########################################################
@@ -535,7 +655,8 @@ class CargoComissao {
                 $pessoal->get_nome($idServidor),
                 $pessoal->get_cargoSimples($idServidor),
                 $pessoal->get_lotacao($idServidor),
-                date_to_php($dados["dtNom"])
+                date_to_php($dados["dtNom"]),
+                $this->get_tipo($idComissao)
         );
     }
 
@@ -551,29 +672,18 @@ class CargoComissao {
          * 
          * @param $idComissao integer null o id do cargo em comissão
          */
-        # Conecta ao Banco de Dados
-        $comissao = new CargoComissao();
-
+        
         # Pega os dados da comissão
-        $dados = $comissao->get_dados($idComissao);
-        $descricao = $comissao->get_descricaoCargo($idComissao);
-        $tipo = $dados['tipo'];
+        $dados = $this->get_dados($idComissao);
 
-        echo $descricao;
+        # Exibe o cargo
+        echo $this->get_descricaoCargo($idComissao);
 
         # Informa o tipo
-        switch ($tipo) {
-
-            case 1:
-                br();
-                label("Pro Tempore");
-                break;
-
-            case 2:
-                br();
-                label("Designado");
-                break;
+        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+            label($this->tipos[$dados['tipo']][1]);
         }
+
         return;
     }
 
@@ -607,7 +717,8 @@ class CargoComissao {
                     $pessoal->get_nome($idServidorAnterior),
                     $pessoal->get_cargoSimples($idServidorAnterior),
                     $pessoal->get_lotacao($idServidorAnterior),
-                    date_to_php($dados2['dtNom']) . ' - ' . date_to_php($dados2['dtExo'])
+                    date_to_php($dados2['dtNom']) . ' - ' . date_to_php($dados2['dtExo']),
+                    $this->get_tipo($idAnterior)
             );
         }
     }
@@ -742,11 +853,30 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
 
-        if(empty($row)){
+        if (empty($row)) {
             return null;
-        }else{
+        } else {
             return $row[0];
-        }        
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método exibequadroTipoComissao
+     * 
+     * Exibe um quadro informativo das características dos tipos
+     * de nomeação de Cargos em comissão
+     */
+    public function exibeQuadroTipoComissao() {
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Tipos de Nomeação");
+        $tabela->set_conteudo($this->tipos);
+        $tabela->set_label(["#", "Nome", "Descrição", "Remunerado?", "Visibilidade"]);
+        $tabela->set_align(["center", "center", "left", "center", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
     }
 
     ###########################################################

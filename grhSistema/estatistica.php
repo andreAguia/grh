@@ -274,7 +274,7 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por faixa etária";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -668,7 +668,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por perfil";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -706,13 +706,39 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por cargo";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             # Título
             tituloTable("por Cargo - Geral");
+
+            ########
+            # Formulário de Pesquisa
+            $form = new Form('?fase=cargo');
+
+            # Perfil
+            $result = $pessoal->select('SELECT DISTINCT idPerfil, nome
+                                      FROM tbperfil
+                                      WHERE idPerfil <> 10
+                                  ORDER BY nome');
+            array_unshift($result, array("*", 'Todos'));
+
+            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_autofocus(true);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+
+            ########
 
             $grid3 = new Grid();
             $grid3->abreColuna(4);
@@ -722,9 +748,13 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE situacao = 1 
-                                 AND tbservidor.idPerfil <> 10
-                            GROUP BY tbtipocargo.tipo
+                               WHERE situacao = 1';
+            # Perfil
+            if ($parametroPerfil <> '*') {
+                $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $selectGrafico .= '    GROUP BY tbtipocargo.tipo
                             ORDER BY 2 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -759,9 +789,13 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1 
-                                 AND tbservidor.idPerfil <> 10
-                                 AND tbtipocargo.tipo = "Adm/Tec" GROUP BY tbtipocargo.cargo
+                               WHERE tbservidor.situacao = 1 ';
+            # Perfil
+            if ($parametroPerfil <> '*') {
+                $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $selectGrafico .= ' AND tbtipocargo.tipo = "Adm/Tec" GROUP BY tbtipocargo.cargo
                         ORDER BY 1 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -776,9 +810,13 @@ if ($acesso) {
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                               AND tbservidor.idPerfil <> 10
-                               AND tbtipocargo.tipo = "Adm/Tec"
+                               WHERE tbservidor.situacao = 1';
+            # Perfil
+            if ($parametroPerfil <> '*') {
+                $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $selectGrafico .= ' AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
 
@@ -855,9 +893,13 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                                 AND tbservidor.idPerfil <> 10
-                                 AND tbtipocargo.tipo = "Professor" GROUP BY tbtipocargo.cargo
+                               WHERE tbservidor.situacao = 1';
+            # Perfil
+            if ($parametroPerfil <> '*') {
+                $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $selectGrafico .= ' AND tbtipocargo.tipo = "Professor" GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
 
             $servidores = $pessoal->select($selectGrafico);
@@ -875,9 +917,13 @@ if ($acesso) {
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                               AND tbservidor.idPerfil <> 10
-                               AND tbtipocargo.tipo = "Professor"
+                               WHERE tbservidor.situacao = 1';
+            # Perfil
+            if ($parametroPerfil <> '*') {
+                $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $selectGrafico .= ' AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
 
@@ -959,7 +1005,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por cargo administrativo e técnico";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1169,7 +1215,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por diretoria";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1391,7 +1437,6 @@ if ($acesso) {
 
             $grid2->fechaColuna();
 
-
             ###
 
             $grid2->abreColuna(12);
@@ -1489,7 +1534,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por gerência";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1565,7 +1610,7 @@ if ($acesso) {
             # Sexo por Lotação
             $painel = new Callout();
             $painel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por escolaridade";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1621,7 +1666,7 @@ if ($acesso) {
 
             $masculinoTotal = 0;
             $femininoTotal = 0;
-            
+
             # Percorre o array preenchendo os valores
             foreach ($servidores as $value) {
 
@@ -1765,7 +1810,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por nacionalidade";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1789,7 +1834,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(6);
 
-            $estatistica = new Estatistica("nacionalidade",false);
+            $estatistica = new Estatistica("nacionalidade", false);
             $estatistica->exibeTabelaPorTipoCargo("por Cargo (Ativos e Inativos)");
 
             $grid->fechaColuna();
@@ -1804,7 +1849,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por estado civil";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -1836,7 +1881,7 @@ if ($acesso) {
             # Abre um callout
             $panel = new Callout();
             $panel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por cidade de moradia";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
@@ -2048,10 +2093,10 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por Diretoria/Gerência x Cargo/Função";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);            
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             titulotable("por Diretoria/Gerência x Cargo/Função");
             br();
@@ -2150,10 +2195,10 @@ if ($acesso) {
             # Abre o painel
             $painel = new Callout();
             $painel->abre();
-            
+
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística por filhos";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);       
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
             titulotable("Servidores Ativos");
             br();

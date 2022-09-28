@@ -2187,7 +2187,10 @@ class Pessoal extends Bd {
     function get_nome($idServidor) {
         if (empty($idServidor)) {
             return null;
+        } elseif (!is_numeric($idServidor)) {
+            return null;
         } else {
+
             if (is_numeric($idServidor)) {
                 $select = 'SELECT tbpessoa.nome
                             FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -2562,7 +2565,8 @@ class Pessoal extends Bd {
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is null))
-                    AND idServidor = ' . $idServidor;
+                      AND tipo <> 3 
+                      AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $num = parent::count($select);
@@ -2577,13 +2581,9 @@ class Pessoal extends Bd {
             # Pega o $idComissao
             $idComissao = $rr[0];
 
-            # Verifica se é designado ou protempore
-            if ($rr[1] == 1) {
-                $tipo = " - Pro Tempore";
-            }
-
-            if ($rr[1] == 2) {
-                $tipo = " - Designado";
+            # Informa o tipo
+            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
 
             # Verifica se tem cargo
@@ -2602,7 +2602,7 @@ class Pessoal extends Bd {
                 $descricao = $cargoComissao->get_descricaoCargo($idComissao);
 
                 # Verifica se tem tipo
-                if (!vazio($tipo)) {
+                if (!empty($tipo)) {
                     $tipoCargo .= $tipo;
                     #$descricao .= $tipo;
                 }
@@ -2654,13 +2654,9 @@ class Pessoal extends Bd {
             # Pega o $idComissao
             $idComissao = $rr[0];
 
-            # Verifica se é designado ou protempore
-            if ($rr[1] == 1) {
-                $tipo = " - Pro Tempore";
-            }
-
-            if ($rr[1] == 2) {
-                $tipo = " - Designado";
+            # Informa o tipo
+            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
 
             # Verifica se tem cargo
@@ -2679,7 +2675,7 @@ class Pessoal extends Bd {
                 $descricao = $cargoComissao->get_descricaoCargo($idComissao);
 
                 # Verifica se tem tipo
-                if (!vazio($tipo)) {
+                if (!empty($tipo)) {
                     $tipoCargo .= $tipo;
                     #$descricao .= $tipo;
                 }
@@ -2736,11 +2732,14 @@ class Pessoal extends Bd {
         $comissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao
+        $select = 'SELECT idComissao,
+                          tipo,
+                          idTipoComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (dtExo is null))
-                    AND idServidor = ' . $idServidor;
+                      AND tipo <> 3
+                      AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
         $count = parent::count($select);
@@ -2751,12 +2750,22 @@ class Pessoal extends Bd {
 
         foreach ($row as $rr) {
 
-            # Pega o id
-            $idComissao = $rr[0];
-
             # Pega a descrição 
-            if (!is_null($idComissao)) {
-                $retorno .= $comissao->get_descricaoCargo($idComissao);
+            if (!is_null($rr[0])) {
+                if (empty($comissao->get_descricaoCargo($rr[0]))) {
+                    $tipoComissao = new TipoComissao();
+                    $retorno .= $tipoComissao->get_descricao($rr['idTipoComissao']);
+                } else {
+                    $retorno .= $comissao->get_descricaoCargo($rr[0]);
+                }
+            }
+
+            if (!empty($rr[1])) {
+                # Informa o tipo
+                if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                    $cargoComissao = new CargoComissao();
+                    $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
+                }
             }
 
             if ($contador < $count) {
@@ -5458,7 +5467,13 @@ class Pessoal extends Bd {
                      AND (tblotacao.idlotacao = $idLotacao)";
 
         $row = parent::select($select, false);
-        return $row[0];
+
+        # trata o retorno
+        if (empty($row[0])) {
+            return "---";
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################
@@ -5519,6 +5534,11 @@ class Pessoal extends Bd {
          * @param $idLotacao integer o id da lotaçao
          * 
          */
+        # Verifica o id
+        if (empty($idLotacao)) {
+            return null;
+        }
+
         # Pega a diretoria dessa lotação
         $select = "SELECT DIR FROM tblotacao WHERE idLotacao = " . $idLotacao;
         $row = parent::select($select, false);
@@ -5533,11 +5553,16 @@ class Pessoal extends Bd {
                                      LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)  
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is null 
-                     AND tbtipocomissao.idTipoComissao = 16
+                     AND (tbtipocomissao.idTipoComissao = 16 OR tbtipocomissao.idTipoComissao = 15)
                      AND (tblotacao.dir = '$diretoria')";
 
         $row = parent::select($select, false);
-        return $row[0];
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ##########################################################################################

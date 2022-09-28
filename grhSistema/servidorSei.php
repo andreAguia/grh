@@ -30,6 +30,51 @@ if ($acesso) {
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
+    # Início do jscript 
+    $script = '<script type="text/javascript" language="javascript">            
+                $(document).ready(function(){
+                    
+                    var tipo = $("#tipo").val();
+                    if(tipo == 1) {
+                        $("#numero").show();
+                        $("#labelnumero").show();
+                        $("#divnumero").show();
+
+                        $("#numeroAntigo").hide();
+                        $("#labelnumeroAntigo").hide();
+                        $("#divnumeroAntigo").hide();
+                    }else{
+                        $("#numero").hide();
+                        $("#labelnumero").hide();
+                        $("#divnumero").hide();
+                        
+                        $("#numeroAntigo").show();
+                        $("#labelnumeroAntigo").show();
+                        $("#divnumeroAntigo").show();
+                   }
+                
+                    $("#tipo").change(function(){
+                    var tipo = $("#tipo").val();
+                    if(tipo == 1) {
+                        $("#numero").show();
+                        $("#labelnumero").show();
+                        $("#divnumero").show();
+
+                        $("#numeroAntigo").hide();
+                        $("#labelnumeroAntigo").hide();
+                        $("#divnumeroAntigo").hide();
+                    }else{
+                        $("#numero").hide();
+                        $("#labelnumero").hide();
+                        $("#divnumero").hide();
+                        
+                        $("#numeroAntigo").show();
+                        $("#labelnumeroAntigo").show();
+                        $("#divnumeroAntigo").show();
+                   }
+                })
+                });</script>';
+
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
@@ -45,6 +90,12 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+
+    # Jascript do formulário
+    if ($fase == "editar") {
+        $page->set_jscript($script);
+    }
+
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -69,24 +120,24 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT tbseicategoria.categoria,
+    $objeto->set_selectLista("SELECT IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
                                      descricao,
-                                     CONCAT("SEI-",numero),
                                      idSei
-                                FROM tbsei LEFT JOIN tbseicategoria USING (idSeiCategoria)
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                            AND (tbseicategoria.categoria LIKE "%' . $parametro . '%"
-                                 OR descricao LIKE "%' . $parametro . '%" 
-                                 OR CONCAT("SEI-",numero) LIKE "%' . $parametro . '%")
-                       ORDER BY tbseicategoria.categoria desc');
+                                FROM tbsei
+                          WHERE idServidor={$idServidorPesquisado}
+                            AND (descricao LIKE '%{$parametro}%' 
+                                 OR CONCAT('SEI-',numero) LIKE '%{$parametro}%'
+                                 OR CONCAT('E-26/',numeroAntigo) LIKE '%{$parametro}%')
+                       ORDER BY descricao");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idSeiCategoria,
+    $objeto->set_selectEdita("SELECT tipo,
                                      numero,
+                                     numeroAntigo,
                                      descricao,
                                      idServidor
                                 FROM tbsei
-                               WHERE idSei = ' . $id);
+                               WHERE idSei = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -100,12 +151,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Categoria", "Descrição", "Número"));
-    $objeto->set_width(array(25, 45, 20));
-    $objeto->set_align(array("center", "left", "left"));
-
-    $objeto->set_rowspan(0);
-    $objeto->set_grupoCorColuna(0);
+    $objeto->set_label(["Número", "Descrição"]);
+    $objeto->set_width([20, 70]);
+    $objeto->set_align(["left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -119,59 +167,53 @@ if ($acesso) {
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
 
-    # Pega os dados da datalist curso
-    $categorias = $pessoal->select('SELECT idSeiCategoria, categoria
-                                       FROM tbseicategoria
-                                   ORDER BY categoria');
-    array_unshift($categorias, array(null, null));
-
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome' => 'idSeiCategoria',
-            'label' => 'Categoria:',
+        array('nome' => 'tipo',
+            'label' => 'Tipo:',
             'tipo' => 'combo',
-            'array' => $categorias,
-            'size' => 100,
-            'col' => 3,
+            'autofocus' => true,
             'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
+            'array' => array(
+                array(1, 'Número SEI'),
+                array(2, 'Número Antigo')),
+            'size' => 20,
+            'title' => 'Qual o tipo de Documento',
+            'col' => 3,
+            'linha' => 1),
         array('nome' => 'numero',
             'label' => 'Número:',
             'tipo' => 'sei',
             'size' => 50,
-            'col' => 6,
-            'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),        
+            'col' => 4,
+            'title' => 'Número do Processo.',
+            'linha' => 2),
+        array('nome' => 'numeroAntigo',
+            'label' => 'Número:',
+            'tipo' => 'processoAntigo2',
+            'size' => 50,
+            'col' => 4,
+            'title' => 'Número do Processo.',
+            'linha' => 3),
         array('nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
             'size' => 200,
             'col' => 12,
             'required' => true,
-            'title' => 'Descrição do Elogio ou Advertência.',
-            'linha' => 2),
+            'title' => 'Descrição do Documento.',
+            'linha' => 4),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,
             'size' => 5,
             'title' => 'Matrícula',
-            'linha' => 4)));
+            'linha' => 5)));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
-
-    # Cadastro de Categoria
-    if (Verifica::acesso($idUsuario, 1)) {
-        $botaoCat = new Button("Categorias");
-        $botaoCat->set_title("Acessa o Cadastro de Categorias");
-        $botaoCat->set_url('cadastroSeiCategoria.php');
-
-        $objeto->set_botaoListarExtra([$botaoCat]);
-    }
 
     ################################################################
 
@@ -184,7 +226,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($id);
+            $objeto->gravar($id, "servidorSeiExtra.php");
             break;
     }
 

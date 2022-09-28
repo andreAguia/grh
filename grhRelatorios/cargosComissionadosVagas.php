@@ -38,13 +38,14 @@ if ($acesso) {
                      tbcomissao.idComissao,
                      tbcomissao.dtNom,
                      tbperfil.nome,
-                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao," (",tbtipocomissao.vagas," vaga(s))") comissao
+                     concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao," - ",tbtipocomissao.vagas," vaga(s)") comissao
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa) 
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                 LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
               WHERE tbservidor.situacao = 1
+                AND tbcomissao.tipo <> 3
                 AND tbcomissao.dtExo is null';
 
     # cargo em comissão
@@ -59,12 +60,11 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores com Cargos em Comissão');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Descrição', 'Nomeação', 'Perfil', ''));
-    $relatorio->set_funcao(array(null, null, "descricaoComissao", "date_to_php"));
-    #$relatorio->set_width(array(10,30,20,0,25,10));
-    $relatorio->set_align(array("center", "left", "left", "center", "center"));
-    #$relatorio->set_classe(array(null,null,null,null,"Pessoal"));
-    #$relatorio->set_metodo(array(null,null,null,null,"get_Lotacao"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Descrição', 'Nomeação', 'Perfil', '']);
+    $relatorio->set_funcao([null, null, null, "date_to_php"]);
+    $relatorio->set_align(["center", "left", "left", "center", "center"]);
+    $relatorio->set_classe([null, null, "CargoComissao"]);
+    $relatorio->set_metodo([null, null, "get_descricaoCargo"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

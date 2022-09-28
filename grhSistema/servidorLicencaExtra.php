@@ -26,7 +26,7 @@ $idServidor = $campoValor[12];
  * Verifica se digitou a data final oiu o numero de dias e preenche automaticamente
  */
 
-if(empty($dtTermino)){
+if (empty($dtTermino)) {
     $campoValor[6] = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
     $dtTermino = $campoValor[6];
 }
@@ -49,7 +49,7 @@ if ($idTpLicenca == "Inicial") {
 
     if ($verifica->verifica()) {
         $erro = 1;
-        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n('.$id.')';
+        $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n(' . $id . ')';
     }
 
     /*
@@ -83,75 +83,93 @@ if ($idTpLicenca == "Inicial") {
             $erro = 1;
         }
     }
-}
 
-/*
- *  Apaga a alta se nao for licenca medica
- */
-if (($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)) {
-    $campoValor[1] = null;
-    $campoValor[2] = null;
-}
 
-/*
- *  Apaga o periodo aquisitivo quando não precisa
- */
-if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
-    $campoValor[2] = null;
-    $campoValor[3] = null;
-}
+    /*
+     *  Apaga a alta se nao for licenca medica
+     */
+    if (($idTpLicenca <> 1) AND ($idTpLicenca <> 30) AND ($idTpLicenca <> 2)) {
+        $campoValor[1] = null;
+        $campoValor[2] = null;
+    }
 
-/*
- *  Apaga o processo quando não precisa
- */
-if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
-    $campoValor[7] = null;
-}
+    /*
+     *  Apaga o periodo aquisitivo quando não precisa
+     */
+    if ($pessoal->get_licencaPeriodo($idTpLicenca) == "Não") {
+        $campoValor[2] = null;
+        $campoValor[3] = null;
+    }
 
-/*
- *  Apaga a publicação quando não precisa
- */
-if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
-    $campoValor[8] = null;
-}
+    /*
+     *  Apaga o processo quando não precisa
+     */
+    if ($pessoal->get_licencaProcesso($idTpLicenca) == "Não") {
+        $campoValor[7] = null;
+    }
 
-/*
- *  Apaga a perícia quando não precisa
- */
-if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
-    $campoValor[9] = null;
-    $campoValor[10] = null;
-}
+    /*
+     *  Apaga a publicação quando não precisa
+     */
+    if ($pessoal->get_licencaPublicacao($idTpLicenca) == "Não") {
+        $campoValor[8] = null;
+    }
 
-/*
- *  Verifica se a data Inicial é anterior a data de admissão
- */
-$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
+    /*
+     *  Apaga a perícia quando não precisa
+     */
+    if ($pessoal->get_licencaPericia($idTpLicenca) == "Não") {
+        $campoValor[9] = null;
+        $campoValor[10] = null;
+    }
 
-if ($dtInicial < $dtAdmissao) {
-    $erro = 1;
-    $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
-}
+    /*
+     *  Verifica se a data Inicial é anterior a data de admissão
+     */
 
-/*
- *  Verifica se a data Inicial é posterior a data de saida
- */
-$dtSaida = $pessoal->get_dtSaida($idServidor);
+    $dtAdmissao = date_to_bd($pessoal->get_dtAdmissao($idServidor));
+
+    if ($dtInicial < $dtAdmissao) {
+        $erro = 1;
+        $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
+    }
+
+    /*
+     *  Verifica se a data Inicial é posterior a data de saida
+     */
+    $dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
-if (!is_null($dtSaida)) {
-    $dtSaida = date_to_bd($dtSaida);
-    if ($dtInicial > $dtSaida) {
-        $erro = 1;
-        $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+    if (!is_null($dtSaida)) {
+        $dtSaida = date_to_bd($dtSaida);
+        if ($dtInicial > $dtSaida) {
+            $erro = 1;
+            $msgErro .= 'O servidor não pode pedir licença DEPOIS de sair da UENF!\n';
+        }
     }
-}
 
-# Preenche a data de término quando for nula
-if (vazio($dtTermino)) {
-    if (!vazio($dtInicial)) {
-        $campoValor[6] = date_to_bd(addDias($dtInicial, $numDias));
-        $dtTermino = $campoValor[6];
+    # Preenche a data de término quando for nula
+    if (vazio($dtTermino)) {
+        if (!vazio($dtInicial)) {
+            $campoValor[6] = date_to_bd(addDias($dtInicial, $numDias));
+            $dtTermino = $campoValor[6];
+        }
+    }
+
+    /*
+     *  Verifica a aposentadoria compulsória
+     */
+
+    # Pega a data compulsória
+    $compulsoria = new AposentadoriaCompulsoria();
+
+    if (!is_null($compulsoria->getDataAposentadoriaCompulsoria($idServidor))) {
+        $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($idServidor);
+
+        # Verifica a data de termino
+        if ($dtTermino >= date_to_bd($dataCompulsoria)) {
+            $erro = 1;
+            $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
+        }
     }
 }

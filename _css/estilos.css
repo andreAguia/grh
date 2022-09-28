@@ -324,11 +324,11 @@ tr#comissaoSemVagas{
 }
 
 tr#comissaoComVagas{
-    background-color:#96ac96;
+    background-color:#bdd3bd;
 }
 
 tr#comissaoVagasNegativas{
-    background-color:#cea4a8;
+    background-color:#e6b2c0;
 }
 
 p#vagaCentro{
@@ -1053,6 +1053,37 @@ div#organograma1 td{
 
 div#organograma2 td{
     background-color: #ffffff;    
+}
+
+div#organograma3 td{
+    background-color: #ffffff;    
+}
+
+div#organograma4 td{
+    background-color: #ffffff;    
+}
+
+div#siglaOrga {
+    color: blue;
+    padding-top: 10px; 
+    font-size: 20px; 
+}
+
+div#nomeOrga {
+    color: red;
+    font-size: 12px; 
+}
+
+div#servidorOrga {
+    color: blue;
+    padding: 0px;
+    font-size: 10px; 
+}
+
+div#servidorCargo {
+    color: blue;
+    padding: 0px;
+    font-size: 10px; 
 }
 
 /*******************************************

@@ -16,9 +16,9 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 # Pega o parametro de pesquisa (se tiver)
-if (is_null(post('parametro')))
+if (is_null(post('parametro'))) {
     $parametro = retiraAspas(get_session('sessionParametro'));
-else {
+} else {
     $parametro = post('parametro');
     set_session('sessionParametro', $parametro);
 }
@@ -44,7 +44,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Verifica a origem 
-    $origem = get_session("origem","servidorMenu.php");
+    $origem = get_session("origem", "servidorMenu.php");
 
     # Começa uma nova página
     $page = new Page();
@@ -143,11 +143,11 @@ if ($acesso) {
             'tipo' => 'combo',
             'autofocus' => true,
             'required' => true,
-            'array' => array(                
+            'array' => array(
                 array(1, 'Documento'),
                 array(2, 'Processo')),
             'size' => 20,
-            'title' => 'Qual o tipo de Docuemnto',
+            'title' => 'Qual o tipo de Documento',
             'col' => 3,
             'linha' => 1),
         array('linha' => 1,

@@ -40,9 +40,6 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
-
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
 
@@ -53,28 +50,43 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Cria um menu
-    $menu = new MenuBar();
+    # Cabeçalho da Página
+    if ($fase <> "relatorio") {
+        AreaServidor::cabecalho();
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
-    $menu->show();
+        # Cria um menu
+        $menu = new MenuBar();
 
-    $grid2 = new Grid();
-    $grid2->abreColuna(12, 3);
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
 
-    $aposentadoria->exibeMenu(9);
+        # Relatórios
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório dessa pesquisa");
+        $botaoRel->set_url("?fase=relatorio");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem);
+        $menu->add_link($botaoRel, "right");
 
-    # Exibe regras
-    $permanente = new AposentadoriaCompulsoria();
-    $permanente->exibeRegras();
+        $menu->show();
 
-    $grid2->fechaColuna();
-    $grid2->abreColuna(12, 9);
+        $grid->fechaColuna();
+        $grid->abreColuna(12, 3);
+
+        $aposentadoria->exibeMenu(9);
+
+        # Exibe regras
+        $permanente = new AposentadoriaCompulsoria();
+        $permanente->exibeRegras();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(12, 9);
+    }
 
     #######################################3
     switch ($fase) {
@@ -120,7 +132,6 @@ if ($acesso) {
             $form->show();
 
             # Exibe a lista
-
             $select = "SELECT month(dtNasc),  
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -133,16 +144,12 @@ if ($acesso) {
                           AND ({$parametroAno} - YEAR(tbpessoa.dtNasc) = {$idade})                    
                      ORDER BY dtNasc";
 
-            $result = $pessoal->select($select);
-            $count = $pessoal->count($select);
-            $titulo = "Servidores Estatutários Ativos que Fazem / Fizeram  {$idade} anos em {$parametroAno}";
-
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
+            $tabela->set_conteudo($pessoal->select($select));
             $tabela->set_label(['Mês', 'Servidor', 'Lotação', "Idade", "Fará / Fez {$idade}"]);
             $tabela->set_align(['center', 'left', 'center', 'center', 'center']);
-            $tabela->set_titulo($titulo);
+            $tabela->set_titulo("Previsão de Aposentadoria Compulsória Para o Ano de {$parametroAno}");
             $tabela->set_classe([null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao"]);
             $tabela->set_funcao(["get_nomeMes", null, null, null, "date_to_php"]);
@@ -159,9 +166,6 @@ if ($acesso) {
             ));
 
             $tabela->show();
-
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
             break;
 
         #######################################    
@@ -179,10 +183,46 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
+
+        #######################################
+
+        case "relatorio" :
+
+            # Idade obrigatória
+            $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
+            $select = "SELECT month(dtNasc),  
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                              ADDDATE(dtNasc, INTERVAL {$idade} YEAR),
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                          AND ({$parametroAno} - YEAR(tbpessoa.dtNasc) = {$idade})                    
+                     ORDER BY dtNasc";
+
+            # Exibe a tabela
+            $relatorio = new Relatorio();
+            $relatorio->set_conteudo($pessoal->select($select));
+            $relatorio->set_label(['Mês', 'Servidor', 'Cargo', 'Lotação', "Idade", "Fará / Fez {$idade}"]);
+            $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center']);
+            $relatorio->set_titulo("Previsão de Aposentadoria Compulsória Para o Ano de {$parametroAno}");
+            $relatorio->set_classe([null, "Pessoal", "Pessoal", "Pessoal"]);
+            $relatorio->set_metodo([null, "get_nome", "get_cargoSimples", "get_lotacao"]);
+            $relatorio->set_funcao(["get_nomeMes", null, null, null, null, "date_to_php"]);
+            $relatorio->set_rowspan(0);
+            $relatorio->set_bordaInterna(true);
+            $relatorio->show();
+            break;
+
+#######################################
     }
 
-    $grid2->fechaColuna();
-    $grid2->fechaGrid();
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 } else {

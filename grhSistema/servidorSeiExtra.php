@@ -10,7 +10,7 @@ $tipo = $campoValor[0];
 
 # Se o tipo for SEI apaga o antigo
 if($tipo == 1){
-    $campoValor[2] = null;
+    $campoValor[3] = null;
 }else{
-    $campoValor[1] = null;
+    $campoValor[2] = null;
 }

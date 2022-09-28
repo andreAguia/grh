@@ -120,7 +120,8 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista("SELECT IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
+    $objeto->set_selectLista("SELECT assunto,
+                                     IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
                                      descricao,
                                      idSei
                                 FROM tbsei
@@ -128,10 +129,11 @@ if ($acesso) {
                             AND (descricao LIKE '%{$parametro}%' 
                                  OR CONCAT('SEI-',numero) LIKE '%{$parametro}%'
                                  OR CONCAT('E-26/',numeroAntigo) LIKE '%{$parametro}%')
-                       ORDER BY descricao");
+                       ORDER BY assunto, descricao");
 
     # select do edita
     $objeto->set_selectEdita("SELECT tipo,
+                                     assunto,
                                      numero,
                                      numeroAntigo,
                                      descricao,
@@ -151,9 +153,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Número", "Descrição"]);
-    $objeto->set_width([20, 70]);
-    $objeto->set_align(["left", "left"]);
+    $objeto->set_label(["Assunto", "Número", "Descrição"]);
+    $objeto->set_width([20, 20, 50]);
+    $objeto->set_align(["center", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -166,6 +168,12 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
+
+    # Pega os dados da datalist curso
+    $assuntos = $pessoal->select('SELECT distinct assunto
+                                    FROM tbsei
+                                ORDER BY assunto');
+    array_unshift($assuntos, array(null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -180,6 +188,15 @@ if ($acesso) {
             'size' => 20,
             'title' => 'Qual o tipo de Documento',
             'col' => 3,
+            'linha' => 1),
+        array('nome' => 'assunto',
+            'label' => 'Assunto:',
+            'tipo' => 'texto',
+            'datalist' => $assuntos,
+            'size' => 80,
+            'col' => 4,
+            'required' => true,
+            'title' => 'Nome do curso.',
             'linha' => 1),
         array('nome' => 'numero',
             'label' => 'Número:',

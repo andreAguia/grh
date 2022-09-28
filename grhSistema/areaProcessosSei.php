@@ -36,10 +36,12 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroDescricao = post('parametroDescricao', get_session('parametroDescricao'));
+    $parametroAssunto = post('parametroAssunto', get_session('parametroAssunto'));
     $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroDescricao', $parametroDescricao);
+    set_session('parametroAssunto', $parametroAssunto);
     set_session('parametroNomeMat', $parametroNomeMat);
 
     # Começa uma nova página
@@ -115,7 +117,23 @@ if ($acesso) {
             $controle->set_valor($parametroDescricao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Pega os dados da datalist curso
+            $assuntos = $pessoal->select('SELECT distinct assunto
+                                            FROM tbsei
+                                        ORDER BY assunto');
+            array_unshift($assuntos, array(null));
+
+            $controle = new Input('parametroAssunto', 'texto', 'Assunto:', 1);
+            $controle->set_size(50);
+            $controle->set_title('Assundo do Processo');
+            $controle->set_datalist($assuntos);
+            $controle->set_valor($parametroAssunto);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
@@ -124,11 +142,12 @@ if ($acesso) {
             # Pega os dados
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
+                              tbsei.assunto,
                               IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
                               descricao,
                               idSei
                          FROM tbsei LEFT JOIN tbservidor USING (idServidor)   
-                                         JOIN tbpessoa USING (idPessoa)                                                                         
+                                         JOIN tbpessoa USING (idPessoa)
                         WHERE TRUE";
 
             # Matrícula, nome ou id
@@ -151,6 +170,11 @@ if ($acesso) {
             if (!is_null($parametroDescricao)) {
                 $select .= ' AND tbsei.descricao LIKE "%' . $parametroDescricao . '%"';
             }
+            
+             # Assunto
+            if (!is_null($parametroAssunto)) {
+                $select .= ' AND tbsei.assunto LIKE "%' . $parametroAssunto . '%"';
+            }
 
             $select .= " ORDER BY tbpessoa.nome";
             #echo $select;
@@ -160,10 +184,10 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Processos Cadastrados no SEI');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Processo", "Descrição"]);
-            $tabela->set_width([10, 20, 20, 40]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Assunto", "Processo", "Descrição"]);
+            $tabela->set_width([8, 20, 20, 20, 35]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_align(["center", "left", "center", "left", "left"]);
             $tabela->set_classe([null, "pessoal"]);
             $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
             $tabela->set_rowspan([0, 1]);

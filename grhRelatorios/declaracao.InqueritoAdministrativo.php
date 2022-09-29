@@ -20,6 +20,15 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Pega o número de faltas
+    $faltas = new Faltas();
+    $numfaltas = $faltas->getNumFaltasServidor($idServidorPesquisado);
+    
+    # Exibe alereta de faltas
+    if ($numfaltas > 0) {
+        alert("ATENÇÃO !! Este Servidor TEM {$numfaltas} FALTA(S) cadastrada(s) no sistema!");
+    }
 
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
@@ -27,8 +36,8 @@ if ($acesso) {
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado, false);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
-    
-    if($idPerfil == 2){
+
+    if ($idPerfil == 2) {
         $cargoEfetivo = "exercendo a função equivalente ao {$cargoEfetivo}";
     }
 
@@ -47,7 +56,7 @@ if ($acesso) {
     $dec = new Declaracao();
     $dec->set_carimboCnpj(true);
     $dec->set_assinatura(true);
-    
+
     $dec->set_data(date("d/m/Y"));
 
     $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
@@ -55,9 +64,12 @@ if ($acesso) {
             . " comunicação de faltas nesta Universidade Estadual do Norte Fluminense Darcy Ribeiro.");
 
     $dec->set_saltoRodape(10);
-    $dec->set_aviso("IMPORTANTE !! O sistema emite essa declaração mas NÃO faz nenhuma verificação a respeito!!<br/>"
-            . "A GRH deverá se certificar realmente se $texto1 $nomeServidor não responde a inquérito administrativo por comunicação de faltas.");
-    
+
+    # Exibe aviso de que tem faltas
+    if ($numfaltas > 0) {
+        $dec->set_aviso("ATENÇÃO !! Este Servidor TEM {$numfaltas} FALTA(S) cadastrada(s) no sistema!");
+    }
+
     $dec->show();
 
     # Grava o log da visualização do relatório
@@ -67,6 +79,6 @@ if ($acesso) {
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
-}else{
+} else {
     echo "Ocorreu um erro !!";
 }

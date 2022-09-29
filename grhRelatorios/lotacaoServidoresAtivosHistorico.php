@@ -54,7 +54,12 @@ if ($acesso) {
             $titulo = null;
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
-            $titulo = $lotacao . "<br/>";
+            $lotacaoClasse = new Lotacao();
+            if ($lotacao <> "Reitoria" AND $lotacao <> "Prefeitura") {
+                $titulo = $lotacaoClasse->get_nomeDiretoriaSigla($lotacao) . " - {$lotacao}<br/>";
+            }else{
+                $titulo = "{$lotacao}<br/>";
+            }
         }
     }
 

@@ -12,7 +12,7 @@ $idUsuario = null;
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 4, 12]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados

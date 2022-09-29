@@ -285,6 +285,30 @@ class MenuPrincipal {
 
         # Servidores
         titulo('Documentos');
+        br();
+        
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(2);
+        #$menu->set_espacoEntreLink(true);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Processos no SEI');
+        $botao->set_url('areaProcessosSei.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de processos cadastrados no SEI');
+        $menu->add_item($botao);
+
+        # Controle de pastas Digitalizadas
+        $botao = new BotaoGrafico();
+        $botao->set_label('Pastas Digitalizadas');
+        $botao->set_url('cadastroPasta.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'funcional.jpg', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de pastas digitalizadas');
+        $menu->add_item($botao);
+
+        $menu->show();
+        
+        hr();
 
         # Menu
         $menu = new Menu("menuProcedimentos");
@@ -697,13 +721,6 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'cessao.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de cedidos da Uenf para outros órgãos');
         $menu->add_item($botao);
-        
-        $botao = new BotaoGrafico();
-        $botao->set_label('Processos no SEI');
-        $botao->set_url('areaProcessosSei.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de processos cadastrados no SEI');
-        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Avaliação');
@@ -785,16 +802,6 @@ class MenuPrincipal {
             $botao->set_url("cadastroMcf.php?grh=1");
             $botao->set_imagem(PASTA_FIGURAS . 'mcf.jpg', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Controle de MCF');
-            $menu->add_item($botao);
-        }
-
-        # Controle de pastas Digitalizadas
-        if (Verifica::acesso($this->idUsuario, [1, 4])) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Pastas Digitalizadas');
-            $botao->set_url('cadastroPasta.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'funcional.jpg', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Controle de pastas digitalizadas');
             $menu->add_item($botao);
         }
 

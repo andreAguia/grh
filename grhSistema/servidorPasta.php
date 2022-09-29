@@ -83,8 +83,8 @@ if ($acesso) {
                                         WHEN 1 THEN 'Documentos'
                                         WHEN 2 THEN 'Processos'
                                      END,
-                                     idPasta,
                                      descricao,
+                                     idPasta,
                                      idPasta
                                 FROM tbpasta
                           WHERE idServidor={$idServidorPesquisado}
@@ -116,11 +116,11 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(["Tipo", "Ver", "Descrição", "Obs"]);
-    $objeto->set_width([15, 5, 60, 5, 5, 5]);
-    $objeto->set_align(["center", "center", "left"]);
-    $objeto->set_classe([null, "PastaFuncional", null, "PastaFuncional"]);
-    $objeto->set_metodo([null, "exibePasta", null, "exibeObs"]);
+    $objeto->set_label(["Tipo", "Descrição", "Obs", "Ver"]);
+    $objeto->set_width([15, 50, 10, 10, 5, 5]);
+    $objeto->set_align(["center", "left"]);
+    $objeto->set_classe([null, null, "PastaFuncional", "PastaFuncional"]);
+    $objeto->set_metodo([null, null, "exibeObs", "exibePasta"]);
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
 

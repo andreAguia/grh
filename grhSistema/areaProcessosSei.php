@@ -35,14 +35,10 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros    
-    $parametroDescricao = post('parametroDescricao', get_session('parametroDescricao'));
-    $parametroAssunto = post('parametroAssunto', get_session('parametroAssunto'));
-    $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
+    $parametro = post('parametro', get_session('parametro'));
 
     # Joga os parâmetros par as sessions   
-    set_session('parametroDescricao', $parametroDescricao);
-    set_session('parametroAssunto', $parametroAssunto);
-    set_session('parametroNomeMat', $parametroNomeMat);
+    set_session('parametro', $parametro);
 
     # Começa uma nova página
     $page = new Page();
@@ -101,36 +97,11 @@ if ($acesso) {
             # Formulário de Pesquisa
             $form = new Form('?');
 
-            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
+            $controle = new Input('parametro', 'texto', 'Pesquisar:', 1);
             $controle->set_size(100);
-            $controle->set_title('Nome do servidor');
-            $controle->set_valor($parametroNomeMat);
+            $controle->set_title('Texto a ser pesquisado');
+            $controle->set_valor($parametro);
             $controle->set_autofocus(true);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-
-            $controle = new Input('parametroDescricao', 'texto', 'Descrição:', 1);
-            $controle->set_size(100);
-            $controle->set_title('Descrição');
-            $controle->set_valor($parametroDescricao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $form->add_item($controle);
-
-            # Pega os dados da datalist curso
-            $assuntos = $pessoal->select('SELECT distinct assunto
-                                            FROM tbsei
-                                        ORDER BY assunto');
-            array_unshift($assuntos, array(null));
-
-            $controle = new Input('parametroAssunto', 'texto', 'Assunto:', 1);
-            $controle->set_size(50);
-            $controle->set_title('Assundo do Processo');
-            $controle->set_datalist($assuntos);
-            $controle->set_valor($parametroAssunto);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(4);
@@ -147,33 +118,19 @@ if ($acesso) {
                               descricao,
                               idSei
                          FROM tbsei LEFT JOIN tbservidor USING (idServidor)   
-                                         JOIN tbpessoa USING (idPessoa)
-                        WHERE TRUE";
+                                         JOIN tbpessoa USING (idPessoa)";
 
             # Matrícula, nome ou id
-            if (!is_null($parametroNomeMat)) {
-                if (is_numeric($parametroNomeMat)) {
-                    $select .= ' AND ((';
-                } else {
-                    $select .= ' AND (';
-                }
-
-                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
-                if (is_numeric($parametroNomeMat)) {
-                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
-                }
-            }
-
-            # Descricao
-            if (!is_null($parametroDescricao)) {
-                $select .= ' AND tbsei.descricao LIKE "%' . $parametroDescricao . '%"';
-            }
-            
-             # Assunto
-            if (!is_null($parametroAssunto)) {
-                $select .= ' AND tbsei.assunto LIKE "%' . $parametroAssunto . '%"';
+            if (!is_null($parametro)) {
+                # nome
+                $select .= "WHERE tbpessoa.nome LIKE '%{$parametro}%'
+                               OR tbservidor.matricula LIKE '%{$parametro}%'
+                               OR tbservidor.idfuncional LIKE '%{$parametro}%'
+                               OR tbsei.descricao LIKE '%{$parametro}%'
+                               OR tbsei.assunto LIKE '%{$parametro}%'
+                               OR tbsei.numero LIKE '%{$parametro}%'
+                               OR tbsei.numeroAntigo LIKE '%{$parametro}%'
+                         ";
             }
 
             $select .= " ORDER BY tbpessoa.nome";
@@ -183,7 +140,6 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Processos Cadastrados no SEI');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["IdFuncional", "Servidor", "Assunto", "Processo", "Descrição"]);
             $tabela->set_width([8, 20, 20, 20, 35]);
             $tabela->set_conteudo($result);

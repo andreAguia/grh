@@ -252,11 +252,7 @@ if ($acesso) {
                 $tabela->set_titulo('Resumo');
                 $tabela->set_label(["Exercício", "Dias", "Faltam"]);
                 $tabela->set_align(["center"]);
-                $tabela->set_formatacaoCondicional(array(
-                    array('coluna' => 1,
-                        'valor' => '---',
-                        'operador' => '=',
-                        'id' => 'feriasFaltando'),
+                $tabela->set_formatacaoCondicional(array(                    
                     array('coluna' => 1,
                         'valor' => '30',
                         'operador' => '<',

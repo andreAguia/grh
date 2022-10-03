@@ -19,6 +19,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    $ferias = new Ferias();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -234,7 +235,10 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(3);
 
-            $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+            # Exibe o resumo de férias
+            $listaFerias = new Ferias();
+            $lista = $listaFerias->get_feriasResumo($idServidorPesquisado);
+
             if (is_null($lista)) {
                 tituloTable('Resumo');
                 $callout = new Callout();
@@ -246,20 +250,25 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($lista);
                 $tabela->set_titulo('Resumo');
-                $tabela->set_label(array("Exercício", "Dias", "Faltam"));
-                $tabela->set_align(array("center"));
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 1,
+                $tabela->set_label(["Exercício", "Dias", "Faltam"]);
+                $tabela->set_align(["center"]);
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 1,
+                        'valor' => '---',
+                        'operador' => '=',
+                        'id' => 'faltando'),
+                    array('coluna' => 1,
                         'valor' => 30,
-                        'operador' => '<>',
-                        'id' => 'problemas')));
+                        'operador' => '<',
+                        'id' => 'problemas')
+                ));
                 $tabela->show();
             }
 
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 
-            # Exibe as férias pendentes
-            $ferias = new Ferias();
+            # Exibe as férias pendentes            
             $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
             if (!empty($pendentes)) {
                 $callout = new Callout("warning");
@@ -284,33 +293,6 @@ if ($acesso) {
 
         case "excluir" :
             $objeto->excluir($id);
-            break;
-
-################################################################
-
-        case "resumo" :
-            botaoVoltar("?");
-            get_DadosServidor($idServidorPesquisado);
-
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            titulo("Resumo das Férias");
-            br();
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
-            $grid = new Grid("center");
-            $grid->abreColuna(4);
-
-            $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
-            $tabela = new Tabela();
-            $tabela->set_conteudo($lista);
-            $tabela->set_label(array("Exercício", "Dias", "Falta"));
-            $tabela->set_align(array("center"));
-            $tabela->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             break;
 
 ################################################################

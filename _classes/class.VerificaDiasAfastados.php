@@ -8,6 +8,7 @@ class VerificaDiasAfastados {
     private $idServidor;
     private $dtInicial;
     private $dtFinal;
+    private $ano;
     private $diasAfastados = 0;
 
     ###########################################################
@@ -43,6 +44,7 @@ class VerificaDiasAfastados {
         if (is_numeric($ano)) {
             $this->dtInicial = "{$ano}-01-01";
             $this->dtFinal = "{$ano}-12-31";
+            $this->ano = $ano;
         } else {
             alert("É necessário informar o ano.");
             return;
@@ -228,6 +230,80 @@ class VerificaDiasAfastados {
         /*
          * Licença Médica Sem Alta
          */
+
+        # Variáveis
+        $dtInicioLicenca = null;
+        $contador = 1;
+
+        # Pega todas as licenças médicas do servidor
+        # tipo 1 - Artigo 110 - Licença para tratamento de saúde - Inicial
+        # tipo 2 - Artigo 117 - Licença por motivo de doença em pessoa da família
+        # tipo 30 - Artigo 111 - Licença para tratamento de saúde - Prorrogação
+        $select = "SELECT idLicenca, 
+                          alta, 
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1) as dtFinal,
+                          idTpLicenca
+                     FROM tblicenca
+                    WHERE idServidor = {$this->idServidor}
+                      AND (idTpLicenca = 1 OR idTpLicenca = 2 OR idTpLicenca = 30)
+                 ORDER BY dtInicial";
+        $afast = $pessoal->select($select);
+
+        # Percorre todos os registros
+        foreach ($afast as $item) {
+
+            # Verifica se é inicial
+            if ($item["idTpLicenca"] == 1) {
+
+                # Verifica não tem alta
+                if ($item["alta"] == 2) {
+
+                    # Verifica se é a primeira
+                    if ($contador == 1) {
+                        $dtInicioLicenca = $item["dtInicial"];
+                        $contador++;
+                    }
+                } else {
+                    # Se For com alta Apaga as variáveis
+                    $dtInicioLicenca = null;
+                    $contador = 1;
+                }
+            }
+
+            # Verifica se é prorrogação
+            if ($item["idTpLicenca"] == 2) {
+
+                # Verifica se é de alta
+                if ($item["alta"] === 1) {
+                    # Apaga as variáveis
+                    $dtInicioLicenca = null;
+                    $contador = 1;
+                }
+            }
+        }
+        
+
+        if (!empty($dtInicioLicenca)) {
+
+            # Configura as datas
+            $data1 = new DateTime($dtInicioLicenca);
+            $data2 = new DateTime("{$this->ano}-01-01");
+            $data3 = new DateTime("{$this->ano}-12-31");
+
+            # Verifica se data de início da licença em aberto é anterior (maior) a data do ano solicitado
+            if ($data1 < $data2) {
+                if (anoBissexto($this->ano)) {
+                    $this->diasAfastados = 366;
+                } else {
+                    $this->diasAfastados = 365;
+                }
+                # verifica se a data é anterior a 31/12
+            } elseif ($data1 < $data3) {
+                $this->diasAfastados += getNumDias(date_to_php($dtInicioLicenca), "31/12/{$this->ano}");
+            }
+        }
 
         ###########################################################
     }

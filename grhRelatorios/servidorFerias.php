@@ -44,7 +44,8 @@ if ($acesso) {
     $grid->fechaColuna();
     $grid->abreColuna(3);
 
-    $lista = $pessoal->get_feriasResumo($idServidorPesquisado);
+    $listaFerias = new Ferias();
+    $lista = $listaFerias->get_feriasResumo($idServidorPesquisado);
 
     p("Férias Fruídas & Solicitadas", "center", "f14");
 

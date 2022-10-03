@@ -231,11 +231,11 @@ class ListaFerias {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
-            $tabela->set_label(array("Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"));
-            $tabela->set_classe(array(null, "pessoal", "pessoal", null, null, null, "Ferias"));
-            $tabela->set_metodo(array(null, "get_nomeECargoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"));
-            $tabela->set_funcao(array(null, null, null, "date_to_php", null, "get_situacao"));
-            $tabela->set_align(array("center", "left", "left"));
+            $tabela->set_label(["Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"]);
+            $tabela->set_classe([null, "pessoal", "pessoal", null, null, null, "Ferias"]);
+            $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"]);
+            $tabela->set_funcao([null, null, null, "date_to_php", null, "get_situacao"]);
+            $tabela->set_align(["center", "left", "left"]);
             $tabela->set_idCampo('idServidor');
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 4,

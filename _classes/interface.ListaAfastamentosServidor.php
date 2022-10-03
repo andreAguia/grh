@@ -134,10 +134,10 @@ class ListaAfastamentosServidor {
 
         $tabela = new Tabela();
         $tabela->set_titulo('Afastamentos');
-        $tabela->set_label(array('Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', "Obs"));
-        $tabela->set_align(array('center', 'center', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"));
-        $tabela->set_width(array(10, 10, 5, 10, 60, 5));
+        $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', "Obs"]);
+        $tabela->set_align(['center', 'center', 'center', 'center', 'left']);
+        $tabela->set_funcao([null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+        $tabela->set_width([10, 10, 5, 10, 60, 5]);
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
         $tabela->set_conteudo($result);

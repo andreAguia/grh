@@ -260,7 +260,11 @@ if ($acesso) {
                     array('coluna' => 1,
                         'valor' => 30,
                         'operador' => '<',
-                        'id' => 'feriasProblemas')
+                        'id' => 'feriasProblemas'),
+                    array('coluna' => 1,
+                        'valor' => 30,
+                        'operador' => '=',
+                        'id' => 'feriasCerto')
                 ));
                 $tabela->show();
             }

@@ -58,7 +58,8 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos');
+    $relatorio->set_titulo('Relatório de Servidores Estatutarios');
+    $relatorio->set_subtitulo("Com Faixa e Nivel do Plano de Cargos");
     if (!is_null($subTitulo)) {
         $lotacao = new Lotacao();
         $relatorio->set_subtitulo2($subTitulo." - ".$lotacao->get_nomeDiretoriaSigla($subTitulo));

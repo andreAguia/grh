@@ -45,24 +45,24 @@ if ($acesso) {
     if (!is_null($lotacao)) {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
-            $select .= ' AND (tblotacao.idlotacao = "' . $lotacao . '")';
+            $select .= " AND tblotacao.idlotacao = {$lotacao}";
             $subTitulo = null;
         } else { # senão é uma diretoria genérica
-            $select .= ' AND (tblotacao.DIR = "' . $lotacao . '")';
+            $select .= " AND tblotacao.DIR = '{$lotacao}'";
             $subTitulo = $lotacao;
         }
     }
 
     $select .= " ORDER BY tblotacao.GER, tbpessoa.nome";
-
+    
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Estatutarios');
     $relatorio->set_subtitulo("Com Faixa e Nivel do Plano de Cargos");
     if (!is_null($subTitulo)) {
-        $lotacao = new Lotacao();
-        $relatorio->set_subtitulo2($subTitulo." - ".$lotacao->get_nomeDiretoriaSigla($subTitulo));
+        $lotacaoClasse = new Lotacao();
+        $relatorio->set_subtitulo2($subTitulo." - ".$lotacaoClasse->get_nomeDiretoriaSigla($subTitulo));
     }
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
     #$relatorio->set_width([10, 90]);

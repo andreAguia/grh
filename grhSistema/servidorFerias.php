@@ -256,15 +256,11 @@ if ($acesso) {
                     array('coluna' => 1,
                         'valor' => '---',
                         'operador' => '=',
-                        'id' => 'faltando'),
+                        'id' => 'feriasFaltando'),
                     array('coluna' => 1,
                         'valor' => 30,
                         'operador' => '<',
-                        'id' => 'problemas'),
-                    array('coluna' => 1,
-                        'valor' => 0,
-                        'operador' => '=',
-                        'id' => 'problemas')
+                        'id' => 'feriasProblemas')
                 ));
                 $tabela->show();
             }

@@ -255,7 +255,7 @@ if ($acesso) {
                 $tabela->set_formatacaoCondicional(array(
                     array('coluna' => 1,
                         'valor' => '---',
-                        'operador' => '=',
+                        'operador' => '==',
                         'id' => 'feriasFaltando'),
                     array('coluna' => 1,
                         'valor' => 30,

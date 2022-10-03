@@ -224,6 +224,29 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_salarioTotal
+     * informa o salario total de uma matrícula
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_salarioTotal($idServidor) {
+
+        # Conecta ao Banco de Dados
+        $trienioClasse = new Trienio();
+
+        # Pega os dados financeiros
+        $salario = $this->get_salarioBase($idServidor);
+        $trienio = $trienioClasse->getValor($idServidor);
+        $comissao = $this->get_salarioCargoComissao($idServidor);
+        $gratificacao = $this->get_gratificacao($idServidor);
+        $cessao = $this->get_salarioCessao($idServidor);
+        $direito = $this->get_direitoPessoal($idServidor);
+        return ($salario + $trienio + $comissao + $gratificacao + $cessao + $direito);
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idClasseServidor
      * informa o idClasse do salário atual de um servidor
      * 
@@ -4447,60 +4470,18 @@ class Pessoal extends Bd {
     #####################################################################################
 
     /**
-     * Método get_feriasResumo
-     * 
-     * Fornece um array com a lista de totais de dias fruidos/solicitados por ano de exercicio
-     */
-    public function get_feriasResumo($idservidor) {
-
-        $select = 'SELECT anoexercicio, SUM(numDias) as total                        
-                         FROM tbferias
-                        WHERE idservidor = ' . $idservidor . '
-                          AND (status = "fruída" OR status = "solicitada" OR status = "confirmada")
-                     GROUP BY anoexercicio
-                     ORDER BY anoexercicio desc';
-
-        $row = parent::select($select);
-        $quantos = count($row);
-
-        $novoArray = null;
-
-        # Pega o menor ano cadastrado
-        if ($quantos > 0) {
-            $menorValor = $row[$quantos - 1];
-            $menorAno = $menorValor['anoexercicio'];
-
-            # Pega o maior ano (anoatual +1)
-            $maiorAno = date("Y") + 1;
-
-            # Verifica ano a ano
-            for ($i = $maiorAno; $i >= $menorAno; $i--) {
-                if (array_search($i, array_column($row, 'anoexercicio')) === false) { // Se o ano nao estiver no array
-                    $novoArray[] = array($i, 0, 30);               // Acrescenta o ano com valor 0
-                } else {
-                    $dias = $this->get_feriasSomaDias($i, $idservidor);
-                    $novoArray[] = array($i, $dias, 30 - $dias);  // Acrescenta o ano com valor 0
-                }
-            }
-        }
-
-        return $novoArray;
-    }
-
-    #####################################################################################
-
-    /**
      * Método get_exercicioDisponivel
      * 
      * Informa o ano exercício das férias disponivel para fruir
      */
-    public function get_feriasExercicioDisponivel($idservidor) {
+    public function get_feriasExercicioDisponivel($idServidor) {
 
         # Pega as férias cadastradas no sistema
-        $lista = $this->get_feriasResumo($idservidor);
+        $ferias = new Ferias();
+        $lista = $ferias->get_feriasResumo($idServidor);
 
         # Pega o ano de admissão do servidor
-        $anoAdmissao = $this->get_anoAdmissao($idservidor);
+        $anoAdmissao = $this->get_anoAdmissao($idServidor);
 
         # Pega o ano atual
         $anoAtual = date("Y");
@@ -4568,10 +4549,10 @@ class Pessoal extends Bd {
      * 
      * Informa os dias de férias fruídas ou solicitadas de um servidor em um ano exercicio,
      */
-    public function get_feriasSomaDias($anoExercicio, $idservidor, $id = null) {
+    public function get_feriasSomaDias($anoExercicio, $idServidor, $id = null) {
         $select = 'SELECT anoexercicio, SUM(numDias)                          
                          FROM tbferias
-                        WHERE idservidor = ' . $idservidor . '
+                        WHERE idservidor = ' . $idServidor . '
                           AND anoExercicio = ' . $anoExercicio;
 
         # Retira o id ferias do calculo caso seja edição desse mesmo registro

@@ -258,11 +258,11 @@ if ($acesso) {
                         'operador' => '=',
                         'id' => 'feriasFaltando'),
                     array('coluna' => 1,
-                        'valor' => 30,
+                        'valor' => '30',
                         'operador' => '<',
                         'id' => 'feriasProblemas'),
                     array('coluna' => 1,
-                        'valor' => 30,
+                        'valor' => '30',
                         'operador' => '=',
                         'id' => 'feriasCerto')
                 ));

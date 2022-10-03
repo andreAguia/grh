@@ -260,6 +260,10 @@ if ($acesso) {
                     array('coluna' => 1,
                         'valor' => 30,
                         'operador' => '<',
+                        'id' => 'problemas'),
+                    array('coluna' => 1,
+                        'valor' => 0,
+                        'operador' => '=',
                         'id' => 'problemas')
                 ));
                 $tabela->show();

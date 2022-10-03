@@ -66,7 +66,7 @@ if ($acesso) {
     }
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
     #$relatorio->set_width([10, 90]);
-    $relatorio->set_align(["center", "left", "left", "left"]);
+    $relatorio->set_align(["center", "left", "left"]);
     $relatorio->set_classe([null, null, "Pessoal", "Progressao"]);
     $relatorio->set_metodo([null, null, "get_cargoSimples", "get_FaixaAtual"]);
     #$relatorio->set_funcao([null, null, "date_to_php"]);

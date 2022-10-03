@@ -452,15 +452,15 @@ tr#vigente{
 /*******************************************
  * Área de Férias
  *******************************************/
-tr#problemas{
+tr#feriasProblemas{
     background-color:#ffdcc3;
 }
 
-tr#faltando{
+tr#feriasFaltando{
     background-color:#cccccc;
 }
 
-tr#certo{
+tr#feriasCerto{
     background-color:#99ccff;
 }
 

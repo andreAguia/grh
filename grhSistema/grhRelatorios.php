@@ -561,6 +561,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Financeiro', '../grhRelatorios/financeiro.php');
             $menu->add_item('linkWindow', 'Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.nascimento.porLotacao.php');
             $menu->add_item('linkWindow', 'Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.php');
+            $menu->add_item('linkWindow', 'Estatutarios Por Cargo Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.porCargo.php');
 
             $menu->show();
             break;

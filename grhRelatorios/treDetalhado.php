@@ -169,7 +169,7 @@ if ($acesso) {
                     dias,
                     idFolga
                FROM tbfolga
-              WHERE idServidor=' . $idServidorPesquisado . '
+              WHERE idServidor=' . $dados["idServidor"] . '
            ORDER BY data desc';
 
         $folgas = $pessoal->select($select);

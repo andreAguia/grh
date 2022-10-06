@@ -73,7 +73,7 @@ if ($acesso) {
 ################################################################
 
         case "exibeLista" :
-            $grid = new Grid();
+            $grid = new Grid();            
             $grid->abreColuna(12);
             br();
 
@@ -86,26 +86,16 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-
+            
             # Relatórios
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
-            $botaoRel = new Button('Relatorio da Tela');
-            $botaoRel->set_target("_blank");
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_url("../grhRelatorios/treGeral.php");
-            $menu1->add_link($botaoRel, "right");
-
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
-            $botaoRel = new Button('Anual de Dias Trabalhados');
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("../grhRelatorios/treAfastamentoAnual.php");
+            $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
-
-            #$imagem = new Imagem(PASTA_FIGURAS.'print.png',null,15,15);
-            $botaoRel = new Button('Anual de Folgas Fruídas');
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_url("../grhRelatorios/treFolgaAnual.php");
-            $menu1->add_link($botaoRel, "right");
-
+            
             $menu1->show();
             
             ###
@@ -143,7 +133,35 @@ if ($acesso) {
 
             $form->show();
 
-            ###
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
+
+            ########################################
+            # Exibe o Processo de férias            
+            $classeFerias = new Ferias();
+            $classeFerias->exibeProcesso($parametroLotacao);
+            
+            ########################################
+            # Menu
+            tituloTable("Menu");
+
+            $menu = new Menu("menuProcedimentos");
+
+            $menu->add_item('titulo', 'Relatórios da Pesquisa');                                  
+            $menu->add_item('linkWindow', "Resumido","../grhRelatorios/treGeral.php");
+            $menu->add_item('linkWindow', "Detalhado","../grhRelatorios/treDetalhado.php");
+            
+            $menu->add_item('titulo', 'Relatório Geral Anual');            
+            $menu->add_item('linkWindow', "Anual de Dias Trabalhados","../grhRelatorios/treAfastamentoAnual.php");
+            $menu->add_item('linkWindow', "Anual de Folgas Fruídas","../grhRelatorios/treFolgaAnual.php");
+
+            $menu->show();
+
+            #######################################
+            # Área Principal
+            $grid->fechaColuna();
+            $grid->abreColuna(9);
+            
             # Pega o time inicial
             $time_start = microtime(true);
 
@@ -201,12 +219,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"));
-            $tabela->set_align(array("center", "center", "left", "left"));
+            $tabela->set_label(["Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"]);
+            $tabela->set_align(["center", "center", "left", "left"]);
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            $tabela->set_funcao(array(null, "dv"));
-            $tabela->set_classe(array(null, null, null, "pessoal"));
-            $tabela->set_metodo(array(null, null, null, "get_lotacao"));
+            $tabela->set_funcao([null, "dv"]);
+            $tabela->set_classe([null, null, null, "pessoal"]);
+            $tabela->set_metodo([null, null, null, "get_lotacao"]);
             $tabela->set_titulo("TRE");
 
             if (!is_null($parametroNomeMat)) {

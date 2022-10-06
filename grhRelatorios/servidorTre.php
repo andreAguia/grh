@@ -25,14 +25,13 @@ if ($acesso) {
     ######
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório Geral do TRE');
-
     br();
 
     #####################################
-    $grid = new Grid();
 
     # Resumo
-    $grid->abreColuna(4);
+    $grid = new Grid("center");
+    $grid->abreColuna(6);    
 
     # Pegas os valores
     $diasTrabalhados = $pessoal->get_treDiasTrabalhados($idServidorPesquisado);
@@ -54,15 +53,17 @@ if ($acesso) {
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
-    $relatorio->set_label(["Folgas", "Dias"]);
+    $relatorio->set_label(["Descrição", "Dias"]);
     $relatorio->set_align(['left']);
     $relatorio->set_conteudo($resumo);
     $relatorio->show();
 
     $grid->fechaColuna();
+    $grid->fechaGrid();
     #####################################
     # Dias Trabalhados e Folgas Concedidas
-    $grid->abreColuna(8);
+    $grid = new Grid();
+    $grid->abreColuna(6);
 
     $select = 'SELECT data,
                       ADDDATE(data,dias-1),
@@ -87,8 +88,10 @@ if ($acesso) {
     $relatorio->set_conteudo($dtrab);
     $relatorio->show();
 
+    $grid->fechaColuna();
     #####################################
     #  Folgas Fruídas
+    $grid->abreColuna(6);
 
     $select = 'SELECT data,
                     ADDDATE(data,dias-1),                                 

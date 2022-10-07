@@ -265,8 +265,8 @@ if ($acesso) {
             $tab->abreConteudo();
 
             # Lista de quem NÃO entregou
-            $select = "SELECT '---' as dtEntrega,
-                              year(dtAdmissao),
+            $select = "SELECT '---',
+                              '---',
                               tbservidor.idServidor,
                               dtAdmissao,
                               '-'

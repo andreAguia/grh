@@ -38,13 +38,6 @@ if ($acesso) {
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
 
-    # botão de voltar da lista
-    if (empty($origem)) {
-        $voltar = 'servidorMenu.php';
-    } else {
-        $voltar = $origem;
-    }
-
     # pega o idTpLicenca (se tiver)
     $idTpLicenca = soNumeros(get('idTpLicenca'));
 
@@ -323,7 +316,7 @@ if ($acesso) {
         $objeto->set_nome('Afastamentos e Licenças');
 
         # botão de voltar da lista
-        $objeto->set_voltarLista($voltar);
+        $objeto->set_voltarLista('servidorMenu.php');
 
         # Pega os dados da combo licenca da pesquisa
         $result = $pessoal->select('SELECT distinct tblicenca.idTpLicenca, tbtipolicenca.nome

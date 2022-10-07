@@ -184,7 +184,7 @@ if ($acesso) {
             'linha' => 3),
         array('nome' => 'orgaoEmail',
             'label' => 'E-mail do Órgão:',
-            'tipo' => 'email',
+            'tipo' => 'texto',
             'size' => 200,
             'col' => 6,
             'title' => 'O e-mail do órgão cessionário',

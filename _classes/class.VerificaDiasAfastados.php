@@ -233,7 +233,7 @@ class VerificaDiasAfastados {
 
         # Variáveis
         $classeLicMedica = new LicencaMedica();
-        $dtInicioLicenca = $classeLicMedica->getDtIniciaLicancaAberto($this->idServidor,$this->ano);
+        $dtInicioLicenca = $classeLicMedica->getDtIniciaLicencaAberto($this->idServidor,$this->ano);
 
         # Verifica se tem alguma data inicial cadastrada
         if (!empty($dtInicioLicenca)) {

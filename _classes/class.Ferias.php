@@ -34,7 +34,7 @@ class Ferias {
         $feriasCadastradas = 2016;
 
         # Percorre os anos de trabalho desse servidor
-        for ($ano = $anoAdmissao + 1; $ano <= $anoFinal; $ano++) {
+        for ($ano = $anoFinal; $ano >= $anoAdmissao + 1; $ano--) {    
 
             # Verifica se é do período estipulado
             if ($ano >= $feriasCadastradas) {
@@ -59,8 +59,8 @@ class Ferias {
                         if ($linhas > 0) {
                             $retorno .= "<br/>";
                         }
-
-                        $retorno .= "($ano) - pendente $pendencia Dias,";
+                        
+                        $retorno .= "Pendentes $pendencia Dias em {$ano}";
                         $linhas++;
                     }
                 }
@@ -145,10 +145,10 @@ class Ferias {
 
 ###########################################################
 
-    public function get_feriasFruidasServidorExercicio($idServidor, $ano = null) {
+    public function get_diasSolicitadosFruidos($idServidor, $ano = null) {
 
         /**
-         * retorna um array com os dias fruidos, solicitados, etc para um servidor em um exercicio determinado
+         * retorna os dias fruidos, solicitados, etc para um servidor em um exercicio determinado
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -252,8 +252,8 @@ class Ferias {
                         $dias = $pessoal->get_feriasSomaDias($ano, $idServidor);
                         $novoArray[] = array($ano, $dias, 30 - $dias);
                     }
-                }else{
-                    $novoArray[] = array("<s>{$ano}</s>","---","Não Trabalhou");
+                } else {
+                    $novoArray[] = array("<s>{$ano}</s>", "---", "Afastado");
                 }
             }
         }
@@ -261,5 +261,92 @@ class Ferias {
         return $novoArray;
     }
 
-    ###########################################################
+    ########################################################### 
+
+    function exibeFeriasPendentesAteDeterminadoano($texto) {
+        /**
+         * Função o numero de dias de ferias pendentes de um servidor
+         * 
+         * Usado no relatorio de escala de ferias
+         */
+        # Divide o texto idServidor&Ano
+        $pedaco = explode("&", $texto);
+
+        # Pega os valores
+        $idServidor = $pedaco[0];
+        $anoPesquisado = $pedaco[1];
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Pega os dados do servidor
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);    // Data de admissao
+        $anoAdmissao = year($dtAdmissao);
+
+        # As ferias estao cadastradas somente apartir de 2014 mas Sandra 
+        # pediu para ser a partir de 2016 para nao exibir alguns problemas antigos no cadastro de ferias
+        $feriasCadastradas = 2016;
+
+        # Define as variaveis 
+        $retorno = null;
+        $linhas = 0;
+
+        # Percorre os anos desde a admissão do servidor até o ano da pesquisa
+        for ($i = $anoPesquisado; $i >= $anoAdmissao + 1; $i--) {
+
+            # Verifica se o ano pode ser exibido
+            if ($i >= $feriasCadastradas) {
+
+                # Verifica se trabalhou no ano
+                if ($this->get_diasTrabalhados($idServidor, $i) > 0) {
+
+                    # Verifica dias de férias no período
+                    $dias = $this->get_diasSolicitadosFruidos($idServidor, $i);
+
+                    # Verifica se e o ano atual e informa que nao tem mais ferias a serem tiradas esse ano quando ja tirou 30 dias
+                    if ($i == $anoPesquisado) {
+                        if ($dias > 0) {
+                            if ($linhas > 0) {
+                                $retorno .= "<br/>";
+                            }
+
+                            $retorno .= "Já solicitou os $dias dias de " . $anoPesquisado;
+                            $linhas++;
+                        }
+                    } else {
+                        # Verifica se tem pendencia 
+                        if ($dias < 30) {
+                            $pendencia = 30 - $dias;
+
+                            if ($linhas > 0) {
+                                $retorno .= "<br/>";
+                            }
+
+                            $retorno .= "Pendentes $pendencia Dias em {$i}";
+                            $linhas++;
+                        }
+                    }
+                } else {
+                    # Se o servidor não trabalhou então não tem direito a férias neste ano
+                    if ($i == $anoPesquisado) {
+                        if ($linhas > 0) {
+                            $retorno .= "<br/>";
+                        }
+
+                        if ($i > date('Y')) {
+                            $retorno .= "Servidor Afastado";
+                        } else {
+                            $retorno .= "Servidor Afastado em {$i}";
+                        }
+                        $linhas++;
+                    }
+                }
+            }
+        }
+
+        # retorna a mensagem
+        return $retorno;
+    }
+
+###########################################################
 }

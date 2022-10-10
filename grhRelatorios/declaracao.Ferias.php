@@ -43,7 +43,7 @@ if ($acesso) {
     
     # Pega as férias fruídas
     $ferias = new Ferias();
-    $numDiasFruidos = $ferias->get_feriasFruidasServidorExercicio($idServidorPesquisado,$parametroAno);
+    $numDiasFruidos = $ferias->get_diasSolicitadosFruidos($idServidorPesquisado,$parametroAno);
     if($numDiasFruidos == 0){
         $dadosFerias = "ainda não fruiu férias referente ao exercício {$parametroAno}. ";
     }else{

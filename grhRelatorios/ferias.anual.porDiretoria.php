@@ -59,9 +59,9 @@ if ($acesso) {
     $relatorio->set_label(['Id', 'Nome', 'Lotação', 'Cargo', 'Admissão', 'Observação']);
     #$relatorio->set_width([6, 25, 0, 10, 20, 25, 25]);
     $relatorio->set_align(["center", "left", "center", "left", "center", "left"]);
-    $relatorio->set_funcao([null, null, null, null, "date_to_php", "exibeFeriasPendentes"]);
-    $relatorio->set_classe(array(null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, "get_cargo"));
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+    $relatorio->set_classe([null, null, null, "pessoal", null, "Ferias"]);
+    $relatorio->set_metodo([null, null, null, "get_cargo", null, "exibeFeriasPendentesAteDeterminadoano"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
     $relatorio->set_bordaInterna(true);

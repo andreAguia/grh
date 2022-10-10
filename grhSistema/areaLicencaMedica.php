@@ -311,7 +311,7 @@ if ($acesso) {
             set_session('origem', 'areaLicencaMedica.php');
 
             # Carrega a página específica
-            loadPage('servidorLicenca.php');
+            loadPage('servidorMenu.php');
             break;
 
         ################################################################

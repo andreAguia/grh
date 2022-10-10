@@ -507,6 +507,27 @@ function exibeFeriasPendentes($texto) {
     # Monta o retorno
     for ($i = $anoAdmissao + 1; $i <= $anoPesquisado; $i++) {
         if ($i >= $feriasCadastradas) {
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            #########################################33
             $dias = $pessoal->get_feriasSomaDias($i, $idServidor);
 
             # resolve temporariamente o problema de Simone Flores

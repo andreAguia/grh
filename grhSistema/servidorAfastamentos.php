@@ -61,18 +61,25 @@ if ($acesso) {
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
 
-//    for ($x = 2004; $x <= 2022; $x++) {
+    # classe de lic médica
+    $classeLicMedica = new LicencaMedica();
+
+//    for ($x = 2002; $x <= 2022; $x++) {
 //        $verificadias = new VerificaDiasAfastados($idServidorPesquisado);
 //        $verificadias->setAno($x);
 //        $verificadias->verifica();
 //
 //        if (anoBissexto($x)) {
+//            br(2);
 //            echo $x . " (Bissexto) -> " . $verificadias->getDiasAfastados();
-//            echo " dias afastados | " . (366 - $verificadias->getDiasAfastados()) . " dias trabalhados<br/>";
-//            hr();
+//            echo " dias afastados | " . (366 - $verificadias->getDiasAfastados()) . " dias trabalhados";
+//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicancaAberto($idServidorPesquisado, $x));          
 //        } else {
+//            br(2);
 //            echo $x . "            -> " . $verificadias->getDiasAfastados();
-//            echo " dias afastados | " .(365 - $verificadias->getDiasAfastados()) . " dias trabalhados<br/>";
+//            echo " dias afastados | " . (365 - $verificadias->getDiasAfastados()) . " dias trabalhados";
+//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicancaAberto($idServidorPesquisado, $x));
+//            
 //        }
 //    }
 

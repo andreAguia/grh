@@ -105,7 +105,6 @@ if ($acesso) {
             $botaoDias->set_title('Relatório informando somente os dias publicados fruidoe e pendentes');
             $menu1->add_link($botaoDias, "right");
 
-
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

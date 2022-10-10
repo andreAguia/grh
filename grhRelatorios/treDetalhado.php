@@ -136,13 +136,13 @@ if ($acesso) {
 
         $grid->abreColuna(6);
 
-        $select = 'SELECT data,
+        $select = "SELECT data,
                       ADDDATE(data,dias-1),
                       dias,
                       folgas
                  FROM tbtrabalhotre
-                WHERE idServidor=' . $dados["idServidor"] . '
-             ORDER BY data desc';
+                WHERE idServidor={$dados["idServidor"]}
+             ORDER BY data desc";
 
         $dtrab = $pessoal->select($select);
 
@@ -164,13 +164,13 @@ if ($acesso) {
         #  Folgas Fruídas
         $grid->abreColuna(6);
 
-        $select = 'SELECT data,
+        $select = "SELECT data,
                     ADDDATE(data,dias-1),                                 
                     dias,
                     idFolga
                FROM tbfolga
-              WHERE idServidor=' . $dados["idServidor"] . '
-           ORDER BY data desc';
+              WHERE idServidor={$dados["idServidor"]}
+           ORDER BY data desc";
 
         $folgas = $pessoal->select($select);
 

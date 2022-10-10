@@ -37,12 +37,12 @@ if ($acesso) {
     if (!empty($pendentes)) {
         $callout = new Callout();
         $callout->abre();
-        p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center');
+        p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center','f14');
         $callout->fecha();
     }
     
     $grid->fechaColuna();
-    $grid->abreColuna(3);
+    $grid->abreColuna(4);
 
     $listaFerias = new Ferias();
     $lista = $listaFerias->get_feriasResumo($idServidorPesquisado);
@@ -54,7 +54,8 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Exercício", "Dias", "Faltam"));
+    $relatorio->set_label(["Exercício", "Dias", "Faltam"]);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_conteudo($lista);
     $relatorio->set_botaoVoltar(false);
@@ -64,7 +65,7 @@ if ($acesso) {
     $relatorio->show();
 
     $grid->fechaColuna();
-    $grid->abreColuna(9);
+    $grid->abreColuna(8);
 
     p("Histórico", "center", "f14");
 
@@ -85,15 +86,16 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Exercicio", "Status", "Data Inicial", "Dias", "P", "Data Final"));
+    $relatorio->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "P", "Data Final"]);
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array(null, null, 'date_to_php', null, null, 'date_to_php'));
-    $relatorio->set_classe(array(null, null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, "get_feriasPeriodo"));
+    $relatorio->set_align(['center']);
+    $relatorio->set_funcao([null, null, 'date_to_php', null, null, 'date_to_php']);
+    $relatorio->set_classe([null, null, null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, "get_feriasPeriodo"]);
 
     $relatorio->set_rowspan(0);
     $relatorio->set_grupoCorColuna(0);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

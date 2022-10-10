@@ -703,7 +703,12 @@ class Pessoal extends Bd {
         # Verifica se tem cargo em comissão
         $comissao = $this->get_cargoComissao($idServidor);
         if ((!empty($comissao)) AND ($exibeComissao)) {
-            $retorno .= "<br/>{$comissao}";
+
+            if (empty($retorno)) {
+                $retorno .= $comissao;
+            } else {
+                $retorno .= "<br/>{$comissao}";
+            }
         }
 
         return $retorno;
@@ -894,7 +899,12 @@ class Pessoal extends Bd {
         }
 
         if ((!empty($comissao)) and ($exibeComissao)) {
-            $retorno .= '<br/><span id="orgaoCedido">(' . $comissao . ')</span)';
+
+            if (empty($retorno)) {
+                $retorno .= '<span id="orgaoCedido">(' . $comissao . ')</span)';
+            } else {
+                $retorno .= '<br/><span id="orgaoCedido">(' . $comissao . ')</span)';
+            }
         }
 
         return $retorno;

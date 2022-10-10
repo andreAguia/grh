@@ -167,7 +167,7 @@ class Ferias {
                      FROM tbferias
                     WHERE idServidor = {$idServidor}
                       AND anoExercicio = '{$ano}'
-                      AND status = 'fruída'";
+                      AND (status = 'fruída' OR status = 'solicitada')";
 
         $retorno = $pessoal->select($select, false);
         return $retorno["dias"];

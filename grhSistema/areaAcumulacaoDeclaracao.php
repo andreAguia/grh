@@ -309,7 +309,7 @@ if ($acesso) {
                 $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
 
-            $select .= " AND year(tbservidor.dtAdmissao) <= {$parametroAno} ORDER BY tbpessoa.nome";
+            $select .= " AND year(tbservidor.dtAdmissao) < {$parametroAno} ORDER BY tbpessoa.nome";
 
             $resumo = $pessoal->select($select);
 

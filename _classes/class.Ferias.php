@@ -235,11 +235,14 @@ class Ferias {
         # Pega o ano de admissão
         $anoAdmissao = year($pessoal->get_dtAdmissao($idServidor));
         
+        # Define o ano de início do resumo
+        $anoInicio = $row[$pessoal->count($select) - 1]['anoexercicio'];
+        
         # Define o ano de término do resumo
         $anoTermino = date("Y") + 1;
         
         # Percorre os anos
-        for ($ano = $anoTermino; $ano >= $anoAdmissao + 1; $ano--) {
+        for ($ano = $anoTermino; $ano >= $anoInicio + 1; $ano--) {
 
             # Verifica se trabalhou no ano
             if ($this->get_diasTrabalhados($idServidor, $ano) > 0) {

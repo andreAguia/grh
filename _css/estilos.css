@@ -464,6 +464,21 @@ tr#feriasCerto{
     background-color:#e6f7d9;
 }
 
+p#pferiasPendentesTitulo{
+    font-size: 14px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+
+p#pferiasPendentesObs{
+    font-size: 10px;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
 /*******************************************
  * Área de Aposentadoria
  *******************************************/

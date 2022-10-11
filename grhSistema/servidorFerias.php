@@ -104,12 +104,12 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', null));
-    #$objeto->set_width(array(10, 10, 15, 10, 15, 10, 10));
-    $objeto->set_classe(array(null, null, null, null, null, "pessoal", "Ferias"));
-    $objeto->set_metodo(array(null, null, null, null, null, "get_feriasPeriodo", "exibeObs"));
+    $objeto->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"]);
+    $objeto->set_align(["center"]);
+    $objeto->set_funcao([null, null, 'date_to_php', null, 'date_to_php', null]);
+    #$objeto->set_width([10, 10, 15, 10, 15, 10, 10]);
+    $objeto->set_classe([null, null, null, null, null, "pessoal", "Ferias"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_feriasPeriodo", "exibeObs"]);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -277,7 +277,7 @@ if ($acesso) {
             if (!empty($pendentes)) {
                 $callout = new Callout("warning");
                 $callout->abre();
-                p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center','f14');
+                p("Atenção:<br/> {$pendentes}", 'center','f14');
                 $callout->fecha();
             }
 

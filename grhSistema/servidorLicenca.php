@@ -336,7 +336,7 @@ if ($acesso) {
          * Licança geral
          */
 
-        $selectLicença = '(SELECT tblicenca.idTpLicenca,
+        $selectLicença = '(SELECT YEAR(dtInicial),
                                   tblicenca.idTpLicenca,
                                      CASE alta
                                         WHEN 1 THEN "Sim"
@@ -360,7 +360,7 @@ if ($acesso) {
              */
             $selectLicença .= ')
                                UNION
-                               (SELECT 6,
+                               (SELECT YEAR(dtInicial),
                                        6,
                                        "",
                                        "",
@@ -374,7 +374,7 @@ if ($acesso) {
                                   FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                                  WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
                                      UNION
-                               (SELECT tblicencasemvencimentos.idTpLicenca,
+                               (SELECT YEAR(tblicencasemvencimentos.dtInicial),
                                        tblicencasemvencimentos.idTpLicenca,
                                        "",
                                        "",
@@ -435,14 +435,14 @@ if ($acesso) {
         }
 
         # Parametros da tabela
-        $objeto->set_label(["Licença ou Afastamento", "Doc.", "Alta", "Bim", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
-        #$objeto->set_width([30, 3, 3, 10, 5, 10, 15, 5, 4]);
-        $objeto->set_align(["left"]);
-        $objeto->set_funcao([null, "exibeBotaoDocumentacaoLicenca", null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
-        $objeto->set_classe(["Licenca", null, null, "LicencaMedica"]);
-        $objeto->set_metodo(["exibeNome", null, null, "ExibeBim"]);
-        $objeto->set_numeroOrdem(true);
-        $objeto->set_numeroOrdemTipo("d");
+        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        #$objeto->set_width([5, 20, 5, 5, 10, 10, 5, 10, 10, 10, 5]);
+        $objeto->set_align([null, "left"]);
+        $objeto->set_funcao([null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
+        $objeto->set_classe([null, "Licenca", null, "LicencaMedica"]);
+        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim"]);
+        $objeto->set_rowspan(0);
+        $objeto->set_grupoCorColuna(0);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -757,25 +757,25 @@ if ($acesso) {
 
                 # Verifica se o usuário tem acesso
                 if (Verifica::acesso($idUsuario, [1, 16])) {
-                    
-                # Apaga o arquivo (na verdade renomeia)
-                if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
-                    alert("Arquivo Excluído !!");
 
-                    # Registra log
-                    $atividade = "Excluiu o arquivo do {$nome}";
-                    $Objetolog = new Intra();
-                    $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
+                    # Apaga o arquivo (na verdade renomeia)
+                    if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                        alert("Arquivo Excluído !!");
 
-                    # Fecha a janela
-                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
-                } else {
-                    alert("Houve algum problema, O arquivo não pode ser excluído !!");
+                        # Registra log
+                        $atividade = "Excluiu o arquivo do {$nome}";
+                        $Objetolog = new Intra();
+                        $data = date("Y-m-d H:i:s");
+                        $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
 
-                    # Fecha a janela
-                    echo '<script type="text/javascript" language="javascript">window.close();</script>';
-                }
+                        # Fecha a janela
+                        echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                    } else {
+                        alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                        # Fecha a janela
+                        echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                    }
                 }
                 break;
 

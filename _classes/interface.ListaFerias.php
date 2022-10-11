@@ -228,6 +228,9 @@ class ListaFerias {
         // Conta o número de servidores
         # Monta a tabela de Servidores.
         if ($totalServidores > 0) {
+            
+            # Ordena o array
+            $servset4 = array_sort($servset3, 'nome', SORT_ASC);
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
@@ -257,7 +260,7 @@ class ListaFerias {
                 $tabela->set_editarBotao("olho.png");
             }
 
-            $tabela->set_conteudo($servset3);
+            $tabela->set_conteudo($servset4);
             $tabela->show();
         }
     }
@@ -384,7 +387,8 @@ class ListaFerias {
                             tbservidor.dtAdmissao,
                             sum(numDias) as soma,
                             tbservidor.idServidor,
-                            tbservidor.idServidor
+                            tbservidor.idServidor,
+                            tbpessoa.nome as nome
                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                      LEFT JOIN tbferias USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
@@ -443,7 +447,8 @@ class ListaFerias {
                            tbservidor.dtAdmissao,
                            '-',
                            tbservidor.idServidor,
-                           tbservidor.idServidor
+                           tbservidor.idServidor,
+                           tbpessoa.nome as nome
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)

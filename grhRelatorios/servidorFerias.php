@@ -37,7 +37,7 @@ if ($acesso) {
     if (!empty($pendentes)) {
         $callout = new Callout();
         $callout->abre();
-        p("Atenção: Férias Pendentes:<br/> {$pendentes}", 'center','f14');
+        p("Atenção:<br/> {$pendentes}", 'center','f14');
         $callout->fecha();
     }
     

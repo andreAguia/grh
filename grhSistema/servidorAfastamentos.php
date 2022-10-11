@@ -73,12 +73,12 @@ if ($acesso) {
 //            br(2);
 //            echo $x . " (Bissexto) -> " . $verificadias->getDiasAfastados();
 //            echo " dias afastados | " . (366 - $verificadias->getDiasAfastados()) . " dias trabalhados";
-//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicancaAberto($idServidorPesquisado, $x));          
+//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicencaAberto($idServidorPesquisado, $x));          
 //        } else {
 //            br(2);
 //            echo $x . "            -> " . $verificadias->getDiasAfastados();
 //            echo " dias afastados | " . (365 - $verificadias->getDiasAfastados()) . " dias trabalhados";
-//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicancaAberto($idServidorPesquisado, $x));
+//            echo " | Data Inicial Licença em Aberto: " . date_to_php($classeLicMedica->getDtIniciaLicencaAberto($idServidorPesquisado, $x));
 //            
 //        }
 //    }

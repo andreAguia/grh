@@ -75,13 +75,12 @@ class LicencaMedica {
     ###########################################################
 
     /**
-     * Método getDtIniciaLicancaAberto
+     * Método getDtIniciaLicencaAberto
      * informa a data Inicial de uma licença em aberto
      * 
      * @param	integer $idLicenca id da licença
-     * @param	integer $ano anterior a esse ano
      */
-    function getDtIniciaLicancaAberto($idServidor, $ano) {
+    function getDtIniciaLicencaAberto($idServidor) {
         # Variáveis
         $dtInicioLicenca = null;
 
@@ -94,7 +93,6 @@ class LicencaMedica {
                           idTpLicenca
                      FROM tblicenca
                     WHERE idServidor = {$idServidor}
-                      AND year(dtInicial) <= {$ano}  
                       AND (idTpLicenca = 1 OR idTpLicenca = 2 OR idTpLicenca = 30)
                  ORDER BY dtInicial";
 

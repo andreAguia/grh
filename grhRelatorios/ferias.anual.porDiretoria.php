@@ -19,6 +19,10 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
+    $intra = new Intra();
+
+    # Idade obrigatória
+    $idadeCompulsoria = $intra->get_variavel("aposentadoria.compulsoria.idade");
 
     # Começa uma nova página
     $page = new Page();
@@ -46,7 +50,8 @@ if ($acesso) {
                   AND (idPerfil = 1 OR idPerfil = 2 OR idPerfil = 4 OR idPerfil = 3)
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND tblotacao.DIR = '{$parametroLotacao}'
-                  AND idLotacao <> 113    
+                  AND idLotacao <> 113
+                  AND ({$parametroAno} - YEAR(tbpessoa.dtNasc) <= {$idadeCompulsoria})                    
              ORDER BY tblotacao.DIR,tblotacao.GER,tbpessoa.nome";
 
     $result = $servidor->select($select);

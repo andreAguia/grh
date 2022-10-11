@@ -233,8 +233,8 @@ class VerificaDiasAfastados {
 
         # Variáveis
         $classeLicMedica = new LicencaMedica();
-        $dtInicioLicenca = $classeLicMedica->getDtIniciaLicancaAberto($this->idServidor,$this->ano);
-
+        $dtInicioLicenca = $classeLicMedica->getDtIniciaLicencaAberto($this->idServidor);
+                
         # Verifica se tem alguma data inicial cadastrada
         if (!empty($dtInicioLicenca)) {
  
@@ -243,7 +243,7 @@ class VerificaDiasAfastados {
             $data2 = new DateTime("{$this->ano}-01-01");
             $data3 = new DateTime("{$this->ano}-12-31");
 
-            # Verifica se data de início da licença em aberto é anterior (maior) a data do ano solicitado
+            # Verifica se data de início da licença em aberto é anterior (maior) a data do início do ano: 01/01
             if ($data1 < $data2) {
                               
                 if (anoBissexto($this->ano)) {
@@ -256,7 +256,7 @@ class VerificaDiasAfastados {
                $this->diasAfastados += getNumDias(date_to_php($dtInicioLicenca), "31/12/{$this->ano}");
             }
         }
-
+#echo $this->ano,"---",$this->diasAfastados;br();
         ###########################################################
     }
 

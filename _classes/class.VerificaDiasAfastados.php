@@ -256,7 +256,7 @@ class VerificaDiasAfastados {
                $this->diasAfastados += getNumDias(date_to_php($dtInicioLicenca), "31/12/{$this->ano}");
             }
         }
-#echo $this->ano,"---",$this->diasAfastados;br();
+
         ###########################################################
     }
 

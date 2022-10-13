@@ -119,7 +119,7 @@ class LicencaMedica {
             if ($item["idTpLicenca"] == 30 OR $item["idTpLicenca"] == 2) {
 
                 # Verifica se é de alta
-                if ($item["alta"] === 1) {
+                if ($item["alta"] == 1) {
                     # Apaga as variáveis
                     $dtInicioLicenca = null;
                 }

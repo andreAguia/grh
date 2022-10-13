@@ -228,7 +228,7 @@ class ListaFerias {
         // Conta o número de servidores
         # Monta a tabela de Servidores.
         if ($totalServidores > 0) {
-            
+
             # Ordena o array
             $servset4 = array_sort($servset3, 'nome', SORT_ASC);
 
@@ -236,7 +236,14 @@ class ListaFerias {
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
             $tabela->set_label(["Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"]);
             $tabela->set_classe([null, "pessoal", "pessoal", null, null, null, "Ferias"]);
-            $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"]);
+            
+            # Exibe o órgão quando for cedido
+            if ($this->lotacao == 113) {
+                $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"]);
+            } else {
+                $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"]);
+            }
+
             $tabela->set_funcao([null, null, null, "date_to_php", null, "get_situacao"]);
             $tabela->set_align(["center", "left", "left"]);
             $tabela->set_idCampo('idServidor');
@@ -360,8 +367,8 @@ class ListaFerias {
 
             $select .= " GROUP BY idServidor
                      HAVING soma = $valor[0]
-                     ORDER BY 1";            
-            
+                     ORDER BY 1";
+
             $num = $servidor->count($select);
             $conta[] = array($valor[0], $num);
         }

@@ -167,7 +167,7 @@ class AposentadoriaCompulsoria {
         $result = $pessoal->select($select,false);
         
         # retorno
-        if(empty($result)){
+        if(empty($result[0])){
             return null;
         }else{
             return date_to_php($result[0]);

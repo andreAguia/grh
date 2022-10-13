@@ -4492,7 +4492,7 @@ class Pessoal extends Bd {
 
         # Pega o ano de admissão do servidor
         $anoAdmissao = $this->get_anoAdmissao($idServidor);
-
+                
         # Pega o ano atual
         $anoAtual = date("Y");
 

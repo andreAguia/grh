@@ -13,25 +13,31 @@ class Ferias {
         /**
          * Função uma string com as pendências de férias do servidor
          */
-        # Pega o ano da aposentadoria compulsória
-        $aposentCompulsorio = new AposentadoriaCompulsoria();
-        $anoCompulsoria = year($aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor));
-
         # Retorno
         $retorno = null;
 
         # contador de linhas para saber se for mais de um e colocar o br
         $linhas = 0;
 
-        # Verifica se estamos no ano da compulsória
-        if (date('Y') >= $anoCompulsoria) {
-            # Ano final da tabela
-            $anoFinal = $anoCompulsoria;
-            $retorno .= "Servidor tem Aposentadoria Compulsória em {$anoCompulsoria} - ({$aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor)})";
-            $linhas++;
-        } else {
-            # Ano final da tabela
+        # Pega o ano da aposentadoria compulsória (se tiver)
+        $aposentCompulsorio = new AposentadoriaCompulsoria();
+        $anoCompulsoria = $aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor);
+
+        # Verifica se é nulo (para não estatutários)
+        if (empty($anoCompulsoria)) {
+            # Pega o maior ano (anoatual +1)
             $anoFinal = date('Y') + 1;
+        } else {
+            # Verifica se estamos no ano da compulsória
+            if (date('Y') >= year($anoCompulsoria)) {
+                # Ano final da tabela
+                $anoFinal = year($anoCompulsoria);
+                $retorno .= "Servidor tem Aposentadoria Compulsória em {$anoCompulsoria}";
+                $linhas++;
+            } else {
+                # Ano final da tabela
+                $anoFinal = date('Y') + 1;
+            }
         }
 
         # Conecta o banco de dados
@@ -248,17 +254,24 @@ class Ferias {
             $menorValor = $row[$quantos - 1];
             $menorAno = $menorValor['anoexercicio'];
 
-            # Pega o ano da aposentadoria compulsória
+            # Pega o ano da aposentadoria compulsória (se tiver)
             $aposentCompulsorio = new AposentadoriaCompulsoria();
-            $anoCompulsoria = year($aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor));
+            $anoCompulsoria = $aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor);
 
-            # Verifica se estamos no ano da compulsória
-            if (date('Y') >= $anoCompulsoria) {
-                # Pega o ano da compulsoria
-                $maiorAno = $anoCompulsoria;
-            } else {
+            # Verifica se é nulo (para não estatutários)
+            if (empty($anoCompulsoria)) {
                 # Pega o maior ano (anoatual +1)
                 $maiorAno = date('Y') + 1;
+            } else {
+                $anoCompulsoria = $aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor);
+                # Verifica se estamos no ano da compulsória
+                if (date('Y') >= year($anoCompulsoria)) {
+                    # Pega o ano da compulsoria
+                    $maiorAno = year($anoCompulsoria);
+                } else {
+                    # Pega o maior ano (anoatual +1)
+                    $maiorAno = date('Y') + 1;
+                }
             }
 
             # Percorre os anos

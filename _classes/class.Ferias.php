@@ -36,16 +36,15 @@ class Ferias {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
-        $intra = new Intra();
 
         # Pega os dados do servidor
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
         $anoAdmissao = year($dtAdmissao);
 
-        # Pega das variáveis a partir de que ano faz a verificação
-        # Sandra pediu essa limitação pois o cadastro não tem os valores antigos
-        $feriasCadastradas = $intra->get_variavel('feriasExercicio');
-                
+        # As ferias estao cadastradas somente apartir de 2014
+        # Sandra pediu para alterar para 2016 para nao exibir alguns problemas
+        $feriasCadastradas = 2016;
+
         # Percorre os anos de trabalho desse servidor
         for ($ano = $anoFinal; $ano >= $anoAdmissao + 1; $ano--) {
 
@@ -180,7 +179,7 @@ class Ferias {
                      FROM tbferias
                     WHERE idServidor = {$idServidor}
                       AND anoExercicio = '{$ano}'
-                      AND (status = 'fruída' OR status = 'solicitada' OR status = 'confirmada')";
+                      AND status = 'fruída'";
 
         $retorno = $pessoal->select($select, false);
         return $retorno["dias"];
@@ -240,10 +239,9 @@ class Ferias {
                  ORDER BY anoexercicio desc";
 
         $row = $pessoal->select($select);
-        
-        # Define o novo array
+        $quantos = count($row);
+
         $novoArray = null;
-<<<<<<< HEAD
 
         # Pega o menor ano cadastrado
         if ($quantos > 0) {
@@ -276,33 +274,9 @@ class Ferias {
                         $dias = $pessoal->get_feriasSomaDias($ano, $idServidor);
                         $novoArray[] = array($ano, $dias, 30 - $dias);
                     }
-=======
-        
-        # Pega o ano de admissão
-        $anoAdmissao = year($pessoal->get_dtAdmissao($idServidor));
-        
-        # Define o ano de início do resumo
-        $anoInicio = $row[$pessoal->count($select) - 1]['anoexercicio'];
-        
-        # Define o ano de término do resumo
-        $anoTermino = date("Y") + 1;
-        
-        # Percorre os anos
-        for ($ano = $anoTermino; $ano >= $anoInicio + 1; $ano--) {
-
-            # Verifica se trabalhou no ano
-            if ($this->get_diasTrabalhados($idServidor, $ano) > 0) {
-
-                # Se o ano não estiver no array acrescenta o ano com valor 0
-                if (array_search($ano, array_column($row, 'anoexercicio')) === false) {
-                    $novoArray[] = array($ano, 0, 30);
->>>>>>> master
                 } else {
-                    $dias = $pessoal->get_feriasSomaDias($ano, $idServidor);
-                    $novoArray[] = array($ano, $dias, 30 - $dias);
+                    $novoArray[] = array("<s>{$ano}</s>", "---", "Afastado");
                 }
-            } else {
-                $novoArray[] = array("<s>{$ano}</s>", "---", "Afastado");
             }
         }
 
@@ -326,14 +300,14 @@ class Ferias {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
-        $intra = new Intra();
 
         # Pega os dados do servidor
-        $anoAdmissao = year($pessoal->get_dtAdmissao($idServidor));
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);    // Data de admissao
+        $anoAdmissao = year($dtAdmissao);
 
-        # Pega das variáveis a partir de que ano faz a verificação
-        # Sandra pediu essa limitação pois o cadastro não tem os valores antigos
-        $feriasCadastradas = $intra->get_variavel('feriasExercicio');
+        # As ferias estao cadastradas somente apartir de 2014 mas Sandra 
+        # pediu para ser a partir de 2016 para nao exibir alguns problemas antigos no cadastro de ferias
+        $feriasCadastradas = 2016;
 
         # Define as variaveis 
         $retorno = null;

@@ -277,13 +277,7 @@ if ($acesso) {
             if (!empty($pendentes)) {
                 $callout = new Callout("warning");
                 $callout->abre();
-<<<<<<< HEAD
                 p("Atenção:<br/> {$pendentes}", 'center','f14');
-=======
-                p("Atenção: Férias Pendentes:", "pferiasPendentesTitulo");
-                p("(A verificação é feita a partir do ano de {$intra->get_variavel('feriasExercicio')})","pferiasPendentesObs");
-                p($pendentes, 'center','f14');
->>>>>>> master
                 $callout->fecha();
             }
 

@@ -19,6 +19,14 @@ if ($acesso) {
     $intra = new Intra();
     $pessoal = new Pessoal();
 
+    # Grava no log a atividade
+    $grh = get('grh', false);
+    if ($grh) {
+        $atividade = "Cadastro do servidor - Cadastro de Dias Trabalhados e Folgas Concedidas do TRE";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    }
+
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
 

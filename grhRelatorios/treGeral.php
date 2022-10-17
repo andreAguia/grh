@@ -40,7 +40,7 @@ if ($acesso) {
     }
 
     if (!is_null($parametroNomeMat)) {
-        $titulo2 .= "Filtro: " . $parametroNomeMat;
+        $titulo2 .= " - Filtro: {$parametroNomeMat}";
     }
 
     if (!is_null($titulo2)) {

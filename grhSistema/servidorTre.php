@@ -24,7 +24,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Controle de folgas do TRE";
+        $atividade = "Cadastro do servidor - Controle do TRE";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -79,13 +79,13 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Dias Trabalhados
-            $botao1 = new Link("Dias Trabalhados", "servidorTreAfastamento.php");
+            $botao1 = new Link("Dias Trabalhados", "servidorTreAfastamento.php?grh=1");
             $botao1->set_class('button');
             $botao1->set_title("Cadastro de Dias Trabalhados e Folgas Concedidas");
             $menu1->add_link($botao1, "right");
 
             # Folgas Fruídas
-            $botao2 = new Link("Folgas Fruídas", "servidorTreFolga.php");
+            $botao2 = new Link("Folgas Fruídas", "servidorTreFolga.php?grh=1");
             $botao2->set_class('button');
             $botao2->set_title("Cadastro de Folgas Fruídas");
             $menu1->add_link($botao2, "right");

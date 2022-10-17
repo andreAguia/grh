@@ -22,16 +22,22 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
+    # Grava o log
+    $Objetolog = new Intra();
+    $idUsuario = get_session('idUsuario');
+    $data = date("Y-m-d H:i:s");
+    $atividade = "Visualizou o Relatório Geral do TRE";
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
+
     ######
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório Geral do TRE');
     br();
 
     #####################################
-
     # Resumo
     $grid = new Grid("center");
-    $grid->abreColuna(6);    
+    $grid->abreColuna(6);
 
     # Pegas os valores
     $diasTrabalhados = $pessoal->get_treDiasTrabalhados($idServidorPesquisado);
@@ -56,6 +62,7 @@ if ($acesso) {
     $relatorio->set_label(["Descrição", "Dias"]);
     $relatorio->set_align(['left']);
     $relatorio->set_conteudo($resumo);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $grid->fechaColuna();
@@ -86,6 +93,7 @@ if ($acesso) {
     $relatorio->set_funcao(["date_to_php", "date_to_php"]);
     $relatorio->set_colunaSomatorio([2, 3]);
     $relatorio->set_conteudo($dtrab);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $grid->fechaColuna();
@@ -102,8 +110,7 @@ if ($acesso) {
            ORDER BY data desc';
 
     $folgas = $pessoal->select($select);
-    
-    
+
     tituloRelatorio('Folgas Fruídas');
     $relatorio = new Relatorio();
     $relatorio->set_cabecalhoRelatorio(false);
@@ -115,6 +122,7 @@ if ($acesso) {
     $relatorio->set_funcao(["date_to_php", "date_to_php"]);
     $relatorio->set_colunaSomatorio(2);
     $relatorio->set_conteudo($folgas);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $grid->fechaColuna();

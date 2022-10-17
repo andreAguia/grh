@@ -21,6 +21,13 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
+    
+    # Grava o log
+    $Objetolog = new Intra();
+    $idUsuario = get_session('idUsuario');
+    $data = date("Y-m-d H:i:s");
+    $atividade = "Visualizou o Relatório de Folgas Fruídas do TRE Por Ano";
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
     ######
     $folgasFruidas = $pessoal->get_treFolgasFruidas($idServidorPesquisado);
@@ -47,19 +54,12 @@ if ($acesso) {
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(false);
-    #$relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
-    #$relatorio->set_tituloLinha2($relatorioAno);
-    #$relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
-
-    $relatorio->set_label(array('Data Inicial', 'Dias', 'Data Final','Ano'));
-    #$relatorio->set_width(array(10,30,20,10,10,10));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", null, "date_to_php"));
-    #$relatorio->set_classe(array(null,null,"pessoal"));
-    #$relatorio->set_metodo(array(null,null,"get_lotacao"));  
-
+    $relatorio->set_label(['Data Inicial', 'Dias', 'Data Final','Ano']);
+    $relatorio->set_align(['center']);
+    $relatorio->set_funcao(["date_to_php", null, "date_to_php"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     p($folgasFruidas . " dias", "f11", "center");

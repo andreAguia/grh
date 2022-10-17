@@ -25,7 +25,7 @@ if ($acesso) {
     $subtitulo = null;
 
     # Pega os dados
-    $result = $pessoal->select($selectRelatorio);
+    $result = $pessoal->select($selectRelatorio);    
 
     # Começa uma nova página
     $page = new Page();
@@ -36,14 +36,17 @@ if ($acesso) {
 
     # Título
     p("Relatório TRE Detalhado", "pRelatorioTitulo");
+    $atividade = "Visualizou o Relatório TRE Detalhado ";
 
     # Lotação
     if (!is_null($parametroLotacao) AND ($parametroLotacao <> "*")) {
         $subtitulo .= $pessoal->get_nomeLotacao($parametroLotacao);
+        $atividade .= " - {$pessoal->get_nomeLotacao($parametroLotacao)}";
     }
 
     if (!is_null($parametroNomeMat)) {
-        $subtitulo .= "Filtro: " . $parametroNomeMat;
+        $subtitulo .= "Filtro: {$parametroNomeMat}";
+        $atividade .= " - Filtro: {$parametroNomeMat}";
     }
 
     # Subtítulo
@@ -51,6 +54,12 @@ if ($acesso) {
         p($subtitulo, "pRelatorioSubtitulo");
     }
     
+    # Grava o log
+    $Objetolog = new Intra();
+    $idUsuario = get_session('idUsuario');
+    $data = date("Y-m-d H:i:s");    
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4);
+
     br();
 
     foreach ($result as $dados) {
@@ -59,11 +68,11 @@ if ($acesso) {
         # Servidor
         $grid = new Grid();
         $grid->abreColuna(12);
-        
+
         $identificação = [
             [$pessoal->get_nome($dados["idServidor"])],
         ];
-        
+
         $relatorio = new Relatorio();
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
@@ -73,6 +82,7 @@ if ($acesso) {
         $relatorio->set_label([""]);
         $relatorio->set_align(['left', 'left']);
         $relatorio->set_conteudo($identificação);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         $grid->fechaColuna();
@@ -95,6 +105,7 @@ if ($acesso) {
         $relatorio->set_label(["Descrição", "Dias"]);
         $relatorio->set_align(['left', 'left']);
         $relatorio->set_conteudo($identificação);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         $grid->fechaColuna();
@@ -127,6 +138,7 @@ if ($acesso) {
         $relatorio->set_label(["Descrição", "Dias"]);
         $relatorio->set_align(['left']);
         $relatorio->set_conteudo($resumo);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         $grid->fechaColuna();
@@ -157,6 +169,7 @@ if ($acesso) {
         $relatorio->set_funcao(["date_to_php", "date_to_php"]);
         $relatorio->set_colunaSomatorio([2, 3]);
         $relatorio->set_conteudo($dtrab);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         $grid->fechaColuna();
@@ -185,6 +198,7 @@ if ($acesso) {
         $relatorio->set_funcao(["date_to_php", "date_to_php"]);
         $relatorio->set_colunaSomatorio(2);
         $relatorio->set_conteudo($folgas);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         $grid->fechaColuna();

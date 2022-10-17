@@ -21,6 +21,13 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
+    
+    # Grava o log
+    $Objetolog = new Intra();
+    $idUsuario = get_session('idUsuario');
+    $data = date("Y-m-d H:i:s");
+    $atividade = "Visualizou o Relatório de Folgas Fruídas do TRE Geral";
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
     ######
     $folgasFruidas = $pessoal->get_treFolgasFruidas($idServidorPesquisado);
@@ -46,11 +53,12 @@ if ($acesso) {
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(false);
-    $relatorio->set_label(array('Data Inicial', 'Data Final', 'Dias'));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", "date_to_php"));
+    $relatorio->set_label(['Data Inicial', 'Data Final', 'Dias']);
+    $relatorio->set_align(['center']);
+    $relatorio->set_funcao(["date_to_php", "date_to_php"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_colunaSomatorio(2);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $page->terminaPagina();

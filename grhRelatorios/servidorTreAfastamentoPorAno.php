@@ -21,6 +21,13 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
+    
+    # Grava o log
+    $Objetolog = new Intra();
+    $idUsuario = get_session('idUsuario');
+    $data = date("Y-m-d H:i:s");
+    $atividade = "Visualizou o Relatório de Dias Trabalhados e Folgas Concedidas Por Ano";
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
     ######
     # Dados do Servidor
@@ -45,12 +52,13 @@ if ($acesso) {
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
-    $relatorio->set_label(array('Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Documentaçao','Ano'));
-    $relatorio->set_align(array('center', 'center', 'center', 'center', 'left', 'left'));
-    $relatorio->set_funcao(array("date_to_php", "date_to_php"));
+    $relatorio->set_label(['Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Documentaçao','Ano']);
+    $relatorio->set_align(['center', 'center', 'center', 'center', 'left', 'left']);
+    $relatorio->set_funcao(["date_to_php", "date_to_php"]);
     $relatorio->set_colunaSomatorio(3);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
+    $relatorio->set_log(false);
     $relatorio->show();
 
     $page->terminaPagina();

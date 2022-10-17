@@ -15,8 +15,17 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
-    # Conecta ao Banco de Dados   
+    # Conecta ao Banco de Dados
+    $intra = new Intra();
     $pessoal = new Pessoal();
+
+    # Grava no log a atividade
+    $grh = get('grh', false);
+    if ($grh) {
+        $atividade = "Cadastro do servidor - Cadastro de Folgas Fruídas do TRE";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+    }
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');

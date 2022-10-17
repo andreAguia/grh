@@ -258,7 +258,7 @@ if ($acesso) {
             set_session('origem', 'areaTre');
 
             # Carrega a página específica
-            loadPage('servidorTre.php');
+            loadPage('servidorTre.php?grh=1');
             break;
 
 ################################################################

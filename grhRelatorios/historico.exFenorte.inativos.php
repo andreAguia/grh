@@ -29,37 +29,35 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
-                     tbservidor.idServidor,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
                      tbservidor.dtDemissao,
-                     tbservidor.idServidor
+                     tbsituacao.situacao
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                    
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                     JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                WHERE tbservidor.situacao <> 1
                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  AND tbhistlot.data = (select min(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND (tblotacao.UADM = "FENORTE" OR tblotacao.UADM = "TECNORTE")
-            ORDER BY tbpessoa.nome';
+            ORDER BY tbsituacao.situacao, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte Inativos');
     $relatorio->set_subtitulo('Estatutários e Celetistas');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Situação'));
-    #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída', 'Situação']);
+    $relatorio->set_align(["center", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, null, null, "get_Situacao"));
+    $relatorio->set_classe([null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_Cargo"]);
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(3);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
+    $relatorio->set_numGrupo(6);
     $relatorio->show();
 
     $page->terminaPagina();

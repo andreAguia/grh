@@ -3,12 +3,12 @@
 class Averbacao {
 
     function getNumDias($idAverbacao) {
-        
+
         # Verifica se foi informado o id
-        if(empty($idAverbacao)){
+        if (empty($idAverbacao)) {
             return null;
         }
-        
+
         # Pega os valores
         $select = "SELECT dtInicial,
                          dtFinal
@@ -26,11 +26,11 @@ class Averbacao {
     #####################################################
 
     function tempoSobreposto($idServidor) {
-        
+
         # Verifica se foi informado o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
-        }        
+        }
 
         # Conecta ao Banco de Dados
         $intra = new Intra();
@@ -98,7 +98,7 @@ class Averbacao {
         # Retorna a sobreposição FALSE ou TRUE
         return $sobreposicao;
     }
-    
+
     ##############################################################################################################################################
 
     /**
@@ -108,12 +108,12 @@ class Averbacao {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_tempoAverbadoPrivado($idServidor) {
-        
+
         # Verifica se foi informado o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega os valores
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
@@ -141,12 +141,12 @@ class Averbacao {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_tempoAverbadoPublico($idServidor) {
-        
+
         # Verifica se foi informado o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega os valores
         $select = 'SELECT SUM(dias) as total
                      FROM tbaverbacao
@@ -174,20 +174,64 @@ class Averbacao {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_tempoAverbadoTotal($idServidor) {
-        
+
         # Verifica se foi informado o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega o tempo público
         $publico = $this->get_tempoAverbadoPublico($idServidor);
-        
+
         # Pega o privado
         $privado = $this->get_tempoAverbadoPrivado($idServidor);
-        
+
         # Retorno o total
         return $publico + $privado;
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método get_temTempoAverbado
+     * informa Sim / Não se tem tempo averbado
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_temTempoAverbado($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if ($this->get_tempoAverbadoTotal($idServidor) > 0) {
+            return "Sim";
+        } else {
+            return "Não";
+        }
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método get_temTempoAverbadoPublico
+     * informa Sim / Não se tem tempo público averbado
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_temTempoAverbadoPublico($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if ($this->get_tempoAverbadoPublico($idServidor) > 0) {
+            return "Sim";
+        } else {
+            return "Não";
+        }
     }
 
 ##############################################################################################################################################

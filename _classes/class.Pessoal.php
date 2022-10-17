@@ -5982,4 +5982,34 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_eExClt
+     * Informa se o servidor é ex clt
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_eExClt($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+        
+        # Pega o id do Concurso
+        $idConcurso = $this->get_idConcurso($idServidor);
+        
+        # Pega o regime do concurso
+        $concurso = new Concurso();
+        $regime = $concurso->get_regime($idConcurso);
+        
+        if($regime == "CLT"){
+            return "Sim";
+        }else{
+            return "Não";
+        }
+        
+    }
+
+    ###########################################################
 }

@@ -143,18 +143,19 @@ class Concurso {
      * Informa o nome de um idconcurso	 */
     public function get_regime($idconcurso) {
 
-        # Monta o select            
-        $select = 'SELECT regime
-                         FROM tbconcurso
-                        WHERE idconcurso = ' . $idconcurso;
         if (empty($idconcurso)) {
             return null;
-        } else {
-            # Pega os dados
-            $pessoal = new Pessoal();
-            $row = $pessoal->select($select, false);
-            return $row[0];
         }
+
+        # Monta o select            
+        $select = "SELECT regime
+                     FROM tbconcurso
+                    WHERE idconcurso = {$idconcurso}";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+        return $row[0];
     }
 
     ###########################################################
@@ -885,8 +886,7 @@ class Concurso {
     }
 
     ###########################################################
-    
-    
+
     public function exibeObs($idServidor) {
 
         /**

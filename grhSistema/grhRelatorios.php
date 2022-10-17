@@ -667,9 +667,11 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Histórico');
             $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral', '../grhRelatorios/historico.exFenorte.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Inativos', '../grhRelatorios/historico.exFenorte.inativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Por Concurso', '../grhRelatorios/historico.exFenorte.porConcurso.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - Com Dados de Tempo Averbado', '../grhRelatorios/historico.exFenorte.geral.averbacao.php');
 
             $menu->add_item('titulo1', 'Anuais');
             $menu->add_item('linkWindow', 'Servidores Por Ano de Admissão Com Email e CPF Por Tipo de Cargo', '../grhRelatorios/servidoresPorAnoAdmissaoComEmailCpf.php');

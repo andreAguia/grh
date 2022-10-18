@@ -140,6 +140,7 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT nome,
+                                     cpf,
                                      dtNasc,
                                      tbparentesco.parentesco,
                                      CASE sexo
@@ -175,7 +176,7 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
-    
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -183,10 +184,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Nome", "Nascimento", "Parentesco", "Sexo", "Idade", "Dependente no IR", "Auxílio Creche", "Término do Aux. Creche"));
+    $objeto->set_label(["Nome", "CPF", "Nascimento", "Parentesco", "Sexo", "Idade", "Dependente no IR", "Auxílio Creche", "Término do Aux. Creche"]);
     #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
-    $objeto->set_align(array("left"));
-    $objeto->set_funcao(array(null, "date_to_php", null, null, null, null, null, "date_to_php"));
+    $objeto->set_align(["left"]);
+    $objeto->set_funcao([null, null, "date_to_php", null, null, null, null, null, "date_to_php"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

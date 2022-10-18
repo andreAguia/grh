@@ -32,7 +32,7 @@ class ListaServidores {
      * da listagem
      */
     private $permiteEditar = true;
-    private $ordenacao = "2 asc";               # ordenação da listagem. Padrão 3 por nome
+    private $ordenacao = "tbpessoa.nome asc";   # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordenação
     private $comissaoPrimeiro = false;          # Define se os cargos comissionados aparecerão (ou não) primeiro
 
@@ -76,8 +76,8 @@ class ListaServidores {
         $this->ordenacaoCombo = array(
             array("1 asc", "por Id Funcional asc"),
             array("1 desc", "por Id Funcional desc"),
-            array("2 asc", "por Nome asc"),
-            array("2 desc", "por Nome desc"),
+            array("tbpessoa.nome asc", "por Nome asc"),
+            array("tbpessoa.nome desc", "por Nome desc"),
             array("tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"),
             array("tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"),
             array("UADM asc, DIR asc, GER asc", "por Lotação asc"),
@@ -167,7 +167,7 @@ class ListaServidores {
         $servidor = new Pessoal();
 
         $select = 'SELECT tbservidor.idServidor,
-                          tbpessoa.nome,
+                          tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbservidor.idServidor,
@@ -218,12 +218,12 @@ class ListaServidores {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
 		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
-                
-                if(!is_null($this->idServidorIdPessoa)){
+
+                if (!is_null($this->idServidorIdPessoa)) {
                     $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
 		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
                 }
-                
+
                 $select .= ')';
             }
             $this->subTitulo .= "pesquisa: " . $this->matNomeId . "<br/>";
@@ -334,7 +334,6 @@ class ListaServidores {
 //        if (($this->ordenacao <> "6 asc") AND ($this->ordenacao <> "6 desc")) {
 //            $select .= ", 6 asc";
 //        }
-
         #echo $select;
 
         foreach ($this->ordenacaoCombo as $value) {
@@ -495,8 +494,22 @@ class ListaServidores {
         }
 
         $align = ["center", "left", "center", "left"];
-        $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal"];
-        $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+        $classe = ["pessoal", "pessoal", "pessoal", "pessoal", "pessoal"];
+
+        # Exibe o idServidor e idPessoa somente quando for para exibir
+        if (is_null($this->matNomeId)) {
+            $metodo = ["get_idFuncionalEMatricula", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+        } else {
+            if (is_null($this->idServidorIdPessoa)) {
+                $metodo = ["get_idFuncionalEMatricula", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+            } else {
+                if (is_numeric($this->matNomeId)) {
+                    $metodo = ["get_idFuncionalEMatricula", "get_nomeEIdServidorEIdPessoa", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+                } else {
+                    $metodo = ["get_idFuncionalEMatricula", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+                }
+            }
+        }
 
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);
@@ -574,8 +587,8 @@ class ListaServidores {
         }
 
         $align = ["center", "left", "left", "left"];
-        $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal"];
-        $metodo = ["get_matricula", null, "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+        $classe = ["pessoal", "pessoal", "pessoal", "pessoal", "pessoal"];
+        $metodo = ["get_matricula", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
 
         # Relatório
         $relatorio = new Relatorio();

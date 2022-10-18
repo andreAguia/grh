@@ -60,7 +60,7 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
-    $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "2 asc"));
+    $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "tbpessoa.nome asc"));
 
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento', 0);

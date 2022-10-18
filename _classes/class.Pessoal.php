@@ -4492,7 +4492,7 @@ class Pessoal extends Bd {
 
         # Pega o ano de admissão do servidor
         $anoAdmissao = $this->get_anoAdmissao($idServidor);
-                
+
         # Pega o ano atual
         $anoAtual = date("Y");
 
@@ -5995,20 +5995,39 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega o id do Concurso
         $idConcurso = $this->get_idConcurso($idServidor);
-        
+
         # Pega o regime do concurso
         $concurso = new Concurso();
         $regime = $concurso->get_regime($idConcurso);
-        
-        if($regime == "CLT"){
+
+        if ($regime == "CLT") {
             return "Sim";
-        }else{
+        } else {
             return "Não";
         }
-        
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeEIdServidorEIdPessoa
+     * fornece o nome o idServidor e o Id Pessoa
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeEIdServidorEIdPessoa($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    null,
+                    "IdS: {$idServidor} - IdP: {$this->get_idPessoa($idServidor)}"
+            );
+        }
     }
 
     ###########################################################

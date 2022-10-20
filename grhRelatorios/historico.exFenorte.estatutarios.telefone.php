@@ -48,7 +48,7 @@ if ($acesso) {
     $relatorio->set_align(["center", "left", "left", "left"]);
 
     $relatorio->set_classe([null, "pessoal", "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, "get_nomeECargoELotacao", "get_telefones", "get_emails"]);
+    $relatorio->set_metodo([null, "get_nomeECargoELotacaoESituacao", "get_telefones", "get_emails"]);
     $relatorio->set_bordaInterna(true);
 
     $relatorio->set_conteudo($result);

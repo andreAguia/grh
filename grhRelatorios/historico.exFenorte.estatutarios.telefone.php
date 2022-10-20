@@ -34,16 +34,16 @@ if ($acesso) {
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE tbservidor.situacao = 1
-                 AND tbhistlot.data = (select min(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+               WHERE tbhistlot.data = (select min(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND (tblotacao.UADM = "FENORTE" OR tblotacao.UADM = "TECNORTE")
+                 AND tbservidor.idPerfil = 1
             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte Ativos');
-    $relatorio->set_subtitulo('Com Telefones e E-mails');
+    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte');
+    $relatorio->set_subtitulo('Estatutários - Com Telefones e E-mails');
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Telefones', "E-mails"]);
     $relatorio->set_align(["center", "left", "left", "left"]);
 

@@ -108,7 +108,7 @@ class Acumulacao {
 
             echo $retorno;
             p($recurso, "pgetCargo");
-        }else{
+        } else {
             echo "---";
         }
     }
@@ -185,7 +185,8 @@ class Acumulacao {
 
         # Pega os dias publicados
         $select = "SELECT processo, 
-                          dtProcesso
+                          dtProcesso,
+                          tipoProcesso
                      FROM tbacumulacao
                     WHERE idAcumulacao = {$idAcumulacao}";
 
@@ -196,7 +197,29 @@ class Acumulacao {
         if (empty($row["processo"])) {
             pLista("---");
         } else {
-            pLista($row["processo"], date_to_php($row["dtProcesso"]));
+            # trata o tipo de processo
+            switch ($row["tipoProcesso"]) {
+                case 1 :
+                    $texto = "<span class='label primary'>Principal</span>";
+                    break;
+                case 2 :
+                    $texto = "<span class='label warning'>Relacionado</span>";
+                    break;
+
+                case 3 :
+                    $texto = "<span class='label secondary'>Outros</span>";
+                    break;
+
+                default:
+                    $texto = null;
+                    break;
+            }
+
+            pLista(
+                    $row["processo"],
+                    date_to_php($row["dtProcesso"]),
+                    $texto
+            );
         }
     }
 
@@ -240,7 +263,9 @@ class Acumulacao {
 
             if (!empty($row['dtSaida'])) {
                 $linha4 .= " / Saída: " . date_to_php($row['dtSaida']);
-                $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivoNome($row['motivoSaida']) . "</span>";
+                if (!empty($pessoal->get_motivoNome($row['motivoSaida']))) {
+                    $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivoNome($row['motivoSaida']) . "</span>";
+                }
             }
 
             pLista(
@@ -266,16 +291,16 @@ class Acumulacao {
         # Joga o valor informado para a variável da classe
         if (empty($idServidor)) {
             return null;
-        } else {           
-            
+        } else {
+
             # Variáveis
             $pessoal = new Pessoal();
             $linha4 = "Admissão: {$pessoal->get_dtAdmissao($idServidor)}";
-            
-             if (!empty($pessoal->get_dtSaida($idServidor))) {
-                 $linha4 .= " / Saída: {$pessoal->get_dtSaida($idServidor)}";
-                 $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivo($idServidor) . "</span>";
-             }
+
+            if (!empty($pessoal->get_dtSaida($idServidor))) {
+                $linha4 .= " / Saída: {$pessoal->get_dtSaida($idServidor)}";
+                $linha4 .= "<br/><span class='label warning'>" . $pessoal->get_motivo($idServidor) . "</span>";
+            }
             pLista(
                     $pessoal->get_lotacao($idServidor),
                     $pessoal->get_cargo($idServidor),

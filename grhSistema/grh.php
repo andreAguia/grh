@@ -161,6 +161,12 @@ if ($acesso) {
                 $linkAdm->set_class('button success');
                 $linkAdm->set_title('Área do Servidor');
                 $menu->add_link($linkAdm, "right");
+                
+                $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
+                $linkProc->set_class('button success');
+                $linkProc->set_title('Acessa a área de procedimentos');
+                $linkProc->set_target("_blank");
+                $menu->add_link($linkProc, "right");
             }
 
             $menu->show();

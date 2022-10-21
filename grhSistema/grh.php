@@ -73,7 +73,6 @@ if ($acesso) {
     set_session('parametroSexo');
     set_session('parametroAlta');
     set_session('parametroTrimestre');
-    
 
     set_session('concursoTipo');
 
@@ -97,7 +96,7 @@ if ($acesso) {
     # Vacina
     set_session('parametroApto');
     set_session('parametroJustificativa');
-    
+
     # Area de Licença Médica
     set_session('parametroAlta');
 
@@ -118,6 +117,26 @@ if ($acesso) {
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
+
+            # Cria um menu Administrador
+            if (Verifica::acesso($idUsuario, 1)) {
+                $menu = new MenuBar();
+
+                # Area do Servidor
+                $linkAdm = new Link("Area do Servidor", "../../areaServidor/sistema/areaServidor.php");
+                $linkAdm->set_class('button success');
+                $linkAdm->set_title('Área do Servidor');
+                $menu->add_link($linkAdm, "right");
+
+                # Procedimentos
+                $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
+                $linkProc->set_class('button success');
+                $linkProc->set_title('Acessa a área de procedimentos');
+                $linkProc->set_target("_blank");
+                $menu->add_link($linkProc, "right");
+                
+                $menu->show();
+            }
 
             # Cria um menu
             $menu = new MenuBar();
@@ -142,33 +161,18 @@ if ($acesso) {
             $botaoRel->set_title("Relatórios dos Sistema");
             $botaoRel->set_imagem($imagem1);
             $menu->add_link($botaoRel, "right");
-            
+
             # Alertas
             $linkArea = new Link("Alertas", "alertas.php?grh=1");
             $linkArea->set_class('button alert');
             $linkArea->set_title('Alertas do Sistema');
             $menu->add_link($linkArea, "right");
-            
+
             # Trocar Senha
             $botaoSenha = new Link("Alterar Senha", '../../areaServidor/sistema/trocarSenha.php');
             $botaoSenha->set_class('button');
             $botaoSenha->set_title('Altera a senha do usuário logado');
-            $menu->add_link($botaoSenha, "right");            
-
-            # Administração do Sistema
-            if (Verifica::acesso($idUsuario, 1)) {   // Somente Administradores
-                $linkAdm = new Link("Area do Servidor", "../../areaServidor/sistema/areaServidor.php");
-                $linkAdm->set_class('button success');
-                $linkAdm->set_title('Área do Servidor');
-                $menu->add_link($linkAdm, "right");
-                
-                $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
-                $linkProc->set_class('button success');
-                $linkProc->set_title('Acessa a área de procedimentos');
-                $linkProc->set_target("_blank");
-                $menu->add_link($linkProc, "right");
-            }
-
+            $menu->add_link($botaoSenha, "right");
             $menu->show();
 
             $grid->fechaColuna();
@@ -318,21 +322,21 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
 
-            # Tabela
+# Tabela
             $grid = new Grid();
             $grid->abreColuna(3);
 
-            # Resumo
+# Resumo
             $pessoal = new Pessoal();
             $numAniversdariantes = $pessoal->get_numAniversariantes();
             $numHoje = $pessoal->get_numAniversariantesHoje();
             $numServidores = $pessoal->get_numServidoresAtivos();
 
-            # Exibe os valores            
+# Exibe os valores            
             $dados[] = ["Aniversariantes do Mês", $numAniversdariantes];
             $dados[] = ["Aniversariantes de Hoje", $numHoje];
 
-            # Tabela
+# Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
             $tabela->set_titulo("Resumo");
@@ -342,14 +346,14 @@ if ($acesso) {
             $tabela->set_align(["left", "center"]);
             $tabela->show();
 
-            # Calendário
+# Calendário
             $cal = new Calendario($parametroMes);
             $cal->show();
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
 
-            # Exibe a tabela            
+# Exibe a tabela            
             $select = 'SELECT DAY(tbpessoa.dtNasc),
                      tbpessoa.nome,
                      tbservidor.idServidor,
@@ -362,7 +366,7 @@ if ($acesso) {
                  AND MONTH(tbpessoa.dtNasc) = ' . $parametroMes . '
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
-            # lotacao
+# lotacao
             if (!is_null($parametroLotacao)) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
@@ -378,7 +382,7 @@ if ($acesso) {
             $count = $pessoal->count($select);
             $titulo = "Aniversariantes de " . get_nomeMes($parametroMes);
 
-            # Tabela
+# Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Dia", "Nome", "Lotação", "Cargo", "Perfil"));
@@ -401,11 +405,11 @@ if ($acesso) {
 
         case "atualizacoes" :
 
-            # Limita a tela
+# Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # Verifica se veio menu grh e registra o acesso no log
+# Verifica se veio menu grh e registra o acesso no log
             $grh = get('grh', false);
             if ($grh) {
                 # Grava no log a atividade
@@ -414,20 +418,20 @@ if ($acesso) {
                 $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             }
 
-            # botão voltar
+# botão voltar
             botaoVoltar("?", "Voltar", "Volta ao Menu principal");
 
-            # Título
+# Título
             titulo("Detalhes das Atualizações");
 
-            # Limita ainda mais a tela para o painel
+# Limita ainda mais a tela para o painel
             $grid = new Grid("center");
             $grid->abreColuna(10);
 
-            # Pega os dados 
+# Pega os dados 
             $atualizacoes = $intra->get_atualizacoes();
 
-            # Percorre os dados
+# Percorre os dados
             foreach ($atualizacoes as $valor) {
 
                 p("Versão: " . $valor[0] . " - " . date_to_php($valor[1]), "patualizacao");
@@ -447,24 +451,24 @@ if ($acesso) {
 ##################################################################
 
         case "acumulacao" :
-            
+
             /*
              * Área desativada
              * Agora o acesso é feito de forma direta sem esse menu
              */
 
-            # Limita a tela
+# Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # botão voltar
+# botão voltar
             botaoVoltar("?", "Voltar", "Volta ao Menu principal");
 
-            # Título
+# Título
             titulo("Área de Acumulação de Cargos");
             br(2);
 
-            # Limita a tela
+# Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(8);
 
@@ -480,7 +484,7 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            #$botao->set_novo(true);
+#$botao->set_novo(true);
             $botao->set_label('Controle da Entrega da Declaração Anual');
             $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);

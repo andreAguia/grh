@@ -20,25 +20,25 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
  */
 define("PASTA_CLASSES_GERAIS", "../../_framework/_classesGerais/");  # Classes Gerais
 define("PASTA_CLASSES_ADMIN", "../../areaServidor/_classes/");       # Classes do sistema de Administração 
-define("PASTA_CLASSES", "../_classes/");                              # Classes Específicas
+define("PASTA_CLASSES", "../_classes/");                             # Classes Específicas
 
 /*
  *  Funções
  */
 define("PASTA_FUNCOES_GERAIS", "../../_framework/_funcoesGerais/");  # Funções Gerais
-define("PASTA_FUNCOES", "../_funcoes/");                    # Funções Específicas GRH
+define("PASTA_FUNCOES", "../_funcoes/");                             # Funções Específicas GRH
 
 /*
  *  Figuras
  */
 define("PASTA_FIGURAS_GERAIS", "../../_framework/_imgGerais/");      # Figuras Gerais
-define("PASTA_FIGURAS", "../_img/");                               # Figuras Específicas
+define("PASTA_FIGURAS", "../_img/");                                 # Figuras Específicas
 
 /*
  *  Estilos
  */
 define("PASTA_ESTILOS_GERAIS", "../../_framework/_cssGerais/");      # Estilos Gerais (Foundation)
-define("PASTA_ESTILOS", "../_css/");                                  # Estilos Específicos
+define("PASTA_ESTILOS", "../_css/");                                 # Estilos Específicos
 
 /*
  *  Arquivos
@@ -53,7 +53,7 @@ define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos
 define("PASTA_BIM", "../../_arquivos/bim/");                        # BIM
 define("PASTA_ATESTADO", "../../_arquivos/atestados/");             # atestados
 define("PASTA_TRANSPORTE", "../../_arquivos/transporte/");          # servidores que receberam auxílio transporte naquele mês
-define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");          # servidores que receberam auxílio transporte naquele mês
+define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");  # Pasta do ato de investidura
 
 /*
  *  Tags aceitas em campos com htmlTag = true

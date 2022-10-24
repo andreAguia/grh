@@ -132,7 +132,7 @@ if ($acesso) {
                 $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
                 $linkProc->set_class('button success');
                 $linkProc->set_title('Acessa a área de procedimentos');
-                $linkProc->set_target("_blank");
+                $linkProc->set_target("_blank3");
                 $menu->add_link($linkProc, "right");
                 
                 $menu->show();

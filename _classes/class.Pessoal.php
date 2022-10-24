@@ -4158,31 +4158,25 @@ class Pessoal extends Bd {
          * @param date $data a data (no formato dia/mês/ano) a ser pesquisada, se nulo pega a data atual
          * 
          */
+        # Se a data for nula pega-se a data atual no formato do Mysql
         if (is_null($data)) {
-            # Monta o select
-            $select = 'SELECT descricao
-                         FROM tbferiado 
-                        WHERE (tipo = "anual" AND MONTH(data) = MONTH(current_date()) AND DAY(data) = DAY(current_date())
-                           OR (tipo = "data única" and  data = current_date()))';
-            $row = parent::select($select, false);
+            $data = date("Y-m-d");
+        }
 
+        # Valida a data
+        if (validaData($data)) {
+            $data = date_to_bd($data);
+
+            # Monta o select
+            $select = "SELECT descricao
+                             FROM tbferiado 
+                            WHERE (tipo = 'anual' AND MONTH(data) = MONTH('{$data}') AND DAY(data) = DAY('{$data}')
+                               OR (tipo = 'data única' and  data = '{$data}')
+                               OR (tipo = 'data única' AND  '{$data}' BETWEEN data AND dataFinal))";
+
+            $row = parent::select($select, false);
             if (!empty($row["descricao"])) {
                 return $row["descricao"];
-            }
-        } else {
-            if (validaData($data)) {
-                $data = date_to_bd($data);
-
-                # Monta o select
-                $select = 'SELECT descricao
-                             FROM tbferiado 
-                            WHERE (tipo = "anual" AND MONTH(data) = MONTH("' . $data . '") AND DAY(data) = DAY("' . $data . '")
-                               OR (tipo = "data única" and  data = "' . $data . '"))';
-
-                $row = parent::select($select, false);
-                if (!empty($row["descricao"])) {
-                    return $row["descricao"];
-                }
             }
         }
     }

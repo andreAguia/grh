@@ -65,15 +65,17 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT tipo,
-                                      data,
-                                      descricao,
-                                      idferiado
-                                 FROM tbferiado
-                                WHERE descricao LIKE "%' . $parametro . '%"
-                             ORDER BY tipo, month(data), day(data)');
+                                     data,
+                                     dataFinal,
+                                     descricao,
+                                     idferiado
+                                FROM tbferiado
+                               WHERE descricao LIKE "%' . $parametro . '%"
+                            ORDER BY tipo, month(data), day(data)');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,
+                                     dataFinal,
                                      descricao,
                                      tipo
                                 FROM tbferiado
@@ -93,10 +95,10 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo", "Data", "Descrição"));
-    $objeto->set_width(array(10, 20, 60));
-    $objeto->set_align(array("center", "center", "left"));
-    $objeto->set_funcao(array(null, "date_to_php"));
+    $objeto->set_label(["Tipo", "Data", "Data Final (Quando Houver)", "Descrição"]);
+    $objeto->set_width([15, 15, 15, 55]);
+    $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -124,14 +126,21 @@ if ($acesso) {
             'title' => 'Data do feriado.',
             'col' => 3,
             'linha' => 1),
-        array('linha' => 1,
+        array('nome' => 'dataFinal',
+            'label' => 'Data Final (quando houver):',
+            'tipo' => 'date',
+            'size' => 20,
+            'title' => 'Data final quando for período.',
+            'col' => 3,
+            'linha' => 1),
+        array('linha' => 2,
             'nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
             'required' => true,
             'col' => 6,
             'size' => 50),
-        array('linha' => 1,
+        array('linha' => 2,
             'nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',

@@ -76,8 +76,8 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita('SELECT data,
                                      dataFinal,
-                                     descricao,
-                                     tipo
+                                     tipo,
+                                     descricao
                                 FROM tbferiado
                                WHERE idferiado = ' . $id);
 
@@ -132,21 +132,22 @@ if ($acesso) {
             'size' => 20,
             'title' => 'Data final quando for período.',
             'col' => 3,
-            'linha' => 1),
-        array('linha' => 2,
-            'nome' => 'descricao',
-            'label' => 'Descrição:',
-            'tipo' => 'texto',
-            'required' => true,
-            'col' => 6,
-            'size' => 200),
-        array('linha' => 2,
+            'linha' => 1),        
+        array('linha' => 1,
             'nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'array' => array("anual", "data única"),
             'col' => 3,
-            'size' => 30)));
+            'size' => 30),
+        array('linha' => 2,
+            'nome' => 'descricao',
+            'label' => 'Descrição:',
+            'tipo' => 'texto',
+            'required' => true,
+            'col' => 12,
+            'size' => 200),        
+        ));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

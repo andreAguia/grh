@@ -100,6 +100,23 @@ if ($acesso) {
     # Area de Licença Médica
     set_session('parametroAlta');
 
+    # Pega os parâmetros do calendário
+    $anoCalendario = post('ano', date("Y"));
+    $mesCalendario = post('mes', date("m"));
+    
+    # Valida os valores
+    if($anoCalendario < 1900 OR $anoCalendario > 2100){
+        $anoCalendario = date("Y");
+    }
+    
+    if($mesCalendario < 1){
+        $mesCalendario = 1;
+    }
+    
+    if($mesCalendario > 12){
+        $mesCalendario = 12;
+    }
+
     /*
      *  Menu
      */
@@ -134,7 +151,7 @@ if ($acesso) {
                 $linkProc->set_title('Acessa a área de procedimentos');
                 $linkProc->set_target("_blank3");
                 $menu->add_link($linkProc, "right");
-                
+
                 $menu->show();
             }
 
@@ -257,7 +274,7 @@ if ($acesso) {
 
             ########
             # monta o menu principal
-            $menu = new MenuPrincipal($idUsuario);
+            $menu = new MenuPrincipal($idUsuario, $mesCalendario, $anoCalendario);
 
             # Zera a session de alerta
             set_session('alerta');
@@ -322,21 +339,21 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
 
-# Tabela
+            # Tabela
             $grid = new Grid();
             $grid->abreColuna(3);
 
-# Resumo
+            # Resumo
             $pessoal = new Pessoal();
             $numAniversdariantes = $pessoal->get_numAniversariantes();
             $numHoje = $pessoal->get_numAniversariantesHoje();
             $numServidores = $pessoal->get_numServidoresAtivos();
 
-# Exibe os valores            
+            # Exibe os valores            
             $dados[] = ["Aniversariantes do Mês", $numAniversdariantes];
             $dados[] = ["Aniversariantes de Hoje", $numHoje];
 
-# Tabela
+            # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
             $tabela->set_titulo("Resumo");
@@ -346,14 +363,14 @@ if ($acesso) {
             $tabela->set_align(["left", "center"]);
             $tabela->show();
 
-# Calendário
+            # Calendário
             $cal = new Calendario($parametroMes);
             $cal->show();
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
 
-# Exibe a tabela            
+            # Exibe a tabela            
             $select = 'SELECT DAY(tbpessoa.dtNasc),
                      tbpessoa.nome,
                      tbservidor.idServidor,
@@ -366,7 +383,7 @@ if ($acesso) {
                  AND MONTH(tbpessoa.dtNasc) = ' . $parametroMes . '
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
-# lotacao
+            # lotacao
             if (!is_null($parametroLotacao)) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
@@ -382,7 +399,7 @@ if ($acesso) {
             $count = $pessoal->count($select);
             $titulo = "Aniversariantes de " . get_nomeMes($parametroMes);
 
-# Tabela
+            # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_label(array("Dia", "Nome", "Lotação", "Cargo", "Perfil"));
@@ -457,18 +474,18 @@ if ($acesso) {
              * Agora o acesso é feito de forma direta sem esse menu
              */
 
-# Limita a tela
+            # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
 
-# botão voltar
+            # botão voltar
             botaoVoltar("?", "Voltar", "Volta ao Menu principal");
 
-# Título
+            # Título
             titulo("Área de Acumulação de Cargos");
             br(2);
 
-# Limita a tela
+            # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(8);
 
@@ -484,7 +501,6 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-#$botao->set_novo(true);
             $botao->set_label('Controle da Entrega da Declaração Anual');
             $botao->set_url('areaAcumulacaoDeclaracao.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);

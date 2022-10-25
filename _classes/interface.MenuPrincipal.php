@@ -11,7 +11,7 @@ class MenuPrincipal {
 
     ######################################################################################################################    
 
-    public function __construct($idUsuario) {
+    public function __construct($idUsuario, $mes = null, $ano = null) {
         /**
          * Inicia a classe
          */
@@ -66,27 +66,26 @@ class MenuPrincipal {
 
         $grid1 = new Grid();
         $grid1->abreColuna(12, 6, 12);
-
+        
         # Módulos
-        $this->moduloBalcao($idUsuario);
+        $this->moduloBalcao($idUsuario);       
 
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 6, 12);
 
+        # Calendário        
+        $cal = new Calendario($mes, $ano);
+        $cal->show("?");
+        
+        $grid1->fechaColuna();
+        $grid1->abreColuna(12, 6, 12);
+        
         $this->moduloAniversariantes();
+
+        $grid1->fechaColuna();
+        $grid1->abreColuna(12, 6, 12);
+
         $this->moduloGrh();
-        #$this->moduloAlertas();
-
-        $grid1->fechaColuna();
-        $grid1->abreColuna(12, 6, 12);
-
-        # Calendário
-        $cal = new Calendario();
-        $cal->show();
-
-        $grid1->fechaColuna();
-        $grid1->abreColuna(12, 6, 12);
-
         $this->moduloRamais();
 
         $grid1->fechaColuna();
@@ -403,20 +402,19 @@ class MenuPrincipal {
                 p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!", "center");
 
                 $painel2->fecha();
-                
+
                 # idServidor de Gustavo = 32
                 if ($idServidor == 32) {
-                    
+
                     # Exibe as figuras
                     $figura = new Imagem(PASTA_FIGURAS . 'flor.png', 'Bom Apetite', 50, 50);
                     $figura->set_id('flor');
                     $figura->show();
-                    
+
                     # Exibe as figuras
                     $figura = new Imagem(PASTA_FIGURAS . 'coracao.gif', 'Bom Apetite', 50, 50);
                     $figura->set_id('coracao');
-                    $figura->show();                    
-                    
+                    $figura->show();
                 }
             }
         } else {

@@ -65,7 +65,8 @@ define('TAGS', '<p></p><a></a><br/><br><div></div><table></table><tr></tr><td></
 /*
  *  Cria array dos meses
  */
-$mes = array(array("1", "Janeiro"),
+$mes = array(
+    array("1", "Janeiro"),
     array("2", "Fevereiro"),
     array("3", "Março"),
     array("4", "Abril"),

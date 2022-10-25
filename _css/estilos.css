@@ -609,6 +609,20 @@ p#labelBalcao{
     margin: 0px;
 }
 
+img#flor{
+    position: relative;
+    float: left;
+    left: 30px;
+    bottom: 90px;
+}
+
+img#coracao{
+    position: relative;
+    float: right;
+    left: -40px;
+    bottom: 70px;
+}
+
 /*******************************************
  * Controle de solicitação de redução de Carga horária
  *******************************************/

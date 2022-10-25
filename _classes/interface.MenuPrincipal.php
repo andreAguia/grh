@@ -286,7 +286,7 @@ class MenuPrincipal {
         # Servidores
         titulo('Documentos');
         br();
-        
+
         $tamanhoImage = 60;
         $menu = new MenuGrafico(2);
         #$menu->set_espacoEntreLink(true);
@@ -307,7 +307,7 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $menu->show();
-        
+
         hr();
 
         # Menu
@@ -403,6 +403,21 @@ class MenuPrincipal {
                 p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!", "center");
 
                 $painel2->fecha();
+                
+                # idServidor de Gustavo = 32
+                if ($idServidor == 32) {
+                    
+                    # Exibe as figuras
+                    $figura = new Imagem(PASTA_FIGURAS . 'flor.png', 'Bom Apetite', 50, 50);
+                    $figura->set_id('flor');
+                    $figura->show();
+                    
+                    # Exibe as figuras
+                    $figura = new Imagem(PASTA_FIGURAS . 'coracao.gif', 'Bom Apetite', 50, 50);
+                    $figura->set_id('coracao');
+                    $figura->show();                    
+                    
+                }
             }
         } else {
             $sortudos = ["", "", "", ""];

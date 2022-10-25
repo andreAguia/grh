@@ -139,7 +139,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'required' => true,
             'col' => 6,
-            'size' => 50),
+            'size' => 200),
         array('linha' => 2,
             'nome' => 'tipo',
             'label' => 'Tipo:',

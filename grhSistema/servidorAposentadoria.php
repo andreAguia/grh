@@ -110,27 +110,48 @@ if ($acesso) {
     $tab->abreConteudo();
 
     $grid1 = new Grid();
-    $grid1->abreColuna(12, 4);
+    $grid1->abreColuna(12, 6, 3);
 
     $array = [
         ["Idade", $pessoal->get_idade($idServidorPesquisado)],
-        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) . " dias"],
-        ["Tempo Averbado + Tempo de Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoTotal($idServidorPesquisado) . " dias"],
-        ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
+        ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)]
     ];
 
     # Tabela
     $tabela = new Tabela();
     $tabela->set_titulo("Dados do Servidor");
     $tabela->set_conteudo($array);
-    $tabela->set_label(array("Descrição", "Valor"));
-    $tabela->set_width(array(60, 40));
-    $tabela->set_align(array("left", "center"));
+    $tabela->set_label(["Descrição", "Valor"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
     $tabela->set_totalRegistro(false);
     $tabela->show();
 
     $grid1->fechaColuna();
-    $grid1->abreColuna(12, 4);
+    $grid1->abreColuna(12, 6, 3);
+
+    /*
+     *  Tempo Geral
+     */
+
+    $array = [
+        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
+        ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidorPesquisado)]
+    ];
+
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Geral");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 6, 3);
 
     /*
      *  Tempo Averbado
@@ -144,33 +165,36 @@ if ($acesso) {
     $tabela = new Tabela();
     $tabela->set_titulo("Tempo Averbado");
     $tabela->set_conteudo($array);
-    $tabela->set_label(array("Descrição", "Dias"));
-    $tabela->set_width(array(60, 40));
-    $tabela->set_align(array("left", "center"));
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
     $tabela->set_totalRegistro(false);
     $tabela->set_colunaSomatorio(1);
     $tabela->show();
 
     $grid1->fechaColuna();
-    $grid1->abreColuna(12, 4);
+    $grid1->abreColuna(12, 6, 3);
 
     /*
      *  Tempo Público
      */
     $array = [
-        ["Total (averbado + Uenf)", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado) + $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
-        ["Ininterrupto", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)],
+        ["Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
+        ["Averbado Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)]
     ];
 
     # Tabela
     $tabela = new Tabela();
     $tabela->set_titulo("Tempo Público");
     $tabela->set_conteudo($array);
-    $tabela->set_label(array("Descrição", "Dias"));
-    $tabela->set_width(array(60, 40));
-    $tabela->set_align(array("left", "center"));
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
     $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
     $tabela->show();
+
+    callout("Tempo Público Ininterrupto: " . $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado) . " dias","secondary");
 
     $grid1->fechaColuna();
     $grid1->fechaGrid();

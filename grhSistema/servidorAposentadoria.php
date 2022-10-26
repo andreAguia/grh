@@ -55,8 +55,8 @@ if ($acesso) {
 ####################################################
     # Limita o tamanho da tela
     $grid = new Grid();
-    $grid->abreColuna(12);
-
+    $grid->abreColuna(12);    
+    
     # Verifica a data de saída
     $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);      # Data de Saída de servidor inativo
     $dtHoje = date("Y-m-d");                                      # Data de hoje

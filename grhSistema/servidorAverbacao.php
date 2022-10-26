@@ -132,7 +132,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-    $objeto->set_width([8, 8, 8, 8, 8, 20, 8, 8, 8, 8]);
+    #$objeto->set_width([8, 8, 8, 8, 8, 20, 8, 8, 8, 8]);
     $objeto->set_align(["center", "center", "center", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 

@@ -11,16 +11,53 @@ class Averbacao {
 
         # Pega os valores
         $select = "SELECT dtInicial,
-                         dtFinal
-                   FROM tbaverbacao
-                  WHERE idAverbacao = {$idAverbacao}";
+                          dtFinal
+                     FROM tbaverbacao
+                    WHERE idAverbacao = {$idAverbacao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        $retorno = getNumDias($dados[0], $dados[1]);
+        # Passa para o formato brasileiro
+        $dados[0] = date_to_php($dados[0]);
+        $dados[1] = date_to_php($dados[1]);
 
-        return $retorno;
+        return getNumDias($dados[0], $dados[1]);
+    }
+
+    #####################################################
+
+    function getDiasAnterior151298($idAverbacao) {
+
+        # Verifica se foi informado o id
+        if (empty($idAverbacao)) {
+            return null;
+        }
+
+        # Data a ser verificada 
+        $dtalvo = date_to_bd("15/12/1998");
+
+        # Pega os valores
+        $select = "SELECT dtInicial,
+                          dtFinal,
+                          dias
+                     FROM tbaverbacao
+                    WHERE idAverbacao = {$idAverbacao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        # Verifica se dataz inicial é maior que mais recente 
+        if ($dados[0] > $dtalvo) {
+            return 0;
+        } else {
+            # Verifica se a data final é anterior a data alvo
+            if ($dados[1] < $dtalvo) {
+                return $dados[2];
+            } else {
+                return getNumDias(date_to_php($dados[0]), date_to_php($dtalvo));
+            }
+        }
     }
 
     #####################################################

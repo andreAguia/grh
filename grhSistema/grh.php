@@ -22,11 +22,7 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'menu');
     $alerta = get('alerta');
-    $parametroMes = post('parametroMes', date("m"));
-    $parametroLotacao = post('parametroLotacao', '*');
 
-    # Define a senha padrão de acordo com o que está nas variáveis
-    #define("SENHA_PADRAO",$config->get_variavel('senha_padrao'));    
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -100,20 +96,24 @@ if ($acesso) {
     # Area de Licença Médica
     set_session('parametroAlta');
 
+    # Pega os parâmetros dos aniversariantes
+    $parametroMes = post('parametroMes', date("m"));
+    $parametroLotacao = post('parametroLotacao', '*');
+
     # Pega os parâmetros do calendário
     $anoCalendario = post('ano', date("Y"));
     $mesCalendario = post('mes', date("m"));
-    
+
     # Valida os valores
-    if($anoCalendario < 1900 OR $anoCalendario > 2100){
+    if ($anoCalendario < 1900 OR $anoCalendario > 2100) {
         $anoCalendario = date("Y");
     }
-    
-    if($mesCalendario < 1){
+
+    if ($mesCalendario < 1) {
         $mesCalendario = 1;
     }
-    
-    if($mesCalendario > 12){
+
+    if ($mesCalendario > 12) {
         $mesCalendario = 12;
     }
 
@@ -129,7 +129,7 @@ if ($acesso) {
 
             # Exibe a Versão e o usuário logado
             p(SISTEMA, 'grhTitulo');
-            p("Usuário: {$nickUser} - Versão: " . VERSAO, "versao");
+            p("Versão: " . VERSAO . "<br/>Atualizado em: " . ATUALIZACAO, "versao");
 
             # Limita o tamanho da tela
             $grid = new Grid();

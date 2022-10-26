@@ -189,6 +189,17 @@ if ($acesso) {
     $objeto->set_align(["left"]);
     $objeto->set_funcao([null, null, "date_to_php", null, null, null, null, null, "date_to_php"]);
 
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 6,
+            'valor' => "Sim",
+            'operador' => '<>',
+            'id' => 'normal'),
+        array('coluna' => 6,
+            'valor' => "Sim",
+            'operador' => '=',
+            'id' => 'diasAntes')
+    ));
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 

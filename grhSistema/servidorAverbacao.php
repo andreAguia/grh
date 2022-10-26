@@ -78,6 +78,7 @@ if ($acesso) {
                       dtFinal,
                       dias,
                       idAverbacao,
+                      idAverbacao,
                       empresa,
                       CASE empresaTipo ";
 
@@ -99,7 +100,7 @@ if ($acesso) {
                  FROM tbaverbacao
                 WHERE idServidor = {$idServidorPesquisado}
              ORDER BY dtInicial desc";
-    
+
     # select da lista
     $objeto->set_selectLista($select);
 
@@ -129,22 +130,29 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $label = array("Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo");
-    $align = array("center", "center", "center", "center", "left");
-    $funcao = array("date_to_php", "date_to_php", null, null, null, null, null, null, "date_to_php");
-
     # Parametros da tabela
-    $objeto->set_label($label);
-    $objeto->set_width(array(10, 10, 5, 5, 20, 5, 5, 8, 10, 12));
-    $objeto->set_align($align);
-    $objeto->set_funcao($funcao);
+    $objeto->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+    $objeto->set_width([8, 8, 8, 8, 8, 20, 8, 8, 8, 8]);
+    $objeto->set_align(["center", "center", "center", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
     $objeto->set_colunaSomatorio([2, 3]);
     $objeto->set_textoSomatorio("Total de Dias:");
     $objeto->set_totalRegistro(false);
 
-    $objeto->set_classe(array(null, null, null, "Averbacao"));
-    $objeto->set_metodo(array(null, null, null, "getNumDias"));
+    $objeto->set_classe([null, null, null, "Averbacao", "Averbacao"]);
+    $objeto->set_metodo([null, null, null, "getNumDias", "getDiasAnterior151298"]);
+
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 4,
+            'valor' => 0,
+            'operador' => '<>',
+            'id' => 'diasAntes'),
+        array('coluna' => 4,
+            'valor' => 0,
+            'operador' => '=',
+            'id' => 'normal')
+    ));
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

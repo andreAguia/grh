@@ -21,8 +21,7 @@ class Aposentadoria {
         $intra = new Intra();
         $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
         $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
-        
-        
+
         tituloTable("Menu");
         $menu = new Menu("menuAposentadoria", $itemBold);
 
@@ -39,7 +38,7 @@ class Aposentadoria {
         $menu->add_item("link", "Compulsória", "areaAposentadoria_previsaoCompulsoria.php", "Previsão de aposentadoria compulsória");
         $menu->add_item("link", "Compulsória por Ano", "areaAposentadoria_previsaoCompulsoriaPorAno.php", "Previsão de aposentadoria compulsória por ano");
         #$menu->add_item("link", "Configuração Compulsória", "areaAposentadoria.php?fase=configuracaoCompulsoria", "Configuração");
-        
+
         $menu->add_item("titulo1", "Regras de Transição");
         $menu->add_item("link", "EC nº 41/2003", "areaAposentadoria_previsaoTransicaoEC41.php", "Regras de transição - EC nº 41/2003");
         $menu->add_item("link", "EC nº 47/2005", "areaAposentadoria_previsaoTransicaoEC47.php", "Regras de transição - EC nº 47/2005");
@@ -180,6 +179,7 @@ class Aposentadoria {
 
         # Monta o select
         $select = 'SELECT tbservidor.idfuncional,
+                              tbpessoa.nome,
                               tbservidor.idServidor,
                               tbservidor.dtAdmissao,
                               tbservidor.dtDemissao,
@@ -194,16 +194,16 @@ class Aposentadoria {
         $result = $pessoal->select($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Aposentados por Tipo');
+        $tabela->set_titulo($pessoal->get_motivoAposentadoria($parametroMotivo));
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Perfil'));
-        $tabela->set_align(array('center', 'left'));
-        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
+        $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Saída', 'Perfil']);
+        $tabela->set_align(['center', 'left', 'left']);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
-        $tabela->set_classe(array(null, "pessoal", null, null, "pessoal"));
-        $tabela->set_metodo(array(null, "get_nomeECargo", null, null, "get_perfil"));
+        $tabela->set_classe([null, null, "pessoal", null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_cargo", null, null, "get_perfil"]);
 
         $tabela->set_conteudo($result);
 
@@ -384,7 +384,7 @@ class Aposentadoria {
                 $totalDias += $periodo[1];
             }
         }
-        
+
         return $totalDias;
     }
 
@@ -400,7 +400,7 @@ class Aposentadoria {
 
         $averbacao = new Averbacao();
         $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
-        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);        
+        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);
         $tempoUenf = $this->get_tempoServicoUenf($idServidor);
 
         return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;

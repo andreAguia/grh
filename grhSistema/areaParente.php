@@ -14,8 +14,7 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
-if ($acesso)
-{
+if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
@@ -25,8 +24,7 @@ if ($acesso)
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
-    if ($grh)
-    {
+    if ($grh) {
         # Grava no log a atividade
         $atividade = "Visualizou a área de parentes";
         $data = date("Y-m-d H:i:s");
@@ -47,15 +45,13 @@ if ($acesso)
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio")
-    {
+    if ($fase <> "relatorio") {
         AreaServidor::cabecalho();
     }
 
 ################################################################
 
-    switch ($fase)
-    {
+    switch ($fase) {
         case "" :
             br(4);
             aguarde();
@@ -103,7 +99,7 @@ if ($acesso)
             # Formulário de Pesquisa
             $form = new Form('?');
 
-            # Nome 
+            # Nome do Parente
             $controle = new Input('parametroNome', 'texto', 'Nome do Parente', 1);
             $controle->set_size(55);
             $controle->set_title('Nome, matrícula ou ID:');
@@ -111,28 +107,29 @@ if ($acesso)
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
 
             ##############
             # Pega os dados
-            $select = 'SELECT tbdependente.nome,
-                             TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
-                             tbparentesco.Parentesco,
-                             tbservidor.idServidor
-                        FROM tbdependente JOIN tbpessoa USING (idPessoa)
-                                          JOIN tbservidor USING (idPessoa)
-                                          JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
+            $select = 'SELECT tbservidor.idServidor,
+                              tbdependente.nome,
+                              tbparentesco.Parentesco,
+                              TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
+                              tbdependente.cpf,                             
+                              dependente
+                         FROM tbdependente JOIN tbpessoa USING (idPessoa)
+                                           JOIN tbservidor USING (idPessoa)
+                                           JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
                        WHERE situacao = 1';
 
-            if (!vazio($parametroNome))
-            {
+            if (!empty($parametroNome)) {
                 $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
             }
 
-            $select .= ' ORDER BY tbdependente.nome';
+            $select .= ' ORDER BY tbpessoa.nome, tbdependente.nome';
 
             #echo $select;
 
@@ -141,17 +138,19 @@ if ($acesso)
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Parentes de Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(array("Parente", "Idade", "Parentesco", "Servidor"));
+            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Idade", "CPF", "Dependente IR"]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("left", "center", "center", "left"));
-            $tabela->set_classe(array(null, null, null, "pessoal"));
-            $tabela->set_metodo(array(null, null, null, "get_nomeECargoELotacao"));
+            $tabela->set_align(["left", "left"]);
+            $tabela->set_classe(["pessoal"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao"]);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 
-            if (!vazio($parametroNome))
-            {
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            if (!vazio($parametroNome)) {
                 $tabela->set_textoRessaltado($parametroNome);
             }
 
@@ -198,20 +197,17 @@ if ($acesso)
                      WHERE situacao = 1
                        AND idPerfil = 1';
 
-            if ($parametroNivel <> "Todos")
-            {
+            if ($parametroNivel <> "Todos") {
                 $select .= ' AND tbtipocargo.nivel = "' . $parametroNivel . '"';
                 $subTitulo .= 'Cargo Efetivo de Nível ' . $parametroNivel . '<br/>';
             }
 
-            if ($parametroEscolaridade <> "*")
-            {
+            if ($parametroEscolaridade <> "*") {
                 $select .= ' AND tbformacao.idEscolaridade = ' . $parametroEscolaridade;
                 $subTitulo .= 'Curso de Nível ' . $pessoal->get_escolaridade($parametroEscolaridade) . '<br/>';
             }
 
-            if (!vazio($parametroCurso))
-            {
+            if (!vazio($parametroCurso)) {
                 $select .= ' AND tbformacao.habilitacao like "%' . $parametroCurso . '%"';
                 $subTitulo .= 'Filtro : ' . $parametroCurso . '<br/>';
             }
@@ -222,8 +218,7 @@ if ($acesso)
             $relatorio = new Relatorio();
             $relatorio->set_titulo('Relatório Geral de Formação Servidores');
 
-            if (!is_null($subTitulo))
-            {
+            if (!is_null($subTitulo)) {
                 $relatorio->set_subtitulo($subTitulo);
             }
 
@@ -239,8 +234,7 @@ if ($acesso)
     }
 
     $page->terminaPagina();
-} else
-{
+} else {
     loadPage("../../areaServidor/sistema/login.php");
 }
 

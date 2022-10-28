@@ -254,30 +254,17 @@ class Aposentadoria {
         # Conecta o banco de dados
         $pessoal = new Pessoal();
 
-        # Data de admissão
-        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);   # Data de entrada na UENF
-        # Define a data inicial
-        $dtInicial = date_to_bd($dtAdmissao);
+        # Data Inicial (data de admissão)
+        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
 
         # Verifica se o servidor é inativo e pega a data de saída dele
-        $dtSaida = $pessoal->get_dtSaida($idServidor);
-
-        $dtHoje = date("Y-m-d");
-
-        # Define a data término
-        if (!vazio($dtSaida)) {       // Se tem saída é a saída
-            $dtFinal = $dtSaida;
-        } else {
-            $dtFinal = $dtHoje;     // Se não tiver saída é hoje
+        if($pessoal->get_idSituacao($idServidor) == 1){
+            $dtFinal = date("d/m/Y");
+        }else{
+            $dtFinal = $pessoal->get_dtSaida($idServidor);
         }
 
-        # Calcula a diferença em segundos entre as datas
-        $diferenca = strtotime($dtFinal) - strtotime($dtInicial);
-
-        # Calcula a diferença em dias
-        $dias = floor($diferenca / (60 * 60 * 24));
-
-        return $dias;
+        return getNumDias($dtInicial, $dtFinal);
     }
 
 ##############################################################################################################################################

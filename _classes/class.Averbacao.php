@@ -18,11 +18,8 @@ class Averbacao {
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        # Passa para o formato brasileiro
-        $dados[0] = date_to_php($dados[0]);
-        $dados[1] = date_to_php($dados[1]);
-
-        return getNumDias($dados[0], $dados[1]);
+        # Retorna
+        return getNumDias(date_to_php($dados[0]), date_to_php($dados[1]));
     }
 
     #####################################################
@@ -47,7 +44,7 @@ class Averbacao {
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        # Verifica se dataz inicial é maior que mais recente 
+        # Verifica se data inicial é maior que mais recente 
         if ($dados[0] > $dtalvo) {
             return 0;
         } else {

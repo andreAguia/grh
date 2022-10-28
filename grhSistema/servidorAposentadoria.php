@@ -193,8 +193,19 @@ if ($acesso) {
     $tabela->set_totalRegistro(false);
     $tabela->set_colunaSomatorio(1);
     $tabela->show();
-
-    callout("Tempo Público Ininterrupto: " . $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado) . " dias","secondary");
+    
+    $array = [
+        ["Tempo Ininterrupto", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
+    ];
+    
+    $tabela = new Tabela();
+    #$tabela->set_titulo("Tempo Público");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["", ""]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->show();
 
     $grid1->fechaColuna();
     $grid1->fechaGrid();

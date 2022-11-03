@@ -54,7 +54,7 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function exibeDadosPlano($idPlano = null) {
+    public function exibeDadosPlano($idPlano = null, $relatorio = false) {
         /**
          * Exibe uma pequena tabela com o dados do plano
          * 
@@ -75,27 +75,42 @@ class PlanoCargos {
             $status = "Antigo";
         }
 
-        # Exibe a tabela identificando o plano
-        $tabela = new Tabela();
-        $tabela->set_titulo($dados[0]);
-        $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6], $status]));
-        $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores", "Status"]);
-        $tabela->set_totalRegistro(false);
-        $tabela->set_width([15, 15, 15, 10, 5]);
+        if ($relatorio) {
+            $relatorio = new Relatorio('relatorioFichaCadastral');
+            $relatorio->set_titulo($dados[0]);
+            $relatorio->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores", "Status"]);
+            $relatorio->set_width([15, 15, 15, 10, 5]);
+            $relatorio->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6], $status]));
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_linhaNomeColuna(false);
+            $relatorio->set_brHr(0);
+            $relatorio->set_logDetalhe("Visualizou a tabela de salário");
+            $relatorio->show();
+        } else {
+            # Exibe a tabela identificando o plano
+            $tabela = new Tabela();
+            $tabela->set_titulo($dados[0]);
+            $tabela->set_conteudo(array([date_to_php($dados[2]), date_to_php($dados[1]), date_to_php($dados[5]), $dados[6], $status]));
+            $tabela->set_label(["Data da Lei/Decreto", "Data da Publicação", "Data do Início da Vigência", "Servidores", "Status"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_width([15, 15, 15, 10, 5]);
 
-        $formatacaoCondicional = array(
-            array('coluna' => 3,
-                'valor' => $dados[6],
-                'operador' => '=',
-                'id' => 'listaDados'));
+            $formatacaoCondicional = array(
+                array('coluna' => 3,
+                    'valor' => $dados[6],
+                    'operador' => '=',
+                    'id' => 'listaDados'));
 
-        $tabela->set_formatacaoCondicional($formatacaoCondicional);
-        $tabela->show();
+            $tabela->set_formatacaoCondicional($formatacaoCondicional);
+            $tabela->show();
+        }
     }
 
     ###########################################################
 
-    public function exibeTabela($idPlano = null, $editavel = false) {
+    public function exibeTabela($idPlano = null, $relatorio = false) {
         /**
          * Retorna a tabela salarial do plano
          * 
@@ -126,32 +141,81 @@ class PlanoCargos {
             $temLetra = true;
         }
 
-        # Exibe quadro do plano
-        $this->exibeDadosPlano($idPlano);
+//        ##### Rowspan
+//        # Cria um array com os valores da coluna do rowspan
+//        $arrayRowspan = [];
+//
+//        # Preenche as variáveis de verificações que serão usadas mais na frente
+//        $rowAnterior = null;
+//        $rowAtual = null;
+//
+//        # Pega os valores
+//        $select = "SELECT faixa,
+//                              valor,
+//                              idClasse,
+//                              tbtipocargo.cargo
+//                         FROM tbclasse LEFT JOIN tbtipocargo USING (idTipoCargo)
+//                        WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
+//
+//        $row = $pessoal->select($select);
+//
+//        # Passa os valores para o array
+//        foreach ($this->conteudo as $itens) {
+//            # A verificação abaixo evita o erro da função array_count_values()
+//            # que somente funciona com valores interiros e string. 
+//            # Transformando um null em string vazia. Dai não dá erro
+//            if (empty($itens[$this->rowspan])) {
+//                $arrayRowspan[] = "";
+//            } else {
+//                $arrayRowspan[] = $itens[$this->rowspan];
+//            }
+//        }
+//        
+//        # Conta quantos valores tem e guarda no array $arr
+//        $arr = array_count_values($arrayRowspan);
+//
+//        ####
+        
 
-        # Exibe a tabela de valores
-        echo "<table class='tabelaPadrao'>";
-        echo '<caption>Valores</caption>';
+        # Se for relatório
+        if ($relatorio) {
+            # Abre a div do relatório
+            $div = new Div('divRelatorio');
+            $div->abre();
+
+            # Exibe quadro do plano com o relatório true
+            $this->exibeDadosPlano($idPlano, true);
+            br();
+
+            # Inicia a tabela do relatório
+            echo '<table class="tabelaRelatorio" border="0"';
+        } else {
+            # Exibe quadro do plano
+            $this->exibeDadosPlano($idPlano);
+
+            # Exibe a tabela de valores
+            echo "<table class='tabelaPadrao'>";
+            echo '<caption>Valores</caption>';
+        }
 
         # Percorre os valores seguindo a ordem dos níveis definido no array
         foreach ($nivel as $nn) {
 
             # Pega os valores
-            $select = 'SELECT faixa,
+            $select = "SELECT faixa,
                               valor,
                               idClasse,
                               tbtipocargo.cargo
                          FROM tbclasse LEFT JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE idPlano = ' . $idPlano . ' AND tbclasse.nivel = "' . $nn . '" ORDER BY SUBSTRING(faixa, 1, 1), valor';
+                        WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
 
             $row = $pessoal->select($select);
 
             # Preenche a tabela
             foreach ($row as $rr) {
 
-                $faixa = $rr[0];
-                $valor = $rr[1];
-                $url = $rr[2];
+                $faixa = $rr['faixa'];
+                $valor = $rr['valor'];
                 $cargo = $rr[3];
 
                 # Trata faixa
@@ -177,17 +241,34 @@ class PlanoCargos {
                         $nivelAnterior = $nn;
                     }
 
+                    /*
+                     * Cabeçalho
+                     */
+
                     # Verifica se é início da tabela
                     if (is_null($faixaRomanosAnterior)) {
                         echo "<tr>";
+
+                        # Nível - Cabeçalho
                         if ($temLetra) {
                             echo "<th rowspan='2' colspan='2' valign='middle'>Nível</th>";
                         } else {
                             echo "<th rowspan='2' valign='middle'>Nível</th>";
                         }
+
+                        # Faixas - Cabeçalho
                         echo "<th rowspan='2' valign='middle'>Faixa</th>";
-                        echo "<th colspan='$numPadroes' valign='middle'>Padrão</th>";
-                        echo "</tr><tr>";
+
+                        # Padrões - Cabeçalho
+                        if ($relatorio) {
+                            echo "<td id='salarial' colspan='$numPadroes' valign='middle'>Padrão</td>";
+                        } else {
+                            echo "<th colspan='$numPadroes' valign='middle'>Padrão</th>";
+                        }
+                        echo "</tr>";
+
+                        # Números dos Padrões - Cabeçalho
+                        echo "<tr>";
                         for ($a = 1; $a <= $numPadroes; $a++) {
                             echo "<th>$a</th>";
                         }
@@ -198,19 +279,31 @@ class PlanoCargos {
                         echo "<tr id='$cor'>";
                     }
 
+                    /*
+                     *  Corpo da tabela
+                     */
+
                     $faixaRomanosAnterior = $faixaRomanos;
+
+                    # Nível
                     echo "<td align='left'>$nn<br/>";
                     p($cargo, "ptabelaSalarial");
                     echo"</td>";
+
+                    # Nível - Letra
                     if ($temLetra) {
                         echo "<td align='center'>$letra</td>";
                     }
+
+                    # Faixa
                     echo "<td align='center'>$faixaRomanos</td>";
 
+                    # Padrões - Valores
                     echo "<td align='right'>";
                     echo formataMoeda($valor);
                     echo "</td>";
                 } else {
+                    # Padrões - Valores
                     echo "<td align='right'>";
                     echo formataMoeda($valor);
                     echo "</td>";
@@ -219,6 +312,12 @@ class PlanoCargos {
         }
 
         echo "</tr></table>";
+
+        # Se for relatório
+        if ($relatorio) {
+            # fecha a div relatório
+            $div->fecha();
+        }
     }
 
     ###########################################################

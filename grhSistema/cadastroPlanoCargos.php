@@ -48,7 +48,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "exibeRelatorio") {
+        AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -228,28 +230,45 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            # Somente para admin
-            if (Verifica::acesso($idUsuario, 1)) {
+            # Cria um menu
+            $menu1 = new MenuBar();
 
-                # Cria um menu
-                $menu1 = new MenuBar();
-                
+            # Imprimir
+            $botaoVoltar = new Link("Imprimir", "?fase=exibeRelatorio&id=".$id);
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Exibe o relatório desta tabela');
+            $menu1->add_link($botaoVoltar, "right");
+
+            # Somente Admin edita
+            if (Verifica::acesso($idUsuario, 1)) {
                 # Editar
                 $botaoVoltar = new Link("Editar", "cadastroTabelaSalarial.php");
                 $botaoVoltar->set_class('button');
                 $botaoVoltar->set_title('Edita os valores da tabela');
                 $menu1->add_link($botaoVoltar, "right");
-
-                $menu1->show();
-            } else {
-                br();
             }
 
+            $menu1->show();
+
             $plano = new PlanoCargos();
-            $plano->exibeTabela($id, false);
+            $plano->exibeTabela($id, false, true);
 
             # guarda na sessio o plano caso deseje editar
             set_session('parametroPlano', $id);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "exibeRelatorio" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            $plano = new PlanoCargos();
+            $plano->exibetabela($id,true);
 
             $grid->fechaColuna();
             $grid->fechaGrid();

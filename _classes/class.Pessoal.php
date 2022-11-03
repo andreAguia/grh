@@ -2618,7 +2618,7 @@ class Pessoal extends Bd {
         $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is null))
+                       OR (CURRENT_DATE >= dtNom AND dtExo is null))
                       AND tipo <> 3 
                       AND idServidor = ' . $idServidor;
 
@@ -2692,7 +2692,7 @@ class Pessoal extends Bd {
         $select = 'SELECT idComissao, tipo
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is null))
+                       OR (CURRENT_DATE >= dtNom AND dtExo is null))
                     AND idServidor = ' . $idServidor;
 
         $row = parent::select($select);
@@ -2765,7 +2765,7 @@ class Pessoal extends Bd {
         $select = 'SELECT *
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is null))
+                       OR (CURRENT_DATE >= dtNom AND dtExo is null))
                     AND idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
@@ -2791,7 +2791,7 @@ class Pessoal extends Bd {
                           idTipoComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
-                       OR (dtExo is null))
+                       OR (CURRENT_DATE >= dtNom AND dtExo is null))
                       AND tipo <> 3
                       AND idServidor = ' . $idServidor;
 

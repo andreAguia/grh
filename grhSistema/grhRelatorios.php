@@ -328,7 +328,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Férias');
             $menu->add_item('titulo1', 'Escala de Férias');
             $menu->add_item('linkWindow', 'Escala Anual de Férias - por Ano de Exercício', '../grhRelatorios/ferias.anual.porDiretoria.php');
-            #$menu->add_item('linkWindow', 'Escala Anual de Férias - Cedidos da Uenf - por Ano de Exercício', '../grhRelatorios/ferias.anual.cedidos.php');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias - Cedidos da Uenf - por Ano de Exercício', '../grhRelatorios/ferias.anual.cedidos.php');
             
             $menu->add_item('titulo1', 'Recesso de Professores');
             $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');

@@ -129,6 +129,7 @@ if ($acesso) {
             array('Por Cargo - Geral', 'cargo'),
             array('Por Cargo - Adm/Tec', 'cargoAdm'),
             array('Por Lotação x Cargo', 'cargoGerencia'),
+            array('Por Professores x Diretoria', 'professorDiretoria'),
             array('Por Diretoria', 'diretoria'),
             array('Por Gerência', 'gerencia'),
             array('Por Filhos', 'filhos'),
@@ -2189,6 +2190,59 @@ if ($acesso) {
             break;
 
 ####################################################################################################            
+
+        case "professorDiretoria":
+
+            # Abre o painel
+            $painel = new Callout();
+            $painel->abre();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística de professores por Diretoria";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
+
+            titulotable("Professores por Diretoria");
+            br();
+
+            ########
+            # Monta o select
+            $select = 'SELECT tblotacao.dir,
+                              CONCAT(tbtipocargo.sigla," - ",tbcargo.nome) efetivo, 
+                              count(tbservidor.idServidor) as jj
+                         FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                               JOIN tbcargo USING (idCargo)
+                                               JOIN tbtipocargo USING (idTipoCargo)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbservidor.idPerfil <> 10
+                     AND situacao = 1
+                     AND ativo
+                     AND tbtipocargo.tipo = "Professor"
+                GROUP BY tblotacao.dir, efetivo
+                ORDER BY tblotacao.dir, efetivo, tbcargo.nome';
+            #echo $select;
+            $servidores = $pessoal->select($select);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(["Diretoria", "Cargo", "Nº de Servidores"]);
+            #$tabela->set_width(array(80,20));
+            $tabela->set_align(["left", "left"]);
+            $tabela->set_rodape("Total de Servidores: " . $total);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $painel->fecha();
+            break;
+
+####################################################################################################                        
 
         case "filhos":
 

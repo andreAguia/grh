@@ -325,11 +325,15 @@ if ($acesso) {
 
         case "ferias";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Férias');            
-            $menu->add_item('titulo1', 'Para o Recesso');
-            $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
-            $menu->add_item('titulo1', 'Férias Fruídas');
+            $menu->add_item('titulo', 'Férias');
+            $menu->add_item('titulo1', 'Escala de Férias');
             $menu->add_item('linkWindow', 'Escala Anual de Férias - por Ano de Exercício', '../grhRelatorios/ferias.anual.porDiretoria.php');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias - Cedidos da Uenf - por Ano de Exercício', '../grhRelatorios/ferias.anual.cedidos.php');
+            
+            $menu->add_item('titulo1', 'Recesso de Professores');
+            $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
+            
+            $menu->add_item('titulo1', 'Férias Fruídas');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.professor.php');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.adm.php');
             $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.fruidas.professor.php');
@@ -377,7 +381,8 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimento.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geralServidoresNomeCpfNascimentoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geralServidoresNomeCpfCargoIdade.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');            
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Por Ano de Admissão - Caego e E-mail ', '../grhRelatorios/servidores.ativos.AnoAdmissao.e-mail.php');
             $menu->show();
             break;
 

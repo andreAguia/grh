@@ -146,10 +146,10 @@ if ($acesso) {
                  */
 
                 $select = "SELECT tbservidor.idFuncional,  
-                          tbservidor.idServidor,
-                          tbhistcessao.orgao,
-                          tbhistcessao.dtInicio,
-                          tbhistcessao.dtFim,
+                                  tbservidor.idServidor,
+                                  tbhistcessao.orgao,
+                                  tbhistcessao.dtInicio,
+                                  tbhistcessao.dtFim,
                           tbservidor.idServidor,
                           tbservidor.idServidor
                     FROM tbhistcessao LEFT JOIN tbservidor USING (idServidor)

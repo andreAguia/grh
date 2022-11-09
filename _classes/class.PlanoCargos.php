@@ -139,56 +139,17 @@ class PlanoCargos {
         } else {
             $numPadroes = 5;
             $temLetra = true;
-        }
-
-//        ##### Rowspan
-//        # Cria um array com os valores da coluna do rowspan
-//        $arrayRowspan = [];
-//
-//        # Preenche as variáveis de verificações que serão usadas mais na frente
-//        $rowAnterior = null;
-//        $rowAtual = null;
-//
-//        # Pega os valores
-//        $select = "SELECT faixa,
-//                              valor,
-//                              idClasse,
-//                              tbtipocargo.cargo
-//                         FROM tbclasse LEFT JOIN tbtipocargo USING (idTipoCargo)
-//                        WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
-//
-//        $row = $pessoal->select($select);
-//
-//        # Passa os valores para o array
-//        foreach ($this->conteudo as $itens) {
-//            # A verificação abaixo evita o erro da função array_count_values()
-//            # que somente funciona com valores interiros e string. 
-//            # Transformando um null em string vazia. Dai não dá erro
-//            if (empty($itens[$this->rowspan])) {
-//                $arrayRowspan[] = "";
-//            } else {
-//                $arrayRowspan[] = $itens[$this->rowspan];
-//            }
-//        }
-//        
-//        # Conta quantos valores tem e guarda no array $arr
-//        $arr = array_count_values($arrayRowspan);
-//
-//        ####
-        
+        }        
 
         # Se for relatório
         if ($relatorio) {
-            # Abre a div do relatório
-            $div = new Div('divRelatorio');
-            $div->abre();
 
             # Exibe quadro do plano com o relatório true
             $this->exibeDadosPlano($idPlano, true);
             br();
 
             # Inicia a tabela do relatório
-            echo '<table class="tabelaRelatorio" border="0"';
+            echo '<table class="tabelaRelatorioFicha" border="0"';
         } else {
             # Exibe quadro do plano
             $this->exibeDadosPlano($idPlano);
@@ -312,12 +273,6 @@ class PlanoCargos {
         }
 
         echo "</tr></table>";
-
-        # Se for relatório
-        if ($relatorio) {
-            # fecha a div relatório
-            $div->fecha();
-        }
     }
 
     ###########################################################

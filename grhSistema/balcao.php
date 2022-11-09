@@ -499,7 +499,10 @@ if ($acesso) {
             # Verifica quantos dias tem o mês específico
             $dias = date("j", mktime(0, 0, 0, $parametroMes + 1, 0, $parametroAno));
 
+            # Log
+            $atividade = null;
             $contador = 0;
+
             while ($contador < $dias) {
                 $contador++;
                 $vmanha = post("m$contador");
@@ -527,11 +530,47 @@ if ($acesso) {
                 # Verifica se já existe esse campo e pega o id para o update
                 $idBalcao = get_idBalcao($parametroAno, $parametroMes, $contador);
 
+                # Verifica se houve alteração e salva para o Log
+                # Manha Presencial
+                if ($vmanha <> get_servidorBalcao($parametroAno, $parametroMes, $contador, "m")) {
+                    $atividade .= "{$contador}/{$parametroMes}/{$parametroAno} - Manhã Presencial:";
+                    $atividade .= " De " . $pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "m"));
+                    $atividade .= " Para " . $pessoal->get_nomeSimples($vmanha) . "<br/>";
+                }
+
+                # Manha Online
+                if ($vmanhaOnline <> get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo")) {
+                    $atividade .= "{$contador}/{$parametroMes}/{$parametroAno} - Manhã Online:";
+                    $atividade .= " De " . $pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "mo"));
+                    $atividade .= " Para " . $pessoal->get_nomeSimples($vmanhaOnline) . "<br/>";
+                }
+
+                # Tarde Presencial
+                if ($vtarde <> get_servidorBalcao($parametroAno, $parametroMes, $contador, "t")) {
+                    $atividade .= "{$contador}/{$parametroMes}/{$parametroAno} - Tarde Presencial:";
+                    $atividade .= " De " . $pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "t"));
+                    $atividade .= " Para " . $pessoal->get_nomeSimples($vtarde) . "<br/>";
+                }
+
+                # Tarde Omline
+                if ($vtardeOnline <> get_servidorBalcao($parametroAno, $parametroMes, $contador, "to")) {
+                    $atividade .= "{$contador}/{$parametroMes}/{$parametroAno} - Tarde Online:";
+                    $atividade .= " De " . $pessoal->get_nomeSimples(get_servidorBalcao($parametroAno, $parametroMes, $contador, "to"));
+                    $atividade .= " Para " . $pessoal->get_nomeSimples($vtardeOnline) . "<br/>";
+                }
+
                 # Grava na tabela
                 $campos = array("ano", "mes", "dia", "idServidorManha", "idServidorManhaOnline", "idServidorTarde", "idServidorTardeOnline");
                 $valor = array($parametroAno, $parametroMes, $contador, $vmanha, $vmanhaOnline, $vtarde, $vtardeOnline);
                 $pessoal->gravar($campos, $valor, $idBalcao, "tbbalcao", "idBalcao", false);
             }
+           
+            # Grava no log a atividade
+            if (!empty($atividade)) {
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario, $data, "Alterou o balcão:<br/>{$atividade}", "tbbalcao", null, 2);
+            }
+
             loadPage("?");
             break;
 

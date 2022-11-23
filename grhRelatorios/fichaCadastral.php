@@ -1521,7 +1521,7 @@ if ($acesso) {
         $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Resultado", "Publicação", "Saída", "Motivo"]);
         $relatorio->set_width([20, 20, 10, 10, 10, 10, 20]);
         #$relatorio->set_align(["left", "center", "left"]);
-        $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+        $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
         $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
         $relatorio->set_conteudo($result);

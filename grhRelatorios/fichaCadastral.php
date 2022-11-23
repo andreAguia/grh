@@ -276,7 +276,6 @@ if ($acesso) {
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
         $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
         $dadosConcurso = $pessoal->get_idConcurso($idServidorPesquisado);
-        
 
         # Informa se o servidor entrou como CLT
         if ($regime == "CLT") {
@@ -1509,7 +1508,8 @@ if ($acesso) {
         $select = "SELECT instituicao,
                           cargo,                                     
                           matricula,
-                          dtAdmissao,
+                          idAcumulacao,
+                          idAcumulacao,
                           dtSaida,
                           tbmotivo.motivo
                      FROM tbacumulacao LEFT JOIN tbmotivo ON(tbacumulacao.motivoSaida = tbmotivo.idMotivo)
@@ -1518,10 +1518,12 @@ if ($acesso) {
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Admissão", "Saída", "Motivo"]);
-        #$relatorio->set_width([40, 20, 40]);
+        $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Resultado", "Publicação", "Saída", "Motivo"]);
+        $relatorio->set_width([20, 20, 10, 10, 10, 10, 20]);
         #$relatorio->set_align(["left", "center", "left"]);
         $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+        $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
+        $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
         $relatorio->set_conteudo($result);
 
         $relatorio->set_botaoVoltar(false);

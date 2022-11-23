@@ -311,4 +311,77 @@ class Acumulacao {
     }
 
 ##############################################################
+
+    public function get_resultadoRelatorio($idAcumulacao) {
+
+        /**
+         * Informa o resultado final de uma acumulação
+         * 
+         * @param $idAcumulacao integer null O id da acumulação
+         * 
+         * @syntax $acumulacao->get_resultado([$idAcumulacao]);
+         */
+        # Inicia a variável de retorno
+        $retorno = null;
+        $recurso = null;
+
+        # Pega os dados
+        $dados = $this->get_dados($idAcumulacao);
+
+        # Joga os resultados nas variáveis
+        $resultado = $dados["resultado"];
+        $resultado1 = $dados["resultado1"];
+        $resultado2 = $dados["resultado2"];
+        $resultado3 = $dados["resultado3"];
+        $motivo = $dados["motivoSaida"];
+
+        # Verifica se é nulo ou aposentadoria
+        # Quando a saída é aposentadoria o sitema continua a exibir ilícito pois o vínculo ainda existe
+        # Já que o servidor ainda recebe pelo outro vínculo
+        # ---
+        # Quando A saída não é de Aposentadoria, o ilícito deixa de ser exibido, pois o vínculo foi desfeito
+        # Dessa forma entende-se que o servidor optou pela Uenf
+        #---
+        if ($motivo == null OR $motivo == 3 OR $motivo == 4 OR $motivo == 5 OR $motivo == 6) {
+            # Verifica o primeiro resultado
+            if (!vazio($resultado)) {
+                $retorno = $resultado;
+            }
+
+            # Verifica o primeiro recurso
+            if (!vazio($resultado1)) {
+                $retorno = $resultado1;
+                $recurso = "(1° recurso)";
+            }
+
+            # Verifica o segundo recurso
+            if (!vazio($resultado2)) {
+                $retorno = $resultado2;
+                $recurso = "(2° recurso)";
+            }
+
+            # Verifica o último recurso
+            if (!vazio($resultado3)) {
+                $retorno = $resultado3;
+                $recurso = "(3° recurso)";
+            }
+
+            # Trata o retorno
+            if ($retorno == 1) {
+                $retorno = "<b>Lícito</b>";
+            } elseif ($retorno == 2) {
+                $retorno = "<b>Ilícito</b>";
+            } else {
+                $retorno = "---";
+            }
+
+            echo $retorno;
+            p($recurso, "pgetCargo");
+        } else {
+            echo "---";
+        }
+    }
+
+##############################################################
+
 }

@@ -15,7 +15,7 @@ include ("../grhSistema/_config.php");
 
 # Pega os parâmetros do relatório
 $postIdServidor = post('postIdServidor');
-$parametroAno = post('parametroAno', date('Y'));
+$parametroAno = post('parametroAno', date('Y') + 1);
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
@@ -48,7 +48,7 @@ if ($acesso) {
 
     # Cria um array com os anos possíveis
     $anoInicial = 1993;
-    $anoAtual = date('Y')+1;
+    $anoAtual = date('Y') + 1;
     $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
 
     # Menu do Relatório

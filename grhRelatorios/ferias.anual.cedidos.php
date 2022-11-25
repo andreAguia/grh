@@ -48,7 +48,7 @@ if ($acesso) {
 
     # Cria um array com os anos possíveis
     $anoInicial = 1993;
-    $anoAtual = date('Y');
+    $anoAtual = date('Y')+1;
     $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
 
     # Menu do Relatório

@@ -191,7 +191,7 @@ class Ferias {
         return $retorno["dias"];
     }
 
-###########################################################
+    ###########################################################
 
     public function get_diasTrabalhados($idServidor, $ano = null) {
 
@@ -383,5 +383,103 @@ class Ferias {
         return $retorno;
     }
 
-###########################################################
+    ###########################################################
+
+    public function exibe_diasFerias($texto) {
+
+        /**
+         * Retorna o todal de dias de férias de um ano exercicio
+         */
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Divide o texto idServidor&Ano
+        $pedaco = explode("&", $texto);
+
+        # Pega os valores
+        $idServidor = $pedaco[0];
+        $ano = $pedaco[1];
+
+        # Trata os parêmetros
+        if (empty($idServidor) OR empty($ano)) {
+            return null;
+        }
+
+        if ($this->get_diasSolicitadosFruidos($idServidor, $ano) > 0) {
+            
+            $link = new Button("Editar", "?fase=editaServidorFerias&idServidor={$idServidor}");
+            $link->set_class('button tiny');
+            $link->set_id('btnEditarServidorImporta');
+            $link->set_title('Edita Férias do servidor');
+            $link->show();
+
+            echo "Já possui " . $this->get_diasSolicitadosFruidos($idServidor, $ano) . " dias de férias<br/>para o exercício de {$ano}<br/>";
+
+            $select = "SELECT dtInicial,
+                              numdias,
+                              date_format(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtfinal
+                         FROM tbferias    
+                        WHERE anoExercicio = {$ano}
+                          AND idServidor = {$idServidor}
+                         ORDER BY dtInicial DESC";
+            $result = $pessoal->select($select);
+
+            hr("vagasAdm");
+
+            foreach ($result as $item) {
+                echo date_to_php($item[0]), " | ", $item[1], " dias | ", $item[2], "<br/>";
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function exibe_diasFeriasArquivoCsv($texto) {
+
+        /**
+         * Retorna o todal de dias de férias de um ano exercicio
+         */
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Divide o texto idServidor&Ano
+        $pedaco = explode("&", $texto);
+
+        # Pega os valores
+        $idServidor = $pedaco[0];
+        $ano = $pedaco[1];
+
+        # Trata os parêmetros
+        if (empty($idServidor) OR empty($ano)) {
+            return null;
+        }
+
+        if ($this->get_diasSolicitadosFruidos($idServidor, $ano) > 0) {
+            
+            $link = new Button("Editar", "?fase=editaServidorFerias&idServidor={$idServidor}");
+            $link->set_class('button tiny');
+            $link->set_id('btnEditarServidorImporta');
+            $link->set_title('Edita Férias do servidor');
+            $link->show();
+
+            echo "Já possui " . $this->get_diasSolicitadosFruidos($idServidor, $ano) . " dias de férias<br/>para o exercício de {$ano}<br/>";
+
+            $select = "SELECT dtInicial,
+                              numdias,
+                              date_format(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') as dtfinal
+                         FROM tbferias    
+                        WHERE anoExercicio = {$ano}
+                          AND idServidor = {$idServidor}
+                         ORDER BY dtInicial DESC";
+            $result = $pessoal->select($select);
+
+            hr("vagasAdm");
+
+            foreach ($result as $item) {
+                echo date_to_php($item[0]), " | ", $item[1], " dias | ", $item[2], "<br/>";
+            }
+        }
+    }
+
+    ###########################################################
 }

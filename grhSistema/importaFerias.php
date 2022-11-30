@@ -402,7 +402,7 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Importou arquivo csv de férias do SigRh";
+                    $atividade = "Importou o arquivo csv de férias do SigRh temporáriamente para memória";
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
                     # Volta para o menu
@@ -784,7 +784,7 @@ if ($acesso) {
             # Registra log
             $Objetolog = new Intra();
             $data = date("Y-m-d H:i:s");
-            $atividade = "Apagou o os registros do ano {$parametroAno} do arquivo csv de férias do SigRh";
+            $atividade = "Apagou os registros do ano {$parametroAno} do arquivo csv de férias do SigRh";
             $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3);
 
             # Apaga o ano da session
@@ -848,7 +848,8 @@ if ($acesso) {
                        ORDER BY tbpessoa.nome";
 
             $row = $pessoal->select($select);
-            
+            $numRegistros = $pessoal->count($select);
+
             # Valores para gravação (Cria um id para cada importação)
             $data = date("Y-m-d H:i:s");
 
@@ -884,6 +885,13 @@ if ($acesso) {
                 # Grava
                 $pessoal->gravar($campos, $valor, null, "tbferias", "idFerias");
             }
+
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Importados {$numRegistros} registros do SIGRH (arquivo CSV) para a tabela de férias do sistema";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
             loadPage("?fase=apagarBase");
             break;
     }

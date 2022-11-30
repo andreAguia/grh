@@ -74,6 +74,12 @@ if ($acesso) {
     $botaoProcesso->set_class('button');
     $botaoProcesso->set_title('Acessa o controle dos processos de férias');
     $menu1->add_link($botaoProcesso, "right");
+    
+    # Importa fèrias do SigRH
+    $botaoProcesso = new Link("Importa do SigRH", "importaFerias.php");
+    $botaoProcesso->set_class('button warning');
+    $botaoProcesso->set_title('Acessa a rotina que importa os dados de férias do SigRh de um ano exercício');
+    $menu1->add_link($botaoProcesso, "right");
 
     $menu1->show();
 

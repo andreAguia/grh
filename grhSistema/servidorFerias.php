@@ -64,6 +64,8 @@ if ($acesso) {
         $voltarLista = 'areaFeriasExercicio.php';
     } elseif ($areaFerias == "fruicao") {
         $voltarLista = 'areaFeriasFruicao.php';
+    } elseif ($areaFerias == "importa") {
+        $voltarLista = 'importaFerias.php';    
     } else {
         $voltarLista = 'servidorMenu.php';
     }

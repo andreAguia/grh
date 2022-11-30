@@ -103,7 +103,7 @@ p#pInativo{
     padding: 0px;
     margin: 0px;
     color: red;
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 /*******************************************
@@ -180,6 +180,16 @@ div#divNumProcessoPremio{
     position: fixed;
     top: 45px;
     left: 23%;
+}
+
+/*******************************************
+ * Tela Inicial Menu do administrador
+ *******************************************/
+
+div#menuAdmin{
+    position: absolute;
+    top: 90px;
+    right: 15px;
 }
 
 /*******************************************
@@ -486,6 +496,12 @@ p#pferiasPendentesObs{
     padding: 0px;
     margin: 0px;
     margin-bottom: 10px;
+}
+
+a#btnEditarServidorImporta{
+    margin: 0px;
+    margin-right: 10px;
+    float: left;
 }
 
 /*******************************************
@@ -1086,42 +1102,42 @@ tr#licencaEmAberto{
  *******************************************/
 
 div#organograma1 td{
-    background-color: #ffffff;    
+    background-color: #ffffff;
 }
 
 div#organograma2 td{
-    background-color: #ffffff;    
+    background-color: #ffffff;
 }
 
 div#organograma3 td{
-    background-color: #ffffff;    
+    background-color: #ffffff;
 }
 
 div#organograma4 td{
-    background-color: #ffffff;    
+    background-color: #ffffff;
 }
 
 div#siglaOrga {
     color: blue;
-    padding-top: 10px; 
-    font-size: 20px; 
+    padding-top: 10px;
+    font-size: 20px;
 }
 
 div#nomeOrga {
     color: red;
-    font-size: 12px; 
+    font-size: 12px;
 }
 
 div#servidorOrga {
     color: blue;
     padding: 0px;
-    font-size: 10px; 
+    font-size: 10px;
 }
 
 div#servidorCargo {
     color: blue;
     padding: 0px;
-    font-size: 10px; 
+    font-size: 10px;
 }
 
 /*******************************************

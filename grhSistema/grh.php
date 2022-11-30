@@ -59,6 +59,7 @@ if ($acesso) {
     set_session('sessionTítulo');                      // Título do relatório
     set_session('sessionSubTítulo');                   // SubTítulo do relatório
     set_session('parametroAno');
+    set_session('parametroAnoImportacao');
     set_session('parametroAnoLista');
     set_session('parametroMes');
     set_session('idCategoria');
@@ -137,6 +138,10 @@ if ($acesso) {
 
             # Cria um menu Administrador
             if (Verifica::acesso($idUsuario, 1)) {
+                # Div
+                $div = new Div("menuAdmin");
+                $div->abre();
+
                 $menu = new MenuBar();
 
                 # Area do Servidor
@@ -153,6 +158,8 @@ if ($acesso) {
                 $menu->add_link($linkProc, "right");
 
                 $menu->show();
+
+                $div->fecha();
             }
 
             # Cria um menu

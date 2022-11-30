@@ -77,10 +77,18 @@ class Pessoal extends Bd {
     /**
      * Método Excluir
      */
-    public function excluir($idValor = null, $tabela = null, $idCampo = 'id') {
+    public function excluir($idValor = null, $tabela = null, $idCampo = null) {
+
+        if (empty($tabela)) {
+            $tabela = $this->tabela;
+        }
+
+        if (empty($idCampo)) {
+            $idCampo = $this->idCampo;
+        }
 
         # efetua a exclus�o
-        parent::excluir($idValor, $this->tabela, $this->idCampo);
+        parent::excluir($idValor, $tabela, $idCampo);
 
         return true;
     }
@@ -4722,17 +4730,24 @@ class Pessoal extends Bd {
      * @param	string $idFuncional  idFuncional do servidor
      */
     public function get_idServidoridFuncionalAtivo($idFuncional) {
-        # Pega o cargo do servidor
-        $select = 'SELECT idServidor
+
+        # Verifica o $idPessoa
+        if (empty($idFuncional)) {
+            return null;
+        } else {
+
+            # Pega o cargo do servidor
+            $select = 'SELECT idServidor
                          FROM tbservidor
                         WHERE situacao = 1 AND idFuncional = ' . $idFuncional;
 
-        $row = parent::select($select, false);
+            $row = parent::select($select, false);
 
-        if (empty($row[0])) {
-            return null;
-        } else {
-            return $row[0];
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return $row[0];
+            }
         }
     }
 
@@ -4747,7 +4762,7 @@ class Pessoal extends Bd {
     public function get_idServidoridPessoa($idPessoa) {
 
         # Verifica o $idPessoa
-        if (is_null($idPessoa)) {
+        if (empty($idPessoa)) {
             return null;
         } else {
 

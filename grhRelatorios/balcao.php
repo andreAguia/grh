@@ -8,8 +8,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null; 
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -45,10 +46,9 @@ if ($acesso) {
     $cabecalho = new Relatorio();
     #$cabecalho->exibeCabecalho();
 
-    echo '<table class="tabelaRelatorio" id="tableRelatorioBalcao">';
-
-    echo "<caption>Atendimento no Balcão<br/>" . get_nomeMes($parametroMes) . " / " . $parametroAno . "</caption>";
-
+    echo '<table class="tabelaRelatorioFicha">';
+    echo "<caption>Atendimento no Balcão<br/>" . get_nomeMes($parametroMes) . " / " . $parametroAno . "<br/><br/></caption>";
+   
     echo '<col style="width:10%">';
     echo '<col style="width:20%">';
     echo '<col style="width:15%">';

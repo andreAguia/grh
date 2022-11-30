@@ -194,6 +194,16 @@ class MenuServidor {
                 $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $this->tamanhoImagem, $this->tamanhoImagem);
                 $botao->set_title('Avalia a posentadoria do Servidor');
                 $menu->add_item($botao);
+
+                # Nova rotina
+                if (Verifica::acesso($this->idUsuario, 1)) {
+                    $botao = new BotaoGrafico();
+                    $botao->set_label('Aposentadoria Nova');
+                    $botao->set_url('servidorAposentadoriaNovo.php?grh=1');
+                    $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $this->tamanhoImagem, $this->tamanhoImagem);
+                    $botao->set_title('Avalia a posentadoria do Servidor');
+                    $menu->add_item($botao);
+                }
             }
 
             $botao = new BotaoGrafico();
@@ -224,14 +234,14 @@ class MenuServidor {
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
 
-        # Ato de Investidura
-        $botao = new BotaoGrafico();
-        $botao->set_label('Ato de Investidura');
-        $botao->set_url('servidorAto.php?grh=1');
-        $botao->set_target("_blank");
-        $botao->set_imagem(PASTA_FIGURAS . 'ato.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Ato de Investidura do servidor');
-        $menu->add_item($botao);
+//        # Ato de Investidura
+//        $botao = new BotaoGrafico();
+//        $botao->set_label('Ato de Investidura');
+//        $botao->set_url('servidorAto.php?grh=1');
+//        $botao->set_target("_blank");
+//        $botao->set_imagem(PASTA_FIGURAS . 'ato.png', $this->tamanhoImagem, $this->tamanhoImagem);
+//        $botao->set_title('Ato de Investidura do servidor');
+//        $menu->add_item($botao);
 
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
@@ -530,6 +540,7 @@ class MenuServidor {
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
+        $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
         $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         $menu->add_item('linkWindow', 'Declaração de Frequência Geral', '../grhRelatorios/declaracao.Frequencia.Geral.php');

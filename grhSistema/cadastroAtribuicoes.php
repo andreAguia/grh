@@ -146,6 +146,7 @@ if ($acesso) {
     $comboServidores[] = "Todos";
     $comboServidores[] = "Bolsista";
     $comboServidores[] = "Gerente";
+    $comboServidores[] = "Sub-Gerente";
 
     # Adapta o array a combo
     foreach ($servGrh as $item) {

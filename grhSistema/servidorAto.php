@@ -45,8 +45,10 @@ if ($acesso) {
     }
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase == "upload") {
+        # Cabeçalho da Página
+        AreaServidor::cabecalho();
+    }
 
     # Dados da rotina de Upload
     $pasta = PASTA_ATOINVESTIDURA;
@@ -61,8 +63,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             if (file_exists("{$pasta}{$idServidorPesquisado}.pdf")) {
-                br();
-
+                
                 # Cria um menu
                 $menu = new MenuBar();
 

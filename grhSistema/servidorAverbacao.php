@@ -137,7 +137,7 @@ if ($acesso) {
     $objeto->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
     $objeto->set_colunaSomatorio([2, 3]);
-    $objeto->set_textoSomatorio("Total de Dias:");
+    $objeto->set_textoSomatorio("Total:");
     $objeto->set_totalRegistro(false);
 
     $objeto->set_classe([null, null, null, "Averbacao", "Averbacao"]);

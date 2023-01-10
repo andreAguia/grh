@@ -45,6 +45,36 @@ class Aposentadoria {
         $menu->show();
     }
 
+    ##################################################
+
+    public function exibeMenuServidor($itemBold = null) {
+
+        tituloTable("Menu");
+        $menu = new Menu("menuAposentadoria", $itemBold);
+
+        $menu->add_item("titulo", "Dados do Servidor");
+        $menu->add_item("link", "Resumo Geral", "?", "resumo dos dados do servidor");
+        $menu->add_item("link", "Tempo Averbado", "?fase=averbado", "Exibe o tempo averbado com detalhes");
+        $menu->add_item("link", "Vínculos Anteriores", "?fase=vinculos", "Exibe os vínculos anteriores do servidor na Uenf");
+        $menu->add_item("link", "Afastamentos", "?fase=afastamentos", "Exibe todos os afastamentos do servidor");
+
+        $menu->add_item("titulo", "Regras de Aposentadoria");
+        $menu->add_item("titulo1", "Direito Adquirido");
+        $menu->add_item("link", "Por Idade e Contribuição", "?fase=idadeContribuicao", "Artigo 40 - Aposentadoria voluntária por idade e tempo de contribuição");
+        $menu->add_item("link", "Por Idade", "?fase=idade", "Aposentadoria voluntária por idade");
+        $menu->add_item("link", "Artigo 2º da EC nº 41/2003", "?fase=41_2", "Regras de transição - Artigo 2º da EC nº 41/2003");
+        $menu->add_item("link", "Artigo 6º da EC nº 41/2003", "?fase=41_6", "Regras de transição - Artigo 6º da EC nº 41/2003");
+        $menu->add_item("link", "Artigo 3º da EC nº 47/2005", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
+
+        $menu->add_item("titulo1", "Regras de Transição");
+        $menu->add_item("link", "Regra de Transição 1", "?fase=transicao1", "Regras de transição 1");
+        $menu->add_item("link", "Regra de Transição 2", "?fase=transicao2", "Regras de transição 2");
+        
+        $menu->add_item("titulo1", "Regras Permanentes");
+        $menu->add_item("link", "Compulsória", "?fase=compulsoria", "Aposentadoria Compulsória");
+        $menu->show();
+    }
+
     ############################################################################
 
     function get_numServidoresAposentados() {

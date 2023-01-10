@@ -22,19 +22,6 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
     $averbacao = new Averbacao();
 
-    # Variáveis
-    $empresaTipo = [
-        [1, "Pública"],
-        [2, "Privada"]
-    ];
-
-    $regime = [
-        [1, "Celetista"],
-        [2, "Estatutário"],
-        [3, "Próprio"],
-        [4, "Militar"]
-    ];
-
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -221,6 +208,19 @@ if ($acesso) {
 
     $grid1 = new Grid();
     $grid1->abreColuna(12);
+
+    # Variáveis
+    $empresaTipo = [
+        [1, "Pública"],
+        [2, "Privada"]
+    ];
+
+    $regime = [
+        [1, "Celetista"],
+        [2, "Estatutário"],
+        [3, "Próprio"],
+        [4, "Militar"]
+    ];
 
     $select = "SELECT dtInicial,
                       dtFinal,

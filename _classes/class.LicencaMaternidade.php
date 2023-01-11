@@ -23,7 +23,6 @@ class LicencaMaternidade {
                     WHERE idServidor = {$idServidor}
                       AND (idtpLicenca = 3 OR idtpLicenca = 18)";
 
-        echo "-> " . $servidor->count($select);
         if ($servidor->count($select) > 0) {
             return true;
         } else {

@@ -242,7 +242,6 @@ class MenuServidor {
 //        $botao->set_imagem(PASTA_FIGURAS . 'ato.png', $this->tamanhoImagem, $this->tamanhoImagem);
 //        $botao->set_title('Ato de Investidura do servidor');
 //        $menu->add_item($botao);
-
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
             $botao = new BotaoGrafico();
@@ -530,6 +529,11 @@ class MenuServidor {
 
         if ($this->perfil == 1 AND $this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.Exercicio.php');
+        }
+        
+        $licencaMaternidade = new LicencaMaternidade();
+        if ($licencaMaternidade->teveLicenca($this->idServidor)) {
+            $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
         }
 
         $menu->add_item('titulo', 'Despachos', '#');

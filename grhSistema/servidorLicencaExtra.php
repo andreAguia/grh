@@ -23,7 +23,7 @@ $obs = $campoValor[11];
 $idServidor = $campoValor[12];
 
 /*
- * Verifica se digitou a data final oiu o numero de dias e preenche automaticamente
+ * Verifica se digitou a data final ou o numero de dias e preenche automaticamente
  */
 
 if (empty($dtTermino)) {

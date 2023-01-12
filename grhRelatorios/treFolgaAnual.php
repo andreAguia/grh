@@ -43,7 +43,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Mensal de Folgas Fruídas do TRE');
+    $relatorio->set_titulo('Relatório Anual de Folgas Fruídas do TRE');
     $relatorio->set_tituloLinha2($relatorioAno);
     $relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
 

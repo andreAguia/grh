@@ -185,10 +185,40 @@ class Ferias {
                      FROM tbferias
                     WHERE idServidor = {$idServidor}
                       AND anoExercicio = '{$ano}'
-                      AND (status = 'fruída' OR status = 'solicitada' OR status = 'confirmada') ";
+                      AND (status = 'fruída' OR status = 'solicitada') ";
 
         $retorno = $pessoal->select($select, false);
         return $retorno["dias"];
+    }
+
+    ###########################################################
+
+    public function get_feriasSolicitadas($idServidor, $ano = null) {
+
+        /**
+         * retorna os dias solicitados ainda não fruídos de um servidor em um determinado exercicio
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata os parêmetros
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if (empty($ano)) {
+            $ano = date('Y');
+        }
+
+        # Pega array com os dias publicados
+        $select = "SELECT *
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                      AND anoExercicio = '{$ano}'
+                 ORDER BY dtInicial";
+
+        $retorno = $pessoal->select($select);
+        return $retorno;
     }
 
     ###########################################################

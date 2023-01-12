@@ -35,7 +35,7 @@ if ($acesso) {
     $dados = $licencaMaternidade->getUltima($idServidorPesquisado);
     
     $dtInicial = date_to_php($dados["dtInicial"]);    
-    $dtTermino = addDias($dtInicial, $dados['numDias']);    
+    $dtTermino = addDias($dtInicial, $dados['numDias']);
 
     # Começa uma nova página
     $page = new Page();

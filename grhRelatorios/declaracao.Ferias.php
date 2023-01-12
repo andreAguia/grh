@@ -79,7 +79,7 @@ if ($acesso) {
 
                 # Verifica se o servidor está em férias no momento
                 if (entre(date('d/m/Y'), $dtInicial, $dtTermino)) {
-                    $dadosFerias .= "está fruindo férias de {$dtInicial} a {$dtTermino}";
+                    $dadosFerias .= "está fruindo {$item['numDias']} dias de férias de {$dtInicial} a {$dtTermino}";
                 } else {
                     if ($contadorFruiu == 0) {
                         $dadosFerias .= "fruiu {$item['numDias']} dias de férias no período de {$dtInicial} a {$dtTermino}";

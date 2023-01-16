@@ -30,7 +30,7 @@ if ($acesso) {
     }
 
     # Verifica a fase do programa
-    $fase = get('fase');
+    $fase = get('fase', 'dias');
 
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -80,7 +80,7 @@ if ($acesso) {
         $botao1->set_class('button');
         $menu1->add_link($botao1, "right");
     }
-    
+
     if ($fase == "historicoDias") {
         $botao1 = new Link("Dias Trabalhados", '?fase=dias');
         $botao1->set_class('button');
@@ -92,7 +92,7 @@ if ($acesso) {
         $botao1->set_class('button');
         $menu1->add_link($botao1, "right");
     }
-    
+
     if ($fase == "historicoFolga") {
         $botao1 = new Link("Folgas fruídas", '?fase=folgas');
         $botao1->set_class('button');

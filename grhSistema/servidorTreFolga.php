@@ -49,10 +49,10 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Folgas do TRE');
+    $objeto->set_nome('Cadastro de Folgas Fruídas  do TRE');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorTre.php');
+    $objeto->set_voltarLista('servidorTre.php?fase=folgas');
 
     # select da lista
     $objeto->set_selectLista('SELECT data,
@@ -84,10 +84,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data do Início", "Data do Término", "Folgas Fruídas", "Observação"));
-    $objeto->set_width(array(10, 10, 10, 60));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", "date_to_php", null));
+    $objeto->set_label(["Data do Início", "Data do Término", "Folgas Fruídas", "Observação"]);
+    $objeto->set_width([10, 10, 10, 60]);
+    $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", "date_to_php", null]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

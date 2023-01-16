@@ -52,7 +52,7 @@ if ($acesso) {
     $objeto->set_nome('Cadastro de Dias Trabalhados e Folgas Concedidas');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorTre.php');
+    $objeto->set_voltarLista('servidorTre.php?fase=dias');
 
     # select da lista
     $objeto->set_selectLista("SELECT data,
@@ -88,10 +88,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Início", "Término", "Dias", "Folgas Concedidas", "Descrição do Trabalho", "Documento"));
-    $objeto->set_width(array(10, 10, 10, 10, 30, 20));
-    $objeto->set_align(array('center', 'center', 'center', 'center', 'left', 'left'));
-    $objeto->set_funcao(array("date_to_php", "date_to_php"));
+    $objeto->set_label(["Início", "Término", "Dias", "Folgas Concedidas", "Descrição do Trabalho", "Documento"]);
+    $objeto->set_width([10, 10, 10, 10, 30, 20]);
+    $objeto->set_align(['center', 'center', 'center', 'center', 'left', 'left']);
+    $objeto->set_funcao(["date_to_php", "date_to_php"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

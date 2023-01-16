@@ -64,6 +64,14 @@ if ($acesso) {
         $voltar = 'servidorMenu.php';
     }
 
+    if ($fase == "historicoDias") {
+        $voltar = '?fase=dias';
+    }
+
+    if ($fase == "historicoFolga") {
+        $voltar = '?fase=folgas';
+    }
+
     # Cria um menu
     $menu1 = new MenuBar();
 
@@ -81,20 +89,8 @@ if ($acesso) {
         $menu1->add_link($botao1, "right");
     }
 
-    if ($fase == "historicoDias") {
-        $botao1 = new Link("Dias Trabalhados", '?fase=dias');
-        $botao1->set_class('button');
-        $menu1->add_link($botao1, "right");
-    }
-
     if ($fase == "folgas") {
         $botao1 = new Link("Histórioco de Folgas fruídas", '?fase=historicoFolga');
-        $botao1->set_class('button');
-        $menu1->add_link($botao1, "right");
-    }
-
-    if ($fase == "historicoFolga") {
-        $botao1 = new Link("Folgas fruídas", '?fase=folgas');
         $botao1->set_class('button');
         $menu1->add_link($botao1, "right");
     }
@@ -220,25 +216,7 @@ if ($acesso) {
         ################################################################
 
         case "historicoDias" :
-            # Menu      
-            $grid->abreColuna(4);
-
-            # Menu Principal
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Menu');
-            $menu->add_item('link', '<b>Dias Trabalhados e Folgas Concedidas</b>', '?fase=dias');
-            $menu->add_item('link', 'Folgas Fruídas', '?fase=folgas');
-
-            $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Relatório Geral', '../grhRelatorios/servidorTre.php');
-            $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Geral', '../grhRelatorios/servidorTreAfastamento.php');
-            $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Por Ano', '../grhRelatorios/servidorTreAfastamentoPorAno.php');
-            $menu->add_item('linkWindow', 'Folgas Fruídas Geral', '../grhRelatorios/servidorTreFolga.php');
-            $menu->add_item('linkWindow', 'Folgas Fruídas Por Ano', '../grhRelatorios/servidorTreFolgaPorAno.php');
-            $menu->show();
-
-            $grid->fechaColuna();
-            $grid->abreColuna(8);
+            $grid->abreColuna(12);
 
             $historico = new Historico("tbtrabalhotre", $idServidorPesquisado);
             $historico->set_titulo("Histórico de Dias Trabalhados");
@@ -249,25 +227,8 @@ if ($acesso) {
         ################################################################
 
         case "historicoFolga" :
-            # Menu      
-            $grid->abreColuna(4);
 
-            # Menu Principal
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Menu');
-            $menu->add_item('link', 'Dias Trabalhados e Folgas Concedidas', '?fase=dias');
-            $menu->add_item('link', '<b>Folgas Fruídas</b>', '?fase=folgas');
-
-            $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Relatório Geral', '../grhRelatorios/servidorTre.php');
-            $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Geral', '../grhRelatorios/servidorTreAfastamento.php');
-            $menu->add_item('linkWindow', 'Dias Trabalhados e Folgas Concedidas Por Ano', '../grhRelatorios/servidorTreAfastamentoPorAno.php');
-            $menu->add_item('linkWindow', 'Folgas Fruídas Geral', '../grhRelatorios/servidorTreFolga.php');
-            $menu->add_item('linkWindow', 'Folgas Fruídas Por Ano', '../grhRelatorios/servidorTreFolgaPorAno.php');
-            $menu->show();
-
-            $grid->fechaColuna();
-            $grid->abreColuna(8);
+            $grid->abreColuna(12);
 
             $historico = new Historico("tbfolga", $idServidorPesquisado);
             $historico->set_titulo("Histórico de Folgas Fruídas");

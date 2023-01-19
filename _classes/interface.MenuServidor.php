@@ -508,6 +508,7 @@ class MenuServidor {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
         $cargo = $pessoal->get_idCargo($this->idServidor);
+        $idPerfil = $pessoal->get_idPerfil($this->idServidor);
 
         titulo('Documentos');
         br();
@@ -535,6 +536,12 @@ class MenuServidor {
         if ($licencaMaternidade->teveLicenca($this->idServidor)) {
             $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
         }
+        
+//        if($idPerfil == 2){
+//            $menu->add_item('titulo', 'Declarações Cedidos', '#');
+//            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
+//            $menu->add_item('linkWindow', 'Declaração de Frequência Total', '../grhRelatorios/declaracao.Cedido.Frequencia.Total.php');
+//        }
 
         $menu->add_item('titulo', 'Despachos', '#');
         $menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
@@ -546,8 +553,7 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
-        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
-        $menu->add_item('linkWindow', 'Declaração de Frequência Geral', '../grhRelatorios/declaracao.Frequencia.Geral.php');
+        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");        
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');
 
         #$menu->add_item('link','Declaração para o INSS','#');

@@ -24,6 +24,10 @@ if ($acesso) {
     # Desde de qual data?
     $dataInicial = $pessoal->get_dtAdmissao($idServidorPesquisado);
     $dataSaida = $pessoal->get_dtSaida($idServidorPesquisado);
+    
+    if(empty($dataSaida)){
+        $dataSaida = " a presente data";
+    }
 
     # Pega as faltas do servidor (se tiver)
     $falta = new Faltas();

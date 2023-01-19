@@ -54,6 +54,25 @@ class PlanoCargos {
 
     ###########################################################
 
+    public function get_numDadosPlano($idPlano = null) {
+        /**
+         * Retorna o número de lançamentos de um plano
+         * 
+         * @param $idPlano integer null o $idPlano
+         * 
+         * @syntax $plano->get_dadosPlano([$idPlano]);  
+         */
+        # Pega os planos cadastrados
+        $select = 'SELECT idClasse
+                     FROM tbclasse
+                     WHERE idPlano = ' . $idPlano;
+
+        $pessoal = new Pessoal();
+        return $pessoal->count($select);
+    }
+
+    ###########################################################
+
     public function exibeDadosPlano($idPlano = null, $relatorio = false) {
         /**
          * Exibe uma pequena tabela com o dados do plano
@@ -128,6 +147,7 @@ class PlanoCargos {
         $faixaRomanosAnterior = null;
         $nivelAnterior = null;
         $cor = "tipo1";
+        $contador = 0;
 
         # Define o número de padrões de acordo com a tabela
         if ($idPlano == 13) {
@@ -171,7 +191,7 @@ class PlanoCargos {
                         WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
 
             $row = $pessoal->select($select);
-
+            
             # Preenche a tabela
             foreach ($row as $rr) {
 

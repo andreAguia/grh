@@ -19,6 +19,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $plano = new PlanoCargos();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -33,15 +34,12 @@ if ($acesso) {
     }
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));
+    $id = soNumeros(get('id', get_session('idPlano')));
+    set_session('idPlano', $id);
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {
-        $parametro = retiraAspas(get_session('sessionParametro'));
-    } else {
-        $parametro = post('parametro');
-        set_session('sessionParametro', $parametro);
-    }
+    $parametro = post('parametro', retiraAspas(get_session('sessionParametro')));
+    set_session('sessionParametro', $parametro);
 
     # Começa uma nova página
     $page = new Page();
@@ -67,25 +65,26 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT idPlano,
+    $objeto->set_selectLista("SELECT idPlano,
                                       numDecreto,
                                       servidores,
                                       dtDecreto,
                                       dtPublicacao,
                                       dtVigencia,
                                       CASE planoAtual
-                                            WHEN 1 THEN "Vigente"
-                                            ELSE "Antigo"
+                                            WHEN 1 THEN 'Vigente'
+                                            ELSE 'Antigo'
                                        end,
+                                      idPlano,
                                       idPlano,
                                       idPlano
                                  FROM tbplano
-                                WHERE numDecreto LIKE "%' . $parametro . '%"
-                                   OR idPlano LIKE "%' . $parametro . '%"
-                             ORDER BY planoAtual desc, dtPublicacao desc, numDecreto desc');
+                                WHERE numDecreto LIKE '%{$parametro}%'
+                                   OR idPlano LIKE '%{$parametro}%'
+                             ORDER BY planoAtual desc, dtPublicacao desc, numDecreto desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT numDecreto,
+    $objeto->set_selectEdita("SELECT numDecreto,
                                      servidores,
                                      planoAtual,
                                      dtDecreto,
@@ -94,7 +93,7 @@ if ($acesso) {
                                      link,
                                      obs
                                 FROM tbplano
-                               WHERE idPlano = ' . $id);
+                               WHERE idPlano = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -109,16 +108,23 @@ if ($acesso) {
     # Dá acesso a exclusão somente ao administrador
     if (Verifica::acesso($idUsuario, 1)) {
         $objeto->set_linkExcluir('?fase=excluir');
+        $objeto->set_label(["id", "Decreto / Lei", "Servidores", "Data do Decreto / Lei", "Publicação no DOERJ", "Data da Vigência", "Plano Atual", "DO", "Tabela", "Gerenciar"]);
+    } else {
+        $objeto->set_label(["id", "Decreto / Lei", "Servidores", "Data do Decreto / Lei", "Publicação no DOERJ", "Data da Vigência", "Plano Atual", "DO", "Tabela"]);
     }
 
-    # Parametros da tabela
-    $objeto->set_label(array("id", "Decreto / Lei", "Servidores", "Data do Decreto / Lei", "Publicação no DOERJ", "Data da Vigência", "Plano Atual", "DO", "Tabela"));
-    #$objeto->set_width(array(5,20,20,20,10,10));
-    $objeto->set_align(array("center", "left"));
-    $objeto->set_funcao(array(null, null, null, "date_to_php", "date_to_php", "date_to_php"));
-
+    # Parametros da tabela    
+    $objeto->set_align(["center", "left"]);
+    $objeto->set_funcao([null, null, null, "date_to_php", "date_to_php", "date_to_php"]);
     $objeto->set_classe([null, null, null, null, null, null, null, 'PlanoCargos', 'PlanoCargos']);
     $objeto->set_metodo([null, null, null, null, null, null, null, 'exibeLei', 'exibeBotaoTabela']);
+
+    # Botão de Gerenciar Tabela (somente admin)
+    if (Verifica::acesso($idUsuario, 1)) {
+        $link = new Link(null, '?fase=gerenciaTabela&id=', 'Gerencia Tabela');
+        $link->set_imagem(PASTA_FIGURAS . 'gerenciar.png', 20, 20);
+        $objeto->set_link([null, null, null, null, null, null, null, null, null, $link]);
+    }
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 6,
@@ -233,8 +239,8 @@ if ($acesso) {
             # Cria um menu
             $menu1 = new MenuBar();
 
-            # Imprimir
-            $botaoVoltar = new Link("Imprimir", "?fase=exibeRelatorio&id=".$id);
+            # Voltar
+            $botaoVoltar = new Link("Imprimir", "?fase=exibeRelatorio&id=" . $id);
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Exibe o relatório desta tabela');
             $menu1->add_link($botaoVoltar, "right");
@@ -250,11 +256,19 @@ if ($acesso) {
 
             $menu1->show();
 
-            $plano = new PlanoCargos();
-            $plano->exibeTabela($id, false, true);
+            $plano->exibeTabela($id, false);
 
             # guarda na sessio o plano caso deseje editar
             set_session('parametroPlano', $id);
+
+            if ($plano->get_numDadosPlano($id) == 0) {
+                $painel = new Callout();
+                $painel->abre();
+
+                p("Não há dados a serem exibidos", "center");
+
+                $painel->fecha();
+            }
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -267,8 +281,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
 
-            $plano = new PlanoCargos();
-            $plano->exibetabela($id,true);
+            $plano->exibetabela($id, true);
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -292,6 +305,381 @@ if ($acesso) {
                 alert('Este pĺano de cargos tem salário cadastrados.\nNão é possível excluí-lo');
                 back(1);
             }
+            break;
+
+        ################################################################
+
+        case "gerenciaTabela" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Volta para a tela inicial');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            # Exibe dados do plano
+            $plano->exibeDadosPlano($id);
+            br();
+
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+
+            tituloTable('Gerenciar Tabela de Plano de Cargos');
+            $painel = new Callout();
+            $painel->abre();
+            br();
+
+            $menu = new MenuGrafico(3);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Apagar os Dados da Tabela');
+            $botao->set_url("?fase=apagaDados");
+            $botao->set_imagem(PASTA_FIGURAS . 'apagar.png', 50, 50);
+            $botao->set_title('Apaga os dados da Tabela');
+            #$botao->set_confirma('Realmente Deseja Apagar os Dados da Tabela?\nEsta Ação NÂO poderá ser desfeita!');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Preencher Tabela com Valores Resjustados de Outra (%)');
+            $botao->set_url("?fase=porcentagem");
+            $botao->set_imagem(PASTA_FIGURAS . 'porcentagem.png', 50, 50);
+            $botao->set_title('Preenche uma tabela vazia com os valores reajustados de outra tabela');
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
+            $botao->set_label('Ver Tabela');
+            $botao->set_url("?fase=exibeTabela");
+            $botao->set_imagem(PASTA_FIGURAS . "tabela.png", 50, 50);
+            $botao->set_title('Exibe a tabela de valores');
+            $botao->set_target("_blank");
+            $menu->add_item($botao);
+
+            $menu->show();
+            $painel->fecha();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "apagaDados" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?fase=gerenciaTabela");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Volta para a tela inicial');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            # Exibe dados do plano
+            $plano->exibeDadosPlano($id);
+            br();
+
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+
+            # Verifica se a tabela já não está vazia
+            $select = "SELECT idClasse 
+                         FROM tbclasse
+                         WHERE idPlano = {$id}";
+
+            if ($pessoal->count($select) > 0) {
+
+                # Verifica se existe algum servidor vinculado a essa tabela
+                $select = "SELECT idProgressao 
+                             FROM tbprogressao JOIN tbclasse USING (idClasse)
+                            WHERE idPlano = {$id}";
+
+                if ($pessoal->count($select) > 0) {
+                    tituloTable('Os Dados Desta Tabela Não Poderão Ser Apagados');
+                    $painel = new Callout("warning");
+                    $painel->abre();
+                    br();
+
+                    p("Existem {$pessoal->count($select)} registros de servidores vinculados a esse plano de cargos.<br/>Os dados não poderão ser Apagados.", "center");
+                    br();
+
+                    $painel->fecha();
+                } else {
+
+                    tituloTable('Os Dados Desta Tabela Podem Ser Apagados');
+                    $painel = new Callout("warning");
+                    $painel->abre();
+                    br();
+
+                    p("O Sistema verificou que não existe nenhum registro de servidor vinculado a este plano de cargos.", "center");
+                    p("Ele pode ser apagado, mas lembre-se que esta ação não poderá ser desfeita !!", "center");
+                    p("Se deseja realmente apagar os dados desta tabela clique em prosseguir", "center");
+                    br();
+
+                    # Cria um menu
+                    $menu1 = new MenuBar();
+
+                    # Prosseguir
+                    $botaoVoltar = new Link("Prosseguir", "?fase=apagaDados2");
+                    $botaoVoltar->set_class('button');
+                    $botaoVoltar->set_title('Confirma e pressegue');
+                    $menu1->add_link($botaoVoltar, "right");
+
+                    $menu1->show();
+
+                    $painel->fecha();
+                }
+            } else {
+                tituloTable('Essa Tabela Já Está Vazia');
+                $painel = new Callout("warning");
+                $painel->abre();
+                br();
+
+                p("Essa tabela já se encontra sem nenhum dado.", "center");
+                br();
+
+                $painel->fecha();
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "apagaDados2" :
+
+            # Apaga a tabela tbsispatri
+            $select = "SELECT idClasse
+                         FROM tbclasse
+                         WHERE idPlano = {$id}";
+
+            $row = $pessoal->select($select);
+
+            $pessoal->set_tabela("tbclasse");
+            $pessoal->set_idCampo("idClasse");
+
+            foreach ($row as $tt) {
+                $pessoal->excluir($tt[0]);
+            }
+            loadPage("?fase=gerenciaTabela");
+            break;
+
+        ################################################################
+
+        case "porcentagem" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?fase=gerenciaTabela");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Volta para a tela inicial');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            # Exibe dados do plano
+            $plano->exibeDadosPlano($id);
+            br();
+
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+
+            # Verifica se a tabela vazia
+            $select = "SELECT idClasse 
+                         FROM tbclasse
+                         WHERE idPlano = {$id}";
+
+            if ($pessoal->count($select) > 0) {
+                tituloTable('Essa Tabela NÃO Está Vazia');
+                $painel = new Callout("warning");
+                $painel->abre();
+                br();
+
+                p("Para importar os dados de uma tabela já existente é necessário que a tabela esteja vazia", "center");
+                br();
+
+                $painel->fecha();
+            } else {
+
+                tituloTable('Informe o Plano de Cargos Modelo e a Porcentagem de Aumento');
+                $callout = new Callout("secondary");
+                $callout->abre();
+                br();
+                $form = new Form("?fase=PorcentagemValida");
+
+                # Preenche o array para o plano de cargos
+                $select = "SELECT idPlano,
+                                  numDecreto
+                             FROM tbplano
+                            WHERE idPlano <> {$id}
+                         ORDER BY planoAtual desc, dtPublicacao desc, numDecreto desc";
+
+                $itens = $pessoal->select($select);
+
+                # Plano de Cargos
+                $controle = new Input('idPlano', 'combo', 'Plano de Cargos Modelo:', 1);
+                $controle->set_size(10);
+                $controle->set_linha(1);
+                $controle->set_col(6);
+                $controle->set_array($itens);
+                $controle->set_required(true);
+                $controle->set_autofocus(true);
+                $controle->set_title('A tabela usada como base para a nova tabela');
+                $form->add_item($controle);
+
+                # Porcentagem
+                $controle = new Input('porcentagem', 'porcentagem', 'Porcentagem:', 1);
+                $controle->set_size(5);
+                $controle->set_linha(1);
+                $controle->set_col(3);
+                $controle->set_required(true);
+                $controle->set_title('A porcentagem de aumento');
+                $form->add_item($controle);
+
+                # submit
+                $controle = new Input('submit', 'submit');
+                $controle->set_valor('Entrar');
+                $controle->set_linha(3);
+                $form->add_item($controle);
+
+                $form->show();
+                $callout->fecha();
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "PorcentagemValida" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?fase=porcentagem");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Volta para a tela inicial');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            # Exibe dados do plano a ser preenchido (que está em branco)
+            $plano->exibeDadosPlano($id);
+            br();
+
+            $grid = new Grid("center");
+            $grid->abreColuna(8);
+
+            # Pega o id do plano que será modelo ( o que está preenchido)
+            $idPlanoModelo = post("idPlano");
+            $porcentagem = str_replace(".", ",", post("porcentagem"));
+
+            # Joga os dados do post para a session
+            set_session('idPlanoModelo', $idPlanoModelo);
+            set_session('porcentagem', $porcentagem);
+
+            if (empty($idPlanoModelo) OR empty($porcentagem)) {
+                alert("Todos os dados devem ser informados!!");
+                back(1);
+            } else {
+                # Pega os dados
+                $dados = $plano->get_dadosPlano($idPlanoModelo);
+
+                tituloTable('Confirmar o procedimento');
+                $painel = new Callout("warning");
+                $painel->abre();
+                br();
+
+                p("O Sistema irá usar, como base, os dados do plano:<br/><b>{$dados['numDecreto']}</b><br/>com o aumento de:<br/><b>{$porcentagem}%</b>", "center");
+
+                # Cria um menu
+                $menu1 = new MenuBar();
+
+                # Prosseguir
+                $botaoVoltar = new Link("Prosseguir", "?fase=preencheTabela");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Confirma e pressegue');
+                $menu1->add_link($botaoVoltar, "right");
+
+                $menu1->show();
+
+                $painel->fecha();
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "preencheTabela" :
+            # Limita o tamanho da tela
+            # Pega os dados do post
+            $idPlanoModelo = get_session('idPlanoModelo');
+            $porcentagem = get_session('porcentagem');
+
+            # Pega os valores da tabela modelo
+            $select = "SELECT * FROM tbclasse WHERE idPlano = {$idPlanoModelo}";
+            $row = $pessoal->select($select);
+            $porcentagem = str_replace(",", ".", $porcentagem);
+
+            # Joga os valores para a tabela em branco
+            foreach ($row as $item) {
+                # Grava os dados
+                $campoNome = ["idTipoCargo", "idPlano", "faixa", "valor", "nivel"];
+                $campoValor = [$item["idTipoCargo"], $id, $item["faixa"], $item["valor"], $item["nivel"]];
+                $pessoal->gravar($campoNome, $campoValor, null, "tbclasse", "idClasse");
+            }
+
+            # Pega os valores da tabela nova
+            $select = "SELECT * FROM tbclasse WHERE idPlano = {$id}";
+            $row = $pessoal->select($select);
+
+            # Efetua o aumento na tabela nova
+            foreach ($row as $item) {
+                # Grava os dados
+                $campoNome = ["valor"];
+                $campoValor = [(float) $item["valor"] + (((float) $item["valor"] * $porcentagem) / 100)];
+                $pessoal->gravar($campoNome, $campoValor, $item["idClasse"], "tbclasse", "idClasse");
+            }
+
+            loadPage("?fase=gerenciaTabela");
             break;
 
         ################################################################

@@ -522,7 +522,7 @@ class MenuServidor {
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
-        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
+        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');        
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
@@ -535,6 +535,10 @@ class MenuServidor {
         $licencaMaternidade = new LicencaMaternidade();
         if ($licencaMaternidade->teveLicenca($this->idServidor)) {
             $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
+        }
+        
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $menu->add_item('linkWindow', 'Declaração MODELO', '../grhRelatorios/declaracao.MODELO.php');
         }
         
 //        if($idPerfil == 2){

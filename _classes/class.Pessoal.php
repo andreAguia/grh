@@ -865,7 +865,8 @@ class Pessoal extends Bd {
         $select = 'SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.cargo,
                           tbarea.area,
-                          tbcargo.nome
+                          tbcargo.nome,
+                          idPerfil
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
                                      LEFt JOIN tbarea USING (idarea)
@@ -884,17 +885,22 @@ class Pessoal extends Bd {
         $nomeCargo = $row[3];
         $retorno = null;
 
+        # Verifica se é cedido
+        if ($row["idPerfil"] == 2) {
+            $retorno .= "exercendo função equivalente ao ";
+        }
+
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
         if (!empty($tipoCargo)) {
-            $retorno = $tipoCargo;
+            $retorno .= $tipoCargo;
         }
 
         if (!empty($area)) {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $area;
             } else {
-                $retorno = $area;
+                $retorno .= $area;
             }
         }
 
@@ -902,7 +908,7 @@ class Pessoal extends Bd {
             if (!empty($tipoCargo)) {
                 $retorno .= ' - ' . $nomeCargo;
             } else {
-                $retorno = $nomeCargo;
+                $retorno .= $nomeCargo;
             }
         }
 

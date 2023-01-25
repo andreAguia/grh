@@ -54,6 +54,26 @@ class PlanoCargos {
 
     ###########################################################
 
+    public function get_numDecreto($idPlano = null) {
+        /**
+         * Retorna o numero do decreto / lei
+         * 
+         * @param $idPlano integer null o $idPlano
+         * 
+         */
+        # Pega os planos cadastrados
+        $select = 'SELECT numDecreto
+                     FROM tbplano
+                     WHERE idPlano = ' . $idPlano;
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        return $row[0];
+    }
+
+    ###########################################################
+
     public function get_numDadosPlano($idPlano = null) {
         /**
          * Retorna o número de lançamentos de um plano

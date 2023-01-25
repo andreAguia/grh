@@ -338,7 +338,7 @@ if ($acesso) {
             $painel->abre();
             br();
 
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(4);
 
             $botao = new BotaoGrafico();
             $botao->set_label('Apagar os Dados da Tabela');
@@ -349,6 +349,14 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
+            $botao->set_label('Ver Tabela');
+            $botao->set_url("?fase=exibeTabela");
+            $botao->set_imagem(PASTA_FIGURAS . "tabela.png", 50, 50);
+            $botao->set_title('Exibe a tabela de valores');
+            $botao->set_target("_blank");
+            $menu->add_item($botao);
+
+            $botao = new BotaoGrafico();
             $botao->set_label('Preencher Tabela com Valores Resjustados de Outra (%)');
             $botao->set_url("?fase=porcentagem");
             $botao->set_imagem(PASTA_FIGURAS . 'porcentagem.png', 50, 50);
@@ -356,11 +364,10 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label('Ver Tabela');
-            $botao->set_url("?fase=exibeTabela");
-            $botao->set_imagem(PASTA_FIGURAS . "tabela.png", 50, 50);
-            $botao->set_title('Exibe a tabela de valores');
-            $botao->set_target("_blank");
+            $botao->set_label('Passa os Servidores Ativos Para a Nova Tabela');
+            $botao->set_url("importaPlanoCargos.php");
+            $botao->set_imagem(PASTA_FIGURAS . 'importaSalario.png', 50, 50);
+            $botao->set_title('Faz a atualização automática dos servidores ativos paraa nova tabela');
             $menu->add_item($botao);
 
             $menu->show();

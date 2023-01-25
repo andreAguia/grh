@@ -102,13 +102,12 @@ if ($acesso) {
     $objeto->set_botaoIncluir(false);
 
     # Parametros da tabela
-    $objeto->set_label(array("Diretoria", "Gerência", "Nome", "Telefones", "Email", "Servidores"));
-    $objeto->set_align(array("center", "center", "left", "left", "left", "center"));
-    #$objeto->set_width(array(10,10,15,20,20,15));
-    $objeto->set_funcao(array(null, null, null, "nl2br"));
-
-//    $objeto->set_classe(array(null, null, null, null, null, "Grh"));
-//    $objeto->set_metodo(array(null, null, null, null, null, "get_numServidoresAtivosLotacao"));
+    $objeto->set_titulo('Área de telefones');
+    $objeto->set_subtitulo('Para transferir clica em OK e no ramal desejado e desligue.');
+    $objeto->set_label(["Diretoria", "Gerência", "Nome", "Telefones", "Email", "Servidores"]);
+    $objeto->set_align(["center", "center", "left", "left", "left", "center"]);
+    $objeto->set_funcao([null, null, null, "nl2br"]);
+    
     # Ver servidores
     $servAtivos = new Link(null, '?fase=listaServidoresAtivos&id=' . $id);
     $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);

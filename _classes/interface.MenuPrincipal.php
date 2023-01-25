@@ -66,9 +66,9 @@ class MenuPrincipal {
 
         $grid1 = new Grid();
         $grid1->abreColuna(12, 6, 12);
-        
+
         # Módulos
-        $this->moduloBalcao($idUsuario);       
+        $this->moduloBalcao($idUsuario);
 
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 6, 12);
@@ -76,10 +76,10 @@ class MenuPrincipal {
         # Calendário        
         $cal = new Calendario($mes, $ano);
         $cal->show("?");
-        
+
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 6, 12);
-        
+
         $this->moduloAniversariantes();
 
         $grid1->fechaColuna();
@@ -1066,19 +1066,16 @@ class MenuPrincipal {
      */
     private function moduloRamais() {
 
+        $select = "SELECT ramais FROM tblotacao WHERE idLotacao = 66";
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+        
         # tabela
         $tabela = new Tabela();
-        $tabela->set_titulo("Ramais da GRH");
-        $tabela->set_conteudo(array(
-            array("86006", "Ana Terezinha, Chris e Rafaela"),
-            array("86007", "Francisco, Rose e Cláudia"),
-            array("86008", "Sandra e Simone"),
-            array("86009", "Ana Paula e Rosângela"),
-            array("97064", "Débora e Edilene")
-        ));
-        $tabela->set_label(array("Ramal", "Servidor"));
-        $tabela->set_width(array(30, 70));
-        $tabela->set_align(array("center", "left"));
+        $tabela->set_conteudo($row);
+        $tabela->set_label(["Ramais da GRH"]);
+        $tabela->set_align(["left"]);
+        $tabela->set_funcao(["nl2br"]);
         $tabela->set_rodape("Para Transferir clica em OK e no ramal desejado");
         $tabela->set_totalRegistro(false);
         $tabela->show();

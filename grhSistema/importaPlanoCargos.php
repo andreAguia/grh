@@ -120,11 +120,13 @@ if ($acesso) {
             $idPlanoAtual = $plano->get_planoAtual();
 
             # Pega quantos servidores ativos estão na tabela atual
-            $select = "SELECT tbservidor.idServidor
-                         FROM tbservidor JOIN  tbprogressao USING (idServidor)
-                                         JOIN  tbclasse USING (idClasse)
-                        WHERE situacao = 1 
-                          AND idPerfil = 1
+            $select = "SELECT tbservidor.idServidor, 
+                              idPlano
+                        FROM tbservidor JOIN  tbprogressao USING (idServidor)
+                                        JOIN tbclasse USING (idclasse)
+                       WHERE tbprogressao.dtInicial = (SELECT MAX(dtInicial) FROM tbprogressao WHERE tbprogressao.idServidor = tbservidor.idservidor)
+                         AND situacao = 1
+                         AND idPerfil = 1
                           AND idPlano = {$idPlanoAtual}";
 
             $servidoresafetados = $pessoal->select($select);
@@ -138,12 +140,14 @@ if ($acesso) {
             p("{$numServidoresafetados} servidores ativos serão atualizados para a nova tabela", "center");
 
             # Pega quantos servidores ativos não estão atualizados
-            $select = "SELECT A.idServidor, idPlano                         
-                         FROM tbservidor A JOIN tbprogressao USING (idServidor)
-                                         JOIN tbclasse USING (idClasse)
-                        WHERE situacao = 1 
-                          AND idPerfil = 1
-                          AND {$idPlanoAtual} = (SELECT max(idPlano) FROM tbclasse JOIN tbprogressao B USING (idClasse) WHERE B.idServidor = A.idServidor)";
+            $select = "SELECT tbservidor.idServidor, 
+                              idPlano
+                        FROM tbservidor JOIN  tbprogressao USING (idServidor)
+                                        JOIN tbclasse USING (idclasse)
+                       WHERE tbprogressao.dtInicial = (SELECT MAX(dtInicial) FROM tbprogressao WHERE tbprogressao.idServidor = tbservidor.idservidor)
+                         AND situacao = 1
+                         AND idPerfil = 1
+                          AND idPlano <> {$idPlanoAtual}";
 
             $servidoresNafetados = $pessoal->select($select);
             $numServidoresNafetados = $pessoal->count($select);
@@ -152,12 +156,13 @@ if ($acesso) {
 
             # Exemplo com mais itens
             $tabela = new Tabela();
-            $tabela->set_titulo("servidores");
+            $tabela->set_titulo("Servidores Que Não Serão Atualizados");
+            $tabela->set_subtitulo("Plano de Cargos Atual: {$plano->get_numDecreto($idPlanoAtual)}");
             $tabela->set_conteudo($servidoresNafetados);
-            $tabela->set_label(["Servidor", "Plano"]);
-            $tabela->set_classe(["Pessoal"]);
-            $tabela->set_metodo(["get_nome"]);
-            $tabela->set_width([80, 20]);
+            $tabela->set_label(["Servidor", "Plano Cadastrador"]);
+            $tabela->set_classe(["Pessoal","PlanoCargos"]);
+            $tabela->set_metodo(["get_nome","get_numDecreto"]);
+            $tabela->set_width([60, 40]);
             $tabela->set_align(["left", "left"]);
             $tabela->show();
 

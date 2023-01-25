@@ -103,7 +103,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_titulo('Área de Telefones');
-    $objeto->set_subtitulo('Para transferir clica em OK e no ramal desejado, espera começar a chamar e desligue.');
+    $objeto->set_subtitulo('Para transferir clica em OK, digita o ramal desejado, espera começar a chamar e desligue.');
     $objeto->set_label(["Diretoria", "Gerência", "Nome", "Telefones / Ramais", "Email", "Servidores"]);
     $objeto->set_align(["center", "center", "left", "left", "left", "center"]);
     $objeto->set_funcao([null, null, null, "nl2br"]);

@@ -50,7 +50,7 @@ if ($acesso) {
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("À SE/SPM,");
+    $despacho->set_destino("À SES/SUPCPMSO,");
     $despacho->set_data(date("d/m/Y"));
 
     # Sexo

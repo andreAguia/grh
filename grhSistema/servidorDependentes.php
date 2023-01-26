@@ -292,7 +292,7 @@ if ($acesso) {
         array('nome' => 'processo',
             'label' => 'Processo:',
             'tipo' => 'texto',
-            'size' => 20,
+            'size' => 40,
             'title' => 'Processo de exclusão do auxílio Creche.',
             'col' => 4,
             'linha' => 3),

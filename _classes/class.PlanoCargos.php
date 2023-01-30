@@ -179,7 +179,7 @@ class PlanoCargos {
         } else {
             $numPadroes = 5;
             $temLetra = true;
-        }        
+        }
 
         # Se for relatório
         if ($relatorio) {
@@ -211,7 +211,7 @@ class PlanoCargos {
                         WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
 
             $row = $pessoal->select($select);
-            
+
             # Preenche a tabela
             foreach ($row as $rr) {
 
@@ -428,9 +428,34 @@ class PlanoCargos {
             $row = $pessoal->select($select, false);
 
             pLista(
-                    "{$row[0]} - {$row[1]}",
+                    $row[0] . " - R$ " . formataMoeda($row[1]),
                     $row[2]
             );
+        }
+    }
+
+    ###########################################################
+
+    public function get_valor($idClasse) {
+        /**
+         * Retorna o valor do salário dessa idClasse
+         * 
+         * @param $classe  texto   null A classe do salário
+         * 
+         * @syntax $plano->evibeValor($idclasse);
+         */
+        if (is_null($idClasse)) {
+            return null;
+        } else {
+            # Pega os projetos cadastrados
+            $select = "SELECT valor
+                         FROM tbclasse
+                         WHERE idClasse = $idClasse";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+
+            return $row[0];
         }
     }
 

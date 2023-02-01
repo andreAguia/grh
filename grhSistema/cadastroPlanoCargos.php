@@ -315,6 +315,11 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
 
+            # Grava no log a atividade
+            $atividade = "Acessou a área da gerência da tabela do plano de cargos {$plano->get_numDecreto($id)}";
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+
             # Cria um menu
             $menu1 = new MenuBar();
 
@@ -364,10 +369,10 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            $botao->set_label('Passa os Servidores Ativos Para a Nova Tabela');
+            $botao->set_label('Importar Servidores para Esta Tabela');
             $botao->set_url("importaPlanoCargos.php");
             $botao->set_imagem(PASTA_FIGURAS . 'importaSalario.png', 50, 50);
-            $botao->set_title('Faz a atualização automática dos servidores ativos paraa nova tabela');
+            $botao->set_title('Faz a atualização automática dos servidores ativos para esta tabela');
             $menu->add_item($botao);
 
             $menu->show();
@@ -473,7 +478,30 @@ if ($acesso) {
 
         ################################################################
 
-        case "apagaDados2" :
+        case "apagaDados2":
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Apagando ...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=apagaDados3');
+            break;
+
+        ################################################################
+
+        case "apagaDados3" :
+            
+            # Grava no log a atividade
+            $atividade = "Excluiu os valores da tabela do plano de cargos {$plano->get_numDecreto($id)}";
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, "tbclasse", null, 3);
 
             # Apaga a tabela tbsispatri
             $select = "SELECT idClasse
@@ -484,10 +512,17 @@ if ($acesso) {
 
             $pessoal->set_tabela("tbclasse");
             $pessoal->set_idCampo("idClasse");
+            
 
             foreach ($row as $tt) {
                 $pessoal->excluir($tt[0]);
+                
+                # grava o logo de cada inclusão
+                $intra->registraLog($idUsuario, $data, "Excluiu o valor de forma automárica", "tbclasse",$tt[0], 3);
             }
+            
+            
+            
             loadPage("?fase=gerenciaTabela");
             break;
 
@@ -623,23 +658,24 @@ if ($acesso) {
                 back(1);
             } else {
                 # Pega os dados
-                $dados = $plano->get_dadosPlano($idPlanoModelo);
+                $dados1 = $plano->get_dadosPlano($idPlanoModelo);
+                $dados2 = $plano->get_dadosPlano($id);
 
                 tituloTable('Confirmar o procedimento');
                 $painel = new Callout("warning");
                 $painel->abre();
                 br();
 
-                p("O Sistema irá usar, como base, os dados do plano:<br/><b>{$dados['numDecreto']}</b><br/>com o aumento de:<br/><b>{$porcentagem}%</b>", "center");
+                p("O Sistema irá povoar a tabela do plano: <b>{$dados2['numDecreto']}</b><br/>usando, como base, os dados da tabela do plano: <b>{$dados1['numDecreto']}</b><br/>com o aumento de: <b>{$porcentagem}%</b>", "center");
 
                 # Cria um menu
                 $menu1 = new MenuBar();
 
                 # Prosseguir
-                $botaoVoltar = new Link("Prosseguir", "?fase=preencheTabela");
-                $botaoVoltar->set_class('button');
-                $botaoVoltar->set_title('Confirma e pressegue');
-                $menu1->add_link($botaoVoltar, "right");
+                $botao = new Link("Prosseguir", "?fase=porcentagemAguarda");
+                $botao->set_class('button');
+                $botao->set_title('Confirma e pressegue');
+                $menu1->add_link($botao, "right");
 
                 $menu1->show();
 
@@ -651,6 +687,24 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "porcentagemAguarda":
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Preenchendo a tabela...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=preencheTabela');
             break;
 
         ################################################################
@@ -678,12 +732,29 @@ if ($acesso) {
             $select = "SELECT * FROM tbclasse WHERE idPlano = {$id}";
             $row = $pessoal->select($select);
 
+            # Grava no log Inicial
+            $data = date("Y-m-d H:i:s");
+
+            # Pega os dados
+            $dados1 = $plano->get_dadosPlano($idPlanoModelo);
+            $dados2 = $plano->get_dadosPlano($id);
+
+            $atividade = "Executou a rotina de preenchimento automático de uma nova tabela de salário."
+                    . " Preenchendo a tabela de salário do plano: {$dados2['numDecreto']} usando, como base,"
+                    . " os dados da tabela do plano: {$dados1['numDecreto']} com o aumento de: {$porcentagem}%.";
+
+            # grava se tiver atividades para serem gravadas
+            $intra->registraLog($idUsuario, $data, $atividade, "tbclasse", null, 1);
+
             # Efetua o aumento na tabela nova
             foreach ($row as $item) {
                 # Grava os dados
                 $campoNome = ["valor"];
                 $campoValor = [(float) $item["valor"] + (((float) $item["valor"] * $porcentagem) / 100)];
                 $pessoal->gravar($campoNome, $campoValor, $item["idClasse"], "tbclasse", "idClasse");
+
+                # grava o logo de cada inclusão
+                $intra->registraLog($idUsuario, $data, "Incluiu valor de forma automárica", "tbclasse", $item["idClasse"], 1);
             }
 
             loadPage("?fase=gerenciaTabela");

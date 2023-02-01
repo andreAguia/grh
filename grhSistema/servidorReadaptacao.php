@@ -596,7 +596,7 @@ if ($acesso) {
             $menu = new Menu();
             #$menu->add_item('titulo','Documentos');
 
-            $menu->add_item("linkWindow", "Despacho ao Protocolo para Abertura de Processo", "servidorMenu.php?fase=despacho");
+            #$menu->add_item("linkWindow", "Despacho ao Protocolo para Abertura de Processo", "servidorMenu.php?fase=despacho");
             $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "servidorMenu.php?fase=despachoChefia");
             $menu->add_item("linkWindow", "Despacho à Perícia para Arquivamento", "../grhRelatorios/despacho.Pericia.Arquivamento.php");
 

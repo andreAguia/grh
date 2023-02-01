@@ -56,6 +56,9 @@ if ($acesso) {
             $plano->exibeDadosPlano($id);
             br();
 
+            # Pega qual e a tabela atual
+            $idPlanoAtual = $plano->get_planoAtual();
+
             $grid = new Grid("center");
             $grid->abreColuna(8);
 
@@ -79,28 +82,36 @@ if ($acesso) {
                 tituloTable('Atenção !');
                 $painel = new Callout("warning");
                 $painel->abre();
-                br();
+
+                p("Plano Atual: {$plano->get_numDecreto($idPlanoAtual)}", "center");
+                p("Plano a Ser Atualizado: {$plano->get_numDecreto($id)}", "center");
 
                 p("Esta rotina atualiza o salário de TODOS OS SERVIDORES ESTATUTÁRIOS ATIVOS<br/>"
-                        . "que estão cadastrados no PLANO ATUAL para a tabela: {$plano->get_numDecreto($id)},<br/>"
+                        . "que estão cadastrados no PLANO ATUAL para a tabela do plano <b>{$plano->get_numDecreto($id)}</b>,<br/>"
                         . "respeitando o nível / faixa / padrão correspondente.<br/>"
                         . "<br/>Esta atualização só irá ocorrer se o nível / faixa / padrão<br/>"
                         . "da nova tabela corresponder exatamente ao da tabela atual.<br/>"
                         . "<br/>Importante observer que só serão atualizados os servidores estatutários ativos que,<br/>"
                         . "estiverem com o cadastro regularizados, ou seja, com o salário vinculado ao plano atual.", "center");
 
-                br();
+                if ($id == $idPlanoAtual) {
+                    $painel = new Callout("alert");
+                    $painel->abre();
+                    p("<b>Atenção<br/>Você não pode atualizar o plano de cargos atual<br/>usando o mesmo plano como base !!</b>", "center");
+                    $painel->fecha();
+                } else {
 
-                # Cria um menu
-                $menu1 = new MenuBar();
+                    # Cria um menu
+                    $menu1 = new MenuBar();
 
-                # Prosseguir
-                $botaoVoltar = new Link("Prosseguir", "?fase=importa1");
-                $botaoVoltar->set_class('button');
-                $botaoVoltar->set_title('Confirma e prossegue');
-                $menu1->add_link($botaoVoltar, "right");
+                    # Prosseguir
+                    $botaoVoltar = new Link("Prosseguir", "?fase=importa1");
+                    $botaoVoltar->set_class('button');
+                    $botaoVoltar->set_title('Confirma e prossegue');
+                    $menu1->add_link($botaoVoltar, "right");
 
-                $menu1->show();
+                    $menu1->show();
+                }
 
                 $painel->fecha();
             }
@@ -121,7 +132,7 @@ if ($acesso) {
             # Limita a tela
             $grid1 = new Grid("center");
             $grid1->abreColuna(5);
-            p("Verificando os servidore que serão afetados...", "center");
+            p("Verificando os servidores que serão afetados...", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
@@ -156,38 +167,35 @@ if ($acesso) {
 
             # Servidores Afetados
             $select = "SELECT DISTINCT tbservidor.idServidor, 
-                              tbservidor.idServidor,
-                              idPlano
+                              tbservidor.idServidor, 
+                              CONCAT(tbservidor.idServidor, '&',{$id})
                         FROM tbservidor JOIN tbprogressao USING (idServidor)
                                         JOIN tbclasse USING (idClasse)
                                         JOIN tbplano USING (idPlano)
                                         JOIN tbpessoa USING (idPessoa)
-                       WHERE tbplano.dtVigencia = (SELECT MAX(dtVigencia) FROM tbprogressao JOIN tbclasse USING(idClasse)
-                                                                                               JOIN tbplano USING (idPlano)
-                                                                             WHERE tbprogressao.idServidor = tbservidor.idservidor)
-                         AND situacao = 1
+                       WHERE situacao = 1
                          AND idPerfil = 1
-                          AND idPlano = {$idPlanoAtual}
-                          ORDER BY tbpessoa.nome";
+                         AND idPlano = {$idPlanoAtual}
+                    ORDER BY tbpessoa.nome";
 
             $servidoresafetados = $pessoal->select($select);
             $numServidoresafetados = $pessoal->count($select);
 
             # Servidores Não Afetados
             $select = "SELECT DISTINCT tbservidor.idServidor, 
-                              tbservidor.idServidor,
-                              idPlano
+                              tbservidor.idServidor, 
+                              CONCAT(tbservidor.idServidor, '&',{$id})
                         FROM tbservidor JOIN tbprogressao USING (idServidor)
                                         JOIN tbclasse USING (idClasse)
                                         JOIN tbplano USING (idPlano)
                                         JOIN tbpessoa USING (idPessoa)                                        
                        WHERE tbplano.dtVigencia = (SELECT MAX(dtVigencia) FROM tbprogressao JOIN tbclasse USING(idClasse)
-                                                                                               JOIN tbplano USING (idPlano)
+                                                                                            JOIN tbplano USING (idPlano)
                                                                              WHERE tbprogressao.idServidor = tbservidor.idservidor)
                          AND situacao = 1
                          AND idPerfil = 1
-                          AND idPlano <> {$idPlanoAtual}
-                          ORDER BY tbpessoa.nome";
+                         AND idPlano <> {$idPlanoAtual}
+                    ORDER BY tbpessoa.nome";
 
             $servidoresNafetados = $pessoal->select($select);
             $numServidoresNafetados = $pessoal->count($select);
@@ -195,8 +203,8 @@ if ($acesso) {
             $painel = new Callout("warning");
             $painel->abre();
             p("O Sistema irá atualizar o salário de {$numServidoresafetados} servidores do<br/>"
-                    . "plano atual: {$plano->get_numDecreto($idPlanoAtual)}, para o novo plano: {$plano->get_numDecreto($id)}.<br/>"
-                    . "{$numServidoresNafetados} servidores não serão afetados.", "center");
+                    . "plano atual: <b>{$plano->get_numDecreto($idPlanoAtual)}</b>, para o novo plano: <b>{$plano->get_numDecreto($id)}</b>.<br/>"
+                    . "{$numServidoresNafetados} servidores não serão afetados, pois estão cadastrados em plano diferente ao atual.", "center");
             $painel->fecha();
 
             # Cria um menu
@@ -219,11 +227,11 @@ if ($acesso) {
             $tabela->set_titulo("Servidores Que Terão O Salário Atualizado");
             $tabela->set_subtitulo("{$numServidoresafetados} servidores");
             $tabela->set_conteudo($servidoresafetados);
-            $tabela->set_label(["Servidor", "Lotação", "Plano Cadastrador"]);
-            $tabela->set_classe(["Pessoal", "Pessoal", "PlanoCargos"]);
-            $tabela->set_metodo(["get_nomeECargoSimplesEPerfil", "get_lotacao", "get_numDecreto"]);
+            $tabela->set_label(["Servidor", "Salário Atual", "Salário Atualizado"]);
+            $tabela->set_classe(["Pessoal", "PlanoCargos", "PlanoCargos"]);
+            $tabela->set_metodo(["get_nomeECargoSimplesEPerfil", "evibeValorServidor", "evibeValorServidorPlano"]);
             $tabela->set_width([40, 30, 30]);
-            $tabela->set_align(["left", "left"]);
+            $tabela->set_align(["left"]);
             $tabela->show();
 
             $tab->fechaConteudo();
@@ -234,11 +242,11 @@ if ($acesso) {
             $tabela->set_titulo("Servidores Não Afetados");
             $tabela->set_subtitulo("{$numServidoresNafetados} servidores");
             $tabela->set_conteudo($servidoresNafetados);
-            $tabela->set_label(["Servidor", "Lotação", "Plano Cadastrador"]);
-            $tabela->set_classe(["Pessoal", "Pessoal", "PlanoCargos"]);
-            $tabela->set_metodo(["get_nomeECargoSimplesEPerfil", "get_lotacao", "get_numDecreto"]);
+            $tabela->set_label(["Servidor", "Salário Atual", "Salário Atualizado"]);
+            $tabela->set_classe(["Pessoal", "PlanoCargos", "PlanoCargos"]);
+            $tabela->set_metodo(["get_nomeECargoSimplesEPerfil", "evibeValorServidor", "evibeValorServidorPlano"]);
             $tabela->set_width([40, 30, 30]);
-            $tabela->set_align(["left", "left"]);
+            $tabela->set_align(["left"]);
             $tabela->show();
 
             $tab->fechaConteudo();
@@ -253,7 +261,6 @@ if ($acesso) {
 
         case "importa3":
 
-
             br(4);
             aguarde();
             br();
@@ -261,7 +268,7 @@ if ($acesso) {
             # Limita a tela
             $grid1 = new Grid("center");
             $grid1->abreColuna(5);
-            p("Fazendo a Importação. Aguarde. Esse procedimento pode demorar um pouco.", "center");
+            p("Fazendo a Importação.<br/>Aguarde...<br/>Esse procedimento pode demorar um pouco.", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
@@ -277,39 +284,48 @@ if ($acesso) {
 
             # Pega os dados do novo plano
             $dados = $plano->get_dadosPlano($id);
-            
+
+            # Grava no log a atividade Geral
+            $atividade = "Importou os servidores do plano atual: {$plano->get_numDecreto($idPlanoAtual)}, para o novo plano: {$plano->get_numDecreto($id)}}";
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, "tbclasse", null, 1);
+
             # Servidores Afetados
-             $select = "SELECT DISTINCT tbservidor.idServidor, 
-                               tbclasse.faixa
-                        FROM tbservidor LEFT JOIN tbprogressao USING (idServidor)
-                                        LEFT JOIN tbclasse USING (idClasse)
-                                        JOIN tbplano USING (idPlano)
-                                        JOIN tbpessoa USING (idPessoa)
-                       WHERE tbplano.dtVigencia = (SELECT MAX(dtVigencia) FROM tbprogressao JOIN tbclasse USING(idClasse)
-                                                                                            JOIN tbplano USING (idPlano)
-                                                                             WHERE tbprogressao.idServidor = tbservidor.idservidor)
-                         AND situacao = 1
-                         AND idPerfil = 1
-                          AND idPlano = {$idPlanoAtual}
-                          ORDER BY tbpessoa.nome";
+            $select = "SELECT DISTINCT tbservidor.idServidor
+                          FROM tbservidor JOIN tbprogressao USING (idServidor)
+                                          JOIN tbclasse USING (idClasse)
+                                          JOIN tbplano USING (idPlano)
+                                          JOIN tbpessoa USING (idPessoa)
+                         WHERE situacao = 1
+                           AND idPerfil = 1
+                           AND idPlano = {$idPlanoAtual}
+                      ORDER BY tbpessoa.nome";
 
             $servidoresafetados = $pessoal->select($select);
             $numServidoresafetados = $pessoal->count($select);
-            echo $numServidoresafetados;
-            
 
             foreach ($servidoresafetados as $item) {
 
-//                # Campos
-//                $campos = ["idServidor", "idTpProgressao", "idClasse", "dtPublicacao", "dtInicial", "dtImportacao"];
-//
-//                # Valores
-//                $valor = [$item["idServidor"], 5, $plano->get_idClasse($id, $item['faixa']), $dados["dtPublicacao"], $dados["dtVigencia"], date("Y-m-d")];
-//
-//                # Grava
-//                $pessoal->gravar($campos, $valor, null, "tbprogressao", "idProgressao");
+                # Pega a faixa dele
+                $faixa = $pessoal->get_faixaServidor($item["idServidor"]);
+
+                # Campos
+                $campos = ["idServidor", "idTpProgressao", "idClasse", "dtPublicacao", "dtInicial", "dtImportacao"];
+
+                # Valores
+                $valor = [$item["idServidor"], 5, $plano->get_idClasse($id, $faixa), $dados["dtPublicacao"], $dados["dtVigencia"], date("Y-m-d")];
+
+                # Grava
+                $pessoal->gravar($campos, $valor, null, "tbprogressao", "idProgressao");
+
+                # Grava no log a atividade Geral
+                $atividade = "Incluído através da rotina de importação";
+                $data = date("Y-m-d H:i:s");
+                $intra->registraLog($idUsuario, $data, $atividade, "tbprogressao", $pessoal->get_lastId(), 1);
             }
-            #loadPage("?");
+
+            alert("Atualização Completada. {$numServidoresafetados} servidores afetados.");
+            loadPage("cadastroPlanoCargos.php?fase=gerenciaTabela");
             break;
 
         ################################################################

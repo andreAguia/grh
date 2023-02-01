@@ -114,12 +114,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data Inicial", "Tipo", "Valor", "DOERJ", "Obs"));
-    $objeto->set_width(array(10, 20, 20, 10, 30));
-    $objeto->set_align(array("center", "left", "center", "center", "left"));
-    $objeto->set_funcao(array("date_to_php", null, null, "date_to_php"));
-    $objeto->set_classe(array(null, null, "PlanoCargos"));
-    $objeto->set_metodo(array(null, null, "evibeValor"));
+    $objeto->set_label(["Data Inicial", "Tipo", "Valor", "DOERJ", "Obs"]);
+    $objeto->set_width([10, 20, 20, 10, 30]);
+    $objeto->set_align(["center", "left", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", null, null, "date_to_php"]);
+    $objeto->set_classe([null, null, "PlanoCargos"]);
+    $objeto->set_metodo([null, null, "evibeValor"]);
 
     # Formatação condicional
     $objeto->set_formatacaoCondicional(array(array('coluna' => 1,

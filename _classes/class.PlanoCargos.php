@@ -611,4 +611,144 @@ class PlanoCargos {
     }
 
     ###########################################################
+
+    public function evibeValorServidor($idServidor) {
+        /**
+         * Exive informação da faixa, valor e plano referente ao idClasse para ser exibido na rotina de cadastro de progressão
+         * 
+         * @param $idServidor  numero  null O id do servidor
+         * 
+         * @syntax $plano->evibeValor($idclasse);
+         */
+        ############################################## Parei aqui
+
+
+        if (is_null($idServidor)) {
+            return null;
+        } else {
+
+            # Pega o idClasse
+            $pessoal = new Pessoal();
+            $select1 = "SELECT idClasse
+                          FROM tbprogressao
+                         WHERE idServidor = {$idServidor}
+              ORDER BY dtInicial desc";
+
+            $row1 = $pessoal->select($select1, false);
+
+            # Pega os projetos cadastrados
+            $select2 = "SELECT faixa,
+                              valor,
+                              tbplano.numdecreto
+                         FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                         WHERE idClasse = $row1[0]";
+
+            $row2 = $pessoal->select($select2, false);
+
+            pLista(
+                    $row2[0] . " - R$ " . formataMoeda($row2[1]),
+                    $row2[2]
+            );
+        }
+    }
+
+    ###########################################################
+
+    public function evibeValorServidorPlano($texto) {
+        /**
+         * Exibe o slaáriode um servidor na mesma faixa do atual(usado na rotina de importação de valores)
+         * É necessário que a faixa seja a mesma
+         * 
+         * @param $idServidor  numero  null O id do servidor
+         * @param $idPlano     numero  null O id do plano em que o servidor será transferido
+         * 
+         * @syntax $plano->evibeValorServidorPlano($idServidor, $idPlano);
+         */
+        if (is_null($texto)) {
+            return null;
+        } else {
+
+            # Divide o texto TIPO&ID
+            $pedaco = explode("&", $texto);
+
+            # Pega os pedaços
+            $idServidor = $pedaco[0];
+            $idPlano = $pedaco[1];
+
+            # Inicia as Classes
+            $pessoal = new Pessoal();
+            $plano = new PlanoCargos();
+
+            # Pega o plano de cargos do servidor
+            $idPlanoServidor = $this->get_idPlano($idServidor);
+
+            # Pega o plano de cargos do servidor
+            $idPlanoAtual = $this->get_planoAtual();
+
+            # Verifica se o plano do servidor está atualizado
+            if ($idPlanoServidor == $idPlanoAtual) {
+
+                # Pega a faixa atual do servidor
+                $faixa = $pessoal->get_faixaServidor($idServidor);
+
+                # Pega o idClasse que iria no plano informado
+                $idClasse = $plano->get_idClasse($idPlano, $faixa);
+
+                # Pega o salário projetado
+                $select2 = "SELECT faixa,
+                               valor,
+                               tbplano.numdecreto
+                          FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                         WHERE idClasse = {$idClasse}";
+
+                $row2 = $pessoal->select($select2, false);
+
+                pLista(
+                        $row2[0] . " - R$ " . formataMoeda($row2[1]),
+                        $row2[2]
+                );
+            } else {
+                return null;
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_idPlano($idServidor) {
+        /**
+         * Retorna o idPlano do salário atual do servidor
+         * 
+         * @param $idServidor  numero  null O id do servidor
+         * 
+         * @syntax $plano->get_idPlano($idclasse);
+         */
+        ############################################## Parei aqui
+
+
+        if (is_null($idServidor)) {
+            return null;
+        } else {
+
+            # Pega o idClasse
+            $pessoal = new Pessoal();
+            $select1 = "SELECT idClasse
+                          FROM tbprogressao
+                         WHERE idServidor = {$idServidor}
+              ORDER BY dtInicial desc";
+
+            $row1 = $pessoal->select($select1, false);
+
+            # Pega os projetos cadastrados
+            $select2 = "SELECT idPlano
+                          FROM tbclasse LEFT JOIN tbplano USING (idPlano)
+                         WHERE idClasse = $row1[0]";
+
+            $row2 = $pessoal->select($select2, false);
+
+            return $row2[0];
+        }
+    }
+
+    ###########################################################
 }

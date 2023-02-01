@@ -279,6 +279,30 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idClasseServidor
+     * informa a faixa salarial atual de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_faixaServidor($idServidor) {
+
+        $select = "SELECT faixa
+                     FROM tbprogressao JOIN tbclasse USING (idClasse)
+                    WHERE idServidor = $idServidor
+                 ORDER BY dtInicial desc";
+
+        $row = parent::select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_salarioCessao
      * informa o sal�rio recebido pelo �rg�o de origem de um cedido
      * 

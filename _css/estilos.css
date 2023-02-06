@@ -182,6 +182,13 @@ div#divNumProcessoPremio{
     left: 23%;
 }
 
+p#calloutMensagemPremio{
+    padding: 0px 0px 0px 0px;
+    text-align: justify;
+    font-size: 14px;
+    margin: 0px;
+}
+
 /*******************************************
  * Tela Inicial Menu do administrador
  *******************************************/

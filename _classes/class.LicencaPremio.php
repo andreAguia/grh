@@ -478,6 +478,9 @@ class LicencaPremio {
             p($this->get_numProcesso($idServidor), "f20", "center");
             $painel->fecha();
         }
+        
+        tituloTable("Atenção");
+        callout("Antes de informar ao servidor sobre a licença prêmio, verifique se o mesmo possui algum afastamento específico que poderia alterar as datas da licença.<br/>O sistema, ainda, não verifica essa informação","alert","calloutMensagemPremio");
 
         /*
          * Exibe o número de publicação
@@ -501,6 +504,7 @@ class LicencaPremio {
 
             $tabela = new Tabela();
             $tabela->set_titulo("N° de Publicações");
+            $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
             $tabela->set_align(["left"]);
             $tabela->set_conteudo($conteudo2);
             $tabela->set_grupoCorColuna(0);
@@ -523,6 +527,7 @@ class LicencaPremio {
 
             $tabela = new Tabela();
             $tabela->set_titulo("N° de Publicações");
+            $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
             $tabela->set_conteudo($conteudo);
             $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
             $tabela->set_totalRegistro(false);
@@ -589,7 +594,7 @@ class LicencaPremio {
 
             $tabela->set_colunaSomatorio([3, 4, 5]);
             $tabela->set_totalRegistro(false);
-            
+
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 4,
                     'valor' => 90,
@@ -1252,4 +1257,33 @@ class LicencaPremio {
     }
 
     ###########################################################
+
+    function get_dataProximaPublicacao($idServidor) {
+        /*
+         * Informa a data da próxima publicação
+         *
+         */
+        
+        # Valor fixo do período aquisitivo (em dias) 365 x 5
+        $valor = 1825;
+
+        if (is_numeric($idServidor)) {
+
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            $select = "SELECT dtFimPeriodo
+                         FROM tbpublicacaopremio 
+                        WHERE idServidor = {$idServidor} 
+                     ORDER BY dtFimPeriodo DESC";
+
+            $row = $pessoal->select($select, false);
+
+            return addDias(date_to_php($row[0]), $valor, false);
+        } else {
+            return null;
+        }
+    }
+
+    ########################################################### 
 }

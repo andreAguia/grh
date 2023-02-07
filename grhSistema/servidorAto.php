@@ -7,7 +7,6 @@
  */
 # Inicia as variáveis que receberão as sessions
 $idUsuario = null;
-$idServidorPesquisado = null;
 
 # Configuração
 include ("_config.php");
@@ -19,6 +18,9 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase');
 
+    # pega o id (se tiver)
+    $id = soNumeros(get('id'));
+    
     # Conecta ao Banco de Dados
     $intra = new Intra();
 
@@ -28,11 +30,8 @@ if ($acesso) {
         # Grava no log a atividade
         $atividade = "Cadastro do servidor - Ato de Investidura do Servidor";
         $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $id);
     }
-
-    # pega o id (se tiver)
-    $id = soNumeros(get('id'));
 
     # Começa uma nova página
     $page = new Page();
@@ -62,19 +61,13 @@ if ($acesso) {
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
-            if (file_exists("{$pasta}{$idServidorPesquisado}.pdf")) {
-                
+            if (file_exists("{$pasta}{$id}.pdf")) {
+
                 # Cria um menu
                 $menu = new MenuBar();
 
-                # Botão de Upload
-                $botao = new Button("Trocar o {$nome}");
-                $botao->set_url("?fase=upload&id={$id}");
-                $botao->set_title("Faz o Upload do {$nome}");
-                $menu->add_link($botao, "left");
-
                 $botaoApaga = new Button("Excluir o Arquivo");
-                $botaoApaga->set_url("?fase=apagaDocumento&id={$idServidorPesquisado}");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
                 $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
                 $botaoApaga->set_class("button alert");
                 $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
@@ -83,13 +76,18 @@ if ($acesso) {
                 $menu->show();
 
                 tituloTable("Ato de Investidura");
-                iframe("{$pasta}{$idServidorPesquisado}.pdf");
+                iframe("{$pasta}{$id}.pdf");
             } else {
-                loadPage("?fase=upload");
+                loadPage("?fase=upload&id={$id}");
             }
+            
+            
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+
+        ########################################        
+
         case "upload" :
             # Limita a tela
             $grid = new Grid("center");
@@ -97,7 +95,7 @@ if ($acesso) {
             br();
 
             # Exibe o Título
-            if (!file_exists("{$pasta}{$idServidorPesquisado}.pdf")) {
+            if (!file_exists("{$pasta}{$id}.pdf")) {
 
                 # Título
                 tituloTable("Upload do {$nome}");
@@ -147,7 +145,7 @@ if ($acesso) {
             p($texto, "f14", "center");
 
             if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
-                $upload = new UploadDoc($_FILES['doc'], $pasta, $idServidorPesquisado, $extensoes);
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
@@ -155,18 +153,18 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idServidorPesquisado);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $id);
 
                     # Fecha a janela aberta
                     loadPage("?fase=uploadTerminado");
                 } else {
                     # volta a tela de upload
-                    loadPage("?fase=upload&id={$idServidorPesquisado}");
+                    loadPage("?fase=upload&id={$id}");
                 }
             }
 
             # Informa caso exista um arquivo com o mesmo nome
-            if (file_exists("{$pasta}{$idServidorPesquisado}.pdf")) {
+            if (file_exists("{$pasta}{$id}.pdf")) {
                 p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
                 br();
             }
@@ -174,6 +172,8 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+
+        ########################################
 
         case "uploadTerminado" :
             # Informa que o bim foi substituído
@@ -183,17 +183,19 @@ if ($acesso) {
             loadPage("?");
             break;
 
+        ########################################    
+
         case "apagaDocumento" :
 
             # Apaga o arquivo (na verdade renomeia)
-            if (rename("{$pasta}{$idServidorPesquisado}.pdf", "{$pasta}apagado_{$idServidorPesquisado}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
                 alert("Arquivo Excluído !!");
 
                 # Registra log
                 $atividade = "Excluiu o arquivo do {$nome}";
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
-                $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3, $idServidorPesquisado);
+                $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3, $id);
 
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
@@ -205,7 +207,7 @@ if ($acesso) {
             }
             break;
 
-        ################################################################
+        ########################################
     }
 
     $page->terminaPagina();

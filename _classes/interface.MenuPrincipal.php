@@ -817,16 +817,6 @@ class MenuPrincipal {
             $botao->set_title('Controle de MCF');
             $menu->add_item($botao);
         }
-
-        if (Verifica::acesso($this->idUsuario, 1)) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Recadastramento de Servidores');
-            $menu->add_item($botao);
-        }
-
         $botao = new BotaoGrafico();
         $botao->set_label('Vacina');
         $botao->set_url('areaVacina.php?grh=1');
@@ -847,6 +837,26 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de servidores com direito ao auxílio transporte');
         $menu->add_item($botao);
+
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
+        }
+
+
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Atos de Investidura');
+            $botao->set_url('areaAtoInvestidura.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Cadastro de atos de investidura');
+            $menu->add_item($botao);
+        }
+
 
         $menu->show();
         $painel->fecha();
@@ -1069,7 +1079,7 @@ class MenuPrincipal {
         $select = "SELECT ramais FROM tblotacao WHERE idLotacao = 66";
         $pessoal = new Pessoal();
         $row = $pessoal->select($select);
-        
+
         # tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($row);

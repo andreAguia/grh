@@ -555,7 +555,7 @@ class MenuServidor {
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
-        $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1");
+        $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
         $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");        
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');

@@ -20,7 +20,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Conecta ao Banco de Dados
     $intra = new Intra();
 
@@ -80,8 +80,7 @@ if ($acesso) {
             } else {
                 loadPage("?fase=upload&id={$id}");
             }
-            
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
@@ -180,7 +179,7 @@ if ($acesso) {
             alert("Arquivo do {$nome} Cadastrado !!");
 
             # Fecha a janela
-            loadPage("?");
+            echo '<script type="text/javascript" language="javascript">window.close();</script>';
             break;
 
         ########################################    

@@ -847,7 +847,6 @@ class MenuPrincipal {
             $menu->add_item($botao);
         }
 
-
         if (Verifica::acesso($this->idUsuario, 1)) {
             $botao = new BotaoGrafico();
             $botao->set_label('Atos de Investidura');

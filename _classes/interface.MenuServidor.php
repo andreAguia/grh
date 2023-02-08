@@ -324,6 +324,15 @@ class MenuServidor {
         $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
 
+        # Ato de investidura
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atos de Investidura');
+        $botao->set_url("servidorAto.php?grh=1&id={$this->idServidor}");
+        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro de atos de investidura');
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
+
         $menu->show();
         br();
     }
@@ -522,7 +531,7 @@ class MenuServidor {
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
-        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');        
+        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
@@ -531,16 +540,16 @@ class MenuServidor {
         if ($this->perfil == 1 AND $this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.Exercicio.php');
         }
-        
+
         $licencaMaternidade = new LicencaMaternidade();
         if ($licencaMaternidade->teveLicenca($this->idServidor)) {
             $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
         }
-        
+
         if (Verifica::acesso($this->idUsuario, 1)) {
             $menu->add_item('linkWindow', 'Declaração MODELO', '../grhRelatorios/declaracao.MODELO.php');
         }
-        
+
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
@@ -557,7 +566,7 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
-        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");        
+        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');
 
         #$menu->add_item('link','Declaração para o INSS','#');

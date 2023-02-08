@@ -171,9 +171,10 @@ if ($acesso) {
             # Pega os dados
             $select = "SELECT idFuncional,
                               tbpessoa.nome,
-                              idservidor,
-                              idservidor,
-                              idservidor
+                              idServidor,
+                              idServidor,
+                              idServidor,
+                              idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
@@ -205,6 +206,9 @@ if ($acesso) {
                 #$tabela->set_funcao([null, null, "exibeAto"]);
                 $tabela->set_classe([null, null, "Pessoal", "Pessoal", "AtoInvestidura"]);
                 $tabela->set_metodo([null, null, "get_lotacao", "get_cargoSimples", "exibeAto"]);
+
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('?fase=editaServidor');
                 $tabela->show();
             }
 
@@ -330,6 +334,22 @@ if ($acesso) {
             #callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
             $grid->fechaColuna();
             $grid->fechaGrid();
+            break;
+
+        ##################################################################
+
+        case "editaServidor" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAtoInvestidura.php');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
             break;
 
         ##################################################################

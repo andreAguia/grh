@@ -22,6 +22,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -51,7 +52,7 @@ if ($acesso) {
 
     # Dados da rotina de Upload
     $pasta = PASTA_ATOINVESTIDURA;
-    $nome = "Ato de Investidura";
+    $nome = "Ato de Investidura de <b>{$pessoal->get_nome($id)}</b>";
     $extensoes = ["pdf"];
 
     ################################################################
@@ -59,9 +60,12 @@ if ($acesso) {
     switch ($fase) {
         case "" :
             $grid = new Grid("center");
-            $grid->abreColuna(12);
+            $grid->abreColuna(12);            
 
             if (file_exists("{$pasta}{$id}.pdf")) {
+                
+                tituloTable($nome);
+                br();
 
                 # Cria um menu
                 $menu = new MenuBar();
@@ -75,7 +79,7 @@ if ($acesso) {
 
                 $menu->show();
 
-                tituloTable("Ato de Investidura");
+                
                 iframe("{$pasta}{$id}.pdf");
             } else {
                 loadPage("?fase=upload&id={$id}");

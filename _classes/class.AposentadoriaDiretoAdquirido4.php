@@ -1,6 +1,6 @@
 <?php
 
-class AposentadoriaDiretoAdquirido1 {
+class AposentadoriaDiretoAdquirido4 {
 
     /**
      * Abriga as rotina referentes a aposentadoria do servidor
@@ -12,39 +12,46 @@ class AposentadoriaDiretoAdquirido1 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>C.F. Art. 40, §1º, III, alínea a";
+    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>Art. 6º DA EC Nº 41/2003";
 
     # Regras
-    private $dtIngresso = null;
+    private $dtIngresso = "31/12/2003";
     private $idadeHomem = 60;
     private $idadeMulher = 55;
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
-    private $servicoPublico = 10;
+    private $servicoPublico = 20;
+    private $carreira = 10;
     private $cargoEfetivo = 5;
     private $dtRequesitosCumpridos = "31/12/2021";
 
     # Remuneração
-    private $calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Lei Federal 10.887";
+    private $calculoInicial = "Média aritmética simples dos 80% das maiores remunerações corrigidas desde julho/94 - Lei Federal 10.887<br/>
+                               Redutor:<br/>
+                                       - Até 31/12/2005 - Redutor de 3,5% x nº de anos (reduzidos em relação a idade – 60 H/ 55 M)<br/>
+                                       - Após 01/01/2006 - Redutor de 5% x nº de anos (reduzidos em relação a idade – 60 H/55 M)";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – Aplicado em Janeiro – Lei 6.244/2012";
     private $paridade = "SEM PARIDADE";
 
     # Descrições
-    private $tempoContribuiçãoDescricao = "Tempo Total averbado (público e privado).";
+   private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
+    private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $idadeDescricao = "Idade do servidor.";
     private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
 
     # Dados do servidor
+    public $analisaDtIngresso = null;
     public $analiseIdade = null;
     public $analiseContribuicao = null;
     public $analisePublico = null;
     public $analiseCargoEfetivo = null;
     public $analiseDtRequesitosCumpridos = null;
 
-    # Variaveis de Retorno
+    # Variaveis de Retorno    
+    public $dataCriterioIngresso = null;
     public $dataCriterioIdade = null;
     public $dataCriterioTempoContribuicao = null;
     public $dataCriterioTempoServicoPublico = null;
@@ -66,6 +73,7 @@ class AposentadoriaDiretoAdquirido1 {
         $dtNasc = $pessoal->get_dataNascimento($this->idServidor);
         $idadeServidor = $pessoal->get_idade($this->idServidor);
         $sexo = $pessoal->get_sexo($this->idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($this->idServidor);
 
         $averbacao = new Averbacao();
         $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($this->idServidor);
@@ -90,6 +98,13 @@ class AposentadoriaDiretoAdquirido1 {
         /*
          * Análise
          */
+
+        # Data de Ingresso        
+        if (dataMaior($this->dtIngresso, $dtAdmissao) == $this->dtIngresso) {
+            $this->analisaDtIngresso = "OK";
+        } else {
+            $this->analisaDtIngresso = "NÃO TEM DIREITO";
+        }
 
         # Idade
         $this->dataCriterioIdade = addAnos($dtNasc, $regraIdade);
@@ -151,6 +166,7 @@ class AposentadoriaDiretoAdquirido1 {
         $pessoal = new Pessoal();
         $idadeServidor = $pessoal->get_idade($this->idServidor);
         $sexo = $pessoal->get_sexo($this->idServidor);
+        $dtAdmissao = $pessoal->get_dtAdmissao($this->idServidor);
 
         $averbacao = new Averbacao();
         $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($this->idServidor);
@@ -175,6 +191,7 @@ class AposentadoriaDiretoAdquirido1 {
          */
 
         $array = [
+            ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $dtAdmissao, "---", $this->analisaDtIngresso],
             ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$idadeServidor} anos", $this->dataCriterioIdade, $this->analiseIdade],
             ["Contribuição", $this->tempoContribuiçãoDescricao, "{$regraContribuicao} anos<br/>(" . ($regraContribuicao * 365) . " dias)", "{$tempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
             ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$tempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
@@ -225,6 +242,12 @@ class AposentadoriaDiretoAdquirido1 {
             $cor = "warning";
         }
 
+        # Verifica a regra extra da data de ingresso
+        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
+            $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
+            $cor = "warning";
+        }
+
         # Exibe o resumo
         tituloTable($this->descricao);
         $painel = new Callout($cor);
@@ -258,6 +281,7 @@ class AposentadoriaDiretoAdquirido1 {
     public function exibeRegras() {
 
         $array = [
+            ["<p id='pLinha1'>Data de Ingresso</p><p id='pLinha4'>{$this->dtIngressoDescricao}</p>", $this->dtIngresso, $this->dtIngresso],
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
             ["<p id='pLinha1'>Contribuição</p><p id='pLinha4'>{$this->tempoContribuiçãoDescricao}</p>", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],

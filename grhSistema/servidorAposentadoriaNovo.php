@@ -153,7 +153,7 @@ if ($acesso) {
 
     ####################################################
     /*
-     *  Tempo Averbado Detalhado
+     *  Tempo Averbado
      */
 
     $tab->abreConteudo();
@@ -204,7 +204,7 @@ if ($acesso) {
 
     # Tabela
     $tabela = new Tabela();
-    $tabela->set_titulo("Tempo Averbado - Detalhado");
+    $tabela->set_titulo("Tempo Averbado");
     $tabela->set_conteudo($result);
     $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
     #$tabela->set_width(array(60, 40));
@@ -301,41 +301,98 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
+    titulotable("Direito Adquirido");
+    br();
+    echo "1";
+
     $direitoAdquirido = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
     $direitoAdquirido->exibeAnaliseResumo();
-
-    $grid1->fechaColuna();
-    $grid1->abreColuna(8);
-
     $direitoAdquirido->exibeAnalise();
 
     $grid1->fechaColuna();
-    $grid1->abreColuna(4);
+    $grid1->abreColuna(6);
 
     $direitoAdquirido->exibeRemuneração();
-    #$direitoAdquirido->exibeRegras();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRegras();
 
     $grid1->fechaColuna();
 
+    #########
+
     $grid1->abreColuna(12);
-    hr("geral");
+
+    hr("superGrosso");
     br();
+    echo "2";
 
     $direitoAdquirido = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
     $direitoAdquirido->exibeAnaliseResumo();
-
-    $grid1->fechaColuna();
-    $grid1->abreColuna(8);
-
     $direitoAdquirido->exibeAnalise();
 
     $grid1->fechaColuna();
-    $grid1->abreColuna(4);
+    $grid1->abreColuna(6);
 
     $direitoAdquirido->exibeRemuneração();
-    #$direitoAdquirido->exibeRegras();
 
     $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRegras();
+
+    $grid1->fechaColuna();
+
+    #########
+
+    $grid1->abreColuna(12);
+
+    hr("superGrosso");
+    br();
+    echo "3";
+
+    $direitoAdquirido = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+    $direitoAdquirido->exibeAnaliseResumo();
+    $direitoAdquirido->exibeAnalise();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRemuneração();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRegras();
+
+    $grid1->fechaColuna();
+
+    #########
+
+    $grid1->abreColuna(12);
+
+    hr("superGrosso");
+    br();
+    echo "4";
+
+    $direitoAdquirido = new AposentadoriaDiretoAdquirido4($idServidorPesquisado);
+    $direitoAdquirido->exibeAnaliseResumo();
+    $direitoAdquirido->exibeAnalise();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRemuneração();
+
+    $grid1->fechaColuna();
+    $grid1->abreColuna(6);
+
+    $direitoAdquirido->exibeRegras();
+
+    $grid1->fechaColuna();
+
     $grid1->fechaGrid();
 
     $tab->fechaConteudo();

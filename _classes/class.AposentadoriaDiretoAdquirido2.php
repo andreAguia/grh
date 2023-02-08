@@ -12,7 +12,7 @@ class AposentadoriaDiretoAdquirido2 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Direito Adquirido - Aposentadoria Voluntária por Idade<br/>C.F. Art. 40, §1º, III, alínea b";
+    private $descricao = "Aposentadoria Voluntária por Idade<br/>C.F. Art. 40, §1º, III, alínea b";
 
     # Regras
     private $dtIngresso = null;
@@ -29,7 +29,6 @@ class AposentadoriaDiretoAdquirido2 {
     private $paridade = "SEM PARIDADE";
 
     # Descrições
-    private $dtIngressoDescricao = "Data de entrada no serviço público sem interrupção.";
     private $idadeDescricao = "Idade do servidor.";
     private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";

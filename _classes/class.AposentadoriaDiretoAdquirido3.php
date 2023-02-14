@@ -248,7 +248,6 @@ class AposentadoriaDiretoAdquirido3 {
         }
 
         # Exibe o resumo
-        tituloTable($this->descricao);
         $painel = new Callout($cor);
         $painel->abre();
 
@@ -320,4 +319,12 @@ class AposentadoriaDiretoAdquirido3 {
         $tabela->show();
     }
 
+    ###########################################################
+
+    public function get_descricao() {
+
+        return $this->descricao;
+    }
+
+    ###########################################################
 }

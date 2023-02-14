@@ -58,20 +58,72 @@ class Aposentadoria {
         $menu->add_item("link", "Vínculos Anteriores", "?fase=vinculos", "Exibe os vínculos anteriores do servidor na Uenf");
         $menu->add_item("link", "Afastamentos", "?fase=afastamentos", "Exibe todos os afastamentos do servidor");
 
-        $menu->add_item("titulo", "Regras de Aposentadoria");
-        $menu->add_item("titulo1", "Direito Adquirido");
-        $menu->add_item("link", "Por Idade e Contribuição", "?fase=idadeContribuicao", "Artigo 40 - Aposentadoria voluntária por idade e tempo de contribuição");
-        $menu->add_item("link", "Por Idade", "?fase=idade", "Aposentadoria voluntária por idade");
+        $menu->add_item("titulo", "Regras Permanentes");
+        $menu->add_item("link", "Aposentadoria Voluntária", "?fase=permanenteVoluntaria");
+        $menu->add_item("link", "Aposentadoria Compulsória", "?fase=permanenteCompulsoria");
+        $menu->add_item("link", "Incap. Permanente", "?fase=incapacidadePermanente");
+        $menu->add_item("link", "Incap. Permanente - Acid.Trabalho", "?fase=incapacidadeAcidenteAT");
+
+        $menu->add_item("titulo", "Regras de Transição");
+        $menu->add_item("titulo1", "Regra dos Pontos");
+        $menu->add_item("link", "Integralidade e Paridade", "?fase=pontosIntegral");
+        $menu->add_item("link", "Média da Lei Federal nº 10.887/2004", "?fase=pontosMedia");
+        $menu->add_item("titulo1", "Regra do Pedágio");
+        $menu->add_item("link", "Integralidade e Paridade", "?fase=pedagioIntegral");
+        $menu->add_item("link", "Redutor de Idade", "?fase=pedagioRedutor");
+        $menu->add_item("link", "Média da Lei Federal nº 10.887/2004", "?fase=pedagioMedia");
+
+        $menu->add_item("titulo", "Direito Adquirido");
+        $menu->add_item("link", "Art. 40, §1º, III, alínea a", "?fase=idadeContribuicao", "Artigo 40 - Aposentadoria voluntária por idade e tempo de contribuição");
+        $menu->add_item("link", "Art. 40, §1º, III, alínea b", "?fase=idade", "Aposentadoria voluntária por idade");
         $menu->add_item("link", "Artigo 2º da EC nº 41/2003", "?fase=41_2", "Regras de transição - Artigo 2º da EC nº 41/2003");
         $menu->add_item("link", "Artigo 6º da EC nº 41/2003", "?fase=41_6", "Regras de transição - Artigo 6º da EC nº 41/2003");
         $menu->add_item("link", "Artigo 3º da EC nº 47/2005", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
+        $menu->add_item("link", "Artigo 3º da EC nº 41/2003", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
 
-        $menu->add_item("titulo1", "Regras de Transição");
-        $menu->add_item("link", "Regra de Transição 1", "?fase=transicao1", "Regras de transição 1");
-        $menu->add_item("link", "Regra de Transição 2", "?fase=transicao2", "Regras de transição 2");
-        
-        $menu->add_item("titulo1", "Regras Permanentes");
-        $menu->add_item("link", "Compulsória", "?fase=compulsoria", "Aposentadoria Compulsória");
+        $menu->add_item("titulo", "Documentação");
+
+        # Banco de dados
+        $pessoal = new Pessoal();
+
+        # Pega os projetos cadastrados
+        $select = 'SELECT idMenuDocumentos,
+                          categoria,
+                          texto,
+                          title
+                     FROM tbmenudocumentos
+                     WHERE categoria = "Regras de Aposentadoria"
+                  ORDER BY categoria, texto';
+
+        $dados = $pessoal->select($select);
+        $num = $pessoal->count($select);
+
+        # Verifica se tem itens no menu
+        if ($num > 0) {
+            # Percorre o array 
+            foreach ($dados as $valor) {
+                
+                if (empty($valor["title"])) {
+                    $title = $valor["texto"];
+                } else {
+                    $title = $valor["title"];
+                }
+
+                # Verifica qual documento
+                $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+                if (file_exists($arquivoDocumento)) {
+                    # Caso seja PDF abre uma janela com o pdf
+                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                } else {
+                    # Caso seja um .doc, somente faz o download
+                    $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+                }
+            }
+        }
+
+        $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
+        $menu->add_item("linkWindow", "Regras Vigentes a partir até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
+
         $menu->show();
     }
 
@@ -288,9 +340,9 @@ class Aposentadoria {
         $dtInicial = $pessoal->get_dtAdmissao($idServidor);
 
         # Verifica se o servidor é inativo e pega a data de saída dele
-        if($pessoal->get_idSituacao($idServidor) == 1){
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
             $dtFinal = date("d/m/Y");
-        }else{
+        } else {
             $dtFinal = $pessoal->get_dtSaida($idServidor);
         }
 

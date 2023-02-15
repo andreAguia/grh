@@ -21,7 +21,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase');
-    
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -294,9 +294,11 @@ if ($acesso) {
                 $relatorio = new Relatorio();
                 $relatorio->set_titulo('Responsáveis pela Prestação de Contas');
                 $relatorio->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Detalhe"]);
+                $relatorio->set_width([0, 15, 30, 10, 10, 30]);
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(["left", "center", "left", "center", "center", "left"]);
                 $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+                $relatorio->set_numGrupo(0);
                 $relatorio->show();
             } else {
                 $select = "(SELECT 'Ordenador de Despesa Nato',
@@ -350,10 +352,11 @@ if ($acesso) {
 
                 $relatorio = new Relatorio();
                 $relatorio->set_titulo("Responsáveis pela Prestação de Contas em {$parametroAno}");
-                $relatorio->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe"]);
+                $relatorio->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe"]);                
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(["left", "center", "left", "center", "center", "center", "center", "left"]);
                 $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php", "date_to_php", "date_to_php"]);
+                $relatorio->set_numGrupo(0);
                 $relatorio->show();
             }
             break;

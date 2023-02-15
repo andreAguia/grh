@@ -76,10 +76,10 @@ class Aposentadoria {
         $menu->add_item("titulo", "Direito Adquirido");
         $menu->add_item("link", "Art. 40, §1º, III, alínea a", "?fase=idadeContribuicao", "Artigo 40 - Aposentadoria voluntária por idade e tempo de contribuição");
         $menu->add_item("link", "Art. 40, §1º, III, alínea b", "?fase=idade", "Aposentadoria voluntária por idade");
-        $menu->add_item("link", "Artigo 2º da EC nº 41/2003", "?fase=41_2", "Regras de transição - Artigo 2º da EC nº 41/2003");
+        #$menu->add_item("link", "Artigo 2º da EC nº 41/2003", "?fase=41_2", "Regras de transição - Artigo 2º da EC nº 41/2003");
         $menu->add_item("link", "Artigo 6º da EC nº 41/2003", "?fase=41_6", "Regras de transição - Artigo 6º da EC nº 41/2003");
         $menu->add_item("link", "Artigo 3º da EC nº 47/2005", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
-        $menu->add_item("link", "Artigo 3º da EC nº 41/2003", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
+        #$menu->add_item("link", "Artigo 3º da EC nº 41/2003", "?fase=41_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
 
         $menu->add_item("titulo", "Documentação");
 

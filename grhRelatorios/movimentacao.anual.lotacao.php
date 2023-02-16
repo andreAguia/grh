@@ -54,7 +54,7 @@ if ($acesso) {
     $relatorio->set_funcao([null, null, "date_to_php",null,null,"get_nomeMes"]);
 
     $relatorio->set_classe([null, null, null, "Lotacao", "Lotacao"]);
-    $relatorio->set_metodo([null, null, null, "getNomeLotacaoAnterior", "getLotacao"]);
+    $relatorio->set_metodo([null, null, null, "getLotacaoAnterior", "getLotacao"]);
     $relatorio->set_numGrupo(5);
 
     $relatorio->set_formCampos(array(

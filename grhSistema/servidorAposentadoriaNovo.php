@@ -672,6 +672,8 @@ if ($acesso) {
          */
 
         case "41_2":
+            
+            # OBS regra retirada pelo sistema pois é desfavorável para o servidor
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
@@ -725,7 +727,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
 
-            $aposentadoria->exibeMenuServidor(22);
+            $aposentadoria->exibeMenuServidor(21);
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 9);
@@ -775,7 +777,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
 
-            $aposentadoria->exibeMenuServidor(11);
+            $aposentadoria->exibeMenuServidor(22);
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 9);

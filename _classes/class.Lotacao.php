@@ -50,7 +50,7 @@ class Lotacao {
                         WHERE idHistLot = {$idHistLot}";
 
             $row1 = $pessoal->select($select1, false);
-            $idServidor = $row1[0];
+            $idServidor = $row1["idServidor"];
 
             # Agora pega a lotação anterior a esta mudança
             $select2 = "SELECT idHistLot,
@@ -61,17 +61,57 @@ class Lotacao {
 
             $row2 = $pessoal->select($select2);
 
-            $lotacaoAnterior = null;
+            $lotacao = null;
             foreach ($row2 as $item) {
 
-                if ($item[0] == $idHistLot) {
-                    break;
+                if ($item["idHistLot"] == $idHistLot) {
+                    return $this->getLotacao($lotacao);
                 } else {
-                    $lotacaoAnterior = $item[1];
+                    $lotacao = $item["lotacao"];
                 }
             }
+        }
+    }
 
-            return $lotacaoAnterior;
+    ###########################################################
+
+    public function getLotacaoPosterior($idHistLot = null) {
+        /**
+         * Retorna a lotação Posterior deste servidor a partir de uma mudança de lotação no histórico 
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT idServidor
+                         FROM tbhistlot
+                        WHERE idHistLot = {$idHistLot}";
+
+            $row1 = $pessoal->select($select1, false);
+            $idServidor = $row1[0];
+
+            # Agora pega a lotação anterior a esta mudança
+            $select2 = "SELECT idHistLot,
+                               lotacao 
+                          FROM tbhistlot 
+                         WHERE idServidor = {$idServidor}
+                      ORDER BY data DESC";
+
+            $row2 = $pessoal->select($select2);
+
+            $lotacao = null;
+            foreach ($row2 as $item) {
+
+                if ($item["idHistLot"] == $idHistLot) {
+                    return $this->getLotacao($lotacao);
+                } else {
+                    $lotacao = $item["lotacao"];
+                }
+            }
         }
     }
 
@@ -206,7 +246,7 @@ class Lotacao {
             return null;
         } else {
             $nome = null;
-            
+
             # Cria a função caso não seja PHP 8
             if (!function_exists('str_contains')) {
 
@@ -236,8 +276,8 @@ class Lotacao {
                          FROM tblotacao
                         WHERE DIR = '{$sigla}' 
                           AND (GER = 'SECR' OR GER = 'GAB')";
-                        
-            $pessoal = new Pessoal();            
+
+            $pessoal = new Pessoal();
             $row2 = $pessoal->select($select, false);
 
             if (!empty($row2['nome'])) {

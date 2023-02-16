@@ -37,10 +37,10 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega os parâmetros da rotina de Organograma
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'DGA'));
-    
+
     # Joga os parâmetros par as sessions    
     set_session('parametroLotacao', $parametroLotacao);
 
@@ -90,6 +90,7 @@ if ($acesso) {
                                       idLotacao,
                                       idLotacao,
                                       idLotacao,
+                                      idLotacao,
                                       if(ativo = 0,"Não","Sim"),
                                       idLotacao
                                  FROM tblotacao LEFT JOIN tbcampus USING (idCampus)
@@ -125,7 +126,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Lotação<br/>Ativa?"]);
+    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Histórico de<br/>Servidores", "Lotação<br/>Ativa?"]);
     $objeto->set_colspanLabel([null, null, null, null, null, 2, null, 2]);
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(["center", "center", "center", "center", "left"]);
@@ -148,8 +149,13 @@ if ($acesso) {
     $servInativos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
     $servInativos->set_title("Exibe os servidores inativos");
 
+    # Ver histórico de servidores
+    $historicoServidores = new Link(null, "?fase=aguardeHistorico&id={$id}");
+    $historicoServidores->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+    $historicoServidores->set_title("Exibe o histórico dos servidores nesta lotação");
+
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos]);
+    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos, $historicoServidores]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -321,7 +327,6 @@ if ($acesso) {
 
         ################################################################
 
-
         case "listaServidoresAtivos" :
             # Limita o tamanho da tela
             $grid = new Grid();
@@ -348,12 +353,7 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel, "right");
-
             $menu->show();
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
 
             # Titulo
             titulo('Servidores da Lotação: ' . $pessoal->get_nomeLotacao($id));
@@ -494,9 +494,9 @@ if ($acesso) {
             # Limita a Tela
             $grid = new Grid();
             $grid->abreColuna(12);
-            
+
             $lotacaoClasse = new Lotacao();
-            
+
             # Menu 
             $menu = new MenuBar();
 
@@ -517,16 +517,16 @@ if ($acesso) {
             #$menu->add_link($botaoRel, "right");
 
             $menu->show();
-            
+
             # Formulário de Pesquisa
             $form = new Form('?fase=organograma');
-            
+
             # Lotação
             $result = $pessoal->select('SELECT DISTINCT DIR, DIR
                                           FROM tblotacao
                                          WHERE ativo
                                       ORDER BY DIR');
-            
+
             array_unshift($result, array("Pró Reitorias", "Pró Reitorias"));
             array_unshift($result, array("Centros", "Centros"));
             array_unshift($result, array("Administrativo", "Administrativo"));
@@ -541,9 +541,9 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
-            
+
             $form->show();
-            
+
             # Título
             tituloTable("Organograma - {$parametroLotacao}");
             br();
@@ -554,7 +554,105 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+
+        ################################################################
+
+        case "aguardeHistorico" :
+            br(10);
+            aguarde("Montando a Listagem");
+            br();
+            loadPage('?fase=listaHistorico&id=' . $id);
+            break;
+
+        ################################################################
+
+        case "listaHistorico" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroLotacao.php?fase=listaHistorico&id=' . $id);
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", "?");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Volta para a página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu->add_link($linkVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
+            $botaoRel->set_imagem($imagem2);
+            #$menu->add_link($botaoRel, "right");
+            $menu->show();
+
+            $select = "SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,                     
+                              tbperfil.nome,
+                              tbservidor.idServidor,
+                              tbhistlot.data,
+                              tbhistlot.idHistLot,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+               WHERE idLotacao = {$id} 
+            ORDER BY tbhistlot.data DESC, tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Histórico de Servidores');
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao2($id));
+            $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Situação', 'Chegada ao Setor', 'Vindo da', 'Editar']);
+            $tabela->set_align(["center", "left", "left", "center", "center", "center", "left"]);
+            $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
+
+            $tabela->set_classe([null, null, "pessoal", null, "pessoal", null, "Lotacao"]);
+            $tabela->set_metodo([null, null, "get_Cargo", null, "get_Situacao", null, "getLotacaoAnterior"]);
+
+            # Botão Editar
+            $botao = new Link(null, '?fase=editaServidor&idServidor=', 'Acessa o servidor');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+
+            $tabela->set_conteudo($result);
+            $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
+        case "editaServidor" :
+            br(8);
+            aguarde();
+
+            # pega o idServidor
+            $idServidor = soNumeros(get('idServidor'));
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $idServidor);
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
     }
+
+    ################################################################
 
     if ($fase <> "organograma") {
         $page->terminaPagina();

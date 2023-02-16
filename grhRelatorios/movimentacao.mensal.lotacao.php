@@ -55,7 +55,7 @@ if ($acesso) {
     $relatorio->set_funcao([null, null, "date_to_php"]);
 
     $relatorio->set_classe([null, null, null, "Lotacao", "Lotacao"]);
-    $relatorio->set_metodo([null, null, null, "getNomeLotacaoAnterior", "getLotacao"]);
+    $relatorio->set_metodo([null, null, null, "getLotacaoAnterior", "getLotacao"]);
 
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',

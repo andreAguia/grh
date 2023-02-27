@@ -617,7 +617,7 @@ if ($acesso) {
             $tabela->set_titulo('Histórico de Servidores');
             $tabela->set_subtitulo($pessoal->get_nomeLotacao2($id));
             $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Situação', 'Chegada ao Setor', 'Vindo da', 'Saída do Setor', 'Indo para', 'Editar']);
-            $tabela->set_align(["center", "left", "left", "center", "center", "center", "left"]);
+            $tabela->set_align(["center", "left", "left", "center", "center", "center", "left", "center", "left"]);
             $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
 
             $tabela->set_classe([null, null, "pessoal", null, "pessoal", null, "Lotacao", "Lotacao", "Lotacao"]);
@@ -625,14 +625,13 @@ if ($acesso) {
 
 //            $tabela->set_rowspan(1);
 //            $tabela->set_grupoCorColuna(1);
-
             # Botão Editar
             $botao = new Link(null, '?fase=editaServidor&idServidor=', 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
-            
+
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 7,
                     'valor' => null,

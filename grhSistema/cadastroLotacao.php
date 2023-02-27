@@ -617,7 +617,7 @@ if ($acesso) {
             $tabela->set_titulo('Histórico de Servidores');
             $tabela->set_subtitulo($pessoal->get_nomeLotacao2($id));
             $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Situação', 'Chegada ao Setor', 'Vindo da', 'Saída do Setor', 'Indo para', 'Editar']);
-            $tabela->set_align(["center", "left", "left", "center", "center", "center", "left", "center", "left"]);
+            $tabela->set_align(["center", "left", "left"]);
             $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
 
             $tabela->set_classe([null, null, "pessoal", null, "pessoal", null, "Lotacao", "Lotacao", "Lotacao"]);

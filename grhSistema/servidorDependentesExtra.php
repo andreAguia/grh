@@ -16,12 +16,12 @@ if ((($campoValor[3] == 2) OR ($campoValor[3] == 8) OR ($campoValor[3] == 9)) AN
     $dataLimite = addAnos($dtNasc, 6);                   // acrescenta os 6 anos
     $dataLimite = addMeses($dataLimite, 11);             // acrescenta os 11 meses
     # verifica se a data de término está vazia e preenche
-    if (is_null($campoValor[7])) {
-        $campoValor[7] = date_to_bd($dataLimite); // passa a data para o formato do bd
+    if (is_null($campoValor[9])) {
+        $campoValor[9] = date_to_bd($dataLimite); // passa a data para o formato do bd
     }
 
     # verifica se data é posterior a data limite
-    if ($campoValor[7] > date_to_bd($dataLimite)) {
+    if ($campoValor[9] > date_to_bd($dataLimite)) {
         $erro = 1;
         $msgErro .= 'A data de término está alem da data limite!\n';
     }
@@ -30,7 +30,9 @@ if ((($campoValor[3] == 2) OR ($campoValor[3] == 8) OR ($campoValor[3] == 9)) AN
     $campoValor[6] = "Não";
 
     # passa os dados do aux para nulo
-    $campoValor[7] = null;  # data
-    $campoValor[8] = null;  # processo
-    $campoValor[9] = null;  # documento
+    $campoValor[7] = null;  # data início
+    $campoValor[8] = null;  # processo inicio
+    $campoValor[9] = null;  # data término
+    $campoValor[10] = null;  # processo término
+    $campoValor[11] = null;  # documento
 }

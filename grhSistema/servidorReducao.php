@@ -50,19 +50,7 @@ if ($acesso) {
         $voltar = $origem;
     }
 
-    $jscript = '// Pega os valores da pendêencia                
-                
-                // Verifica o valor da pendência quando o form é carregado
-                if($("#pendencia").is(":checked")){
-                    $("#dadosPendencia").show();
-                    $("#dtEnvioPendencia").show();
-                    $("#div9").show();
-                }else{
-                    $("#dadosPendencia").hide();
-                    $("#dtEnvioPendencia").hide();
-                    $("#div9").hide();
-                }
-                
+    $jscript = '                
                 // Pega os valores do resultado
                 var resultado = $("#resultado").val();
 
@@ -73,29 +61,15 @@ if ($acesso) {
                     $("#periodo").show();
                     $("#numCiInicio").show();
                     $("#numCiTermino").show();                    
-                    $("#div11").show();
+                    $("#div3").show();
                 }else{
                     $("#dtPublicacao").hide();
                     $("#dtInicio").hide();
                     $("#periodo").hide();
                     $("#numCiInicio").hide();
                     $("#numCiTermino").hide();                    
-                    $("#div11").hide();
+                    $("#div3").hide();
                 }
-        
-                // Verifica o valor da pendência quando se muda o valor do campo
-                $("#pendencia").click(function(){
-                    
-                    if($("#pendencia").is(":checked")){
-                        $("#dadosPendencia").show();
-                        $("#dtEnvioPendencia").show();
-                        $("#div9").show();
-                    }else{
-                        $("#dadosPendencia").hide();
-                        $("#dtEnvioPendencia").hide();
-                        $("#div9").hide();
-                    }
-                });
                 
                 // Verifica o valor do resultado quando se muda o valor do campo
                 $("#resultado").change(function(){
@@ -107,14 +81,14 @@ if ($acesso) {
                         $("#periodo").show();
                         $("#numCiInicio").show();
                         $("#numCiTermino").show();                    
-                        $("#div11").show();
+                        $("#div3").show();
                     }else{
                         $("#dtPublicacao").hide();
                         $("#dtInicio").hide();
                         $("#periodo").hide();
                         $("#numCiInicio").hide();
                         $("#numCiTermino").hide();                    
-                        $("#div11").hide();
+                        $("#div3").hide();
                     }                
                 });
                 
@@ -222,8 +196,6 @@ if ($acesso) {
                                          ELSE "--"
                                      END,
                                      idReducao,
-                                     dtSolicitacao,
-                                     idReducao,
                                      idReducao,
                                      idReducao,
                                      idReducao,
@@ -235,17 +207,9 @@ if ($acesso) {
                             ORDER BY status, dtTermino, dtInicio');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT dtSolicitacao,
-                                     tipo,
+    $objeto->set_selectEdita('SELECT tipo,
                                      status,
-                                     dtEnvioPericia,
-                                     dtChegadaPericia,
-                                     dtAgendadaPericia,
-                                     pendencia,
-                                     resultado,
-                                     dtCiencia,
-                                     dadosPendencia,
-                                     dtEnvioPendencia,                                     
+                                     resultado,                                
                                      dtPublicacao,
                                      pgPublicacao,
                                      dtInicio,
@@ -286,13 +250,10 @@ if ($acesso) {
     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Tipo", "Status", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período", "Documentos"));
-    #$objeto->set_width(array(10,10,10,20,20,10,10));	
-    $objeto->set_align(array("center", "center", "center", "left", "center", "center", "left", "left"));
-    $objeto->set_funcao(array(null, null, "date_to_php"));
-
-    $objeto->set_classe(array(null, "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-    $objeto->set_metodo(array(null, "exibeStatus", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"));
+    $objeto->set_label(["Tipo", "Status", "Resultado", "Publicação", "Período", "Documentos"]);
+    $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
+    $objeto->set_classe([null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"]);
+    $objeto->set_metodo([null, "exibeStatus", "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"]);
 
     # Número de Ordem
     $objeto->set_numeroOrdem(true);
@@ -311,15 +272,7 @@ if ($acesso) {
     $objeto->set_formLabelTipo(1);
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'dtSolicitacao',
-            'label' => 'Solicitado em:',
-            'tipo' => 'data',
-            'size' => 30,
-            'required' => true,
-            'autofocus' => true,
-            'title' => 'A data da Solicitação.',
-            'col' => 3,
-            'linha' => 1),
+    $objeto->set_campos(array(
         array('nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
@@ -346,35 +299,6 @@ if ($acesso) {
             'disabled' => true,
             'title' => 'Se a solicitação foi arquivada ou não.',
             'linha' => 1),
-        array('nome' => 'dtEnvioPericia',
-            'label' => 'Data de Envio:',
-            'tipo' => 'data',
-            'size' => 10,
-            'fieldset' => 'Da Perícia',
-            'col' => 3,
-            'title' => 'A data do envio do processo à perícia.',
-            'linha' => 2),
-        array('nome' => 'dtChegadaPericia',
-            'label' => 'Data da Chegada:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data da chegada do processo à perícia.',
-            'linha' => 2),
-        array('nome' => 'dtAgendadaPericia',
-            'label' => 'Data Agendada:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data agendada pela perícia.',
-            'linha' => 2),
-        array('nome' => 'pendencia',
-            'label' => 'Há pendências:',
-            'tipo' => 'simnao',
-            'size' => 5,
-            'title' => 'Se há pendências',
-            'col' => 3,
-            'linha' => 3),
         array('nome' => 'resultado',
             'label' => 'Resultado:',
             'tipo' => 'combo',
@@ -382,29 +306,7 @@ if ($acesso) {
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
-            'linha' => 3),
-        array('nome' => 'dtCiencia',
-            'label' => 'Data da Ciência:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data da ciência do servidor.',
-            'linha' => 3),
-        array('linha' => 4,
-            'col' => 9,
-            'nome' => 'dadosPendencia',
-            'label' => 'Pendências:',
-            'tipo' => 'textarea',
-            'fieldset' => 'Das Pendências',
-            'title' => 'Quais são as pendências.',
-            'size' => array(80, 3)),
-        array('nome' => 'dtEnvioPendencia',
-            'label' => 'Data de Envio:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'Data de envio das pendências da Perícia.',
-            'linha' => 5),
+            'linha' => 1),
         array('nome' => 'dtPublicacao',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',

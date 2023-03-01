@@ -164,6 +164,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Que Não Averbaram Tempo', '../grhRelatorios/servidores.ativos.semTempoAverbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Com o Tempo Averbado e de Uenf', '../grhRelatorios/estatutarios.ativos.tempoUenf.averbado.php');
             $menu->add_item('titulo1', 'Servidores Aposentados');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Geral', '../grhRelatorios/aposentados.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Professores', '../grhRelatorios/professor.aposentadoPorCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentadoria.periodo.php');

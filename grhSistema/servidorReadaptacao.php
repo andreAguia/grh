@@ -233,6 +233,14 @@ if ($acesso) {
             $menu->add_link($linkBotao2, "right");
         }
 
+        # Regras
+        $linkBotao3 = new Link("Procedimentos", "../_diagramas/readaptacao.pdf");
+        #$linkBotao3 = new Link("Procedimentos", "https://www.evernote.com/shard/s383/sh/5e239ad7-061b-4889-5ce8-613d2f56d7b4/dsgLPn1xOjcGQ66Fx1P9h_Ofik-Koj1jCi2KGnX6iiYMwFOxz4rykprCcw");
+        $linkBotao3->set_class('button');
+        $linkBotao3->set_title('Regras da readaptação');
+        $linkBotao3->set_target("_blank4");
+        $menu->add_link($linkBotao3, "right");
+
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -595,7 +603,6 @@ if ($acesso) {
 
             $menu = new Menu();
             #$menu->add_item('titulo','Documentos');
-
             #$menu->add_item("linkWindow", "Despacho ao Protocolo para Abertura de Processo", "servidorMenu.php?fase=despacho");
             $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "servidorMenu.php?fase=despachoChefia");
             $menu->add_item("linkWindow", "Despacho à Perícia para Arquivamento", "../grhRelatorios/despacho.Pericia.Arquivamento.php");

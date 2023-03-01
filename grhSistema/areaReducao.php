@@ -149,8 +149,6 @@ if ($acesso) {
                               idReducao,
                               tbservidor.idServidor,                              
                               idServidor,
-                              dtSolicitacao,
-                              idReducao,
                               idReducao,
                               idReducao,
                               idReducao,
@@ -181,15 +179,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Tipo", "Status", "Servidor", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-            $tabela->set_align(array("center", "center", "left", "center", "center", "left", "center", "center", "left"));
-            $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
-
-            $tabela->set_classe(array(null, "ReducaoCargaHoraria", "Pessoal", "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-            $tabela->set_metodo(array(null, "exibeStatus", "get_nomeEidFuncional", "get_numProcesso", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
-
+            $tabela->set_label(["Tipo", "Status", "Servidor", "Processo", "Resultado", "Publicação", "Período"]);
+            $tabela->set_align(["center", "center", "left", "center", "center", "center", "left"]);
+            $tabela->set_classe([null, "ReducaoCargaHoraria", "Pessoal", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"]);
+            $tabela->set_metodo([null, "exibeStatus", "get_nomeEidFuncional", "get_numProcesso", "exibeResultado", "exibePublicacao", "exibePeriodo"]);
             $tabela->set_titulo("Redução de Carga Horária");
-
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 

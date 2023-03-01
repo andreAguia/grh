@@ -610,29 +610,22 @@ class ReducaoCargaHoraria {
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT resultado, pendencia
+        $select = 'SELECT resultado
                      FROM tbreducao
                     WHERE idReducao = ' . $idReducao;
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
-
-        $resultado = $row[0];
-        $dataCiencia = $row[1];
+        $retorno = null;
 
         # Verifica o resultado
-        switch ($resultado) {
+        switch ($row["resultado"]) {
             case null:
-                $retorno = $resultado;
+                $retorno = null;
                 break;
 
             case 1:
                 $retorno = "Deferido";
-
-                # Data da Ciência
-                if (!is_null($dataCiencia)) {
-                    
-                }
                 break;
 
             case 2:
@@ -642,12 +635,7 @@ class ReducaoCargaHoraria {
             case 3:
                 $retorno = "Interrompido";
                 break;
-        }
-
-        # Verifica se há pendências
-        if ($row[1] == 1) {
-            $retorno .= "<br/><span title='Existem pendências nessa solicitação de redução de carga horária!' class='warning label'>Pendências</span>";
-        }
+         }
 
         return $retorno;
     }
@@ -665,7 +653,7 @@ class ReducaoCargaHoraria {
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT status, pendencia
+        $select = 'SELECT status
                      FROM tbreducao
                     WHERE idReducao = ' . $idReducao;
 
@@ -674,7 +662,7 @@ class ReducaoCargaHoraria {
         $retorno = null;
 
         # Verifica o status
-        switch ($row[0]) {
+        switch ($row["status"]) {
             case 1:
                 $retorno = "Em Aberto";
                 break;

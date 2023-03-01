@@ -38,8 +38,7 @@ if ($acesso) {
                         WHEN 1 THEN 'Inicial'
                         WHEN 2 THEN 'Renovação'
                         ELSE '--'
-                      END,idReducao,
-                      dtSolicitacao,
+                      END,
                       idReducao,
                       CASE resultado
                         WHEN 1 THEN 'Deferido'
@@ -49,11 +48,10 @@ if ($acesso) {
                       END,
                       idReducao,
                       idReducao,
-                      idReducao,                                   
-                      idReducao               
+                      ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
                  FROM tbreducao
-                WHERE idServidor = $idServidorPesquisado
-             ORDER BY status, dtInicio desc";
+                WHERE idServidor = {$idServidorPesquisado}
+             ORDER BY status, dtTermino, dtInicio";
 
     $result = $pessoal->select($select);
 
@@ -62,17 +60,13 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Tipo", "Status", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período", "CI"));
+    $relatorio->set_label(["Tipo", "Status", "Resultado", "Publicação", "Período"]);
     $relatorio->set_subtitulo("Processo: " . $processo);
-
-    $relatorio->set_align(array("center", "center", "center", "left", "center", "center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, "date_to_php"));
-
-    $relatorio->set_classe(array(null, "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array(null, "exibeStatus", null, "exibeDadosPericia", null, "exibePublicacao", "exibePeriodo", "exibeCi"));
+    $relatorio->set_align(["center", "center", "center", "center", "left", "left"]);
+    $relatorio->set_classe([null, "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"]);
+    $relatorio->set_metodo([null, "exibeStatus", null, "exibePublicacao", "exibePeriodo", "exibeCi"]);
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Solicitação de Redução da Carga Horária");

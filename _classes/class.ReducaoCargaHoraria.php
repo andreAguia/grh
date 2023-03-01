@@ -327,55 +327,6 @@ class ReducaoCargaHoraria {
 
     ###########################################################
 
-    function exibeDadosPericia($idReducao) {
-
-        /**
-         * Informe os dados da perícia de uma solicitação de redução de carga horária específica
-         * 
-         * @obs Usada na tabela inicial do cadastro de redução
-         */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        # Pega os dias publicados
-        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia
-                     FROM tbreducao
-                    WHERE idReducao = ' . $idReducao;
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
-
-        # Trata a data de envio a perícia
-        if (vazio($row[0])) {
-            $dtEnvioPericia = "---";
-        } else {
-            $dtEnvioPericia = date_to_php($row[0]);
-        }
-
-        # Trata a data de chegada a perícia
-        if (vazio($row[1])) {
-            $dtChegadaPericia = "---";
-        } else {
-            $dtChegadaPericia = date_to_php($row[1]);
-        }
-
-        # Trata a data de agendamento da perícia
-        if (vazio($row[2])) {
-            $dtAgendadaPericia = "---";
-        } else {
-            $dtAgendadaPericia = date_to_php($row[2]);
-        }
-
-        # Retorno
-        $retorno = "Enviado em:    " . $dtEnvioPericia . "<br/>"
-                . "Chegou  em:    " . $dtChegadaPericia . "<br/>"
-                . "Agendado para: " . $dtAgendadaPericia;
-
-        return $retorno;
-    }
-
-    ###########################################################
-
     function exibePeriodo($idReducao) {
 
         /**

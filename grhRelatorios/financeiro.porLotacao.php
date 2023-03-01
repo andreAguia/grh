@@ -26,7 +26,8 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao', 66));
-
+    $subTitulo = null;
+    
     ######
 
     $select = "SELECT idfuncional,
@@ -42,7 +43,7 @@ if ($acesso) {
                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
     # lotacao
-    if (!is_null($lotacao)) {
+    if ($lotacao <> 'todos') {
         # Verifica se o que veio é numérico
         if (is_numeric($lotacao)) {
             $select .= " AND tblotacao.idlotacao = {$lotacao}";
@@ -53,8 +54,8 @@ if ($acesso) {
         }
     }
 
-    $select .= " ORDER BY tblotacao.GER, tbpessoa.nome";
-    
+    $select .= " ORDER BY tblotacao.DIR, tblotacao.GER, tbpessoa.nome";
+
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
@@ -62,7 +63,7 @@ if ($acesso) {
     $relatorio->set_subtitulo("Com Faixa e Nivel do Plano de Cargos");
     if (!is_null($subTitulo)) {
         $lotacaoClasse = new Lotacao();
-        $relatorio->set_subtitulo2($subTitulo." - ".$lotacaoClasse->get_nomeDiretoriaSigla($subTitulo));
+        $relatorio->set_subtitulo2($subTitulo . " - " . $lotacaoClasse->get_nomeDiretoriaSigla($subTitulo));
     }
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
     #$relatorio->set_width([10, 90]);
@@ -79,7 +80,8 @@ if ($acesso) {
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-    array_unshift($listaLotacao, array('*', '-- Selecione a Lotação --'));
+    
+    array_unshift($listaLotacao, array('todos', 'Todos'));
 
     $relatorio->set_formCampos(array(
         array('nome' => 'lotacao',

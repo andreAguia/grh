@@ -177,8 +177,6 @@ if ($acesso) {
                               idReadaptacao,
                               idReadaptacao,
                               idReadaptacao,
-                              idReadaptacao,
-                              idReadaptacao,
                               idReadaptacao,                                   
                               idReadaptacao,
                               ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino,
@@ -212,14 +210,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Origem", "Tipo", "Status", "Servidor", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-            $tabela->set_align(array("center", "center", "center", "left", "center", "center", "left", "center", "center", "left"));
-
-            $tabela->set_classe(array(null, null, "Readaptacao", "Pessoal", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-            $tabela->set_metodo(array(null, null, "exibeStatus", "get_nomeEidFuncional", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
-
+            $tabela->set_label(["Origem", "Tipo", "Status", "Servidor", "Processo", "Resultado", "Publicação", "Período"]);
+            $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "left"]);
+            $tabela->set_classe([null, null, "Readaptacao", "Pessoal", null, "Readaptacao", "Readaptacao", "Readaptacao"]);
+            $tabela->set_metodo([null, null, "exibeStatus", "get_nomeEidFuncional", null, "exibeResultado", "exibePublicacao", "exibePeriodo"]);
             $tabela->set_titulo("Readaptação");
-
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
 

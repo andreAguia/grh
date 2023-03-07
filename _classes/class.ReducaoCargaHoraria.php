@@ -334,10 +334,9 @@ class ReducaoCargaHoraria {
          * 
          * @obs Usada na tabela inicial do cadastro de redução
          */
-        
         # Pega os Dados
         $dados = $this->get_dados($idReducao);
-        
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
@@ -379,29 +378,31 @@ class ReducaoCargaHoraria {
             $retorno = "Início : " . $dtInicio . "<br/>"
                     . "Período: " . $periodo . "<br/>"
                     . "Término: " . $dttermino;
+
+            # Verifica se estamos a 31 dias da data Termino
+            if (!vazio($dados["dtTermino"])) {
+                $hoje = date("d/m/Y");
+                $dias = dataDif($hoje, $dttermino);
+
+                if (($dias > 0) AND ($dias < 45)) {
+                    if ($dias == 1) {
+                        $retorno .= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
+                    } else {
+                        $retorno .= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                    }
+                } elseif ($dias == 0) {
+                    $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                } elseif ($dias < 0) {
+                    if ($dados["status"] == 2) {
+                        $retorno .= "<br/><span title='Benefício terminou em {$dttermino}' class='alert label'>Já Terminou!</span>";
+                    }
+                }
+            }
         } else {
             $retorno = null;
         }
 
-        # Verifica se estamos a 31 dias da data Termino
-        if (!vazio($dados["dtTermino"])) {
-            $hoje = date("d/m/Y");
-            $dias = dataDif($hoje, $dttermino);
 
-            if (($dias > 0) AND ($dias < 45)) {
-                if ($dias == 1) {
-                    $retorno .= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
-                } else {
-                    $retorno .= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
-                }
-            } elseif ($dias == 0) {
-                $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
-            } elseif ($dias < 0) {
-                if ($dados["status"] == 2) {
-                    $retorno .= "<br/><span title='Benefício terminou em {$dttermino}' class='alert label'>Já Terminou!</span>";
-                }
-            }
-        }
 
         return $retorno;
     }
@@ -502,7 +503,7 @@ class ReducaoCargaHoraria {
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReducao);
 
             # Ci 45 dias
-            if (($dias >= 0) AND($dias <= 45)) {
+            if (($dias >= 0) AND ($dias <= 45)) {
                 $menu->add_item('link', "\u{1F5A8} " . $nomeBotao45, '?fase=ci45Form&id=' . $idReducao);
             }
 
@@ -635,7 +636,7 @@ class ReducaoCargaHoraria {
             case 3:
                 $retorno = "Interrompido";
                 break;
-         }
+        }
 
         return $retorno;
     }

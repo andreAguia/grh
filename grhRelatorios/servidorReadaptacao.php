@@ -46,9 +46,7 @@ if ($acesso) {
                         END,
                         idReadaptacao,
                         processo,
-                        idReadaptacao,                                     
-                        idReadaptacao,
-                        idReadaptacao,
+                        idReadaptacao, 
                         idReadaptacao,
                         idReadaptacao,
                         idReadaptacao
@@ -63,15 +61,11 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(array("Origem", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-    $relatorio->set_align(array("center", "center", "center", "center", "center", "left", "center", "center", "left", "left"));
-    #$relatorio->set_funcao(array(null,"date_to_php"));
-
-    $relatorio->set_classe(array(null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-    $relatorio->set_metodo(array(null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
-
+    $relatorio->set_label(["Origem", "Tipo", "Status", "Processo", "Resultado", "Publicação", "Período"]);
+    $relatorio->set_align(["center", "center", "center", "center", "center", "center", "left", "left"]);
+    $relatorio->set_classe([null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao"]);
+    $relatorio->set_metodo([null, null, "exibeStatus", null, "exibeResultado", "exibePublicacao", "exibePeriodo"]);
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório de Histórico de Solicitação de Readaptação");

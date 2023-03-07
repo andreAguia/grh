@@ -40,8 +40,10 @@ class Alertas {
 //        Estava dando deprecated na função usort
         
 
-        $menu = new Menu();
-        $menu->add_item('titulo', 'Categorias');
+        tituloTable('Categorias');
+        br();
+        
+        $menu = new Menu();       
 
         foreach ($this->itens as $ii) {
             if ($fase == $ii[1]) {

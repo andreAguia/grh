@@ -302,7 +302,12 @@ if ($acesso) {
         array('nome' => 'resultado',
             'label' => 'Resultado:',
             'tipo' => 'combo',
-            'array' => array(array(null, ""), array(1, "Deferido"), array(2, "Indeferido"), array(3, "Interrompido")),
+            'array' => [
+                [null, ""],
+                [1, "Deferido"],
+                [2, "Indeferido"],
+                [3, "Interrompido"]
+                ],
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,

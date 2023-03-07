@@ -104,89 +104,6 @@ class Readaptacao {
 
     ###########################################################
 
-    function exibeSolicitacao($idReadaptacao) {
-
-        /**
-         * Informe a data da solicitação
-         */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        # Pega os dias publicados
-        $select = 'SELECT dtSolicitacao, origem
-                     FROM tbreadaptacao
-                    WHERE idReadaptacao = ' . $idReadaptacao;
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
-
-        # Verifica se é solicitado
-        if ($row[1] == 2) {
-            $retorno = date_to_php($row[0]);
-        } else {
-            $retorno = "";
-        }
-
-        return $retorno;
-    }
-
-    ###########################################################
-
-    function exibeDadosPericia($idReadaptacao) {
-
-        /**
-         * Informe os dados da perícia de uma solicitação de redução de carga horária específica
-         *
-         * @obs Usada na tabela inicial do cadastro de redução
-         */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        # Pega os dias publicados
-        $select = 'SELECT dtEnvioPericia, dtChegadaPericia, dtAgendadaPericia, origem
-                     FROM tbreadaptacao
-                    WHERE idReadaptacao = ' . $idReadaptacao;
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
-
-        # Verifica se é solicitado
-        if ($row[3] == 2) {
-
-            # Trata a data de envio a perícia
-            if (vazio($row[0])) {
-                $dtEnvioPericia = "---";
-            } else {
-                $dtEnvioPericia = date_to_php($row[0]);
-            }
-
-            # Trata a data de chegada a perícia
-            if (vazio($row[1])) {
-                $dtChegadaPericia = "---";
-            } else {
-                $dtChegadaPericia = date_to_php($row[1]);
-            }
-
-            # Trata a data de agendamento da perícia
-            if (vazio($row[2])) {
-                $dtAgendadaPericia = "---";
-            } else {
-                $dtAgendadaPericia = date_to_php($row[2]);
-            }
-
-            # Retorno
-            $retorno = "Enviado em:    " . $dtEnvioPericia . "<br/>"
-                    . "Chegou  em:    " . $dtChegadaPericia . "<br/>"
-                    . "Agendado para: " . $dtAgendadaPericia;
-        } else {
-            $retorno = '';
-        }
-
-        return $retorno;
-    }
-
-    ###########################################################
-
     function exibeResultado($idReadaptacao) {
 
         /**
@@ -216,15 +133,14 @@ class Readaptacao {
 
             case 1:
                 $retorno = "Deferido";
-
-                # Data da Ciência
-                if (!is_null($dataCiencia)) {
-                    
-                }
                 break;
 
             case 2:
                 $retorno = "Indeferido";
+                break;
+
+            case 3:
+                $retorno = "Interrompido";
                 break;
         }
 
@@ -310,30 +226,30 @@ class Readaptacao {
             $retorno = "Início : " . $dtInicio . "<br/>"
                     . "Período: " . $periodo . "<br/>"
                     . "Término: " . $dttermino;
+
+            # Verifica se estamos a 90 dias da data Termino
+            if (!vazio($dados["dtTermino"])) {
+                $hoje = date("d/m/Y");
+                $dias = dataDif($hoje, $dttermino);
+
+                if (($dias > 0) AND ($dias < 45)) {
+                    if ($dias == 1) {
+                        $retorno .= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                    } else {
+                        $retorno .= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
+                    }
+                } elseif ($dias == 0) {
+                    $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                } elseif ($dias < 0) {
+                    if ($dados["status"] == 2) {
+                        $retorno .= "<br/><span title='Benefício terminou em {$dttermino}' class='alert label'>Já Terminou!</span>";
+                    }
+                }
+            }
         } else {
             $retorno = null;
         }
-
-        # Verifica se estamos a 90 dias da data Termino
-        if (!vazio($dados["dtTermino"])) {
-            $hoje = date("d/m/Y");
-            $dias = dataDif($hoje, $dttermino);
-
-            if (($dias > 0) AND ($dias < 45)) {
-                if ($dias == 1) {
-                    $retorno .= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
-                } else {
-                    $retorno .= "<br/><span title='Faltam $dias dias para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
-                }
-            } elseif ($dias == 0) {
-                $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
-            } elseif ($dias < 0) {
-                if ($dados["status"] == 2) {
-                    $retorno .= "<br/><span title='Benefício terminou em {$dttermino}' class='alert label'>Já Terminou!</span>";
-                }
-            }
-        }
-
+        
         return $retorno;
     }
 
@@ -407,7 +323,7 @@ class Readaptacao {
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReadaptacao);
 
             # Ci 90 dias
-            if (($dias >= 0) AND($dias <= 90)) {
+            if (($dias >= 0) AND ($dias <= 90)) {
                 $menu->add_item('link', "\u{1F5A8} " . $nomeBotao90, '?fase=ci90Form&id=' . $idReadaptacao);
             }
 

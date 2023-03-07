@@ -41,18 +41,7 @@ if ($acesso) {
     # Verifica se veio da área de Redução
     $origem = get_session("origem");
 
-    $jscript = '// Pega os valores da pendêencia
-                
-                // Verifica o valor da pendência quando o form é carregado
-                if($("#pendencia").is(":checked")){
-                    $("#dadosPendencia").show();
-                    $("#dtEnvioPendencia").show();
-                    $("#div11").show();
-                }else{
-                    $("#dadosPendencia").hide();
-                    $("#dtEnvioPendencia").hide();
-                    $("#div11").hide();
-                }
+    $jscript = '
                 
                 // Pega os valores do resultado
                 var resultado = $("#resultado").val();
@@ -60,68 +49,13 @@ if ($acesso) {
                 // Verifica o valor do resultado quando o form é carregado
                 if(resultado == 1){
                     $("#dtInicio").show();
-                    $("#periodo").show();
-                    $("#numCiInicio").show();
-                    $("#numCiTermino").show();                    
-                    $("#div15").show();
+                    $("#periodo").show();            
+                    $("#div7").show();
                 }else{
                     $("#dtInicio").hide();
-                    $("#periodo").hide();
-                    $("#numCiInicio").hide();
-                    $("#numCiTermino").hide();                    
-                    $("#div15").hide();
+                    $("#periodo").hide();               
+                    $("#div7").hide();
                 }
-                
-                // Pega o valor do origem
-                var origem = $("#origem").val();
-                
-                // Verifica o valor do origem quando o form é carregado
-                if(origem == 1){
-                    $("#labeldtSolicitacao").hide();
-                    $("#dtSolicitacao").hide();
-                    $("#dtEnvioPericia").hide();
-                    $("#dtChegadaPericia").hide();
-                    $("#dtChegadaPericia").hide();
-                    $("#dtAgendadaPericia").hide();
-                    $("#pericia").hide();
-                    $("#resultado").hide();
-                    $("#dtCiencia").hide();
-                    $("#div5").hide();
-                    $("#dadosPendencia").hide();
-                    $("#dtEnvioPendencia").hide();
-                    $("#div11").hide();
-                    $("#dtPublicacao").show();
-                    $("#dtInicio").show();
-                    $("#periodo").show();
-                    $("#numCiInicio").show();
-                    $("#numCiTermino").show();                    
-                    $("#div15").show();
-                }else{
-                    $("#labeldtSolicitacao").show();
-                    $("#dtSolicitacao").show();
-                    $("#dtEnvioPericia").show();
-                    $("#dtChegadaPericia").show();
-                    $("#dtChegadaPericia").show();
-                    $("#dtAgendadaPericia").show();
-                    $("#pericia").show();
-                    $("#resultado").show();
-                    $("#dtCiencia").show();
-                    $("#div5").show();                    
-                }
-        
-                // Verifica o valor da pendência quando se muda o valor do campo
-                $("#pendencia").click(function(){
-                    
-                    if($("#pendencia").is(":checked")){
-                        $("#dadosPendencia").show();
-                        $("#dtEnvioPendencia").show();
-                        $("#div11").show();
-                    }else{
-                        $("#dadosPendencia").hide();
-                        $("#dtEnvioPendencia").hide();
-                        $("#div11").hide();
-                    }
-                });
                 
                 // Verifica o valor do resultado quando se muda o valor do campo
                 $("#resultado").change(function(){
@@ -129,58 +63,13 @@ if ($acesso) {
                     
                     if(resultado == 1){
                         $("#dtInicio").show();
-                        $("#periodo").show();
-                        $("#numCiInicio").show();
-                        $("#numCiTermino").show();                    
-                        $("#div15").show();
+                        $("#periodo").show();             
+                        $("#div7").show();
                     }else{
                         $("#dtInicio").hide();
-                        $("#periodo").hide();
-                        $("#numCiInicio").hide();
-                        $("#numCiTermino").hide();                    
-                        $("#div15").hide();
+                        $("#periodo").hide();             
+                        $("#div7").hide();
                     }                
-                });
-                
-                // Verifica o valor do resultado quando se muda o valor do campo
-                $("#origem").change(function(){
-                
-                    // Pega o valor do origem
-                    var origem = $("#origem").val();
-
-                    // Verifica o valor do origem quando o form é carregado
-                    if(origem == 1){
-                        $("#labeldtSolicitacao").hide();
-                        $("#dtSolicitacao").hide();
-                        $("#dtEnvioPericia").hide();
-                        $("#dtChegadaPericia").hide();
-                        $("#dtChegadaPericia").hide();
-                        $("#dtAgendadaPericia").hide();
-                        $("#pericia").hide();
-                        $("#resultado").hide();
-                        $("#dtCiencia").hide();
-                        $("#div5").hide();
-                        $("#dadosPendencia").hide();
-                        $("#dtEnvioPendencia").hide();
-                        $("#div11").hide();
-                        $("#dtPublicacao").show();
-                        $("#dtInicio").show();
-                        $("#periodo").show();
-                        $("#numCiInicio").show();
-                        $("#numCiTermino").show();                    
-                        $("#div15").show();
-                    }else{
-                        $("#labeldtSolicitacao").show();
-                        $("#dtSolicitacao").show();
-                        $("#dtEnvioPericia").show();
-                        $("#dtChegadaPericia").show();
-                        $("#dtChegadaPericia").show();
-                        $("#dtAgendadaPericia").show();
-                        $("#pericia").show();
-                        $("#resultado").show();
-                        $("#dtCiencia").show();
-                        $("#div5").show();                    
-                    }
                 });
                 
 ';
@@ -233,12 +122,11 @@ if ($acesso) {
             $menu->add_link($linkBotao2, "right");
         }
 
-        # Regras
-        $linkBotao3 = new Link("Procedimentos", "../_diagramas/readaptacao.pdf");
-        #$linkBotao3 = new Link("Procedimentos", "https://www.evernote.com/shard/s383/sh/5e239ad7-061b-4889-5ce8-613d2f56d7b4/dsgLPn1xOjcGQ66Fx1P9h_Ofik-Koj1jCi2KGnX6iiYMwFOxz4rykprCcw");
+        # Procedimentos
+        $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
         $linkBotao3->set_class('button');
         $linkBotao3->set_title('Regras da readaptação');
-        $linkBotao3->set_target("_blank4");
+        $linkBotao3->set_target("_blank");
         $menu->add_link($linkBotao3, "right");
 
         # Relatório
@@ -284,8 +172,6 @@ if ($acesso) {
                                      END,
                                      idReadaptacao,
                                      processo,
-                                     idReadaptacao,                                     
-                                     idReadaptacao,
                                      idReadaptacao,
                                      idReadaptacao,
                                      idReadaptacao,
@@ -296,19 +182,11 @@ if ($acesso) {
                             ORDER BY status, dtInicio desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT origem,
+    $objeto->set_selectEdita("SELECT origem,
                                      tipo,
-                                     status,
                                      processo,
-                                     dtSolicitacao,
-                                     dtEnvioPericia,
-                                     dtChegadaPericia,
-                                     dtAgendadaPericia,
-                                     pendencia,
-                                     resultado,
-                                     dtCiencia,
-                                     dadosPendencia,
-                                     dtEnvioPendencia,                                     
+                                     status,
+                                     resultado,                                                               
                                      dtPublicacao,
                                      pgPublicacao,
                                      dtInicio,
@@ -316,7 +194,7 @@ if ($acesso) {
                                      parecer,
                                      idServidor
                                 FROM tbreadaptacao
-                               WHERE idReadaptacao = ' . $id);
+                               WHERE idReadaptacao = {$id}");
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -349,13 +227,10 @@ if ($acesso) {
     ));
 
     # Parametros da tabela
-    $objeto->set_label(array("Origem", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período", "Documentos"));
-    $objeto->set_width(array(7, 7, 7, 12, 7, 12, 7, 7, 12, 12));
-    $objeto->set_align(array("center", "center", "center", "center", "center", "left", "center", "center", "left", "left"));
-    #$objeto->set_funcao(array(null,null,"date_to_php"));
-
-    $objeto->set_classe(array(null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-    $objeto->set_metodo(array(null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"));
+    $objeto->set_label(["Origem", "Tipo", "Status", "Processo", "Resultado", "Publicação", "Período", "Documentos"]);
+    $objeto->set_align(["center", "center", "center", "center", "center", "center", "center", "left"]);
+    $objeto->set_classe([null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"]);
+    $objeto->set_metodo([null, null, "exibeStatus", null, "exibeResultado", "exibePublicacao", "exibePeriodo", "exibeBotaoDocumentos"]);
 
     # Número de Ordem
     $objeto->set_numeroOrdem(true);
@@ -397,6 +272,13 @@ if ($acesso) {
             'col' => 2,
             'title' => 'Se é inicial ou renovação.',
             'linha' => 1),
+        array('linha' => 1,
+            'nome' => 'processo',
+            'label' => 'Processo:',
+            'tipo' => 'texto',
+            'col' => 3,
+            'size' => 25,
+            'title' => 'Número do processo.'),
         array('nome' => 'status',
             'label' => 'Status:',
             'tipo' => 'combo',
@@ -411,94 +293,34 @@ if ($acesso) {
             'disabled' => true,
             'title' => 'Se a solicitação foi arquivada ou não.',
             'linha' => 1),
-        array('linha' => 1,
-            'nome' => 'processo',
-            'label' => 'Processo:',
-            'tipo' => 'texto',
-            'col' => 3,
-            'size' => 25,
-            'title' => 'Número do processo.'),
-        array('nome' => 'dtSolicitacao',
-            'label' => 'Solicitado em:',
-            'tipo' => 'data',
-            'size' => 30,
-            'title' => 'A data da Solicitação.',
-            'col' => 3,
-            'linha' => 1),
-        array('nome' => 'dtEnvioPericia',
-            'label' => 'Data de Envio:',
-            'tipo' => 'data',
-            'size' => 10,
-            'fieldset' => 'Da Perícia',
-            'col' => 3,
-            'title' => 'A data do envio do processo à perícia.',
-            'linha' => 2),
-        array('nome' => 'dtChegadaPericia',
-            'label' => 'Data da Chegada:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data da chegada do processo à perícia.',
-            'linha' => 2),
-        array('nome' => 'dtAgendadaPericia',
-            'label' => 'Data Agendada:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data agendada pela perícia.',
-            'linha' => 2),
-        array('nome' => 'pendencia',
-            'label' => 'Há pendências:',
-            'tipo' => 'simnao',
-            'size' => 5,
-            'title' => 'Se há pendências',
-            'col' => 3,
-            'linha' => 3),
         array('nome' => 'resultado',
+            'fieldset' => 'Resultado:',
             'label' => 'Resultado:',
             'tipo' => 'combo',
-            'array' => array(array(null, ""), array(1, "Deferido"), array(2, "Indeferido")),
+            'array' => [
+                [null, ""],
+                [1, "Deferido"],
+                [2, "Indeferido"],
+                [3, "Interrompido"]
+            ],
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
             'linha' => 3),
-        array('nome' => 'dtCiencia',
-            'label' => 'Data da Ciência:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'A data da ciência do servidor.',
-            'linha' => 3),
-        array('linha' => 4,
-            'col' => 9,
-            'nome' => 'dadosPendencia',
-            'label' => 'Pendências:',
-            'tipo' => 'textarea',
-            'fieldset' => 'Das Pendências',
-            'title' => 'Quais são as pendências.',
-            'size' => array(80, 3)),
-        array('nome' => 'dtEnvioPendencia',
-            'label' => 'Data de Envio:',
-            'tipo' => 'data',
-            'size' => 10,
-            'col' => 3,
-            'title' => 'Data de envio das pendências da Perícia.',
-            'linha' => 5),
         array('nome' => 'dtPublicacao',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,
             'title' => 'A Data da Publicação.',
-            'fieldset' => 'Publicação:',
-            'linha' => 6),
+            'linha' => 3),
         array('nome' => 'pgPublicacao',
             'label' => 'Página:',
             'tipo' => 'texto',
             'size' => 5,
             'col' => 2,
             'title' => 'A página da Publicação no DOERJ.',
-            'linha' => 6),
+            'linha' => 3),
         array('nome' => 'dtInicio',
             'label' => 'Data de Inicio:',
             'fieldset' => 'Quando Deferido',
@@ -1402,6 +1224,19 @@ if ($acesso) {
             break;
 
         ################################################################################################################
+
+        case "procedimentos" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            $rotina = new Rotina();
+            $rotina->exibeRotina(1);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+            break;
     }
 
     $page->terminaPagina();

@@ -70,11 +70,7 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu->add_link($botaoVoltar, "left");
             $menu->show();
-
-            # Título
-            titulo("Alertas");
-            br();
-
+            
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
 
@@ -84,6 +80,7 @@ if ($acesso) {
             $grid->abreColuna(12, 9);
 
             # Mostra o início
+            tituloTable("Alertas");
             br(5);
             p("Informe a Categoria", "f16", "center");
             break;
@@ -100,10 +97,6 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu->add_link($botaoVoltar, "left");
             $menu->show();
-
-            # Título
-            titulo("Alertas");
-            br();
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
@@ -133,10 +126,6 @@ if ($acesso) {
             $menu->add_link($botaoVoltar, "left");
             $menu->show();
 
-            # Título
-            titulo("Alertas");
-            br();
-
             $grid->fechaColuna();
             $grid->abreColuna(12, 3);
 
@@ -145,7 +134,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(12, 9);
 
-            tituloTable($alertas->getNomeCategoria($categoria));
+            tituloTable("Alertas - ".$alertas->getNomeCategoria($categoria));
             br();
 
             $checkup->listaCategoria($categoria);

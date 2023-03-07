@@ -34,24 +34,22 @@ if ($acesso) {
     $titulo = "Servidores com Solicitação de Redução de Carga Horária";
 
     # Pega os dados
-    $select = "SELECT idServidor,
-                      tbpessoa.nome,
-                      CASE tipo
-                        WHEN 1 THEN 'Inicial'
-                        WHEN 2 THEN 'Renovação'
-                        ELSE '--'
-                      END,     
-                      idReducao,                              
-                      idServidor,
-                      dtSolicitacao,
-                      idReducao,
-                      idReducao,
-                      idReducao,
-                      idReducao,
-                      idServidor
-                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbreducao USING (idServidor)
-                WHERE tbservidor.idPerfil <> 10";
+    $select = "SELECT CASE tipo
+                    WHEN 1 THEN 'Inicial'
+                    WHEN 2 THEN 'Renovação'
+                    ELSE '--'
+                  END,                              
+                  idReducao,
+                  tbservidor.idServidor,                              
+                  idServidor,
+                  idReducao,
+                  idReducao,
+                  idReducao,
+                  idServidor,
+                  ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
+             FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                             JOIN tbreducao USING (idServidor)
+            WHERE tbservidor.idPerfil <> 10";
 
     # status
     if ($parametroStatus <> 0) {
@@ -65,19 +63,21 @@ if ($acesso) {
         $subTitulo .= "Nome: " . $parametroNomeMat;
     }
 
-    $select .= " ORDER BY status, dtInicio";
+    $select .= " ORDER BY status, 
+                    CASE WHEN status = 3 THEN dtTermino END DESC,
+                    CASE WHEN status <> 3 THEN dtTermino END ASC,
+                    dtInicio";
 
     $resumo = $pessoal->select($select);
 
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Id/Matrícula", "Nome", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-    $relatorio->set_align(array("center", "left", "center", "center", "center", "center", "left", "center", "center", "left"));
-    $relatorio->set_funcao(array("idMatricula", null, null, null, null, "date_to_php"));
 
-    $relatorio->set_classe(array(null, null, null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", null, "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"));
-    $relatorio->set_metodo(array(null, null, null, "exibeStatus", "get_numProcesso", null, "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
+    $relatorio->set_label(["Tipo", "Status", "Servidor", "Processo", "Resultado", "Publicação", "Período"]);
+    $relatorio->set_align(["center", "center", "left", "center", "center", "center", "left"]);
+    $relatorio->set_classe([null, "ReducaoCargaHoraria", "Pessoal", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria", "ReducaoCargaHoraria"]);
+    $relatorio->set_metodo([null, "exibeStatus", "get_nomeEidFuncional", "get_numProcesso", "exibeResultado", "exibePublicacao", "exibePeriodo"]);
 
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);

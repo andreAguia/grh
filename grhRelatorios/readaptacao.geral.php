@@ -54,8 +54,6 @@ if ($acesso) {
                       idReadaptacao,
                       idReadaptacao,
                       idReadaptacao,
-                      idReadaptacao,
-                      idReadaptacao,
                       idReadaptacao,                                   
                       idReadaptacao
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -88,14 +86,11 @@ if ($acesso) {
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-
-    $relatorio->set_label(array("idServidor", "Nome", "Origem", "Tipo", "Status", "Processo", "Solicitado em:", "Pericia", "Resultado", "Publicação", "Período"));
-    $relatorio->set_align(array("center", "left", "center", "center", "center", "center", "center", "left", "center", "center", "left"));
-    $relatorio->set_funcao(array("idMatricula"));
-
-    $relatorio->set_classe(array(null, null, null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao", "Readaptacao"));
-    $relatorio->set_metodo(array(null, null, null, null, "exibeStatus", null, "exibeSolicitacao", "exibeDadosPericia", "exibeResultado", "exibePublicacao", "exibePeriodo"));
-
+    $relatorio->set_label(["idServidor", "Nome", "Origem", "Tipo", "Status", "Processo", "Resultado", "Publicação", "Período"]);
+    $relatorio->set_align(["center", "left", "center", "center", "center", "center", "center", "center", "left"]);
+    $relatorio->set_funcao(["idMatricula"]);
+    $relatorio->set_classe([null, null, null, null, "Readaptacao", null, "Readaptacao", "Readaptacao", "Readaptacao"]);
+    $relatorio->set_metodo([null, null, null, null, "exibeStatus", null, "exibeResultado", "exibePublicacao", "exibePeriodo"]);
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
     $relatorio->show();

@@ -117,7 +117,7 @@ class Checkup {
      */
     public function get_licencaVencendo($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -194,7 +194,7 @@ class Checkup {
      */
     public function get_trienioVencendo($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "trienio" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "trienio" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -291,7 +291,7 @@ class Checkup {
      */
     public function get_trienioVencido($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "trienio" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "trienio" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -393,7 +393,7 @@ class Checkup {
      */
     public function get_auxilioCrecheVencido($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "creche" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "creche" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -469,7 +469,7 @@ class Checkup {
      */
     public function get_motoristaCarteiraVencida($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -549,7 +549,7 @@ class Checkup {
      */
     public function get_motoristaSemDataCarteira($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -628,7 +628,7 @@ class Checkup {
      */
     public function get_motoristaSemCarteira($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "motorista" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -707,7 +707,7 @@ class Checkup {
      */
     public function get_servidorCom74($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -781,7 +781,7 @@ class Checkup {
      */
     public function get_servidorComMais75($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -855,7 +855,7 @@ class Checkup {
      */
     public function get_servidorComMaisde1MatriculaAtiva($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -940,7 +940,7 @@ class Checkup {
      */
     public function get_servidorComPerfilOutros($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1020,7 +1020,7 @@ class Checkup {
      */
     public function get_servidorSemPerfil($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "perfil" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "perfil" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -1098,7 +1098,7 @@ class Checkup {
      */
     public function get_servidorTecnicoEstatutarioInativosSemConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -1180,7 +1180,7 @@ class Checkup {
      */
     public function get_servidorTecnicoCeletistaInativosSemConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1264,7 +1264,7 @@ class Checkup {
      */
     public function get_servidorTecnicoAtivosEstatutarioSemConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1344,7 +1344,7 @@ class Checkup {
      */
     public function get_servidorAtivoComConcursoPosteriorAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1425,7 +1425,7 @@ class Checkup {
      */
     public function get_servidorInativoComConcursoPosteriorAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1506,7 +1506,7 @@ class Checkup {
      */
     public function get_servidorProfessorAtivoSemConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1588,7 +1588,7 @@ class Checkup {
      */
     public function get_servidorProfessorInativoSemConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1670,7 +1670,7 @@ class Checkup {
      */
     public function get_cargoComissaoNomeacaoIgualExoneracao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "comissao" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "comissao" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -1748,7 +1748,7 @@ class Checkup {
      */
     public function get_servidorSemIdFuncional($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1825,7 +1825,7 @@ class Checkup {
      */
     public function get_servidorSemDtNasc($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1900,7 +1900,7 @@ class Checkup {
      */
     public function get_servidorCedidoLotacaoErrada($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -1981,7 +1981,7 @@ class Checkup {
      */
     public function get_servidorCedidoDataExpirada($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2066,7 +2066,7 @@ class Checkup {
      */
     public function get_servidorEstatutarioSemCargo($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2142,7 +2142,7 @@ class Checkup {
      */
     public function get_servidorSemCargo($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2215,7 +2215,7 @@ class Checkup {
      */
     public function get_servidorCedidoSemInfoCedente($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cedidos" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2290,7 +2290,7 @@ class Checkup {
      */
     public function get_servidorInativoComPerfilOutros($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2371,7 +2371,7 @@ class Checkup {
      */
     public function get_servidorInativoSemMotivoSaida($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2446,7 +2446,7 @@ class Checkup {
      */
     public function get_servidorInativoSemdataSaida($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2523,7 +2523,7 @@ class Checkup {
      */
     public function get_servidorDuplicado($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
 
@@ -2602,7 +2602,7 @@ class Checkup {
      */
     public function get_servidorSemSituacao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2674,7 +2674,7 @@ class Checkup {
      */
     public function get_servidorSemAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2749,7 +2749,7 @@ class Checkup {
      */
     public function get_servidorSemProcessoPremio($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2821,7 +2821,7 @@ class Checkup {
      */
     public function get_feriasAntesAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "ferias" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "ferias" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2897,7 +2897,7 @@ class Checkup {
      */
     public function get_licencaPremioEstranha($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -2976,7 +2976,7 @@ class Checkup {
      */
     public function get_estatutarioComLicencaMedicaClt($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3053,7 +3053,7 @@ class Checkup {
      */
     public function get_folgaFruidaTreMaiorConcedida($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "tre" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "tre" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -3125,7 +3125,7 @@ class Checkup {
      */
     public function get_progressaoImportada($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "progressao" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "progressao" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3199,7 +3199,7 @@ class Checkup {
      */
     public function get_progressaoImportadaInativos($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "progressao" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "progressao" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3275,7 +3275,7 @@ class Checkup {
      */
     public function get_celetistaInativoFimCessao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3351,7 +3351,7 @@ class Checkup {
      */
     public function get_servidorSemSexo($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -3423,7 +3423,7 @@ class Checkup {
      */
     public function get_servidorSemEstCiv($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -3495,7 +3495,7 @@ class Checkup {
      */
     public function get_servidorComAverbacaoAposAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3571,7 +3571,7 @@ class Checkup {
      */
     public function get_servidorComAverbacaoTerminandoAposAdmissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3647,7 +3647,7 @@ class Checkup {
      */
     public function get_servidorComDependentesSemParentesco($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3721,7 +3721,7 @@ class Checkup {
      */
     public function get_servidorComTerminoReadaptacaoMenos45Dias($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -3799,7 +3799,7 @@ class Checkup {
      */
     public function get_servidorComTerminoReducaoMenos45Dias($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -3876,7 +3876,7 @@ class Checkup {
      */
     public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -3956,7 +3956,7 @@ class Checkup {
      */
     public function get_servidorInativoComCargoEmComissao($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "comissao" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "comissao" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4039,7 +4039,7 @@ class Checkup {
      */
     public function get_servidorAtivoUltimaLicencaMedicaEmAberto($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4126,7 +4126,7 @@ class Checkup {
      */
     public function get_servidorAtivoLicencaMedicaSemAlta($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4207,7 +4207,7 @@ class Checkup {
      */
     public function get_servidorAtivoSemEscolha($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4284,7 +4284,7 @@ class Checkup {
      */
     public function get_servidorNaoAtivoSemEscolha($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4360,7 +4360,7 @@ class Checkup {
      */
     public function get_servidorAdmTecConcursoNao2012AdmitidoDepois2012($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4442,7 +4442,7 @@ class Checkup {
      */
     public function get_servidorComReadaptacaoVigenteTerminada($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -4520,7 +4520,7 @@ class Checkup {
      */
     public function get_servidorComTerminoReducaoVigenteTerminada($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4597,7 +4597,7 @@ class Checkup {
      */
     public function get_servidorPublicacaoPremioPendente($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4682,7 +4682,7 @@ class Checkup {
      */
     public function get_servidorNaoCeletistaNaoEstatutarioComConcurso($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "concurso" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4760,7 +4760,7 @@ class Checkup {
      */
     public function get_servidorTempoSobreposto($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "aposentadoria" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $averbacao = new Averbacao();
@@ -4857,7 +4857,7 @@ class Checkup {
      */
     public function get_licencaPremioMais90dias($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR!empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -4909,6 +4909,83 @@ class Checkup {
                 if ($this->lista) {
                     if ($count > 0) {
                         callout("Não se pode ter mais de 90 dias de licença prêmio em um mesmo período aquisitivo. Houve algum erro no lançamento destes registros !");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_servidorComTerminoReadaptacaoMenos45Dias
+     * 
+     * Servidor Com Readaptação terminando em menos de 45 dias
+     */
+    public function get_servidorComLicencaSemVencimentosMenos30Dias($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
+
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          idServidor,
+                          idServidor,
+                          tbtipolicenca.nome,
+                          DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY),
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY))
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbperfil USING (idPerfil)
+                                     LEFT JOIN tblicencasemvencimentos USING (idServidor)
+                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
+                    WHERE tblicencasemvencimentos.dtInicial IS NOT null
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) >= 0 
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) <=30';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY 4 desc';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Licença Sem Vencimentos terminando em menos de 30 dias.';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Licença', 'Data Final', 'Dias Faltantes']);
+            $tabela->set_align(['center', 'left', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, "get_nome", "get_lotacao"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
                         $tabela->show();
                         set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
                     } else {

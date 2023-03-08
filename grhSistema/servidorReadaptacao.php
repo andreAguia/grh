@@ -1228,7 +1228,8 @@ if ($acesso) {
         case "procedimentos" :
             $grid = new Grid();
             $grid->abreColuna(12);
-            br();
+
+            p("Readaptação", "center", "f16");
 
             $tab = new Tab(["Solicitação e Renovação", "Ex-Ofício"]);
 

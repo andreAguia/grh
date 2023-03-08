@@ -1385,7 +1385,7 @@ if ($acesso) {
             p("Redução de Carga Horária", "center", "f26");
 
             $rotina = new Rotina();
-            $rotina->exibeRotina(1);            
+            $rotina->exibeRotina(3);            
 
             $grid->fechaColuna();
             $grid->fechaGrid();

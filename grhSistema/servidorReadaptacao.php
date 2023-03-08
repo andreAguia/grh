@@ -1230,7 +1230,7 @@ if ($acesso) {
             $grid->abreColuna(12);
             br();
 
-            p("Readaptação", "center", "f22");
+            p("Readaptação", "center", "f26");
 
             $tab = new Tab(["Solicitação e Renovação", "Ex-Ofício"]);
 

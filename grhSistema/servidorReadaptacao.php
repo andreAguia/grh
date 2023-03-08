@@ -1230,8 +1230,30 @@ if ($acesso) {
             $grid->abreColuna(12);
             br();
 
+            $tab = new Tab(["Solicitação e Renovação", "Ex-Ofício"]);
+
+            ###########
+
+            $tab->abreConteudo();
+
             $rotina = new Rotina();
             $rotina->exibeRotina(1);
+
+            $tab->fechaConteudo();
+
+            ###########
+
+            $tab->abreConteudo();
+
+            $rotina = new Rotina();
+            $rotina->exibeRotina(2);
+
+            $tab->fechaConteudo();
+
+            ###########
+
+            $tab->show();
+            br();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

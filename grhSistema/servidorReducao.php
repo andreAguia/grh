@@ -135,20 +135,21 @@ if ($acesso) {
                 $menu->add_link($linkBotao2, "right");
             }
         }
+        
+        # Procedimentos
+        $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
+        $linkBotao3->set_class('button');
+        $linkBotao3->set_title('Regras da readaptação');
+        $linkBotao3->set_target("_blank");
+        $menu->add_link($linkBotao3, "right");
 
         # Site
         $botaoSite = new Button("Site da GRH");
         $botaoSite->set_target('_blank');
-        $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
+        $botaoSite->set_title("Pagina da GRH");
         $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
         $menu->add_link($botaoSite, "right");
-
-        # Legislação
-        $botaoLegis = new Button("Legislação");
-        $botaoLegis->set_disabled(true);
-        $botaoLegis->set_title('Exibe as Legislação pertinente');
-        #$botaoLegis->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRfb7P06MCBHAwd15hKm6KWV4-y0I8yBzlac58uAA-xCHeaL9aCbtSGCgGguZzaPQafvXYvGqWhwG0r/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-        #$menu->add_link($botaoLegis,"right");
+       
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -157,15 +158,6 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorReducao.php");
         $botaoRel->set_target("_blank");
         $menu->add_link($botaoRel, "right");
-
-        # Fluxograma
-        $imagem = new Imagem(PASTA_FIGURAS . 'fluxograma.png', null, 15, 15);
-        $botaoFluxo = new Button();
-        $botaoFluxo->set_imagem($imagem);
-        $botaoFluxo->set_title("Exibe o Fluxograma de todo o processo redução da carga horária");
-        $botaoFluxo->set_url("../_diagramas/reducao2.jpg");
-        $botaoFluxo->set_target("_blank");
-        $menu->add_link($botaoFluxo, "right");
 
         $menu->show();
 
@@ -360,7 +352,7 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    ################################################################
+    ###################################################################
 
     switch ($fase) {
         case "" :
@@ -368,7 +360,7 @@ if ($acesso) {
             # Divide a página em 3 colunas
             $grid = new Grid();
 
-            #########################################################################################################
+            ###################################################################
             # Processo
             $grid->abreColuna(12, 4);
 
@@ -400,7 +392,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #########################################################################################################
+            ###################################################################
             # Contatos
             $grid->abreColuna(12, 4);
 
@@ -450,7 +442,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #########################################################################################################
+            ###################################################################
             # Documentos
             $grid->abreColuna(12, 4);
 
@@ -480,7 +472,7 @@ if ($acesso) {
             $objeto->listar();
             break;
 
-#########################################################################################################
+###################################################################
 
         case "editar" :
         case "excluir" :
@@ -491,7 +483,7 @@ if ($acesso) {
             $objeto->gravar($id, "servidorReducaoExtra.php");
             break;
 
-################################################################################################################
+        ###################################################################
         # Ci Início
         case "ciInicioForm" :
 
@@ -735,7 +727,7 @@ if ($acesso) {
             }
             break;
 
-################################################################################################################
+        ###################################################################
         # Ci 45 Dias
         case "ci45Form" :
 
@@ -918,7 +910,7 @@ if ($acesso) {
             }
             break;
 
-################################################################################################################
+        ###################################################################
         # Ci Término
         case "ciTerminoForm" :
 
@@ -1141,7 +1133,7 @@ if ($acesso) {
             }
             break;
 
-################################################################################################################
+        ###################################################################
         # Ato Reitor        
         case "atoReitorForm" :
 
@@ -1305,7 +1297,7 @@ if ($acesso) {
             }
             break;
 
-        ################################################################################################################
+        ###################################################################
         # Despacho para Perícia
         case "despachoPerícia" :
 
@@ -1383,7 +1375,21 @@ if ($acesso) {
             }
             break;
 
-################################################################################################################
+    ###################################################################
+
+        case "procedimentos" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            #p("Readaptação", "center", "f26");
+
+            $rotina = new Rotina();
+            $rotina->exibeRotina(1);            
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
     }
 
     $page->terminaPagina();

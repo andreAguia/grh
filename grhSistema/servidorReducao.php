@@ -1382,7 +1382,7 @@ if ($acesso) {
             $grid->abreColuna(12);
             br();
 
-            #p("Readaptação", "center", "f26");
+            p("Redução de Carga Horária", "center", "f26");
 
             $rotina = new Rotina();
             $rotina->exibeRotina(1);            

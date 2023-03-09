@@ -452,12 +452,8 @@ class ReducaoCargaHoraria {
 
         # Pega os dados
         $resultado = $dados["resultado"];
-        $ciInicio = $dados["numCiInicio"];
-        $ciTermino = $dados["numCiTermino"];
         $atoReitor = date_to_php($dados["dtAtoReitor"]);
-        $ci45 = $dados["numCi45"];
         $dtTermino = date_to_php($dados["dtTermino"]);
-        $tipo = $dados["tipo"];
 
         # Inicia o menu
         $menu = new Menu("menuBeneficios");
@@ -488,24 +484,29 @@ class ReducaoCargaHoraria {
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitor&id=' . $idReducao);
         }
 
-        # Despacho à Reitoria
-        if ($resultado == 1) {
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho à Reitoria", '?fase=despachoReitoria');
-        }
+//        # Despacho à Reitoria
+//        if ($resultado == 1) {
+//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho à Reitoria", '?fase=despachoReitoria');
+//        }
 
         # Despacho para Publicação
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", '?fase=despachoPublicacao');
 
         if ($resultado == 1) {
-            
+
+            $hoje = date("d/m/Y");
+            $dias = dataDif($hoje, $dtTermino);
+
             # Despacho: Início da Concessão
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", '?fase=despachoInicio');
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", '?fase=despachoInicio&id=' . $idReducao);
 
             # Despacho: Aviso 45 Dias
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", '?fase=despacho45dias');
+            if (abs($dias) <= 45) {
+                $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", '?fase=despacho45dias&id=' . $idReducao);
+            }
 
             # Despacho: Aviso de Término
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", '?fase=despachotermino');
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", '?fase=despachoTermino&id=' . $idReducao);
         }
 
         $menu->show();

@@ -484,8 +484,8 @@ if ($acesso) {
             break;
 
         ###################################################################
-        # Ci Início
-        case "ciInicioForm" :
+        # Despacho: Início da Concessão
+        case "despachoIniciohhh" :
 
             # Voltar
             botaoVoltar("?");
@@ -495,70 +495,37 @@ if ($acesso) {
 
             # Pega os Dados
             $dados = $reducao->get_dados($id);
-
-            $numCiInicio = $dados["numCiInicio"];
-            $dtCiInicio = $dados["dtCiInicio"];
             $dtInicio = $dados["dtInicio"];
             $dtPublicacao = $dados["dtPublicacao"];
             $pgPublicacao = $dados["pgPublicacao"];
-            $tipo = $dados["tipo"];
             $periodo = $dados["periodo"];
             $processo = $reducao->get_numProcesso($idServidorPesquisado);
 
-            # Chefia imediata desse servidor
-            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
-            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
-            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
 
             # Título
-            tituloTable("Controle de Redução da Carga Horária<br/>Ci de início");
-            $painel = new Callout();
-            $painel->abre();
+            tituloTable("Controle de Redução da Carga Horária - Despacho: Início da Concessão");
+            br();
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=ciInicioFormValida&id=' . $id);
-
-            # numCiInicio
-            $controle = new Input('numCiInicio', 'texto', 'Ci n°:', 1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            #$controle->set_required(true);
-            $controle->set_autofocus(true);
-            $controle->set_valor($numCiInicio);
-            $controle->set_title('Número da Ci informando a chefia imediata do servidor da data de início do benefício.');
-            $form->add_item($controle);
-
-            # dtCiInicio
-            $controle = new Input('dtCiInicio', 'data', 'Data da Ci:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_valor($dtCiInicio);
-            #$controle->set_required(true);
-            $controle->set_title('A data da CI de inicio.');
-            $form->add_item($controle);
-
-            # tipo
-            $controle = new Input('tipo', 'combo', 'Tipo:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_array(array(array(null, null),
-                array(1, "Inicial"),
-                array(2, "Renovação")));
-            $controle->set_valor($tipo);
-            $controle->set_title('Se é Inicial ou Renovação.');
-            $form->add_item($controle);
+            $form = new Form('?fase=despachoInicioValida&id=' . $id);
 
             # servidor da grh
-            $controle = new Input('servidorGrh', 'combo', 'Servidor da GRH que assina a CI:', 1);
+            $controle = new Input('servidorGrh', 'combo', 'Quem assina:', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(9);
 
             # Cria combo de servidores da GRH
             $select = "SELECT idServidor, tbpessoa.nome 
@@ -612,13 +579,12 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            $painel->fecha();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
 
-        case "ciInicioFormValida" :
+        case "despachoInicioValida" :
 
             # Pega os Dados
             $dados = $reducao->get_dados($id);
@@ -1349,6 +1315,7 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1402,6 +1369,7 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1455,6 +1423,7 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1508,7 +1477,17 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+            
+            # número do documento da publicação no SEI
+            $controle = new Input('numDocumento', 'texto', 'Número do documento da publicação no SEI:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(4);
+            $controle->set_col(12);
+            $controle->set_required(true);
+            $controle->set_title('O número do documento da publicação no SEI.');
             $form->add_item($controle);
 
             # submit
@@ -1561,6 +1540,7 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1614,6 +1594,7 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1631,16 +1612,25 @@ if ($acesso) {
             break;
 
         ###################################################################
-        # Despacho para Publicação
-        case "despachoPublicacao" :
+        # Despacho: Início da Concessão
+        case "despachoInicio" :
 
             # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
 
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
             # Título
-            tituloTable("Despacho para Publicação");
+            tituloTable("Despacho: Início da Concessão");
             br();
 
             # Pega os dados da combo assinatura
@@ -1657,7 +1647,7 @@ if ($acesso) {
             $lista = $pessoal->select($select);
 
             # Monta o formulário
-            $form = new Form("../grhRelatorios/despacho.RCH.publicacao.php");
+            $form = new Form("../grhRelatorios/despacho.RCH.inicioConcessao.php?id={$id}");
 
             # Assinatura
             $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
@@ -1667,6 +1657,99 @@ if ($acesso) {
             $controle->set_array($lista);
             $controle->set_valor($intra->get_idServidor($idUsuario));
             $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # Chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata do Servidor Solicitante:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            $controle->set_required(true);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo
+            $controle = new Input('cargo', 'texto', 'Cargo da Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            $controle->set_required(true);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+            
+            # número do documento da publicação no SEI
+            $controle = new Input('numDocumento', 'texto', 'Número do documento da publicação no SEI:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(4);
+            $controle->set_col(12);
+            $controle->set_required(true);
+            $controle->set_title('O número do documento da publicação no SEI.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho: Aviso 45 Dias
+        case "despacho45dias" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+            # Título
+            tituloTable("Despacho: Aviso 45 Dias");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.RCH.aviso45dias.php?id={$id}");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
@@ -1683,7 +1766,90 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ###################################################################                                         
+        ###################################################################
+        # Despacho: Aviso de Término
+        case "despachoTermino" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+            # Título
+            tituloTable("Despacho: Aviso de Término");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.RCH.avisoTermino.php?id={$id}");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # Chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata do Servidor Solicitante:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            $controle->set_required(true);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo
+            $controle = new Input('cargo', 'texto', 'Cargo da Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            $controle->set_required(true);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
     }
 
     $page->terminaPagina();

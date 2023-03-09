@@ -31,9 +31,8 @@ if ($acesso) {
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("Prezado(a) servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
-    $despacho->set_texto("Informamos o INDEFERIMENTO na solicitação por existir instaurado Inquérito Administrativo em fase de tramitação.");
-    $despacho->set_texto("Solicitamos <b>ciência do(a) servidor(a)</b> para a devida conclusão do presente processo.");
+    $despacho->set_destino("Ao Setor de Publicações Oficiais da UENF-SEPOF,");
+    $despacho->set_texto("Para publicação no DOERJ.");
     $despacho->set_texto("Atenciosamente,");
     
     # Verifica se quem assina é gerente e por o cargo em comissão
@@ -53,7 +52,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento por Inquérito";
+    $atividades = "Visualizou o Despacho de RCH para Publicação";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 

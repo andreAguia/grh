@@ -32,7 +32,7 @@ if ($acesso) {
     # despacho
     $despacho = new Despacho();
     $despacho->set_destino("Prezado(a) servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
-    $despacho->set_texto("Informamos o INDEFERIMENTO na solicitação por existir instaurado Inquérito Administrativo em fase de tramitação.");
+    $despacho->set_texto("Informamos o INDEFERIMENTO do requerimento, conforme Despacho da Superintendência Central de Perícias Médicas e Saúde Ocupacional da Secretaria de Estado de Saúde, presente no Documento SEI n° XXXXXX, do Processo SEI-XXXX.");
     $despacho->set_texto("Solicitamos <b>ciência do(a) servidor(a)</b> para a devida conclusão do presente processo.");
     $despacho->set_texto("Atenciosamente,");
     
@@ -53,7 +53,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento por Inquérito";
+    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 

@@ -53,7 +53,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho: Ciência do Indeferimento por Inquérito";
+    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento por Inquérito";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 

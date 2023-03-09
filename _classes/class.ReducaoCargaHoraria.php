@@ -471,86 +471,42 @@ class ReducaoCargaHoraria {
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
 
         # Despacho para Perícia
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPerícia&id=' . $idReducao);
-//
-//        # Despacho: Ciência do Indeferimento
-//        if ($resultado == 2) {
-//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", null);
-//        }
-//
-//        # Despacho para Publicação
-//        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", null);
-//
-//        if ($resultado == 1) {
-//            # Despacho: Início da Concessão
-//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", null);
-//
-//            # Despacho: Aviso 45 Dias
-//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", null);
-//
-//            # Despacho: Aviso de Término
-//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", null);
-//        }
-//
-//
-//
-//
-//
-//
-//
-//        $dias = null;
-//
-//        # Calcula os dias
-//        if (!is_null($dtTermino)) {
-//            $hoje = date("d/m/Y");
-//            $dias = dataDif($hoje, $dtTermino);
-//        }
-//
-//        # Nome do botão de início
-//        $nomeBotaoInicio = "CI Início";
-//        if (!is_null($ciInicio)) {
-//            $nomeBotaoInicio = "CI Início n° " . $ciInicio;
-//        }
-//
-//        # Nome do botão de 45 Dias
-//        $nomeBotao45 = "CI 45 Dias";
-//        if (!is_null($ci45)) {
-//            $nomeBotao45 = "CI 45 Dias n° " . $ci45;
-//        }
-//
-//        # Nome do botão de Término
-//        $nomeBotaotermino = "CI Término";
-//        if (!is_null($ciTermino)) {
-//            $nomeBotaotermino = "CI Término n° " . $ciTermino;
-//        }
-//
-//        # Nome do botão do Ato
-//        $nomeBotaoAto = "Ato do Reitor";
-//        if (!is_null($atoReitor)) {
-//            $nomeBotaoAto = "Ato do Reitor " . $atoReitor;
-//        }
-//
-//
-//
-//
-//
-//        # Retorno
-//        if ($resultado == 1) {
-//
-//            # Ci Início
-//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReducao);
-//
-//            # Ci 45 dias
-//            if (($dias >= 0) AND ($dias <= 45)) {
-//                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao45, '?fase=ci45Form&id=' . $idReducao);
-//            }
-//
-//            # Ci Término    
-//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaotermino, '?fase=ciTerminoForm&id=' . $idReducao);
-//
-//            # Ato do Reitor
-//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitorForm&id=' . $idReducao);
-//        }
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPericia&id=' . $idReducao);
+
+        # Despacho: Ciência do Indeferimento
+        if ($resultado == 2) {
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", '?fase=despachoCienciaIndeferimento&id=' . $idReducao);
+        }
+
+        # Ato do Reitor
+        if ($resultado == 1) {
+            $nomeBotaoAto = "Ato do Reitor";
+
+            if (!is_null($atoReitor)) {
+                $nomeBotaoAto = "Ato do Reitor " . $atoReitor;
+            }
+            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitor&id=' . $idReducao);
+        }
+
+        # Despacho à Reitoria
+        if ($resultado == 1) {
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho à Reitoria", '?fase=despachoReitoria');
+        }
+
+        # Despacho para Publicação
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", '?fase=despachoPublicacao');
+
+        if ($resultado == 1) {
+            
+            # Despacho: Início da Concessão
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", '?fase=despachoInicio');
+
+            # Despacho: Aviso 45 Dias
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", '?fase=despacho45dias');
+
+            # Despacho: Aviso de Término
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", '?fase=despachotermino');
+        }
 
         $menu->show();
     }

@@ -135,7 +135,7 @@ if ($acesso) {
                 $menu->add_link($linkBotao2, "right");
             }
         }
-        
+
         # Procedimentos
         $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
         $linkBotao3->set_class('button');
@@ -149,7 +149,7 @@ if ($acesso) {
         $botaoSite->set_title("Pagina da GRH");
         $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
         $menu->add_link($botaoSite, "right");
-       
+
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -299,7 +299,7 @@ if ($acesso) {
                 [1, "Deferido"],
                 [2, "Indeferido"],
                 [3, "Interrompido"]
-                ],
+            ],
             'size' => 20,
             'title' => 'Se o processo foi deferido ou indeferido',
             'col' => 3,
@@ -1298,84 +1298,6 @@ if ($acesso) {
             break;
 
         ###################################################################
-        # Despacho para Perícia
-        case "despachoPerícia" :
-
-            # Voltar
-            #botaoVoltar("?");
-            # Dados do Servidor
-            #get_DadosServidor($idServidorPesquisado);
-            # Pega os dados da redução
-            $dados = $reducao->get_dados($id);
-            $tipo = $dados["tipo"];
-
-            # Formulário somente para tipo 2
-            if ($tipo == 2) {
-
-                # Limita a tela
-                $grid = new Grid("center");
-                $grid->abreColuna(10);
-                br();
-
-                callout("ATENÇÃO:<br/>Quando a solicitação é de renovação, faz-se necessário informar a página do processo, onde se encontra a cópia da publicação do benefício anterior.");
-
-                # Título
-                titulo("Redução de Carga Horária - Despacho Para Perícia Médica");
-                $painel = new Callout();
-                $painel->abre();
-
-                # Monta o formulário
-                $form = new Form('?fase=despachoPericiaFormValida&id=' . $id);
-
-                # folha da publicação no processo 
-                $controle = new Input('folha', 'texto', 'Página:', 1);
-                $controle->set_size(10);
-                $controle->set_linha(1);
-                $controle->set_col(3);
-                $controle->set_autofocus(true);
-                $controle->set_title('A página do processo da cópia da publicação.');
-                $form->add_item($controle);
-
-                # submit
-                $controle = new Input('imprimir', 'submit');
-                $controle->set_valor('Imprimir');
-                $controle->set_linha(5);
-                $controle->set_col(2);
-                $form->add_item($controle);
-
-                $form->show();
-
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-            } else {
-                loadPage("../grhRelatorios/reducao.DespachoPericia.php?id=$id");
-            }
-            break;
-
-        case "despachoPericiaFormValida" :
-
-            # Pega os dados Digitados
-            $folha = vazioPraNulo(post("folha"));
-
-            # Erro
-            $msgErro = null;
-            $erro = 0;
-
-            # Verifica o número da folha
-            if (vazio($folha)) {
-                $msgErro .= 'Deve digitar o número da folha!\n';
-                $erro = 1;
-            }
-
-            if ($erro == 0) {
-                loadPage("../grhRelatorios/reducao.DespachoPericia.php?folha=$folha&id=$id");
-            } else {
-                alert($msgErro);
-                back(1);
-            }
-            break;
-
-    ###################################################################
 
         case "procedimentos" :
             $grid = new Grid();
@@ -1385,11 +1307,172 @@ if ($acesso) {
             p("Redução de Carga Horária", "center", "f26");
 
             $rotina = new Rotina();
-            $rotina->exibeRotina(3);            
+            $rotina->exibeRotina(3);
 
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+
+        ###################################################################
+        # Despacho: Ciência do Indeferimento por Inquérito
+        case "despachoCienciaIndeferimentoInquerito" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho: Ciência do Indeferimento por Inquérito");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.RCH.cienciaIndeferimentoInquerito.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho de Conclusão temporária
+        case "despachoConclusaoTemporaria" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho de Conclusão Temporária");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.RCH.conclusaoTemporaria.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho para perícia
+        case "despachoPericia" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho de Conclusão Temporária");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.RCH.conclusaoTemporaria.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################          
     }
 
     $page->terminaPagina();

@@ -459,106 +459,98 @@ class ReducaoCargaHoraria {
         $dtTermino = date_to_php($dados["dtTermino"]);
         $tipo = $dados["tipo"];
 
-        $dias = null;
-
-        # Calcula os dias
-        if (!is_null($dtTermino)) {
-            $hoje = date("d/m/Y");
-            $dias = dataDif($hoje, $dtTermino);
-        }
-
-        # Nome do botão de início
-        $nomeBotaoInicio = "CI Início";
-        if (!is_null($ciInicio)) {
-            $nomeBotaoInicio = "CI Início n° " . $ciInicio;
-        }
-
-        # Nome do botão de 45 Dias
-        $nomeBotao45 = "CI 45 Dias";
-        if (!is_null($ci45)) {
-            $nomeBotao45 = "CI 45 Dias n° " . $ci45;
-        }
-
-        # Nome do botão de Término
-        $nomeBotaotermino = "CI Término";
-        if (!is_null($ciTermino)) {
-            $nomeBotaotermino = "CI Término n° " . $ciTermino;
-        }
-
-        # Nome do botão do Ato
-        $nomeBotaoAto = "Ato do Reitor";
-        if (!is_null($atoReitor)) {
-            $nomeBotaoAto = "Ato do Reitor " . $atoReitor;
-        }
-
+        # Inicia o menu
         $menu = new Menu("menuBeneficios");
 
-        # Despachos
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPerícia&id=' . $idReducao);
-
-        # Retorno
-        if ($resultado == 1) {
-
-            # Ci Início
-            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReducao);
-
-            # Ci 45 dias
-            if (($dias >= 0) AND ($dias <= 45)) {
-                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao45, '?fase=ci45Form&id=' . $idReducao);
-            }
-
-            # Ci Término    
-            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaotermino, '?fase=ciTerminoForm&id=' . $idReducao);
-
-            # Ato do Reitor
-            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitorForm&id=' . $idReducao);
-            /*
-
-              $tamanhoImage = 20;
-              if(($dias >= 0) AND($dias <= 45)){
-              $menu = new MenuGrafico(4);
-              }else{
-              $menu = new MenuGrafico(3);
-              }
-
-              # Ci Início
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ciInicioForm&id='.$idReducao);
-              $botao->set_label($nomeBotaoInicio);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de início');
-              $menu->add_item($botao);
-
-              # Ci 45 dias
-              if(($dias >= 0) AND($dias <= 45)){
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ci45Form&id='.$idReducao);
-              $botao->set_label($nomeBotao45);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de 45 Dias');
-              $menu->add_item($botao);
-              }
-
-              # Ci Término
-              $botao = new BotaoGrafico();
-              $botao->set_url('?fase=ciTerminoForm&id='.$idReducao);
-              $botao->set_label($nomeBotaotermino);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime a Ci de término');
-              $menu->add_item($botao);
-
-              # Ato do Reitor
-              $botao = new BotaoGrafico();
-              $botao->set_label($nomeBotaoAto);
-              $botao->set_url('?fase=atoReitorForm&id='.$idReducao);
-              $botao->set_imagem(PASTA_FIGURAS.'print.png',$tamanhoImage,$tamanhoImage);
-              $botao->set_title('Imprime o Ato do Reitor');
-              $menu->add_item($botao);
-
-              $menu->show();
-             * 
-             */
+        # Despacho: Ciência do Indeferimento por Inquérito
+        if ($resultado == 2) {
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento por Inquérito", '?fase=despachoCienciaIndeferimentoInquerito');
         }
+
+        # Despacho de conclusão temporária
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
+
+        # Despacho para Perícia
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPerícia&id=' . $idReducao);
+//
+//        # Despacho: Ciência do Indeferimento
+//        if ($resultado == 2) {
+//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", null);
+//        }
+//
+//        # Despacho para Publicação
+//        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", null);
+//
+//        if ($resultado == 1) {
+//            # Despacho: Início da Concessão
+//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", null);
+//
+//            # Despacho: Aviso 45 Dias
+//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", null);
+//
+//            # Despacho: Aviso de Término
+//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", null);
+//        }
+//
+//
+//
+//
+//
+//
+//
+//        $dias = null;
+//
+//        # Calcula os dias
+//        if (!is_null($dtTermino)) {
+//            $hoje = date("d/m/Y");
+//            $dias = dataDif($hoje, $dtTermino);
+//        }
+//
+//        # Nome do botão de início
+//        $nomeBotaoInicio = "CI Início";
+//        if (!is_null($ciInicio)) {
+//            $nomeBotaoInicio = "CI Início n° " . $ciInicio;
+//        }
+//
+//        # Nome do botão de 45 Dias
+//        $nomeBotao45 = "CI 45 Dias";
+//        if (!is_null($ci45)) {
+//            $nomeBotao45 = "CI 45 Dias n° " . $ci45;
+//        }
+//
+//        # Nome do botão de Término
+//        $nomeBotaotermino = "CI Término";
+//        if (!is_null($ciTermino)) {
+//            $nomeBotaotermino = "CI Término n° " . $ciTermino;
+//        }
+//
+//        # Nome do botão do Ato
+//        $nomeBotaoAto = "Ato do Reitor";
+//        if (!is_null($atoReitor)) {
+//            $nomeBotaoAto = "Ato do Reitor " . $atoReitor;
+//        }
+//
+//
+//
+//
+//
+//        # Retorno
+//        if ($resultado == 1) {
+//
+//            # Ci Início
+//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReducao);
+//
+//            # Ci 45 dias
+//            if (($dias >= 0) AND ($dias <= 45)) {
+//                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao45, '?fase=ci45Form&id=' . $idReducao);
+//            }
+//
+//            # Ci Término    
+//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaotermino, '?fase=ciTerminoForm&id=' . $idReducao);
+//
+//            # Ato do Reitor
+//            $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitorForm&id=' . $idReducao);
+//        }
 
         $menu->show();
     }

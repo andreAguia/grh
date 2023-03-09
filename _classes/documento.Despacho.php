@@ -14,6 +14,7 @@ class Despacho {
     private $origemNome = null;
     private $origemSetor = null;
     private $origemDescricao = null;
+    private $origemLotacao = null;
     private $origemIdFuncional = null;
     private $reitor = null;
     private $saltoRodape = 3;
@@ -116,31 +117,27 @@ class Despacho {
         br();
 
         # Destino
-        p($this->destino, 'pCiNum');
+        p($this->destino, 'pDestino');
         br(2);
 
         # Texto
-        foreach ($this->texto as $textoCi) {
-            p($textoCi, 'pCi');
-        }
-        br();
-
-        # Data
-        if (vazio($this->data)) {
-            $this->data = date("d/m/Y");
+        foreach ($this->texto as $textoDespacho) {
+            p($textoDespacho, 'pDespacho');
         }
 
-        p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pCiNum');
         br($this->saltoRodape);
 
         # Assinatura
-        #p('____________________________________________________','pCiAssinatura');
-        p($this->origemNome . '<br/>' . $this->origemDescricao . '<br/>Id Funcional n° ' . $this->origemIdFuncional, 'pCiAssinatura');
+        if (empty($this->origemLotacao)) {
+            p("{$this->origemNome}<br/>{$this->origemDescricao}<br/>Id Funcional n° {$this->origemIdFuncional}", 'pCiAssinatura');
+        } else {
+            p("{$this->origemNome}<br/>{$this->origemDescricao}<br/>{$this->origemLotacao}<br/>Id Funcional n° {$this->origemIdFuncional}", 'pCiAssinatura');
+        }
 
         $grid->fechaColuna();
         $grid->fechaGrid();
 
-        $this->rodape();
+        #$this->rodape();
     }
 
 }

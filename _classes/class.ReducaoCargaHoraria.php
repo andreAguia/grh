@@ -129,9 +129,9 @@ class ReducaoCargaHoraria {
         }
 
         # Pega os dias publicados
-        $select = 'SELECT processoReducao
+        $select = "SELECT processoReducao
                      FROM tbservidor
-                    WHERE idServidor = ' . $idServidor;
+                    WHERE idServidor = {$idServidor}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -156,9 +156,9 @@ class ReducaoCargaHoraria {
         }
 
         # Pega os dias publicados
-        $select = 'SELECT processoAntigoReducao
+        $select = "SELECT processoAntigoReducao
                      FROM tbservidor
-                    WHERE idServidor = ' . $idServidor;
+                    WHERE idServidor = {$idServidor}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);

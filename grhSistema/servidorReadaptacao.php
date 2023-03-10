@@ -1236,33 +1236,9 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-
-            p("Readaptação", "center", "f26");
-
-            $tab = new Tab(["Solicitação e Renovação", "Ex-Ofício"]);
-
-            ###########
-
-            $tab->abreConteudo();
-
+            
             $rotina = new Rotina();
-            $rotina->exibeRotina(1);
-
-            $tab->fechaConteudo();
-
-            ###########
-
-            $tab->abreConteudo();
-
-            $rotina = new Rotina();
-            $rotina->exibeRotina(2);
-
-            $tab->fechaConteudo();
-
-            ###########
-
-            $tab->show();
-            br();
+            $rotina->exibeRotinaCategoria("Readaptação");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

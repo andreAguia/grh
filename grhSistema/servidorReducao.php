@@ -1270,7 +1270,7 @@ if ($acesso) {
             br();
 
             $rotina = new Rotina();
-            $rotina->exibeRotina(3);
+            $rotina->exibeRotinaCategoria("Redução de Carga Horária");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

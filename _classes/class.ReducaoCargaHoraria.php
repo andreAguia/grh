@@ -463,9 +463,6 @@ class ReducaoCargaHoraria {
             $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento por Inquérito", '?fase=despachoCienciaIndeferimentoInquerito');
         }
 
-        # Despacho de conclusão temporária
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
-
         # Despacho para Perícia
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPericia&id=' . $idReducao);
 
@@ -488,7 +485,6 @@ class ReducaoCargaHoraria {
 //        if ($resultado == 1) {
 //            $menu->add_item('linkWindow', "\u{1F5A8} Despacho à Reitoria", '?fase=despachoReitoria');
 //        }
-
         # Despacho para Publicação
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", '?fase=despachoPublicacao');
 
@@ -508,6 +504,9 @@ class ReducaoCargaHoraria {
             # Despacho: Aviso de Término
             $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", '?fase=despachoTermino&id=' . $idReducao);
         }
+
+        # Despacho de conclusão temporária
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
 
         $menu->show();
     }

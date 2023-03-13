@@ -151,7 +151,9 @@ if ($acesso) {
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $idCargo = $lista->get_idCargo($idServidorPesquisado);
 
-    $combo = 'SELECT idClasse, concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe 
+    $combo = 'SELECT idClasse, 
+                     concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe,
+                     concat(tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")) as public
                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
                WHERE nivel = "' . $nivel . '"';
 
@@ -163,14 +165,15 @@ if ($acesso) {
         $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
     }
 
-    $combo .= ' ORDER BY tbplano.planoAtual DESC, tbplano.dtPublicacao DESC, SUBSTRING(faixa, 1, 1), valor';
+    $combo .= ' ORDER BY tbplano.planoAtual DESC, tbplano.dtVigencia DESC, SUBSTRING(faixa, 1, 1), valor';
 
 
     $result2 = $lista->select($combo);
 
     array_unshift($result2, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'dtInicial',
+    $objeto->set_campos(array(
+        array('nome' => 'dtInicial',
             'label' => 'Data Inicial:',
             'tipo' => 'data',
             'size' => 20,
@@ -191,6 +194,7 @@ if ($acesso) {
         array('nome' => 'idClasse',
             'label' => 'Classe:',
             'tipo' => 'combo',
+            'optgroup' => true,
             'array' => $result2,
             'size' => 20,
             'col' => 6,

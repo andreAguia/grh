@@ -42,6 +42,11 @@ switch ($resultado) {
     # Resultado: 2 - Indeferido
     # Status:    3 - Arquivado
     case 2:
+        $campoValor[1] = 3;
+        break;
+        
+    # Resultado: 3 - Interrompido
+    # Status:    3 - Arquivado    
     case 3:
         $campoValor[1] = 3;
         break;

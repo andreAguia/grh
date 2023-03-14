@@ -384,7 +384,7 @@ class ReducaoCargaHoraria {
                 $hoje = date("d/m/Y");
                 $dias = dataDif($hoje, $dttermino);
 
-                if (($dias > 0) AND ($dias < 45)) {
+                if (($dias > 0) AND ($dias <= 45)) {
                     if ($dias == 1) {
                         $retorno .= "<br/><span title='Falta apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Falta apenas $dias dia</span>";
                     } else {

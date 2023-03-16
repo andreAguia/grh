@@ -124,8 +124,12 @@ class ReducaoCargaHoraria {
         $pessoal = new Pessoal();
 
         # Verifica se foi informado
-        if (vazio($idServidor)) {
+        if (empty($idServidor)) {
             $idServidor = $this->idServidor;
+        }
+
+        if (empty($idServidor)) {
+            return null;
         }
 
         # Pega os dias publicados
@@ -153,6 +157,10 @@ class ReducaoCargaHoraria {
         # Verifica se foi informado
         if (vazio($idServidor)) {
             $idServidor = $this->idServidor;
+        }
+
+        if (empty($idServidor)) {
+            return null;
         }
 
         # Pega os dias publicados

@@ -95,7 +95,7 @@ if ($acesso) {
             $botaoDias = new Link("<p id='pBotaoRelatorio'>Relatório de</p>Dias", "?fase=relatorioDias");
             $botaoDias->set_class('button');
             $botaoDias->set_target("_blank");
-            $botaoDias->set_title('Relatório informando somente os dias publicados fruidoe e pendentes');
+            $botaoDias->set_title('Relatório informando somente os dias publicados fruidos e pendentes');
             $menu1->add_link($botaoDias, "right");
 
             # Relatório de Publicações

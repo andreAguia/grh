@@ -90,28 +90,26 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-
-            # Relatório de Publicações
-            $botaoPub = new Link("Publicações", "?fase=relatorioPublicacao");
-            $botaoPub->set_class('button');
-            $botaoPub->set_target("_blank");
-            $botaoPub->set_title('Relatório informando somente as publicações');
-            $menu1->add_link($botaoPub, "right");
             
-            # Relatório de Publicações
-            $botaoDias = new Link("Dias", "?fase=relatorioDias");
+            # Relatório de Dias
+            $botaoDias = new Link("<p id='pBotaoRelatorio'>Relatório de</p>Dias", "?fase=relatorioDias");
             $botaoDias->set_class('button');
             $botaoDias->set_target("_blank");
             $botaoDias->set_title('Relatório informando somente os dias publicados fruidoe e pendentes');
             $menu1->add_link($botaoDias, "right");
 
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
+            # Relatório de Publicações
+            $botaoPub = new Link("<p id='pBotaoRelatorio'>Relatório de</p>Publicações", "?fase=relatorioPublicacao");
+            $botaoPub->set_class('button');
+            $botaoPub->set_target("_blank");
+            $botaoPub->set_title('Relatório informando somente as publicações');
+            $menu1->add_link($botaoPub, "right");
+
+            # Relatórios           
+            $botaoRel = new Link("<p id='pBotaoRelatorio'>Relatório</p>Geral","?fase=relatorio");
+            $botaoRel->set_class('button');
             $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Relatório dessa pesquisa");
             $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
@@ -344,11 +342,11 @@ if ($acesso) {
             $result = $pessoal->select($selectRelatorio);
 
             # Inicia a variável do subtítulo
-            $subtitulo = null;
+            $subtitulo = 'Número de Publicações<br/>';
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
-                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+                $subtitulo .= $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
             }
 
             # Processo
@@ -397,11 +395,11 @@ if ($acesso) {
             $result = $pessoal->select($selectRelatorio);
 
             # Inicia a variável do subtítulo
-            $subtitulo = null;
+            $subtitulo = 'Número de Dias Publicados, Fruídos e Disponíveis<br/>';
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
-                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+                $subtitulo .= $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
             }
 
             # Processo

@@ -274,7 +274,7 @@ class Organograma {
 
                 # Abre a div do organograma
                 echo "<div id='organograma4'></div>";
-                breeak;
+                break;
             ################################################################
             default:
 

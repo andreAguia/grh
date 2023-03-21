@@ -53,8 +53,8 @@ if ($acesso) {
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
-    
-    function exibeProblemaProgressao($idProgressaoFuncao){
+
+    function exibeProblemaProgressao($idProgressaoFuncao) {
         $progressaoClasse = new Progressao();
         $progressaoClasse->verificaProblemaPlano($idProgressaoFuncao, false);
     }
@@ -63,7 +63,7 @@ if ($acesso) {
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
-    
+
     $objeto->set_rotinaExtraEditar("exibeProblemaProgressao");
     $objeto->set_rotinaExtraEditarParametro($id);
 
@@ -128,7 +128,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Data Inicial", "Tipo", "Valor", "DOERJ", "Obs", "Problemas?"]);
-    #$objeto->set_width([10, 20, 20, 10, 30]);
+    $objeto->set_width([10, 15, 20, 10, 25, 10]);
     $objeto->set_align(["center", "left", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php", null, null, "date_to_php"]);
     $objeto->set_classe([null, null, "PlanoCargos", null, null, "Progressao"]);

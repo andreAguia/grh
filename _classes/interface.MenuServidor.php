@@ -523,6 +523,10 @@ class MenuServidor {
         br();
 
         $menu = new Menu("menuServidor");
+        $menu->add_item('titulo', 'Admissão', '#');
+        $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/carta.Apresentacao.php');
+        $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '../grhRelatorios/admissao.OficioAberturaConta.php');
+
         $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
         $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
         $menu->add_item('linkWindow', 'Documento Termo de Responsabilidade', '../grhRelatorios/declaracao.Eleitoral.Termo.Responsabilidade.php');

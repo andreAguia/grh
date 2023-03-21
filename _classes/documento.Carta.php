@@ -13,16 +13,25 @@ class Carta {
     private $data = null;
     private $nomeCarta = null;
     private $texto = null;
+
+    # Da assinatura
     private $origemNome = null;
     private $origemSetor = null;
     private $origemDescricao = null;
     private $origemIdFuncional = null;
+    private $saltoAssinatura = 3;
+    private $assinatura = false;
+
+    # do destinatário
     private $destinoNome = null;
     private $destinoSetor = null;
+    private $destinoNomeCC = null;
+    private $destinoSetorCC = null;
+
+    # Rodapé
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
     private $rodapeTelefone = "(22) 2739-7064";
-    private $saltoAssinatura = 3;
 
     ###########################################################
 
@@ -125,7 +134,6 @@ class Carta {
         $relatorio = new Relatorio();
         $relatorio->exibeCabecalho();
 
-
         # Limita o tamanho da tela
         $grid = new Grid("center");
         $grid->abreColuna(11);
@@ -156,9 +164,11 @@ class Carta {
         br();
 
         # Origem
-        p('Ilmo(a) Sr(a)', 'pCiDePara1');
-        p($this->destinoNome, 'pCiDePara1');
-        p($this->destinoSetor, 'pCiDePara1');
+        p("Ilmo(a) Sr(a)<br/>{$this->destinoNome}<br/>{$this->destinoSetor}", 'pCiDePara1');
+
+        if (!empty($this->destinoNomeCC)) {
+            p("c/c Ilmo(a) Sr(a)<br/>{$this->destinoNomeCC}<br/>{$this->destinoSetorCC}", 'pCiDePara1');
+        }
         br();
 
         # Prezado
@@ -170,13 +180,29 @@ class Carta {
         }
         br();
 
-        # Atenciosamente
-        p('Atenciosamente,', 'pCiNum');
-        br(4);
-
         # Assinatura
-        #p('____________________________________________________','pCiAssinatura');
-        p($this->origemNome . '<br/>' . $this->origemDescricao . '<br/>Id Funcional n° ' . $this->origemIdFuncional, 'pCiAssinatura');
+        if ($this->assinatura) {
+            $grid = new Grid("center");
+            $grid->abreColuna(4);
+
+            $figura = new Imagem(PASTA_FIGURAS . 'assinatura.png', null, 150, 150);
+            $figura->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }
+
+        $textoAssinatura = "{$this->origemNome}<br/>";
+
+        if (!empty($this->origemDescricao)) {
+            $textoAssinatura .= "{$this->origemDescricao}<br/>";
+        }
+
+        if (!empty($this->origemIdFuncional)) {
+            $textoAssinatura .= "Id Funcional n° {$this->origemIdFuncional}<br/>";
+        }
+
+        p($textoAssinatura, 'pCiAssinatura');
 
         $grid->fechaColuna();
         $grid->fechaGrid();

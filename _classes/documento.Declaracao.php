@@ -222,5 +222,4 @@ class Declaracao {
 
         $this->rodape();
     }
-
 }

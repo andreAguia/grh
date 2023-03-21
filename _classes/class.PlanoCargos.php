@@ -545,6 +545,21 @@ class PlanoCargos {
 
     ###########################################################
 
+    public function exibeBotaoTabela2($idPlano) {
+        /**
+         * Exibe um link para a lei quando o campo link tiver sido preenchido
+         * 
+         * @param $idPlano integer null O id do plano
+         * 
+         * @syntax $plano->exibeLei($idPlano);
+         */
+        $link = new Link(null, "?fase=exibeTabela&id=" . $idPlano, "Exibe a tabela SalariaL");
+        $link->set_imagem(PASTA_FIGURAS_GERAIS . "tabela.png", 20, 20);
+        $link->show();
+    }
+
+    ###########################################################
+
     public function get_ultimoIdClasse($idCargo) {
         /**
          * Exibe o último idClasse do plano vigente para o idCargo informado
@@ -715,38 +730,26 @@ class PlanoCargos {
 
     ###########################################################
 
-    public function get_idPlano($idServidor) {
+    public function get_dtVigencia($idPlano = null) {
         /**
-         * Retorna o idPlano do salário atual do servidor
+         * Retorna a data de vigência do plano 
          * 
-         * @param $idServidor  numero  null O id do servidor
+         * @param $idPlano integer null o $idPlano
          * 
-         * @syntax $plano->get_idPlano($idclasse);
+         * @syntax $plano->get_dtVigencia([$idPlano]);  
          */
-        ############################################## Parei aqui
+        # Pega os planos cadastrados
+        $select = 'SELECT dtVigencia
+                     FROM tbplano
+                    WHERE idPlano = ' . $idPlano;
 
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
 
-        if (is_null($idServidor)) {
+        if (empty($row[0])) {
             return null;
         } else {
-
-            # Pega o idClasse
-            $pessoal = new Pessoal();
-            $select1 = "SELECT idClasse
-                          FROM tbprogressao
-                         WHERE idServidor = {$idServidor}
-              ORDER BY dtInicial desc";
-
-            $row1 = $pessoal->select($select1, false);
-
-            # Pega os projetos cadastrados
-            $select2 = "SELECT idPlano
-                          FROM tbclasse LEFT JOIN tbplano USING (idPlano)
-                         WHERE idClasse = $row1[0]";
-
-            $row2 = $pessoal->select($select2, false);
-
-            return $row2[0];
+            return date_to_php($row[0]);
         }
     }
 

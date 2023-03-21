@@ -855,6 +855,15 @@ class MenuPrincipal {
             $botao->set_title('Cadastro de atos de investidura');
             $menu->add_item($botao);
         }
+        
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Problemas na Progressão');
+            $botao->set_url('areaProblemasProgressao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'bug-tracker.svg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
+            $menu->add_item($botao);
+        }
 
 
         $menu->show();

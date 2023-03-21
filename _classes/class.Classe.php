@@ -68,5 +68,37 @@ class Classe {
         }
     }
 
+##############################################################
+
+    public function get_idPlano($idClasse = null) {
+
+        /**
+         * Informa o idPlano de uma idClasse
+         * 
+         * @param $idClasse integer null O idClasse 
+         * 
+         * @syntax $classe->get_idPlano([$idClasse]);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se o id foi informado
+        if (empty($idClasse)) {
+            return null;
+        } else {
+            # Pega os dados
+            $select = "SELECT idPlano 
+                         FROM tbclasse
+                        WHERE idClasse = {$idClasse}";
+
+            
+            $row = $pessoal->select($select, false);
+
+            # Retorno
+            return $row[0];
+        }
+    }
+
 ###########################################################
+
 }

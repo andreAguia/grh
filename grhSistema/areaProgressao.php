@@ -85,8 +85,14 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # tabela
-            $botao = new Button("Tabela", "tabelaSalarial.php");
-            $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
+//            $botao = new Button("Tabela", "tabelaSalarial.php");
+//            $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
+//            $botao->set_target("_blank");
+//            $menu1->add_link($botao, "right");
+            
+            # Planos
+            $botao = new Button("Planos", "exibeTabela.php");
+            $botao->set_title("Exibe os planos de cargo e as tabalas\ salariais");
             $botao->set_target("_blank");
             $menu1->add_link($botao, "right");
 

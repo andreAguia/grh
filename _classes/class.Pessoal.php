@@ -6091,4 +6091,27 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método exFenorte
+     * Retorna true caso o servidor é ex-Fenorte
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function exFenorte($idServidor) {
+        $select = "SELECT tbservidor.idServidor
+                     FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                    WHERE tbhistlot.data = (select min(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND (tblotacao.UADM = 'FENORTE' OR tblotacao.UADM = 'TECNORTE')
+                      AND tbservidor.idServidor = {$idServidor}";
+
+        if ($this->count($select) > 0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    ###########################################################
 }

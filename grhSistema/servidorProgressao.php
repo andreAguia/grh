@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -19,7 +20,10 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
 
+    # Conecta ao Banco de Dados
     $intra = new Intra();
+    $pessoal = new Pessoal();
+    $plano = new PlanoCargos();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -49,11 +53,19 @@ if ($acesso) {
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
+    
+    function exibeProblemaProgressao($idProgressaoFuncao){
+        $progressaoClasse = new Progressao();
+        $progressaoClasse->verificaProblemaPlano($idProgressaoFuncao, false);
+    }
 
     ################################################################
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    
+    $objeto->set_rotinaExtraEditar("exibeProblemaProgressao");
+    $objeto->set_rotinaExtraEditarParametro($id);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Progressões do Servidor');
@@ -80,6 +92,7 @@ if ($acesso) {
                                      idClasse,
                                      dtPublicacao,
                                      tbprogressao.obs,
+                                     tbprogressao.idProgressao,
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -96,7 +109,7 @@ if ($acesso) {
                                      idServidor
                                 FROM tbprogressao
                                WHERE idProgressao = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -114,12 +127,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data Inicial", "Tipo", "Valor", "DOERJ", "Obs"]);
-    $objeto->set_width([10, 20, 20, 10, 30]);
+    $objeto->set_label(["Data Inicial", "Tipo", "Valor", "DOERJ", "Obs", "Problemas?"]);
+    #$objeto->set_width([10, 20, 20, 10, 30]);
     $objeto->set_align(["center", "left", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php", null, null, "date_to_php"]);
-    $objeto->set_classe([null, null, "PlanoCargos"]);
-    $objeto->set_metodo([null, null, "evibeValor"]);
+    $objeto->set_classe([null, null, "PlanoCargos", null, null, "Progressao"]);
+    $objeto->set_metodo([null, null, "evibeValor", null, null, "verificaProblemaPlano"]);
 
     # Formatação condicional
     $objeto->set_formatacaoCondicional(array(array('coluna' => 1,
@@ -145,15 +158,15 @@ if ($acesso) {
                                       nome
                                  FROM tbtipoprogressao
                              ORDER BY nome');
-    array_push($result1, array(null, null)); 
-    
+    array_push($result1, array(null, null));
+
     # Pega os dados da combo classe
     $nivel = $lista->get_nivelCargo($idServidorPesquisado);
     $idCargo = $lista->get_idCargo($idServidorPesquisado);
 
     $combo = 'SELECT idClasse, 
-                     concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," )") as classe,
-                     concat(tbplano.numdecreto," - ",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")) as public
+                     concat("R$ ",Valor," - ",faixa," ( ",tbplano.numdecreto," - Pub.:",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," - Vigência.:",DATE_FORMAT(tbplano.dtVigencia,"%d/%m/%Y")," )") as classe,
+                     concat(tbplano.numdecreto," - Pub.:",DATE_FORMAT(tbplano.dtPublicacao,"%d/%m/%Y")," - Vigência.:",DATE_FORMAT(tbplano.dtVigencia,"%d/%m/%Y")) as public
                 FROM tbclasse JOIN tbplano ON (tbplano.idPlano = tbclasse.idPlano)
                WHERE nivel = "' . $nivel . '"';
 
@@ -165,8 +178,7 @@ if ($acesso) {
         $combo .= ' AND (SUBSTRING(faixa, 1, 1) = "F" OR faixa = "Titular" OR SUBSTRING(faixa, 1, 1) = "X")';
     }
 
-    $combo .= ' ORDER BY tbplano.planoAtual DESC, tbplano.dtVigencia DESC, SUBSTRING(faixa, 1, 1), valor';
-
+    $combo .= ' ORDER BY tbplano.planoAtual DESC, tbplano.dtVigencia DESC, numDecreto, SUBSTRING(faixa, 1, 1), valor';
 
     $result2 = $lista->select($combo);
 
@@ -197,32 +209,32 @@ if ($acesso) {
             'optgroup' => true,
             'array' => $result2,
             'size' => 20,
-            'col' => 6,
+            'col' => 12,
             'required' => true,
             'title' => 'Valor',
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'documento',
             'label' => 'Documento:',
             'tipo' => 'texto',
             'size' => 30,
             'col' => 4,
             'title' => 'Documento comunicando a nova progressão.',
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'numProcesso',
             'label' => 'Processo:',
             'tipo' => 'texto',
             'size' => 30,
             'col' => 3,
             'title' => 'Número do Processo',
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'dtPublicacao',
             'label' => 'Data da Pub. no DOERJ:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
-            'linha' => 2),
-        array('linha' => 3,
+            'linha' => 3),
+        array('linha' => 4,
             'nome' => 'obs',
             'col' => 12,
             'label' => 'Observação:',
@@ -234,13 +246,17 @@ if ($acesso) {
             'padrao' => $idServidorPesquisado,
             'size' => 5,
             'title' => 'Matrícula',
-            'linha' => 8)));
+            'linha' => 5)));
 
-
-    # tabela
+    # tabela /// retirado para colocar o botão de planos
     $botao = new Button("Tabela", "tabelaSalarial.php");
     $botao->set_title("Exibe a tabela salarial do plano de cargos requisitado");
     $botao->set_target("_blank");
+
+    # Planos
+    $botaoPlanos = new Button("Planos", "exibeTabela.php");
+    $botaoPlanos->set_title("Exibe os planos de cargo cadastrados no sistema");
+    $botaoPlanos->set_target("_blank");
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -250,7 +266,8 @@ if ($acesso) {
     $botaoRel->set_url("../grhRelatorios/servidorProgressao.php");
     $botaoRel->set_target("_blank");
 
-    $objeto->set_botaoListarExtra(array($botao, $botaoRel));
+    $objeto->set_botaoListarExtra([$botaoPlanos, $botaoRel]);
+    $objeto->set_botaoEditarExtra([$botaoPlanos]);
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -261,7 +278,14 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+
+            $objeto->$fase($id);
+            break;
+
         case "editar" :
+            $objeto->$fase($id);
+            break;
+
         case "excluir" :
             $objeto->$fase($id);
             break;
@@ -269,6 +293,8 @@ if ($acesso) {
         case "gravar" :
             $objeto->gravar($id, "servidorProgressaoExtra.php");
             break;
+
+        ################################################################
     }
     $page->terminaPagina();
 } else {

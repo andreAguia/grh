@@ -164,10 +164,15 @@ class Carta {
         br();
 
         # Origem
-        p("Ilmo(a) Sr(a)<br/>{$this->destinoNome}<br/>{$this->destinoSetor}", 'pCiDePara1');
+        p("Ilmo(a) Sr(a)", 'pCiDePara1');
+        p($this->destinoNome, 'pCiDePara1');
+        p($this->destinoSetor, 'pCiDePara1');
 
         if (!empty($this->destinoNomeCC)) {
-            p("c/c Ilmo(a) Sr(a)<br/>{$this->destinoNomeCC}<br/>{$this->destinoSetorCC}", 'pCiDePara1');
+            br();
+            p("c/c Ilmo(a) Sr(a)", 'pCiDePara1');
+            p($this->destinoNomeCC, 'pCiDePara1');
+            p($this->destinoSetorCC, 'pCiDePara1');
         }
         br();
 

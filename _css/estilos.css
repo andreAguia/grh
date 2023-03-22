@@ -1474,8 +1474,9 @@ p#pDestino{
 p#pCiDePara1{
     text-align: left;
     font-size: 14px;
-    line-height: 1.0;
+    line-height: 0;
     font-family: Arial, Helvetica, sans-serif;
+    padding: 3px;
 }
 
 p#pCiDePara2{

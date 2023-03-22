@@ -53,7 +53,7 @@ if ($acesso) {
     $carta->set_destinoSetorCC($cargoDiretor);
     $carta->set_assinatura(true);
 
-    $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, cargo {$cargoServidor}, para exercer suas atividades na {$lotacao}
+    $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao}
         , a contar de {$dtAdmissao}, data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
 
     $carta->set_texto($texto);

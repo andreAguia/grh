@@ -33,7 +33,7 @@ if ($acesso) {
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cpf = $pessoal->get_cpf($pessoal->get_idPessoa($idServidorPesquisado));
-    $identidade = $pessoal->get_identidade($pessoal->get_idPessoa($idServidorPesquisado));    
+    $identidade = $pessoal->get_identidadeSimples($pessoal->get_idPessoa($idServidorPesquisado));    
 
     # Assunto
     $assunto = "Abertura de Conta para Crédito de Pagamento.";
@@ -53,21 +53,17 @@ if ($acesso) {
     $oficio->set_obsTitulo("<b>ATENÇÃO AGÊNCIA – REALIZAR O CADASTRAMENTO NAS ROTINAS:</b>");
     $oficio->set_obsFinal("- Contas Bradesco – CSAL Opção – 03 – Subopção 1 – Agência e Conta Salário Bradesco, Agência e Conta-Corrente Bradesco.");
     $oficio->set_obsFinal("- No Aplicativo GFCT – Cesta Serviços – Adesão Individual –Inclusão – Agência e Conta-Corrente – Usar Código: 1115 Cesta Completa ou 1229 Cesta Básica.");
-    $oficio->set_obsFinal("- Acessar o correio e enviar O “MPI – BENEFÍCIO SERVIDOR RJ"
-            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-            . "&nbsp;&nbsp;&nbsp;&nbsp;Via da Agência");
-    $oficio->set_obsFinal("<hr/>");
+    $oficio->set_obsFinal("- Acessar o correio e enviar O “MPI – BENEFÍCIO SERVIDOR RJ");
+    #$oficio->set_obsFinal("<hr id='geral'>");
+    $oficio->set_obsFinal("<hr>");
     $oficio->set_obsFinal("Prezado(a) Servidor(a) do Governo do Estado do Rio de Janeiro,");
-    $oficio->set_obsFinal("<br/>");
     $oficio->set_obsFinal("Este protocolo de abertura de conta salário deverá ser entregue na área de Recursos Humanos da Secretaria/Orgão ao qual está vinculado, a fim de proceder o cadastro para recebimento de créditos provenientes de folha de pagamento.");
     $oficio->set_obsFinal("<br/>");
-    $oficio->set_obsFinal("Agência: ________________________ Conta Salário: _____________________________________");
-    $oficio->set_obsFinal("<br/>");
-    $oficio->set_obsFinal("______________________________________");
-    $oficio->set_obsFinal("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Banco Bradesco - Carimbo e Assinatura&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-            . "Via do Servidor");
+    $oficio->set_obsFinal("&nbsp;________________&nbsp;&nbsp;&nbsp;_____________________ &nbsp;&nbsp;&nbsp;&nbsp;_______________________________________");
+    $oficio->set_obsFinal("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agência"
+            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conta Salário"
+            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+            . "Banco Bradesco - Carimbo e Assinatura");
     
     
     $oficio->temRodape(false);

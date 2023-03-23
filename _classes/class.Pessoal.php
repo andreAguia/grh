@@ -4203,6 +4203,39 @@ class Pessoal extends Bd {
 
     ###########################################################
 
+    /**
+     * Método get_identidade
+     * fornece o número, orgão e data de emissão da
+     * carteira de identidade de um id_pessoa
+     * 
+     * @param	string $idPessoa do servidor
+     */
+    public function get_identidadeSimples($idPessoa) {
+        $select = "SELECT identidade
+                     FROM tbdocumentacao
+                    WHERE idPessoa = {$idPessoa}";
+
+        $valor = parent::select($select, false);
+
+        if (empty($valor["identidade"])) {
+            return null;
+        } else {
+            $return = $valor["identidade"];
+
+            if (!empty($valor["orgaoId"])) {
+                $return .= " - " . $valor["orgaoId"];
+            }
+
+            if (!empty($valor["dtId"])) {
+                $return .= " - " . date_to_php($valor["dtId"]);
+            }
+        }
+
+        return $return;
+    }
+
+    ###########################################################
+
     public function get_feriado($data = null) {
         /**
          * 

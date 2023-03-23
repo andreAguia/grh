@@ -75,7 +75,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a Ci de renovação de redução da carga horária: ';
+    $atividades = 'Visualizou o ofício de abertura de conta: ';
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", $id, $tipoLog, $idServidorPesquisado);
 

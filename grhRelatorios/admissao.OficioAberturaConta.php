@@ -24,6 +24,10 @@ if ($acesso) {
 
     # Pega o id
     $id = get('id');
+    
+    # Pega o número do ofício
+    $numero = post("numero");
+    $ano = post("ano");
 
     # Começa uma nova página
     $page = new Page();
@@ -39,7 +43,7 @@ if ($acesso) {
     $assunto = "Abertura de Conta para Crédito de Pagamento.";
 
     # Monta o Ofício
-    $oficio = new Oficio(12, null, $assunto);
+    $oficio = new Oficio("{$numero} / {$ano}", null, $assunto);
     
     $oficio->set_destinoNome("Ao Banco Bradesco");
     $oficio->set_destinoSetor("At. Gerente");
@@ -57,7 +61,7 @@ if ($acesso) {
     #$oficio->set_obsFinal("<hr id='geral'>");
     $oficio->set_obsFinal("<hr>");
     $oficio->set_obsFinal("Prezado(a) Servidor(a) do Governo do Estado do Rio de Janeiro,");
-    $oficio->set_obsFinal("Este protocolo de abertura de conta salário deverá ser entregue na área de Recursos Humanos da Secretaria/Orgão ao qual está vinculado, a fim de proceder o cadastro para recebimento de créditos provenientes de folha de pagamento.");
+    $oficio->set_obsFinal("Este protocolo de abertura de conta salário deverá ser entregue na área de Recursos Humanos da UENF, a fim de proceder o cadastro para recebimento de créditos provenientes de folha de pagamento.");
     $oficio->set_obsFinal("<br/>");
     $oficio->set_obsFinal("&nbsp;________________&nbsp;&nbsp;&nbsp;_____________________ &nbsp;&nbsp;&nbsp;&nbsp;_______________________________________");
     $oficio->set_obsFinal("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agência"

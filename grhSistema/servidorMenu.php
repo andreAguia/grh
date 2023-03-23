@@ -49,9 +49,7 @@ if ($acesso) {
     }
     $page->iniciaPagina();
 
-    if (($fase <> "despacho") AND
-            ($fase <> "despachoChefia")) {
-
+    if (($fase <> "despacho") AND ($fase <> "despachoChefia")) {
         # Cabeçalho da Página
         AreaServidor::cabecalho();
     }
@@ -116,12 +114,12 @@ if ($acesso) {
 
         $menu->show();
     } else {
-        if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao") {
+        if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao" AND $fase <> "oficioAberturaConta") {
             botaoVoltar("?");
         }
     }
 
-    if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao") {
+    if ($fase <> "despacho" AND $fase <> "despachoChefia" AND $fase <> "acumulacao" AND $fase <> "oficioAberturaConta") {
 
         # Exibe os dados do Servidor
         Grh::listaDadosServidor($idServidorPesquisado);
@@ -403,7 +401,55 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-##################################################################
+###################################################################
+        # Ofício de Abertura de conta
+        case "oficioAberturaConta" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            tituloTable("Ofício de Abertura de Conta");
+            br();
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/admissao.OficioAberturaConta.php");
+
+            # Número do Ofício
+            $controle = new Input('numero', 'texto', 'Número do Oficio:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_required(true);
+            $controle->set_autofocus(true);
+            $controle->set_title('O número do ofício.');
+            $form->add_item($controle);
+
+            # Ano
+            $controle = new Input('ano', 'texto', 'Ano:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor(date("Y"));
+            $controle->set_required(true);
+            $controle->set_title('O ano.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
     }
 
     $grid->fechaColuna();

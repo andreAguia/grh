@@ -1545,6 +1545,11 @@ p#pOficio{
     text-indent: 3em;
 }
 
+div#carimboAberturaConta{
+    position: relative;
+    top: 50px; 
+}
+
 /*******************************************
 * Folha de Presença
 *******************************************/

@@ -33,6 +33,9 @@ class Oficio {
     private $obsTitulo = null;
     private $obsFinal = null;
 
+    # Outros
+    private $carimboAberturaConta = false;
+
     # do Rodapé
     private $temRodape;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
@@ -174,9 +177,33 @@ class Oficio {
         $menuRelatorio->set_botaoVoltar(null);
         $menuRelatorio->show();
 
+        # Limita o tamanho da tela
+        $grid = new Grid("center");
+        $grid->abreColuna(3);
+
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+
         # Cabeçalho do Relatório (com o logotipo)
         $relatorio = new Relatorio();
         $relatorio->exibeCabecalho();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(3);
+
+        # Carimbo utilizado no ofício de abertura de conta
+        if ($this->carimboAberturaConta) {
+            $div = new Div("carimboAberturaConta");
+            $div->abre();
+
+            $figura = new Imagem(PASTA_FIGURAS . 'carimboOficioAberturaConta.png', null, 150, 150);
+            $figura->show();
+
+            $div->fecha();
+        }
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
 
         hr();
 

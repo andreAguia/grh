@@ -45,6 +45,7 @@ if ($acesso) {
     $oficio->set_destinoSetor("At. Gerente");
     $oficio->set_assinatura(true);
     $oficio->set_carimboCnpj(true);
+    $oficio->set_carimboAberturaConta(true);
    
     $oficio->set_texto("Apresentamos o(a) Sr(a) <b>{$nomeServidor}</b>, portador(a) do RG: {$identidade} e CPF: {$cpf} para abertura de Conta para Crédito de pagamento.");
     $oficio->set_texto("Os Servidores do GOVERNO DO ESTADO DO RIO DE JANEIRO já possuem aprovado um Pacote de Benefícios exclusivo, com direito a tarifas e taxas diferenciadas."); 

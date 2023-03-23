@@ -524,7 +524,7 @@ class MenuServidor {
 
         $menu = new Menu("menuServidor");
         $menu->add_item('titulo', 'Admissão', '#');
-        $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/carta.Apresentacao.php');
+        $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
         $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '../grhRelatorios/admissao.OficioAberturaConta.php');
 
         $menu->add_item('titulo', 'Afastamento Eleitoral', '#');

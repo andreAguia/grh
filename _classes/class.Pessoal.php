@@ -4176,13 +4176,29 @@ class Pessoal extends Bd {
      * @param	string $idPessoa do servidor
      */
     public function get_identidade($idPessoa) {
-        $select = 'SELECT CONCAT(identidade," - ",orgaoId," - ",DATE_FORMAT(dtId,"%d/%m/%Y"))
+        $select = 'SELECT identidade,
+                          orgaoId,
+                          dtId
                          FROM tbdocumentacao
                         WHERE idPessoa = ' . $idPessoa;
 
         $valor = parent::select($select, false);
 
-        return $valor[0];
+        if (empty($valor["identidade"])) {
+            return null;
+        } else {
+            $return = $valor["identidade"];
+
+            if (!empty($valor["orgaoId"])) {
+                $return .= " - " . $valor["orgaoId"];
+            }
+
+            if (!empty($valor["dtId"])) {
+                $return .= " - " . date_to_php($valor["dtId"]);
+            }
+        }
+
+        return $return;
     }
 
     ###########################################################
@@ -6106,9 +6122,9 @@ class Pessoal extends Bd {
                       AND (tblotacao.UADM = 'FENORTE' OR tblotacao.UADM = 'TECNORTE')
                       AND tbservidor.idServidor = {$idServidor}";
 
-        if ($this->count($select) > 0){
+        if ($this->count($select) > 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

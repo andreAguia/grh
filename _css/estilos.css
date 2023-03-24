@@ -1108,20 +1108,12 @@ tr#licencaEmAberto{
  * Organograma
  *******************************************/
 
-div#organograma1 td{
+div#organograma1 td, div#organograma2 td, div#organograma3 td, div#organograma4 td{
     background-color: #ffffff;
 }
 
-div#organograma2 td{
-    background-color: #ffffff;
-}
-
-div#organograma3 td{
-    background-color: #ffffff;
-}
-
-div#organograma4 td{
-    background-color: #ffffff;
+div#organograma1 tr, div#organograma2 tr, div#organograma3 tr, div#organograma4 tr{
+    border: 0px solid;
 }
 
 div#siglaOrga {
@@ -1547,7 +1539,7 @@ p#pOficio{
 
 div#carimboAberturaConta{
     position: relative;
-    top: 50px; 
+    top: 50px;
 }
 
 /*******************************************

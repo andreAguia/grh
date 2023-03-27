@@ -290,7 +290,6 @@ class ListaServidores {
             $this->subTitulo .= "Cargo em comissão: " . $servidor->get_nomeCargoComissao($this->cargoComissao) . "<br/>";
         }
 
-
         # Comissao Primeiro
         if ($this->comissaoPrimeiro) {
             $select .= ' AND tbcomissao.dtExo is null AND tbcomissao.tipo != 3';

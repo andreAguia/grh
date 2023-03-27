@@ -128,6 +128,8 @@ class VerificaAfastamentos {
             $this->dtFinal = date("Y-m-d");
         }
 
+        #################
+
         /*
          *  Férias
          */
@@ -143,7 +145,7 @@ class VerificaAfastamentos {
                        OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbferias" AND!empty($this->id)) {
+        if ($this->tabela == "tbferias" AND !empty($this->id)) {
             $select .= " AND idFerias <> {$this->id}";
         }
 
@@ -157,6 +159,8 @@ class VerificaAfastamentos {
             $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             return true;
         }
+
+        #################
 
         /*
          *  Licenças e Afastamentos gerais
@@ -174,7 +178,7 @@ class VerificaAfastamentos {
                    OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL))";
 
         // se tiver isenção
-        if ($this->tabela == "tblicenca" AND!empty($this->id)) {
+        if ($this->tabela == "tblicenca" AND !empty($this->id)) {
             $select .= " AND idLicenca <> {$this->id}";
         }
 
@@ -199,11 +203,14 @@ class VerificaAfastamentos {
             return true;
         }
 
+        #################
+
         /*
          * Licença Médica Sem Alta
          */
 
         # Verifica se o servidor está em licença médica vencida sem alta
+        # Pega a ultima licença médica (tipo 1, 2 ou 30) do servidor
         $select = "SELECT idLicenca, 
                           alta, 
                           dtInicial,
@@ -215,20 +222,40 @@ class VerificaAfastamentos {
                   ORDER BY dtInicial DESC LIMIT 1";
         $row2 = $pessoal->select($select, false);
 
-        # Verifica se tem algum registro e não é de alta
-        if (!empty($row2[0]) AND $row2[1] <> 1) {
-            # Verifica se tem isenção - A isenção neste caso é particulkarmente diferente
-            if ($this->tabela == "tblicenca" AND $this->id == $row2[0]) {
-                return false;
-            } else {
-                # Verifica se a licença editada é posterior a data em aberto
-                if (dataMaior(date_to_php($row2[2]), date_to_php($this->dtInicial)) == date_to_php($this->dtInicial)) {
+        # Verifica se retornou alguma licença
+        if (!empty($row2)) {
 
-                    # Agora Verifica se é a que está sendo incluída não é continuação desta ultima
-                    if (!empty($this->tipoLicenca) AND ($this->tipoLicenca == 1 OR $this->tipoLicenca == 30)) {
-                        return false;
-                    } else {
-                        # Se não for é uma outra licença sendo incluída sem que a licença anterior tenha alta
+            # Verifica se está em aberto
+            if ($row2["alta"] <> 1) {
+
+                # Verifica se tem isenção - A isenção neste caso é particularmente diferente
+                if ($this->tabela == "tblicenca" AND $this->id == $row2["idLicenca"]) {
+                    return false;
+                } else {
+                    # Verifica se a licença editada é posterior a data em aberto
+                    # Ou seja, se a data informada é posterior à data inicial da licença
+                    if (dataMaior(date_to_php($row2["dtInicial"]), date_to_php($this->dtInicial)) == date_to_php($this->dtInicial)) {
+
+                        # Agora Verifica se é a que está sendo incluída não é continuação desta ultima
+                        if (!empty($this->tipoLicenca) AND ($this->tipoLicenca == 1 OR $this->tipoLicenca == 30)) {
+                            return false;
+                        } else {
+                            # Se não for é uma outra licença sendo incluída sem que a licença anterior tenha alta
+                            $this->afastamento = "Licença Em Aberto";
+                            $this->detalhe = "Licença Médica Sem Alta";
+
+                            if (empty($row2['numDias'])) {
+                                $this->periodo = date_to_php($row2['dtInicial']) . " a ???";
+                            } else {
+                                $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
+                            }
+                            return true;
+                        }
+                    }
+
+                    # Verifica se a data em aberto está entre as datas da licença editada
+                    # Ou seja se a data informada está dentro do período da licença
+                    if (entre(date_to_php($row2[2]), date_to_php($this->dtInicial), date_to_php($this->dtFinal))) {
                         $this->afastamento = "Licença Em Aberto";
                         $this->detalhe = "Licença Médica Sem Alta";
 
@@ -238,25 +265,14 @@ class VerificaAfastamentos {
                             $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
                         }
                         return true;
-                    }
-                }
-
-                # Verifica se a data em aberto está entre as datas da licença editada
-                if (entre(date_to_php($row2[2]), date_to_php($this->dtInicial), date_to_php($this->dtFinal))) {
-                    $this->afastamento = "Licença Em Aberto";
-                    $this->detalhe = "Licença Médica Sem Alta";
-
-                    if (empty($row2['numDias'])) {
-                        $this->periodo = date_to_php($row2['dtInicial']) . " a ???";
                     } else {
-                        $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
+                        return false;
                     }
-                    return true;
-                } else {
-                    return false;
                 }
             }
         }
+
+        #################
 
         /*
          *  Licenças prêmio
@@ -270,9 +286,9 @@ class VerificaAfastamentos {
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
                      OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))";
-                      
+
         // se tiver isenção
-        if ($this->tabela == "tblicencapremio" AND!empty($this->id)) {
+        if ($this->tabela == "tblicencapremio" AND !empty($this->id)) {
             $select .= " AND idLicencaPremio <> {$this->id}";
         }
 
@@ -291,6 +307,8 @@ class VerificaAfastamentos {
             }
             return true;
         }
+
+        #################
 
         /*
          *  Licenças sem vencimentos
@@ -319,7 +337,7 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Licença";
             $this->detalhe = $afast['nome'];
-            
+
             if (empty($afast['numDias'])) {
                 $this->periodo = date_to_php($afast['dtInicial']) . " a ???";
             } else {
@@ -327,6 +345,8 @@ class VerificaAfastamentos {
             }
             return true;
         }
+
+        #################
 
         /*
          *  Faltas Abonadas por atestado
@@ -342,7 +362,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= dtInicio AND '{$this->dtFinal}' >= ADDDATE(dtInicio,numDias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbatestado" AND!empty($this->id)) {
+        if ($this->tabela == "tbatestado" AND !empty($this->id)) {
             $select .= " AND idAtestado <> {$this->id}";
         }
 
@@ -353,7 +373,7 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Falta Abonada";
             $this->detalhe = "Atestado Médico";
-            
+
             if (empty($afast['numDias'])) {
                 $this->periodo = date_to_php($afast['dtInicio']) . " a ???";
             } else {
@@ -361,6 +381,8 @@ class VerificaAfastamentos {
             }
             return true;
         }
+
+        #################
 
         /*
          *  Trabalho TRE
@@ -376,7 +398,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbtrabalhotre" AND!empty($this->id)) {
+        if ($this->tabela == "tbtrabalhotre" AND !empty($this->id)) {
             $select .= " AND idTrabalhoTre <> {$this->id}";
         }
 
@@ -387,7 +409,7 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "TRE";
             $this->detalhe = "Trabalhando no TRE";
-            
+
             if (empty($afast['dias'])) {
                 $this->periodo = date_to_php($afast['data']) . " a ???";
             } else {
@@ -395,6 +417,8 @@ class VerificaAfastamentos {
             }
             return true;
         }
+
+        #################
 
         /*
          *  Folgas TRE
@@ -410,7 +434,7 @@ class VerificaAfastamentos {
                      OR ('{$this->dtInicial}' <= data AND '{$this->dtFinal}' >= ADDDATE(data,dias-1)))";
 
         // se tiver isenção
-        if ($this->tabela == "tbfolga" AND!empty($this->id)) {
+        if ($this->tabela == "tbfolga" AND !empty($this->id)) {
             $select .= " AND idFolga <> {$this->id}";
         }
 
@@ -421,7 +445,7 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             $this->afastamento = "Folga";
             $this->detalhe = "Em folga do TRE";
-            
+
             if (empty($afast['dias'])) {
                 $this->periodo = date_to_php($afast['data']) . " a ???";
             } else {

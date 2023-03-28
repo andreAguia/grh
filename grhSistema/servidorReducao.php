@@ -140,7 +140,7 @@ if ($acesso) {
         # Procedimentos
         $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
         $linkBotao3->set_class('button');
-        $linkBotao3->set_title('Regras da readaptação');
+        $linkBotao3->set_title('Procedimentos da readaptação');
         $linkBotao3->set_target("_blank");
         $menu->add_link($linkBotao3, "right");
 

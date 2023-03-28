@@ -93,6 +93,20 @@ if ($acesso) {
                 $botaoInserir->set_title("Incluir um Servidor");
                 $menu1->add_link($botaoInserir, "right");
             }
+            
+            # Procedimentos
+            $linkBotao3 = new Link("Procedimentos", "servidorAcumulacao.php?fase=procedimentos");
+            $linkBotao3->set_class('button');
+            $linkBotao3->set_title('Procedimentos de Acumulação');
+            $linkBotao3->set_target("_blank");
+            $menu1->add_link($linkBotao3, "right");
+            
+            # Site
+            $botaoSite = new Button("Site da GRH");
+            $botaoSite->set_target('_blank');
+            $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
+            $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/");
+            $menu1->add_link($botaoSite, "right");
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -103,12 +117,12 @@ if ($acesso) {
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
 
-            # Normas
-            $botao2 = new Button("Regras", "servidorAcumulacao.php?fase=regras");
-            $botao2->set_title("Exibe as regras da acumulação");
-            #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
-            $botao2->set_target("_blank");
-            $menu1->add_link($botao2, "right");
+//            # Normas
+//            $botao2 = new Button("Regras", "servidorAcumulacao.php?fase=regras");
+//            $botao2->set_title("Exibe as regras da acumulação");
+//            #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
+//            $botao2->set_target("_blank");
+//            $menu1->add_link($botao2, "right");
 
             $menu1->show();
 

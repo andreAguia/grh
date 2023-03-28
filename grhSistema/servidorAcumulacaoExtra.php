@@ -9,8 +9,8 @@
  * Verifica se data é anterior a admissão
  */
 
-$dtSaida = $campoValor[9];
-$motivo = $campoValor[10];
+$dtSaida = $campoValor[7];
+$motivo = $campoValor[8];
 
 # Se tiver data de saida
 if ((!is_null($dtSaida)) XOR (!is_null($motivo))) {

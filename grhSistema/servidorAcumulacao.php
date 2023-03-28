@@ -88,8 +88,6 @@ if ($acesso) {
     $objeto->set_selectEdita('SELECT processo,
                                      tipoProcesso,   
                                      dtProcesso,
-                                     origemProcesso,
-                                     dtEnvio,
                                      instituicao,
                                      cargo,                                     
                                      matricula,
@@ -192,22 +190,7 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'title' => 'Data de entrada do processo.',
-            'linha' => 1),
-        array('nome' => 'origemProcesso',
-            'label' => 'Processo aberto por:',
-            'tipo' => 'texto',
-            'size' => 200,
-            'valor' => null,
-            'col' => 5,
-            'title' => 'Órgão que abriu o processo.',
-            'linha' => 2),
-        array('nome' => 'dtEnvio',
-            'label' => 'Data do Envio à COCPP/SECCG:',
-            'tipo' => 'data',
-            'size' => 20,
-            'col' => 3,
-            'title' => 'Data do Envio ao Rio.',
-            'linha' => 2),
+            'linha' => 1),        
         array('nome' => 'instituicao',
             'fieldset' => 'Outro Vínculo:',
             'label' => 'Instituição:',
@@ -393,13 +376,25 @@ if ($acesso) {
     $botaoRel->set_url("../grhRelatorios/servidorAcumulacao.php");
     $botaoRel->set_target("_blank");
 
-    # Normas
-    $botao2 = new Button("Regras", "?fase=regras");
-    $botao2->set_title("Exibe as regras da acumulação");
-    #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
-    $botao2->set_target("_blank");
+    # Procedimentos
+    $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
+    $linkBotao3->set_class('button');
+    $linkBotao3->set_title('Procedimentos');
+    $linkBotao3->set_target("_blank");
 
-    $objeto->set_botaoListarExtra(array($botaoRel, $botao2));
+    # Site
+    $botaoSite = new Button("Site da GRH");
+    $botaoSite->set_target('_blank');
+    $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
+    $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/");
+
+//    # Normas
+//    $botao2 = new Button("Regras", "?fase=regras");
+//    $botao2->set_title("Exibe as regras da acumulação");
+//    #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
+//    $botao2->set_target("_blank");
+
+    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite]);
 
     # Botão exibe declaração na rotina editar
     $botaoDec = new Button("Declarações");
@@ -430,6 +425,22 @@ if ($acesso) {
             $regra = new Procedimento();
             $regra->exibeProcedimento(24);
             break;
+
+        ###################################################################
+
+        case "procedimentos" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            $rotina = new Rotina();
+            $rotina->exibeRotinaCategoria("Acumulação de Cargos Públicos");
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
     }
     $page->terminaPagina();
 } else {

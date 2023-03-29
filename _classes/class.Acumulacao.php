@@ -382,6 +382,25 @@ class Acumulacao {
         }
     }
 
-##############################################################
+###########################################################
 
+    function exibeBotaoDocumentos($idAcumulacao) {
+
+        /**
+         * Exibe o botão de imprimir os documentos de uma solicitação de redução de carga horária específica
+         * 
+         * @obs Usada na tabela inicial do cadastro de redução
+         */
+        # Inicia o menu
+        $menu = new Menu("menuBeneficios");
+        $menu->add_item('linkWindow', "\u{1F5A8} Declaração de Atribuições do Cargo", "../grhRelatorios/declaracao.AtribuicoesCargo.php");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Solicitação de Documentos", "?fase=despachoSolicitacaoDocumentos&id={$idAcumulacao}");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Análise", '?fase=despachoAnalise');
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Licitude", '?fase=despachoCienciaLicitude');
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Ilicitude", "?fase=despachoCienciaIlicitude&id={$idAcumulacao}");
+        $menu->show();
+    }
+
+    ###########################################################
 }

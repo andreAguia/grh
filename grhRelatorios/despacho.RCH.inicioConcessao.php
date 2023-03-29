@@ -47,7 +47,7 @@ if ($acesso) {
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
 
     # Trata a publicação
-    if (vazio($pgPublicacao)) {
+    if (empty($pgPublicacao)) {
         $publicacao = $dtPublicacao;
     } else {
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";

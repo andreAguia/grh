@@ -118,7 +118,7 @@ class Despacho {
 
         # Destino
         p($this->destino, 'pDestino');
-        br(2);
+        br();
 
         # Texto
         foreach ($this->texto as $textoDespacho) {

@@ -79,6 +79,7 @@ if ($acesso) {
                                      idAcumulacao,                                     
                                      idAcumulacao,
                                      idAcumulacao,    
+                                     idAcumulacao,    
                                      idAcumulacao
                                 FROM tbacumulacao
                                WHERE idServidor = ' . $idServidorPesquisado . '
@@ -135,10 +136,10 @@ if ($acesso) {
     ));
 
     # Parametros da tabela
-    $objeto->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo"]);
-    $objeto->set_align(["center", "center", "center", "center", "left"]);
-    $objeto->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
-    $objeto->set_metodo([null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo"]);
+    $objeto->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo", "Documentos"]);
+    $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
+    $objeto->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
+    $objeto->set_metodo([null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo", "exibeBotaoDocumentos"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -190,7 +191,7 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'title' => 'Data de entrada do processo.',
-            'linha' => 1),        
+            'linha' => 1),
         array('nome' => 'instituicao',
             'fieldset' => 'Outro Vínculo:',
             'label' => 'Instituição:',
@@ -435,6 +436,323 @@ if ($acesso) {
 
             $rotina = new Rotina();
             $rotina->exibeRotinaCategoria("Acumulação de Cargos Públicos");
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho: Solicitação de Documentos
+        case "despachoSolicitacaoDocumentos" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho: Solicitação de Documentos");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Acumulacao.SolicitacaoDocumento.php?id={$id}");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho: Despacho Para Análise
+        case "despachoAnalise" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho Para Análise");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Acumulacao.Analise.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho: Ciência da Licitude
+        case "despachoCienciaLicitude" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho: Ciência da Licitude");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Acumulacao.CienciaLicitude.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # número do documento da publicação no SEI
+            $controle = new Input('numDocumento', 'texto', 'Nº do documento da publicação no SEI:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $controle->set_required(true);
+            $controle->set_title('O número do documento da publicação no SEI.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho de Conclusão Temporária
+        case "despachoConclusaoTemporaria" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # Título
+            tituloTable("Despacho de Conclusão Temporária");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Acumulacao.ConclusaoTemporaria.php");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+        # Despacho: Ciência de Ilicitude
+        case "despachoCienciaIlicitude" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+            # Título
+            tituloTable("Despacho: Ciência de Ilicitude");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Acumulacao.CienciaIlicitude.php?id={$id}");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # Chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata do Servidor Solicitante:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            $controle->set_required(true);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo
+            $controle = new Input('cargo', 'texto', 'Cargo da Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            $controle->set_required(true);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+
+            # número do documento da publicação no SEI
+            $controle = new Input('numDocumento', 'texto', 'Número do documento da publicação no SEI:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(4);
+            $controle->set_col(12);
+            $controle->set_required(true);
+            $controle->set_title('O número do documento da publicação no SEI.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

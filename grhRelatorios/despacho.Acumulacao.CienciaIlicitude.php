@@ -75,7 +75,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho para ciência de licitude de Acumulação";
+    $atividades = "Visualizou o Despacho para ciência de ilicitude de Acumulação";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbacumulacao", null, $tipoLog, $idServidorPesquisado);
 

@@ -190,6 +190,20 @@ if ($acesso) {
             'size' => 5,
             'title' => 'Matrícula',
             'linha' => 3)));
+    
+    # Procedimentos
+    $botaoProcedimentos = new Link("Procedimentos", "servidorAcumulacao.php?fase=procedimentos");
+    $botaoProcedimentos->set_class('button');
+    $botaoProcedimentos->set_title('Procedimentos');
+    $botaoProcedimentos->set_target("_blank");
+
+    # Site
+    $botaoSite = new Button("Site da GRH");
+    $botaoSite->set_target('_blank');
+    $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
+    $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/declaracao-anual-de-acumulacao-de-cargos/");
+
+    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite]);
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

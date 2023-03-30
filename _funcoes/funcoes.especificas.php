@@ -1122,7 +1122,7 @@ function get_DadosServidorCessao($idServidor) {
 /**
  * Função que retorna uma tabela com as declarações de acumulação positivas de um servidor 
  */
-function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
+function exibeDeclaracaoAcumulacao($idServidor) {
     # Abre a div para a invisibilidade
     $div = new Div("divRegrasLsv");
     $div->abre();
@@ -1133,20 +1133,19 @@ function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
     # select da lista
     $select = "SELECT anoReferencia,
                        dtEntrega, 
-                       IF(acumula,'SIM','Não'),
+                       IF(acumula,'<span id=\'vermelho\'>SIM</span>','<span id=\'verde\'>Não</span>'),
                        CONCAT('SEI-',processo),
                        obs,
                        idAcumulacaoDeclaracao
                   FROM tbacumulacaodeclaracao 
                 WHERE idServidor = {$idServidor}
-                   AND acumula 
                 ORDER BY anoReferencia desc";
 
     $conteudo = $pessoal->select($select);
 
     # Exibe em forma de tabela
     $tabela = new Tabela();
-    $tabela->set_titulo("Declarações Positivas de Acumulação");
+    $tabela->set_titulo("Declarações de Acumulação");
     $tabela->set_conteudo($conteudo);
 
     $tabela->set_label(array("Referência", "Entregue em", "Declarou Acumular", "Processo", "Obs"));
@@ -1161,7 +1160,66 @@ function exibeDeclaracaoAcumulacaoPositiva($idServidor) {
             'id' => 'problemas')));
 
     $tabela->set_totalRegistro(false);
-    $tabela->set_mensagemTabelaVazia("Este servidor não possui declarações positivas de acumulação!");
+    $tabela->set_mensagemTabelaVazia("Este servidor não possui declarações de acumulação cadastradas!");
+    $tabela->show();
+
+    $div->fecha();
+    return;
+}
+
+##########################################################
+
+/**
+ * Função que retorna uma tabela com as declarações de acumulação positivas de um servidor 
+ */
+function exibeProcessosAcumulacao($idServidor) {
+    # Abre a div para a invisibilidade
+    $div = new Div("divRegrasLsv");
+    $div->abre();
+
+    # Conecta 
+    $pessoal = new Pessoal();
+
+    # select da lista
+    $select = "SELECT CASE conclusao
+                         WHEN 1 THEN 'Pendente'
+                         WHEN 2 THEN 'Resolvido'
+                         ELSE '--'
+                      END,
+                      idAcumulacao,                                     
+                      idAcumulacao,
+                      idAcumulacao,    
+                      idAcumulacao
+                 FROM tbacumulacao
+                WHERE idServidor = {$idServidor}
+             ORDER BY tipoProcesso, dtProcesso";
+
+    $conteudo = $pessoal->select($select);
+
+    # Exibe em forma de tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Processo de Acumulação");
+    $tabela->set_conteudo($conteudo);
+    
+    $tabela->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo"]);
+    $tabela->set_align(["center", "center", "center", "center", "left", "left"]);
+    $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
+    $tabela->set_metodo([null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo"]);
+
+    $tabela->set_formatacaoCondicional(array(
+        array('coluna' => 0,
+            'valor' => 'Resolvido',
+            'operador' => '=',
+            'id' => 'emAberto'),
+        array('coluna' => 0,
+            'valor' => 'Pendente',
+            'operador' => '=',
+            'id' => 'alerta')
+    ));
+
+
+    $tabela->set_totalRegistro(false);
+    $tabela->set_mensagemTabelaVazia("Este servidor não possui processos de acumulação cadastrados!");
     $tabela->show();
 
     $div->fecha();

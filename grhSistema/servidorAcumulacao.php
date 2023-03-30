@@ -50,11 +50,11 @@ if ($acesso) {
 
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeDeclaracaoAcumulacao"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado]);
 
     # Rotina extra editar
-    $objeto->set_rotinaExtraEditar("exibeDeclaracaoAcumulacaoPositiva");
+    $objeto->set_rotinaExtraEditar("exibeDeclaracaoAcumulacao");
     $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
@@ -71,10 +71,10 @@ if ($acesso) {
     $objeto->set_voltarLista($voltar);
 
     # select da lista
-    $objeto->set_selectLista('SELECT CASE conclusao
-                                        WHEN 1 THEN "Pendente"
-                                        WHEN 2 THEN "Resolvido"
-                                        ELSE "--"
+    $objeto->set_selectLista("SELECT CASE conclusao
+                                        WHEN 1 THEN 'Pendente'
+                                        WHEN 2 THEN 'Resolvido'
+                                        ELSE '--'
                                       END,
                                      idAcumulacao,                                     
                                      idAcumulacao,
@@ -82,8 +82,8 @@ if ($acesso) {
                                      idAcumulacao,    
                                      idAcumulacao
                                 FROM tbacumulacao
-                               WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY tipoProcesso, dtProcesso');
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY tipoProcesso, dtProcesso");
 
     # select do edita
     $objeto->set_selectEdita('SELECT processo,
@@ -389,20 +389,19 @@ if ($acesso) {
     $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
     $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/");
 
-//    # Normas
-//    $botao2 = new Button("Regras", "?fase=regras");
-//    $botao2->set_title("Exibe as regras da acumulação");
-//    #$botao2->set_url("../grhRelatorios/servidorGratificacao.php");
-//    $botao2->set_target("_blank");
-
-    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite]);
-
-    # Botão exibe declaração na rotina editar
+    # Botão exibe declaração
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
     $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
 
-    $objeto->set_botaoEditarExtra(array($botaoDec));
+    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite, $botaoDec]);
+
+    # Botão exibe declaração
+    $botaoDec = new Button("Declarações");
+    $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
+    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
+
+    $objeto->set_botaoEditarExtra([$botaoDec]);
 
     # Log
     $objeto->set_idUsuario($idUsuario);

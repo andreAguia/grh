@@ -435,7 +435,7 @@ if ($acesso) {
             br();
 
             $rotina = new Rotina();
-            $rotina->exibeRotinaCategoria("Acumulação de Cargos Públicos");
+            $rotina->exibeRotina(7);
 
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -93,7 +93,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
             
             # Procedimentos
-            $linkBotao3 = new Link("Procedimentos", "servidorAcumulacao.php?fase=procedimentos");
+            $linkBotao3 = new Link("Procedimentos", "servidorAcumulacaoDeclaracao.php?fase=procedimentos");
             $linkBotao3->set_class('button');
             $linkBotao3->set_title('Procedimentos de Acumulação');
             $linkBotao3->set_target("_blank");

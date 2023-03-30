@@ -192,7 +192,7 @@ if ($acesso) {
             'linha' => 3)));
     
     # Procedimentos
-    $botaoProcedimentos = new Link("Procedimentos", "servidorAcumulacao.php?fase=procedimentos");
+    $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
     $botaoProcedimentos->set_class('button');
     $botaoProcedimentos->set_title('Procedimentos');
     $botaoProcedimentos->set_target("_blank");
@@ -222,6 +222,22 @@ if ($acesso) {
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+    ###################################################################
+
+        case "procedimentos" :
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+
+            $rotina = new Rotina();
+            $rotina->exibeRotina(8);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################    
     }
 
     $page->terminaPagina();

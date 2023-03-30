@@ -52,7 +52,7 @@ if ($acesso) {
     # Exibe os dados do Servidor
     $objeto->set_rotinaExtra(["get_DadosServidor", "exibeProcessosAcumulacao"]);
     $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado]);
-    
+
     # Rotina extra editar
     $objeto->set_rotinaExtraEditar("exibeProcessosAcumulacao");
     $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
@@ -195,7 +195,7 @@ if ($acesso) {
             'size' => 5,
             'title' => 'Matrícula',
             'linha' => 3)));
-    
+
     # Procedimentos
     $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
     $botaoProcedimentos->set_class('button');
@@ -207,20 +207,14 @@ if ($acesso) {
     $botaoSite->set_target('_blank');
     $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
     $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/declaracao-anual-de-acumulacao-de-cargos/");
-    
+
     # Botão exibe Processos
     $botaoDec = new Button("Processos");
     $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
     $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
 
     $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
-    
-    # Botão exibe Processos
-    $botaoDec = new Button("Processos");
-    $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
-    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
-
-    $objeto->set_botaoEditarExtra([$botaoDec]);
+    $objeto->set_botaoEditarExtra([$botaoProcedimentos, $botaoDec]);
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -239,8 +233,8 @@ if ($acesso) {
         case "gravar" :
             $objeto->$fase($id);
             break;
-        
-    ###################################################################
+
+        ###################################################################
 
         case "procedimentos" :
             $grid = new Grid();

@@ -395,18 +395,6 @@ if ($acesso) {
     $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
 
     $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite, $botaoDec]);
-
-    # Procedimentos
-    $linkBotao3 = new Link("Procedimentos", "?fase=procedimentos");
-    $linkBotao3->set_class('button');
-    $linkBotao3->set_title('Procedimentos');
-    $linkBotao3->set_target("_blank");
-
-    # Botão exibe declaração
-    $botaoDec = new Button("Declarações");
-    $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
-    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
-
     $objeto->set_botaoEditarExtra([$linkBotao3, $botaoDec]);
 
     # Log

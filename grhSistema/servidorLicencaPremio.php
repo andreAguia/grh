@@ -291,6 +291,12 @@ if ($acesso) {
         $botaoAfastPremio->set_title("Verifica os afastamentos que interferem no período aquisitido da licença prêmio deste servidor");
         $botaoAfastPremio->set_target("_blank");
 
+        # Site
+        $botaoSite = new Button("Site da GRH");
+        $botaoSite->set_target('_blank');
+        $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
+        $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/requerimento-de-licenca-especial/");
+
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
@@ -302,13 +308,13 @@ if ($acesso) {
         if (Verifica::acesso($idUsuario, [1, 2])) {
             $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
-            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast]);
+            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoSite]);
         }
 
         if (Verifica::acesso($idUsuario, 12)) {
             $objeto->set_botaoListarExtra([$botaoRel, $botaoAfastPremio, $botaoAfast]);
         }
-        
+
 
         ################################################################
 

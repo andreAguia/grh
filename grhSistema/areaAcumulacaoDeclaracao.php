@@ -91,14 +91,14 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-            
+
             # Procedimentos
             $linkBotao3 = new Link("Procedimentos", "servidorAcumulacaoDeclaracao.php?fase=procedimentos");
             $linkBotao3->set_class('button');
             $linkBotao3->set_title('Procedimentos de Acumulação');
             $linkBotao3->set_target("_blank");
             $menu1->add_link($linkBotao3, "right");
-            
+
             # Site
             $botaoSite = new Button("Site da GRH");
             $botaoSite->set_target('_blank');
@@ -221,7 +221,7 @@ if ($acesso) {
             $tab->abreConteudo();
             # Lista de quem entregou
             $select = "SELECT dtEntrega,
-                              IF(acumula,'SIM','Não'),
+                              IF(acumula,'<span id=\'vermelho\'>SIM</span>','<span id=\'verde\'>Não</span>'),
                               tbservidor.idServidor,
                               dtAdmissao,
                               processo,

@@ -69,9 +69,10 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT anoReferencia,
                        dtEntrega, 
-                       IF(acumula,'SIM','Não'),
+                       IF(acumula,'<span id=\'vermelho\'>SIM</span>','<span id=\'verde\'>Não</span>'),
                        processo,
                        obs,
+                       idAcumulacaoDeclaracao,
                        idAcumulacaoDeclaracao
                   FROM tbacumulacaodeclaracao 
                 WHERE idServidor = {$idServidorPesquisado}

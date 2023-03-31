@@ -58,7 +58,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Controle da Entrega da Declaração Anual de Acumulação de Cargo Público');
+    $objeto->set_nome('Declaração Anual de Acumulação de Cargo Público');
 
     # botão de voltar da lista
     if (empty($origem)) {
@@ -209,11 +209,18 @@ if ($acesso) {
     $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/declaracao-anual-de-acumulacao-de-cargos/");
 
     # Botão exibe Processos
-    $botaoDec = new Button("Processos");
+    $botaoDec = new Button("Processos de ACP");
+    $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
+//    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
+    $botaoDec->set_url("servidorAcumulacao.php");
+
+    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
+    
+    # Botão exibe Processos
+    $botaoDec = new Button("Processos de ACP");
     $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
     $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
 
-    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
     $objeto->set_botaoEditarExtra([$botaoProcedimentos, $botaoDec]);
 
     # idUsuário para o Log

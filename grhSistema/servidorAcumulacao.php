@@ -58,7 +58,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraEditarParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Acumulações de Cargos Públicos');
+    $objeto->set_nome('Processos de Acumulações de Cargos Públicos');
 
     # botão de voltar da lista
     if (empty($origem)) {
@@ -392,9 +392,15 @@ if ($acesso) {
     # Botão exibe declaração
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
-    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
+    $botaoDec->set_url("servidorAcumulacaoDeclaracao.php");
 
     $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite, $botaoDec]);
+    
+    # Botão exibe declaração
+    $botaoDec = new Button("Declarações");
+    $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
+    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
+
     $objeto->set_botaoEditarExtra([$linkBotao3, $botaoDec]);
 
     # Log

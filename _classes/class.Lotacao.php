@@ -28,11 +28,11 @@ class Lotacao {
                       WHERE idLotacao = {$idLotacao}";
 
             $row = $pessoal->select($select, false);
-            if($row["UADM"] <> "UENF"){
+            if ($row["UADM"] <> "UENF") {
                 return "{$row["UADM"]} - {$row["DIR"]} - {$row["GER"]}";
-            }else{
+            } else {
                 return "{$row["DIR"]} - {$row["GER"]}";
-            }            
+            }
         }
     }
 
@@ -124,7 +124,7 @@ class Lotacao {
 
     public function getDataSaida($idHistLot = null) {
         /**
-         * Retorna a lotação Posterior deste servidor a partir de uma mudança de lotação no histórico 
+         * Retorna a data de saída de uma lotação
          * 
          * @syntax $this->getLotacaoAnterior($idRpa);
          */
@@ -141,7 +141,7 @@ class Lotacao {
             $row1 = $pessoal->select($select1, false);
             $idServidor = $row1["idServidor"];
 
-            # Agora pega a lotação anterior a esta mudança
+            # Agora pega a lotação posterior a esta mudança
             $select2 = "SELECT idHistLot,
                                data 
                           FROM tbhistlot 
@@ -154,6 +154,8 @@ class Lotacao {
             foreach ($row2 as $item) {
 
                 if ($item["idHistLot"] == $idHistLot) {
+
+
                     return date_to_php($lotacao);
                 } else {
                     $lotacao = $item["data"];
@@ -415,5 +417,110 @@ class Lotacao {
         }
     }
 
-    ##########################################################################################
+    ###########################################################
+
+    public function getDataSaidaPraOnde($idHistLot = null) {
+        /**
+         * Retorna a data de saída de uma lotação
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            if (empty($this->getLotacaoPosterior($idHistLot))) {
+                pLista($this->getDataSaida($idHistLot));
+            }
+
+            if (empty($this->getDataSaida($idHistLot))) {
+                $pessoal = new Pessoal();
+
+                # Pega o servidor desta alteração de lotação
+                $select1 = "SELECT idServidor
+                         FROM tbhistlot
+                        WHERE idHistLot = {$idHistLot}";
+
+                $row = $pessoal->select($select1, false);
+                $idServidor = $row["idServidor"];
+
+                # Verifica se o servidor está ativo
+                if ($pessoal->get_idSituacao($idServidor) <> 1) {
+                    # Verifica se esta foi a últtima lotação dele
+                    $select2 = "SELECT idHistLot
+                                  FROM tbhistlot 
+                                 WHERE idServidor = {$idServidor}
+                              ORDER BY data DESC LIMIT 1";
+
+                    $row2 = $pessoal->select($select2, false);
+
+                    if ($idHistLot == $row2['idHistLot']) {
+                        pLista($pessoal->get_dtSaida($idServidor), $pessoal->get_situacao($idServidor));
+                    }
+                }
+
+
+                return null;
+            } else {
+                pLista($this->getDataSaida($idHistLot), "saiu para:", $this->getLotacaoPosterior($idHistLot));
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function getDataChegadaDeOnde($idHistLot = null) {
+        /**
+         * Retorna a data de saída de uma lotação
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            if (empty($this->getLotacaoAnterior($idHistLot))) {
+                $pessoal = new Pessoal();
+
+                # Pega o servidor desta alteração de lotação
+                $select1 = "SELECT idServidor
+                         FROM tbhistlot
+                        WHERE idHistLot = {$idHistLot}";
+
+                $row = $pessoal->select($select1, false);
+                $idServidor = $row["idServidor"];
+
+                if ($pessoal->get_dtAdmissao($idServidor) == $this->getDataChegada($idHistLot)) {
+                    pLista($this->getDataChegada($idHistLot), "Admissão");
+                } else {
+                    pLista($this->getDataChegada($idHistLot));
+                }
+            } else {
+                pLista($this->getDataChegada($idHistLot), "vindo da:", $this->getLotacaoAnterior($idHistLot));
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function getDataChegada($idHistLot = null) {
+        /**
+         * Retorna a data de saída de uma lotação
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT data
+                          FROM tbhistlot
+                         WHERE idHistLot = {$idHistLot}";
+
+            $row = $pessoal->select($select1, false);
+            return date_to_php($row["data"]);
+        }
+    }
+
+    ###########################################################
 }

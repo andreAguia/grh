@@ -499,7 +499,7 @@ class LicencaSemVencimentos {
         $menu->add_item('linkWindow', "\u{1F5A8} Reitoria - Nada Opor", '../grhRelatorios/lsv.despacho.reitoria.php?id=' . $idLicencaSemVencimentos, "Despacho à reitoria para emitir o nada opor a concessão da Licença");
         $menu->add_item('linkWindow', "\u{1F5A8} Sepof - Publicação", '../grhRelatorios/lsv.despacho.sepof.php?id=' . $idLicencaSemVencimentos, "Despacho ao Sepof solicitando publicação");
         $menu->add_item('linkWindow', "\u{1F5A8} Rioprev - Padrão", '../grhRelatorios/lsv.despacho.rioprev.padrao.php?id=' . $idLicencaSemVencimentos, "Despacho padrão ao Rioprev para emissão dos boletos de pgto");
-        $menu->add_item('link', "\u{1F5A8} Carta de Reassunção", '?fase=cartaReassuncao&id=' . $idLicencaSemVencimentos);
+        $menu->add_item('linkWindow', "\u{1F5A8} Carta de Reassunção", '?fase=cartaReassuncao&id=' . $idLicencaSemVencimentos);
         $menu->add_item('linkWindow', "\u{1F5A8} Rioprev - CSP/CRP", '../grhRelatorios/lsv.despacho.rioprev.crp.php?id=' . $idLicencaSemVencimentos, "Despacho ao Rioprev para emissão de CSP/CRP");
 
         $menu->show();

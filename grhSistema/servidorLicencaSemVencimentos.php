@@ -370,7 +370,7 @@ if ($acesso) {
             'size' => 10,
             'col' => 3,
             'title' => 'Número CRP.',
-            'linha' => 8),        
+            'linha' => 8),
         array('nome' => 'numSeiCrp',
             'label' => 'Número do documento CRP no SEI:',
             'tipo' => 'texto',
@@ -432,12 +432,6 @@ if ($acesso) {
         # Carta Reassunção
         case "cartaReassuncao" :
 
-            # Voltar
-            botaoVoltar("?");
-
-            # Dados do Servidor
-            get_DadosServidor($idServidorPesquisado);
-
             # Pega os Dados
             $dados = $lsv->get_dados($id);
 
@@ -446,29 +440,29 @@ if ($acesso) {
             $pgPublicacao = $dados['pgPublicacao'];
 
             # Chefia imediata desse servidor
-            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);              // idServidor do chefe
-            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);                          // Nome do chefe
-            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);   // Descrição do cargo
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
             # Limita a tela
             $grid = new Grid("center");
-            $grid->abreColuna(10);
+            $grid->abreColuna(12);
             br(3);
 
             # Título
-            tituloTable("Controle de Licença Sem Vencimentos<br/>Carta de Reassunção de Servidor<br/>(Usado quando o servidor retorna ANTES da data prevista)");
+            tituloTable("Carta de Reassunção de Servidor");
             $painel = new Callout();
             $painel->abre();
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=cartaReassuncaoFormValida&id=' . $id);
+            $form = new Form("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}");
 
             # dtRetorno
-            $controle = new Input('dtRetorno', 'data', 'Data do Retorno (antecipado):', 1);
+            $controle = new Input('dtRetorno', 'data', 'Data do Retorno', 1);
             $controle->set_size(10);
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(4);
             $controle->set_valor($dtRetorno);
-            #$controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_title('A data do retorno do servidor.');
             $form->add_item($controle);
 
@@ -495,7 +489,7 @@ if ($acesso) {
             # Chefia
             $controle = new Input('chefia', 'texto', 'Chefia:', 1);
             $controle->set_size(200);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(12);
             $controle->set_valor($nomeGerenteDestino);
             #$controle->set_required(true);
@@ -505,18 +499,35 @@ if ($acesso) {
             # Cargo
             $controle = new Input('cargo', 'texto', 'Cargo:', 1);
             $controle->set_size(200);
-            $controle->set_linha(3);
+            $controle->set_linha(4);
             $controle->set_col(12);
             $controle->set_valor($gerenciaImediataDescricao);
             #$controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
+            
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
 
-            # submit
-            $controle = new Input('salvar', 'submit');
-            $controle->set_valor('Salvar');
+            $lista = $pessoal->select($select);
+            
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
             $controle->set_linha(5);
-            $controle->set_col(2);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));            
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
             $form->add_item($controle);
 
             # submit
@@ -539,7 +550,8 @@ if ($acesso) {
             $dados = $lsv->get_dados($id);
 
             $dtRetorno = vazioPraNulo($dados["dtRetorno"]);
-            $dttermino = vazioPraNulo($dados["dtTermino"]);
+            $dtTermino = vazioPraNulo($dados["dtTermino"]);
+
             $dtPublicacao = $dados['dtPublicacao'];
             $pgPublicacao = $dados['pgPublicacao'];
 
@@ -560,20 +572,27 @@ if ($acesso) {
             $msgErro = null;
             $erro = 0;
 
+            echo "dtRetorno: ", $dtRetorno, "<br/>",
+            "dtRetorno: ", $dtRetorno, "<br/>",
+            "dtTermino: ", $dtTermino, "<br/>",
+            "dtRetornoDigitado: ", $dtRetornoDigitado;
+
             # Verifica a data de retorno
-            if (vazio($dtRetornoDigitado)) {
-                $msgErro .= 'Não tem data de retorno cadastrada!\n';
-                $erro = 1;
+            if (empty($dtRetornoDigitado)) {
+                $dtRetornoDigitado = $dtTermino;
             } else {
-                # Verifica qual é q data maior
-                $dtRetornoDigitado = date_to_php($dtRetornoDigitado);
-                $dttermino = date_to_php($dttermino);
-                $dm = dataMaior($dtRetornoDigitado, $dttermino);
-                echo $dm;
-                # Verifica a data de retorno é anterior a data de termino
-                if ($dm == $dtRetornoDigitado) {
-                    $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
-                    $erro = 1;
+
+                if ($dtRetornoDigitado <> $dtTermino) {
+                    # Verifica qual é q data maior
+                    $dtRetornoDigitado = date_to_php($dtRetornoDigitado);
+                    $dttermino = date_to_php($dtTermino);
+                    $dm = dataMaior($dtRetornoDigitado, $dtTermino);
+                    echo $dm;
+                    # Verifica a data de retorno é anterior a data de termino
+                    if ($dm == $dtRetornoDigitado) {
+                        $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
+                        $erro = 1;
+                    }
                 }
             }
 
@@ -620,14 +639,16 @@ if ($acesso) {
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if ($botaoEscolhido == "imprimir") {
                 if ($erro == 0) {
-                    loadPage("../grhRelatorios/lsv.cartaReassuncao.php?id=$id&array=$array", "_blank");
-                    loadPage("?");
+                    loadPage("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}&array={$array}");
+                    #loadPage("?");
+                    echo "oi";
                 } else {
                     alert($msgErro);
-                    back(1);
+                    #back(1);
                 }
             } else {
-                loadPage("?");
+                #loadPage("?");
+                echo "oi";
             }
             break;
 

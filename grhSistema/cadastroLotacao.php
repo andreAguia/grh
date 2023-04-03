@@ -40,6 +40,10 @@ if ($acesso) {
 
     # Pega os parâmetros da rotina de Organograma
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'DGA'));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao'));
+
+    # Joga os parâmetros para as sessions
+    set_session('parametroSituacao', $parametroSituacao);
 
     # Joga os parâmetros par as sessions    
     set_session('parametroLotacao', $parametroLotacao);
@@ -594,6 +598,27 @@ if ($acesso) {
             #$menu->add_link($botaoRel, "right");
             $menu->show();
 
+            # Formulário de Pesquisa
+            $form = new Form("?fase=listaHistorico&id={$id}");
+
+            # Situação
+            $result = $pessoal->select('SELECT idsituacao, situacao
+                                              FROM tbsituacao                                
+                                          ORDER BY 1');
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+
             $select = "SELECT tbservidor.idFuncional,
                               tbpessoa.nome,
                               tbservidor.idServidor,                     
@@ -606,8 +631,13 @@ if ($acesso) {
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE idLotacao = {$id} 
-            ORDER BY tbpessoa.nome, tbhistlot.data DESC";
+               WHERE idLotacao = {$id}";
+
+            if ($parametroSituacao <> null AND $parametroSituacao <> "*") {
+                $select .= " AND tbservidor.situacao = {$parametroSituacao}";
+            }
+
+            $select .= " ORDER BY tbpessoa.nome, tbhistlot.data DESC";
 
             $result = $pessoal->select($select);
 

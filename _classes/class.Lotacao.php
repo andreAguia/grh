@@ -462,16 +462,18 @@ class Lotacao {
         if (empty($idHistLot)) {
             return null;
         } else {
-            if (empty($this->getLotacaoAnterior($idHistLot))) {
-                $pessoal = new Pessoal();
 
-                # Pega o servidor desta alteração de lotação
-                $select1 = "SELECT idServidor
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT idServidor
                          FROM tbhistlot
                         WHERE idHistLot = {$idHistLot}";
 
-                $row = $pessoal->select($select1, false);
-                $idServidor = $row["idServidor"];
+            $row = $pessoal->select($select1, false);
+            $idServidor = $row["idServidor"];
+
+            if (empty($this->getLotacaoAnterior($idHistLot))) {
 
                 if ($pessoal->get_dtAdmissao($idServidor) == $this->getDataChegada($idHistLot)) {
                     pLista($this->getDataChegada($idHistLot), "Admissão");
@@ -482,7 +484,7 @@ class Lotacao {
                 # Verifica se saiu para ser cedido
                 if ($this->getLotacaoAnterior($idHistLot) == 113) {
                     $cessao = new Cessao();
-                    pLista($this->getDataChegada($idHistLot), "retornou da cessão");
+                    pLista($this->getDataChegada($idHistLot), "vindo da:", $cessao->getOrgaoDtFinal($idServidor, addDias($this->getDataChegada($idHistLot), $dias = -1, false)));
                 } else {
                     pLista($this->getDataChegada($idHistLot), "vindo da:", $this->getLotacao($this->getLotacaoAnterior($idHistLot)));
                 }

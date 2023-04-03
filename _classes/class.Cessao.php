@@ -390,12 +390,48 @@ class Cessao {
         } else {
             $dtInicial = date_to_bd($dtInicial);
         }
- 
+
         # Pega array com os dias publicados
         $select = "SELECT orgao
                      FROM tbhistcessao
                     WHERE idServidor = {$idServidor} 
-                      AND dtInicio = '{$dtInicial}'";                    
+                      AND dtInicio = '{$dtInicial}'";
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno["orgao"])) {
+            return "---";
+        } else {
+            return $retorno["orgao"];
+        }
+    }
+
+###########################################################
+
+    public function getOrgaoDtFinal($idServidor = null, $dtFinal = null) {
+
+        /**
+         * Informa o nome do órgão em que este servidor iniciou cessão na data informada
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata o $idServidor
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Trata a data de início
+        if (empty($dtFinal)) {
+            return null;
+        } else {
+            $dtFinal = date_to_bd($dtFinal);
+        }
+
+        # Pega array com os dias publicados
+        $select = "SELECT orgao
+                     FROM tbhistcessao
+                    WHERE idServidor = {$idServidor} 
+                      AND dtFim = '{$dtFinal}'";
 
         $retorno = $pessoal->select($select, false);
         if (empty($retorno["orgao"])) {

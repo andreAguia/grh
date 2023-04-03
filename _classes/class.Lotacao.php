@@ -70,7 +70,7 @@ class Lotacao {
             foreach ($row2 as $item) {
 
                 if ($item["idHistLot"] == $idHistLot) {
-                    return $this->getLotacao($lotacao);
+                    return $lotacao;
                 } else {
                     $lotacao = $item["lotacao"];
                 }
@@ -101,7 +101,7 @@ class Lotacao {
 
             # Agora pega a lotação anterior a esta mudança
             $select2 = "SELECT idHistLot,
-                               lotacao 
+                               lotacao
                           FROM tbhistlot 
                          WHERE idServidor = {$idServidor}
                       ORDER BY data DESC";
@@ -112,7 +112,7 @@ class Lotacao {
             foreach ($row2 as $item) {
 
                 if ($item["idHistLot"] == $idHistLot) {
-                    return $this->getLotacao($lotacao);
+                    return $lotacao;
                 } else {
                     $lotacao = $item["lotacao"];
                 }
@@ -160,27 +160,6 @@ class Lotacao {
                 } else {
                     $lotacao = $item["data"];
                 }
-            }
-        }
-    }
-
-    ###########################################################
-
-    public function getNomeLotacaoAnterior($idHistLot = null) {
-        /**
-         * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
-         * 
-         * @syntax $this->getLotacaoAnterior($idRpa);
-         */
-        if (empty($idHistLot)) {
-            return null;
-        } else {
-            $idLotacao = $this->getLotacaoAnterior($idHistLot);
-
-            if (empty($idLotacao)) {
-                return null;
-            } else {
-                return $this->getLotacao($idLotacao);
             }
         }
     }
@@ -432,16 +411,17 @@ class Lotacao {
                 pLista($this->getDataSaida($idHistLot));
             }
 
-            if (empty($this->getDataSaida($idHistLot))) {
-                $pessoal = new Pessoal();
+            $pessoal = new Pessoal();
 
-                # Pega o servidor desta alteração de lotação
-                $select1 = "SELECT idServidor
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT idServidor
                          FROM tbhistlot
                         WHERE idHistLot = {$idHistLot}";
 
-                $row = $pessoal->select($select1, false);
-                $idServidor = $row["idServidor"];
+            $row = $pessoal->select($select1, false);
+            $idServidor = $row["idServidor"];
+
+            if (empty($this->getDataSaida($idHistLot))) {
 
                 # Verifica se o servidor está ativo
                 if ($pessoal->get_idSituacao($idServidor) <> 1) {
@@ -458,10 +438,15 @@ class Lotacao {
                     }
                 }
 
-
                 return null;
             } else {
-                pLista($this->getDataSaida($idHistLot), "saiu para:", $this->getLotacaoPosterior($idHistLot));
+                # Verifica se saiu para ser cedido
+                if ($this->getLotacaoPosterior($idHistLot) == 113) {
+                    $cessao = new Cessao();
+                    pLista($this->getDataSaida($idHistLot), "cedido para:", $cessao->getOrgaoDtInicial($idServidor, $this->getDataSaida($idHistLot)));
+                } else {
+                    pLista($this->getDataSaida($idHistLot), "saiu para:", $this->getLotacao($this->getLotacaoPosterior($idHistLot)));
+                }
             }
         }
     }
@@ -494,7 +479,13 @@ class Lotacao {
                     pLista($this->getDataChegada($idHistLot));
                 }
             } else {
-                pLista($this->getDataChegada($idHistLot), "vindo da:", $this->getLotacaoAnterior($idHistLot));
+                # Verifica se saiu para ser cedido
+                if ($this->getLotacaoAnterior($idHistLot) == 113) {
+                    $cessao = new Cessao();
+                    pLista($this->getDataChegada($idHistLot), "retornou da cessão");
+                } else {
+                    pLista($this->getDataChegada($idHistLot), "vindo da:", $this->getLotacao($this->getLotacaoAnterior($idHistLot)));
+                }
             }
         }
     }

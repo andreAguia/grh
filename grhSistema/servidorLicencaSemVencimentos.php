@@ -320,7 +320,7 @@ if ($acesso) {
             'title' => 'Data de Termino.',
             'linha' => 4),
         array('nome' => 'dtRetorno',
-            'label' => 'Data de Retorno (antecipado):',
+            'label' => 'Data de Retorno:',
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,
@@ -434,7 +434,6 @@ if ($acesso) {
 
             # Pega os Dados
             $dados = $lsv->get_dados($id);
-
             $dtRetorno = $dados["dtRetorno"];
             $dtPublicacao = $dados['dtPublicacao'];
             $pgPublicacao = $dados['pgPublicacao'];
@@ -443,15 +442,15 @@ if ($acesso) {
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
             $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
-            br(3);
+            br();
 
             # Título
             tituloTable("Carta de Reassunção de Servidor");
-            $painel = new Callout();
-            $painel->abre();
+            br();
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}");
@@ -505,30 +504,6 @@ if ($acesso) {
             #$controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
-            
-            # Pega os dados da combo assinatura
-            $select = 'SELECT idServidor,
-                              tbpessoa.nome
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbhistlot.lotacao = 66
-                          AND situacao = 1
-                     ORDER BY tbpessoa.nome asc';
-
-            $lista = $pessoal->select($select);
-            
-            # Assinatura
-            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(5);
-            $controle->set_col(12);
-            $controle->set_array($lista);
-            $controle->set_valor($intra->get_idServidor($idUsuario));            
-            $controle->set_required(true);
-            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
-            $form->add_item($controle);
 
             # submit
             $controle = new Input('imprimir', 'submit');
@@ -538,118 +513,9 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            $painel->fecha();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
-            break;
-
-        case "cartaReassuncaoFormValida" :
-
-            # Pega os Dados
-            $dados = $lsv->get_dados($id);
-
-            $dtRetorno = vazioPraNulo($dados["dtRetorno"]);
-            $dtTermino = vazioPraNulo($dados["dtTermino"]);
-
-            $dtPublicacao = $dados['dtPublicacao'];
-            $pgPublicacao = $dados['pgPublicacao'];
-
-            # Pega os dados Digitados
-            $botaoEscolhido = get_post_action("salvar", "imprimir");
-            $dtRetornoDigitado = vazioPraNulo(post("dtRetorno"));
-            $dtPublicacaoDigitado = vazioPraNulo(post("dtPublicacao"));
-            $pgPublicacaoDigitado = vazioPraNulo(post("pgPublicacao"));
-
-            $chefeDigitado = post("chefia");
-            $cargoDigitado = post("cargo");
-
-            # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado);
-            $array = serialize($array);
-
-            # Erro
-            $msgErro = null;
-            $erro = 0;
-
-            echo "dtRetorno: ", $dtRetorno, "<br/>",
-            "dtRetorno: ", $dtRetorno, "<br/>",
-            "dtTermino: ", $dtTermino, "<br/>",
-            "dtRetornoDigitado: ", $dtRetornoDigitado;
-
-            # Verifica a data de retorno
-            if (empty($dtRetornoDigitado)) {
-                $dtRetornoDigitado = $dtTermino;
-            } else {
-
-                if ($dtRetornoDigitado <> $dtTermino) {
-                    # Verifica qual é q data maior
-                    $dtRetornoDigitado = date_to_php($dtRetornoDigitado);
-                    $dttermino = date_to_php($dtTermino);
-                    $dm = dataMaior($dtRetornoDigitado, $dtTermino);
-                    echo $dm;
-                    # Verifica a data de retorno é anterior a data de termino
-                    if ($dm == $dtRetornoDigitado) {
-                        $msgErro .= 'A data de retorno não pode ser posterior a data prevista de termino!\n';
-                        $erro = 1;
-                    }
-                }
-            }
-
-            # Verifica a data da Publicação 
-            if (vazio($dtPublicacaoDigitado)) {
-                $msgErro .= 'Não tem data da Publicação cadastrada!\n';
-                $erro = 1;
-            }
-
-            if ($erro == 0) {
-                # Verifica se houve alterações
-                $alteracoes = null;
-                $atividades = null;
-
-                # Verifica as alterações para o log
-                if ($dtRetorno <> $dtRetornoDigitado) {
-                    $alteracoes .= '[dtRetorno] ' . date_to_php($dtRetorno) . '->' . date_to_php($dtRetornoDigitado) . '; ';
-                }
-
-                if ($dtPublicacao <> $dtPublicacaoDigitado) {
-                    $alteracoes .= '[dtPublicacao] ' . date_to_php($dtPublicacao) . '->' . date_to_php($dtPublicacaoDigitado) . '; ';
-                }
-
-                if ($pgPublicacao <> $pgPublicacaoDigitado) {
-                    $alteracoes .= '[pgPublicacao] ' . $pgPublicacao . '->' . $pgPublicacaoDigitado . '; ';
-                }
-
-                # Salva as alterações
-                $pessoal->set_tabela("tblicencasemvencimentos");
-                $pessoal->set_idCampo("idLicencaSemVencimentos");
-                $campoNome = array('dtRetorno', 'dtPublicacao', 'pgPublicacao');
-                $campoValor = array($dtRetornoDigitado, $dtPublicacaoDigitado, $pgPublicacaoDigitado);
-                $pessoal->gravar($campoNome, $campoValor, $id);
-                $data = date("Y-m-d H:i:s");
-
-                # Grava o log das alterações caso tenha
-                if (!is_null($alteracoes)) {
-                    $atividades .= 'Alterou: ' . $alteracoes;
-                    $tipoLog = 2;
-                    $intra->registraLog($idUsuario, $data, $atividades, "tblicencasemvencimentos", $id, $tipoLog, $idServidorPesquisado);
-                }
-            }
-
-            # Exibe o relatório ou salva de acordo com o botão pressionado
-            if ($botaoEscolhido == "imprimir") {
-                if ($erro == 0) {
-                    loadPage("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}&array={$array}");
-                    #loadPage("?");
-                    echo "oi";
-                } else {
-                    alert($msgErro);
-                    #back(1);
-                }
-            } else {
-                #loadPage("?");
-                echo "oi";
-            }
             break;
 
         ################################################################################################################

@@ -79,7 +79,7 @@ if ($acesso) {
 
         case "exibeLista" :
             $grid = new Grid();
-            $grid->abreColuna(12);
+            $grid->abreColuna(6);
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -90,30 +90,41 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
             
+            # Cria um menu
+            $menu2 = new MenuBar();
+
             # Relatório de Dias
             $botaoDias = new Link("<p id='pBotaoRelatorio'>Relatório de</p>Dias", "?fase=relatorioDias");
             $botaoDias->set_class('button');
             $botaoDias->set_target("_blank");
             $botaoDias->set_title('Relatório informando somente os dias publicados fruidos e pendentes');
-            $menu1->add_link($botaoDias, "right");
+            $menu2->add_link($botaoDias, "right");
 
             # Relatório de Publicações
             $botaoPub = new Link("<p id='pBotaoRelatorio'>Relatório de</p>Publicações", "?fase=relatorioPublicacao");
             $botaoPub->set_class('button');
             $botaoPub->set_target("_blank");
             $botaoPub->set_title('Relatório informando somente as publicações');
-            $menu1->add_link($botaoPub, "right");
+            $menu2->add_link($botaoPub, "right");
 
             # Relatórios           
-            $botaoRel = new Link("<p id='pBotaoRelatorio'>Relatório</p>Geral","?fase=relatorio");
+            $botaoRel = new Link("<p id='pBotaoRelatorio'>Relatório</p>Geral", "?fase=relatorio");
             $botaoRel->set_class('button');
             $botaoRel->set_target("_blank");
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $menu1->add_link($botaoRel, "right");
+            $menu2->add_link($botaoRel, "right");
 
-            $menu1->show();
+            $menu2->show();
             
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+
             # Formulário de Pesquisa
             $form = new Form('?');
 
@@ -431,7 +442,7 @@ if ($acesso) {
                 $relatorio->set_subtitulo($subtitulo);
             }
 
-            $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo",  "Número de Dias<br/>Publ./ Fruídos / Disp.", "Situação"]);
+            $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Processo", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Situação"]);
             $relatorio->set_align(["center", "left"]);
             #$tabela->set_width(array(5,15,15,15,8,15,15,15));
             $relatorio->set_funcao([null, null, "date_to_php", null, "exibeDiasLicencaPremio"]);

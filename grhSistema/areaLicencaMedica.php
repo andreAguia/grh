@@ -372,9 +372,10 @@ if ($acesso) {
         ############################################################################
 
         case "procedimentos" :
-
+            
+            br();
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimento(43);
+            $procedimento->exibeProcedimentoFilhos("Licença Médica");
             break;
 
         ############################################################################    

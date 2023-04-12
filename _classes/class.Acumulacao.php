@@ -397,8 +397,8 @@ class Acumulacao {
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Solicitação de Documentos", "?fase=despachoSolicitacaoDocumentos&id={$idAcumulacao}");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Análise", '?fase=despachoAnalise');
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Licitude", '?fase=despachoCienciaLicitude');
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Ilicitude", "?fase=despachoCienciaIlicitude&id={$idAcumulacao}");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
         $menu->show();
     }
 

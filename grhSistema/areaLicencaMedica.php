@@ -61,7 +61,7 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio" AND $fase <> "procedimentos") {
         $menu1 = new MenuBar();
 
         # Voltar
@@ -70,6 +70,15 @@ if ($acesso) {
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu1->add_link($botaoVoltar, "left");
+
+        # Procedimentos
+        if (Verifica::acesso($idUsuario, 1)) {
+            $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
+            $botaoProcedimentos->set_class('button');
+            $botaoProcedimentos->set_title('Exibe os procedimentos');
+            $botaoProcedimentos->set_target("_blank");
+            $menu1->add_link($botaoProcedimentos, "right");
+        }
 
         # Relatórios
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -360,7 +369,15 @@ if ($acesso) {
             $relatorio->show();
             break;
 
-        ################################################################
+        ############################################################################
+
+        case "procedimentos" :
+
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimento(43);
+            break;
+
+        ############################################################################    
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

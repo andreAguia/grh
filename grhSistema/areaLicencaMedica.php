@@ -155,7 +155,7 @@ if ($acesso) {
         case "lista" :
 
             # Define as licenças consideradas
-            $arrayLicencas = [1, 2, 30];
+            $arrayLicencas = [1, 30, 2];
 
             # Pega os dados
             $select = "SELECT tbservidor.idServidor,

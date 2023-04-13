@@ -35,7 +35,7 @@ if ($acesso) {
                       tbservidor.idServidor,
                       tbservidor.dtAdmissao,                      
                       tbpessoa.nomeMae,
-                      month(dtNasc)
+                      dtNasc
                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                 JOIN tbdocumentacao USING (idPessoa)
                                 JOIN tbcargo USING (idCargo)
@@ -50,10 +50,10 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo("Relatório de Docentes Admitidos em {$relatorioAno}");
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array("Matrícula", "Nome", "CPF", "Email", "Admissão","Nome da Mãe","Mês do Nascimento"));
+    $relatorio->set_label(array("Matrícula", "Nome", "CPF", "Email", "Admissão", "Nome da Mãe", "Nascimento"));
     #$relatorio->set_width(array(10, 25, 15, 25, 20));
-    $relatorio->set_align(array("center", "left", "center", "left", "center","left"));
-    $relatorio->set_funcao(array("dv", null, null, null, "date_to_php", null, "get_nomeMes"));
+    $relatorio->set_align(array("center", "left", "center", "left", "center", "left"));
+    $relatorio->set_funcao(array("dv", null, null, null, "date_to_php", null, "date_to_php"));
 
     $relatorio->set_classe(array(null, null, null, "pessoal"));
     $relatorio->set_metodo(array(null, null, null, "get_emails"));

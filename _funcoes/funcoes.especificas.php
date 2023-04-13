@@ -1200,7 +1200,7 @@ function exibeProcessosAcumulacao($idServidor) {
     $tabela = new Tabela();
     $tabela->set_titulo("Processo de Acumulação");
     $tabela->set_conteudo($conteudo);
-    
+
     $tabela->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo"]);
     $tabela->set_align(["center", "center", "center", "center", "left", "left"]);
     $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
@@ -1216,7 +1216,6 @@ function exibeProcessosAcumulacao($idServidor) {
             'operador' => '=',
             'id' => 'alerta')
     ));
-
 
     $tabela->set_totalRegistro(false);
     $tabela->set_mensagemTabelaVazia("Este servidor não possui processos de acumulação cadastrados!");
@@ -1404,3 +1403,33 @@ function array_sort($array, $on, $order = SORT_ASC) {
 
     return $new_array;
 }
+
+###########################################################
+
+/**
+ * Função que retorna o afastamento atual de um servidor (se houver)
+ * Obs esta função acessa a classe verifica afastamento
+ */
+function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
+
+    $painel = new Callout();
+    $painel->abre();
+
+    tituloTable("Despachos:");
+    br();
+
+    $menu = new Menu();
+    #$menu->add_item('titulo','Documentos');
+
+    $menu->add_item("linkWindow", "Despacho: Solicitação de Declaração Pendente", "?fase=despachoDeclaracaoPendente");
+    $menu->add_item("linkWindow", "Despacho: Solicitação de Correção", "?fase=despachoCorrecao");
+    $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise","?fase=despachoAnalise");
+    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada","?fase=despachoConfianca");
+    $menu->add_item("linkWindow", "Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
+
+    $menu->show();
+
+    $painel->fecha();
+}
+
+##################################################################

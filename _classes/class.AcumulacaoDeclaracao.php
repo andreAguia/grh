@@ -18,7 +18,6 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->getNumDecEntregues([$ano]);
          */
-
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
                      FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
@@ -58,7 +57,6 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->getNumDecEntregues([$ano]);
          */
-
         # slq
         $select = "SELECT COUNT(idAcumulacaoDeclaracao)
                      FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
@@ -99,14 +97,13 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
-
         # Acessa o banco de dados
         $pessoal = new Pessoal();
-        
+
         # Pega os dados
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
         $servidores = $this->getnumServidoresAtivos($ano, $idLotacao, $parametroNome);
-        
+
         # Preenche a tabela
         $array[] = array("Entregaram", $entregaram);
         $array[] = array("NÃO Entregaram", $servidores - $entregaram);
@@ -121,7 +118,7 @@ class AcumulacaoDeclaracao {
         } else {
             $tabela->set_titulo("Declaração ({$ano})");
         }
-        
+
         $tabela->set_label(array("Descrição", "Nº de Servidores"));
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
@@ -140,18 +137,17 @@ class AcumulacaoDeclaracao {
          * 
          * @syntax $AcumulacaoDeclaracao->showResumoGeral();  
          */
-        
         # Acessa o banco de dados
         $pessoal = new Pessoal();
-        
+
         # Pega os dados
         $acumulam = $this->getNumAcumula($ano, $idLotacao, $parametroNome);
         $entregaram = $this->getNumDecEntregues($ano, $idLotacao, $parametroNome);
-        
+
         # Preenche a tabela
         $array[] = array("Acumulam", $acumulam);
         $array[] = array("NÃO Acumulam", $entregaram - $acumulam);
-        
+
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
@@ -162,11 +158,11 @@ class AcumulacaoDeclaracao {
         } else {
             $tabela->set_titulo("Declaração ({$ano})");
         }
-        
+
         $tabela->set_label(array("Descrição", "Nº de Servidores"));
         $tabela->set_totalRegistro(false);
         $tabela->set_align(array("center"));
-        
+
         $tabela->set_rodape("Total que Entregaram: " . $entregaram);
         $tabela->show();
     }
@@ -182,7 +178,7 @@ class AcumulacaoDeclaracao {
             $select = "SELECT MAX(anoReferencia) as dd FROM tbacumulacaodeclaracao WHERE idServidor = {$idServidor} LIMIT 1";
             $pessoal = new Pessoal();
             $anoref = $pessoal->select($select, false);
-            
+
             if (empty($anoref[0])) {
                 return $this->getUltimoAnoDeclaracao();
             } else {
@@ -193,7 +189,7 @@ class AcumulacaoDeclaracao {
 
     ###########################################################
 
-    function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNome = null ) {
+    function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNome = null) {
 
         /**
          * informa o número de Servidores Ativos
@@ -222,7 +218,7 @@ class AcumulacaoDeclaracao {
                 $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
             }
         }
-        
+
         $pessoal = new Pessoal();
         $count = $pessoal->count($select);
         return $count;
@@ -233,8 +229,6 @@ class AcumulacaoDeclaracao {
     /**
      * Método get_ultimoAnoDeclaracao
      * informa ultimo ano cadastrado de uma declaração
-     * 
-     * @param	string $idServidor idServidor do servidor
      */
     public function getUltimoAnoDeclaracao() {
 
@@ -245,8 +239,25 @@ class AcumulacaoDeclaracao {
         if (empty($ano[0])) {
             return date("Y");
         } else {
-           return $ano[0];
+            return $ano[0];
         }
+    }
+
+    ###########################################################     
+
+    /**
+     * Método getUltimoProcessoCadastrado
+     * informa ultimo número de processo cadastrado
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function getUltimoProcessoCadastrado($idServidor) {
+
+        $select = "SELECT processo FROM tbacumulacaodeclaracao WHERE idServidor = {$idServidor} ORDER BY anoreferencia DESC LIMIT 1";
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        return $row[0];
     }
 
     ###########################################################

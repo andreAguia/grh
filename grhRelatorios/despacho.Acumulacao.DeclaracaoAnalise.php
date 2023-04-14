@@ -33,7 +33,7 @@ if ($acesso) {
     # despacho
     $despacho = new Despacho();
     $despacho->set_destino("Prezado(a) {$pessoal->get_nome($idServidorPesquisado)},");
-    $despacho->set_texto("Considerando que esta Gerência não localizou o processo que analisou a Acumulação de Cargos Públicos declarada, solicitamos anexar a página do DOERJ que publicou a sua Licitude, ou algum documento oficial que contenha o número do processo e/ou a data da publicação para que possamos buscar o documento, com vistas à conclusão do presente processo.");
+    $despacho->set_texto("Considerando que esta Gerência não localizou o processo que analisou a Acumulação de Cargos Públicos declarada, solicitamos anexar a página do DOERJ que publicou a sua Licitude, ou algum documento oficial que contenha o número do processo e/ou a data da publicação para que possamos fazer a busca, com vistas à conclusão do presente processo.");
     $despacho->set_texto("Em não existindo o processo de análise, faz-se necessária a abertura de um novo processo no sistema SEI, seguindo as orientações do link abaixo, para a devida análise na Acumulação de Cargos pelo órgão competente, regularizando a sua situação funcional.");
     $despacho->set_texto("<a href='https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/abertura-de-processo/'>https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/abertura-de-processo/</a>");
     $despacho->set_texto("Atenciosamente,");

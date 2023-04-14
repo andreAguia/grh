@@ -1444,13 +1444,18 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor idServidor do servidor
      */ {
-        $select = 'SELECT idPerfil
+
+        if (is_null($idServidor)) {
+            return null;
+        } else {
+            $select = "SELECT idPerfil
                          FROM tbservidor
-                        WHERE idServidor = ' . $idServidor;
+                        WHERE idServidor = {$idServidor}";
 
-        $row = parent::select($select, false);
+            $row = parent::select($select, false);
 
-        return $row[0];
+            return $row[0];
+        }
     }
 
     ###########################################################

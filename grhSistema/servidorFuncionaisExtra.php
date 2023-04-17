@@ -56,8 +56,8 @@ for ($i = 0; $i < $quantidade; $i++) {
 if (!empty($idConcurso)) {
     $concurso = new Concurso();
     $dtPublicacaoEdital = date_to_bd($concurso->get_dtPublicacaoEdital($idConcurso));
-    
-    if (strtotime($dtAdmissao) < strtotime($dtPublicacaoEdital)){
+
+    if (strtotime($dtAdmissao) < strtotime($dtPublicacaoEdital)) {
         $msgErro .= 'O servidor não pode ser admitido antes da data do concurso que o aprovou!\n';
         $erro = 1;
     }
@@ -65,9 +65,11 @@ if (!empty($idConcurso)) {
 
 
 # Verifica se a exoneração é posterior a admissão
-if ((strtotime($dtSaida) < strtotime($dtAdmissao)) AND (!is_null($dtSaida))) {
-    $msgErro .= 'O servidor não pode ser exonerado antes de ser admitido!\nA data está errada!\n';
-    $erro = 1;
+if (!is_null($dtSaida)) {
+    if (strtotime($dtSaida) < strtotime($dtAdmissao)) {
+        $msgErro .= 'O servidor não pode ser exonerado antes de ser admitido!\nA data está errada!\n';
+        $erro = 1;
+    }
 }
 
 # Verifica se quando a data de saída estiver preenchida o motivo tb estará

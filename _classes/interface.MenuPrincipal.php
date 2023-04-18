@@ -318,8 +318,10 @@ class MenuPrincipal {
         # Pega os projetos cadastrados
         $select = 'SELECT idMenuDocumentos,
                           categoria,
+                          tipo,
                           texto,
-                          title
+                          title,
+                          link
                      FROM tbmenudocumentos
                   ORDER BY categoria, texto';
 
@@ -343,14 +345,22 @@ class MenuPrincipal {
                     $title = $valor["title"];
                 }
 
-                # Verifica qual documento
-                $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
-                if (file_exists($arquivoDocumento)) {
-                    # Caso seja PDF abre uma janela com o pdf
-                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                } else {
-                    # Caso seja um .doc, somente faz o download
-                    $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+                # Verifica qual o tipo: 1-Documento e 2-Link
+                if ($valor["tipo"] == 1) {
+                    # É do tipo Documento
+                    $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+                    if (file_exists($arquivoDocumento)) {
+                        # Caso seja PDF abre uma janela com o pdf
+                        $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                    } else {
+                        # Caso seja um .doc, somente faz o download
+                        $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+                    }
+                }
+
+                if ($valor["tipo"] == 2) {
+                    # É do tipo Link                    
+                    $menu->add_item('linkWindow', $valor["texto"], $valor["link"], $title);
                 }
             }
         }
@@ -855,7 +865,7 @@ class MenuPrincipal {
             $botao->set_title('Cadastro de atos de investidura');
             $menu->add_item($botao);
         }
-        
+
         if (Verifica::acesso($this->idUsuario, 1)) {
             $botao = new BotaoGrafico();
             $botao->set_label('Problemas na Progressão');

@@ -62,6 +62,11 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT idMenuDocumentos,
                                      categoria,
+                                     CASE
+                                        WHEN tipo = 1 THEN 'Documento'
+                                        WHEN tipo = 2 THEN 'Link'
+                                        ELSE '---'
+                                     END,
                                      texto,
                                      title,
                                      idMenuDocumentos,
@@ -71,8 +76,10 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita("SELECT categoria,
+                                     tipo, 
                                      texto,
-                                     title
+                                     title,
+                                     link
                                 FROM tbmenudocumentos
                                WHERE idMenuDocumentos = {$id}");
 
@@ -83,12 +90,15 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Categoria", "Texto", "Title", "Ver"]);
-    $objeto->set_width([5, 20, 30, 30, 5, 5]);
-    $objeto->set_align(["center", "center", "left", "left"]);
+    $objeto->set_label(["Id", "Categoria", "Tipo", "Texto", "Title", "Ver"]);
+    $objeto->set_width([5, 20, 5, 25, 30, 5, 5]);
+    $objeto->set_align(["center", "center", "center", "left", "left"]);
 
-    $objeto->set_classe([null, null, null, null, "MenuDocumentos"]);
-    $objeto->set_metodo([null, null, null, null, "exibeDocumento"]);
+    $objeto->set_classe([null, null, null, null, null, "MenuDocumentos"]);
+    $objeto->set_metodo([null, null, null, null, null, "exibeDocumento"]);
+
+    $objeto->set_rowspan(1);
+    $objeto->set_grupoCorColuna(1);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -114,29 +124,45 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'size' => 200,
-            'col' => 6,
+            'col' => 8,
             'title' => 'A Categoria do Documento.',
             'linha' => 1),
+        array('linha' => 1,
+            'col' => 2,
+            'nome' => 'tipo',
+            'label' => 'Tipo:',
+            'tipo' => 'combo',
+            'required' => true,
+            'array' => [[null, null], [1, "Documento"], [2, "Link"]],
+            'size' => 15),
         array('nome' => 'texto',
             'label' => 'Texto do link',
             'tipo' => 'texto',
             'required' => true,
             'size' => 200,
-            'col' => 6,
+            'col' => 8,
             'title' => 'O nome do documento, o texto que aparecerá no menu.',
             'linha' => 2),
         array('nome' => "title",
-            'label' => 'Descrição',
+            'label' => 'Descrição:',
             'tipo' => 'texto',
             'size' => 200,
-            'col' => 6,
+            'col' => 8,
             'title' => 'O texto que aparecerá no mouseover.',
-            'linha' => 3)));
+            'linha' => 3),
+        array('nome' => "link",
+            'label' => 'Link:',
+            'tipo' => 'texto',
+            'size' => 200,
+            'col' => 8,
+            'title' => 'O Caminho quando o tipo foor link.',
+            'linha' => 3),
+        ));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
 
-   # Dados da rotina de Upload
+    # Dados da rotina de Upload
     $pasta = PASTA_DOCUMENTOS;
     $nome = "Documento";
     $tabela = "tbmenudocumentos";

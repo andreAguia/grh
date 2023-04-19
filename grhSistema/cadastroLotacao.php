@@ -268,7 +268,7 @@ if ($acesso) {
     $botaoOrg->set_title("Exibe o Organograma da UENF");
     $botaoOrg->set_imagem($imagem3);
     $botaoOrg->set_target("_blank");
-    $botaoOrg->set_url('../documentos/25.pdf');
+    $botaoOrg->set_url('../../documentos/25.pdf');
 
     # Organograma Selecionado (somente admin)
     // retirei pois não era usado

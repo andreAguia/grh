@@ -254,7 +254,7 @@ if ($acesso) {
     $botaoGra->set_url("?fase=grafico");
     $botaoGra->set_imagem($imagem1);
 
-    # Relatório
+    # Relatório 
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
@@ -262,20 +262,23 @@ if ($acesso) {
     $botaoRel->set_target("_blank");
     $botaoRel->set_url('../grhRelatorios/lotacao.php');
 
-    # Organograma
+    # Organograma Geral
     $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
     $botaoOrg = new Button();
     $botaoOrg->set_title("Exibe o Organograma da UENF");
     $botaoOrg->set_imagem($imagem3);
     $botaoOrg->set_target("_blank");
-    $botaoOrg->set_url('../_img/organograma.png');
+    $botaoOrg->set_url('../documentos/25.pdf');
 
-    # Organograma2
-    $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
-    $botaoOrga = new Button();
-    $botaoOrga->set_title("Exibe o Organograma2 da UENF");
-    $botaoOrga->set_imagem($imagem3);
-    $botaoOrga->set_url("?fase=organograma");
+    # Organograma Selecionado (somente admin)
+    // retirei pois não era usado
+    if (Verifica::acesso($idUsuario, 1)) {
+        $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
+        $botaoOrga = new Button();
+        $botaoOrga->set_title("Exibe o Organograma2 da UENF");
+        $botaoOrga->set_imagem($imagem3);
+        $botaoOrga->set_url("?fase=organograma");
+    }
 
     # Cargos Ativos
     $botaoAtivo = new Button("Lotações Ativas", "?tipo=1");
@@ -286,7 +289,7 @@ if ($acesso) {
     $botaoInativo->set_title("Exibe os Cargos Inativos");
 
     # Cria o array de botões
-    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoOrga);
+    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg);
     if ($tipo) {
         array_unshift($arrayBotoes, $botaoInativo);
     } else {

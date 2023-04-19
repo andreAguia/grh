@@ -233,7 +233,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
-        
+
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
             $botao = new BotaoGrafico();
@@ -357,6 +357,19 @@ class MenuServidor {
         if (($situacao <> 1) AND ($pessoal->get_motivo($this->idServidor) <> "Outros")) {
             $mensagem[] = $pessoal->get_motivo($this->idServidor);
         }
+
+        # Verifica se tem ato de investidura cadastrado no sistema
+        # Somente estatutários ou antigos celetistas
+        if ($this->perfil == 1 OR $this->perfil == 4) {
+
+            # Pega o caminho do arquivo
+            $arquivo = PASTA_ATOINVESTIDURA . $this->idServidor . ".pdf";
+            
+            if (!file_exists($arquivo)) {
+                $mensagem[] = "Falta cadastrar o <b>ato de investidura</b>";
+            }
+        }
+
 
         # Alertas        
         $metodos = get_class_methods('Checkup');
@@ -560,7 +573,7 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
-        $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");        
+        $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
         $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');

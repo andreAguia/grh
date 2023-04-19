@@ -233,15 +233,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Pasta funcional do servidor');
         $menu->add_item($botao);
-
-//        # Ato de Investidura
-//        $botao = new BotaoGrafico();
-//        $botao->set_label('Ato de Investidura');
-//        $botao->set_url('servidorAto.php?grh=1');
-//        $botao->set_target("_blank");
-//        $botao->set_imagem(PASTA_FIGURAS . 'ato.png', $this->tamanhoImagem, $this->tamanhoImagem);
-//        $botao->set_title('Ato de Investidura do servidor');
-//        $menu->add_item($botao);
+        
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
             $botao = new BotaoGrafico();
@@ -324,14 +316,14 @@ class MenuServidor {
         $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
 
-        # Ato de investidura
-        $botao = new BotaoGrafico();
-        $botao->set_label('Atos de Investidura');
-        $botao->set_url("servidorAto.php?grh=1&id={$this->idServidor}");
-        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de atos de investidura');
-        $botao->set_target("_blank");
-        $menu->add_item($botao);
+//        # Ato de investidura
+//        $botao = new BotaoGrafico();
+//        $botao->set_label('Atos de Investidura');
+//        $botao->set_url("servidorAto.php?grh=1&id={$this->idServidor}");
+//        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $this->tamanhoImagem, $this->tamanhoImagem);
+//        $botao->set_title('Cadastro de atos de investidura');
+//        $botao->set_target("_blank");
+//        $menu->add_item($botao);
 
         $menu->show();
         br();
@@ -523,10 +515,13 @@ class MenuServidor {
         br();
 
         $menu = new Menu("menuServidor");
-        if ($this->perfil == 1 AND $this->situacao == "Ativo") {
+        if ($this->perfil == 1) {
             $menu->add_item('titulo', 'Admissão', '#');
-            $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
-            $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
+            if ($this->situacao == "Ativo") {
+                $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
+                $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
+            }
+            $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
         }
 
         $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
@@ -552,10 +547,6 @@ class MenuServidor {
             $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
         }
 
-        if (Verifica::acesso($this->idUsuario, 1)) {
-            $menu->add_item('linkWindow', 'Declaração MODELO', '../grhRelatorios/declaracao.MODELO.php');
-        }
-
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
@@ -569,8 +560,7 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
-        $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
-        $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
+        $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");        
         $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
         $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');

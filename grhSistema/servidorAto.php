@@ -52,7 +52,7 @@ if ($acesso) {
 
     # Dados da rotina de Upload
     $pasta = PASTA_ATOINVESTIDURA;
-    $nome = "Ato de Investidura de <b>{$pessoal->get_nome($id)}</b>";
+    $nome = "Ato de Investidura de {$pessoal->get_nome($id)}";
     $extensoes = ["pdf"];
 
     ################################################################
@@ -65,10 +65,10 @@ if ($acesso) {
             if (file_exists("{$pasta}{$id}.pdf")) {
                 
                 tituloTable($nome);
-                br();
+                br();;
 
                 # Cria um menu
-                $menu = new MenuBar();
+                $menu = new MenuBar("small button-group");
 
                 $botaoApaga = new Button("Excluir o Arquivo");
                 $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
@@ -183,6 +183,7 @@ if ($acesso) {
             alert("Arquivo do {$nome} Cadastrado !!");
 
             # Fecha a janela
+            
             echo '<script type="text/javascript" language="javascript">window.close();</script>';
             break;
 

@@ -564,7 +564,7 @@ if ($acesso) {
     $relatorio->set_dataImpressao(false);
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
-    #$relatorio->set_linhaNomeColuna(false);
+    $relatorio->set_exibeLinhaFinal(false);
     $relatorio->set_log(false);
     $relatorio->show();
 
@@ -581,8 +581,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2]) OR!empty($result[0][3]) OR!empty($result[0][4])) {
-
-        br();
+       
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);

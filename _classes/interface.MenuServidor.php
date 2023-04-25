@@ -56,38 +56,61 @@ class MenuServidor {
             $grid->fechaColuna();
         }
         # --
-        $grid->abreColuna(12, 6, 6);
-        $this->moduloOcorrencias();
-        $grid->fechaColuna();
+        if ($this->perfil <> 11) {
+            $grid->abreColuna(12, 6, 6);
+            $this->moduloOcorrencias();
+            $grid->fechaColuna();
+        }
         # --
-        $grid->abreColuna(12, 6, 6);
-        $this->moduloVinculos();
-        $grid->fechaColuna();
+        if ($this->perfil <> 11) {
+            $grid->abreColuna(12, 6, 6);
+            $this->moduloVinculos();
+            $grid->fechaColuna();
+        }
         # --
-        $grid->abreColuna(12, 6, 6);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $grid->abreColuna(12, 6, 6);
+        } else {
+            $grid->abreColuna(12, 6, 5);
+        }
         $this->moduloFuncionais();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(8, 6, 4);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $grid->abreColuna(8, 6, 4);
+        } else {
+            $grid->abreColuna(8, 6, 5);
+        }
+
         $this->moduloPessoais();
-        $this->moduloBeneficios();
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $this->moduloBeneficios();
+        } else {
+            br(10);
+        }
         $grid->fechaColuna();
         # --
         $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
         # --
-        $grid->abreColuna(12, 6, 4);
-        $this->moduloFinanceiro();
-        $grid->fechaColuna();
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $grid->abreColuna(12, 6, 4);
+            $this->moduloFinanceiro();
+            $grid->fechaColuna();
+        }
         # --
-        $grid->abreColuna(12, 6, 4);
-        $this->moduloAfastamentos();
-        $grid->fechaColuna();
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $grid->abreColuna(12, 6, 4);
+            $this->moduloAfastamentos();
+            $grid->fechaColuna();
+        }
         # --
-        $grid->abreColuna(12, 6, 4);
-        $this->moduloRelatorios();
-        $grid->fechaColuna();
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $grid->abreColuna(12, 6, 4);
+            $this->moduloRelatorios();
+            $grid->fechaColuna();
+        }
         # --
         $grid->fechaGrid();
     }
@@ -252,61 +275,75 @@ class MenuServidor {
         }
 
         # Acumulação
-        $botao = new BotaoGrafico();
-        $botao->set_label('Acumulação de Cargos Públicos');
-        #$botao->set_url('servidorAcumulacao.php?grh=1');
-        $botao->set_url('servidorAcumulacao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle de Acumulação de Cargo Público');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $botao = new BotaoGrafico();
+            $botao->set_label('Acumulação de Cargos Públicos');
+            #$botao->set_url('servidorAcumulacao.php?grh=1');
+            $botao->set_url('servidorAcumulacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'acumulacao.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Controle de Acumulação de Cargo Público');
+            $menu->add_item($botao);
+        }
 
         # Declaração de Acumulação
-        $botao = new BotaoGrafico();
-        $botao->set_label('Declaração de Acumulação');
-        $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $botao = new BotaoGrafico();
+            $botao->set_label('Declaração de Acumulação');
+            $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Controle da entrega da declaração de acumulação de cargo público');
+            $menu->add_item($botao);
+        }
 
         # Prestador de Contas
-        $botao = new BotaoGrafico();
-        $botao->set_label('Ordenação de Despesas');
-        $botao->set_url('servidorOrdenador.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Histórico de designação para ordenação de despesas');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $botao = new BotaoGrafico();
+            $botao->set_label('Ordenação de Despesas');
+            $botao->set_url('servidorOrdenador.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Histórico de designação para ordenação de despesas');
+            $menu->add_item($botao);
+        }
 
         # Sei
         $botao = new BotaoGrafico();
-        $botao->set_label('Processos no Sei');
-        $botao->set_url('servidorSei.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de processos no Sei');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $botao->set_label('Processos no Sei');
+            $botao->set_url('servidorSei.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro de processos no Sei');
+            $menu->add_item($botao);
+        }
 
         # Elogios
-        $botao = new BotaoGrafico();
-        $botao->set_label('Elogios');
-        $botao->set_url('servidorElogios.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'elogios.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Elogios');
+            $botao->set_url('servidorElogios.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'elogios.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
+            $menu->add_item($botao);
+        }
 
         # Advertências
-        $botao = new BotaoGrafico();
-        $botao->set_label('Penalidades');
-        $botao->set_url('servidorPenalidades.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Penalidades');
+            $botao->set_url('servidorPenalidades.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
+            $menu->add_item($botao);
+        }
 
         # Avaliação
-        $botao = new BotaoGrafico();
-        $botao->set_label('Avaliação');
-        $botao->set_url('servidorAvaliacao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'avaliacao.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle das avaliações de desempenho e qualidade do servidor');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {   // Ser não for estagiário
+            $botao = new BotaoGrafico();
+            $botao->set_label('Avaliação');
+            $botao->set_url('servidorAvaliacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'avaliacao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Controle das avaliações de desempenho e qualidade do servidor');
+            $menu->add_item($botao);
+        }
 
         # Obs
         $botao = new BotaoGrafico();
@@ -364,7 +401,7 @@ class MenuServidor {
 
             # Pega o caminho do arquivo
             $arquivo = PASTA_ATOINVESTIDURA . $this->idServidor . ".pdf";
-            
+
             if (!file_exists($arquivo)) {
                 $mensagem[] = "Falta cadastrar o <b>ato de investidura</b>";
             }
@@ -597,7 +634,11 @@ class MenuServidor {
         titulo('Pessoais');
         br();
 
-        $menu = new MenuGrafico(3);
+        if ($this->perfil <> 11) {
+            $menu = new MenuGrafico(3);
+        } else {
+            $menu = new MenuGrafico(4);
+        }
         $botao = new BotaoGrafico();
         $botao->set_label('Pessoais');
         $botao->set_url('servidorPessoais.php?grh=1');
@@ -626,19 +667,23 @@ class MenuServidor {
         $botao->set_title('Cadastro de Formação Escolar do Servidor');
         $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Parentes');
-        $botao->set_url('servidorDependentes.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro dos Parentes do Servidor');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Parentes');
+            $botao->set_url('servidorDependentes.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'dependente.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro dos Parentes do Servidor');
+            $menu->add_item($botao);
+        }
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Vacinas');
-        $botao->set_url('servidorVacina.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Controle de vacinação de servidores');
-        $menu->add_item($botao);
+        if ($this->perfil <> 11) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Vacinas');
+            $botao->set_url('servidorVacina.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Controle de vacinação de servidores');
+            $menu->add_item($botao);
+        }
 
         $menu->show();
         br();

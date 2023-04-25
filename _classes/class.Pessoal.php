@@ -3567,7 +3567,7 @@ class Pessoal extends Bd {
             if ($count == 0) {
                 # Diferencia se o select voltou vazio por não ter ninguém na faixa
                 # ou se por não ter matrícula vaga na faixa.
-                if ($pessoal->get_existeMatricula($faixa[1])) {
+                if ($this->get_existeMatricula($faixa[1])) {
                     # Já ocupado o último valor dessa faixa
                     alert("Não há mais matrículas vagas para esse perfil./nAumente o número de matrículas no cadastro de perfil.");
                     back(1);

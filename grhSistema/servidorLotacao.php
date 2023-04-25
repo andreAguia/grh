@@ -85,12 +85,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data", "Lotação", "Motivo"));
-    $objeto->set_width(array(10, 30, 50));
-    $objeto->set_align(array("center", "left", "left"));
-    $objeto->set_funcao(array("date_to_php"));
-    $objeto->set_classe(array(null, "pessoal"));
-    $objeto->set_metodo(array(null, "get_nomelotacao"));
+    $objeto->set_label(["Data", "Lotação", "Motivo"]);
+    $objeto->set_width([10, 30, 50]);
+    $objeto->set_align(["center", "left", "left"]);
+    $objeto->set_funcao(["date_to_php"]);
+    $objeto->set_classe([null, "pessoal"]);
+    $objeto->set_metodo([null, "get_nomelotacao"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

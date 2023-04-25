@@ -60,9 +60,10 @@ if ($acesso) {
 
             # Perfil                
             $perfil = $pessoal->select('SELECT idperfil,
-                                               nome
+                                               nome,
+                                               tipo
                                           FROM tbperfil
-                                      ORDER BY idPerfil');
+                                      ORDER BY tipo, nome');
 
             array_unshift($perfil, array(null, null));
 
@@ -70,6 +71,7 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_required(true);
+            $controle->set_optgroup(true);
             $controle->set_col(3);
             $controle->set_title('O perfil do Servidor.');
             $controle->set_array($perfil);
@@ -318,7 +320,8 @@ if ($acesso) {
 
             # Lotação               
             $lotacao = $pessoal->select('SELECT idLotacao, 
-                                                 concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao
+                                                 concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao,
+                                                 if(ativo = 1,"Lotações Ativas","Lotações Inativas")
                                             FROM tblotacao 
                                         ORDER BY ativo DESC, lotacao');
 
@@ -328,6 +331,7 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(3);
             $controle->set_col(6);
+            $controle->set_optgroup(true);
             $controle->set_required(true);
             $controle->set_title('A Lotação do Servidor.');
             $controle->set_array($lotacao);
@@ -485,7 +489,7 @@ if ($acesso) {
             $matExterna = post('matExterna');
 
             $classe = null;
-            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);            
 
             # Inicia flag de perfil ativo
             $temAtivo = false;
@@ -544,7 +548,7 @@ if ($acesso) {
                     $matricula = $pessoal->get_novaMatricula($perfil);
                 }
             }
-
+echo "oi:",$matricula;
             # Verifica se a lotação foi digitada
             if (empty($lotacao)) {
                 $msgErro .= 'Você tem que informar a Lotação do Servidor!\n';

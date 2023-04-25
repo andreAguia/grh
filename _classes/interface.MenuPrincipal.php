@@ -1190,8 +1190,8 @@ class MenuPrincipal {
         titulo('O Tempo em Campos');
 
         echo '<!-- Weather widget by https://meteodays.com -->';
-        echo '<a id="ms-informer-link-4767178cf5ffdeab09b8623dfc04d28e" class="ms-informer-link" href="https://meteodays.com/pt/weather/overview/campos-dos-goytacazes">O tempo em Campos dos Goytacazes</a>
-<script class="ms-informer-script" src="https://meteodays.com/pt/informer/script/4767178cf5ffdeab09b8623dfc04d28e"></script>';
+        echo '<a id="ms-informer-link-4767178cf5ffdeab09b8623dfc04d28e" class="ms-informer-link" href="https://meteodays.com/pt/weather/overview/campos-dos-goytacazes">O tempo em Campos dos Goytacazes</a>';
+        echo '<script class="ms-informer-script" src="https://meteodays.com/pt/informer/script/4767178cf5ffdeab09b8623dfc04d28e"></script>';
         echo '<!-- End -->';
        
     }

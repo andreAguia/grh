@@ -313,7 +313,7 @@ if ($acesso) {
             }
 
             # Extensões possíveis
-            $extensoes = array("jpg","jpeg","png");
+            $extensoes = array("jpg");
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));

@@ -40,11 +40,13 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
+    $parametroOrdenacao = post('parametroOrdenacao', retiraAspas(get_session('parametroOrdenacao', "tbpessoa.nome asc")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroOrdenacao', $parametroOrdenacao);
 
     # Começa uma nova página
     $page = new Page();
@@ -139,7 +141,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -159,7 +161,26 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $ordenacaoCombo = array(
+                array("tbpessoa.nome asc", "por Nome asc"),
+                array("tbpessoa.nome desc", "por Nome desc"),
+                array("UADM asc, DIR asc, GER asc", "por Lotação asc"),
+                array("UADM desc, DIR desc, GER desc", "por Lotação desc"),
+                array("3 asc", "por Admissão asc"),
+                array("3 desc", "por Admissão desc")
+            );
+
+            $controle = new Input('parametroOrdenacao', 'combo', 'Ordenado:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Ordenação');
+            $controle->set_array($ordenacaoCombo);
+            $controle->set_valor($parametroOrdenacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
@@ -171,6 +192,7 @@ if ($acesso) {
             # Pega os dados
             $select = "SELECT idFuncional,
                               idServidor,
+                              dtAdmissao,
                               idPessoa
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
@@ -188,7 +210,9 @@ if ($acesso) {
                 }
             }
 
-            $select .= "  ORDER BY tbpessoa.nome";
+            $select .= " ORDER BY {$parametroOrdenacao}";
+            
+            #echo $select;
 
             $resumo = $pessoal->select($select);
 
@@ -198,9 +222,9 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
                 $tabela->set_titulo("Área de Fotografias dos Servidores");
-                $tabela->set_label(["IdFuncional", "Servidor", "Foto"]);
+                $tabela->set_label(["IdFuncional", "Servidor", "Admissão", "Foto"]);
                 $tabela->set_align(["center", "left"]);
-                $tabela->set_funcao([null, null, "exibeFoto"]);
+                $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
                 $tabela->set_classe([null, "Pessoal"]);
                 $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
                 $tabela->show();

@@ -92,7 +92,7 @@ if ($acesso) {
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
-//            $menu1->add_link($botaoVoltar, "left");
+            $menu1->add_link($botaoVoltar, "left");
 //            
 //            # Relatório esquisito
 //            $botaoRel = new Link("Relatório", '../grhRelatorios/vagas.passoni.php');

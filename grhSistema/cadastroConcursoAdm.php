@@ -42,9 +42,13 @@ if ($acesso) {
     } else {
         # Pega as variáveis
         $idServidorPesquisado = get('idServidorPesquisado');
-        $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
-        set_session('parametroCargo', $parametroCargo);
         $concurso = new Concurso($idConcurso);
+
+        $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
+        $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
+
+        set_session('parametroCargo', $parametroCargo);
+        set_session('parametroSituacao', $parametroSituacao);
     }
 
     # Começa uma nova página
@@ -166,7 +170,7 @@ if ($acesso) {
                                        ORDER BY 2');
 
             # acrescenta todos
-            array_unshift($result, array('*', '-- Todos --'));
+            array_unshift($result, ['*', '-- Todos --']);
 
             $controle = new Input('parametroCargo', 'combo', 'Cargo - Área - Função:', 1);
             $controle->set_size(30);
@@ -176,7 +180,18 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_autofocus(true);
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array([['*', '-- Todos --'], [1, 'Ativos'], [2, 'Inativos']]);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             $form->show();
@@ -185,6 +200,7 @@ if ($acesso) {
             $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
                               idServidor, 
                               cotasConcurso,
+                              idServidor,
                               idServidor,
                               idServidor,
                               idServidor,
@@ -212,7 +228,17 @@ if ($acesso) {
                 $atividade = "Visualizou a classificação do concurso " . $concurso->get_nomeConcurso($idConcurso);
             }
 
-            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso";
+            if ($parametroSituacao <> "*") {
+                if ($parametroSituacao == 1) {
+                    $select .= ' AND situacao = 1';
+                }
+
+                if ($parametroSituacao == 2) {
+                    $select .= ' AND situacao <> 1';
+                }
+            }
+
+            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao desc";
 
             # Pega os dados
             $row = $pessoal->select($select);
@@ -221,17 +247,17 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Classificação - {$titulo}");
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Ant. Ocupada por:", "Obs", "Editar"]);
-            $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "exibeObs"]);
+            $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs", "Editar"]);
+            $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObs"]);
             $tabela->set_funcao([null, null, "trataNulo"]);
-            $tabela->set_width(array(15, 5, 5, 20, 25, 20, 5));
+            $tabela->set_width(array(15, 5, 5, 20, 20, 15, 15));
             $tabela->set_align(array("left", "center", "center", "left", "left"));
 
             # Botão de exibição dos servidores com permissão a essa regra
             $botao = new Link(null, '?fase=editaServidor&idServidorPesquisado=', 'Edita o Servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

@@ -1139,13 +1139,14 @@ class Pessoal extends Bd {
      */
     public function get_perfil($idServidor) {
         # Pega o cargo do servidor
-        $select = 'SELECT tbperfil.idPerfil,tbperfil.nome
-                     FROM tbservidor JOIN tbperfil USING (idPerfil)
-                    WHERE idServidor = ' . $idServidor;
+        $select = "SELECT tbperfil.idPerfil,
+                          nome
+                     FROM tbperfil JOIN tbservidor USING (idPerfil)
+                    WHERE idServidor = {$idServidor}";
 
         $row = parent::select($select, false);
 
-        $retorno = $row[1];
+        $retorno = $row["nome"];
 
         # Verifica se e cedido para exibir o orgao de origem
         if ($row[0] == 2) {
@@ -2554,9 +2555,9 @@ class Pessoal extends Bd {
             );
 
             if ($this->get_situacao($idServidor) == "Ativo") {
-                p($this->get_situacao($idServidor), "pconcursadoAtivo");
+                span($this->get_situacao($idServidor), "verde");
             } else {
-                p($this->get_situacao($idServidor), "pconcursadoNaoAtivo");
+                span($this->get_situacao($idServidor), "vermelho");
             }
         }
     }

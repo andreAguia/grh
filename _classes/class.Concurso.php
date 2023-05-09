@@ -552,7 +552,9 @@ class Concurso {
         }
 
         if (is_numeric($conteudo[0])) {
-            return $pessoal->get_nome($conteudo[0]);
+            plista($pessoal->get_nome($conteudo[0]));
+            hr("grosso");
+            $this->get_concurso($conteudo[0]);
         }
     }
 
@@ -909,4 +911,71 @@ class Concurso {
     }
 
 ###########################################################
+
+    public function servidorInativoVagaPreenchida($idServidor) {
+
+        /**
+         * Informa (Sim / Não) se a vaga deste concursado inativo foi preenchida por outro servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idServidorOcupanteAnterior,
+                          idServidor
+                     FROM tbservidor
+                    WHERE idServidorOcupanteAnterior = {$idServidor}";
+
+        $retorno = $pessoal->select($select, false);
+
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            echo "---";
+        } else {
+            if (empty($retorno[0])) {
+                span("Não", "vermelho");
+            } else {
+                span($pessoal->get_nome($retorno[1]));
+                hr("grosso");
+                $this->get_concurso($retorno[1]);
+                
+            }
+        }
+    }
+
+###########################################################
+
+    /**
+     * Método get_concurso
+     * Informa o concurso do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_concurso($idServidor) {
+
+        # Verifica se  id foi informado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            # Pega o cargo do servidor
+            $select = 'SELECT anobase
+                     FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
+                    WHERE idServidor = ' . $idServidor;
+
+            $row = $pessoal->select($select, false);
+
+            if (empty($row[0])) {
+                return null;
+            }
+
+            pLista(
+                    "Concurso de {$row[0]}",
+                    $pessoal->get_cargo($idServidor)
+            );
+        }
+    }
+
+    ###########################################################
 }

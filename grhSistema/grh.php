@@ -70,6 +70,7 @@ if ($acesso) {
     set_session('parametroSexo');
     set_session('parametroAlta');
     set_session('parametroTrimestre');
+    set_session('parametroVaga');
     set_session('idServidorPesquisado');
 
     set_session('concursoTipo');

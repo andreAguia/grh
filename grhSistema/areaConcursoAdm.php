@@ -83,6 +83,11 @@ if ($acesso) {
 
     switch ($fase) {
         case "listar" :
+            
+            # Zera as sessions do filtro
+            set_session('parametroSituacao');
+            set_session('parametroCargo');
+            set_session('parametroVaga');
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -93,13 +98,6 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-//            
-//            # Relatório esquisito
-//            $botaoRel = new Link("Relatório", '../grhRelatorios/vagas.passoni.php');
-//            $botaoRel->set_class('button');
-//            $botaoRel->set_title('relatório para Passoni');
-//            $botaoRel->set_target('_blank');            
-//            $menu1->add_link($botaoRel, "right");
 
             # Vagas
             $botaoVoltar = new Link("Vagas", "areaVagasAdm.php");

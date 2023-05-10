@@ -46,9 +46,11 @@ if ($acesso) {
 
         $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
+        $parametroVaga = post('parametroVaga', get_session('parametroVaga', '*'));
 
         set_session('parametroCargo', $parametroCargo);
         set_session('parametroSituacao', $parametroSituacao);
+        set_session('parametroVaga', $parametroVaga);
     }
 
     # Começa uma nova página
@@ -189,9 +191,18 @@ if ($acesso) {
             $controle->set_array([['*', '-- Todos --'], [1, 'Ativos'], [2, 'Inativos']]);
             $controle->set_valor($parametroSituacao);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(true);
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(3);
+            $form->add_item($controle);
+            
+            $controle = new Input('parametroVaga', 'combo', 'Vaga Preenchida?:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Vaga preenchioda Sim ou Não');
+            $controle->set_array([['*', '-- Todos --'], [1, 'Sim'], [2, 'Não']]);
+            $controle->set_valor($parametroVaga);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -237,9 +248,19 @@ if ($acesso) {
                     $select .= ' AND situacao <> 1';
                 }
             }
+            
+            if ($parametroVaga <> "*") {
+                if ($parametroVaga == 1) {
+                    $select .= ' AND situacao <> 1 AND idServidor IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT NULL AND idServidorOcupanteAnterior <> 0)';
+                }
+
+                if ($parametroVaga == 2) {
+                    $select .= ' AND situacao <> 1 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT NULL AND idServidorOcupanteAnterior <> 0)';
+                }
+            }
 
             $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao desc";
-
+            
             # Pega os dados
             $row = $pessoal->select($select);
 

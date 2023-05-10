@@ -249,7 +249,7 @@ if ($acesso) {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs", "Editar"]);
             $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObs"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObs"]);
             $tabela->set_funcao([null, null, "trataNulo"]);
             $tabela->set_width(array(15, 5, 5, 20, 20, 15, 15));
             $tabela->set_align(array("left", "center", "center", "left", "left"));

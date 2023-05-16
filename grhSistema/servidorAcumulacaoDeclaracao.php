@@ -40,7 +40,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    if ($fase = "despachoCorrecao") {
+    if ($fase == "despachoCorrecao") {
         $page->set_jscript('<script>CKEDITOR.replace("dados");</script>');
     }
     $page->iniciaPagina();

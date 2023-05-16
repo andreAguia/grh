@@ -40,6 +40,9 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase = "despachoCorrecao") {
+        $page->set_jscript('<script>CKEDITOR.replace("dados");</script>');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -268,7 +271,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $declaracao = new AcumulacaoDeclaracao();
 
             # Título
@@ -311,7 +314,7 @@ if ($acesso) {
             $controle->set_required(true);
             $controle->set_title('O Ano de referência da declaração pendente.');
             $form->add_item($controle);
-            
+
             # Número do Processo
             $controle = new Input('processo', 'texto', 'Processo:', 1);
             $controle->set_size(50);
@@ -343,7 +346,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $declaracao = new AcumulacaoDeclaracao();
 
             # Título
@@ -379,16 +382,25 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Ano da Declaração Pendente
-            $controle = new Input('anoDeclaracao', 'texto', 'Ano da Declaração:', 1);
+            $controle = new Input('anoDeclaracao', 'texto', 'Ano(s) da Declaração:', 1);
             $controle->set_size(50);
             $controle->set_linha(2);
             $controle->set_col(8);
             $controle->set_required(true);
             $controle->set_title('O Ano de referência da declaração a ser corrigida.');
             $form->add_item($controle);
-            
+
+            # número do documento da publicação no SEI
+            $controle = new Input('numDocumento', 'texto', 'Nº do documento da publicação no SEI:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(3);
+            $controle->set_col(6);
+            $controle->set_required(true);
+            $controle->set_title('O número do documento da publicação no SEI.');
+            $form->add_item($controle);
+
             # Dados a Serem Corrigidos
-            $controle = new Input('dados', 'textarea', 'Dados a Serem Corrigidos:', 1);
+            $controle = new Input('dados', 'editor', 'Dados a Serem Corrigidos:', 1);
             $controle->set_size([80, 5]);
             $controle->set_linha(4);
             $controle->set_col(12);
@@ -417,7 +429,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $declaracao = new AcumulacaoDeclaracao();
 
             # Título
@@ -473,7 +485,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $declaracao = new AcumulacaoDeclaracao();
 
             # Título

@@ -274,6 +274,7 @@ if ($acesso) {
         $regime = $conc->get_regime($pessoal->get_idConcurso($idServidorPesquisado));
         $dtTranfRegime = $pessoal->get_dtTranfRegime($idServidorPesquisado);
         $dtadmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
+        $dtEstagio = $pessoal->get_dtEstagio($idServidorPesquisado);
         $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
         $dadosConcurso = $pessoal->get_idConcurso($idServidorPesquisado);
 
@@ -301,7 +302,11 @@ if ($acesso) {
 
         # Se for estatutário
         if ($regime == "Estatutário") {
-            $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
+            if (empty($dtEstagio) OR ($dtEstagio == $dtadmissao)) {
+                $mensagem .= "- Servidor(a) admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
+            } else {
+                $mensagem .= "- Servidor(a) designado, em {$dtEstagio}, para o estágio experimental, pelo período de 6 meses, e admitido mediante concurso público sob o regime Estatutário em {$dtadmissao}";
+            }
         }
 
         # Informa se servidor optou da transferência FENORTE x UENF em 2002
@@ -580,8 +585,8 @@ if ($acesso) {
 
     $result = $pessoal->select($select);
 
-    if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2]) OR!empty($result[0][3]) OR!empty($result[0][4])) {
-       
+    if (!empty($result[0][0]) OR !empty($result[0][1]) OR !empty($result[0][2]) OR !empty($result[0][3]) OR !empty($result[0][4])) {
+
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
@@ -613,7 +618,7 @@ if ($acesso) {
 
     $result = $pessoal->select($select);
 
-    if (!empty($result[0][0]) OR!empty($result[0][1]) OR!empty($result[0][2])) {
+    if (!empty($result[0][0]) OR !empty($result[0][1]) OR !empty($result[0][2])) {
 
         br();
         $relatorio = new Relatorio('relatorioFichaCadastral');

@@ -22,7 +22,7 @@ if ($acesso) {
     # Verifica a fase do programa
     if (Verifica::acesso($idUsuario, 12)) {
         $fase = get('fase', 'editar');
-    }else{
+    } else {
         $fase = get('fase', 'ver');
     }
 
@@ -85,20 +85,25 @@ if ($acesso) {
         $selectEdita .= 'opcaoFenorteUenf,';
     }
 
-    $selectEdita .= 'nomenclaturaOriginal,
-                    dtAdmissao,
-                    processoAdm,
-                    dtPublicAdm,
-                    ciGepagAdm,
-                    dtDemissao,
-                    processoExo,
-                    dtPublicExo,
-                    ciGepagExo,
-                    motivo,
-                    tipoAposentadoria,
-                    motivoDetalhe
-            FROM tbservidor
-            WHERE idServidor = ' . $idServidorPesquisado;
+    $selectEdita .= 'nomenclaturaOriginal,';
+
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        $selectEdita .= 'dtEstagio,';
+    }
+
+    $selectEdita .= 'dtAdmissao,
+                     processoAdm,
+                     dtPublicAdm,
+                     ciGepagAdm,
+                     dtDemissao,
+                     processoExo,
+                     dtPublicExo,
+                     ciGepagExo,
+                     motivo,
+                     tipoAposentadoria,
+                     motivoDetalhe
+                FROM tbservidor
+               WHERE idServidor = ' . $idServidorPesquisado;
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -129,11 +134,12 @@ if ($acesso) {
 
     # Pega os dados da combo perfil
     $perfil = $pessoal->select('SELECT idperfil,
-                                       nome
+                                       nome,
+                                       tipo
                                   FROM tbperfil
-                              ORDER BY nome');
+                              ORDER BY tipo, nome');
 
-    array_unshift($perfil, array(null, null));
+    array_unshift($perfil, [null, null]);
 
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,
@@ -142,7 +148,7 @@ if ($acesso) {
                                               LEFT JOIN tbarea USING (idarea)
                              ORDER BY tbtipocargo.cargo,tbarea.area,nome');
 
-    array_unshift($cargo, array(0, null));
+    array_unshift($cargo, [0, null]);
 
     # Pega os dados da combo situação
     $situacao = $pessoal->select('SELECT idsituacao,
@@ -150,7 +156,7 @@ if ($acesso) {
                                     FROM tbsituacao
                                 ORDER BY situacao');
 
-    array_unshift($situacao, array(null, null));
+    array_unshift($situacao, [null, null]);
 
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
@@ -158,7 +164,7 @@ if ($acesso) {
                                   FROM tbmotivo
                               ORDER BY motivo');
 
-    array_unshift($motivo, array(null, null));
+    array_unshift($motivo, [null, null]);
 
     $colunaCargo = 12;
 
@@ -176,6 +182,7 @@ if ($acesso) {
             'label' => 'Perfil:',
             'tipo' => 'combo',
             'required' => true,
+            'optgroup' => true,
             'array' => $perfil,
             'title' => 'Perfil do servidor',
             'col' => 3,
@@ -262,8 +269,23 @@ if ($acesso) {
                 'helptext' => 'Informe a nomenclatura original do cargo, caso a mesma tenha sido alterada pelo Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e Lei 4800/2006 de 30/06/2006.',
                 'col' => $colunaCargo,
                 'size' => 200,
-                'title' => 'Cargo de origem, que consta no ato de investidura.'),
-            array('linha' => 4,
+                'title' => 'Cargo de origem, que consta no ato de investidura.'));
+
+    if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
+        array_push($campos,
+                array('linha' => 4,
+                    'nome' => 'dtEstagio',
+                    'label' => 'Data de Designação do Estagio Experimental:',
+                    'tipo' => 'data',
+                    'size' => 20,
+                    'col' => 3,
+                    'fieldset' => 'Dados da Admissão',
+                    'required' => true,
+                    'title' => 'Data de designação do estagio experimental.'));
+    }
+
+    array_push($campos,
+            array('linha' => 5,
                 'nome' => 'dtAdmissao',
                 'label' => 'Data de Admissão:',
                 'tipo' => 'data',
@@ -272,28 +294,28 @@ if ($acesso) {
                 'fieldset' => 'Dados da Admissão',
                 'required' => true,
                 'title' => 'Data de Admissão.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'processoAdm',
                 'label' => 'Processo de Admissão:',
                 'tipo' => 'texto',
                 'col' => 3,
                 'size' => 25,
                 'title' => 'Número do processo de admissão.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'dtPublicAdm',
                 'label' => 'Data da Publicação:',
                 'tipo' => 'data',
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data da Publicação no DOERJ.'),
-            array('linha' => 4,
+            array('linha' => 5,
                 'nome' => 'ciGepagAdm',
                 'label' => 'Documento:',
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,
                 'title' => 'Documento informando a admissão.'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'dtDemissao',
                 'label' => 'Data da Saída:',
                 'tipo' => 'data',
@@ -301,28 +323,28 @@ if ($acesso) {
                 'fieldset' => 'Dados da Saída do Servidor',
                 'size' => 20,
                 'title' => 'Data da Saída do Servidor.'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'processoExo',
                 'label' => 'Processo:',
                 'tipo' => 'processo',
                 'size' => 25,
                 'col' => 3,
                 'title' => 'Número do processo.'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'dtPublicExo',
                 'label' => 'Data da Publicação:',
                 'tipo' => 'data',
                 'size' => 20,
                 'col' => 3,
                 'title' => 'Data da Publicação no DOERJ.'),
-            array('linha' => 5,
+            array('linha' => 6,
                 'nome' => 'ciGepagExo',
                 'label' => 'Documento:',
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,
                 'title' => 'Documento informando a saída do servidor'),
-            array('linha' => 6,
+            array('linha' => 7,
                 'nome' => 'motivo',
                 'label' => 'Motivo:',
                 'tipo' => 'combo',
@@ -330,7 +352,7 @@ if ($acesso) {
                 'col' => 4,
                 'size' => 30,
                 'title' => 'Motivo da Saida do Servidor.'),
-            array('linha' => 6,
+            array('linha' => 7,
                 'nome' => 'tipoAposentadoria',
                 'label' => 'Tipo:',
                 'tipo' => 'combo',
@@ -338,7 +360,7 @@ if ($acesso) {
                 'title' => 'Tipo de Aposentadoria',
                 'col' => 2,
                 'size' => 15),
-            array('linha' => 6,
+            array('linha' => 7,
                 'nome' => 'motivoDetalhe',
                 'label' => 'Motivo Detalhado:',
                 'tipo' => 'texto',

@@ -1399,6 +1399,24 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_dtEstagio
+     * informa a data de designação no estágio experimental
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_dtEstagio($idServidor) {
+        $select = 'SELECT dtEstagio
+                     FROM tbservidor
+                    WHERE idServidor = ' . $idServidor;
+
+        $dt = parent::select($select, false);
+
+        return date_to_php($dt[0]);
+    }
+
+    ###########################################################
+
+    /**
      * Método get_dtTranfRegime
      * informa a data da transformação do regime de um servidor
      * 

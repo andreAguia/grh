@@ -281,7 +281,6 @@ if ($acesso) {
                     'size' => 20,
                     'col' => 3,
                     'fieldset' => 'Dados do Estagio Experimental',
-                    'required' => true,
                     'title' => 'Data de designação do estagio experimental.'));
     }
 

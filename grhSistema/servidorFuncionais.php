@@ -169,7 +169,8 @@ if ($acesso) {
     $colunaCargo = 12;
 
     # Campos para o formulario
-    $campos = array(array('linha' => 1,
+    $campos = array(
+        array('linha' => 1,
             'nome' => 'idFuncional',
             'label' => 'id Funcional:',
             'tipo' => 'texto',
@@ -279,7 +280,7 @@ if ($acesso) {
                     'tipo' => 'data',
                     'size' => 20,
                     'col' => 3,
-                    'fieldset' => 'Dados da Admissão',
+                    'fieldset' => 'Dados do Estagio Experimental',
                     'required' => true,
                     'title' => 'Data de designação do estagio experimental.'));
     }

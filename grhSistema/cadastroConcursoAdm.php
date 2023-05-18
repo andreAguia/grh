@@ -58,7 +58,11 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorioAtivos" AND $fase <> "relatorioInativos" AND $fase <> "relatorioTodos") {
+    if ($fase <> "relatorioAtivos"
+            AND $fase <> "relatorioInativos"
+            AND $fase <> "relatorioClassificacao"
+            AND $fase <> "relatorioTodos") {
+
         AreaServidor::cabecalho();
     }
 
@@ -136,6 +140,15 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioClassificacao");
+            $botaoRel->set_imagem($imagem2);
+            $menu1->add_link($botaoRel, "right");
+
             $menu1->show();
 
             $grid->fechaColuna();
@@ -194,7 +207,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-            
+
             $controle = new Input('parametroVaga', 'combo', 'Vaga Preenchida?:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Vaga preenchioda Sim ou Não');
@@ -248,7 +261,7 @@ if ($acesso) {
                     $select .= ' AND situacao <> 1';
                 }
             }
-            
+
             if ($parametroVaga <> "*") {
                 if ($parametroVaga == 1) {
                     $select .= ' AND situacao <> 1 AND idServidor IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT NULL AND idServidorOcupanteAnterior <> 0)';
@@ -260,7 +273,7 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao desc";
-            
+
             # Pega os dados
             $row = $pessoal->select($select);
 
@@ -271,11 +284,10 @@ if ($acesso) {
             $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs", "Editar"]);
             $tabela->set_width(array(15, 5, 5, 20, 20, 15, 15));
             $tabela->set_align(["left", "center", "center", "left", "left"]);
-            
+
             $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
             $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObs"]);
             $tabela->set_funcao([null, null, "trataNulo"]);
-            
 
             # Botão de exibição dos servidores com permissão a essa regra
             $botao = new Link(null, '?fase=editaServidor&idServidorPesquisado=', 'Edita o Servidor');
@@ -829,6 +841,90 @@ if ($acesso) {
                 $lista->set_cargo($parametroCargo);
             }
             $lista->showRelatorio();
+            break;
+
+        ###############################################################
+
+        case "relatorioClassificacao" :
+            # Pega os dados
+            $dados = $concurso->get_dados($idConcurso);            
+                
+            # Monta o select
+            $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
+                              idServidor, 
+                              cotasConcurso,
+                              idServidor,
+                              idServidor,
+                              idServidor,
+                              idServidor,
+                              idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                         LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                        WHERE idConcurso = {$idConcurso}";
+
+            # cargo
+            if ($parametroCargo <> "*") {
+                if (is_numeric($parametroCargo)) {
+                    $select .= ' AND (tbcargo.idcargo = "' . $parametroCargo . '")';
+                    $titulo = $pessoal->get_nomeCompletoCargo($parametroCargo);
+                    $atividade = "Visualizou a classificação do cargo " . $titulo . " concurso " . $concurso->get_nomeConcurso($idConcurso);
+                } else { # senão é nivel do cargo
+                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                    $titulo = $parametroCargo;
+                    $atividade = "Visualizou a classificação do cargo " . $parametroCargo . " concurso " . $concurso->get_nomeConcurso($idConcurso);
+                }
+            } else {
+                $titulo = "Classificação Geral";
+                $atividade = "Visualizou a classificação do concurso " . $concurso->get_nomeConcurso($idConcurso);
+            }
+
+            if ($parametroSituacao <> "*") {
+                if ($parametroSituacao == 1) {
+                    $select .= ' AND situacao = 1';
+                }
+
+                if ($parametroSituacao == 2) {
+                    $select .= ' AND situacao <> 1';
+                }
+            }
+
+            if ($parametroVaga <> "*") {
+                if ($parametroVaga == 1) {
+                    $select .= ' AND situacao <> 1 AND idServidor IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT NULL AND idServidorOcupanteAnterior <> 0)';
+                }
+
+                if ($parametroVaga == 2) {
+                    $select .= ' AND situacao <> 1 AND idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT NULL AND idServidorOcupanteAnterior <> 0)';
+                }
+            }
+
+            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao desc";
+
+            # Pega os dados
+            $row = $pessoal->select($select);
+
+            # tabela
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Concurso {$dados["anobase"]}");            
+            $relatorio->set_subtitulo($titulo);
+            $relatorio->set_conteudo($row);
+            $relatorio->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs"]);
+            $relatorio->set_width([15, 5, 5, 20, 20, 15, 15]);
+            $relatorio->set_align(["left", "center", "center", "left", "left"]);
+
+            $relatorio->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
+            $relatorio->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObsRel"]);
+            $relatorio->set_funcao([null, null, "trataNulo"]);
+            
+            $relatorio->set_bordaInterna(true);
+
+            $relatorio->set_numGrupo(0);
+//            $relatorio->set_grupoCorColuna(0);
+
+            $relatorio->show();
+
             break;
 
         ################################################################

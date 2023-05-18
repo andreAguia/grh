@@ -887,7 +887,7 @@ class Concurso {
         return $numero;
     }
 
-    ###########################################################
+###########################################################
 
     public function exibeObs($idServidor) {
 
@@ -911,6 +911,30 @@ class Concurso {
     }
 
 ###########################################################
+
+    public function exibeObsRel($idServidor) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = 'SELECT obsConcurso
+                     FROM tbservidor
+                    WHERE idServidor = ' . $idServidor;
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno[0])) {
+            echo "---";
+        } else {
+            return $retorno[0];
+        }
+    }
+
+###########################################################
+
 
     public function servidorInativoVagaPreenchida($idServidor) {
 

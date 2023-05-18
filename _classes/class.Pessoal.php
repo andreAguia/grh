@@ -2592,11 +2592,13 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
+            # informa o nome e a lotação
             pLista(
                     $this->get_nome($idServidor),
                     $this->get_lotacao($idServidor)
             );
 
+            # Informa a data de admissão e a de saída (quando inativo)
             if ($this->get_situacao($idServidor) == "Ativo") {
                 span($this->get_situacao($idServidor), "verde");
                 br();
@@ -2605,6 +2607,12 @@ class Pessoal extends Bd {
                 span($this->get_situacao($idServidor), "vermelho");
                 br();
                 span($this->get_dtAdmissao($idServidor) . " - " . $this->get_dtSaida($idServidor), "f11");
+            }
+            
+            # Informa se é ex-fenorte
+            if($this->exFenorte($idServidor)){
+                br();
+                span("ex-Fenorte", "roxo");
             }
         }
     }

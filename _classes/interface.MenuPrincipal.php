@@ -618,10 +618,10 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('RPA');
-        $botao->set_url('rpa.php?grh=1');
+        $botao->set_url('cadastroRpa.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de RPAs');
-        #$menu->add_item($botao);   # Retirado por falta de uso
+        $menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();

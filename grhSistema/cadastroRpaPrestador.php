@@ -95,9 +95,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Cpf", "Prestador", "Endereço", "Contatos", "Documentos"));
-    #$objeto->set_width(array(5, 40, 45));
-    $objeto->set_align(array("center", "left", "left", "left", "left"));
+    $objeto->set_label(["Cpf", "Prestador", "Endereço", "Contatos", "Documentos"]);
+    $objeto->set_align(["center", "left", "left", "left", "left"]);
 
     $objeto->set_classe([null, "RpaPrestador", "RpaPrestador", "RpaPrestador", "RpaPrestador"]);
     $objeto->set_metodo([null, "exibePrestador", "exibeEndereco", "exibeContatos", "exibeDocumentos"]);

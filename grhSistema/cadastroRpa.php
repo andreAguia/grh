@@ -124,10 +124,12 @@ if ($acesso) {
 
     # Pega os dados da combo de prestadores
     $prestador = $pessoal->select('SELECT idPrestador,
-                                       CONCAT(prestador," - ",especialidade)
-                                  FROM tbrpa_prestador
-                              ORDER BY prestador');
-    array_unshift($prestador, array(null, null)); # Adiciona o valor de nulo
+                                          CONCAT(prestador," - ",especialidade)
+                                     FROM tbrpa_prestador
+                                 ORDER BY prestador');
+    
+    array_unshift($prestador, array(null, null));
+    
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,

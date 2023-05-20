@@ -103,7 +103,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Número", "Pgto", "Prestador", "Serviço", "Período", "Valores", "Processo e Rubrica", "Rpa"]);
-    $objeto->set_width(array(5, 8, 15, 15, 8, 17, 18, 4));
+    $objeto->set_width([5, 8, 15, 15, 8, 17, 18, 4]);
     $objeto->set_align(["center", "center", "left", "left"]);
     $objeto->set_funcao([null, "date_to_php"]);
 
@@ -127,9 +127,9 @@ if ($acesso) {
                                           CONCAT(prestador," - ",especialidade)
                                      FROM tbrpa_prestador
                                  ORDER BY prestador');
-    
+
     array_unshift($prestador, array(null, null));
-    
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
@@ -243,10 +243,10 @@ if ($acesso) {
 
             # Pega os dados
             $comboAno = $pessoal->select('SELECT DISTINCT YEAR(dtInicial), YEAR(dtInicial)
-                                                  FROM tbrpa_recibo
-                                                 WHERE dtInicial IS NOT NULL
-                                              ORDER BY YEAR(dtInicial)');
-
+                                            FROM tbrpa_recibo
+                                           WHERE dtInicial IS NOT NULL
+                                        ORDER BY YEAR(dtInicial)');
+            
             # Ano
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(5);

@@ -38,6 +38,22 @@ class Lotacao {
 
     ###########################################################
 
+    public function getNomeLotacaoAnterior($idHistLot = null) {
+        /**
+         * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();            
+            echo $this->getLotacao($this->getLotacaoAnterior($idHistLot));            
+        }
+    }
+
+     ###########################################################
+
     public function getLotacaoAnterior($idHistLot = null) {
         /**
          * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 
@@ -48,11 +64,11 @@ class Lotacao {
             return null;
         } else {
             $pessoal = new Pessoal();
-
+            
             # Pega o servidor desta alteração de lotação
             $select1 = "SELECT idServidor
-                         FROM tbhistlot
-                        WHERE idHistLot = {$idHistLot}";
+                          FROM tbhistlot
+                         WHERE idHistLot = {$idHistLot}";
 
             $row1 = $pessoal->select($select1, false);
             $idServidor = $row1["idServidor"];
@@ -306,7 +322,7 @@ class Lotacao {
                           AND (GER = 'SECR' OR GER = 'GAB')";
 
             $pessoal = new Pessoal();
-            $row2 = $pessoal->select($select, false);
+            $row2 = $pessoal->select($select, false);            
 
             if (!empty($row2['nome'])) {
                 # Verifica o nome
@@ -316,6 +332,11 @@ class Lotacao {
                     $nome = substr($row2['nome'], 12);
                 }
             }
+            
+            if($sigla == "Reitoria"){
+                $nome = $sigla;
+            }
+            
             return $nome;
         }
     }

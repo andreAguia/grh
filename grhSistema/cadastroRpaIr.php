@@ -87,7 +87,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Data Inicial", "Valor Inicial", "Valor Final", "Aliquota", "Dedução"]);
-    $objeto->set_width(array(18, 18, 18, 18, 18));
+    $objeto->set_width([18, 18, 18, 18, 18]);
     $objeto->set_align(["center","right","right","center","right"]);
     $objeto->set_funcao(["date_to_php", "formataMoeda2", "formataMoeda2", null, "formataMoeda2"]);
 

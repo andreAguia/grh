@@ -130,7 +130,7 @@ if ($acesso) {
         array('linha' => 2,
             'nome' => 'aliquota',
             'label' => 'Aliquota:',
-            'tipo' => 'porcentacem',
+            'tipo' => 'porcentagem',
             'col' => 4,
             'size' => 3),
         array('linha' => 3,

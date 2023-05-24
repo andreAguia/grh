@@ -132,8 +132,8 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT idFuncional,
-                              idServidor,
-                              idServidor,
+                              tbpessoa.nome,
+                              concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,'')) lotacao,
                               idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
@@ -161,10 +161,10 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
                 $tabela->set_titulo("Atos de Investidura");
-                $tabela->set_label(["IdFuncional", "Servidor", "Ato"]);
-                $tabela->set_align(["center", "left"]);
-                $tabela->set_classe([null, "Pessoal", "AtoInvestidura"]);
-                $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeAto"]);
+                $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Ato"]);
+                $tabela->set_align(["center", "left", "left"]);
+                $tabela->set_classe([null, null, null, "AtoInvestidura"]);
+                $tabela->set_metodo([null, null, null, "exibeAto"]);
                 $tabela->show();
             }
 
@@ -221,7 +221,7 @@ if ($acesso) {
             # Limita a tela
             $grid = new Grid("center");
             $grid->abreColuna(12);
-            
+
             # Exibe o Título
             if (!file_exists("{$pasta}{$id}.pdf")) {
 
@@ -240,7 +240,7 @@ if ($acesso) {
                 # do Log
                 $atividade = "Substituiu o arquivo do {$nome}";
             }
-            br();            
+            br();
 
             # Cria um menu
             $menu = new MenuBar();

@@ -48,7 +48,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    if ($fase == "uploadFoto") {
+    if ($fase == "upload") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -57,10 +57,10 @@ if ($acesso) {
     }
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    if ($fase <> "relatorio") {
-        AreaServidor::cabecalho();
-    }
+    # Dados da rotina de Upload
+    $pasta = PASTA_ATOINVESTIDURA;
+    $nome = "Ato de Investidura de {$pessoal->get_nome($id)}";
+    $extensoes = ["pdf"];
 
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -70,22 +70,6 @@ if ($acesso) {
     switch ($fase) {
 
         case "" :
-            br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            loadPage('?fase=lista');
-            break;
-
-################################################################
-
         case "lista" :
 
             br(4);
@@ -105,28 +89,6 @@ if ($acesso) {
 ################################################################
 
         case "exibeLista" :
-            br();
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
-
-            $menu1->show();
 
             ###
             # Formulário de Pesquisa
@@ -139,7 +101,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -159,7 +121,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             $form->show();
@@ -170,8 +132,6 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT idFuncional,
-                              tbpessoa.nome,
-                              idServidor,
                               idServidor,
                               idServidor,
                               idServidor
@@ -201,14 +161,10 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($resumo);
                 $tabela->set_titulo("Atos de Investidura");
-                $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Cargo", "Ato"]);
-                $tabela->set_align(["center", "left", "left", "left"]);
-                #$tabela->set_funcao([null, null, "exibeAto"]);
-                $tabela->set_classe([null, null, "Pessoal", "Pessoal", "AtoInvestidura"]);
-                $tabela->set_metodo([null, null, "get_lotacao", "get_cargoSimples", "exibeAto"]);
-
-                $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editaServidor');
+                $tabela->set_label(["IdFuncional", "Servidor", "Ato"]);
+                $tabela->set_align(["center", "left"]);
+                $tabela->set_classe([null, "Pessoal", "AtoInvestidura"]);
+                $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeAto"]);
                 $tabela->show();
             }
 
@@ -218,84 +174,101 @@ if ($acesso) {
             p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
             break;
 
-        ##################################################################
+        ########################################        
 
-        case "exibeFoto" :
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "?");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $menu1->add_link($botaoVoltar, "left");
-
-            # Alterar Foto
-            if (Verifica::acesso($idUsuario, [1, 2])) {
-                $botaoalterar = new Link("Alterar Foto", "?fase=uploadFoto&idPessoa={$idPessoa}");
-                $botaoalterar->set_class('button');
-                $botaoalterar->set_title('Altera a foto do Servidor');
-                $menu1->add_link($botaoalterar, "right");
-            }
-
-            $menu1->show();
-
-            # Dados do Servidor
-            get_DadosServidor($idServidor);
-
+        case "exibeAto" :
             $grid = new Grid("center");
-            $grid->abreColuna(6);
+            $grid->abreColuna(12);
 
-            br();
+            if (file_exists("{$pasta}{$id}.pdf")) {
 
-            $painel = new Callout("secondary", "center");
-            $painel->abre();
+                tituloTable($nome);
+                br();
+                ;
 
-            $foto = new ExibeFoto();
-            $foto->set_fotoLargura(300);
-            $foto->set_fotoAltura(400);
-            $foto->show($idPessoa);
+                # Cria um menu
+                $menu = new MenuBar();
 
-            $painel->fecha();
+                # Voltar
+                $botaoVoltar = new Link("Voltar", "?");
+                $botaoVoltar->set_class('button');
+                $botaoVoltar->set_title('Voltar a página anterior');
+                $botaoVoltar->set_accessKey('V');
+                $menu->add_link($botaoVoltar, "left");
+
+                # Excluir
+                $botaoApaga = new Button("Excluir o Arquivo");
+                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                $botaoApaga->set_class("button alert");
+                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                $menu->add_link($botaoApaga, "right");
+
+                $menu->show();
+
+                iframe("{$pasta}{$id}.pdf");
+            } else {
+                loadPage("?fase=upload&id={$id}");
+            }
 
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
 
-        ##################################################################
+        ########################################        
 
-        case "uploadFoto" :
-
-            # Botão de Voltar
-            botaoVoltar("?fase=exibeFoto&idPessoa=$idPessoa");
-
-            # Nome
-            $nome = $pessoal->get_nomeidPessoa($idPessoa);
-
-            # Dados do Servidor
-            get_DadosServidor($idServidor);
-            br();
-
+        case "upload" :
+            # Limita a tela
             $grid = new Grid("center");
+            $grid->abreColuna(12);
+            
+            # Exibe o Título
+            if (!file_exists("{$pasta}{$id}.pdf")) {
+
+                # Título
+                tituloTable("Upload do {$nome}");
+
+                # do Log
+                $atividade = "Fez o upload do {$nome}";
+            } else {
+                # Título
+                tituloTable("Substituir o Arquivo Cadastrado");
+
+                # Define o link de voltar após o salvar
+                $voltarsalvar = "?fase=uploadTerminado";
+
+                # do Log
+                $atividade = "Substituiu o arquivo do {$nome}";
+            }
+            br();            
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "?");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+            $menu->show();
+
+            #####
+            # Limita a tela
+            $grid->fechaColuna();
             $grid->abreColuna(6);
 
-            # Gera a área de upload
+            # Monta o formulário
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
-                        <input type='file' name='foto'>
+                        <input type='file' name='doc'>
                         <p>Click aqui ou arraste o arquivo.</p>
                         <button type='submit' name='submit'>Enviar</button>
                     </form>";
-
-            $pasta = PASTA_FOTOS;
 
             # Se não existe o programa cria
             if (!file_exists($pasta) || !is_dir($pasta)) {
                 mkdir($pasta, 0755);
             }
-
-            # Extensões possíveis
-            $extensoes = array("jpg");
 
             # Pega os valores do php.ini
             $postMax = limpa_numero(ini_get('post_max_size'));
@@ -303,56 +276,81 @@ if ($acesso) {
             $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
-
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
 
-            #$texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
-            #br(2);
+            br();
             p($texto, "f14", "center");
 
-            if ((isset($_POST["submit"])) && (!empty($_FILES['foto']))) {
-                $upload = new UploadImage($_FILES['foto'], 1000, 800, $pasta, $idPessoa, $extensoes);
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, $id, $extensoes);
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
+
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Alterou a foto do servidor $nome";
-                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $idPessoa);
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8, $id);
 
-                    # Volta para o menu
-                    loadPage("?fase=exibeFoto&idPessoa=$idPessoa");
+                    # Fecha a janela aberta
+                    loadPage("?fase=uploadTerminado");
                 } else {
-                    loadPage("?fase=uploadFoto&idPessoa=$idPessoa");
+                    # volta a tela de upload
+                    loadPage("?fase=upload&id={$id}");
                 }
             }
 
-            #br(4);                
-            #callout("Somente é permitido uma foto para cada servidor<br/>E a foto deverá ser no formato jpg ou img.");
+            # Informa caso exista um arquivo com o mesmo nome
+            if (file_exists("{$pasta}{$id}.pdf")) {
+                p("Já existe um documento para este registro!!<br/>O novo documento irá substituir o antigo !", "puploadMensagem");
+                br();
+            }
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
 
-        ##################################################################
+        ########################################
 
-        case "editaServidor" :
-            br(8);
-            aguarde();
+        case "uploadTerminado" :
+            # Informa que o bim foi substituído
+            alert("Arquivo do {$nome} Cadastrado !!");
 
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado', $id);
-
-            # Informa a origem
-            set_session('origem', 'areaAtoInvestidura.php');
-
-            # Carrega a página específica
-            loadPage('servidorMenu.php');
+            # Fecha a janela            
+            #echo '<script type="text/javascript" language="javascript">window.close();</script>';
+            loadPage("areaAtoInvestidura.php");
             break;
 
-        ##################################################################
+        ########################################    
+
+        case "apagaDocumento" :
+
+            # Apaga o arquivo (na verdade renomeia)
+            if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                alert("Arquivo Excluído !!");
+
+                # Registra log
+                $atividade = "Excluiu o arquivo do {$nome}";
+                $Objetolog = new Intra();
+                $data = date("Y-m-d H:i:s");
+                $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3, $id);
+
+                # Fecha a janela
+                #echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                loadPage("?");
+            } else {
+                alert("Houve algum problema, O arquivo não pode ser excluído !!");
+
+                # Fecha a janela
+                #echo '<script type="text/javascript" language="javascript">window.close();</script>';
+                loadPage("?");
+            }
+            break;
+
+        ########################################
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

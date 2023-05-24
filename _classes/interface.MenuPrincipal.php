@@ -850,14 +850,13 @@ class MenuPrincipal {
             $menu->add_item($botao);
         }
 
-        if (Verifica::acesso($this->idUsuario, 1)) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Atos de Investidura');
-            $botao->set_url('areaAtoInvestidura.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Cadastro de atos de investidura');
-            $menu->add_item($botao);
-        }
+        $botao = new BotaoGrafico();
+        $botao->set_label('Atos de Investidura');
+        $botao->set_url('areaAtoInvestidura.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de atos de investidura');
+        $botao->set_target("_blank");
+        $menu->add_item($botao);
 
         if (Verifica::acesso($this->idUsuario, 1)) {
             $botao = new BotaoGrafico();

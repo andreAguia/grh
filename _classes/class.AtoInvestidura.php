@@ -24,15 +24,15 @@ class AtoInvestidura {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(null, "servidorAto.php?id={$idServidor}", "Exibe o Ato de investidura");
+            $link = new Link(null, "?fase=exibeAto&id={$idServidor}", "Exibe o Ato de investidura");
             $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
-            $link->set_target("_blank");
+            #$link->set_target("_blank");
             $link->show();
         } else {
            # Monta o link
-            $link = new Link(null, "servidorAto.php?id={$idServidor}", "Faz o Upload do Ato de investidura");
+            $link = new Link(null, "?fase=upload&id={$idServidor}", "Faz o Upload do Ato de investidura");
             $link->set_imagem(PASTA_FIGURAS . "upload.png", 20, 20);
-            $link->set_target("_blank");
+            #$link->set_target("_blank");
             $link->show();
         }
     }

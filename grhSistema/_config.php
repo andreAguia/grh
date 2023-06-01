@@ -43,17 +43,18 @@ define("PASTA_ESTILOS", "../_css/");                                 # Estilos E
 /*
  *  Arquivos
  */
-define("PASTA_FOTOS", "../../_arquivos/fotos/");                    # Fotos dos Servidores
-define("PASTA_MCF", "../../_arquivos/mcf/");                        # MCF dos Servidores
-define("PASTA_CONCURSO", "../../_arquivos/concurso/");              # Publicações de concurso
-define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");         # Publicações no DOERJ
-define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");       # Fotos dos Servidores
-define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");       # Fotos dos certificados de cursos
-define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");          # Documentos Gerais
-define("PASTA_BIM", "../../_arquivos/bim/");                        # BIM
-define("PASTA_ATESTADO", "../../_arquivos/atestados/");             # atestados
-define("PASTA_TRANSPORTE", "../../_arquivos/transporte/");          # servidores que receberam auxílio transporte naquele mês
-define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");  # Pasta do ato de investidura
+define("PASTA_FOTOS", "../../_arquivos/fotos/");                            # Fotos dos Servidores
+define("PASTA_MCF", "../../_arquivos/mcf/");                                # MCF dos Servidores
+define("PASTA_CONCURSO", "../../_arquivos/concurso/");                      # Publicações de concurso
+define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");                 # Publicações no DOERJ
+define("PASTA_PUBLICACAO_PREMIO", "../../_arquivos/publicacoesPremio/");    # Publicações de Licença Prêmio no DOERJ
+define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");               # Fotos dos Servidores
+define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");               # Fotos dos certificados de cursos
+define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");                  # Documentos Gerais
+define("PASTA_BIM", "../../_arquivos/bim/");                                # BIM
+define("PASTA_ATESTADO", "../../_arquivos/atestados/");                     # atestados
+define("PASTA_TRANSPORTE", "../../_arquivos/transporte/");                  # servidores que receberam auxílio transporte naquele mês
+define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");          # Pasta do ato de investidura
 
 /*
  *  Tags aceitas em campos com htmlTag = true

@@ -478,9 +478,9 @@ class LicencaPremio {
             p($this->get_numProcesso($idServidor), "f20", "center");
             $painel->fecha();
         }
-        
+
         tituloTable("Atenção");
-        callout("Antes de informar ao servidor sobre a licença prêmio, verifique se o mesmo possui algum afastamento específico que poderia alterar as datas da licença.<br/>O sistema, ainda, não verifica essa informação","alert","calloutMensagemPremio");
+        callout("Antes de informar ao servidor sobre a licença prêmio, verifique se o mesmo possui algum afastamento específico que poderia alterar as datas da licença.<br/>O sistema, ainda, não verifica essa informação", "alert", "calloutMensagemPremio");
 
         /*
          * Exibe o número de publicação
@@ -559,6 +559,7 @@ class LicencaPremio {
                               idPublicacaoPremio,
                               idPublicacaoPremio,
                               idPublicacaoPremio,
+                              idPublicacaoPremio,
                               idPublicacaoPremio
                          FROM tbpublicacaopremio
                         WHERE idServidor = ' . $idServidor;
@@ -582,12 +583,12 @@ class LicencaPremio {
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_titulo('Publicações');
-            $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "Obs"]);
+            $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DOERJ", "Obs"]);
             $tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
             $tabela->set_align(["left"]);
             $tabela->set_funcao([null, 'date_to_php']);
-            $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-            $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeObsPublicacao']);
+            $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+            $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -612,6 +613,7 @@ class LicencaPremio {
                               idPublicacaoPremio,
                               idPublicacaoPremio,
                               idPublicacaoPremio,
+                              idPublicacaoPremio,
                               idPublicacaoPremio
                          FROM tbpublicacaopremio
                         WHERE idServidor = {$idServidor}
@@ -624,11 +626,11 @@ class LicencaPremio {
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_titulo('Publicações');
-            $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "Obs"]);
-            $tabela->set_width([14, 30, 14, 14, 14, 14]);
+            $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DO", "Obs"]);
+            $tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
             $tabela->set_funcao(['date_to_php']);
-            $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-            $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeObsPublicacao']);
+            $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+            $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
@@ -689,7 +691,7 @@ class LicencaPremio {
             $relatorio->set_align(["left", "left"]);
             $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
-            $relatorio->set_conteudo($conteudo1);            
+            $relatorio->set_conteudo($conteudo1);
             $relatorio->set_log(false);
             $relatorio->show();
         } else {
@@ -993,7 +995,7 @@ class LicencaPremio {
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
 
-        $relatorio->set_conteudo($result);        
+        $relatorio->set_conteudo($result);
         $relatorio->show();
     }
 
@@ -1256,7 +1258,7 @@ class LicencaPremio {
          * Informa a data da próxima publicação
          *
          */
-        
+
         # Valor fixo do período aquisitivo (em dias) 365 x 5
         $valor = 1825;
 
@@ -1275,6 +1277,32 @@ class LicencaPremio {
             return addDias(date_to_php($row[0]), $valor, false);
         } else {
             return null;
+        }
+    }
+
+    ###########################################################
+
+    public function exibeDoerj($idPublicacaoPremio) {
+        /**
+         * Exibe um link para exibir o pdf do certificado
+         * 
+         * @param $idFormacao integer null O id
+         * 
+         * @syntax $formacao->exibeCertificado($idFormacao);
+         */
+        # Monta o arquivo
+        $arquivo = PASTA_PUBLICACAO_PREMIO . $idPublicacaoPremio . ".pdf";
+
+        # Verifica se ele existe
+        if (file_exists($arquivo)) {
+
+            # Monta o link
+            $link = new Link(null, $arquivo, "Exibe a publicação");
+            $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+            $link->set_target("_blank");
+            $link->show();
+        } else {
+            echo "---";
         }
     }
 

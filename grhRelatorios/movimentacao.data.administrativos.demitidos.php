@@ -27,7 +27,7 @@ if ($acesso) {
     
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
@@ -35,31 +35,30 @@ if ($acesso) {
                       tbservidor.dtAdmissao,
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
-                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                 WHERE tbservidor.dtDemissao >= "' . $relatorioData . '"
-                  AND (tbservidor.idCargo <>128 AND tbservidor.idCargo <> 129)
-                  AND tbservidor.idPerfil = 1
-             ORDER BY dtDemissao';
+                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                 JOIN tbperfil USING (idPerfil)
+                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                 WHERE tbservidor.dtDemissao >= '{$relatorioData}'
+                  AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <> 129)
+                  AND tbperfil.tipo <> 'Outros'
+             ORDER BY dtDemissao";
 
 
     $result = $servidor->select($select);
     
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados a Partir ' . date_to_php($relatorioData));
+    $relatorio->set_titulo('Relatório de Estatutários Administrativos');
+    $relatorio->set_tituloLinha2("Demitidos, Aposentados, Exonerados, Etc a Partir de " . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo'));
-    #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-    $relatorio->set_align(array('center', 'left', 'left', 'left','center','center','center','left'));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo']);
+    $relatorio->set_align(['center', 'left', 'left', 'left','center','center','center','left']);
+    $relatorio->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacao"));
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples", "get_lotacao"]);
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_botaoVoltar(false);
     $relatorio->set_formCampos(array(
         array('nome' => 'data',
             'label' => 'A partir de:',
@@ -83,4 +82,3 @@ if ($acesso) {
 
     $page->terminaPagina();
 }
-?>

@@ -226,6 +226,6 @@ if ($acesso) {
     $relatorio->set_formFocus('ano');
     $relatorio->set_formLink('?');
     $relatorio->show();
-    
+
     $page->terminaPagina();
 }

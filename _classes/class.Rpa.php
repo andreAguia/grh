@@ -145,7 +145,7 @@ class Rpa
                 ["IRRS:",$valorIr[1]. "% (" . formataMoeda2($valorIr[0]) . ")"],
                 ["Total:", formataMoeda2($dados["valor"] - $valorInss[0] - $valorIr[0])]
             ];
-
+            
             $tabela = new Tabela(null, "tabelaRpa");
             $tabela->set_conteudo($valores);
             $tabela->set_label([null, null]);

@@ -1203,7 +1203,7 @@ if ($acesso) {
                 $grid->fechaColuna();
                 $grid->fechaGrid();
             } else {
-                loadPage("../grhRelatorios/readaptacao.DespachoPericia.php?id=$id");
+                loadPage("../grhRelatorios/despacho.Readaptacao.pericia.php?id=$id");
             }
             break;
 
@@ -1223,7 +1223,7 @@ if ($acesso) {
             }
 
             if ($erro == 0) {
-                loadPage("../grhRelatorios/readaptacao.DespachoPericia.php?folha=$folha&id=$id");
+                loadPage("../grhRelatorios/despacho.Readaptacao.pericia.php?folha=$folha&id=$id");
             } else {
                 alert($msgErro);
                 back(1);

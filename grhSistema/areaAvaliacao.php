@@ -149,7 +149,7 @@ if ($acesso) {
 
             $select .= "      tbservidor.idServidor,
                               tbservidor.idServidor,
-                              CASE tipo
+                              CASE tbavaliacao.tipo
                                     WHEN 1 THEN 'Estágio' 
                                     WHEN 2 THEN 'Anual'
                                END,
@@ -162,7 +162,9 @@ if ($acesso) {
                                          LEFT JOIN tbavaliacao USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbperfil USING (idPerfil)
                         WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros' 
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Verifica se tem filtro por lotação
@@ -193,8 +195,10 @@ if ($acesso) {
                       FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                       JOIN tbhistlot USING (idServidor)
                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                      WHERE situacao = 1
-                        AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                                      JOIN tbperfil USING (idPerfil)
+                        WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
                 if ($parametroLotacao <> "*") {  // senão verifica o da classe
@@ -213,7 +217,9 @@ if ($acesso) {
                                          LEFT JOIN tbavaliacao USING (idServidor)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                              JOIN tbperfil USING (idPerfil)
                               WHERE situacao = 1
+                                AND tbperfil.tipo <> 'Outros'
                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação

@@ -104,7 +104,7 @@ if ($acesso) {
     if (!is_null($parametroStatus)) {
         $titulo3 .= "<br/>Ferias {$parametroStatus}s";
     }
-    
+
     if (!is_null($parametroPerfil)) {
         $titulo3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
     }
@@ -116,12 +116,12 @@ if ($acesso) {
 
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pela Data Inicial');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Situação'));
-    #$relatorio->set_width(array(10,30,20,5,9,8,9,10));
-    $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, null, null, null, null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, null, null, null, "get_feriasPeriodo"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Situação']);
+    $relatorio->set_align(["center", "left", "left"]);
+
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+    $relatorio->set_classe([null, null, null, null, null, null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, null, null, null, "get_feriasPeriodo"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);

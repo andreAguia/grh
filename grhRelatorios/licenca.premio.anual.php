@@ -40,7 +40,9 @@ if ($acesso) {
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicencapremio  USING (idServidor)
                                  LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                WHERE situacao = 1
+                                 JOIN tbperfil USING (idPerfil)
+                WHERE tbperfil.tipo <> "Outros"
+                  AND situacao = 1
                   AND (((YEAR(tblicencapremio.dtInicial) =  ' . $relatorioAno . ') OR (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) = ' . $relatorioAno . '))
                    OR ((YEAR(tblicencapremio.dtInicial) <  ' . $relatorioAno . ') AND (YEAR(ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1)) > ' . $relatorioAno . ')))
              ORDER BY tbpessoa.nome';

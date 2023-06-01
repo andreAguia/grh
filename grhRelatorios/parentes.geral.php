@@ -31,7 +31,7 @@ if ($acesso) {
     $titulo = "Servidores com Acumulação de Cargo Público";
 
     # Pega os dados
-    $select = 'SELECT tbdependente.nome,
+    $select = "SELECT tbdependente.nome,
                      TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()) as idade,
                      tbparentesco.Parentesco,
                      tbpessoa.nome,
@@ -39,9 +39,11 @@ if ($acesso) {
                      tbservidor.idServidor
                 FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                   JOIN tbservidor USING (idPessoa)
+                                  JOIN tbperfil USING (idPerfil)
                                   JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
               WHERE situacao = 1
-                ORDER BY tbdependente.nome';
+                AND tbperfil.tipo <> 'Outros'  
+           ORDER BY tbdependente.nome";
 
     $result = $pessoal->select($select);
 
@@ -52,10 +54,10 @@ if ($acesso) {
     $relatorio->set_titulo('Cadastro de Parentes de Servidores Ativos');
     $relatorio->set_subtitulo("Ordenados por Nome");
 
-    $relatorio->set_label(array("Parente", "Idade", "Parentesco", "Servidor", "Cargo", "Lotação"));
-    $relatorio->set_align(array("left", "center", "center", "left", "left", "left"));
-    $relatorio->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, "get_Cargo", "get_Lotacao"));
+    $relatorio->set_label(["Parente", "Idade", "Parentesco", "Servidor", "Cargo", "Lotação"]);
+    $relatorio->set_align(["left", "center", "center", "left", "left", "left"]);
+    $relatorio->set_classe([null, null, null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, "get_Cargo", "get_Lotacao"]);
     $relatorio->show();
 
     $page->terminaPagina();

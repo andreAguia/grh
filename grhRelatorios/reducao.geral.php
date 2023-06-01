@@ -49,7 +49,8 @@ if ($acesso) {
                   ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
              FROM tbservidor JOIN tbpessoa USING (idPessoa)
                              JOIN tbreducao USING (idServidor)
-            WHERE tbservidor.idPerfil <> 10";
+                             JOIN tbperfil USING (idPerfil)
+            WHERE tbperfil.tipo <> 'Outros' ";
 
     # status
     if ($parametroStatus <> 0) {

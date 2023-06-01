@@ -74,30 +74,6 @@ if ($acesso) {
     $relatorio->set_metodo([null, null, null, null, "get_tempoAverbadoTotal", "get_tempoServicoUenf"]);
     $relatorio->set_conteudo($result);
 
-//    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-//                                              FROM tblotacao
-//                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-//                                              FROM tblotacao
-//                                             WHERE ativo)
-//                                          ORDER BY 2');
-//
-//    array_unshift($listaLotacao, array('*', '-- Todos --'));
-//
-//    $relatorio->set_formCampos(array(
-//        array('nome' => 'lotacao',
-//            'label' => 'Lotação:',
-//            'tipo' => 'combo',
-//            'array' => $listaLotacao,
-//            'size' => 30,
-//            'padrao' => $lotacao,
-//            'title' => 'Lotação',
-//            'onChange' => 'formPadrao.submit();',
-//            'linha' => 1)
-//    ));
-//
-//    $relatorio->set_formFocus('lotacao');
-//    $relatorio->set_formLink('?');
-
     $relatorio->show();
 
     $page->terminaPagina();

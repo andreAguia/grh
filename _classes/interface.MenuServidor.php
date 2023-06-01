@@ -26,6 +26,7 @@ class MenuServidor {
 
         # Pega o perfil do servidor pesquisado
         $perfil = $pessoal->get_idPerfil($idServidor);
+        $perfilTipo = $pessoal->get_perfilTipo($perfil);
         $situacao = $pessoal->get_situacao($idServidor);
         $cargoComissao = $pessoal->get_cargoComissao($idServidor);
         $orgaoCedido = $pessoal->get_orgaoCedido($idServidor);
@@ -34,6 +35,7 @@ class MenuServidor {
         $this->idUsuario = $idUsuario;
         $this->idServidor = $idServidor;
         $this->perfil = $perfil;
+        $this->perfilTipo = $perfilTipo;
         $this->situacao = $situacao;
         $this->cargoComissao = $cargoComissao;
         $this->orgaoCedido = $orgaoCedido;
@@ -55,63 +57,64 @@ class MenuServidor {
             $this->moduloOrgaoCedido();
             $grid->fechaColuna();
         }
-        # --
-        if ($this->perfil <> 11) {
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
             $this->moduloOcorrencias();
             $grid->fechaColuna();
         }
-        # --
-        if ($this->perfil <> 11) {
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
             $this->moduloVinculos();
             $grid->fechaColuna();
         }
-        # --
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
         } else {
             $grid->abreColuna(12, 6, 5);
         }
+
         $this->moduloFuncionais();
         $grid->fechaColuna();
-        # --
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(8, 6, 4);
         } else {
             $grid->abreColuna(8, 6, 5);
         }
 
         $this->moduloPessoais();
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $this->moduloBeneficios();
         } else {
-            br(10);
+            br(15);
         }
         $grid->fechaColuna();
-        # --
+
         $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
-        # --
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloFinanceiro();
             $grid->fechaColuna();
         }
-        # --
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloAfastamentos();
             $grid->fechaColuna();
         }
-        # --
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloRelatorios();
             $grid->fechaColuna();
         }
-        # --
+
         $grid->fechaGrid();
     }
 
@@ -239,12 +242,14 @@ class MenuServidor {
             # Somente admin
             # Para resolver problemas do cadastro de concurso de servidores não concursados
             if (Verifica::acesso($this->idUsuario, 1)) {
-                $botao = new BotaoGrafico();
-                $botao->set_label('Concurso<br/>(Admin)');
-                $botao->set_url('servidorConcurso.php?grh=1');
-                $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-                $botao->set_title('Dados do concurso');
-                $menu->add_item($botao);
+                if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+                    $botao = new BotaoGrafico();
+                    $botao->set_label('Concurso<br/>(Admin)');
+                    $botao->set_url('servidorConcurso.php?grh=1');
+                    $botao->set_imagem(PASTA_FIGURAS . 'concurso.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+                    $botao->set_title('Dados do concurso');
+                    $menu->add_item($botao);
+                }
             }
         }
 
@@ -275,7 +280,7 @@ class MenuServidor {
         }
 
         # Acumulação
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Acumulação de Cargos Públicos');
             #$botao->set_url('servidorAcumulacao.php?grh=1');
@@ -286,7 +291,7 @@ class MenuServidor {
         }
 
         # Declaração de Acumulação
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Declaração de Acumulação');
             $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
@@ -296,7 +301,7 @@ class MenuServidor {
         }
 
         # Prestador de Contas
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Ordenação de Despesas');
             $botao->set_url('servidorOrdenador.php?grh=1');
@@ -307,7 +312,7 @@ class MenuServidor {
 
         # Sei
         $botao = new BotaoGrafico();
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao->set_label('Processos no Sei');
             $botao->set_url('servidorSei.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'sei2.png', $this->tamanhoImagem, $this->tamanhoImagem);
@@ -316,7 +321,7 @@ class MenuServidor {
         }
 
         # Elogios
-        if ($this->perfil <> 11) {
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Elogios');
             $botao->set_url('servidorElogios.php?grh=1');
@@ -326,7 +331,7 @@ class MenuServidor {
         }
 
         # Advertências
-        if ($this->perfil <> 11) {
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Penalidades');
             $botao->set_url('servidorPenalidades.php?grh=1');
@@ -336,7 +341,7 @@ class MenuServidor {
         }
 
         # Avaliação
-        if ($this->perfil <> 11) {   // Ser não for estagiário
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Avaliação');
             $botao->set_url('servidorAvaliacao.php?grh=1');
@@ -634,11 +639,12 @@ class MenuServidor {
         titulo('Pessoais');
         br();
 
-        if ($this->perfil <> 11) {
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
             $menu = new MenuGrafico(3);
         } else {
             $menu = new MenuGrafico(4);
         }
+
         $botao = new BotaoGrafico();
         $botao->set_label('Pessoais');
         $botao->set_url('servidorPessoais.php?grh=1');
@@ -667,7 +673,7 @@ class MenuServidor {
         $botao->set_title('Cadastro de Formação Escolar do Servidor');
         $menu->add_item($botao);
 
-        if ($this->perfil <> 11) {
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
             $botao = new BotaoGrafico();
             $botao->set_label('Parentes');
             $botao->set_url('servidorDependentes.php?grh=1');
@@ -676,7 +682,7 @@ class MenuServidor {
             $menu->add_item($botao);
         }
 
-        if ($this->perfil <> 11) {
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
             $botao = new BotaoGrafico();
             $botao->set_label('Vacinas');
             $botao->set_url('servidorVacina.php?grh=1');

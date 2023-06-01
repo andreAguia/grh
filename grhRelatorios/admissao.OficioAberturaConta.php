@@ -24,7 +24,7 @@ if ($acesso) {
 
     # Pega o id
     $id = get('id');
-    
+
     # Pega o número do ofício
     $numero = post("numero");
     $ano = post("ano");
@@ -37,23 +37,23 @@ if ($acesso) {
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $cpf = $pessoal->get_cpf($pessoal->get_idPessoa($idServidorPesquisado));
-    $identidade = $pessoal->get_identidadeSimples($pessoal->get_idPessoa($idServidorPesquisado));    
+    $identidade = $pessoal->get_identidadeSimples($pessoal->get_idPessoa($idServidorPesquisado));
 
     # Assunto
     $assunto = "Abertura de Conta para Crédito de Pagamento.";
 
     # Monta o Ofício
     $oficio = new Oficio("{$numero} / {$ano}", null, $assunto);
-    
+
     $oficio->set_destinoNome("Ao Banco Bradesco");
     $oficio->set_destinoSetor("At. Gerente");
     $oficio->set_assinatura(true);
     $oficio->set_carimboCnpj(true);
     $oficio->set_carimboAberturaConta(true);
-   
+
     $oficio->set_texto("Apresentamos o(a) Sr(a) <b>{$nomeServidor}</b>, portador(a) do RG: {$identidade} e CPF: {$cpf} para abertura de Conta para Crédito de pagamento.");
-    $oficio->set_texto("Os Servidores do GOVERNO DO ESTADO DO RIO DE JANEIRO já possuem aprovado um Pacote de Benefícios exclusivo, com direito a tarifas e taxas diferenciadas."); 
-    
+    $oficio->set_texto("Os Servidores do GOVERNO DO ESTADO DO RIO DE JANEIRO já possuem aprovado um Pacote de Benefícios exclusivo, com direito a tarifas e taxas diferenciadas.");
+
     $oficio->set_obsTitulo("<b>ATENÇÃO AGÊNCIA – REALIZAR O CADASTRAMENTO NAS ROTINAS:</b>");
     $oficio->set_obsFinal("- Contas Bradesco – CSAL Opção – 03 – Subopção 1 – Agência e Conta Salário Bradesco, Agência e Conta-Corrente Bradesco.");
     $oficio->set_obsFinal("- No Aplicativo GFCT – Cesta Serviços – Adesão Individual –Inclusão – Agência e Conta-Corrente – Usar Código: 1115 Cesta Completa ou 1229 Cesta Básica.");
@@ -68,8 +68,7 @@ if ($acesso) {
             . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conta Salário"
             . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
             . "Banco Bradesco - Carimbo e Assinatura");
-    
-    
+
     $oficio->temRodape(false);
     $oficio->show();
 

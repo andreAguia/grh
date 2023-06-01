@@ -192,9 +192,11 @@ if ($acesso) {
                 $select = "SELECT rr.idServidor,
                                   rr.idServidor
                              FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbperfil USING (idPerfil) 
                                                    JOIN tbhistlot USING (idServidor)
                                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
                           ";
@@ -265,9 +267,11 @@ if ($acesso) {
                                   rr.idServidor,
                                   rr.justificativaVacina
                              FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                   JOIN tbperfil USING (idPerfil)
                                                    JOIN tbhistlot USING (idServidor)
                                                    JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 } else {
@@ -280,9 +284,11 @@ if ($acesso) {
                                       rr.idServidor,
                                       rr.idServidor
                                  FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
+                                                       JOIN tbperfil USING (idPerfil)
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 }

@@ -41,7 +41,9 @@ if ($acesso) {
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicencapremio  USING (idServidor)
                                  LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                WHERE situacao = 1
+                                 JOIN tbperfil USING (idPerfil)
+                WHERE tbperfil.tipo <> 'Outros'
+                  AND situacao = 1
                   AND ((dtInicial <= '{$relatorioDtInicial}' AND ADDDATE(dtInicial,tblicencapremio.numDias-1) >= '{$relatorioDtInicial}')
                    OR (dtInicial BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}')  
                    OR (ADDDATE(dtInicial,tblicencapremio.numDias-1) BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}'))

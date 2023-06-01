@@ -39,7 +39,9 @@ if ($acesso) {
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-               WHERE situacao = 1 ';
+                                     JOIN tbperfil USING (idPerfil)     
+               WHERE tbservidor.situacao = 1
+                 AND tbperfil.tipo <> "Outros" ';
 
     # lotacao
     if (!is_null($lotacao)) {
@@ -58,13 +60,13 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Histórico de Servidores Ativos por Lotação');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Servidor', 'Lotação', 'Admissão', 'Saída', 'Situação', 'Histórico'));
-    $relatorio->set_width(array(10, 20, 0, 10, 10, 10, 40));
-    $relatorio->set_align(array("center", "left", "left", "center", "center", "center", "left"));
-    $relatorio->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Servidor', 'Lotação', 'Admissão', 'Saída', 'Situação', 'Histórico']);
+    $relatorio->set_width([10, 20, 0, 10, 10, 10, 40]);
+    $relatorio->set_align(["center", "left", "left", "center", "center", "center", "left"]);
+    $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, "pessoal", null, null, null, "pessoal", "Lotacao"));
-    $relatorio->set_metodo(array(null, "get_nomeECargoSimplesEPerfil", null, null, null, "get_Situacao", "exibeHistoricoLotacao"));
+    $relatorio->set_classe([null, "pessoal", null, null, null, "pessoal", "Lotacao"]);
+    $relatorio->set_metodo([null, "get_nomeECargoSimplesEPerfil", null, null, null, "get_Situacao", "exibeHistoricoLotacao"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);

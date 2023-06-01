@@ -42,9 +42,11 @@ if ($acesso) {
                                  LEFT JOIN tbferias USING (idServidor)
                                      JOIN tbhistlot USING (idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbperfil USING (idPerfil)                  
                  WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                    AND tbtipocargo.tipo = 'Professor'
                    AND anoExercicio = '{$parametroAno}'
+                   AND tbperfil.tipo <> 'Outros'
                    AND situacao = 1
               GROUP BY tbpessoa.nome
               ORDER BY soma,tbpessoa.nome)";

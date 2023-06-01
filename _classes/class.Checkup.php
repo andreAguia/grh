@@ -956,7 +956,7 @@ class Checkup {
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE idPerfil = 8
+                    WHERE idPerfil = 9
                       AND tbservidor.situacao = 1';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
@@ -1761,11 +1761,11 @@ class Checkup {
                           idServidor,
                           tbsituacao.situacao,
                           idServidor
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbperfil USING (idPerfil)
-                                     LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE (idFuncional IS null OR idFuncional = "")
-                      AND idPerfil <> 10
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbperfil USING (idPerfil)
+                                     JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    WHERE (idFuncional IS null OR idFuncional = "")                      
+                      AND tbperfil.tipo <> "Outros" 
                       AND tbservidor.situacao = 1';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
@@ -2306,7 +2306,7 @@ class Checkup {
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                    WHERE idPerfil = 8
+                    WHERE idPerfil = 9
                       AND tbservidor.situacao <> 1';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';

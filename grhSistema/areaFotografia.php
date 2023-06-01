@@ -226,7 +226,7 @@ if ($acesso) {
                 $tabela->set_align(["center", "left"]);
                 $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
                 $tabela->set_classe([null, "Pessoal"]);
-                $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
+                $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil"]);
                 $tabela->show();
             }
 

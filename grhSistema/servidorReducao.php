@@ -635,7 +635,7 @@ if ($acesso) {
             # Exibe o relatório ou salva de acordo com o botão pressionado
             if ($botaoEscolhido == "imprimir") {
                 if ($erro == 0) {
-                    loadPage("../grhRelatorios/ato.RCH.php?necessidade={$necessidade}&id={$id}", "_blank");
+                    loadPage("../grhRelatorios/reducao.ato.php?necessidade={$necessidade}&id={$id}", "_blank");
                     loadPage("?");
                 } else {
                     alert($msgErro);

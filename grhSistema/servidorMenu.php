@@ -6,14 +6,16 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              // Servidor logado
-$idServidorPesquisado = null;   // Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
 # Zera session usadas
-set_session('sessionParametro'); // Zera a session do parâmetro de pesquisa da classe modelo1
-set_session('sessionPaginacao'); // Zera a session de paginação da classe modelo1
+set_session('sessionParametro');
+set_session('sessionPaginacao');
+
 # Verifica a origem 
 $origem = get_session("origem");
 $origemId = get_session("origemId");
@@ -71,7 +73,7 @@ if ($acesso) {
         $menu = new MenuBar();
 
         # Verifica a origem
-        if (is_null($origem)) {
+        if (empty($origem)) {
             $caminhoVolta = 'servidor.php';
         } else {
             $caminhoVolta = $origem;

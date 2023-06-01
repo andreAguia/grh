@@ -27,7 +27,7 @@ if ($acesso) {
 
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.dtNasc,
@@ -38,11 +38,11 @@ if ($acesso) {
                       tbservidor.dtPublicAdm,
                       MONTH(tbservidor.dtAdmissao)
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
-                WHERE YEAR(tbservidor.dtAdmissao) = "' . $relatorioAno . '"
-             ORDER BY MONTH(tbservidor.dtAdmissao), dtadmissao';
-
+                                 LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
+                                 LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
+                WHERE YEAR(tbservidor.dtAdmissao) = '{$relatorioAno}'
+                  AND tbperfil.tipo <> 'Outros'    
+             ORDER BY MONTH(tbservidor.dtAdmissao), dtadmissao";
 
     $result = $servidor->select($select);
 
@@ -50,12 +50,12 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Anual de Servidores Admitidos em ' . $relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Perfil', 'Admissão', 'Demissão', 'Publicação', 'Mês'));
-    $relatorio->set_align(array('center', 'left'));
-    $relatorio->set_funcao(array(null, null, null, "date_to_php", null, null, "date_to_php", "date_to_php", "date_to_php", "get_NomeMes"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Perfil', 'Admissão', 'Demissão', 'Publicação', 'Mês']);
+    $relatorio->set_align(['center', 'left', 'center', 'center', 'left']);
+    $relatorio->set_funcao([null, null, null, "date_to_php", null, null, "date_to_php", "date_to_php", "date_to_php", "get_NomeMes"]);
 
-    $relatorio->set_classe(array(null, null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, "get_cargo"));
+    $relatorio->set_classe([null, null, null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, "get_cargo"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(9);

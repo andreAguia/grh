@@ -42,8 +42,8 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte');
-    $relatorio->set_subtitulo('Estatutários - Com Telefones e E-mails');
+    $relatorio->set_titulo('Relatório de Servidores');
+    $relatorio->set_subtitulo('Ex-Fenorte');
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Telefones', "E-mails"]);
     $relatorio->set_align(["center", "left", "left", "left"]);
 

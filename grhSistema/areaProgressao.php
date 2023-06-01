@@ -100,7 +100,7 @@ if ($acesso) {
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/progressaoporcargo.php");
+            $botaoRel->set_url("../grhRelatorios/progressao.porCargo.php");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
@@ -143,7 +143,7 @@ if ($acesso) {
                                 LEFT JOIN tbcargo USING (idCargo)                     
                                      JOIN tbtipocargo USING (idTipoCargo) 
                WHERE tbservidor.situacao = 1
-                 AND (idPerfil = 1 OR idPerfil = 4)
+                 AND idPerfil = 1
                  AND tbtipocargo.idTipoCargo = "' . $parametroCargo . '"
             ORDER BY tbpessoa.nome';
 

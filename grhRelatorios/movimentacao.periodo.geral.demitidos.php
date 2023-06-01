@@ -33,7 +33,7 @@ if ($acesso) {
 
     ###### Relatório 1
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.dtNasc,
@@ -48,12 +48,13 @@ if ($acesso) {
                                  LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                WHERE YEAR(tbservidor.dtDemissao) >= "' . $de . '"
-                  AND YEAR(tbservidor.dtDemissao) <= "' . $para . '"';
+                WHERE YEAR(tbservidor.dtDemissao) >= '{$de}'
+                  AND YEAR(tbservidor.dtDemissao) <= '{$para}'
+                  AND tbperfil.tipo <> 'Outros'";
 
     # Motivo
     if ($motivo <> "*") {
-        $select .= ' AND idMotivo =  ' . $motivo;
+        $select .= " AND idMotivo =  {$motivo}";
         $titulo .= $servidor->get_motivoAposentadoria($motivo);
     } else {
         $titulo .= "Exonerados, Aposentados e Demitidos";
@@ -61,11 +62,11 @@ if ($acesso) {
     
     # Perfil
     if ($perfil <> "*") {
-        $select .= ' AND tbservidor.idPerfil =  ' . $perfil;
+        $select .= " AND tbservidor.idPerfil =  {$perfil}";
         $titulo .= '<br/>'.$servidor->get_perfilNome($perfil);
     }
     
-    $select .= ' ORDER BY tbservidor.dtDemissao';
+    $select .= " ORDER BY tbservidor.dtDemissao";
 
     $result = $servidor->select($select);
 
@@ -77,12 +78,12 @@ if ($acesso) {
     }
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Publicação', 'Motivo'));
-    $relatorio->set_align(array('center', 'left', 'center', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left'));
-    $relatorio->set_funcao(array(null, null, null, "date_to_php", null, null, null, "date_to_php", "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Publicação', 'Motivo']);
+    $relatorio->set_align(['center', 'left', 'center', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left']);
+    $relatorio->set_funcao([null, null, null, "date_to_php", null, null, null, "date_to_php", "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, "get_cargo", "get_lotacao"));
+    $relatorio->set_classe([null, null, null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
 
     $relatorio->set_conteudo($result);
 

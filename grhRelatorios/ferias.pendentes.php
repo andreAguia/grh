@@ -53,6 +53,7 @@ if ($acesso) {
                            tbservidor.idServidor
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
+                                         JOIN tbperfil USING (idPerfil)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
@@ -66,7 +67,9 @@ if ($acesso) {
     }
 
     # Verifica se tem filtro por perfil
-    if (!is_null($parametroPerfil)) {
+    if (is_null($parametroPerfil)) {
+        $select2 .= " AND tbperfil.tipo <> 'Outros'";
+    } else {
         $select2 .= " AND idPerfil = {$parametroPerfil}";
     }
 

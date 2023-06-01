@@ -47,8 +47,8 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte Inativos');
-    $relatorio->set_subtitulo('Estatutários e Celetistas');
+    $relatorio->set_titulo('Relatório de Servidores Inativos');
+    $relatorio->set_subtitulo('Ex-Fenorte');
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída', 'Situação']);
     $relatorio->set_align(["center", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);

@@ -68,15 +68,14 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Mensal de Vencimento de Triênios');
     $relatorio->set_tituloLinha2(get_nomeMes($relatorioMes) . ' / ' . $relatorioAno);
-    $relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
+    $relatorio->set_subtitulo('Ordenado pelo Nome');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio'));
-    $relatorio->set_width(array(10, 50, 10, 10, 10, 10));
-    $relatorio->set_align(array('center', 'left'));
-    $relatorio->set_funcao(array(null, null, "date_to_php", null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Último Percentual', 'Último Triênio', 'Próximo Triênio']);
+    $relatorio->set_width([10, 50, 10, 10, 10, 10]);
+    $relatorio->set_align(['center', 'left']);
+    $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", "date_to_php"]);
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',

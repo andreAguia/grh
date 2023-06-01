@@ -135,13 +135,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Cargo", "Simbolo", "Valor (R$)", "Vagas", "Vagas<br/>Ocupadas", "Vagas<br/>Disponíveis", "Ativo?", "obs"));
-    $objeto->set_width(array(5, 20, 10, 10, 10, 10, 10, 10, 10));
-    $objeto->set_align(array("center", "left"));
+    $objeto->set_label(["id", "Cargo", "Simbolo", "Valor (R$)", "Vagas", "Vagas<br/>Ocupadas", "Vagas<br/>Disponíveis", "Ativo?", "obs"]);
+    $objeto->set_width([5, 20, 10, 10, 10, 10, 10, 10, 10]);
+    $objeto->set_align(["center", "left"]);
 
-    $objeto->set_funcao(array(null, null, null, "formataMoeda"));
-    $objeto->set_classe(array(null, null, null, null, null, 'CargoComissao', 'CargoComissao', null, 'CargoComissao'));
-    $objeto->set_metodo(array(null, null, null, null, null, 'get_numServidoresNomeados', 'get_vagasDisponiveis', null, "exibeObs"));
+    $objeto->set_funcao([null, null, null, "formataMoeda"]);
+    $objeto->set_classe([null, null, null, null, null, 'CargoComissao', 'CargoComissao', null, 'CargoComissao']);
+    $objeto->set_metodo([null, null, null, null, null, 'get_numServidoresNomeados', 'get_vagasDisponiveis', null, "exibeObs"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -214,9 +214,9 @@ if ($acesso) {
     $botaoRel->set_title("Imprimir");
     $botaoRel->set_target("_blank");
     if ($tipo) {
-        $botaoRel->set_url('../grhRelatorios/cargoComissaoAtivos.php');
+        $botaoRel->set_url('../grhRelatorios/cargoComissao.ativos.php');
     } else {
-        $botaoRel->set_url('../grhRelatorios/cargoComissaoInativos.php');
+        $botaoRel->set_url('../grhRelatorios/cargoComissao.inativos.php');
     }
 
     # Cargos Ativos
@@ -285,7 +285,7 @@ if ($acesso) {
             $botaoRel->set_imagem($imagem);
             $botaoRel->set_title("Imprimir");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("../grhRelatorios/cargosComissionados.php?comissao=" . $id);
+            $botaoRel->set_url("../grhRelatorios/cargoComissao.geral.php?comissao=" . $id);
             $menu->add_link($botaoRel, "right");
 
             # Relatório

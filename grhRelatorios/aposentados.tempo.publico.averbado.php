@@ -36,7 +36,7 @@ if ($acesso) {
                 WHERE (idPerfil = 1 OR idPerfil = 4)
                   AND situacao = 2
                   AND empresaTipo = 1
-            ORDER BY tbpessoa.nome';
+             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 

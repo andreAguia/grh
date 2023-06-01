@@ -79,11 +79,12 @@ class Vacina {
          */
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
-                     FROM tbvacina 
-                     JOIN tbhistlot USING (idServidor)
-                     JOIN tbservidor USING (idServidor)
-                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     FROM tbvacina JOIN tbhistlot USING (idServidor)
+                                   JOIN tbservidor USING (idServidor)
+                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                   JOIN tbperfil USING (idPerfil)
                     WHERE situacao = 1
+                      AND tbperfil.tipo <> 'Outros'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
@@ -285,8 +286,10 @@ class Vacina {
                                      LEFT JOIN tbtipovacina USING (idTipoVacina)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                               WHERE situacao = 1
-                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                                          JOIN tbperfil USING (idPerfil)
+                    WHERE situacao = 1
+                      AND tbperfil.tipo <> 'Outros'
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao)) {
@@ -347,8 +350,10 @@ class Vacina {
                                      LEFT JOIN tbtipovacina USING (idTipoVacina)
                                           JOIN tbhistlot USING (idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                               WHERE situacao = 1
-                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                                          JOIN tbperfil USING (idPerfil)
+                    WHERE situacao = 1
+                      AND tbperfil.tipo <> 'Outros'
+                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
         if (!empty($idLotacao)) {

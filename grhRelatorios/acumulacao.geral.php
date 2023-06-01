@@ -60,13 +60,13 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
 
-    $relatorio->set_label(array("Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculo da Uenf", "Outro Vínculo"));
-    $relatorio->set_align(array("center", "center", "center", "left", "center", "left", "left"));
-    #$relatorio->set_funcao(array(null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"));
-    $relatorio->set_metodo(array(null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"));
+    $relatorio->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculo da Uenf", "Outro Vínculo"]);
+    $relatorio->set_align(["center", "center", "center", "left", "center", "left", "left"]);
+    $relatorio->set_classe([null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"]);
+    $relatorio->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"]);
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
+    $relatorio->set_bordaInterna(true);    
     $relatorio->show();
 
     $page->terminaPagina();

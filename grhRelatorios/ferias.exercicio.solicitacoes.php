@@ -104,11 +104,11 @@ if ($acesso) {
 
     $relatorio->set_subtitulo('Agrupados por Mês - Ordenados pela Data Inicial');
     $relatorio->set_bordaInterna(true);
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Mês', 'Situação'));
-    $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias", "get_situacaoRel"));
-    $relatorio->set_classe(array(null, null, "pessoal", null, null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Mês', 'Situação']);
+    $relatorio->set_align(["center", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php", null, null, null, "acertaDataFerias", "get_situacaoRel"]);
+    $relatorio->set_classe([null, null, "pessoal", null, null, null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_lotacaoSimples", null, null, null, null, "get_feriasPeriodo"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(8);

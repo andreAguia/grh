@@ -622,6 +622,13 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de RPAs');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Estagiários & Bolsistas');
+        $botao->set_url('cadastroEstagiario.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'estagiario.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Cadastro de Estagiários & Bolsistas');
+        $menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();

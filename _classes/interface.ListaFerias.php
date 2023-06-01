@@ -127,16 +127,16 @@ class ListaFerias {
         } else {
             $totalServidores2 = 0;
         }
-        $semFerias[] = array("Solicitaram", $totalServidores1);
-        $semFerias[] = array("Não Solicitaram", $totalServidores2);
+        $semFerias[] = ["Solicitaram", $totalServidores1];
+        $semFerias[] = ["Não Solicitaram", $totalServidores2];
         $totalServidores3 = $totalServidores1 + $totalServidores2;
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($semFerias);
-        $tabela->set_label(array("Descrição", "Nº de Servidores"));
+        $tabela->set_label(["Descrição", "Nº de Servidores"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_align(array("center"));
+        $tabela->set_align(["center"]);
         $tabela->set_titulo("Resumo Geral");
         $tabela->set_rodape("Total de Servidores: " . $totalServidores3);
         $tabela->show();
@@ -178,9 +178,9 @@ class ListaFerias {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conta);
-        $tabela->set_label(array("Dias", "Servidores"));
+        $tabela->set_label(["Dias", "Servidores"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_align(array("center"));
+        $tabela->set_align(["center"]);
         $tabela->set_titulo("Servidores Por Dia");
         $tabela->set_rodape("Total de Servidores: " . $totalServidores);
         $tabela->show();
@@ -236,7 +236,7 @@ class ListaFerias {
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
             $tabela->set_label(["Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"]);
             $tabela->set_classe([null, "pessoal", "pessoal", null, null, null, "Ferias"]);
-            
+
             # Exibe o órgão quando for cedido
             if ($this->lotacao == 113) {
                 $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil", "get_lotacaoSimples", null, null, null, "exibeFeriasPendentes"]);
@@ -458,6 +458,7 @@ class ListaFerias {
                            tbpessoa.nome as nome
                       FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
+                                         JOIN tbperfil USING (idPerfil)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND YEAR(tbservidor.dtAdmissao) < {$this->anoExercicio}
@@ -473,7 +474,9 @@ class ListaFerias {
             }
 
             # Verifica se tem filtro por perfil
-            if (!is_null($this->perfil)) {
+            if (is_null($this->perfil)) {
+                $select2 .= " AND tbperfil.tipo <> 'Outros'";
+            } else {
                 $select2 .= " AND idPerfil = {$this->perfil}";
             }
 

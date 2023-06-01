@@ -327,7 +327,7 @@ if ($acesso) {
             }
 
             # Formuário da CI
-            $form = new Form("../grhRelatorios/ciSispatri.php");
+            $form = new Form("../grhRelatorios/sispatri.ci.php");
 
             # usuário
             $controle = new Input('ci', 'numero', 'N° CI:', 1);

@@ -52,9 +52,9 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte');
-
-    $relatorio->set_subtitulo('Concurso de ' . $concurso->get_nomeConcurso($parametroConcurso));
+    $relatorio->set_titulo('Relatório de Servidores');
+    $relatorio->set_subtitulo('Ex-Fenorte<br/>Concurso de ' . $concurso->get_nomeConcurso($parametroConcurso));
+    
     $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Concurso', 'Perfil', 'Admissão', 'Saída', 'Situação'));
     $relatorio->set_width(array(10, 30, 20, 20, 10, 10));
     $relatorio->set_align(array("center", "left", "left"));

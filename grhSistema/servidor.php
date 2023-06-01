@@ -253,11 +253,12 @@ if ($acesso) {
 
             # Perfil
             $result = $pessoal->select('SELECT idperfil,
-                                               nome,
-                                               tipo
-                                          FROM tbperfil
-                                      ORDER BY tipo, nome');
-                        
+                                       nome,
+                                       tipo
+                                  FROM tbperfil
+                                 WHERE tipo <> "Outros"  
+                              ORDER BY tipo, nome');
+
             array_unshift($result, array('*', '-- Todos --'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
@@ -304,7 +305,7 @@ if ($acesso) {
                 if (Verifica::acesso($idUsuario, 1)) {
                     $lista->set_idServidorIdPessoa($parametroNomeMat);
                 }
-                
+
                 $lista->set_matNomeId($parametroNomeMat);
                 $lista->set_paginacao(false);
             }
@@ -332,6 +333,9 @@ if ($acesso) {
             if ($parametroPerfil <> "*") {
                 $lista->set_perfil($parametroPerfil);
                 $lista->set_paginacao(false);
+            }else{
+                # esconde o tipo outros
+                $lista->set_escondeTipoPerfil("Outros");
             }
 
             if ($parametroSituacao <> "*") {

@@ -37,7 +37,7 @@ if ($acesso) {
                      tbservidor.dtAdmissao,
                      tbservidor.dtDemissao,
                      tbsituacao.situacao
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                    
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                    
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
@@ -50,9 +50,9 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório Geral de Servidores Ex-Fenorte');
-
-    #$relatorio->set_subtitulo('Concurso de ' . $concurso->get_nomeConcurso($parametroConcurso));
+    $relatorio->set_titulo('Relatório de Servidores Estatutários');
+    $relatorio->set_subtitulo('Ex-Fenorte');
+    
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída', 'Situação']);
     $relatorio->set_width([10, 30, 20, 20, 10, 10]);
     $relatorio->set_align(["center", "left", "left"]);

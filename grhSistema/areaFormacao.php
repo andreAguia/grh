@@ -122,17 +122,22 @@ if ($acesso) {
             $controle->set_array(["Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"]);
             $controle->set_autofocus(true);
             $form->add_item($controle);
-
+            
             # Perfil
-            $result = $pessoal->select('SELECT idperfil, nome
-                                              FROM tbperfil                                
-                                          ORDER BY 1');
-            array_unshift($result, array('Todos', 'Todos'));
+            $result = $pessoal->select('SELECT idperfil,
+                                       nome,
+                                       tipo
+                                  FROM tbperfil
+                                 WHERE tipo <> "Outros"  
+                              ORDER BY tipo, nome');
+
+            array_unshift($result, array('*', '-- Todos --'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Perfil');
             $controle->set_array($result);
+            $controle->set_optgroup(true);
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -365,7 +370,7 @@ if ($acesso) {
                 $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
                 $subTitulo .= "Filtro Curso: {$parametroCurso}<br/>";
             }
-            
+
             if ($parametroInstituicao <> "Todos") {
                 $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
                 $subTitulo .= "Filtro Instituição: {$parametroInstituicao}<br/>";

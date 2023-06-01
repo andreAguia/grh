@@ -105,9 +105,11 @@ class Sispatri {
 
         $select .= ' tbservidor.idServidor
                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbperfil USING (idPerfil)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbperfil.tipo <> "Outros"
                      AND tbservidor.situacao = 1';
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -456,7 +458,9 @@ class Sispatri {
                     FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbperfil.tipo <> "Outros" 
                    AND tbservidor.situacao = 1';
 
         # Lotacao
@@ -688,7 +692,9 @@ class Sispatri {
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
                                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                     JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbperfil.tipo <> "Outros"
                    AND tbservidor.situacao = 1';
 
         # Lotacao

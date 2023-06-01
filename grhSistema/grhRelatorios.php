@@ -81,28 +81,24 @@ if ($acesso) {
             $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
-            $menu->add_item('linkAjax', 'Contatos', '?fase=contatos', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Contatos & Endereços', '?fase=contatos', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Dependentes & Auxílio Creche', '?fase=dependentes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Diárias', '?fase=diarias', '', '', 'divMenuRelatorioGrh');
+            #$menu->add_item('linkAjax', 'Diárias', '?fase=diarias', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Estatutários', '?fase=estatutarios', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Endereço', '?fase=endereco', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Faltas', '?fase=faltas', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Férias', '?fase=ferias', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Formação', '?fase=formacao', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Geral - Servidores Ativos', '?fase=geralAtivos', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
-            $menu->add_item('linkAjax','Licença Prêmio','?fase=licencaPremio','','','divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Licença Prêmio', '?fase=licencaPremio', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Outros', '?fase=outros', '', '', 'divMenuRelatorioGrh');
+            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh'); 
             $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
+            #$menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Seguro Anual', '?fase=seguro', '', '', 'divMenuRelatorioGrh');
             #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
             $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
@@ -149,25 +145,8 @@ if ($acesso) {
             #$menu->add_item('linkWindow','Relatório de Estatutários com Idade para Aposentadoria','../grhRelatorios/servIdadeAposent.php');
             #$menu->add_item('linkWindow','Relatório de Estatutários que Atingiram Idade para Aposentadoria','../grhRelatorios/servidoresComIdadeParaAposentar.php');
             #$menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios com Abono Permanencia Deferido', '../grhRelatorios/geralAbonoDeferido.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios com Abono Permanencia Indeferido', '../grhRelatorios/geralAbonoIndeferido.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "aposentados";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Aposentadoria e Tempo Averbado');
-            $menu->add_item('titulo1', 'Servidores Ativos');            
-            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Que Não Averbaram Tempo', '../grhRelatorios/servidores.ativos.semTempoAverbado.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Com o Tempo Averbado e de Uenf', '../grhRelatorios/estatutarios.ativos.tempoUenf.averbado.php');
-            $menu->add_item('titulo1', 'Servidores Aposentados');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Geral', '../grhRelatorios/aposentados.geral.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Professores', '../grhRelatorios/professor.aposentadoPorCargo.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentadoria.periodo.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios - com Abono Permanencia Deferido', '../grhRelatorios/abonoPermanencia.geral.deferido.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios - com Abono Permanencia Indeferido', '../grhRelatorios/abonoPermanencia.geral.indeferido.php');
 
             $menu->show();
             break;
@@ -177,7 +156,7 @@ if ($acesso) {
         case "aniversariantes";
             $menu = new Menu();
             $menu->add_item('titulo', 'Aniversariantes');
-            $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantesAnualLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantes.anual.lotacao.php');
 
             $menu->show();
             break;
@@ -187,8 +166,45 @@ if ($acesso) {
         case "afastamentos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Afastamentos');
-            $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
+
+            $menu->add_item('titulo1', 'Faltas');
+            $menu->add_item('linkWindow', 'Relatório de Faltas - Mensal', '../grhRelatorios/faltas.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório de Faltas - Anual', '../grhRelatorios/faltas.anual.php');
+
+            $menu->add_item('titulo1', 'Geral');
+            $menu->add_item('linkWindow', 'Relatório de Professores - com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
             #$menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "aposentados";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Aposentadoria e Tempo Averbado');
+
+            $menu->add_item('titulo1', 'Servidores Ativos');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Sem Tempo Averbado', '../grhRelatorios/estatutarios.ativos.semTempoAverbado.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Com o Tempo Averbado e de Uenf', '../grhRelatorios/estatutarios.ativos.tempoUenf.averbado.php');
+
+            $menu->add_item('titulo1', 'Servidores Aposentados');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Geral', '../grhRelatorios/aposentados.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Cargo - Professores', '../grhRelatorios/aposentados.professor.porCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Cargo - Administrativo e Técnicos', '../grhRelatorios/aposentados.admtec.porCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentados.porPeriodo.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "atestado";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Atestado');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Atestado - Mensal', '../grhRelatorios/atestado.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores com Atestado - Anual', '../grhRelatorios/atestado.anual.php');
 
             $menu->show();
             break;
@@ -197,14 +213,21 @@ if ($acesso) {
 
         case "cargoEfetivo";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Cargos');
-            $menu->add_item('linkWindow', 'Relatório de Cargos - Agrupados por Nível', '../grhRelatorios/cargoNivel.php');
-            $menu->add_item('linkWindow', 'Relatório Numero de Servidores Ativos por Diretoria / Cargo', '../grhRelatorios/cargoNivelLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários - Por Cargo', '../grhRelatorios/cargoEstatutarios.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos e Técnicos por Lotação', '../grhRelatorios/admTecporLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos e Técnicos por Sexo', '../grhRelatorios/admTecporSexo.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos e Técnicos por Escolaridade do Cargo', '../grhRelatorios/admTecporEscolaridadeCargo.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores por Lotação', '../grhRelatorios/professorporLotacao.php');
+            $menu->add_item('titulo', 'Cargo Efetivo');
+
+            $menu->add_item('titulo1', 'Administrativos e Técnicos');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Administrativos e Técnicos - por Lotação', '../grhRelatorios/cargo.admTec.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Administrativos e Técnicos - por Sexo', '../grhRelatorios/cargo.admTec.porSexo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Administrativos e Técnicos - por Escolaridade do Cargo', '../grhRelatorios/cargo.admTec.porEscolaridadeCargo.php');
+
+            $menu->add_item('titulo1', 'Professores');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Professores - por Lotação', '../grhRelatorios/cargo.professor.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Professores - por Sexo', '../grhRelatorios/cargo.professor.porSexo.php');
+
+            $menu->add_item('titulo1', 'Geral');
+            $menu->add_item('linkWindow', 'Relatório de Cargos - Agrupados por Nível', '../grhRelatorios/cargo.nivel.php');
+            $menu->add_item('linkWindow', 'Relatório de Cargos - Numero de Servidores Ativos por Diretoria / Cargo', '../grhRelatorios/cargo.nivel.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Por Cargo', '../grhRelatorios/cargo.estatutarios.php');
 
             $menu->show();
             break;
@@ -215,21 +238,23 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Cargos');
             $menu->add_item('titulo1', 'Relação dos Cargos');
-            $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Ativos', '../grhRelatorios/cargoComissaoAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Inativos', '../grhRelatorios/cargoComissaoInativos.php');
+            $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Ativos', '../grhRelatorios/cargoComissao.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Inativos', '../grhRelatorios/cargoComissao.inativos.php');
+
             $menu->add_item('titulo1', 'Relação dos Servidores com Cargo em Comissão');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargosComissionados.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão com Vagas - Agrupados por Cargo', '../grhRelatorios/cargosComissionadosVagas.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargosComissionadosLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargosComissionadosCpfRg.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Docentes', '../grhRelatorios/cargosComissionados.docentes.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão - Adm & Tec', '../grhRelatorios/cargosComissionados.adm.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Vigentes', '../grhRelatorios/cargoComissao.vigentes.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Agrupados por Cargo', '../grhRelatorios/cargoComissao.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - com Vagas e Agrupados por Cargo', '../grhRelatorios/cargoComissao.vagas.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Agrupados por Lotacao', '../grhRelatorios/cargoComissao.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Agrupados por Cargo - Com CPF e RG', '../grhRelatorios/cargoComissao.cpf.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Docentes', '../grhRelatorios/cargoComissao.docentes.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Adm & Tec', '../grhRelatorios/cargoComissao.admTec.php');
+
             $menu->add_item('titulo1', 'Histórico');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Ativos - Histórico', '../grhRelatorios/cargosComissionadosAtivosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Cargos em Comissão Inativos - Histórico', '../grhRelatorios/cargosComissionadosInativosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Docentes - Histórico por Ano', '../grhRelatorios/cargosComissionados.docentes.porAno.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Cargos em Comissão - Adm & Tec - Histórico por Ano', '../grhRelatorios/cargosComissionados.adm.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Ativos', '../grhRelatorios/cargoComissao.histiorico.cargosAtivos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Intivos', '../grhRelatorios/cargoComissao.histiorico.cargosInativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Docentes - Histórico por Ano', '../grhRelatorios/cargoComissao.histiorico.docentes.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Adm & Tec - Histórico por Ano', '../grhRelatorios/cargoComissao.histiorico.admTec.porAno.php');
 
             $menu->show();
             break;
@@ -239,25 +264,44 @@ if ($acesso) {
         case "cedidos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Cedidos');
-            $menu->add_item('titulo1', 'Cedidos da Uenf');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos', '../grhRelatorios/estatutarios.cedidos.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Admin e Tecnicos Cedidos', '../grhRelatorios/estatutarios.cedidos.admin.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Professores Cedidos', '../grhRelatorios/estatutarios.cedidos.professores.php');
-            $menu->add_item('linkWindow', 'Histórico de Estatutários Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.historico.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.orgao.php');
+            $menu->add_item('titulo1', 'Cedidos da Uenf para Outro Órgão');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos', '../grhRelatorios/estatutarios.cedidos.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Professores', '../grhRelatorios/estatutarios.cedidos.professores.php');
+            $menu->add_item('linkWindow', 'Histórico de Estatutários - Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.historico.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
             $menu->add_item('titulo1', 'Cedidos de Fora');
             #$menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
-            $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidosporOrgao.php');
+            $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidos.porOrgao.php');
 
             $menu->show();
             break;
 
         ######################################
 
-        case "concursos";
+        case "contatos";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Concursos');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Agrupados por Concurso', '../grhRelatorios/estatutariosConcurso.php');
+            $menu->add_item('titulo', 'Contatos & Endereços');
+            $menu->add_item('titulo1', 'Email');
+            $menu->add_item('linkWindow', 'Email Institucional dos Servidores Ativos', '../grhRelatorios/contatos.ativos.email.institucional.php');
+            $menu->add_item('linkWindow', 'Email Pessoal dos Servidores Ativos', '../grhRelatorios/contatos.ativos.email.pessoal.php');
+            $menu->add_item('linkWindow', 'Emails dos Servidores Ativos', '../grhRelatorios/contatos.ativos.emails.php');
+            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional Cadastrado', '../grhRelatorios/contatos.ativos.semEmail.institucional.php');
+
+            $menu->add_item('titulo1', 'Telefone');
+            $menu->add_item('linkWindow', 'Telefones dos Servidores Ativos', '../grhRelatorios/contatos.ativos.telefones.php');
+            $menu->add_item('linkWindow', 'Servidores sem Celular Cadastrado', '../grhRelatorios/contatos.ativos.servidoresSemCelular.php');
+
+            $menu->add_item('titulo1', 'Contatos');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores Ativos', '../grhRelatorios/contatos.ativos.php');
+            $menu->add_item('linkWindow', 'Contatos dos Servidores Ativos - Formato Sispatri', '../grhRelatorios/contatos.ativos.sispatri.php');
+            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional ou Celular Cadastrado', '../grhRelatorios/contatos.ativos.semEmailECelular.php');
+
+            $menu->add_item('titulo1', 'Endereços');
+            $menu->add_item('linkWindow', 'Endereço de Servidores Ativos Agrupado por Cidade', '../grhRelatorios/endereco.porCidade.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Endereço, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/endereco.email.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Endereço, CPF, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/endereco.email.lotacao.cpf.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos e Aposentados Com Endereço', '../grhRelatorios/endereco.ativos.aposentados.php');
 
             $menu->show();
             break;
@@ -266,12 +310,16 @@ if ($acesso) {
 
         case "dependentes";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Dependentes');
-            $menu->add_item('linkWindow', 'Relatório Geral de Auxílio Creche', '../grhRelatorios/servidoresAtivoAuxilioCreche.php');
-            $menu->add_item('linkWindow', 'Relatório Servidores Ativos com Dependente (Filhos)', '../grhRelatorios/servidoresAtivoComFilhos.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Auxilio Creche', '../grhRelatorios/vencimentoMensalAuxilioCreche.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Auxilio Creche', '../grhRelatorios/vencimentoAnualAuxilioCreche.php');
-            $menu->add_item('linkWindow', 'Relatório de Dependentes Filhos de Servidores Ativos', '../grhRelatorios/dependentes.filhos.ativos.php');
+            $menu->add_item('titulo', 'Dependentes & Auxílio Creche');
+
+            $menu->add_item('titulo1', 'Dependentes');
+            $menu->add_item('linkWindow', 'Relatório Servidores Ativos - com Dependente (Filhos)', '../grhRelatorios/dependentes.servidores.ativos.comFilho.php');
+            $menu->add_item('linkWindow', 'Relatório de Dependentes - Filhos de Servidores Ativos', '../grhRelatorios/dependentes.filhos.ativos.php');
+
+            $menu->add_item('titulo1', 'Auxílio Creche');
+            $menu->add_item('linkWindow', 'Relatório Geral de Auxílio Creche', '../grhRelatorios/auxilioCreche.servidores.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Vencimento de Auxilio Creche - Mensal', '../grhRelatorios/auxilioCreche.vencimento.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório de Vencimento de Auxilio Creche - Anual', '../grhRelatorios/auxilioCreche.vencimento.anual.php');
 
             $menu->show();
             break;
@@ -279,45 +327,32 @@ if ($acesso) {
         ######################################
 
         case "diarias";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Diárias');
-            $menu->add_item('linkWindow', 'Relatório Mensal pela Data do Processo', '../grhRelatorios/diariasMensalDataProcesso.php');
-            $menu->add_item('linkWindow', 'Relatório Anual pela Data do Processo', '../grhRelatorios/diariasAnualDataProcesso.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal por Data de Saída', '../grhRelatorios/diariasMensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual por Data de Saída', '../grhRelatorios/diariasAnual.php');
-
-            $menu->show();
+//            $menu = new Menu();
+//            $menu->add_item('titulo', 'Diárias');
+//            $menu->add_item('linkWindow', 'Relatório Mensal pela Data do Processo', '../grhRelatorios/diariasMensalDataProcesso.php');
+//            $menu->add_item('linkWindow', 'Relatório Anual pela Data do Processo', '../grhRelatorios/diariasAnualDataProcesso.php');
+//            $menu->add_item('linkWindow', 'Relatório Mensal por Data de Saída', '../grhRelatorios/diariasMensal.php');
+//            $menu->add_item('linkWindow', 'Relatório Anual por Data de Saída', '../grhRelatorios/diariasAnual.php');
+//
+//            $menu->show();
             break;
 
         ######################################
 
-        case "formacao";
+        case "estatutarios";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Formação dos Servidores');
-            $menu->add_item('linkWindow', 'Relatório dos Servidores por Formação', '../grhRelatorios/servidoresComFormacao.php');
+            $menu->add_item('titulo', 'Estatutários');
+            $menu->add_item('titulo1', 'Ativos');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Assinatura', '../grhRelatorios/estatutarios.ativos.assinatura.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - Agrupados pela Lotação', '../grhRelatorios/estatutarios.ativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - Agrupados pelo Cargo', '../grhRelatorios/estatutarios.ativos.porCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Data de Nascimento', '../grhRelatorios/estatutarios.ativos.cpf.nascimento.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Idade', '../grhRelatorios/estatutarios.ativos.porIdade.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo e E-mail - Por Ano de Admissão', '../grhRelatorios/estatutarios.ativos.email.porAnoAdmissao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - Agrupados por Nacionalidade', '../grhRelatorios/estatutarios.ativos.porNacionalidade.php');
 
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "frequencia";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'FoLha de Frequência dos Servidores');
-            $menu->add_item('linkWindow', 'Folha de Frequencia de uma Lotação', '../grhRelatorios/folhaFrequenciaLotacao.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "tre";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'TRE');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Afastamentos para Serviço Eleitoral (TRE)', '../grhRelatorios/treAfastamentoMensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Afastamentos para Serviço Eleitoral (TRE)', '../grhRelatorios/treAfastamentoAnual.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Folgas Fruídas (TRE)', '../grhRelatorios/treFolgaMensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Folgas Fruídas (TRE)', '../grhRelatorios/treFolgaAnual.php');
+            $menu->add_item('titulo1', 'Inativos');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Inativos - por Lotação', '../grhRelatorios/estatutarios.inativos.porLotacao.php');
 
             $menu->show();
             break;
@@ -328,36 +363,43 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Férias');
             $menu->add_item('titulo1', 'Escala de Férias');
-            $menu->add_item('linkWindow', 'Escala Anual de Férias - por Ano de Exercício', '../grhRelatorios/ferias.anual.porDiretoria.php');
-            $menu->add_item('linkWindow', 'Escala Anual de Férias - Cedidos da Uenf - por Ano de Exercício', '../grhRelatorios/ferias.anual.cedidos.php');
-            
+            $menu->add_item('linkWindow', 'Escala Anual de Férias - por Ano de Exercício', '../grhRelatorios/ferias.escala.anual.porDiretoria.php');
+            $menu->add_item('linkWindow', 'Escala Anual de Férias - Cedidos da Uenf - por Ano de Exercício', '../grhRelatorios/ferias.escala.anual.cedidos.php');
+
             $menu->add_item('titulo1', 'Recesso de Professores');
             $menu->add_item('linkWindow', 'Relatório de Professores com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
-            
+
             $menu->add_item('titulo1', 'Férias Fruídas');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.professor.php');
             $menu->add_item('linkWindow', 'Total de Dias Fruídos por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.porTotalDias.adm.php');
             $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Professor Ativo', '../grhRelatorios/ferias.exercicio.fruidas.professor.php');
             $menu->add_item('linkWindow', 'Férias Fruídas por Ano de Exercício - Adm & Tec Ativo', '../grhRelatorios/ferias.exercicio.fruidas.adm.php');
-//            $menu->add_item('titulo1', 'Antigas Escalas');
-//            $menu->add_item('linkWindow', 'Escala Anual de Férias de Servidores Tecnicos Estatutarios', '../grhRelatorios/ferias.escalaAnual.TecnicosEstatutarios.php');
-//            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Estatutarios com Cargo de Comissao', '../grhRelatorios/ferias.escalaAnual.DocentesComCargo.php');
-//            $menu->add_item('linkWindow', 'Escala Anual de Férias de Docentes Com Regencia de Turma', '../grhRelatorios/ferias.escalaAnual.DocentesComRegencia.php');
-            
 
             $menu->show();
-
             break;
 
         ######################################
 
-        case "trienio";
+        case "financeiro";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Triênio');
-            $menu->add_item('linkWindow', 'Relatório Geral de Triênio', '../grhRelatorios/trienio.geral.php');
-            $menu->add_item('linkWindow', 'Relatório de Triênio por Lotação', '../grhRelatorios/trienio.lotacao.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.mensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.anual.php');
+            $menu->add_item('titulo', 'Financeiro');
+            $menu->add_item('titulo1', 'Geral');
+            $menu->add_item('linkWindow', 'Relatório Geral Financeiro', '../grhRelatorios/financeiro.geral.php');
+
+            $menu->add_item('titulo1', 'Estatutários');
+            $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.nascimento.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutarios Por Cargo Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.porCargo.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "frequencia";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'FoLha de Frequência dos Servidores');
+            $menu->add_item('linkWindow', 'Folha de Frequencia de uma Lotação', '../grhRelatorios/folhaFrequencia.porLotacao.php');
 
             $menu->show();
             break;
@@ -367,23 +409,23 @@ if ($acesso) {
         case "geralAtivos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Geral - Servidores Ativos');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos', '../grhRelatorios/geralServidoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Professores', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresAdmTecAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoLotacaoSexo.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geralServidoresAtivoCpf.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geralServidoresAtivoCpf_1.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geralServidoresAtivosAssinatura.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geralServidoresAtivosAssinaturaCpf.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Emails e CPF', '../grhRelatorios/geralServidoresAtivosEmailCpf2.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Check', '../grhRelatorios/geralServidoresAtivosCheck.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimento.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geralServidoresNomeCpfNascimentoAdmissao.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geralServidoresNomeCpfCargoIdade.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geralServidoresNomeCpfNascimentoSexo.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Por Ano de Admissão - Caego e E-mail ', '../grhRelatorios/servidores.ativos.AnoAdmissao.e-mail.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos', '../grhRelatorios/geral.servidores.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Professores', '../grhRelatorios/geral.servidores.ativos.professores.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Administrativos e Técnicos', '../grhRelatorios/geral.servidores.ativos.admTec.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.sexo.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.cpf.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geral.servidores.ativos.cpf.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geral.servidores.ativos.cpf.assinatura.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geral.servidores.ativos.email.cpf.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Emails e CPF', '../grhRelatorios/geral.servidores.ativos.email.cpf2.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Check', '../grhRelatorios/geral.servidores.ativos.check.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Nascimento', '../grhRelatorios/geral.servidores.ativos.nome.cpf.nascimento.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo, Nascimento e Admissão', '../grhRelatorios/geral.servidores.ativos.nome.cpf.nascimento.admissao.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Cargo e Idade', '../grhRelatorios/geral.servidores.ativos.nome.cpf.cargo.idade.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, Cpf, Sexo e Nascimento', '../grhRelatorios/geral.servidores.ativos.nome.cpf.nascimento.sexo.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Nome, CPF, Identidade, Nacionalidade e Contatos', '../grhRelatorios/geral.servidores.ativos.nome.cpf.nacionalidade.contatos.php');            
             $menu->show();
             break;
 
@@ -393,14 +435,14 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Geral - Inativos');
             $menu->add_item('titulo1', 'Ordenados pela Data de Saída');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.php');
-            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.php');
-            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geral.servidores.inativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geral.concursados.inativos.professores.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geral.concursados.inativos.admTec.php');
             $menu->add_item('titulo1', 'Ordenados pelo Nome');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geralServidoresInativos.porNome.php');
-            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geralServidoresInativosProfessores.porNome.php');
-            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geralServidoresInativosAdm.porNome.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários e Celetistas Inativos', '../grhRelatorios/servidores.estatutarios.celetistas.inativos.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Inativos', '../grhRelatorios/geral.servidores.inativos.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geral.concursados.inativos.professores.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geral.concursados.inativos.admTec.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários e Celetistas - Exonerados ou Demitidos', '../grhRelatorios/servidores.estatutarios.celetistas.inativos.porNome.php');
             $menu->show();
             break;
 
@@ -408,63 +450,36 @@ if ($acesso) {
 
         case "geralGeral";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Geral _ Ativos e Inativos');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Agrupados por Lotação', '../grhRelatorios/geralServidoresLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Com CPF', '../grhRelatorios/geralServidoresCPF.php');
+            $menu->add_item('titulo', 'Geral - Ativos e Inativos');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Agrupados por Lotação', '../grhRelatorios/geral.servidores.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos e Inativos - Com CPF', '../grhRelatorios/geral.servidores.cpf.php');
             $menu->show();
             break;
 
         ######################################
-        /*
-         * Retirado devido a área de afastamento já permite relatórios completos
 
-          case "licenca";
-          $menu = new Menu();
-          $menu->add_item('titulo','Licença e Afastamentos');
-          $menu->add_item('linkWindow','Relatório Mensal de Servidores com Afastamento Por Lotação','../grhRelatorios/afastamento.Mensal.php');
-          $menu->add_item('linkWindow','Relatório Anual de Servidores com Afastamento Por Lotação','../grhRelatorios/afastamento.Anual.php');
+        case "licencaPremio";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Licença Prêmio');
+            $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Anual', '../grhRelatorios/licenca.premio.anual.php');
+            $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Período', '../grhRelatorios/licenca.premio.periodo.php');
+            $menu->show();
+            break;
 
-          #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Por Lotação','../grhRelatorios/licencaMensal.php');
-          #$menu->add_item('linkWindow','Relatório Anual de Servidores em Licença Por Lotação','../grhRelatorios/licencaAnualLotacao.php');
-          #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Agrupados','../grhRelatorios/licencaMensalAgrupado.php');
-          #$menu->add_item('linkWindow','Relatório Mensal de Servidores em Licença Sem Duplicidade','../grhRelatorios/licencaMensalAgrupadoSemDuplicidade.php');
-          #$menu->add_item('linkWindow','Relatório Mensal de Término de Licença','../grhRelatorios/licencaVencimentoMensal.php');
-          #$menu->add_item('linkWindow','Relatório Anual de Término de Licença','../grhRelatorios/licencaVencimentoAnual.php');
-          #$menu->add_item('linkWindow','Relatório Anual de Término de Licença (Sem Prêmio)','../grhRelatorios/licencaVencimentoAnualSemPremio.php');
-          #$menu->add_item('linkWindow','Relatório Anual de Licença Prêmio','../grhRelatorios/licencaPremioAnual.php');
-
-          if(Verifica::acesso($idUsuario,1)){
-          $menu->add_item('linkWindow','Relatório Geral Por Tipo','../grhRelatorios/licencaGeralporTipo.php');
-          }
-          $menu->show();
-          break;
-
-         * 
-         */
-         ######################################
-
-          case "licencaPremio";
-          $menu = new Menu();
-          $menu->add_item('titulo','Licença Prêmio');
-          $menu->add_item('linkWindow','Relatório de Licença Prêmio Fruídas - Anual','../grhRelatorios/licenca.premio.anual.php');
-          $menu->add_item('linkWindow','Relatório de Licença Prêmio Fruídas - Período','../grhRelatorios/licenca.premio.periodo.php');
-          $menu->show();
-          break;
-          
         ######################################
 
         case "lotacao";
             $menu = new Menu();
             $menu->add_item('titulo', 'Lotação');
             $menu->add_item('titulo1', 'Cadastro de Lotações');
-            $menu->add_item('linkWindow', 'Relatório de Lotações Ativas', '../grhRelatorios/lotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Lotações Inativas', '../grhRelatorios/lotacaoInativa.php');
+            $menu->add_item('linkWindow', 'Relatório de Lotações Ativas', '../grhRelatorios/lotacao.ativa.php');
+            $menu->add_item('linkWindow', 'Relatório de Lotações Inativas', '../grhRelatorios/lotacao.inativa.php');
 
             $menu->add_item('titulo1', 'Servidores nas Lotações');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Por Lotação', '../grhRelatorios/lotacaoServidoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Histórico Por Lotação', '../grhRelatorios/lotacaoServidoresAtivosHistorico.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Pro-Reitorias', '../grhRelatorios/lotacaoServidoresAtivosProReitorias.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Inativos - Por Lotação', '../grhRelatorios/lotacaoEstatutariosInativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Por Lotação', '../grhRelatorios/lotacao.servidores.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Histórico Por Lotação', '../grhRelatorios/lotacao.servidores.ativos.historico.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Inativos - Por Lotação', '../grhRelatorios/estatutarios.inativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Por Lotação', '../grhRelatorios/estatutarios.ativos.porLotacao.php');
 
             $menu->add_item('titulo1', 'Movimentação de Lotação');
             $menu->add_item('linkWindow', 'Relatório Mensal de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.mensal.lotacao.php');
@@ -473,29 +488,6 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Histórico de Servidores nas Lotações');
             $menu->add_item('linkWindow', 'Histórico de Servidores em uma Lotação', '../grhRelatorios/lotacao.historico.servidores.php');
             $menu->add_item('linkWindow', 'Histórico de Servidores Ativos em uma Lotação', '../grhRelatorios/lotacao.historico.servidores.ativos.php');
-            #$menu->add_item('linkWindow','Lista de Telefones e Ramais - Agrupados por Diretoria','../grhRelatorios/ramais.php');
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "atestado";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Atestado');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Atestado', '../grhRelatorios/atestadoMensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Servidores com Atestado', '../grhRelatorios/atestadoAnual.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "faltas";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Faltas');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Faltas', '../grhRelatorios/faltasMensal.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Faltas', '../grhRelatorios/faltasAnual.php');
-
             $menu->show();
             break;
 
@@ -521,181 +513,18 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Somente os Docentes');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/movimentacao.anual.docentes.admitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos, Aposentados, Exonerados, etc', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.exonerados.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Docentes Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.docentes.demitidos.php');
 
             $menu->add_item('titulo1', 'Somente os Técnicos & Administrativos');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Admitidos', '../grhRelatorios/movimentacao.anual.administrativos.admitidos.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Demitidos e Exonerados', '../grhRelatorios/movimentacao.anual.administrativos.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Demitidos, Aposentados, Exonerados, etc', '../grhRelatorios/movimentacao.anual.administrativos.demitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Administrativos & Técnicos Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.administrativos.exonerados.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Administrativos & Técnicos Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.administrativos.demitidos.php');
 
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "sispatri";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Sispatri');
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "estatutarios";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Estatutários');
-            $menu->add_item('linkWindow', 'Estatutários Ativos com Assinatura', '../grhRelatorios/estatutariosAtivosAssinatura.php');
-            $menu->add_item('linkWindow', 'Estatutários Agrupados pela Lotação', '../grhRelatorios/estatutariosLotacao.php');
-            $menu->add_item('linkWindow', 'Estatutários Agrupados pelo Cargo', '../grhRelatorios/estatutariosCargo.php');
-            $menu->add_item('linkWindow', 'Estatutários Com CPF e Data de Nascimento', '../grhRelatorios/estatutariosCpfNascimento.php');
-            $menu->add_item('linkWindow', 'Estatutários Inativos Por Lotação', '../grhRelatorios/lotacaoEstatutariosInativos.php');
-            $menu->add_item('linkWindow', 'Estatutários Ativos com Idade', '../grhRelatorios/estatutarios.idade.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "financeiro";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Financeiro');
-            $menu->add_item('linkWindow', 'Financeiro', '../grhRelatorios/financeiro.php');
-            $menu->add_item('linkWindow', 'Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.nascimento.porLotacao.php');
-            $menu->add_item('linkWindow', 'Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.php');
-            $menu->add_item('linkWindow', 'Estatutarios Por Cargo Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.porCargo.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "contatos";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Contatos');
-            $menu->add_item('titulo1', 'Email');
-            $menu->add_item('linkWindow', 'Email Institucional dos Servidores Ativos', '../grhRelatorios/email.php');
-            $menu->add_item('linkWindow', 'Email Pessoal dos Servidores Ativos', '../grhRelatorios/email2.php');
-            $menu->add_item('linkWindow', 'Emails dos Servidores Ativos', '../grhRelatorios/email3.php');
-            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional Cadastrado', '../grhRelatorios/contatos.servidoresSemEmail.php');
-
-            $menu->add_item('titulo1', 'Telefone');
-            $menu->add_item('linkWindow', 'Telefones dos Servidores Ativos', '../grhRelatorios/telefone.php');
-            $menu->add_item('linkWindow', 'Servidores sem Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemCelular.php');
-
-            $menu->add_item('titulo1', 'Contatos');
-            $menu->add_item('linkWindow', 'Contatos (Todos) dos Servidores Ativos', '../grhRelatorios/contatos1.php');
-            $menu->add_item('linkWindow', 'Contatos dos Servidores (Formato Sispatri)', '../grhRelatorios/contatos.sispatri.php');            
-            $menu->add_item('linkWindow', 'Servidores sem E-mail Institucional ou Celular Cadastrado', '../grhRelatorios/contatos.servidoresSemEmailECelular.php');
-            
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "outros";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Outros');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com Nacionalidade, Documentos e Telefone', '../grhRelatorios/relatorioOutro1.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "nacionalidade";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Censo');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Agrupados por Nacionalidade', '../grhRelatorios/geralServidoresNacionalidade.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Nacionalidade', '../grhRelatorios/professorNacionalidade.php');
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "professores";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Professores');
-            $menu->add_item('titulo1', 'Geral');
-            $menu->add_item('linkWindow', 'Relatório de Professores Ativos', '../grhRelatorios/geralServidoresProfessoresAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Ativos Agrupados por Cargo', '../grhRelatorios/professor.ativoPorCargo.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Aposentados Agrupados por Cargo', '../grhRelatorios/professor.aposentadoPorCargo.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Nacionalidade', '../grhRelatorios/professorNacionalidade.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com Data de Nascimento e Sexo', '../grhRelatorios/professorIdadeSexo.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Agrupados por Lotaçao', '../grhRelatorios/professorporLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com Email A Partir do Ano de Admissão', '../grhRelatorios/professores.email.porAnoAdmissao.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com CPF, Nascimento e Email', '../grhRelatorios/professor.cpf.email.nascimento.php');
-            
-            $menu->add_item('titulo1', 'A Pedido da PROPPG');
-            $menu->add_item('linkWindow', 'Relatório da Professores Ativos', '../grhRelatorios/professoresPROPPG.php');
-            $menu->add_item('linkWindow', 'Relatório da Professores Não-Ativos', '../grhRelatorios/professoresPROPPGInativos.php');
-            
-            $menu->add_item('titulo1', 'A pedido da SECACAD - Censo Anual');
-            $menu->add_item('linkWindow', 'Censo 2020 - Relatório da Professores', '../grhRelatorios/professoresCenso2020.php');
-            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Ativos', '../grhRelatorios/professoresCenso2021.php');
-            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Admissão', '../grhRelatorios/professoresCenso2021Admissao.php');
-            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Admissão 2', '../grhRelatorios/professoresCenso2021Admissao2.php');
-            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Por Data de Saída', '../grhRelatorios/professoresCenso2021Saida.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "eleitoral";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Processo Eleitoral');
-
-            $menu->add_item('titulo1', 'Administrativo e Técnico');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com Cargo por Locação', '../grhRelatorios/eleitoral.AdmTec.PorLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com Cargo por Locação e Nivel do Cargo', '../grhRelatorios/eleitoral.AdmTec.NivelCargo.PorLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com CPF e Assinatura Por Lotação', '../grhRelatorios/eleitoral.Assinatura.AdmTec.PorLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com CPF e Assinatura Por Lotação - Polo Macaé', '../grhRelatorios/eleitoral.Assinatura.AdmTec.PoloMacae.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Com CPF e Assinatura Por Lotação - Polo Campos', '../grhRelatorios/eleitoral.Assinatura.AdmTec.PoloCampos.php');
-
-            $menu->add_item('titulo1', 'Professores');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com Cargo por Locação', '../grhRelatorios/eleitoral.Professores.PorLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura por Locação', '../grhRelatorios/eleitoral.Assinatura.Professores.PorLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura - Polo Macaé', '../grhRelatorios/eleitoral.Assinatura.Professores.PoloMacae.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores Com CPF e Assinatura - Polo Campos', '../grhRelatorios/eleitoral.Assinatura.Professores.PoloCampos.php');
-
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "historico";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Histórico');
-            $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral', '../grhRelatorios/historico.exFenorte.geral.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Inativos', '../grhRelatorios/historico.exFenorte.inativos.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Por Concurso', '../grhRelatorios/historico.exFenorte.porConcurso.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - Com Dados de Tempo Averbado', '../grhRelatorios/historico.exFenorte.geral.averbacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Estatutários - Com Telefones e E-mails', '../grhRelatorios/historico.exFenorte.estatutarios.telefone.php');
-
-            $menu->add_item('titulo1', 'Anuais');
-            $menu->add_item('linkWindow', 'Servidores Por Ano de Admissão Com Email e CPF Por Tipo de Cargo', '../grhRelatorios/servidoresPorAnoAdmissaoComEmailCpf.php');
-            $menu->add_item('linkWindow', 'Servidores Por Ano de Saída Com Email e CPF Por Tipo de Cargo', '../grhRelatorios/servidoresPorAnoDemissaoComEmailCpf.php');
-            $menu->add_item('linkWindow', 'Servidores Ativo em um Determinado Ano', '../grhRelatorios/servidoresAtivosPorAno.php');
-            $menu->show();
-            break;
-
-        ######################################
-
-        case "endereco";
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Endereço');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Agrupado por Cidade', '../grhRelatorios/enderecoPorCidade.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Endereço, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/enderecoEmailLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores com Endereço, CPF, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/enderecoEmailLotacaoCpf.php');
-            $menu->add_item('linkWindow', 'Relatório de Ativos e Aposentados Com Endereço', '../grhRelatorios/enderecoAtivoAposentado.php');
             $menu->show();
             break;
 
@@ -712,14 +541,113 @@ if ($acesso) {
 
         ######################################
 
+        case "professores";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Professores');
+            $menu->add_item('titulo1', 'Geral');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos', '../grhRelatorios/geral.servidores.ativos.professores.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Cargo', '../grhRelatorios/professores.ativos.porCargo.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Nacionalidade', '../grhRelatorios/professores.ativos.porNacionalidade.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com Data de Nascimento, Idade e Sexo', '../grhRelatorios/professores.ativos.idade.sexo.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Lotaçao', '../grhRelatorios/professores.ativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com Email A Partir do Ano de Admissão', '../grhRelatorios/professores.ativos.email.porAnoAdmissao.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com CPF, Data de Nascimento e Email', '../grhRelatorios/professores.ativos.email.cpf.nascimento.php');
+
+            $menu->add_item('titulo1', 'A Pedido da PROPPG');
+            $menu->add_item('linkWindow', 'Relatório da Professores Ativos', '../grhRelatorios/professores.ativos.proppg.php');
+            $menu->add_item('linkWindow', 'Relatório da Professores Inativos', '../grhRelatorios/professores.inativos.proppg.php');
+
+            $menu->add_item('titulo1', 'A pedido da SECACAD - Censo Anual');
+            $menu->add_item('linkWindow', 'Censo 2020 - Relatório da Professores Ativos - Em um Ano Específico - Com CPF, Nome da Mãe e E-mails', '../grhRelatorios/professores.censo.2020.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Ativos - Com CPF e E-mails', '../grhRelatorios/professores.censo.2021.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores - Por Ano de Admissão - Com CPF e E-mails', '../grhRelatorios/professores.censo.2021.PorAnoAdmissao.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores - Por Ano de Admissão - Com CPF, Nome da Mãe e E-mails', '../grhRelatorios/professores.censo.2021.PorAnoAdmissao2.php');
+            $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Inativos - Por Ano de Saída', '../grhRelatorios/professores.censo.2021.porAnoSaida.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "eleitoral";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Processo Eleitoral'); ### parei aqui
+
+            $menu->add_item('titulo1', 'Administrativo e Técnico');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo - por Locação - Agrupado por Gerência', '../grhRelatorios/eleitoral.estatutarios.admTec.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo - por Locação - Agrupado por Nivel do Cargo', '../grhRelatorios/eleitoral.estatutarios.admTec.nivelCargo.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - por Lotação', '../grhRelatorios/eleitoral.estatutarios.admTec.assinatura.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - Polo Macaé', '../grhRelatorios/eleitoral.estatutarios.admTec.assinatura.poloMacae.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - Polo Campos', '../grhRelatorios/eleitoral.estatutarios.admTec.assinatura.poloCampos.php');
+
+            $menu->add_item('titulo1', 'Professores');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo - por Locação - Agrupado por Gerência', '../grhRelatorios/eleitoral.estatutarios.professores.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - por Lotação', '../grhRelatorios/eleitoral.estatutarios.professores.assinatura.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - Polo Macaé', '../grhRelatorios/eleitoral.estatutarios.professores.assinatura.poloMacae.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com CPF e Assinatura - Polo Campos', '../grhRelatorios/eleitoral.estatutarios.professores.assinatura.poloCampos.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
         case "seguro";
             $menu = new Menu();
             $menu->add_item('titulo', 'Seguro Anual');
-            $menu->add_item('linkWindow', 'Relatório Geral de Ativos', '../grhRelatorios/seguro.geral.php');
-            $menu->add_item('linkWindow', 'Relatório de Administrativo e Tecnicos', '../grhRelatorios/seguro.admTec.php');
-            $menu->add_item('linkWindow', 'Relatório de Professores', '../grhRelatorios/seguro.professores.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Geral - por Lotação', '../grhRelatorios/seguro.geral.ativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Administrativo e Tecnicos - por Lotação', '../grhRelatorios/seguro.admTec.ativos.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - Professores - por Lotação', '../grhRelatorios/seguro.professores.ativos.porLotacao.php');
             $menu->show();
             callout("Os relatórios desta seção se referentem ao contrato de seguro solicitado anualmente pela PROGRAD.");
+            break;
+
+        ######################################
+
+        case "trienio";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Triênio');
+            $menu->add_item('titulo1', 'Servidores com Triêmio');
+            $menu->add_item('linkWindow', 'Relatório Geral de Triênio - Servidores Estatutários Ativos', '../grhRelatorios/trienio.geral.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Triênio por Lotação', '../grhRelatorios/trienio.geral.ativos.porLotacao.php');
+
+            $menu->add_item('titulo1', 'Vencimento de Triênios');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.anual.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "tre";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'TRE');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Afastamentos para Serviço Eleitoral (TRE)', '../grhRelatorios/treAfastamentoMensal.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Afastamentos para Serviço Eleitoral (TRE)', '../grhRelatorios/treAfastamentoAnual.php');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Folgas Fruídas (TRE)', '../grhRelatorios/treFolgaMensal.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Folgas Fruídas (TRE)', '../grhRelatorios/treFolgaAnual.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "historico";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Histórico');
+            $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Inativos - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.inativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.geral.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - por Concurso - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.porConcurso.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - com Dados de Tempo Averbado', '../grhRelatorios/historico.exFenorte.geral.averbacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Estatutários - Com Telefones e E-mails', '../grhRelatorios/historico.exFenorte.estatutarios.telefone.php');
+
+            $menu->add_item('titulo1', 'Histórico Anual');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - em um Determinado Ano', '../grhRelatorios/historico.servidores.ativos.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Admissão - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoAdmissao.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Saída - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoSaida.php');
+            $menu->show();
             break;
 
         ######################################

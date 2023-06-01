@@ -83,7 +83,7 @@ if ($acesso) {
 
     switch ($fase) {
         case "listar" :
-            
+
             # Zera as sessions do filtro
             set_session('parametroSituacao');
             set_session('parametroCargo');
@@ -150,10 +150,15 @@ if ($acesso) {
             $tabela->set_colspanLabel([null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);
             $tabela->set_width([5, 8, 10, 10, 10, 10, 17, 5, 5, 5, 5, 5]);
+
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 11, "==");
+            }
+
             $tabela->set_funcao([null, null, 'date_to_php']);
             $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", null, "Concurso", null, "Concurso"]);
             $tabela->set_metodo([null, null, null, null, null, null, null, "get_numServidoresAtivosConcurso", null, "get_numServidoresInativosConcurso", null, "get_numServidoresConcurso"]);
-            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 11, "==");
+
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 

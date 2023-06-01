@@ -169,7 +169,7 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'required' => true,
-            'array' => array("Concursados", "Não Concursados"),
+            'array' => array("Concursados", "Não Concursados", "Outros"),
             'size' => 20),
         array('linha' => 3,
             'nome' => 'progressao',
@@ -267,6 +267,9 @@ if ($acesso) {
     $botaoRel->set_url('../grhRelatorios/perfil.php');
 
     $objeto->set_botaoListarExtra([$botaoGra, $botaoRel]);
+    
+    $objeto->set_rotinaExtraListar("callout");
+    $objeto->set_rotinaExtraListarParametro("Os Perfis do tipo Outros NÃO APARECERÃO nas listagens e relatório de servidores.<br/>Estes perfis são para bolsistas e estagiários que só estão no cadastro para poderem acessar o sistema.");
 
     ################################################################
 
@@ -403,6 +406,8 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+        ################################################################
 
         case "relatorio" :
 
@@ -421,6 +426,8 @@ if ($acesso) {
                 $lista->showRelatorio();
             }
             break;
+            
+        ################################################################    
 
         case "grafico" :
             # Botão voltar
@@ -432,7 +439,7 @@ if ($acesso) {
 
             # Pega os dados
             $selectGrafico = 'SELECT tbperfil.nome, count(tbservidor.idServidor) 
-                                FROM tbservidor LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                FROM tbservidor JOIN tbperfil USING (idPerfil)
                                WHERE tbservidor.situacao = 1
                             GROUP BY tbperfil.nome';
 
@@ -441,20 +448,20 @@ if ($acesso) {
             titulo('Servidores por Perfil');
 
             $grid3 = new Grid();
-            $grid3->abreColuna(4);
+            $grid3->abreColuna(3);
             br();
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Perfil", "Servidores"));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Perfil", "Servidores"]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_colunaSomatorio(1);
             $tabela->set_totalRegistro(false);
             $tabela->show();
 
             $grid3->fechaColuna();
-            $grid3->abreColuna(8);
+            $grid3->abreColuna(9);
 
             $chart = new Chart("Pie", $servidores);
             $chart->show();
@@ -465,6 +472,8 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
+        
+        ################################################################
 
         case "historico" :
             # Botão voltar

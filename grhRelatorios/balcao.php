@@ -122,8 +122,8 @@ if ($acesso) {
             #   m -> atendimento no turno da manhã; 
             #   t -> atendimento no turno da tarde; 
             #   a -> ambos
-            #$regraFuncionamento = array('n', 't', 'm', 'a', 't', 'm', 'n');
-            $regraFuncionamento = array('n', 'a', 'a', 'a', 'a', 'a', 'n');
+            #$regraFuncionamento = array('n', 't', 'm', 'a', 't', 'm', 'n'); // Quando o atendimento era alternado
+            $regraFuncionamento = array('n', 'a', 'a', 'a', 'a', 'a', 'n');  // Agora quando o atendimento é todo dia
 
             /*
              *  Turno da manhã

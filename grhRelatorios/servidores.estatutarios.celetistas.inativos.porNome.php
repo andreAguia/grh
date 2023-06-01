@@ -43,11 +43,11 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Celetistas e Estatutários Exonerados ou Demitidos');
+    $relatorio->set_titulo('Relatório de Celetistas e Estatutários');
+    $relatorio->set_tituloLinha2('Exonerados ou Demitidos');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída', 'Situação'));
-    #$relatorio->set_width(array(10,30,30,0,10,10,10));
-    $relatorio->set_align(array("center", "left", "left"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Admissão', 'Saída', 'Situação']);
+    $relatorio->set_align(["center", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
 
     $relatorio->set_classe([null, null, "pessoal"]);
@@ -55,7 +55,6 @@ if ($acesso) {
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(6);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

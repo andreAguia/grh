@@ -95,7 +95,6 @@ if ($acesso) {
 
     $relatorio->set_formFocus('lotacao');
     $relatorio->set_formLink('?');
-
     $relatorio->show();
 
     $page->terminaPagina();

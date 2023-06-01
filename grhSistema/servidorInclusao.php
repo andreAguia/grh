@@ -548,7 +548,7 @@ if ($acesso) {
                     $matricula = $pessoal->get_novaMatricula($perfil);
                 }
             }
-echo "oi:",$matricula;
+
             # Verifica se a lotação foi digitada
             if (empty($lotacao)) {
                 $msgErro .= 'Você tem que informar a Lotação do Servidor!\n';

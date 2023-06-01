@@ -27,32 +27,34 @@ if ($acesso) {
 
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbperfil.nome,
                       tbservidor.dtAdmissao
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                 WHERE tbservidor.dtAdmissao >= "' . $relatorioData . '"
-                  AND situacao = 1
-             ORDER BY dtAdmissao';
+                                 LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
+                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                 WHERE tbservidor.dtAdmissao >= '{$relatorioData}'
+                   AND tbperfil.tipo <> 'Outros'  
+                   AND situacao = 1
+              ORDER BY dtAdmissao";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ativos Admitidos a Partir ' . date_to_php($relatorioData));
+    $relatorio->set_titulo('Relatório de Servidores Ativos Admitidos');
+    $relatorio->set_tituloLinha2('a Partir de ' . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão'));
-    $relatorio->set_width(array(10, 30, 20, 30, 10));
-    $relatorio->set_align(array('center', 'left', 'left', 'left', 'center', 'center'));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão']);
+    $relatorio->set_width([10, 30, 20, 30, 10]);
+    $relatorio->set_align(['center', 'left', 'left', 'left', 'center', 'center']);
+    $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacao"));
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples", "get_lotacao"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_botaoVoltar(false);
@@ -79,4 +81,3 @@ if ($acesso) {
 
     $page->terminaPagina();
 }
-?>

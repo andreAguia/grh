@@ -84,6 +84,7 @@ if ($acesso) {
          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                             JOIN tbferias USING (idservidor)
                             JOIN tbhistlot USING (idServidor)
+                            JOIN tbperfil USING (idPerfil)
                             JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
               AND anoExercicio = $parametroAno";
@@ -97,7 +98,9 @@ if ($acesso) {
         }
 
         # Verifica se tem filtro por perfil
-        if (!is_null($parametroPerfil)) {
+        if (is_null($parametroPerfil)) {
+            $select2 .= " AND tbperfil.tipo <> 'Outros'";
+        } else {
             $select2 .= " AND idPerfil = {$parametroPerfil}";
         }
 
@@ -125,7 +128,7 @@ if ($acesso) {
             }
 
             $relatorio->set_tituloLinha3($linha3);
-            
+
             $relatorio->set_subtitulo("== Servidores que Não Solicitaram Férias ==");
 
             $relatorio->set_label(array("Id", "Servidor", "Lotação", "Perfil", "Admissão", "Dias", "Situação"));
@@ -189,7 +192,7 @@ if ($acesso) {
     $result = $servidor->select($select1);
 
     $relatorio = new Relatorio();
-    
+
     # Verifica se já teve o título na listagem acima
     if ($parametroSituacao == 1 OR is_null($parametroSituacao)) {
 
@@ -200,7 +203,7 @@ if ($acesso) {
         } else {
             $relatorio->set_titulo('Relatório de Férias de Servidores Com Menos de 30 Dias');
             $relatorio->set_tituloLinha2('Ano Exercício: ' . $parametroAno);
-            
+
             $linha3 = "Servidores {$servidor->get_nomeSituacao($parametroSituacao)}s";
 
             if (!is_null($parametroPerfil)) {

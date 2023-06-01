@@ -633,7 +633,9 @@ class Pessoal extends Bd {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                          WHERE tbservidor.situacao = 1 AND idPerfil <> 10
+                                              JOIN tbperfil USING (idPerfil)
+                          WHERE tbservidor.situacao = 1
+                            AND tbperfil.tipo <> "Outros" 
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                             AND tbhistlot.lotacao = ' . $idLotacao;
 
@@ -653,8 +655,9 @@ class Pessoal extends Bd {
         $select = 'SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+                                              JOIN tbperfil USING (idPerfil)
                           WHERE tbservidor.situacao <> 1
-                            AND idPerfil <> 10
+                            AND tbperfil.tipo <> "Outros" 
                             AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                             AND tbhistlot.lotacao = ' . $idLotacao;
 
@@ -3081,10 +3084,11 @@ class Pessoal extends Bd {
      * Exibe o n�mero de servidores ativos em um determinado cargo(funcao)
      */
     public function get_numServidoresAtivosCargo($id) {
-        $select = 'SELECT idServidor                             
-                     FROM tbservidor
-                    WHERE situacao = 1 AND 
-                          idCargo = ' . $id;
+        $select = "SELECT idServidor                             
+                     FROM tbservidor JOIN tbperfil USING (idPerfil)
+                    WHERE situacao = 1
+                      AND tbperfil.tipo <> 'Outros'
+                      AND idCargo = {$id}";
 
         $numero = parent::count($select);
         return $numero;
@@ -3115,11 +3119,12 @@ class Pessoal extends Bd {
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
     public function get_numServidoresAtivosTipoCargo($id) {
-        $select = 'SELECT idServidor                             
+        $select = "SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
+                                     JOIN tbperfil USING (idPerfil)  
                     WHERE situacao = 1 
-                    AND idPerfil <> 10
-                    AND tbcargo.idTipoCargo = ' . $id;
+                      AND tbperfil.tipo <> 'Outros' 
+                      AND tbcargo.idTipoCargo = {$id}";
 
         $numero = parent::count($select);
         return $numero;
@@ -3133,10 +3138,12 @@ class Pessoal extends Bd {
      * Exibe o número de servidores inativos em um determinado tipo de cargo
      */
     public function get_numServidoresInativosTipoCargo($id) {
-        $select = 'SELECT idServidor                             
+        $select = "SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
-                    WHERE situacao <> 1 AND 
-                          tbcargo.idTipoCargo = ' . $id;
+                                     JOIN tbperfil USING (idPerfil)  
+                    WHERE situacao <> 1 
+                      AND tbperfil.tipo <> 'Outros' 
+                      AND tbcargo.idTipoCargo = {$id}";
 
         $numero = parent::count($select);
         return $numero;
@@ -3217,8 +3224,8 @@ class Pessoal extends Bd {
      */
     public function get_servidoresSituacao($id) {
         $select = 'SELECT idServidor                             
-                     FROM tbservidor
-                    WHERE idPerfil <> 10
+                     FROM tbservidor JOIN tbperfil USING (idPerfil)
+                    WHERE tbperfil.tipo <> "Outros" 
                       AND situacao = ' . $id;
 
         $numero = parent::count($select);
@@ -3770,9 +3777,26 @@ class Pessoal extends Bd {
      * @param   integer $id id do Perfil
      */
     public function get_perfilNome($id) {
-        $select = 'SELECT nome
-                         FROM tbperfil
-                        WHERE idPerfil = ' . $id;
+        $select = "SELECT nome
+                     FROM tbperfil
+                    WHERE idPerfil = {$id}";
+
+        $row = parent::select($select, false);
+        return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_perfilNome
+     * informa o nome do perfil
+     * 
+     * @param   integer $id id do Perfil
+     */
+    public function get_perfilTipo($id) {
+        $select = "SELECT tipo
+                     FROM tbperfil
+                    WHERE idPerfil = {$id}";
 
         $row = parent::select($select, false);
 
@@ -3870,10 +3894,11 @@ class Pessoal extends Bd {
          * @param integer $idPessoa do servidor
          */
         $select = 'SELECT idServidor
-                     FROM tbservidor
-                     JOIN tbhistlot USING (idServidor)
-                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     FROM tbservidor JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbperfil USING (idPerfil)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbperfil.tipo <> "Outros" 
                       AND situacao = 1';
 
         # Lotação
@@ -3920,17 +3945,18 @@ class Pessoal extends Bd {
          * 
          * @param integer $idPerfil do servidor
          */
-        $select = 'SELECT idServidor
-                     FROM tbservidor
-                    WHERE situacao = 1';
+        $select = "SELECT idServidor
+                     FROM tbservidor JOIN tbperfil USING (idPerfil)
+                    WHERE tbservidor.situacao = 1";
 
         # Perfil
         if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
-            $select .= ' AND idPerfil = ' . $idPerfil;
+            $select .= " AND idPerfil = {$idPerfil}";
+        }else{
+            $select .= " AND tbperfil.tipo <> 'Outros'";
         }
 
-        $count = parent::count($select);
-        return $count;
+        return parent::count($select);
     }
 
     ###########################################################
@@ -3942,17 +3968,18 @@ class Pessoal extends Bd {
          * 
          * @param integer $idPerfil do servidor
          */
-        $select = 'SELECT idServidor
-                     FROM tbservidor
-                    WHERE situacao <> 1';
+        $select = "SELECT idServidor
+                     FROM tbservidor JOIN tbperfil USING (idPerfil)
+                    WHERE tbservidor.situacao <> 1";
 
         # Perfil
         if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
-            $select .= ' AND idPerfil = ' . $idPerfil;
+            $select .= " AND idPerfil = {$idPerfil}";
+        }else{
+            $select .= " AND tbperfil.tipo <> 'Outros'";
         }
 
-        $count = parent::count($select);
-        return $count;
+        return parent::count($select);
     }
 
     ###########################################################
@@ -3968,8 +3995,11 @@ class Pessoal extends Bd {
             return null;
         } else {
             $select = "SELECT idServidor
-                     FROM tbservidor JOIN tbpessoa USING(idPessoa)                                     
-                    WHERE situacao = 1 AND sexo = '{$sexo}'";
+                         FROM tbservidor JOIN tbpessoa USING(idPessoa) 
+                                         JOIN tbperfil USING (idPerfil)    
+                        WHERE situacao = 1 
+                          AND tbperfil.tipo <> 'Outros'
+                          AND sexo = '{$sexo}'";
 
             return parent::count($select);
         }
@@ -3988,9 +4018,13 @@ class Pessoal extends Bd {
             return null;
         } else {
             $select = "SELECT distinct idServidor
-                     FROM tbservidor JOIN tbpessoa USING(idPessoa)
-                                     JOIN tbdependente USING(idPessoa) 
-                    WHERE situacao = 1 AND tbpessoa.sexo = '{$sexo}' AND parentesco = 2";
+                         FROM tbservidor JOIN tbpessoa USING(idPessoa)
+                                         JOIN tbperfil USING (idPerfil)                      
+                                         JOIN tbdependente USING(idPessoa) 
+                        WHERE situacao = 1 
+                          AND tbpessoa.sexo = '{$sexo}'
+                          AND parentesco = 2
+                          AND tbperfil.tipo <> 'Outros'";
 
             return parent::count($select);
         }
@@ -4011,8 +4045,9 @@ class Pessoal extends Bd {
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
+                                     JOIN tbperfil USING (idPerfil)
                     WHERE situacao = 1
-                      AND idPerfil <> 10
+                      AND tbperfil.tipo <> "Outros" 
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND idTipoCargo = ' . $idCargo;
 
@@ -5466,8 +5501,8 @@ class Pessoal extends Bd {
 
         # Monta o select		
         $select = 'SELECT idServidor
-                         FROM tbservidor
-                        WHERE idPessoa = ' . $idPessoa;
+                     FROM tbservidor
+                    WHERE idPessoa = ' . $idPessoa;
 
         $numero = parent::count($select);
         return $numero;

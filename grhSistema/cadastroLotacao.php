@@ -260,7 +260,7 @@ if ($acesso) {
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir");
     $botaoRel->set_target("_blank");
-    $botaoRel->set_url('../grhRelatorios/lotacao.php');
+    $botaoRel->set_url('../grhRelatorios/lotacao.ativa.php');
 
     # Organograma Geral
     $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
@@ -370,7 +370,7 @@ if ($acesso) {
             $lista = new ListaServidores('Servidores Ativos');
             $lista->set_situacao(1);
             $lista->set_lotacao($id);
-            #$lista->set_comissaoPrimeiro(true);
+            $lista->set_escondeTipoPerfil("Outros");
             $lista->showTabela();
 
             $grid->fechaColuna();
@@ -412,9 +412,10 @@ if ($acesso) {
             titulo('Servidores da Lotação: ' . $pessoal->get_nomeLotacao($id));
             br();
 
-            # Lista de Servidores Ativos
+            # Lista de Servidores Inativos
             $lista = new ListaServidores('Servidores Inativos');
             $lista->set_situacao(1);
+            $lista->set_escondeTipoPerfil("Outros");
             $lista->set_situacaoSinal("<>");
             $lista->set_lotacao($id);
             $lista->showTabela();
@@ -431,6 +432,7 @@ if ($acesso) {
                 $lista = new ListaServidores('Servidores Ativos');
                 $lista->set_situacao(1);
                 $lista->set_lotacao($id);
+                $lista->set_escondeTipoPerfil("Outros");
                 $lista->showRelatorio();
             } else {
                 # Lista de Servidores Inativos
@@ -438,6 +440,7 @@ if ($acesso) {
                 $lista->set_situacao(1);
                 $lista->set_situacaoSinal("<>");
                 $lista->set_lotacao($id);
+                $lista->set_escondeTipoPerfil("Outros");
                 $lista->showRelatorio();
             }
             break;

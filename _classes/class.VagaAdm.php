@@ -16,7 +16,7 @@ class VagaAdm {
          * @syntax $this->get_dados($idVaga);
          */
 
-        if (vazio($idConcursoVaga)) {
+        if (empty($idConcursoVaga)) {
             alert("Deve-se informar o idVaga!");
         } else {
             # Pega os dados
@@ -280,6 +280,29 @@ class VagaAdm {
      * 
      * Exibe o número de servidores ativos em um determinado vaga
      */
+    public function get_numServidoresInativosVaga($idConcursoVaga = null) {
+
+        $dados = $this->get_dados($idConcursoVaga);
+
+        $select = "SELECT tbservidor.idServidor                             
+                     FROM tbservidor JOIN tbcargo USING(idCargo)
+                    WHERE situacao <> 1
+                      AND tbservidor.idConcurso = {$dados['idConcurso']}
+                      AND tbcargo.idTipoCargo = {$dados['idTipoCargo']}
+                    ";
+
+        $pessoal = new Pessoal();
+        $numero = $pessoal->count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado vaga
+     */
     public function get_vagasDisponiveis($idConcursoVaga = null) {
 
         # Pega o número de vagas reais
@@ -302,7 +325,6 @@ class VagaAdm {
     }
 
     ###########################################################
-
     /**
      * Método get_numVagas
      * 
@@ -357,6 +379,47 @@ class VagaAdm {
 
 
         return $vagaReais - $numServAtivos;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosConcurso
+     * 
+     * Exibe o número de servidores ativos em um determinado vaga
+     */
+    public function get_vagasAcumuladas($idConcursoVaga = null) {
+        
+        # Conecta ao banco
+        $pessoal = new Pessoal();
+        $concurso = new Concurso();
+
+        # Pega os dados da vaga
+        $dadosVaga = $this->get_dados($idConcursoVaga);
+        
+        # Pega os dados do concurso
+        $dadosConcurso = $concurso->get_dados($dadosVaga['idConcurso']);
+        
+        # Pega os concursos anteriores
+        $select = "SELECT idConcurso, dtPublicacaoEdital, anobase
+                     FROM tbconcurso
+                    WHERE dtPublicacaoEdital < '".$dadosConcurso['dtPublicacaoEdital']."' 
+                      AND tipo = 1
+                 ORDER BY dtPublicacaoEdital";
+        
+        $listaConcursos = $pessoal->select($select);
+        
+        # Define a variável que pega as vagas
+        $vagas = 0;
+        
+        # Percorre os concursos
+        foreach($listaConcursos as $item){
+            echo $item["anobase"];br();
+            echo $dadosVaga["idTipoCargo"];br();
+            echo $this->get_numVagas($item["idConcurso"], $dadosVaga["idTipoCargo"]) ;
+                    
+        }
+        
     }
 
     ###########################################################

@@ -49,11 +49,12 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Perfil');
-    #$relatorio->set_subtitulo('Agrupados por Diretoria - Ordenados pelo Nome');
-    $relatorio->set_label(array("id", "Perfil", "Tipo", "Ativos", "Inativos", "Progressão", "Triênio", "Cargo em Comissão", "Gratificação", "Férias", "Licença"));
-    $relatorio->set_classe(array(null, null, null, "Pessoal", "Pessoal"));
-    $relatorio->set_metodo(array(null, null, null, "get_servidoresAtivosPerfil", "get_servidoresInativosPerfil"));
-    $relatorio->set_align(array("center", "left", "left"));    
+    $relatorio->set_label(["id", "Perfil", "Tipo", "Ativos", "Inativos", "Progressão", "Triênio", "Cargo em Comissão", "Gratificação", "Férias", "Licença"]);
+    $relatorio->set_align(["center", "left", "left"]);
+    
+    $relatorio->set_classe([null, null, null, "Pessoal", "Pessoal"]);
+    $relatorio->set_metodo([null, null, null, "get_servidoresAtivosPerfil", "get_servidoresInativosPerfil"]);
+    
     $relatorio->set_colunaSomatorio([3,4]);
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);

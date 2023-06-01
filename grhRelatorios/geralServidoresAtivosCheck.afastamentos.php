@@ -36,9 +36,10 @@ if ($acesso) {
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      CONCAT(tbservidor.idServidor,'-','{$relatorioMes}','-','{$relatorioAno}')
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                JOIN tbperfil USING (idPerfil)
                WHERE tbservidor.situacao = 1
-                 AND tbservidor.idPerfil <> 10
+                 AND tbperfil.tipo <> 'Outros' 
             ORDER BY tbpessoa.nome";
 
     $result = $servidor->select($select);
@@ -87,4 +88,3 @@ if ($acesso) {
 
     $page->terminaPagina();
 }
-?>

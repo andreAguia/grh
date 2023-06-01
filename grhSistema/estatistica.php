@@ -49,6 +49,15 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
+    # Define o select do perfil que será usado em toda a rotina
+    $selectPerfil = "SELECT DISTINCT idPerfil, 
+                                     tbperfil.nome,
+                                     tbperfil.tipo
+                                FROM tbservidor JOIN tbperfil USING (idPerfil)
+                               WHERE situacao = 1
+                                 AND tbperfil.tipo <> 'Outros' 
+                            ORDER BY tbperfil.tipo, tbperfil.nome";
+
     if (!$rel) {
         # Cria um menu
         $menu1 = new MenuBar();
@@ -94,23 +103,19 @@ if ($acesso) {
         p($numServidores, "estatisticaNumero");
         p("Servidores Ativos", "estatisticaTexto");
 
-        $selectPerfil = "SELECT DISTINCT idPerfil, tbperfil.nome
-                           FROM tbservidor JOIN tbperfil USING (idPerfil)
-                           WHERE situacao = 1
-                        ORDER BY idPerfil";
-
+        # Perfil
         $numPerfil = $pessoal->select($selectPerfil);
         br();
+
         # Tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($numPerfil);
-        $tabela->set_label(array("", ""));
-        #$tabela->set_width(array(50, 50));
-        $tabela->set_align(array("right", "left"));
+        $tabela->set_label(["", ""]);
+        $tabela->set_align(["right", "left"]);
         $tabela->set_totalRegistro(false);
 
-        $tabela->set_classe(array("Pessoal"));
-        $tabela->set_metodo(array("get_numServidoresAtivosPerfil"));
+        $tabela->set_classe(["Pessoal"]);
+        $tabela->set_metodo(["get_numServidoresAtivosPerfil"]);
 
         $tabela->show();
 
@@ -192,7 +197,9 @@ if ($acesso) {
             $selectGrafico = 'SELECT count(tbservidor.idServidor) as jj,
                                      TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1 AND idPerfil <> 10
+                                              JOIN tbperfil USING (idPerfil) 
+                               WHERE situacao = 1 
+                                 AND tbperfil.tipo <> "Outros" 
                             GROUP BY idade
                             ORDER BY 2';
 
@@ -215,9 +222,9 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($dados);
-            $tabela->set_label(array("Descrição", "Idade"));
-            $tabela->set_width(array(50, 50));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Descrição", "Idade"]);
+            $tabela->set_width([50, 50]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->set_linkTituloTitle("Exibe detalhes");
             $tabela->show();
@@ -238,7 +245,9 @@ if ($acesso) {
             $select = 'SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade,
                               count(tbservidor.idServidor) as jj
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                               WHERE situacao = 1 AND idPerfil <> 10
+                                              JOIN tbperfil USING (idPerfil) 
+                               WHERE situacao = 1 
+                                 AND tbperfil.tipo <> "Outros" 
                             GROUP BY idade
                             ORDER BY 1';
 
@@ -257,9 +266,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
             $tabela->set_titulo("por Cada Idade");
-            $tabela->set_label(array("Idade", "Servidores"));
-            $tabela->set_align(array("center"));
-            $tabela->set_width(array(50, 50));
+            $tabela->set_label(["Idade", "Servidores"]);
+            $tabela->set_align(["center"]);
+            $tabela->set_width([50, 50]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             #$tabela->show();
 
@@ -306,16 +315,14 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Perfil
-            $result = $pessoal->select('SELECT DISTINCT idPerfil, tbperfil.nome
-                                          FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                          WHERE situacao = 1
-                                      ORDER BY tbperfil.nome');
+            $result = $pessoal->select($selectPerfil);
             array_unshift($result, array("*", 'Todos'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Perfil');
             $controle->set_array($result);
+            $controle->set_optgroup(true);
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -348,9 +355,10 @@ if ($acesso) {
                    tbpessoa.sexo, count(tbservidor.idServidor) as jj
               FROM tbpessoa JOIN tbservidor USING (idPessoa)
                             LEFT JOIN tbhistlot USING (idServidor)
-                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                            
+                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                            JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.idPerfil <> 10
+                     AND tbperfil.tipo <> "Outros" 
                      AND situacao = 1';
 
             if ($parametroLotacao <> '*') {
@@ -415,13 +423,13 @@ if ($acesso) {
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
 
-            $arrayResultado[] = array("Total", $totalFemi, $totalMasc, $total);
+            $arrayResultado[] = ["Total", $totalFemi, $totalMasc, $total];
 
             # Chart
             $chart = new Chart("ColumnChart", $arrayGrafico, 2);
-            $chart->set_cores(array("Violet", "CornflowerBlue"));
+            $chart->set_cores(["Violet", "CornflowerBlue"]);
             $chart->set_idDiv("faixa");
-            $chart->set_label(array("Faixa", "Feminino", "Masculino"));
+            $chart->set_label(["Faixa", "Feminino", "Masculino"]);
             $chart->set_tituloEixoY("Servidores");
             $chart->set_tituloEixoX("Faixa Etária");
             $chart->set_legend(false);
@@ -432,9 +440,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayResultado);
             $tabela->set_titulo("Todos os Cargos");
-            $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Faixa", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
@@ -508,8 +516,8 @@ if ($acesso) {
                     if (is_null($escolaridadeAnterior)) {
                         $escolaridadeAnterior = $escolaridade;
                     } else {
-                        $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
-                        $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+                        $arrayResultado[] = [$escolaridadeAnterior, $femi, $masc, $femi + $masc];
+                        $arrayGrafico[] = [$escolaridadeAnterior, $femi, $masc];
                         $masc = 0;
                         $femi = 0;
                         $escolaridadeAnterior = $escolaridade;
@@ -526,23 +534,24 @@ if ($acesso) {
                 }
             }
 
-            $arrayResultado[] = array($escolaridadeAnterior, $femi, $masc, $femi + $masc);
-            $arrayGrafico[] = array($escolaridadeAnterior, $femi, $masc);
+            $arrayResultado[] = [$escolaridadeAnterior, $femi, $masc, $femi + $masc];
+            $arrayGrafico[] = [$escolaridadeAnterior, $femi, $masc];
 
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
 
-            $arrayResultado[] = array("Total", $totalFemi, $totalMasc, $total);
+            $arrayResultado[] = ["Total", $totalFemi, $totalMasc, $total];
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayResultado);
             $tabela->set_titulo("Administrativos e Tecnicos");
-            $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Faixa", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -644,11 +653,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayResultado);
             $tabela->set_titulo("Docentes");
-            $tabela->set_label(array("Faixa", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Faixa", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -720,10 +730,13 @@ if ($acesso) {
             $form = new Form('?fase=cargo');
 
             # Perfil
-            $result = $pessoal->select('SELECT DISTINCT idPerfil, nome
-                                      FROM tbperfil
-                                      WHERE idPerfil <> 10
-                                  ORDER BY nome');
+            $result = $pessoal->select('SELECT idperfil,
+                                               nome,
+                                               tipo
+                                          FROM tbperfil
+                                         WHERE tipo <> "Outros"  
+                                      ORDER BY tipo, nome');
+
             array_unshift($result, array("*", 'Todos'));
 
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
@@ -731,6 +744,7 @@ if ($acesso) {
             $controle->set_title('Filtra por Perfil');
             $controle->set_array($result);
             $controle->set_autofocus(true);
+            $controle->set_optgroup(true);
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -749,7 +763,9 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE situacao = 1';
+                                                JOIN tbperfil USING (idPerfil)
+                               WHERE situacao = 1
+                               AND tbperfil.tipo <> "Outros"  ';
             # Perfil
             if ($parametroPerfil <> '*') {
                 $selectGrafico .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
@@ -763,9 +779,9 @@ if ($acesso) {
             # Exemplo de tabela simples
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Tipo do Cargo", "Servidores"));
-            $tabela->set_width(array(80, 20));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Tipo do Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_colunaSomatorio(1);
             $tabela->set_totalRegistro(false);
             $tabela->show();
@@ -876,9 +892,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             #$tabela->set_titulo("Adm/Tec");
-            $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
                     'valor' => "Total",
@@ -983,11 +999,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             #$tabela->set_titulo("Professor");
-            $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -1023,8 +1040,9 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                                 AND tbservidor.idPerfil <> 10
+                                                JOIN tbperfil USING (idPerfil) 
+                               WHERE situacao = 1 
+                                 AND tbperfil.tipo <> "Outros" 
                                  AND tbtipocargo.tipo = "Adm/Tec" GROUP BY tbtipocargo.cargo
                         ORDER BY 1 DESC ';
 
@@ -1034,15 +1052,14 @@ if ($acesso) {
             $chart->set_tamanho(800, 500);
             $chart->show();
 
-            #$grid3->fechaColuna();
-            #$grid3->abreColuna(6);
             # Tabela
             $selectGrafico = 'SELECT tbtipocargo.cargo, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbservidor.situacao = 1
-                               AND tbservidor.idPerfil <> 10
+                                              JOIN tbperfil USING (idPerfil) 
+                               WHERE situacao = 1 
+                                 AND tbperfil.tipo <> "Outros" 
                                AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo, tbpessoa.sexo
                             ORDER BY 1';
@@ -1102,11 +1119,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             #$tabela->set_titulo("Geral");
-            $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -1130,9 +1148,10 @@ if ($acesso) {
                 $selectGrafico = 'SELECT tbcargo.nome, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                     FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                                   JOIN tbcargo USING (idCargo)
-                                   WHERE tbservidor.situacao = 1
-                                   AND tbservidor.idPerfil <> 10
-                                   AND idTipoCargo = ' . $cc[0] . '
+                                                  JOIN tbperfil USING (idPerfil) 
+                                   WHERE situacao = 1 
+                                     AND tbperfil.tipo <> "Outros" 
+                                     AND idTipoCargo = ' . $cc[0] . '
                                 GROUP BY tbcargo.nome, tbpessoa.sexo
                                 ORDER BY 1';
 
@@ -1191,11 +1210,12 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_conteudo($arrayEscolaridade);
                 $tabela->set_titulo($cc[1]);
-                $tabela->set_label(array("Cargo", "Feminino", "Masculino", "Total"));
-                $tabela->set_width(array(55, 15, 15, 15));
-                $tabela->set_align(array("left", "center"));
+                $tabela->set_label(["Cargo", "Feminino", "Masculino", "Total"]);
+                $tabela->set_width([55, 15, 15, 15]);
+                $tabela->set_align(["left", "center"]);
                 $tabela->set_totalRegistro(false);
-                $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 0,
                         'valor' => "Total",
                         'operador' => '=',
                         'id' => 'estatisticaTotal')));
@@ -1232,9 +1252,10 @@ if ($acesso) {
             $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                               WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                 AND tbservidor.idPerfil <> 10
-                                 AND situacao = 1
+                                                      JOIN tbperfil USING (idPerfil) 
+                               WHERE situacao = 1 
+                                 AND tbperfil.tipo <> "Outros" 
+                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                  AND ativo
                             GROUP BY tblotacao.dir
                             ORDER BY 1';
@@ -1248,9 +1269,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
             #$tabela->set_titulo("por Lotação");
-            $tabela->set_label(array("Diretoria", "Servidores"));
-            $tabela->set_width(array(80, 20));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Diretoria", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->show();
 
@@ -1271,12 +1292,13 @@ if ($acesso) {
             # Adm/Tec
             $selectGrafico = 'SELECT tblotacao.dir, tbpessoa.sexo, count(tbservidor.idServidor) as jj
                                 FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                         LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
+                                              JOIN tbperfil USING (idPerfil)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                     AND tbservidor.idPerfil <> 10
+                                     AND tbperfil.tipo <> "Outros" 
                                      AND situacao = 1
                                      AND ativo
                                      AND tbtipocargo.tipo = "Adm/Tec"
@@ -1332,17 +1354,18 @@ if ($acesso) {
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
 
-            $arrayEscolaridade[] = array("Total", $totalFemi, $totalMasc, $total);
+            $arrayEscolaridade[] = ["Total", $totalFemi, $totalMasc, $total];
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             $tabela->set_titulo("Adm/Tec");
-            $tabela->set_label(array("Lotação", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Lotação", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -1362,8 +1385,9 @@ if ($acesso) {
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                               JOIN tbcargo USING (idCargo)
                                               JOIN tbtipocargo USING (idTipoCargo)
+                                              JOIN tbperfil USING (idPerfil)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                     AND tbservidor.idPerfil <> 10
+                                     AND tbperfil.tipo <> "Outros" 
                                      AND situacao = 1
                                      AND ativo
                                      AND tbtipocargo.tipo = "Professor"
@@ -1425,11 +1449,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             $tabela->set_titulo("Professor");
-            $tabela->set_label(array("Lotação", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Lotação", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -1550,8 +1575,9 @@ if ($acesso) {
             $selectGrafico = 'SELECT tblotacao.dir, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                      JOIN tbperfil USING (idPerfil)
                                WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                 AND tbservidor.idPerfil <> 10
+                                 AND tbperfil.tipo <> "Outros" 
                                  AND situacao = 1
                                  AND ativo
                             GROUP BY tblotacao.dir
@@ -1566,8 +1592,9 @@ if ($acesso) {
                 $selectGrafico2 = 'SELECT tblotacao.ger, count(tbservidor.idServidor) as jj
                                         FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                              JOIN tbperfil USING (idPerfil)
                                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                         AND tbservidor.idPerfil <> 10
+                                         AND tbperfil.tipo <> "Outros" 
                                          AND situacao = 1
                                          AND ativo
                                          AND tblotacao.dir="' . $item[0] . '" 
@@ -1590,9 +1617,9 @@ if ($acesso) {
                 $tabela = new Tabela();
                 #$tabela->set_titulo($item[0]);
                 $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Lotação", "Servidores"));
-                $tabela->set_width(array(80, 20));
-                $tabela->set_align(array("left", "center"));
+                $tabela->set_label(["Lotação", "Servidores"]);
+                $tabela->set_width([80, 20]);
+                $tabela->set_align(["left", "center"]);
                 $tabela->set_rodape("Total de Servidores: " . $total);
                 $tabela->show();
 
@@ -1788,11 +1815,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
             $tabela->set_titulo("Servidores Estatutários Adm/Tec");
-            $tabela->set_label(array("Escolaridade", "Feminino", "Masculino", "Total"));
-            $tabela->set_width(array(55, 15, 15, 15));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Escolaridade", "Feminino", "Masculino", "Total"]);
+            $tabela->set_width([55, 15, 15, 15]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));
@@ -1946,9 +1974,10 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                JOIN tbperfil USING (idPerfil)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
                                  AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
-                                 AND tbservidor.idPerfil <> 10    
+                                 AND tbperfil.tipo <> "Outros" 
                             GROUP BY tbtipocargo.tipo
                             ORDER BY 2 DESC ';
 
@@ -1961,9 +1990,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("por Cargo (Temporal)");
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Cargo", "Servidores"));
-            $tabela->set_width(array(80, 20));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->show();
 
@@ -1988,9 +2017,10 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
+                                                JOIN tbperfil USING (idPerfil)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
                                  AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
-                                 AND tbservidor.idPerfil <> 10
+                                 AND tbperfil.tipo <> "Outros" 
                                  AND tbtipocargo.tipo = "Adm/Tec"
                             GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
@@ -2004,9 +2034,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Administrativos e Técnicos");
             $tabela->set_conteudo($admTec);
-            $tabela->set_label(array("Cargo", "Servidores"));
-            $tabela->set_width(array(80, 20));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->show();
 
@@ -2017,9 +2047,10 @@ if ($acesso) {
             $selectGrafico = 'SELECT tbtipocargo.cargo, count(tbservidor.idServidor) as jj
                                 FROM tbservidor JOIN tbcargo USING (idCargo)
                                                 JOIN tbtipocargo USING (idTipoCargo)
+                                                JOIN tbperfil USING (idPerfil)
                                WHERE YEAR(dtadmissao) <= "' . $ano . '" 
                                  AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
-                                 AND tbservidor.idPerfil <> 10    
+                                 AND tbperfil.tipo <> "Outros" 
                                  AND tbtipocargo.tipo = "Professor"
                             GROUP BY tbtipocargo.cargo
                             ORDER BY 1 DESC ';
@@ -2033,9 +2064,9 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Professores");
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Cargo", "Servidores"));
-            $tabela->set_width(array(80, 20));
-            $tabela->set_align(array("left", "center"));
+            $tabela->set_label(["Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->show();
 
@@ -2056,10 +2087,11 @@ if ($acesso) {
                 $selectGrafico = 'SELECT tbcargo.nome, count(tbservidor.idServidor) as jj
                                     FROM tbservidor JOIN tbcargo USING (idCargo)
                                                     JOIN tbtipocargo USING (idTipoCargo)
+                                                    JOIN tbperfil USING (idPerfil)
                                    WHERE YEAR(dtadmissao) <= "' . $ano . '" 
                                      AND ((dtdemissao IS null) OR (YEAR(dtdemissao) >= "' . $ano . '"))
                                      AND tbtipocargo.cargo = "' . $valor . '"
-                                     AND tbservidor.idPerfil <> 10
+                                     AND tbperfil.tipo <> "Outros" 
                                 GROUP BY tbcargo.nome
                                 ORDER BY 2 DESC ';
 
@@ -2072,9 +2104,9 @@ if ($acesso) {
                 $tabela = new Tabela();
                 $tabela->set_titulo($valor);
                 $tabela->set_conteudo($servidores);
-                $tabela->set_label(array("Cargo", "Servidores"));
-                $tabela->set_width(array(80, 20));
-                $tabela->set_align(array("left", "center"));
+                $tabela->set_label(["Cargo", "Servidores"]);
+                $tabela->set_width([80, 20]);
+                $tabela->set_align(["left", "center"]);
                 $tabela->set_rodape("Total de Servidores: " . $total);
                 $tabela->show();
 
@@ -2125,17 +2157,15 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Perfil
-            $result = $pessoal->select('SELECT DISTINCT idPerfil, nome
-                                      FROM tbperfil
-                                      WHERE idPerfil <> 10
-                                  ORDER BY nome');
+            $result = $pessoal->select($selectPerfil);
             array_unshift($result, array("*", 'Todos'));
-
+            
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Perfil');
             $controle->set_array($result);
             $controle->set_valor($parametroPerfil);
+            $controle->set_optgroup(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(6);
@@ -2152,8 +2182,9 @@ if ($acesso) {
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                           JOIN tbcargo USING (idCargo)
                                           JOIN tbtipocargo USING (idTipoCargo)
+                                          JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.idPerfil <> 10
+                     AND tbperfil.tipo <> "Outros" 
                      AND situacao = 1
                      AND ativo';
 
@@ -2176,9 +2207,8 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(array("Gerência / Laboratório", "Cargo Efetivo", "Nº de Servidores"));
-            #$tabela->set_width(array(80,20));
-            $tabela->set_align(array("left", "left"));
+            $tabela->set_label(["Gerência / Laboratório", "Cargo Efetivo", "Nº de Servidores"]);
+            $tabela->set_align(["left", "left"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
 
             $tabela->set_rowspan(0);
@@ -2213,8 +2243,9 @@ if ($acesso) {
                                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                                JOIN tbcargo USING (idCargo)
                                                JOIN tbtipocargo USING (idTipoCargo)
+                                               JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.idPerfil <> 10
+                     AND tbperfil.tipo <> "Outros"  
                      AND situacao = 1
                      AND ativo
                      AND tbtipocargo.tipo = "Professor"
@@ -2272,13 +2303,15 @@ if ($acesso) {
 
             # Tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo(array(["Feminino", $mulheres, $maes, number_format($pmae, 2, ',', '') . " %"],
+            $tabela->set_conteudo(array(
+                ["Feminino", $mulheres, $maes, number_format($pmae, 2, ',', '') . " %"],
                 ["Masculino", $homens, $pais, number_format($ppai, 2, ',', '') . " %"],
                 ["Total", $mulheres + $homens, $pais + $maes, null]));
 
-            $tabela->set_label(array("Sexo", "Servidores", "Servidores Com Filhos", "Servidores Com Filhos (%)"));
-            $tabela->set_width(array(25, 25, 25, 25));
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+            $tabela->set_label(["Sexo", "Servidores", "Servidores Com Filhos", "Servidores Com Filhos (%)"]);
+            $tabela->set_width([25, 25, 25, 25]);
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
                     'valor' => "Total",
                     'operador' => '=',
                     'id' => 'estatisticaTotal')));

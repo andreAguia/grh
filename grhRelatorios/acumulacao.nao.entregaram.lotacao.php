@@ -32,16 +32,18 @@ if ($acesso) {
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
-                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                      FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                      JOIN tbperfil USING (idPerfil)  
                                       LEFT JOIN tbhistlot USING (idServidor)
                                       LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                      WHERE situacao = 1
+                     AND tbperfil.tipo <> 'Outros'
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
+                WHERE situacao = 1                  
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND year(tbservidor.dtadmissao) <= '{$parametroAno}'
                   AND anoReferencia = '{$parametroAno}'";

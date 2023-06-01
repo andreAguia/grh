@@ -284,10 +284,12 @@ if ($acesso) {
                               tbservidor.idServidor,
                               dtAdmissao,
                               '-'
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbperfil USING (idPerfil)  
                                          LEFT JOIN tbhistlot USING (idServidor)
                                          LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)

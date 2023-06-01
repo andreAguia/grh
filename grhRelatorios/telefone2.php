@@ -41,10 +41,11 @@ if ($acesso) {
                      tbservidor.idServidor,
                      tbservidor.idServidor
                 FROM tbservidor JOIN tbpessoa USING (idpessoa)
-                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                JOIN tbperfil USING (idPerfil)
                WHERE tbservidor.situacao = 1
-                 AND idPerfil <> 10
+                 AAND tbperfil.tipo <> "Outros" 
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {

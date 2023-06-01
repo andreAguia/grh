@@ -48,12 +48,13 @@ if ($acesso) {
     $relatorio = new Relatorio('relatorioProcessosArquivados');
     $relatorio->set_titulo('Cartão de Frequência Trimestral');
     $relatorio->set_tituloLinha2($trimestre . '° Trimestre / ' . $anoBase);
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Admissão'));
-    #$relatorio->set_width(array(12,30,28,20,10));
-    $relatorio->set_align(array("center"));
-    $relatorio->set_funcao(array("dv", null, null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoComSaltoSemComissao", "get_Lotacao"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Admissão']);
+    $relatorio->set_align(["center"]);
+    
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoComSaltoSemComissao", "get_Lotacao"]);
+    
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);

@@ -37,11 +37,13 @@ class Estatistica {
 
             case "perfil" :
 
-                $select = 'SELECT tbperfil.nome, count(tbservidor.idServidor) as grupo
-                         FROM tbservidor LEFT JOIN tbperfil USING(idPerfil)
-                        WHERE tbservidor.situacao = 1 
-                     GROUP BY 1
-                     ORDER BY 2 DESC ';
+                $select = 'SELECT tbperfil.nome, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbservidor JOIN tbperfil USING (idPerfil)
+                            WHERE tbservidor.situacao = 1
+                              AND tbperfil.tipo <> "Outros" 
+                         GROUP BY 1
+                         ORDER BY 2 DESC ';
 
                 $pessoal = new Pessoal();
                 $servidores = $pessoal->select($select);
@@ -52,11 +54,14 @@ class Estatistica {
 
             case "estadoCivil" :
 
-                $select = 'SELECT tbestciv.estciv, count(tbservidor.idServidor) as grupo
-                         FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
-                                             JOIN tbservidor USING (idPessoa)';
+                $select = 'SELECT tbestciv.estciv, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
+                                                 JOIN tbservidor USING (idPessoa)
+                                                 JOIN tbperfil USING (idPerfil)
+                            WHERE tbperfil.tipo <> "Outros"';
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
@@ -70,12 +75,16 @@ class Estatistica {
 
             case "cidade" :
 
-                $select = 'SELECT CONCAT(tbcidade.nome," (",tbestado.uf,")"), count(tbservidor.idServidor) as grupo
-                         FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                       JOIN tbcidade USING (idCidade)
-                                       JOIN tbestado USING (idEstado)';
+                $select = 'SELECT CONCAT(tbcidade.nome," (",tbestado.uf,")"), 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                           JOIN tbperfil USING (idPerfil)
+                                           JOIN tbcidade USING (idCidade)
+                                           JOIN tbestado USING (idEstado)
+                            WHERE tbperfil.tipo <> "Outros"';
+                
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
@@ -89,11 +98,16 @@ class Estatistica {
 
             case "nacionalidade" :
 
-                $select = 'SELECT tbnacionalidade.nacionalidade, count(tbservidor.idServidor) as grupo
-                         FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
-                                              JOIN tbservidor USING (idPessoa)';
+                $select = 'SELECT tbnacionalidade.nacionalidade, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
+                                                  JOIN tbservidor USING (idPessoa)
+                                                  JOIN tbservidor USING (idPessoa)
+                                                  JOIN tbperfil USING (idPerfil)
+                            WHERE tbperfil.tipo <> "Outros"';
+                
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= ' GROUP BY 1 ORDER BY 2 DESC ';
@@ -131,10 +145,11 @@ class Estatistica {
         $tabela->set_conteudo($this->arrayTabela);
         $tabela->set_titulo($titulo);
         $tabela->set_label($this->labelTabela);
-        $tabela->set_width(array(80, 20));
-        $tabela->set_align(array("left", "center"));
+        $tabela->set_width([80, 20]);
+        $tabela->set_align(["left", "center"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'estatisticaTotal')));
@@ -171,53 +186,66 @@ class Estatistica {
             case "perfil" :
 
                 # Select
-                $select = 'SELECT tbperfil.nome, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
-                         FROM tbpessoa JOIN tbservidor USING (idPessoa)
-                                       JOIN tbperfil USING (idPerfil)';
+                $select = 'SELECT tbperfil.nome, 
+                                  tbpessoa.sexo, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                           JOIN tbperfil USING (idPerfil)
+                            WHERE tbperfil.tipo <> "Outros" ';
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= ' GROUP BY 1, tbpessoa.sexo
                      ORDER BY grupo desc';
 
-                $this->labelTabela = array("Perfil", "Feminino", "Masculino", "Total");
-                $this->labelGrafico = array("Perfil", "Feminino", "Masculino");
+                $this->labelTabela = ["Perfil", "Feminino", "Masculino", "Total"];
+                $this->labelGrafico = ["Perfil", "Feminino", "Masculino"];
                 break;
 
             case "estadoCivil" :
 
                 # Select
-                $select = 'SELECT tbestciv.estciv, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
-                         FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
-                                             JOIN tbservidor USING (idPessoa)';
+                $select = 'SELECT tbestciv.estciv, 
+                                  tbpessoa.sexo, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbestciv RIGHT JOIN tbpessoa ON (tbestciv.idEstCiv = tbpessoa.estCiv)
+                                                 JOIN tbservidor USING (idPessoa)
+                                                 JOIN tbperfil USING (idPerfil)
+                            WHERE tbperfil.tipo <> "Outros" ';
+                
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= ' GROUP BY 1, tbpessoa.sexo
                      ORDER BY tbestciv.estciv';
 
-                $this->labelTabela = array("Estado Civil", "Feminino", "Masculino", "Total");
-                $this->labelGrafico = array("Estado Civil", "Feminino", "Masculino");
+                $this->labelTabela = ["Estado Civil", "Feminino", "Masculino", "Total"];
+                $this->labelGrafico = ["Estado Civil", "Feminino", "Masculino"];
                 break;
 
             case "nacionalidade" :
 
                 # Select
-                $select = 'SELECT tbnacionalidade.nacionalidade, tbpessoa.sexo, count(tbservidor.idServidor) as grupo
-                         FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
-                                              JOIN tbservidor USING (idPessoa)';
+                $select = 'SELECT tbnacionalidade.nacionalidade, 
+                                  tbpessoa.sexo, 
+                                  count(tbservidor.idServidor) as grupo
+                             FROM tbnacionalidade JOIN tbpessoa ON(tbnacionalidade.idnacionalidade = tbpessoa.nacionalidade)
+                                                  JOIN tbservidor USING (idPessoa)
+                                                  JOIN tbperfil USING (idPerfil)
+                            WHERE tbperfil.tipo <> "Outros" ';
+                
                 if($this->somenteAtivos){
-                    $select .= ' WHERE tbservidor.situacao = 1 ';
+                    $select .= ' AND tbservidor.situacao = 1 ';
                 }
                         
                 $select .= 'GROUP BY 1, tbpessoa.sexo
                      ORDER BY tbnacionalidade.nacionalidade';
                      
 
-                $this->labelTabela = array("Nacionalidade", "Feminino", "Masculino", "Total");
-                $this->labelGrafico = array("Nacionalidade", "Feminino", "Masculino");
+                $this->labelTabela = ["Nacionalidade", "Feminino", "Masculino", "Total"];
+                $this->labelGrafico = ["Nacionalidade", "Feminino", "Masculino"];
                 break;
         }
 
@@ -314,8 +342,8 @@ class Estatistica {
                      GROUP BY 1, tbtipocargo.tipo
                      ORDER BY grupo desc';
 
-                $this->labelTabela = array("Perfil", "Adm/Tec", "Professor", "Total");
-                $this->labelGrafico = array("Perfil", "Adm/Tec", "Professor");
+                $this->labelTabela = ["Perfil", "Adm/Tec", "Professor", "Total"];
+                $this->labelGrafico = ["Perfil", "Adm/Tec", "Professor"];
                 break;
 
             case "estadoCivil" :
@@ -445,9 +473,10 @@ class Estatistica {
         $tabela->set_conteudo($this->arrayTabela);
         $tabela->set_titulo($titulo);
         $tabela->set_label($this->labelTabela);
-        $tabela->set_align(array("left", "center", "center", "center"));
+        $tabela->set_align(["left", "center", "center", "center"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'estatisticaTotal')));

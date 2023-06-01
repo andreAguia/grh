@@ -166,9 +166,9 @@ if ($acesso) {
             $menu->add_item("link", "Por Data do Ato do Reitor", "?fase=movimentacaoPorAto", "Movimentação Mensal por Data do Ato do Reitor");
 
             $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Cargo Vigente e Anterior', '../grhRelatorios/cargoComissaoVigenteEAnterior.php');
-            $menu->add_item('linkWindow', 'Planilhão Histórico', '../grhRelatorios/cargoComissaoPlanilhaoHistorico.php');
-            $menu->add_item('linkWindow', 'Planilhão Vigente', '../grhRelatorios/cargoComissaoPlanilhaoVigente.php');
+            $menu->add_item('linkWindow', 'Cargo Vigente e Anterior', '../grhRelatorios/cargoComissao.vigentes.php');
+            $menu->add_item('linkWindow', 'Planilhão Histórico', '../grhRelatorios/cargoComissao.planilhao.historico.php');
+            $menu->add_item('linkWindow', 'Planilhão Vigente', '../grhRelatorios/cargoComissao.planilhao.vigente.php');
             $menu->add_item('linkWindow', 'Histórico por Período', '../grhRelatorios/cargoComissao.porPeriodo.php');
             $menu->show();
 

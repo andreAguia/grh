@@ -155,7 +155,7 @@ if ($acesso) {
             $time_start = microtime(true);
 
             # Pega os dados
-            $select = "SELECT CASE tipo
+            $select = "SELECT CASE tbreducao.tipo
                                 WHEN 1 THEN 'Inicial'
                                 WHEN 2 THEN 'Renovação'
                                 ELSE '--'
@@ -170,7 +170,8 @@ if ($acesso) {
                               ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbreducao USING (idServidor)
-                        WHERE tbservidor.idPerfil <> 10";
+                                         JOIN tbperfil USING (idPerfil)
+                        WHERE tbperfil.tipo <> 'Outros' ";
 
             # status
             if ($parametroStatus <> 0) {

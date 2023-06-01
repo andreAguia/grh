@@ -93,12 +93,12 @@ if ($acesso) {
             $menu->add_item('titulo', 'Relatórios');
 
             $menu->add_item('titulo1', 'Atualmente Cedidos');
-            $menu->add_item('linkWindow', 'Geral', '../grhRelatorios/estatutarios.cedidos.php');
+            $menu->add_item('linkWindow', 'Geral', '../grhRelatorios/estatutarios.cedidos.geral.php');
             $menu->add_item('linkWindow', 'Geral Lotação Anterior', '../grhRelatorios/estatutarios.cedidos.lotacao.anterior.php');
-            $menu->add_item('linkWindow', 'por Órgão', '../grhRelatorios/estatutarios.cedidos.orgao.php');
+            $menu->add_item('linkWindow', 'por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
             $menu->add_item('linkWindow', 'por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.anoCessao.php');
             $menu->add_item('linkWindow', 'Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
-            $menu->add_item('linkWindow', 'Docentes', '../grhRelatorios/estatutarios.cedidos.professores.php');
+            $menu->add_item('linkWindow', 'Profesores', '../grhRelatorios/estatutarios.cedidos.professores.php');
             $menu->add_item('titulo1', 'Histórico Ativos');
             $menu->add_item('linkWindow', 'por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.ativos.historico.php');
             $menu->add_item('titulo1', 'Histórico Todos');

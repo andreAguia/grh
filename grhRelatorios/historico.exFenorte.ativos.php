@@ -31,11 +31,12 @@ if ($acesso) {
                      tbservidor.idServidor,
                      tbservidor.idServidor,
                      tbservidor.dtAdmissao
-                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                    
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                    
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                     JOIN tbperfil USING (idPerfil)     
                WHERE tbservidor.situacao = 1
+                 AND tbperfil.tipo <> "Outros"
                  AND tbhistlot.data = (select min(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                  AND (tblotacao.UADM = "FENORTE" OR tblotacao.UADM = "TECNORTE")
             ORDER BY tbpessoa.nome';
@@ -43,8 +44,8 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte Ativos');
-    $relatorio->set_subtitulo('Estatutários');
+    $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
+    $relatorio->set_subtitulo('Ex-Fenorte');
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Lotação', 'Admissão']);
     $relatorio->set_align(["center", "left", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php"]);

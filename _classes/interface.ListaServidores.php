@@ -21,17 +21,26 @@ class ListaServidores {
     private $tipoCargo = null;
     private $cargoComissao = null;
     private $perfil = null;
+    private $tipoPerfil = null;
+    private $escondeTipoPerfil = null;
     private $concurso = null;
     private $situacao = null;
     private $situacaoSinal = "=";
     private $lotacao = null;
     private $cpf = null;
     private $idServidorIdPessoa = null;
+    
+    /*
+     * Do botão Editar
+     */
+    private $permiteEditar = true;
+    private $caminho = 'servidor.php?fase=editar&id=';
+    
 
     /*
      * da listagem
      */
-    private $permiteEditar = true;
+    
     private $ordenacao = "tbpessoa.nome asc";   # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordenação
     private $comissaoPrimeiro = false;          # Define se os cargos comissionados aparecerão (ou não) primeiro
@@ -255,6 +264,16 @@ class ListaServidores {
             $select .= ' AND (tbperfil.idperfil = "' . $this->perfil . '")';
             $this->subTitulo .= "Perfil: " . $servidor->get_nomePerfil($this->perfil) . "<br/>";
         }
+        
+        # tipoPerfil
+        if (!is_null($this->tipoPerfil)) {
+            $select .= ' AND (tbperfil.tipo = "' . $this->tipoPerfil . '")';
+            $this->subTitulo .= "Tipo Perfil: " . $this->tipoPerfil . "<br/>";
+        }
+        
+        # escondeTipoPerfil
+        if (!is_null($this->escondeTipoPerfil)) {
+            $select .= ' AND (tbperfil.tipo <> "' . $this->escondeTipoPerfil . '")';        }
 
         # tipoCargo
         if (!is_null($this->tipoCargo)) {
@@ -535,7 +554,7 @@ class ListaServidores {
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
             if ($this->permiteEditar) {
-                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->set_editar($this->caminho);
             }
 
             if ($this->paginacao) {

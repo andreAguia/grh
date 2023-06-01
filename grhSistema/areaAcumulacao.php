@@ -162,7 +162,8 @@ if ($acesso) {
                               tbservidor.idServidor
                          FROM tbacumulacao JOIN tbservidor USING (idServidor)
                                            JOIN tbpessoa USING (idPessoa)
-                        WHERE tbservidor.idPerfil <> 10";
+                                           JOIN tbperfil USING (idPerfil)
+                        WHERE tbperfil.tipo <> 'Outros' ";
 
             # nome
             if (!is_null($parametroNomeMat)) {

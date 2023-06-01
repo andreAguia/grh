@@ -27,7 +27,7 @@ if ($acesso) {
 
     ###### Relatório 1
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbdocumentacao.cpf,
                       tbpessoa.dtNasc,
@@ -43,8 +43,9 @@ if ($acesso) {
                                  LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                WHERE YEAR(tbservidor.dtDemissao) = "' . $relatorioAno . '"
-             ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao';
+                WHERE YEAR(tbservidor.dtDemissao) = '{$relatorioAno}'
+                  AND tbperfil.tipo <> 'Outros'   
+             ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao";
 
 
     $result = $servidor->select($select);
@@ -53,12 +54,12 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Anual de Servidores Exonerados, Aposentados e Demitidos em ' . $relatorioAno);
     $relatorio->set_subtitulo('Ordenado pela Data de Demissão');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Publicação', 'Motivo', 'Mês'));
-    $relatorio->set_align(array('center', 'left', 'center', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left'));
-    $relatorio->set_funcao(array(null, null, null, "date_to_php", null, null, null, "date_to_php", "date_to_php", "date_to_php", null, "get_NomeMes"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Nascimento', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Publicação', 'Motivo', 'Mês']);
+    $relatorio->set_align(['center', 'left', 'center', 'center', 'left', 'left', 'center', 'center', 'center', 'center', 'left']);
+    $relatorio->set_funcao([null, null, null, "date_to_php", null, null, null, "date_to_php", "date_to_php", "date_to_php", null, "get_NomeMes"]);
 
-    $relatorio->set_classe(array(null, null, null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, "get_cargo", "get_lotacao"));
+    $relatorio->set_classe([null, null, null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(11);

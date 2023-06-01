@@ -128,20 +128,22 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu->add_link($botaoVoltar, "left");
 
-            if (file_exists($arquivo)) {
-                $informa = new Link("Apagar os Dados", "?fase=apagar");
-                $informa->set_class('button alert');
-                $informa->set_title("Apaga os dados deste mês");
-                $informa->set_confirma("Deseja Realmente apagar os dados de {$parametroMes}/{$parametroAno}!!");
-                $menu->add_link($informa, "right");
-            }
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                if (file_exists($arquivo)) {
+                    $informa = new Link("Apagar os Dados", "?fase=apagar");
+                    $informa->set_class('button alert');
+                    $informa->set_title("Apaga os dados deste mês");
+                    $informa->set_confirma("Deseja Realmente apagar os dados de {$parametroMes}/{$parametroAno}!!");
+                    $menu->add_link($informa, "right");
+                }
 
-            # Botão de Upload
-            $botao = new Button("Upload da Listagem");
-            $botao->set_url("?fase=upload&id={$id}");
-            $botao->set_title("Faz o Upload do arquivo CSV com a listagem de servidores que receberam auxílio transporte neste mês");
-            #$botao->set_target("_blank");
-            $menu->add_link($botao, "right");
+                # Botão de Upload
+                $botao = new Button("Upload da Listagem");
+                $botao->set_url("?fase=upload&id={$id}");
+                $botao->set_title("Faz o Upload do arquivo CSV com a listagem de servidores que receberam auxílio transporte neste mês");
+                #$botao->set_target("_blank");
+                $menu->add_link($botao, "right");
+            }
 
             $menu->show();
 
@@ -310,10 +312,12 @@ if ($acesso) {
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
                                          JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')
-                             AND situacao = 1";
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         JOIN tbperfil USING (idPerfil)
+                        WHERE situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
 
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
@@ -350,9 +354,11 @@ if ($acesso) {
                              FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
                                              JOIN tbhistlot USING (idServidor)
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
-                           WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')
-                             AND situacao = 1";
+                                             JOIN tbperfil USING (idPerfil)
+                            WHERE situacao = 1
+                              AND tbperfil.tipo <> 'Outros'
+                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                              AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
 
                 # Pesquisa por nome
                 if (!empty($parametroNome)) {
@@ -373,7 +379,7 @@ if ($acesso) {
                 if ($parametroPerfil <> "*") {
                     $select .= " AND idperfil = {$parametroPerfil}";
                 }
-                
+
                 $select .= ") UNION (SELECT tbservidor.idfuncional,
                                   tbservidor.idServidor,
                                   tbservidor.idServidor,
@@ -383,7 +389,7 @@ if ($acesso) {
                              FROM tbtransporte JOIN tbservidor USING (idServidor) 
                                                JOIN tbpessoa USING (idPessoa)                                         
                                                JOIN tbhistlot USING (idServidor)
-                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
+                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                        
                           AND ano = '{$parametroAno}'
                           AND mes = '{$parametroMes}'";
@@ -410,7 +416,7 @@ if ($acesso) {
 
                 $select .= ") ORDER BY 6";
             }
-            
+
             #################################################################################
 
             $result = $pessoal->select($select);
@@ -611,9 +617,9 @@ if ($acesso) {
                         } else {
                             # Verifica se é servidor ativo primeiro
                             $idServidor = $pessoal->get_idServidoridFuncionalAtivo($parte[0]);
-                            
+
                             # se não achar verifica se é inativo
-                            if(empty($idServidor)){
+                            if (empty($idServidor)) {
                                 $idServidor = $pessoal->get_idServidoridFuncional($parte[0]);
                             }
                         }

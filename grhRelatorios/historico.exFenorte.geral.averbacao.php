@@ -47,7 +47,9 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Ex-Fenorte');
+    $relatorio->set_titulo('Relatório de Servidores');
+    $relatorio->set_subtitulo('Ex-Fenorte<br/>com Tempo Averbado');
+    
     $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Saída', 'Tempo Averbado', 'Tempo Público', 'Ex-CLT', 'Situação']);
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php", "date_to_php"]);

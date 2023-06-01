@@ -80,9 +80,6 @@ if ($acesso) {
     $relatorio->set_metodo(array(null, null, null, "get_lotacao"));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    #$relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -372,9 +369,6 @@ if ($acesso) {
     $relatorio->set_classe(array(null, "Pessoal", "Pessoal"));
     $relatorio->set_metodo(array(null, "get_CargoCompleto2", "get_concursoRelatorio"));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -408,9 +402,6 @@ if ($acesso) {
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array('formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda'));
     $relatorio->set_conteudo($conteudo);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -450,9 +441,6 @@ if ($acesso) {
         $relatorio->set_align(array('cener'));
         $relatorio->set_funcao(array(null, null, null, 'formataMoeda', null, "date_to_php"));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
@@ -491,9 +479,6 @@ if ($acesso) {
     $relatorio->set_funcao(array("date_to_php"));
     $relatorio->set_align(array('center'));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -524,9 +509,6 @@ if ($acesso) {
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array("trataNulo", "trataNulo"));
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -561,9 +543,6 @@ if ($acesso) {
     $relatorio->set_align(array('center'));
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -595,9 +574,6 @@ if ($acesso) {
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array("trataNulo", "date_to_php", "trataNulo", "trataNulo", "trataNulo"));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
@@ -629,9 +605,6 @@ if ($acesso) {
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo"));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
@@ -667,9 +640,6 @@ if ($acesso) {
     $relatorio->set_align(['left', 'center']);
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(0);
-    $relatorio->set_botaoVoltar(false);
-    #$relatorio->set_bordaInterna(true);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
@@ -705,9 +675,6 @@ if ($acesso) {
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
@@ -749,9 +716,6 @@ if ($acesso) {
         $relatorio->set_funcao(array(null, "date_to_php", null, null, null, null, "date_to_php"));
         $relatorio->set_align(array('left', 'center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -787,9 +751,6 @@ if ($acesso) {
         $relatorio->set_align(array('left', 'left', 'left'));
         #$relatorio->set_funcao($funcao);
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -824,9 +785,6 @@ if ($acesso) {
         $relatorio->set_funcao(array("date_to_php"));
         $relatorio->set_align(array('center', 'left', 'left'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -866,9 +824,6 @@ if ($acesso) {
         $relatorio->set_funcao(array(null, 'formataMoeda', 'date_to_php', null, 'date_to_php'));
         $relatorio->set_align(array('left'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -906,9 +861,6 @@ if ($acesso) {
         $relatorio->set_funcao(array('date_to_php', null, null, null, 'date_to_php'));
         $relatorio->set_align(array('center', 'left', 'center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -944,9 +896,6 @@ if ($acesso) {
         $relatorio->set_funcao(array('date_to_php', null, null, 'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -982,9 +931,6 @@ if ($acesso) {
         $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda'));
         $relatorio->set_align(array('left', 'left', 'left', 'left'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1021,9 +967,6 @@ if ($acesso) {
         $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda', null, 'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1060,9 +1003,6 @@ if ($acesso) {
         $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1107,9 +1047,6 @@ if ($acesso) {
         $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
         $relatorio->set_align(array('left', 'center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1150,9 +1087,6 @@ if ($acesso) {
         $relatorio->set_metodo(array('exibePeriodoAquisitivo'));
         #$relatorio->set_align(array('left'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1185,7 +1119,6 @@ if ($acesso) {
             $relatorio->set_align(array("left"));
             $relatorio->set_funcao(array("nl2br"));
             $relatorio->set_conteudo($result);
-            $relatorio->set_botaoVoltar(false);
             $relatorio->set_subTotal(false);
             $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
@@ -1228,8 +1161,6 @@ if ($acesso) {
         $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
         $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
         $relatorio->set_colunaSomatorio([2, 3, 4]);
         #$relatorio->set_colunaSomatorio(4);
         $relatorio->set_subTotal(false);
@@ -1271,8 +1202,7 @@ if ($acesso) {
         $relatorio->set_label(["Tipo", "RioPrevidência", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
         $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php']);
         $relatorio->set_align(['left', 'center', 'center', 'center', 'center', 'left']);
-        $relatorio->set_conteudo($result);
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_conteudo($result);        
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1338,8 +1268,7 @@ if ($acesso) {
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
         #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
-        $relatorio->set_exibeSomatorioGeral(false);
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_exibeSomatorioGeral(false);        
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -1381,9 +1310,6 @@ if ($acesso) {
         $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, "date_to_php", null, null, "formataMoeda"));
         $relatorio->set_align(array("center"));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1420,9 +1346,6 @@ if ($acesso) {
         $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php'));
         $relatorio->set_align(array('center'));
         $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(0);
-        $relatorio->set_botaoVoltar(false);
-        #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1458,8 +1381,7 @@ if ($acesso) {
         $relatorio->set_width(array(10, 10, 15, 15, 5, 35));
         $relatorio->set_align(array("center", "center", "center", "center", "center", "left"));
         $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
-        $relatorio->set_conteudo($result);
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_conteudo($result);        
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1490,8 +1412,7 @@ if ($acesso) {
         $relatorio->set_width(array(15, 85));
         $relatorio->set_align(array("center", "left"));
         $relatorio->set_funcao(array("date_to_php"));
-        $relatorio->set_conteudo($result);
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_conteudo($result);        
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1528,9 +1449,8 @@ if ($acesso) {
         $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
         $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
-        $relatorio->set_conteudo($result);
-
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_conteudo($result); 
+        
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);

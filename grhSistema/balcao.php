@@ -564,7 +564,7 @@ if ($acesso) {
                 $valor = array($parametroAno, $parametroMes, $contador, $vmanha, $vmanhaOnline, $vtarde, $vtardeOnline);
                 $pessoal->gravar($campos, $valor, $idBalcao, "tbbalcao", "idBalcao", false);
             }
-           
+
             # Grava no log a atividade
             if (!empty($atividade)) {
                 $data = date("Y-m-d H:i:s");
@@ -602,16 +602,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($lista);
-            $tabela->set_label(array("Servidor", "Lotação", "Cargo", "Balcão"));
-            $tabela->set_align(array("left", "left", "left"));
-            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            #$tabela->set_funcao(array(null,"dv"));
-            $tabela->set_classe(array("pessoal", "pessoal", "pessoal"));
-            $tabela->set_metodo(array("get_nomeSimples", "get_lotacao", "get_cargo"));
+            $tabela->set_label(["Servidor", "Cargo", "Perfil", "Balcão"]);
+            $tabela->set_align(["left", "left"]);
+            $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_nome", "get_cargo", "get_perfil"]);
             $tabela->set_titulo("Controle de Servidores da GRH que atendem ao Balcão");
             $tabela->set_editar('?fase=editaServidor');
-            #$tabela->set_nomeColunaEditar("Editar");
-            #$tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idUsuario');
             $tabela->show();
             break;

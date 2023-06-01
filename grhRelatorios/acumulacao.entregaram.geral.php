@@ -65,11 +65,11 @@ if ($acesso) {
 
     $relatorio->set_metodo([null, "get_nome", "get_cargo"]);
     $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
-    
+
     if ($parametroLotacao <> "*") {
         $relatorio->set_titulo("Relatório de Servidores Ativos");
         $relatorio->set_tituloLinha2("da Lotação: {$pessoal->get_nomeLotacao($parametroLotacao)}");
-    }else{
+    } else {
         $relatorio->set_titulo("Relatório Geral de Servidores Ativos");
     }
     $relatorio->set_tituloLinha3("que Entregaram a Declaração Anual de Acumulação - {$parametroAno}");

@@ -689,8 +689,7 @@ class LicencaPremio {
             $relatorio->set_align(["left", "left"]);
             $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
-            $relatorio->set_conteudo($conteudo1);
-            $relatorio->set_botaoVoltar(false);
+            $relatorio->set_conteudo($conteudo1);            
             $relatorio->set_log(false);
             $relatorio->show();
         } else {
@@ -732,7 +731,6 @@ class LicencaPremio {
 //            $relatorio->set_totalRegistro(false);
 //            $relatorio->set_dataImpressao(false);
 //            $relatorio->set_conteudo($conteudo2);
-//            $relatorio->set_botaoVoltar(false);
 //            $relatorio->set_log(false);
 //            $relatorio->show();
 //        } else {
@@ -755,7 +753,6 @@ class LicencaPremio {
 //            $relatorio->set_totalRegistro(false);
 //            $relatorio->set_dataImpressao(false);
 //            $relatorio->set_conteudo($conteudo);
-//            $relatorio->set_botaoVoltar(false);
 //            $relatorio->set_log(false);
 //            $relatorio->show();
 //        }
@@ -812,7 +809,6 @@ class LicencaPremio {
             $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
             $relatorio->set_conteudo($result);
-            $relatorio->set_botaoVoltar(false);
             $relatorio->set_log(false);
             $relatorio->show();
         } else {
@@ -848,7 +844,6 @@ class LicencaPremio {
             $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
             $relatorio->set_conteudo($result);
-            $relatorio->set_botaoVoltar(false);
             $relatorio->set_log(false);
             $relatorio->show();
         }
@@ -998,9 +993,7 @@ class LicencaPremio {
         $relatorio->set_align(array('center'));
         $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
 
-        $relatorio->set_conteudo($result);
-        #$relatorio->set_numGrupo(2);
-        $relatorio->set_botaoVoltar(false);
+        $relatorio->set_conteudo($result);        
         $relatorio->show();
     }
 

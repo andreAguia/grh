@@ -37,7 +37,9 @@ if ($acesso) {
                       tbhistlot.lotacao
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                  JOIN tbhistlot USING (idServidor)
-               WHERE situacao = 1 
+                                 JOIN tbperfil USING (idPerfil)     
+               WHERE tbservidor.situacao = 1
+                 AND tbperfil.tipo <> 'Outros' 
                  AND MONTH(tbhistlot.data) = {$relatorioMes}
                  AND YEAR(tbhistlot.data) = {$relatorioAno}  
              ORDER BY tbhistlot.data";
@@ -51,11 +53,11 @@ if ($acesso) {
 
     $relatorio->set_label(["IdFuncional", "Nome", "Data", "Saiu de", "Foi para"]);
     $relatorio->set_width([10, 20, 10, 30, 30]);
-    $relatorio->set_align(["center", "left", "center", "left", "left"]);
+    $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php"]);
 
     $relatorio->set_classe([null, null, null, "Lotacao", "Lotacao"]);
-    $relatorio->set_metodo([null, null, null, "getLotacaoAnterior", "getLotacao"]);
+    $relatorio->set_metodo([null, null, null, "getNomeLotacaoAnterior", "getLotacao"]);
 
     $relatorio->set_formCampos(array(
         array('nome' => 'ano',

@@ -178,7 +178,7 @@ if ($acesso) {
                                 WHEN 2 THEN 'Solicitada'
                                 ELSE '--'
                               END,
-                              CASE tipo
+                              CASE tbreadaptacao.tipo
                                 WHEN 1 THEN 'Inicial'
                                 WHEN 2 THEN 'Renovação'
                                 ELSE '--'
@@ -196,7 +196,8 @@ if ($acesso) {
                               idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbreadaptacao USING (idServidor)
-                        WHERE tbservidor.idPerfil <> 10";
+                                         JOIN tbperfil USING (idPerfil)
+                        WHERE tbperfil.tipo <> 'Outros' ";
 
             # status
             if ($parametroStatus <> 0) {

@@ -45,16 +45,14 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Estatutários Atualmente Cedidos');
     $relatorio->set_subtitulo('Ordenado Alfabeticamente');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Lotação Anterior', 'Órgão', 'Início', 'Término'));
-    $relatorio->set_width(array(10, 30, 20, 20, 10, 10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, "date_to_php", "date_to_php"));
-    $relatorio->set_classe(array(null, null, "Pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_lotacaoAnterior"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação Anterior', 'Órgão', 'Início', 'Término']);
+    $relatorio->set_width([10, 30, 20, 20, 10, 10]);
+    $relatorio->set_align(["center", "left", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_classe([null, null, "Pessoal"]);
+    $relatorio->set_metodo([null, null, "get_lotacaoAnterior"]);
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(6);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

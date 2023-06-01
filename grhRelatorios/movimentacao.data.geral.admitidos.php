@@ -27,7 +27,7 @@ if ($acesso) {
     
     ######
 
-    $select = 'SELECT tbservidor.idfuncional,
+    $select = "SELECT tbservidor.idfuncional,
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
@@ -36,25 +36,26 @@ if ($acesso) {
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
-                                    LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                    LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
-                 WHERE tbservidor.dtAdmissao >= "' . $relatorioData . '"
-             ORDER BY dtAdmissao';
+                                 LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
+                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                WHERE tbservidor.dtAdmissao >= '{$relatorioData}'
+                  AND tbperfil.tipo <> 'Outros'  
+             ORDER BY dtAdmissao";
 
 
     $result = $servidor->select($select);
     
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Admitidos a Partir ' . date_to_php($relatorioData));
+    $relatorio->set_titulo('Relatório de Servidores Admitidos');
+    $relatorio->set_tituloLinha2('a Partir de ' . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
 
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo'));
-    #$relatorio->set_width(array(10,20,10,10,10,10,10,10,10));
-    $relatorio->set_align(array('center', 'left', 'left', 'left','center','center','center','left'));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Motivo']);
+    $relatorio->set_align(['center', 'left', 'left', 'left','center','center','center','left']);
+    $relatorio->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal", "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples", "get_lotacao"));
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples", "get_lotacao"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_botaoVoltar(false);
@@ -81,4 +82,3 @@ if ($acesso) {
 
     $page->terminaPagina();
 }
-?>

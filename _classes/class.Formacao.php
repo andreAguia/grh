@@ -93,15 +93,13 @@ class Formacao {
         $select = "SELECT idEscolaridade FROM tbformacao WHERE idEscolaridade <> 12 AND idPessoa = $idPessoa ORDER BY idEscolaridade desc LIMIT 1";
         $dados = $pessoal->select($select, false);
 
-        if (empty($dados[0])) {
-            $dados[0] = 0;
+        if ($dados) {
+            # Pega a maior escolaridade
+            $maior = maiorValor([$idEscolaridade, $dados['idEscolaridade']]);
+
+            # Retorna a maior escolaridade registrada
+            return $maior;
         }
-
-        # Pega a maior escolaridade
-        $maior = maiorValor([$idEscolaridade, $dados[0]]);
-
-        # Retorna a maior escolaridade registrada
-        return $maior;
     }
 
     ###########################################################

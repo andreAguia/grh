@@ -44,7 +44,7 @@ if ($acesso) {
                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-             ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
+            ORDER BY month(tbpessoa.dtNasc), day(tbpessoa.dtNasc)';
 
     $result = $servidor->select($select);
 
@@ -52,10 +52,10 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Aniversariantes');
     $relatorio->set_subtitulo($servidor->get_nomeCompletoLotacao($lotacao));
     $relatorio->set_tituloLinha2($servidor->get_nomeLotacao($lotacao));
-    $relatorio->set_label(array('Data', 'Nome'));
-    $relatorio->set_width(array(10, 90));
-    $relatorio->set_align(array("center", "left"));
-    $relatorio->set_funcao(array(null, null, "get_nomeMes"));
+    $relatorio->set_label(['Data', 'Nome']);
+    $relatorio->set_width([10, 90]);
+    $relatorio->set_align(["center", "left"]);
+    $relatorio->set_funcao([null, null, "get_nomeMes"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);

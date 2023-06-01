@@ -263,7 +263,7 @@ if ($acesso) {
 
         case 'diaria':
             $id = get('id');
-            loadPage('../grhRelatorios/ciDiaria.php?id=' . $id, '_blank');
+            loadPage('../grhRelatorios/diaria.ci.php?id=' . $id, '_blank');
 
             # Log
             $atividade = "Emitiu CI de Diária de " . $pessoal->get_nome($idServidorPesquisado);

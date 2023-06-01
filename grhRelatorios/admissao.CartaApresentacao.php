@@ -20,8 +20,8 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();   
-    
+    $pessoal = new Pessoal();
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -33,14 +33,13 @@ if ($acesso) {
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao($idLotacao);
     $dtAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    
+
     $idChefe = $pessoal->get_chefiaImediata($idServidorPesquisado);
     $chefe = $pessoal->get_nome($idChefe);
     $cargo = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
-    
+
     $diretor = $pessoal->get_nome($pessoal->get_chefiaImediata($idChefe));
     $cargoDiretor = $pessoal->get_chefiaImediataDescricao($idChefe);
-            
 
     # Monta a Carta
     $carta = new Carta();
@@ -48,13 +47,13 @@ if ($acesso) {
     $carta->set_nomeCarta("CARTA DE APRESENTAÇÃO");
     $carta->set_destinoNome($chefe);
     $carta->set_destinoSetor($cargo);
-    
+
     $carta->set_destinoNomeCC($diretor);
     $carta->set_destinoSetorCC($cargoDiretor);
     $carta->set_assinatura(true);
 
     $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao},"
-    . " a contar de {$dtAdmissao}, data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
+            . " a contar de {$dtAdmissao}, data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
 
     $carta->set_texto($texto);
 

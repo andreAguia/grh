@@ -192,10 +192,16 @@ if ($acesso) {
             $tabela->set_colspanLabel([null, null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);
             $tabela->set_width([5, 6, 8, 10, 7, 7, 17, 10, 5, 5, 5, 5, 5]);
+            
+            # retira o bolsista e estagiario
+            if (Verifica::acesso($idUsuario, [1, 2])) {
+                $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 12, "==");
+            }
+
             $tabela->set_funcao([null, null, 'date_to_php']);
             $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", "Concurso", null, "Concurso", null, "Concurso"]);
-            $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 12, "==");
             $tabela->set_metodo([null, null, null, null, null, null, null, "get_centroVagas", "get_numServidoresAtivosConcurso", null, "get_numServidoresInativosConcurso", null, "get_numServidoresConcurso"]);
+
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
 

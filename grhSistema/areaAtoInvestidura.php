@@ -140,6 +140,7 @@ if ($acesso) {
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
+                          AND idPerfil = 1
                           AND tbpessoa.nome LIKE '%{$parametroNome}%'";
 
             # Lotação
@@ -182,9 +183,7 @@ if ($acesso) {
 
             if (file_exists("{$pasta}{$id}.pdf")) {
 
-                tituloTable($nome);
-                br();
-                ;
+                
 
                 # Cria um menu
                 $menu = new MenuBar();
@@ -197,15 +196,18 @@ if ($acesso) {
                 $menu->add_link($botaoVoltar, "left");
 
                 # Excluir
-                $botaoApaga = new Button("Excluir o Arquivo");
-                $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
-                $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
-                $botaoApaga->set_class("button alert");
-                $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
-                $menu->add_link($botaoApaga, "right");
+                if (Verifica::acesso($idUsuario, [1, 2])) {
+                    $botaoApaga = new Button("Excluir o Arquivo");
+                    $botaoApaga->set_url("?fase=apagaDocumento&id={$id}");
+                    $botaoApaga->set_title("Exclui o Arquivo PDF cadastrado");
+                    $botaoApaga->set_class("button alert");
+                    $botaoApaga->set_confirma("Tem certeza que você deseja excluir o arquivo do {$nome}?");
+                    $menu->add_link($botaoApaga, "right");
+                }
 
                 $menu->show();
-
+                
+                tituloTable($nome);
                 iframe("{$pasta}{$id}.pdf");
             } else {
                 loadPage("?fase=upload&id={$id}");

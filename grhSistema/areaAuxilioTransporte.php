@@ -479,7 +479,7 @@ if ($acesso) {
                 tituloTable("Upload do {$nome}");
 
                 # do Log
-                $atividade = "Fez o upload do {$nome}";
+                $atividade = "Fez o upload do<br>{$nome}";
             } else {
                 # Título
                 tituloTable("Substituir o Arquivo Cadastrado");

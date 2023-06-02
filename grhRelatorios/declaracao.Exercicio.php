@@ -55,7 +55,7 @@ if ($acesso) {
     $dec->set_data(date("d/m/Y"));
 
     $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, é servidor desta Universidade admitido através de concurso"
+            . " ID funcional nº {$idFuncional}, é servidor(a) desta Universidade admitido através de concurso"
             . " público na data de {$dtAdmissao} para o cargo de {$cargoEfetivo}, desempenhando suas"
             . " atribuições no(a) {$nomeLotacao}.");
 

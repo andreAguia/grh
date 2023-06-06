@@ -422,7 +422,7 @@ class PlanoCargos {
                               valor,
                               tbplano.numdecreto
                          FROM tbclasse LEFT JOIN tbplano USING (idPlano)
-                         WHERE idClasse = $idClasse";
+                         WHERE idClasse = {$idClasse}";
 
             $pessoal = new Pessoal();
             $row = $pessoal->select($select, false);
@@ -509,21 +509,19 @@ class PlanoCargos {
          * 
          * @syntax $plano->exibeLei($idPlano);
          */
-        # Pega os projetos cadastrados
-        $select = 'SELECT link
-                     FROM tbplano
-                     WHERE idPlano = ' . $idPlano;
+        # Monta o arquivo
+        $arquivo = PASTA_PLANOCARGOS . $idPlano . ".pdf";
 
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
+        # Verifica se ele existe
+        if (file_exists($arquivo)) {
 
-        if (is_null($row[0])) {
-            echo "-";
-        } else {
-            $link = new Link(null, "../_legislacao/" . $row[0], "Exibe a Lei");
+            # Monta o link
+            $link = new Link(null, $arquivo, "Exibe a publicação do plano de cargos");
             $link->set_imagem(PASTA_FIGURAS_GERAIS . "do.png", 20, 20);
             $link->set_target("_blank");
             $link->show();
+        } else {
+            echo "-";
         }
     }
 

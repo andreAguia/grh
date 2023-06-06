@@ -30,6 +30,7 @@ if ($acesso) {
 
     $select = "SELECT tbpessoa.nome,                      
                       tbservidor.idservidor,
+                      tbservidor.idservidor,
                       tbservidor.idservidor
                  FROM tbservidor JOIN tbpessoa USING (idpessoa)
                 WHERE tbservidor.situacao = 1
@@ -39,11 +40,10 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
-    $relatorio->set_label(['Servidor', 'Cargo', 'Email Uenf']);
-    $relatorio->set_align(["left", "left", "left"]);
-    $relatorio->set_funcao([null, null, null, "date_to_php"]);
-    $relatorio->set_classe([null, "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, "get_cargoSimples", "get_emailUenf"]);
+    $relatorio->set_label(['Servidor', 'Cargo', 'E-mail Uenf', 'E-mail Pessoal']);
+    $relatorio->set_align(["left", "left", "left", "left"]);
+    $relatorio->set_classe([null, "pessoal", "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, "get_cargoSimples", "get_emailUenf", "get_emailPessoal"]);
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

@@ -350,7 +350,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Idade', '../grhRelatorios/estatutarios.ativos.porIdade.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo e E-mail - Por Ano de Admissão', '../grhRelatorios/estatutarios.ativos.email.porAnoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - Agrupados por Nacionalidade', '../grhRelatorios/estatutarios.ativos.porNacionalidade.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com E-mail Institucional', '../grhRelatorios/estatutarios.ativos.email.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com E-mails', '../grhRelatorios/estatutarios.ativos.email.php');
 
             $menu->add_item('titulo1', 'Inativos');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Inativos - por Lotação', '../grhRelatorios/estatutarios.inativos.porLotacao.php');

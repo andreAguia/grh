@@ -5007,4 +5007,78 @@ class Checkup {
     }
 
     ##########################################################
+
+    /**
+     * Método get_servidorSemDtNasc
+     * 
+     * Servidor sem data de nasciment cadastrada
+     */
+    public function get_servidorFalecidoSemDtFalecimento($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "cadastro" OR !empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT tbservidor.idFuncional,  
+                              tbpessoa.nome,
+                              dtFalecimento,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                        WHERE tbpessoa.dtFalecimento is null
+                          AND situacao = 5';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidor(es) Com Status de Falecido sem data de falecimento cadastrada no sistema';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['IdFuncional', 'Nome', 'Data de Falecimento', 'Lotação', 'Cargo', 'Situação']);
+            $tabela->set_align(['center', 'left', 'center', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_classe([null, null, null, "Pessoal", "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, "get_lotacao", "get_cargo", "get_situacao"]);
+            #$tabela->set_funcao($funcao);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        callout("O servidor com o status de falecido deverá ter "
+                                . "a respectiva data de falecimento preenchida.");
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
 }

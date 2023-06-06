@@ -885,7 +885,11 @@ class MenuServidor {
         titulo('Benefícios');
         br();
 
-        $menu = new MenuGrafico(2);
+        if ($this->situacao <> "Ativo" AND $this->perfil == 1) {
+            $menu = new MenuGrafico(3);
+        } else {
+            $menu = new MenuGrafico(2);
+        }
 
         $botao = new BotaoGrafico();
         $botao->set_label('Readaptação');
@@ -901,6 +905,7 @@ class MenuServidor {
         $botao->set_title('Controle de Redução da Carga Horária');
         $menu->add_item($botao);
 
+        # Verifica se é inativo e se é estatutário (se tem direito ao auxlilio funeral)
         if ($this->situacao <> "Ativo" AND $this->perfil == 1) {
 
             $botao = new BotaoGrafico();

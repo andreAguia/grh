@@ -749,6 +749,9 @@ if ($acesso) {
                 # Informa que o bim foi substituído
                 alert("Arquivo do {$nome} Cadastrado !!");
 
+                # Registra a data do backup nas variáveis
+                $intra->set_variavel('backupArquivosData', date("d/m/Y H:i:s"));
+
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';
                 break;

@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $licenca = new LicencaPremio();
+    $intra = new Intra();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -329,6 +330,9 @@ if ($acesso) {
         case "uploadTerminado" :
             # Informa que o bim foi substituído
             alert("Arquivo do {$nome} Cadastrado !!");
+            
+            # Registra a data do backup nas variáveis
+            $intra->set_variavel('backupArquivosData', date("d/m/Y H:i:s"));      
 
             # Fecha a janela
             echo '<script type="text/javascript" language="javascript">window.close();</script>';

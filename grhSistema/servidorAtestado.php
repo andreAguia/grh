@@ -390,9 +390,9 @@ if ($acesso) {
         case "uploadTerminado" :
             # Informa que o bim foi substituído
             alert("Arquivo do {$nome} Cadastrado !!");
-            
-            # Registra a data do backup nas variáveis
-            $intra->set_variavel('backupArquivosData', date("d/m/Y H:i:s"));      
+
+            # Registra nas variáveis
+            $intra->set_variavel('dataUploadArquivos', date("d/m/Y H:i:s"));
 
             # Fecha a janela
             echo '<script type="text/javascript" language="javascript">window.close();</script>';
@@ -402,10 +402,18 @@ if ($acesso) {
 
             # Verifica se o usuário tem acesso
             if (Verifica::acesso($idUsuario, [1, 15])) {
-                
+
+                # Verifica se existe a pasta dos arquivos deletados
+                if (!file_exists("{$pasta}_apagados/") || !is_dir("{$pasta}_apagados/")) {
+                    mkdir("{$pasta}_apagados/", 0755);
+                }
+
                 # Apaga o arquivo (na verdade renomeia)
-                if (rename("{$pasta}{$id}.pdf", "{$pasta}apagado_{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
+                if (rename("{$pasta}{$id}.pdf", "{$pasta}_apagados/{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf")) {
                     alert("Arquivo Excluído !!");
+
+                    # Registra nas variáveis
+                    $intra->set_variavel('dataUploadArquivos', date("d/m/Y H:i:s"));
 
                     # Registra log
                     $atividade = "Excluiu o arquivo do {$nome}";

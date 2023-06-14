@@ -542,8 +542,9 @@ if ($acesso) {
                     $parte = explode(";", $linha);
 
                     # Percorre as partes da linha
-                    foreach ($parte as $pp) {
-
+                    foreach ($parte as $pp) {                        
+                       
+                        # Verifica se a linha está em branco
                         if (!empty($pp)) {
 
                             if ($linhaDados) {
@@ -568,10 +569,12 @@ if ($acesso) {
                             }
                             $contador++;
                         }
+                        
+                        
                         if (validaCpf($cpf)) {
                             $certos++;
                         } else {
-                            $cpf = null;
+                            $cpf = null;                            
                         }
                     }
 

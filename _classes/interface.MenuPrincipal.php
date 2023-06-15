@@ -817,45 +817,12 @@ class MenuPrincipal {
             #$botao->set_accesskey('S');
             $menu->add_item($botao);
         }
-
-        # Controle de MCF
-        if (Verifica::acesso($this->idUsuario, [1, 14])) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('MCF');
-            $botao->set_url("cadastroMcf.php?grh=1");
-            $botao->set_imagem(PASTA_FIGURAS . 'mcf.jpg', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Controle de MCF');
-            $menu->add_item($botao);
-        }
         $botao = new BotaoGrafico();
         $botao->set_label('Vacina');
         $botao->set_url('areaVacina.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'vacina.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle da vacinação de servidores');
         $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('RPA');
-        $botao->set_url('cadastroRpa.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Emissão de RPA');
-        #$menu->add_item($botao); ### retirado por falta de uso
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Auxílio Transporte');
-        $botao->set_url('areaAuxilioTransporte.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de servidores com direito ao auxílio transporte');
-        $menu->add_item($botao);
-
-        if (Verifica::acesso($this->idUsuario, 1)) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Recadastramento de Servidores');
-            $menu->add_item($botao);
-        }
 
         $botao = new BotaoGrafico();
         $botao->set_label('Atos de Investidura');
@@ -866,6 +833,13 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
+        
             $botao = new BotaoGrafico();
             $botao->set_label('Problemas na Progressão');
             $botao->set_url('areaProblemasProgressao.php?grh=1');

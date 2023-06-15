@@ -65,7 +65,7 @@ if ($acesso) {
             if (file_exists("{$pasta}{$id}.pdf")) {
                 
                 tituloTable($nome);
-                br();;
+                br();
 
                 # Cria um menu
                 $menu = new MenuBar("small button-group");

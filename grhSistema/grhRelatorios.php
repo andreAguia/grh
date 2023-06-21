@@ -264,11 +264,12 @@ if ($acesso) {
         case "cedidos";
             $menu = new Menu();
             $menu->add_item('titulo', 'Cedidos');
-            $menu->add_item('titulo1', 'Cedidos da Uenf para Outro Órgão');
+            $menu->add_item('titulo1', 'Cedidos da Uenf para Outro Órgão - Ativos');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos', '../grhRelatorios/estatutarios.cedidos.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Professores', '../grhRelatorios/estatutarios.cedidos.professores.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
+            $menu->add_item('titulo1', 'Cedidos da Uenf para Outro Órgão - Geral');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Por Ano', '../grhRelatorios/estatutarios.cedidos.porAno.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
             $menu->add_item('titulo1', 'Cedidos de Fora');

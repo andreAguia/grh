@@ -271,7 +271,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
             $menu->add_item('titulo1', 'Cedidos da Uenf para Outro Órgão - Geral');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Por Ano', '../grhRelatorios/estatutarios.cedidos.porAno.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Por Ano de Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Por Ano do Início da Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
             $menu->add_item('titulo1', 'Cedidos de Fora');
             #$menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidos.porOrgao.php');

@@ -268,7 +268,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos', '../grhRelatorios/estatutarios.cedidos.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Professores', '../grhRelatorios/estatutarios.cedidos.professores.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - edidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Por Ano', '../grhRelatorios/estatutarios.cedidos.porAno.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
             $menu->add_item('titulo1', 'Cedidos de Fora');

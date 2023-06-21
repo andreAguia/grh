@@ -30,7 +30,7 @@ if ($acesso) {
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
-                      tbpessoa.emailUenf
+                      tbservidor.idServidor
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tbdocumentacao USING (idPessoa)
                                       JOIN tbperfil USING (idPerfil)     
@@ -43,12 +43,13 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('com Email<br/>Ordenados pelo Nome do Servidor');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Email Uenf']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Emails']);
 
-    $relatorio->set_classe([null, null, "Pessoal", "Pessoal"]);
-    $relatorio->set_metodo([null, null, "get_Cargo", "get_Lotacao"]);
+    $relatorio->set_classe([null, null, "Pessoal", "Pessoal", "Pessoal"]);
+    $relatorio->set_metodo([null, null, "get_Cargo", "get_Lotacao", "get_emails"]);
 
     $relatorio->set_align(["center", "left", "left", "left", "left"]);
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

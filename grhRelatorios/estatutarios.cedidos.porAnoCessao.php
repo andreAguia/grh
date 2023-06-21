@@ -28,32 +28,31 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
-                     tbservidor.idServidor,
                      tbhistcessao.orgao,
                      tbhistcessao.dtInicio,
-                     tbhistcessao.dtFim
+                     tbhistcessao.dtFim,
+                     year(dtInicio),
+                     tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                               RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
+                                RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
                WHERE tbservidor.idPerfil = 1
-                 AND situacao = 1 
-                 AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
-             ORDER BY tbhistcessao.orgao, nome';
+             ORDER BY year(dtInicio), month(dtInicio), nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Estatutários Ativos Cedidos');
-    $relatorio->set_subtitulo('Agrupados pelo Órgão');
+    $relatorio->set_subtitulo('Agrupados pelo Ano de Cessão');
 
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Órgão', 'Início', 'Término']);
-    $relatorio->set_width([10, 30, 20, 20, 10, 10]);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Ano', 'Situação']);
+    $relatorio->set_width([10, 30, 30, 10, 10, 0, 10]);
     $relatorio->set_align(["center", "left", "left", "left"]);
-    $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
-    $relatorio->set_classe([null, null, "Pessoal"]);
-    $relatorio->set_metodo([null, null, "get_Cargo"]);
+    $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_classe([null, null, null, null, null, null, "Pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, null, null, "get_Situacao"]);
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(3);
+    $relatorio->set_numGrupo(5);
     $relatorio->show();
 
     $page->terminaPagina();

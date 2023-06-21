@@ -27,12 +27,13 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbdocumentacao.cpf,
-                     tbpessoa.emailUenf
-                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                LEFT JOIN tbdocumentacao USING (idPessoa)
-                                     JOIN tbperfil USING (idPerfil)     
+                      tbpessoa.nome,
+                      tbservidor.idServidor,
+                      tbservidor.idServidor,
+                      tbpessoa.emailUenf
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tbdocumentacao USING (idPessoa)
+                                      JOIN tbperfil USING (idPerfil)     
                WHERE tbservidor.situacao = 1
                  AND tbperfil.tipo <> "Outros"
             ORDER BY tbpessoa.nome';
@@ -42,8 +43,12 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Email UENF e CPF<br/>Ordenados pelo Nome do Servidor');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'CPF', 'Email Uenf']);
-    $relatorio->set_align(["center", "left", "center", "left"]);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Email Uenf']);
+
+    $relatorio->set_classe([null, null, "Pessoal", "Pessoal"]);
+    $relatorio->set_metodo([null, null, "get_Cargo", "get_Lotacao"]);
+
+    $relatorio->set_align(["center", "left", "left", "left", "left"]);
     $relatorio->set_conteudo($result);
     $relatorio->show();
 

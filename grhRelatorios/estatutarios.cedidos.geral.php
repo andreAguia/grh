@@ -42,7 +42,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Estatutários Atualmente Cedidos');
+    $relatorio->set_titulo('Relatório de Estatutários AtivosAtualmente Cedidos');
     $relatorio->set_subtitulo('Ordenado Alfabeticamente');
 
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Órgão', 'Início', 'Término']);

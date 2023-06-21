@@ -848,13 +848,13 @@ class Pessoal extends Bd {
      */
     public function get_cargoSimples($idServidor) {
         # Pega o cargo do servidor
-        $select = 'SELECT tbtipocargo.idTipoCargo,
+        $select = "SELECT tbtipocargo.idTipoCargo,
                           tbtipocargo.sigla,
                           tbcargo.nome,
                           idPerfil
                      FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbtipocargo USING (idTipoCargo)
-                    WHERE idServidor = ' . $idServidor;
+                    WHERE idServidor = {$idServidor}";
 
         $row = parent::select($select, false);
         $retorno = null;

@@ -42,7 +42,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
-    $relatorio->set_subtitulo('Email UENF e CPF<br/>Ordenados pelo Nome do Servidor');
+    $relatorio->set_subtitulo('com Email<br/>Ordenados pelo Nome do Servidor');
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Email Uenf']);
 
     $relatorio->set_classe([null, null, "Pessoal", "Pessoal"]);

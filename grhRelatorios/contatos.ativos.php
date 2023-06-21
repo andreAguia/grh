@@ -36,6 +36,7 @@ if ($acesso) {
     $relatorio = new Relatorio();
 
     $select = 'SELECT tbservidor.idservidor,
+                      tbservidor.idservidor,                        
                       concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
                       tbservidor.idservidor,
                       tbservidor.idservidor
@@ -72,11 +73,11 @@ if ($acesso) {
     $relatorio->set_conteudo($result);
     $relatorio->set_bordaInterna(true);
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
+                                          FROM tblotacao
+                                         WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                          FROM tblotacao
+                                         WHERE ativo)
+                                      ORDER BY 2');
 
     array_unshift($listaLotacao, array('*', '-- Todos --'));
 

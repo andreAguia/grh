@@ -269,8 +269,8 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Professores', '../grhRelatorios/estatutarios.cedidos.professores.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Cedidos - Agrupados por Órgão', '../grhRelatorios/estatutarios.cedidos.porOrgao.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Por Ano', '../grhRelatorios/estatutarios.cedidos.porAno.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutários - Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Por Ano', '../grhRelatorios/estatutarios.cedidos.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários Geral - Cedidos - Agrupados por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.porAnoCessao.php');
             $menu->add_item('titulo1', 'Cedidos de Fora');
             #$menu->add_item('linkWindow','Escala Anual de Férias - Servidores Técnicos Estatutários Cedidos','../grhRelatorios/escalaAnualFeriasTecnicosSandraCedidos.php');
             $menu->add_item('linkWindow', 'Relatório de Cedidos de Outros Órgãos - Agrupados por Órgão', '../grhRelatorios/cedidos.porOrgao.php');

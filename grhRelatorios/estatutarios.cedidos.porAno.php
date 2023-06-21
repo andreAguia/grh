@@ -38,8 +38,7 @@ if ($acesso) {
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                 RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
-               WHERE tbservidor.idPerfil = 1
-                 AND situacao = 1";
+               WHERE tbservidor.idPerfil = 1";
     
     $select .= " AND (((YEAR(tbhistcessao.dtInicio) = '{$relatorioAno}') OR (YEAR(tbhistcessao.dtFim) = '{$relatorioAno}'))
                   OR ((YEAR(tbhistcessao.dtInicio) < '{$relatorioAno}') AND (YEAR(tbhistcessao.dtFim) > '{$relatorioAno}'))
@@ -50,7 +49,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo("Relatorio de Estatutários Ativos");
+    $relatorio->set_titulo("Relatorio Geral de Estatutários");
     $relatorio->set_subtitulo("Cedidos em {$relatorioAno}");
 
     $relatorio->set_label(['IdFuncional', 'Nome', 'Órgão', 'Início', 'Término', 'Ano', 'Situação ']);

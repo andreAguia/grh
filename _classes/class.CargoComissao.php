@@ -566,12 +566,13 @@ class CargoComissao {
 
         if (!empty($dados["numProcNom"])) {
             $retorna .= "Processo: " . $dados["numProcNom"];
+            $retorna .= "<br/>";
         }
 
         if (!empty($dados["tipo"])) {
             # Informa o tipo
             if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-                $retorna .= "<br/><span id='orgaoCedido'>({$this->tipos[$dados['tipo']][1]})</span>";
+                $retorna .= "<span id='orgaoCedido'>({$this->tipos[$dados['tipo']][1]})</span>";
             }
         }
 

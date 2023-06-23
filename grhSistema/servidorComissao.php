@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -286,18 +287,19 @@ if ($acesso) {
             'array' => $descricao,
             'size' => 100),
         array('nome' => 'tipo',
-            'label' => 'Tipo:',
+            'label' => 'Tipo de Nomeação:',
             'tipo' => 'combo',
-            'array' => [
-                [0, "Padrão"],
-                [1, "Pro Tempore"],
-                [2, "Designado"],
-                [3, "Temporário"]
-            ],
+            'array' => $cargoComissao->tipos,
+//            'array' => [
+//                [0, "Padrão"],
+//                [1, "Pro Tempore"],
+//                [2, "Designado"],
+//                [3, "Temporário"]
+//            ],
             'required' => true,
             'size' => 20,
             'col' => 2,
-            'title' => 'Informa se é pro tempore, ou seja, temporário para terminar mandato. (mandato tampão)',
+            'title' => 'Informa o tipo de nomeação.',
             'linha' => 1),
         array('linha' => 2,
             'col' => 6,
@@ -405,7 +407,7 @@ if ($acesso) {
     $botaoRel->set_url("../grhRelatorios/servidorComissao.php");
     $botaoRel->set_target("_blank");
 
-    $botao = new Button('Tipos');
+    $botao = new Button('Tipos de Nomeação');
     $botao->set_title('Informa os Tipos de Cargos em Comissão');
     $botao->set_url("areaCargoComissao.php?fase=exibeQuadro");
     $botao->set_target("_blank2");
@@ -442,7 +444,7 @@ if ($acesso) {
                 $botao1->set_target("_blank");
                 $botao1->set_url("cadastroDescricaoComissao.php?fase=editar&origem=servidor");
 
-                $botao = new Button('Tipos');
+                $botao = new Button('Tipos de Nomeação');
                 $botao->set_title('Informa os Tipos de Cargos em Comissão');
                 $botao->set_url("areaCargoComissao.php?fase=exibeQuadro");
                 $botao->set_target("_blank2");

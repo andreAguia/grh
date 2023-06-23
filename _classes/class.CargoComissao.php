@@ -152,7 +152,7 @@ class CargoComissao {
         if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
             if ($dados['tipo'] == 3) {
                 label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);
-                label("Esta designação temporária não será<br/>exibida nos relatórios ordinários");                
+                p("Esta designação temporária não será<br/>exibida nos relatórios ordinários", "vermelho", "f10");
             } else {
                 label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
             }
@@ -190,7 +190,7 @@ class CargoComissao {
         # Informa o tipo
         if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
             if ($dados['tipo'] == 3) {
-                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);      
+                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);
             } else {
                 label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
             }
@@ -672,7 +672,6 @@ class CargoComissao {
          * 
          * @param $idComissao integer null o id do cargo em comissão
          */
-        
         # Pega os dados da comissão
         $dados = $this->get_dados($idComissao);
 
@@ -868,7 +867,7 @@ class CargoComissao {
      * Exibe um quadro informativo das características dos tipos
      * de nomeação de Cargos em comissão
      */
-    public function exibeQuadroTipoComissao() {
+    public function exibeQuadroTipoNomeacao() {
 
         $tabela = new Tabela();
         $tabela->set_titulo("Tipos de Nomeação");

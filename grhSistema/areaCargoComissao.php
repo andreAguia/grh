@@ -677,7 +677,7 @@ if ($acesso) {
         # Relatório
         case "exibeQuadro" :
             $cargoComissao = new CargoComissao();
-            $cargoComissao->exibeQuadroTipoComissao();
+            $cargoComissao->exibeQuadroTipoNomeacao();
             break;
     }
 

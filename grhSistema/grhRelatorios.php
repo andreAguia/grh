@@ -556,6 +556,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Lotaçao', '../grhRelatorios/professores.ativos.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com Email A Partir do Ano de Admissão', '../grhRelatorios/professores.ativos.email.porAnoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com CPF, Data de Nascimento e Email', '../grhRelatorios/professores.ativos.email.cpf.nascimento.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - A Partir do Ano de Admissão', '../grhRelatorios/professores.ativos.porAnoAdmissao.php');
 
             $menu->add_item('titulo1', 'A Pedido da PROPPG');
             $menu->add_item('linkWindow', 'Relatório da Professores Ativos', '../grhRelatorios/professores.ativos.proppg.php');

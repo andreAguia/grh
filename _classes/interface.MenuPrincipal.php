@@ -622,7 +622,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'rpa.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Cadastro de RPAs');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Estagiários & Bolsistas');
         $botao->set_url('cadastroEstagiario.php?grh=1');
@@ -808,15 +808,14 @@ class MenuPrincipal {
         $botao->set_title('Exibe os telefones e ramais da UENF');
         $menu->add_item($botao);
 
-        if (Verifica::acesso($this->idUsuario, [1, 13])) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Sispatri');
-            $botao->set_url("areaSispatri.php?grh=1");
-            $botao->set_imagem(PASTA_FIGURAS . 'sispatri.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Controle de Sispatri');
-            #$botao->set_accesskey('S');
-            $menu->add_item($botao);
-        }
+        $botao = new BotaoGrafico();
+        $botao->set_label('Sispatri');
+        $botao->set_url("areaSispatri.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle de Sispatri');
+        #$botao->set_accesskey('S');
+        $menu->add_item($botao);
+
         $botao = new BotaoGrafico();
         $botao->set_label('Vacina');
         $botao->set_url('areaVacina.php?grh=1');
@@ -839,7 +838,7 @@ class MenuPrincipal {
             $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Recadastramento de Servidores');
             $menu->add_item($botao);
-        
+
             $botao = new BotaoGrafico();
             $botao->set_label('Problemas na Progressão');
             $botao->set_url('areaProblemasProgressao.php?grh=1');
@@ -1042,17 +1041,18 @@ class MenuPrincipal {
         #$menu->add_item('link', 'Tabela Salarial', 'cadastroTabelaSalarial.php?grh=1', 'Acessa o Cadastro de Tabela Salarial');
         $menu->add_item('link', 'Banco', 'cadastroBanco.php?grh=1', 'Acessa o Cadastro de Bancos');
         $menu->add_item('link', 'Campus', 'cadastroCampus.php?grh=1', 'Acessa o Cadastro de Campus Universitários');
+        $menu->add_item('link', 'Cidades', 'cadastroCidade.php?grh=1', 'Acessa o Cadastro de Cidades');
         $menu->add_item('link', 'Escolaridade', 'cadastroEscolaridade.php?grh=1', 'Acessa o Cadastro de Escolaridade');
         $menu->add_item('link', 'Estado Civil', 'cadastroEstadoCivil.php?grh=1', 'Acessa o Cadastro de Estado Civil');
+        $menu->add_item('link', 'Estados', 'cadastroEstado.php?grh=1', 'Acessa o Cadastro de Estados');
         $menu->add_item('link', 'Parentesco', 'cadastroParentesco.php?grh=1', 'Acessa o Cadastro de Parentesco');
         $menu->add_item('link', 'Situação', 'cadastroSituacao.php?grh=1', 'Acessa o Cadastro de Situação');
         $menu->add_item('link', 'Motivos de Saída', 'cadastroMotivo.php?grh=1', 'Acessa o Cadastro de Motivo de Saída');
-        $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão');
         $menu->add_item('link', 'Nacionalidade', 'cadastroNacionalidade.php?grh=1', 'Acessa o Cadastro de Nacionalidade');
         $menu->add_item('link', 'País', 'cadastroPais.php?grh=1', 'Acessa o Cadastro de Pais');
-        $menu->add_item('link', 'Estado', 'cadastroEstado.php?grh=1', 'Acessa o Cadastro de Estados');
-        $menu->add_item('link', 'Cidades', 'cadastroCidade.php?grh=1', 'Acessa o Cadastro de Cidades');
+        $menu->add_item('link', 'Tipos de Nomeação', 'cadastroTipoNomeacao.php?grh=1', 'Acessa o Cadastro de Tipos de nomeação');
         $menu->add_item('link', 'Tipos de Penalidades', 'cadastroTipoPenalidades.php?grh=1', 'Acessa o Cadastro de Tipos de penalidades');
+        $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão');
 
         $menu->show();
         $painel->fecha();

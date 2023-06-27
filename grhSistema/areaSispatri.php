@@ -82,11 +82,14 @@ if ($acesso) {
 
         # Importar
         if ($fase == "resumo") {
-            $botaoImp = new Link("Importar", "?fase=regras");
-            $botaoImp->set_class('button');
-            $botaoImp->set_title('Importa arquivo cvs');
-            $botaoImp->set_accessKey('I');
-            $menu1->add_link($botaoImp, "right");
+
+            if (Verifica::acesso($idUsuario, [1, 13])) {
+                $botaoImp = new Link("Importar", "?fase=regras");
+                $botaoImp->set_class('button');
+                $botaoImp->set_title('Importa arquivo cvs');
+                $botaoImp->set_accessKey('I');
+                $menu1->add_link($botaoImp, "right");
+            }
 
             if ($parametroSituacao == "Não Entregaram") {
 
@@ -375,15 +378,15 @@ if ($acesso) {
             if ($parametroAfastamento == "Todos") {
                 $sispatri->exibeEmails();
             }
-            
-            if ($parametroAfastamento == "Férias") {    
+
+            if ($parametroAfastamento == "Férias") {
                 $sispatri->exibeEmailsFerias();
             }
-            
+
             if ($parametroAfastamento == "Licença Prêmio") {
                 $sispatri->exibeEmailsLicPremio();
             }
-            
+
             if ($parametroAfastamento == "Licença Médica") {
                 $sispatri->exibeEmailsLicMedica();
             }
@@ -542,8 +545,8 @@ if ($acesso) {
                     $parte = explode(";", $linha);
 
                     # Percorre as partes da linha
-                    foreach ($parte as $pp) {                        
-                       
+                    foreach ($parte as $pp) {
+
                         # Verifica se a linha está em branco
                         if (!empty($pp)) {
 
@@ -569,12 +572,12 @@ if ($acesso) {
                             }
                             $contador++;
                         }
-                        
-                        
+
+
                         if (validaCpf($cpf)) {
                             $certos++;
                         } else {
-                            $cpf = null;                            
+                            $cpf = null;
                         }
                     }
 

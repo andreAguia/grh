@@ -26,7 +26,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou o cadastro de Tipos de Penalidades";
+        $atividade = "Visualizou o cadastro de Tipos de Nomeação";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -46,25 +46,30 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo
-    $objeto->set_nome('Tipo de Penalidades');
+    $objeto->set_nome('Tipos de Nomeação');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT idTipoPenalidade,
-                                      penalidade,
-                                      obs,
-                                      idTipoPenalidade
-                                 FROM tbtipopenalidade
-                             ORDER BY idTipoPenalidade');
+    $objeto->set_selectLista("SELECT idTipoNomeacao,
+                                     nome,
+                                     descricao,
+                                     remunerado,
+                                     visibilidade,
+                                     idTipoNomeacao
+                                FROM tbtiponomeacao
+                            ORDER BY idTipoNomeacao");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT penalidade,
-                                     obs
-                                FROM tbtipopenalidade
-                               WHERE idTipoPenalidade = ' . $id);
-    
+    $objeto->set_selectEdita("SELECT nome,
+                                     descricao,
+                                     remunerado,
+                                     visibilidade,
+                                     idTipoNomeacao
+                               FROM tbtiponomeacao
+                              WHERE idTipoNomeacao = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -77,18 +82,18 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Tipo de Penalidade", "Obs"));
-    $objeto->set_width(array(5, 20, 65));
-    $objeto->set_align(array("center", "left", "left"));
+    $objeto->set_label(["Id", "Tipo de Nomeação", "Descrição", "Remunerado?", "Visibilidade"]);
+    $objeto->set_align(["center", "left", "left"]);
+    $objeto->set_width([5, 20, 30, 10, 25]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbtipopenalidade');
+    $objeto->set_tabela('tbtiponomeacao');
 
     # Nome do campo id
-    $objeto->set_idCampo('idTipoPenalidade');
+    $objeto->set_idCampo('idTipoNomeacao');
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
@@ -96,17 +101,35 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
-            'nome' => 'penalidade',
-            'label' => 'Tipo de Penalidade:',
+            'col' => 6,
+            'nome' => 'nome',
+            'label' => 'Tipo de Nomeação:',
             'tipo' => 'texto',
             'required' => true,
             'autofocus' => true,
-            'size' => 30),
+            'size' => 100),
         array('linha' => 2,
-            'nome' => 'obs',
-            'label' => 'Observação:',
-            'tipo' => 'textarea',
-            'size' => array(80, 5))));
+            'col' => 12,
+            'nome' => 'descricao',
+            'label' => 'Descrição:',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 250),
+        array('linha' => 3,
+            'col' => 2,
+            'nome' => 'remunerado',
+            'label' => 'Remunerado?:',
+            'tipo' => 'simnao2',
+            'required' => true,
+            'size' => 1),
+        array('linha' => 3,
+            'col' => 4,
+            'nome' => 'visibilidade',
+            'tipo' => 'combo',
+            'label' => 'Descrição:',
+            'array' => ["Em todas as listagens", "Somente na cadastro do servidor"],
+            'required' => true,
+            'size' => 20)));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

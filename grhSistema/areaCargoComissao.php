@@ -84,8 +84,8 @@ if ($acesso) {
         $linkVoltar->set_accessKey('V');
         $menu1->add_link($linkVoltar, "left");
 
-        $botao = new Button('Tipos');
-        $botao->set_title('Informa os Tipos de Cargos em Comissão');
+        $botao = new Button('Tipos de Nomeação');
+        $botao->set_title('Informa os tipos de nomeação para os cargos em comissão');
         $botao->set_url("?fase=exibeQuadro");
         $botao->set_target("_blank2");
         $menu1->add_link($botao, "right");

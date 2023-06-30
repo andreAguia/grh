@@ -1031,6 +1031,42 @@ class Pessoal extends Bd {
 
     /**
      * Método get_cargoCompleto
+     * Identico ao método de cargo completo2 só que sem exibir o cargo em comissão
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoCompleto4($idServidor) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbtipocargo.sigla,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        if ($row["idPerfil"] == 2) {
+            p("Exercendo função equivalente ao", "pLinha3");
+            p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+        } else {
+            plista(
+                    $row["cargo"],
+                    $row["area"],
+                    $row["nome"],
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoCompleto
      * Informa o cargo completo do servidor
      * 
      * @param string $idServidor    null idServidor do servidor
@@ -2717,12 +2753,12 @@ class Pessoal extends Bd {
         $cargoComissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao, tipo
-                     FROM tbcomissao
-                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+        $select = "SELECT idComissao, tipo
+                     FROM tbcomissao JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbtiponomeacao.visibilidade <> 2
+                      AND ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (CURRENT_DATE >= dtNom AND dtExo is null))
-                      AND tipo <> 3 
-                      AND idServidor = ' . $idServidor;
+                      AND idServidor = {$idServidor}";
 
         $row = parent::select($select);
         $num = parent::count($select);
@@ -2738,7 +2774,7 @@ class Pessoal extends Bd {
             $idComissao = $rr[0];
 
             # Informa o tipo
-            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+            if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
                 $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
 
@@ -2791,11 +2827,12 @@ class Pessoal extends Bd {
         $cargoComissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao, tipo
-                     FROM tbcomissao
-                    WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+        $select = "SELECT idComissao, tipo
+                     FROM tbcomissao JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbtiponomeacao.visibilidade <> 2
+                      AND ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (CURRENT_DATE >= dtNom AND dtExo is null))
-                    AND idServidor = ' . $idServidor;
+                    AND idServidor = {$idServidor}";
 
         $row = parent::select($select);
         $num = parent::count($select);
@@ -2811,7 +2848,7 @@ class Pessoal extends Bd {
             $idComissao = $rr[0];
 
             # Informa o tipo
-            if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+            if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
                 $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
             }
 
@@ -2888,14 +2925,14 @@ class Pessoal extends Bd {
         $comissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
-        $select = 'SELECT idComissao,
+        $select = "SELECT idComissao,
                           tipo,
                           idTipoComissao
                      FROM tbcomissao
                     WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
                        OR (CURRENT_DATE >= dtNom AND dtExo is null))
-                      AND tipo <> 3
-                      AND idServidor = ' . $idServidor;
+                      AND tipo <> 4
+                      AND idServidor = {$idServidor}";
 
         $row = parent::select($select);
         $count = parent::count($select);
@@ -2918,7 +2955,7 @@ class Pessoal extends Bd {
 
             if (!empty($rr[1])) {
                 # Informa o tipo
-                if ($rr[1] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
+                if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
                     $cargoComissao = new CargoComissao();
                     $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
                 }

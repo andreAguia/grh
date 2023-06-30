@@ -36,8 +36,10 @@ if ($acesso) {
                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                     JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                                    JOIN tbdescricaocomissao  USING (idDescricaoComissao)    
-           WHERE tbtipocomissao.ativo IS true
+                                    JOIN tbdescricaocomissao  USING (idDescricaoComissao)
+                                    JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+           WHERE tbtiponomeacao.visibilidade <> 2
+             AND tbtipocomissao.ativo IS true
              AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo) 
              AND tbcomissao.tipo <> 3
            ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';

@@ -31,6 +31,9 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
+    # Pega os tipos de nomeação
+    $tipoNom = new TipoNomeacao();
+
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -51,15 +54,24 @@ if ($acesso) {
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
 
+    $select = "SELECT idTipoNomeacao,
+                      nome,
+                      descricao,
+                      IF(remunerado = 1,'Sim','Não'),
+                      CASE";
+
+    foreach ($tipoNom->tiposVisibilidade as $tt) {
+        $select .= " WHEN visibilidade = {$tt[0]} THEN '{$tt[1]}'";
+    }
+
+    $select .= "          ELSE '---'
+                      END,                            
+                      idTipoNomeacao
+                 FROM tbtiponomeacao
+             ORDER BY idTipoNomeacao";
+    
     # select da lista
-    $objeto->set_selectLista("SELECT idTipoNomeacao,
-                                     nome,
-                                     descricao,
-                                     remunerado,
-                                     visibilidade,
-                                     idTipoNomeacao
-                                FROM tbtiponomeacao
-                            ORDER BY idTipoNomeacao");
+    $objeto->set_selectLista($select);
 
     # select do edita
     $objeto->set_selectEdita("SELECT nome,
@@ -127,7 +139,10 @@ if ($acesso) {
             'nome' => 'visibilidade',
             'tipo' => 'combo',
             'label' => 'Descrição:',
-            'array' => ["Em todas as listagens", "Somente na cadastro do servidor"],
+            'array' => [
+                [1, "Em todas as listagens"],
+                [2, "Somente na cadastro do servidor"]
+            ],
             'required' => true,
             'size' => 20)));
 

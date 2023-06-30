@@ -362,12 +362,12 @@ if ($acesso) {
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Admissão', 'Cargo - Área - Função (Comissão)', 'Concurso', 'Data de Saída', 'Motivo'));
-    $relatorio->set_width(array(12, 30, 20, 12, 26));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, "Pessoal", "Pessoal"));
-    $relatorio->set_metodo(array(null, "get_CargoCompleto2", "get_concursoRelatorio"));
+    $relatorio->set_label(['Admissão', 'Cargo - Área - Função (Comissão)', 'Concurso', 'Data de Saída', 'Motivo']);
+    $relatorio->set_width([12, 30, 20, 12, 26]);
+    $relatorio->set_align(['center']);
+    $relatorio->set_funcao(["date_to_php", null, null, "date_to_php"]);
+    $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
+    $relatorio->set_metodo([null, "get_CargoCompleto4", "get_concursoRelatorio"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -802,27 +802,28 @@ if ($acesso) {
     if ($postCargo) {
         tituloRelatorio('Histórico de Cargos em Comissão');
 
-        $select = 'SELECT concat(tbtipocomissao.descricao," - (",tbtipocomissao.simbolo,")") as comissao,
+        $select = "SELECT concat(tbtipocomissao.descricao,' - (',tbtipocomissao.simbolo,')') as comissao,
                           tbtipocomissao.valsal,
                           tbcomissao.dtNom,
                           tbcomissao.numProcNom,
                           tbcomissao.dtExo,
                           tbcomissao.numProcExo,
                           tbcomissao.dtPublicExo
-                     FROM tbcomissao, tbtipocomissao
-                    WHERE tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao 
-                      AND idServidor = ' . $idServidorPesquisado . '
-                 ORDER BY dtNom desc';
+                     FROM tbcomissao JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
+                                     JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbtiponomeacao.visibilidade <> 2
+                      AND idServidor = {$idServidorPesquisado}
+                 ORDER BY dtNom desc";
 
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Cargo', 'Valor', 'Nomeação', 'Processo', 'Exoneração', 'Processo'));
-        $relatorio->set_width(array(20, 10, 15, 20, 15, 20));
-        $relatorio->set_funcao(array(null, 'formataMoeda', 'date_to_php', null, 'date_to_php'));
-        $relatorio->set_align(array('left'));
+        $relatorio->set_label(['Cargo', 'Valor', 'Nomeação', 'Processo', 'Exoneração', 'Processo']);
+        $relatorio->set_width([20, 10, 15, 20, 15, 20]);
+        $relatorio->set_funcao([null, 'formataMoeda', 'date_to_php', null, 'date_to_php']);
+        $relatorio->set_align(['left']);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);

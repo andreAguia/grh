@@ -431,11 +431,11 @@ if ($acesso) {
 
         case "atualizacoes" :
 
-# Limita a tela
+            # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
 
-# Verifica se veio menu grh e registra o acesso no log
+            # Verifica se veio menu grh e registra o acesso no log
             $grh = get('grh', false);
             if ($grh) {
                 # Grava no log a atividade
@@ -444,20 +444,20 @@ if ($acesso) {
                 $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             }
 
-# botão voltar
+            # botão voltar
             botaoVoltar("?", "Voltar", "Volta ao Menu principal");
 
-# Título
+            # Título
             titulo("Detalhes das Atualizações");
 
-# Limita ainda mais a tela para o painel
+            # Limita ainda mais a tela para o painel
             $grid = new Grid("center");
             $grid->abreColuna(10);
 
-# Pega os dados 
+            # Pega os dados 
             $atualizacoes = $intra->get_atualizacoes();
 
-# Percorre os dados
+            # Percorre os dados
             foreach ($atualizacoes as $valor) {
 
                 p("Versão: " . $valor[0] . " - " . date_to_php($valor[1]), "patualizacao");

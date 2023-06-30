@@ -46,12 +46,14 @@ if ($acesso) {
                                  LEFT JOIN tbcomissao USING(idServidor)
                                  LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                       JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                WHERE tbtipocomissao.idTipoComissao = $parametroCargo
+                                      JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                WHERE tbtiponomeacao.visibilidade <> 2
+                  AND tbtipocomissao.idTipoComissao = {$parametroCargo}
                   AND tbcomissao.tipo <> 3";
 
     # Descrição
     if ($parametroDescricao <> "Todos") {
-        $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
+        $select .= " AND tbcomissao.idDescricaoComissao = {$parametroDescricao}";
     }
 
     # Período

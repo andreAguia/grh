@@ -37,7 +37,9 @@ if ($acesso) {
                                         LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)                                        
                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                                              JOIN tbdescricaocomissao USING (idDescricaoComissao)
-                    WHERE tbtipocomissao.ativo IS true
+                                             JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbtiponomeacao.visibilidade <> 2
+                      AND tbtipocomissao.ativo IS true
                       AND tbcomissao.tipo <> 3
                  ORDER BY tbtipocomissao.simbolo, tbdescricaocomissao.descricao, tbcomissao.dtNom desc';
 

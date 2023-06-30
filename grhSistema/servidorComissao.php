@@ -19,6 +19,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados    
     $pessoal = new Pessoal();
     $cargoComissao = new CargoComissao();
+    $tipoNomeacao = new TipoNomeacao();
     $intra = new Intra();
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -266,7 +267,7 @@ if ($acesso) {
             array_unshift($ocupanteAnterior, [null, null]);
         }
     }
-
+        
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'idTipoComissao',
@@ -280,7 +281,7 @@ if ($acesso) {
             'title' => 'Tipo dp Cargo em Comissão',
             'linha' => 1),
         array('linha' => 1,
-            'col' => 7,
+            'col' => 6,
             'nome' => 'idDescricaoComissao',
             'label' => 'Descrição do Cargo:',
             'tipo' => 'combo',
@@ -289,16 +290,10 @@ if ($acesso) {
         array('nome' => 'tipo',
             'label' => 'Tipo de Nomeação:',
             'tipo' => 'combo',
-            'array' => $cargoComissao->tipos,
-//            'array' => [
-//                [0, "Padrão"],
-//                [1, "Pro Tempore"],
-//                [2, "Designado"],
-//                [3, "Temporário"]
-//            ],
+            'array' => $tipoNomeacao->get_tipos(),
             'required' => true,
             'size' => 20,
-            'col' => 2,
+            'col' => 3,
             'title' => 'Informa o tipo de nomeação.',
             'linha' => 1),
         array('linha' => 2,
@@ -324,28 +319,28 @@ if ($acesso) {
             'required' => true,
             'title' => 'Data da Nomeação.',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'dtAtoNom',
             'label' => 'Data do Ato do Reitor:',
             'title' => 'Data do Ato do Reitor da Nomeação',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'numProcNom',
             'label' => 'Processo:',
             'tipo' => 'processo',
             'size' => 30,
             'title' => 'Número do Processo',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'dtPublicNom',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
-            'linha' => 2),
+            'linha' => 3),
         array('nome' => 'dtExo',
             'label' => 'Data da Exoneração:',
             'fieldset' => 'Exoneração',
@@ -353,29 +348,29 @@ if ($acesso) {
             'col' => 3,
             'size' => 20,
             'title' => 'Data da Exoneração.',
-            'linha' => 3),
+            'linha' => 4),
         array('nome' => 'dtAtoExo',
             'label' => 'Data do Ato do Reitor:',
             'title' => 'Data do Ato do Reitor da Exoneraçao',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'linha' => 3),
+            'linha' => 4),
         array('nome' => 'numProcExo',
             'label' => 'Processo:',
             'tipo' => 'texto',
             'size' => 30,
             'col' => 3,
             'title' => 'Processo de Exoneração',
-            'linha' => 3),
+            'linha' => 4),
         array('nome' => 'dtPublicExo',
             'label' => 'Data da Publicação:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
             'title' => 'Data da Publicação no DOERJ.',
-            'linha' => 3),
-        array('linha' => 4,
+            'linha' => 4),
+        array('linha' => 5,
             'nome' => 'obs',
             'col' => 12,
             'label' => 'Observação:',
@@ -388,7 +383,7 @@ if ($acesso) {
             'padrao' => $idServidorPesquisado,
             'size' => 5,
             'title' => 'Matrícula',
-            'linha' => 5)));
+            'linha' => 6)));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

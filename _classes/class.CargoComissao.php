@@ -1,26 +1,11 @@
 <?php
 
 class CargoComissao {
-
     /**
      * Abriga as várias rotina do Cadastro de cargo em Comissao
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
-    ###########################################################
-    /*
-     *  Variáveis
-     */
-
-    # Tipos de Nomeação
-    # Ordem: número, nome, descrição, Remunerado?, Vicibilidade
-    public $tipos = [
-        [0, "Padrão", "Nomeação padrão.", "Sim", "Em todas as listagens"],
-        [1, "Pro Tempore", "Nomeação Temporária até final do mandato.", "Sim", "Em todas as listagens"],
-        [2, "Designado", "Designado para ocupar um cargo que ainda não existe oficialmente.", "Não", "Em todas as listagens"],
-        [3, "Designação Temporária", "Responde pelo cargo temporariamente enquanto o nomeado está em algum afastamento", "Não", "Somente na cadastro do servidor"],
-    ];
-
     ###########################################################
 
     /**
@@ -40,7 +25,7 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT *
                    FROM tbcomissao
-                  WHERE idComissao = $idComissao";
+                  WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -58,7 +43,7 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tipo
                    FROM tbcomissao
-                  WHERE idComissao = $idComissao";
+                  WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -67,11 +52,12 @@ class CargoComissao {
             return null;
         } else {
             # Informa o tipo
-            if ($dados['tipo'] == 0) {
-                // O tipo 0 (padrão) não precisa ser ressaltado
+            if ($dados['tipo'] == 1) {
+                // O tipo 1 (padrão) não precisa ser ressaltado
                 return null;
             } else {
-                return $this->tipos[$dados['tipo']][1];
+                $TipoNomeacao = new TipoNomeacao();
+                return $TipoNomeacao->get_nome($dados['tipo']);
             }
         }
     }
@@ -86,7 +72,7 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao JOIN tbcomissao USING (idDescricaoComissao)
-                    WHERE idComissao = $idComissao";
+                    WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -148,13 +134,17 @@ class CargoComissao {
             );
         }
 
+        # Acessa a classe
+        $tipoNom = new TipoNomeacao();
+
         # Informa o tipo
-        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-            if ($dados['tipo'] == 3) {
-                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);
+        if ($dados['tipo'] > 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+            # Verifica a visibilidade            
+            if ($tipoNom->get_visibilidade($dados['tipo']) == 2) {
+                label($tipoNom->get_nome($dados['tipo']), "warning", null, $tipoNom->get_descricao($dados['tipo']));
                 p("Esta designação temporária não será<br/>exibida nos relatórios ordinários", "vermelho", "f10");
             } else {
-                label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
+                label($tipoNom->get_nome($dados['tipo']), null, null, $tipoNom->get_descricao($dados['tipo']));
             }
         }
     }
@@ -187,12 +177,17 @@ class CargoComissao {
             );
         }
 
+        # Acessa a classe
+        $tipoNom = new TipoNomeacao();
+
         # Informa o tipo
-        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-            if ($dados['tipo'] == 3) {
-                label($this->tipos[$dados['tipo']][1], "secondary", null, $this->tipos[$dados['tipo']][2]);
+        if ($dados['tipo'] > 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+            # Verifica a visibilidade            
+            if ($tipoNom->get_visibilidade($dados['tipo']) == 2) {
+                label($tipoNom->get_nome($dados['tipo']), "warning", null, $tipoNom->get_descricao($dados['tipo']));
+                p("Esta designação temporária não será<br/>exibida nos relatórios ordinários", "vermelho", "f10");
             } else {
-                label($this->tipos[$dados['tipo']][1], null, null, $this->tipos[$dados['tipo']][2]);
+                label($tipoNom->get_nome($dados['tipo']), null, null, $tipoNom->get_descricao($dados['tipo']));
             }
         }
     }
@@ -209,11 +204,12 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
-                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                                          JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbcomissao.idTipoComissao = {$idTipoCargo}
                       AND situacao = 1
                       AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
-                      AND (tbcomissao.tipo is null OR tbcomissao.tipo = 0 OR tbcomissao.tipo = 1)";  // Curioso bug... tbcomissao.tipo <> 2 não funcionou
-        // devido a alguns valores nulos cadastrado no campo tipo
+                      AND tbtiponomeacao.visibilidade <> 2";
+
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
         return $dados;
@@ -231,10 +227,10 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
-                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                    WHERE tbcomissao.idTipoComissao = {$idTipoCargo}
                       AND situacao = 1
                       AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
-                      AND tbcomissao.tipo = 2";
+                      AND tbcomissao.tipo = 3";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
@@ -253,10 +249,10 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
-                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                    WHERE tbcomissao.idTipoComissao = {$idTipoCargo}
                       AND situacao = 1
                       AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
-                      AND tbcomissao.tipo = 3";
+                      AND tbcomissao.tipo = 4";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
@@ -275,10 +271,10 @@ class CargoComissao {
         # Pega os dados
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbcomissao USING(idServidor)
-                    WHERE tbcomissao.idTipoComissao = $idTipoCargo
+                    WHERE tbcomissao.idTipoComissao = {$idTipoCargo}
                       AND situacao = 1
                       AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
-                      AND tbcomissao.tipo = 1";
+                      AND tbcomissao.tipo = 2";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->count($select);
@@ -346,11 +342,12 @@ class CargoComissao {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($dados);
-        $tabela->set_label(array("Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Disponíveis", "Pro Tempore", "Designados"));
+        $tabela->set_label(["Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Disponíveis", "Pro Tempore", "Designados"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_align(array("center"));
+        $tabela->set_align(["center"]);
         $tabela->set_titulo($nomeCargo);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 5,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 5,
                 'valor' => 0,
                 'operador' => '<',
                 'id' => "comissaoVagasNegativas"),
@@ -366,11 +363,11 @@ class CargoComissao {
 
         # Exibe alerta de nomeação a maios que vagas
         if ($nomeados > $vagas) {
+
+            titulotable("Atenção");
             $painel = new Callout("warning");
             $painel->abre();
-
-            p("ATENÇÂO !!!<br/>Existem mais servidores nomeados que vagas !!<br/>$vagas Vagas<br/>$nomeados Servidores Nomeados", "center");
-
+            p("Existem mais servidores nomeados que vagas !!<br/>$vagas Vagas - $nomeados Servidores Nomeados", "center", "f14");
             $painel->fecha();
         }
     }
@@ -468,7 +465,7 @@ class CargoComissao {
         # Pega os Servidores com a mesma descrição
         $select = "SELECT idServidor
                      FROM tbcomissao
-                    WHERE idDescricaoComissao = $idDescricaoComissao 
+                    WHERE idDescricaoComissao = {$idDescricaoComissao}
                  ORDER BY dtNom desc
                     LIMIT 2";
 
@@ -570,9 +567,12 @@ class CargoComissao {
         }
 
         if (!empty($dados["tipo"])) {
+            # Acessa a classe
+            $tipoNom = new TipoNomeacao();
+
             # Informa o tipo
-            if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-                $retorna .= "<span id='orgaoCedido'>({$this->tipos[$dados['tipo']][1]})</span>";
+            if ($dados['tipo'] > 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+                $retorna .= "<span id='orgaoCedido'>({$tipoNom->get_nome($dados['tipo'])})</span>";
             }
         }
 
@@ -680,10 +680,10 @@ class CargoComissao {
         echo $this->get_descricaoCargo($idComissao);
 
         # Informa o tipo
-        if ($dados['tipo'] <> 0) { // O tipo 0 (padrão) não precisa ser ressaltado
-            label($this->tipos[$dados['tipo']][1]);
+        if ($dados['tipo'] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+            $TipoNomeacao = new TipoNomeacao();
+            label($TipoNomeacao->get_nome($dados['tipo']));
         }
-
         return;
     }
 
@@ -778,9 +778,9 @@ class CargoComissao {
      */
     public function get_obs($idTipoCargo) {
 
-        $select = 'SELECT obs                             
+        $select = "SELECT obs                             
                      FROM tbtipocomissao 
-                    WHERE idTipoComissao = ' . $idTipoCargo;
+                    WHERE idTipoComissao = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -796,9 +796,9 @@ class CargoComissao {
      */
     public function exibeObs($idTipoCargo) {
 
-        $select = 'SELECT obs                             
+        $select = "SELECT obs                             
                      FROM tbtipocomissao 
-                    WHERE idTipoComissao = ' . $idTipoCargo;
+                    WHERE idTipoComissao = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -845,7 +845,7 @@ class CargoComissao {
         $select = 'SELECT idServidor                             
                      FROM tbcomissao 
                     WHERE idTipoComissao = 13 
-                      AND tipo <> 2 
+                      AND tipo <> 3 
                       AND (
                       (CAST("' . date_to_bd($data) . '" AS DATE) BETWEEN dtNom AND dtExo) OR (dtExo IS NULL AND dtNom <= CAST("' . date_to_bd($data) . '" AS DATE))
                       )';
@@ -870,12 +870,14 @@ class CargoComissao {
      */
     public function exibeQuadroTipoNomeacao() {
 
+        # Acessa a classe
+        $tipoNom = new TipoNomeacao();
+
         $tabela = new Tabela();
         $tabela->set_titulo("Tipos de Nomeação");
-        $tabela->set_conteudo($this->tipos);
+        $tabela->set_conteudo($tipoNom->get_tipos());
         $tabela->set_label(["#", "Nome", "Descrição", "Remunerado?", "Visibilidade"]);
         $tabela->set_align(["center", "center", "left", "center", "center"]);
-        $tabela->set_totalRegistro(false);
         $tabela->show();
     }
 

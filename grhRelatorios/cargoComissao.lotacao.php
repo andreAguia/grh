@@ -43,9 +43,10 @@ if ($acesso) {
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
                                      JOIN tbhistlot ON(tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)     
+                                     JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+              WHERE tbtiponomeacao.visibilidade <> 2
+                AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)     
                 AND tbservidor.situacao = 1
-                AND tbcomissao.tipo <> 3
                 AND tbcomissao.dtExo is null';
 
     # lotacao

@@ -18,8 +18,9 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    $comissao = new CargoComissao();
     $lotacao = new Lotacao();
+    $comissao = new CargoComissao();
+    $tipoNom = new TipoNomeacao();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -113,9 +114,6 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
         }
         $menu1->show();
-
-        titulo("Cargo em Comissão");
-        br();
     }
 
     switch ($fase) {
@@ -227,7 +225,11 @@ if ($acesso) {
             $obs = $comissao->get_obs($parametroCargo);
 
             if (!is_null($obs)) {
-                callout($obs);
+                titulotable("Obs");
+                $painel = new Callout("primary");
+                $painel->abre();
+                p(nl2br($obs), "f12");
+                $painel->fecha();
             }
 
             # select
@@ -237,10 +239,11 @@ if ($acesso) {
                               tbcomissao.idComissao,
                               tbcomissao.idComissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbcomissao USING(idServidor)
+                                         LEFT JOIN tbcomissao USING (idServidor)
                                          LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
-                                              JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                       WHERE tbcomissao.tipo <> 3
+                                              JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                                              JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                       WHERE tbtiponomeacao.visibilidade <> 2
                          AND tbtipocomissao.idTipoComissao = {$parametroCargo}";
 
             # Descrição
@@ -281,14 +284,13 @@ if ($acesso) {
             break;
 
         ################################################################
-
         case "movimentacaoPorNomExo":
 
             # Informa a origem
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorNomExo');
 
             # Pega os tipos de nomeação
-            $tiposNomeacao = $comissao->tipos;
+            $tiposNomeacao = $tipoNom->get_tipos();
 
             $form = new Form('?fase=movimentacaoPorNomExo');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
@@ -318,7 +320,7 @@ if ($acesso) {
                       (SELECT CASE";
 
             foreach ($tiposNomeacao as $tipo) {
-                if ($tipo[0] == 0) {
+                if ($tipo[0] == 1) {
                     $tipo[1] = "Nomeação";
                 }
                 $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
@@ -391,7 +393,7 @@ if ($acesso) {
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorPublicacao');
 
             # Pega os tipos de nomeação
-            $tiposNomeacao = $comissao->tipos;
+            $tiposNomeacao = $tipoNom->get_tipos();
 
             $form = new Form('?fase=movimentacaoPorPublicacao');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
@@ -432,7 +434,7 @@ if ($acesso) {
                       (SELECT CASE";
 
                 foreach ($tiposNomeacao as $tipo) {
-                    if ($tipo[0] == 0) {
+                    if ($tipo[0] == 1) {
                         $tipo[1] = "Nomeação";
                     }
                     $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
@@ -504,7 +506,7 @@ if ($acesso) {
             set_session('origem', 'areaCargoComissao.php?fase=movimentacaoPorAto');
 
             # Pega os tipos de nomeação
-            $tiposNomeacao = $comissao->tipos;
+            $tiposNomeacao = $tipoNom->get_tipos();
 
             $form = new Form('?fase=movimentacaoPorAto');
             $controle = new Input('parametroAno', 'texto', 'Ano:', 1);
@@ -545,7 +547,7 @@ if ($acesso) {
                       (SELECT CASE";
 
                 foreach ($tiposNomeacao as $tipo) {
-                    if ($tipo[0] == 0) {
+                    if ($tipo[0] == 1) {
                         $tipo[1] = "Nomeação";
                     }
                     $select .= " WHEN tbcomissao.tipo = {$tipo[0]} THEN '{$tipo[1]}'";
@@ -674,7 +676,7 @@ if ($acesso) {
             break;
 
         ################################################################
-        # Relatório
+
         case "exibeQuadro" :
             $cargoComissao = new CargoComissao();
             $cargoComissao->exibeQuadroTipoNomeacao();

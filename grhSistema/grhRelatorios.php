@@ -236,7 +236,7 @@ if ($acesso) {
 
         case "cargoEmComissao";
             $menu = new Menu();
-            $menu->add_item('titulo', 'Cargos');
+            $menu->add_item('titulo', 'Cargos Em Comissão');
             $menu->add_item('titulo1', 'Relação dos Cargos');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Ativos', '../grhRelatorios/cargoComissao.ativos.php');
             $menu->add_item('linkWindow', 'Relatório dos Cargos em Comissão Inativos', '../grhRelatorios/cargoComissao.inativos.php');
@@ -251,10 +251,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Adm & Tec', '../grhRelatorios/cargoComissao.admTec.php');
 
             $menu->add_item('titulo1', 'Histórico');
-            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Ativos', '../grhRelatorios/cargoComissao.histiorico.cargosAtivos.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Intivos', '../grhRelatorios/cargoComissao.histiorico.cargosInativos.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Docentes - Histórico por Ano', '../grhRelatorios/cargoComissao.histiorico.docentes.porAno.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Adm & Tec - Histórico por Ano', '../grhRelatorios/cargoComissao.histiorico.admTec.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Ativos', '../grhRelatorios/cargoComissao.historico.cargosAtivos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores - com Cargos em Comissão - Histórico - Cargos Inativos', '../grhRelatorios/cargoComissao.historico.cargosInativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Docentes - Histórico por Ano', '../grhRelatorios/cargoComissao.historico.docentes.porAno.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - com Cargos em Comissão - Adm & Tec - Histórico por Ano', '../grhRelatorios/cargoComissao.historico.admTec.porAno.php');
 
             $menu->show();
             break;

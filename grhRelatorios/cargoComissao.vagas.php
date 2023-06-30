@@ -44,8 +44,9 @@ if ($acesso) {
                                 LEFT JOIN tbcomissao ON(tbservidor.idServidor = tbcomissao.idServidor)
                                 LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
                                      JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-              WHERE tbservidor.situacao = 1
-                AND tbcomissao.tipo <> 3
+                                     JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+              WHERE tbtiponomeacao.visibilidade <> 2
+                AND tbservidor.situacao = 1
                 AND tbcomissao.dtExo is null';
 
     # cargo em comissão

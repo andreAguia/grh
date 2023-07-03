@@ -2647,9 +2647,9 @@ class Pessoal extends Bd {
                 br();
                 span($this->get_dtAdmissao($idServidor) . " - " . $this->get_dtSaida($idServidor), "f11");
             }
-            
+
             # Informa se é ex-fenorte
-            if($this->exFenorte($idServidor)){
+            if ($this->exFenorte($idServidor)) {
                 br();
                 span("ex-Fenorte", "roxo");
             }
@@ -2749,7 +2749,8 @@ class Pessoal extends Bd {
      */
     function get_cargoComissao($idServidor) {
 
-        # Classe CargoComissão
+        # Classe
+        $tipoNomeacao = new TipoNomeacao();
         $cargoComissao = new CargoComissao();
 
         # Pega o id do cargo em comissão (se houver)		 
@@ -2775,7 +2776,7 @@ class Pessoal extends Bd {
 
             # Informa o tipo
             if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
-                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
+                $tipo = " - {$tipoNomeacao->get_nome($rr[1])}";
             }
 
             # Verifica se tem cargo
@@ -2823,8 +2824,9 @@ class Pessoal extends Bd {
      */
     function get_cargoComissao2($idServidor) {
 
-        # Classe CargoComissão
+        # Classes
         $cargoComissao = new CargoComissao();
+        $tipoNomeacao = new TipoNomeacao();
 
         # Pega o id do cargo em comissão (se houver)		 
         $select = "SELECT idComissao, tipo
@@ -2849,7 +2851,7 @@ class Pessoal extends Bd {
 
             # Informa o tipo
             if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
-                $tipo = " - {$cargoComissao->tipos[$rr[1]][1]}";
+                $tipo = " - {$tipoNomeacao->get_nome($rr[1])}";
             }
 
             # Verifica se tem cargo
@@ -3989,7 +3991,7 @@ class Pessoal extends Bd {
         # Perfil
         if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
             $select .= " AND idPerfil = {$idPerfil}";
-        }else{
+        } else {
             $select .= " AND tbperfil.tipo <> 'Outros'";
         }
 
@@ -4012,7 +4014,7 @@ class Pessoal extends Bd {
         # Perfil
         if ((!is_null($idPerfil)) and ($idPerfil <> "*")) {
             $select .= " AND idPerfil = {$idPerfil}";
-        }else{
+        } else {
             $select .= " AND tbperfil.tipo <> 'Outros'";
         }
 

@@ -70,7 +70,7 @@ if ($acesso) {
                       idTipoNomeacao
                  FROM tbtiponomeacao as tt
              ORDER BY idTipoNomeacao";
-    
+
     # select da lista
     $objeto->set_selectLista($select);
 
@@ -95,13 +95,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Tipo de Nomeação", "Descrição", "Remunerado?", "Visibilidade","Nomeações<br/>Cadastradas"]);
+    $objeto->set_label(["Id", "Tipo de Nomeação", "Descrição", "Remunerado?", "Visibilidade", "Nomeações<br/>Cadastradas"]);
     $objeto->set_align(["center", "left", "left"]);
     $objeto->set_width([5, 20, 30, 10, 25]);
-    
+
     $objeto->set_classe([null, null, null, null, null, "TipoNomeacao"]);
     $objeto->set_metodo([null, null, null, null, null, "get_numNomeacoesPorTipo"]);
-
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -161,8 +160,17 @@ if ($acesso) {
             $objeto->listar();
             break;
 
-        case "editar" :
         case "excluir" :
+            # Verifica se a tipo de nomeação possui registros
+            $tiponom = new TipoNomeacao();
+            if ($tipoNom->get_numNomeacoesPorTipo($id) > 1) {
+                alert("Não é possível excluir pois existem nomeações cadastradas com esse tipo.");
+                back(1);
+            } else {
+                $objeto->excluir($id);
+            }
+            break;
+        case "editar" :
         case "gravar" :
             $objeto->$fase($id);
             break;

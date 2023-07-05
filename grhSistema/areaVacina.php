@@ -461,8 +461,8 @@ if ($acesso) {
                                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                                    AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 } else {
-                    $select = "SELECT 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                                      'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+                    $select = "SELECT tbpessoa.nome,
+                                      rr.idServidor,
                                       concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
                                       rr.idServidor
                                  FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
@@ -511,10 +511,8 @@ if ($acesso) {
                     $relatorio->set_label(["Servidor", "Cargo", "Lotação", "Vacinas"]);
                     $relatorio->set_align(["left", "left", "left", "left", "left"]);
                     $relatorio->set_width([30, 30, 0, 40]);
-                    $relatorio->set_classe([null, null, null, "Vacina"]);
-                    $relatorio->set_metodo([null, null, null, "exibeVacinas"]);
-//                    $relatorio->set_classe([null, "pessoal", null, "Vacina"]);
-//                    $relatorio->set_metodo([null, "get_cargoSimples", null, "exibeVacinas"]);
+                    $relatorio->set_classe([null, "pessoal", null, "Vacina"]);
+                    $relatorio->set_metodo([null, "get_cargo", null, "exibeVacinas"]);
                     $relatorio->set_bordaInterna(true);
                 }
 

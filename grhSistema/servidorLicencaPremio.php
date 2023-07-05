@@ -179,18 +179,16 @@ if ($acesso) {
         # Parametros da tabela
         $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"]);
         $objeto->set_width([17, 22, 17, 10, 17, 12]);
-        #$objeto->set_align(array("center","center","center","center","center","center","left"));
         $objeto->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
         $objeto->set_classe([null, null, null, null, null, 'LicencaPremio']);
         $objeto->set_metodo([null, null, null, null, null, 'exibeObs']);
+        $objeto->set_colunaSomatorio(3);
+        $objeto->set_totalRegistro(false);
 
         $objeto->set_exibeTempoPesquisa(false);
-
         $objeto->set_numeroOrdem(true);
-        $objeto->set_numeroOrdemTipo("d");
-
-        #$objeto->set_rowspan(1);
-        #$objeto->set_grupoCorColuna(1);
+        $objeto->set_numeroOrdemTipo("d");        
+        
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
 

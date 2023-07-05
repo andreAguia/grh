@@ -505,9 +505,9 @@ class CargoComissao {
 
         $pessoal = new Pessoal();
         $result = $pessoal->select($select);
-        $label = array('Nome', 'Nomeação', 'Exoneração', 'Descrição');
-        $align = array("left", "center", "center", "left");
-        $function = array(null, "date_to_php", "date_to_php", "descricaoComissao");
+        $label = ['Nome', 'Nomeação', 'Exoneração', 'Descrição'];
+        $align = ["left", "center", "center", "left"];
+        $function = [null, "date_to_php", "date_to_php", "descricaoComissao"];
 
         # Monta a tabela
         $tabela = new Tabela();

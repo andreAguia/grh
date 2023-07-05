@@ -66,8 +66,9 @@ if ($acesso) {
 
     $select .= "          ELSE '---'
                       END,                            
+                      idTipoNomeacao,
                       idTipoNomeacao
-                 FROM tbtiponomeacao
+                 FROM tbtiponomeacao as tt
              ORDER BY idTipoNomeacao";
     
     # select da lista
@@ -94,9 +95,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Tipo de Nomeação", "Descrição", "Remunerado?", "Visibilidade"]);
+    $objeto->set_label(["Id", "Tipo de Nomeação", "Descrição", "Remunerado?", "Visibilidade","Nomeações<br/>Cadastradas"]);
     $objeto->set_align(["center", "left", "left"]);
     $objeto->set_width([5, 20, 30, 10, 25]);
+    
+    $objeto->set_classe([null, null, null, null, null, "TipoNomeacao"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_numNomeacoesPorTipo"]);
+
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -175,4 +175,36 @@ class TipoNomeacao {
     }
 
 ##############################################################
+
+    public function get_numNomeacoesPorTipo($id) {
+
+        /**
+         * Informa a descricao do tipo de nomeação
+         * 
+         * @param $id integer null O id
+         * 
+         * @syntax $nomeacao->get_dados([$id]);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Verifica se foi informado
+        if (empty($id)) {
+            alert("É necessário informar o id.");
+            return;
+        }
+
+        # Pega os dados
+        $select = "SELECT idComissao 
+                     FROM tbcomissao
+                    WHERE tipo = {$id}";
+
+        $pessoal = new Pessoal();
+        $number = $pessoal->count($select);
+
+        # Retorno
+        return $number;
+    }
+
+##############################################################
 }

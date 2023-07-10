@@ -66,6 +66,7 @@ if ($acesso) {
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
+    echo $servidorGrh;
     echo $pessoal->get_nome($servidorGrh);
     
     # Verifica se alterou o servidor da GRH

@@ -60,7 +60,7 @@ if ($acesso) {
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    
+
     echo "teste2";
 
     # Assunto
@@ -68,17 +68,25 @@ if ($acesso) {
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
-echo "teste3";
+    echo "teste3";
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
         echo "teste4";
+
+        echo $pessoal->get_nome($servidorGrh);
+        br();
+        echo $pessoal->get_cargoSimples($servidorGrh);
+        br();
+        echo $pessoal->get_idFuncional($servidorGrh);
+        br();
+
         $ci->set_nomeAssinatura(
                 $pessoal->get_nome($servidorGrh),
                 $pessoal->get_cargoSimples($servidorGrh),
                 $pessoal->get_idFuncional($servidorGrh));
         echo "teste5";
     }
-    
+
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto('Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>,'

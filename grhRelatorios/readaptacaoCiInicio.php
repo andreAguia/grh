@@ -49,6 +49,8 @@ if ($acesso) {
     $processo = $dados['processo'];
     $parecer = $dados['parecer'];
     $textoCi = $dados['textoCi'];
+    
+    var_dump($array);
 
     # Trata a publicação
     if (vazio($pgPublicacao)) {

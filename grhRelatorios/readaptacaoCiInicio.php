@@ -65,7 +65,7 @@ if ($acesso) {
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
-    
+    echo "teste";
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
         $ci->set_nomeAssinatura(
@@ -73,7 +73,7 @@ if ($acesso) {
                 $pessoal->get_cargoSimples($servidorGrh), 
                 $pessoal->get_idFuncional($servidorGrh));
     }
-    echo "teste";
+    
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto('Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>,'

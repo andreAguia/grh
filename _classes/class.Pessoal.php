@@ -2325,7 +2325,6 @@ class Pessoal extends Bd {
             return null;
         } else {
 
-            echo "teste6";
             if (is_numeric($idServidor)) {
                 $select = 'SELECT tbpessoa.nome
                             FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)

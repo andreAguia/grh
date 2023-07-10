@@ -8,8 +8,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -30,6 +31,8 @@ if ($acesso) {
     $chefe = $array[0];
     $cargo = $array[1];
     $servidorGrh = $array[2];
+    
+    var_dump($array);
 
     # Começa uma nova página
     $page = new Page();
@@ -65,10 +68,11 @@ if ($acesso) {
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
-    echo "teste";
+    echo "teste", "-> {$servidorGrh}",$pessoal->get_gerente(66);
+    
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
-        echo "teste";
+        
         $ci->set_nomeAssinatura(
                 $pessoal->get_nome($servidorGrh), 
                 $pessoal->get_cargoSimples($servidorGrh), 

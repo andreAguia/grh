@@ -17,6 +17,7 @@ include ("../grhSistema/_config.php");
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
+    echo "teste1";
 
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -59,21 +60,23 @@ if ($acesso) {
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+    
+    echo "teste2";
 
     # Assunto
     $assunto = "Readaptação de " . $nomeServidor;
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
-    
+
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
         $ci->set_nomeAssinatura(
-                $pessoal->get_nome($servidorGrh), 
-                $pessoal->get_cargoSimples($servidorGrh), 
+                $pessoal->get_nome($servidorGrh),
+                $pessoal->get_cargoSimples($servidorGrh),
                 $pessoal->get_idFuncional($servidorGrh));
     }
-    
+    echo "teste3";
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto('Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>,'

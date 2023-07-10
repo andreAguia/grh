@@ -73,7 +73,7 @@ if ($acesso) {
                 $pessoal->get_cargoSimples($servidorGrh), 
                 $pessoal->get_idFuncional($servidorGrh));
     }
-    
+    echo "teste";
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto('Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>,'

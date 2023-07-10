@@ -49,8 +49,6 @@ if ($acesso) {
     $processo = $dados['processo'];
     $parecer = $dados['parecer'];
     $textoCi = $dados['textoCi'];
-    
-    var_dump($array);
 
     # Trata a publicação
     if (vazio($pgPublicacao)) {
@@ -67,8 +65,6 @@ if ($acesso) {
     $assunto = "Readaptação de " . $nomeServidor;
 
     # Monta a CI
-    echo $servidorGrh;
-    #echo $pessoal->get_nome($servidorGrh);
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
     
     # Verifica se alterou o servidor da GRH

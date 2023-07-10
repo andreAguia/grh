@@ -76,6 +76,7 @@ echo "teste3";
                 $pessoal->get_nome($servidorGrh),
                 $pessoal->get_cargoSimples($servidorGrh),
                 $pessoal->get_idFuncional($servidorGrh));
+        echo "teste5";
     }
     
     $ci->set_destinoNome($chefe);

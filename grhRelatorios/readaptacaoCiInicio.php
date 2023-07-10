@@ -65,9 +65,9 @@ if ($acesso) {
     $assunto = "Readaptação de " . $nomeServidor;
 
     # Monta a CI
-    $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
     echo $servidorGrh;
     echo $pessoal->get_nome($servidorGrh);
+    $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
     
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {

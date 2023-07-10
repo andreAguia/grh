@@ -31,8 +31,6 @@ if ($acesso) {
     $chefe = $array[0];
     $cargo = $array[1];
     $servidorGrh = $array[2];
-    
-    var_dump($array);
 
     # Começa uma nova página
     $page = new Page();

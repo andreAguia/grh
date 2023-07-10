@@ -5702,7 +5702,7 @@ class Pessoal extends Bd {
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is null AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = {$idLotacao})";
-
+        echo $select;
         $row = parent::select($select, false);
 
         # trata o retorno

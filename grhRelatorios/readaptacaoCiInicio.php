@@ -68,6 +68,7 @@ if ($acesso) {
     echo "teste";
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
+        echo "teste";
         $ci->set_nomeAssinatura(
                 $pessoal->get_nome($servidorGrh), 
                 $pessoal->get_cargoSimples($servidorGrh), 

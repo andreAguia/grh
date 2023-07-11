@@ -27,7 +27,6 @@ if ($acesso) {
     $id = get('id');
 
     # Pega o nome e cargo do chefe
-    # envia os dados por session
     $chefe = get_session("chefeDigitado");
     $cargo = get_session("cargoDigitado");
     $servidorGrh = get_session("servidorGrh");

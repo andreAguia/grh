@@ -27,10 +27,10 @@ if ($acesso) {
     $id = get('id');
 
     # Pega o nome e cargo do chefe
-    $array = unserialize(get('array'));
-    $chefe = $array[0];
-    $cargo = $array[1];
-    $servidorGrh = $array[2];
+    # envia os dados por session
+    $chefe = get_session("chefeDigitado");
+    $cargo = get_session("cargoDigitado");
+    $servidorGrh = get_session("servidorGrh");
 
     # Começa uma nova página
     $page = new Page();
@@ -66,16 +66,16 @@ if ($acesso) {
 
     # Monta a CI
     $ci = new Ci($numCiInicio, $dtCiInicio, $assunto);
-    
+
     # Verifica se alterou o servidor da GRH
     if ($servidorGrh <> $pessoal->get_gerente(66)) {
-        
+
         $ci->set_nomeAssinatura(
-                $pessoal->get_nome($servidorGrh), 
-                $pessoal->get_cargoSimples($servidorGrh), 
+                $pessoal->get_nome($servidorGrh),
+                $pessoal->get_cargoSimples($servidorGrh),
                 $pessoal->get_idFuncional($servidorGrh));
     }
-    
+
     $ci->set_destinoNome($chefe);
     $ci->set_destinoSetor($cargo);
     $ci->set_texto('Vimos informar a concessão de <b>Readaptação</b> do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>,'

@@ -656,9 +656,10 @@ if ($acesso) {
             $cargoDigitado = post("cargo");
             $textoCi = post("textoCi");
 
-            # Prepara para enviar por get
-            $array = array($chefeDigitado, $cargoDigitado, $servidorGrh);
-            $array = serialize($array);
+            # envia os dados por session
+            set_session("chefeDigitado",$chefeDigitado);
+            set_session("cargoDigitado",$cargoDigitado);
+            set_session("servidorGrh",$servidorGrh);
 
             # Verifica se houve alterações
             $alteracoes = null;
@@ -732,9 +733,9 @@ if ($acesso) {
                 if ($erro == 0) {
                     # Exibe o relatório
                     if ($tipo == 1) {
-                        loadPage("../grhRelatorios/readaptacaoCiInicio.php?id=$id&array=$array", "_blank");
+                        loadPage("../grhRelatorios/readaptacaoCiInicio.php?id={$id}", "_blank");
                     } else {
-                        loadPage("../grhRelatorios/readaptacaoCiProrrogacao.php?id=$id&array=$array", "_blank");
+                        loadPage("../grhRelatorios/readaptacaoCiProrrogacao.php?id={$id}", "_blank");
                     }
                     loadPage("?");
                 } else {

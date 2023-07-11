@@ -308,7 +308,7 @@ class Readaptacao {
         # Nome do botão de Término
         $nomeBotaotermino = "CI Término";
         if (!is_null($ciTermino)) {
-            $nomeBotaotermino = "CI Término >n° " . $ciTermino;
+            $nomeBotaotermino = "CI Término n° " . $ciTermino;
         }
 
         $menu = new Menu("menuBeneficios");

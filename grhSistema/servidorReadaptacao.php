@@ -84,7 +84,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+        AreaServidor::cabecalho();
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -128,7 +128,7 @@ if ($acesso) {
         $linkBotao3->set_title('Regras da readaptação');
         $linkBotao3->set_target("_blank");
         $menu->add_link($linkBotao3, "right");
-        
+
         # Site
         $botaoSite = new Button("Site da GRH");
         $botaoSite->set_target('_blank');
@@ -155,9 +155,9 @@ if ($acesso) {
         get_DadosServidor($idServidorPesquisado);
     } else {
         # Exibe os dados do Servidor
-        $objeto->set_rotinaExtra("get_DadosServidor");
-        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
-    }
+            $objeto->set_rotinaExtra("get_DadosServidor");
+            $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+        }
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
@@ -1236,7 +1236,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $rotina = new Rotina();
             $rotina->exibeRotinaCategoria("Readaptação");
 

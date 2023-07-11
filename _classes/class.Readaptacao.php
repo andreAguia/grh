@@ -315,6 +315,7 @@ class Readaptacao {
 
         # Despachos
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPerícia&id=' . $idReadaptacao);
+        #$menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", '?fase=despachoInicio&id=' . $idReadaptacao);
 
         # Retorno
         if (!vazio($dtInicio)) {

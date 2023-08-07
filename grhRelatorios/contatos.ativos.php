@@ -64,7 +64,7 @@ if ($acesso) {
 
     $relatorio->set_titulo('Relatório de Contatos dos Servidores Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Ordenados pelo Nome');
-    $relatorio->set_label(['Servidor', 'Cargo', 'Lotação', 'Emails','Telefones']);
+    $relatorio->set_label(['Servidor', 'Cargo', 'Lotação', 'Telefones', 'Emails']);
     $relatorio->set_align(["left", "left", "left"]);
     $relatorio->set_classe([null, "pessoal", null, "pessoal", "pessoal"]);
     $relatorio->set_metodo([null, "get_cargoSimples", null, "get_telefones", "get_emails"]);

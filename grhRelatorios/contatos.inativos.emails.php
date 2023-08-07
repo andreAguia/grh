@@ -30,7 +30,7 @@ if ($acesso) {
         $situacao = null;
     }
 
-    $desde = get('desde', post('desde'), 1990);
+    $desde = get('desde', post('desde', 1990));
     $subTitulo = "Desde {$desde}";
 
     ######
@@ -42,8 +42,7 @@ if ($acesso) {
                       tbservidor.idServidor,
                       dtDemissao,
                       tbservidor.idServidor
-                 FROM tbservidor JOIN tbpessoa USING(idpessoa)
-                                 JOIN tbperfil USING(idPerfil)                   
+                 FROM tbservidor JOIN tbpessoa USING(idpessoa)                
                 WHERE tbservidor.situacao <> 1
                   AND idPerfil = 1
                   AND YEAR(dtDemissao) >= {$desde}";
@@ -54,11 +53,11 @@ if ($acesso) {
     }
 
     $select .= " ORDER BY dtDemissao";
-
+    
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Emails dos Servidores Estatutários Inativos');
-    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_subtitulo('Ordenados pela data de Saída');
     $relatorio->set_subtitulo2($subTitulo);
     $relatorio->set_label(['Servidor', 'Cargo', 'Email', 'Saída', 'Situação']);
     $relatorio->set_width([30, 20, 30, 10, 10]);

@@ -30,51 +30,6 @@ if ($acesso) {
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
-    # Início do jscript 
-    $script = '<script type="text/javascript" language="javascript">            
-                $(document).ready(function(){
-                    
-                    var tipo = $("#tipo").val();
-                    if(tipo == 1) {
-                        $("#numero").show();
-                        $("#labelnumero").show();
-                        $("#divnumero").show();
-
-                        $("#numeroAntigo").hide();
-                        $("#labelnumeroAntigo").hide();
-                        $("#divnumeroAntigo").hide();
-                    }else{
-                        $("#numero").hide();
-                        $("#labelnumero").hide();
-                        $("#divnumero").hide();
-                        
-                        $("#numeroAntigo").show();
-                        $("#labelnumeroAntigo").show();
-                        $("#divnumeroAntigo").show();
-                   }
-                
-                    $("#tipo").change(function(){
-                    var tipo = $("#tipo").val();
-                    if(tipo == 1) {
-                        $("#numero").show();
-                        $("#labelnumero").show();
-                        $("#divnumero").show();
-
-                        $("#numeroAntigo").hide();
-                        $("#labelnumeroAntigo").hide();
-                        $("#divnumeroAntigo").hide();
-                    }else{
-                        $("#numero").hide();
-                        $("#labelnumero").hide();
-                        $("#divnumero").hide();
-                        
-                        $("#numeroAntigo").show();
-                        $("#labelnumeroAntigo").show();
-                        $("#divnumeroAntigo").show();
-                   }
-                })
-                });</script>';
-
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
@@ -90,12 +45,6 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-
-    # Jascript do formulário
-    if ($fase == "editar") {
-        $page->set_jscript($script);
-    }
-
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -121,21 +70,18 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista("SELECT assunto,
-                                     IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
+                                     numero,
                                      descricao,
                                      idSei
                                 FROM tbsei
                           WHERE idServidor={$idServidorPesquisado}
                             AND (descricao LIKE '%{$parametro}%' 
-                                 OR CONCAT('SEI-',numero) LIKE '%{$parametro}%'
-                                 OR CONCAT('E-26/',numeroAntigo) LIKE '%{$parametro}%')
+                                 OR numero LIKE '%{$parametro}%')
                        ORDER BY assunto, descricao");
 
     # select do edita
-    $objeto->set_selectEdita("SELECT tipo,
-                                     assunto,
+    $objeto->set_selectEdita("SELECT assunto,
                                      numero,
-                                     numeroAntigo,
                                      descricao,
                                      idServidor
                                 FROM tbsei
@@ -177,18 +123,6 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome' => 'tipo',
-            'label' => 'Tipo:',
-            'tipo' => 'combo',
-            'autofocus' => true,
-            'required' => true,
-            'array' => array(
-                array(1, 'Número SEI'),
-                array(2, 'Número Antigo')),
-            'size' => 20,
-            'title' => 'Qual o tipo de Documento',
-            'col' => 3,
-            'linha' => 1),
         array('nome' => 'assunto',
             'label' => 'Assunto:',
             'tipo' => 'texto',
@@ -200,18 +134,11 @@ if ($acesso) {
             'linha' => 1),
         array('nome' => 'numero',
             'label' => 'Número:',
-            'tipo' => 'sei',
+            'tipo' => 'texto',
             'size' => 50,
             'col' => 4,
             'title' => 'Número do Processo.',
-            'linha' => 2),
-        array('nome' => 'numeroAntigo',
-            'label' => 'Número:',
-            'tipo' => 'processoAntigo2',
-            'size' => 50,
-            'col' => 4,
-            'title' => 'Número do Processo.',
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'descricao',
             'label' => 'Descrição:',
             'tipo' => 'texto',
@@ -219,7 +146,7 @@ if ($acesso) {
             'col' => 12,
             'required' => true,
             'title' => 'Descrição do Documento.',
-            'linha' => 4),
+            'linha' => 2),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',
@@ -243,7 +170,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($id, "servidorSeiExtra.php");
+            $objeto->gravar($id);
             break;
     }
 

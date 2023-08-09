@@ -114,7 +114,7 @@ if ($acesso) {
             $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbsei.assunto,
-                              IF(tipo = 1, CONCAT('SEI-',numero), CONCAT('E-26/',numeroAntigo)),
+                              numero,
                               descricao,
                               idSei
                          FROM tbsei LEFT JOIN tbservidor USING (idServidor)   

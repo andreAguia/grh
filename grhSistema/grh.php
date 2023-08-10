@@ -28,7 +28,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "atualizacoes") {
+        AreaServidor::cabecalho();
+    }
 
     # Zera sessions
     set_session('origem');
@@ -173,10 +175,11 @@ if ($acesso) {
             $linkVoltar->set_title('Sair do Sistema');
             $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
             $menu->add_link($linkVoltar, "left");
-
+            
             # Alterações
             $linkArea = new Link("Atualizações", '?fase=atualizacoes&grh=1');
             $linkArea->set_class('button');
+            $linkArea->set_target('_blank');
             $linkArea->set_title('Exibe o histórico de atualizações do sistema');
             $menu->add_link($linkArea, "right");
 
@@ -444,11 +447,8 @@ if ($acesso) {
                 $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             }
 
-            # botão voltar
-            botaoVoltar("?", "Voltar", "Volta ao Menu principal");
-
             # Título
-            titulo("Detalhes das Atualizações");
+            titulo("Atualizações");
 
             # Limita ainda mais a tela para o painel
             $grid = new Grid("center");

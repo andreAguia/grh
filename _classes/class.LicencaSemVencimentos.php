@@ -391,13 +391,13 @@ class LicencaSemVencimentos {
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
 
-        $titulo = 'Licença Sem Vencimentos';
+        $titulo = 'Licença / Afastamento Sem Vencimentos';
 
         $tabela = new Tabela();
         $tabela->set_titulo($titulo);
         $tabela->set_conteudo($result);
 
-        $tabela->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Rioprevidência"]);
+        $tabela->set_label(["Status", "Tipo", "Nome", "Licença / Afastemento", "Dados", "Período", "Rioprevidência"]);
         $tabela->set_align(["center", "center", "left", "left", "left", "left"]);
         $tabela->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
         $tabela->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
@@ -474,7 +474,7 @@ class LicencaSemVencimentos {
 
         # Monta o Relatório        
         $relatorio->set_titulo($titulo);
-        $relatorio->set_label(["Status", "Tipo", "Nome", "Licença Sem Vencimentos", "Dados", "Período", "Entregou CRP?"]);
+        $relatorio->set_label(["Status", "Tipo", "Nome", "Licença / Afastamento", "Dados", "Período", "Entregou CRP?"]);
         $relatorio->set_align(["center", "center", "left", "left", "left", "left"]);
         $relatorio->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
         $relatorio->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);

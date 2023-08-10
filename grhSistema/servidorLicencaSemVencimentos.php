@@ -25,7 +25,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Histórico de llicenças sem vencimentos";
+        $atividade = "Cadastro do servidor - Histórico de licenças sem vencimentos";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -138,7 +138,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraEditar("exibeRegraStatusLSV");
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Hstórico de Licença Sem Vencimentos');
+    $objeto->set_nome('Hstórico de Licença / Afastamentos Sem Vencimentos');
 
     # botão de voltar da lista
     if (empty($origem)) {

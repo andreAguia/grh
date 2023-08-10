@@ -242,7 +242,10 @@ if ($acesso) {
     # Pega os dados da combo licenca
     $result = $pessoal->select('SELECT idTpLicenca, tbtipolicenca.nome
                                   FROM tbtipolicenca
-                                 WHERE (idTpLicenca = 5) OR (idTpLicenca = 8) OR (idTpLicenca = 16)
+                                 WHERE (idTpLicenca = 5) 
+                                    OR (idTpLicenca = 8) 
+                                    OR (idTpLicenca = 16)
+                                    OR (idTpLicenca = 36)
                               ORDER BY 2');
     array_unshift($result, array(null, ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
     # Campos para o formulario

@@ -76,8 +76,9 @@ class RpaIr {
         # Conecta
         $pessoal = new Pessoal();
 
-        # Pega a última data cadastrada na tabela
-        $row = $pessoal->select("SELECT valorInicial FROM tbrpa_ir WHERE dtInicial = '{$dtTabela}' AND valorFinal = 0 ORDER BY valorInicial desc LIMIT 1", false);
+        # Pega a última data cadastrada na tabela        
+        #$row = $pessoal->select("SELECT valorInicial FROM tbrpa_ir WHERE dtInicial = '{$dtTabela}' AND valorFinal = 0 ORDER BY valorInicial desc LIMIT 1", false);
+        $row = $pessoal->select("SELECT valorFinal FROM tbrpa_ir WHERE dtInicial = '{$dtTabela}' ORDER BY valorFinal desc LIMIT 1", false);
         return $row[0];
     }
 

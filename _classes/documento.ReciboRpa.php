@@ -176,8 +176,8 @@ class ReciboRpa
         $valores = [
             ["Serviço Prestado", formataMoeda2($dados["valor"])],
             ["Descontos", null],
-            ["INSS", "(" . formataMoeda2($valorInss[0]) . ")"],
-            ["IRRS", "(" . formataMoeda2($valorIr[0]) . ")"],
+            ["INSS ({$valorInss[1]}%)", "(" . formataMoeda2($valorInss[0]) . ")"],
+            ["IRRS ({$valorIr[1]}%)", "(" . formataMoeda2($valorIr[0]) . ")"],
             ["Total Descontos", "(" . formataMoeda2($valorInss[0] + $valorIr[0]) . ")"]
         ];
 

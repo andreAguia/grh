@@ -52,19 +52,21 @@ if ($acesso) {
     $objeto->set_voltarLista('grh.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT idbanco,
+    $objeto->set_selectLista("SELECT idbanco,
+                                      codigo,
                                       banco,
                                       obs,
                                       idbanco
                                  FROM tbbanco
-                             ORDER BY banco');
+                             ORDER BY codigo");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT banco,
+    $objeto->set_selectEdita("SELECT codigo,
+                                     banco,
                                      obs
                                 FROM tbbanco
-                               WHERE idbanco = ' . $id);
-    
+                               WHERE idbanco = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -77,9 +79,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Banco", "Obs"));
-    $objeto->set_width(array(5, 40, 45));
-    $objeto->set_align(array("center", "center", "left"));
+    $objeto->set_label(["Id", "Código", "Banco", "Obs"]);
+    $objeto->set_width([5, 10, 30, 45]);
+    $objeto->set_align(["center", "center", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -96,12 +98,20 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
+            'nome' => 'codigo',
+            'label' => 'Código:',
+            'tipo' => 'texto',
+            'required' => true,
+            'autofocus' => true,
+            'size' => 5,
+            'col' => 3),
+        array('linha' => 1,
             'nome' => 'banco',
             'label' => 'Banco:',
             'tipo' => 'texto',
             'required' => true,
-            'autofocus' => true,
-            'size' => 30),
+            'col' => 6,
+            'size' => 50),
         array('linha' => 2,
             'nome' => 'obs',
             'label' => 'Observação:',

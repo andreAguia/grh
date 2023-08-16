@@ -23,9 +23,11 @@ class RpaPrestador
             # Pega os dados
             $select = "SELECT *,
                               tbcidade.nome as cidade,
-                              tbestado.uf as estado
+                              tbestado.uf as estado,
+                              CONCAT(tbbanco.codigo, ' - ',tbbanco.banco) as banco
                        FROM tbrpa_prestador LEFT JOIN tbcidade USING (idCidade)
                                             LEFT JOIN tbestado USING (idEstado)
+                                            LEFT JOIN tbbanco USING (idBanco)
                       WHERE idPrestador = $idPrestador";
 
             $pessoal = new Pessoal();
@@ -205,6 +207,41 @@ class RpaPrestador
 
         if (!empty($row["inss"])) {
             $retorno .= "PIS/PASEP: {$row['inss']}";
+        }
+
+        return $retorno;
+    }
+
+    ##########################################################################################
+
+    public function exibeDadosBancarios($idPrestador)
+    {
+
+        # Função que retorna os telefones 
+        #
+        # Parâmetro: $idPrestador
+
+        $select = "SELECT banco,
+                          codigo,
+                          agencia,
+                          conta
+                     FROM tbrpa_prestador JOIN tbbanco USING (idBanco)
+                    WHERE idPrestador = {$idPrestador}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false, true);
+        $retorno = null;
+
+        if (!empty($row["banco"])) {
+            $retorno .= "Banco: {$row['codigo']} - {$row['banco']}<br/>";
+        }
+
+        if (!empty($row["agencia"])) {
+            $retorno .= "Agência: {$row['agencia']}<br/>";
+        }
+        
+        if (!empty($row["conta"])) {
+            $retorno .= "Conta: {$row['agencia']}<br/>";
         }
 
         return $retorno;

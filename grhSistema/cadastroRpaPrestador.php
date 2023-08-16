@@ -72,6 +72,9 @@ if ($acesso) {
                                      identidade,
                                      orgaoId,
                                      dataId,
+                                     idBanco,
+                                     agencia,
+                                     conta,
                                      endereco,
                                      bairro,
                                      idCidade,
@@ -82,7 +85,7 @@ if ($acesso) {
                                      obs
                                 FROM tbrpa_prestador
                                 WHERE idPrestador = {$id}");
-                                
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -95,11 +98,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cpf", "Prestador", "Endereço", "Contatos", "Documentos"]);
-    $objeto->set_align(["center", "left", "left", "left", "left"]);
+    $objeto->set_label(["Cpf", "Prestador", "Endereço", "Contatos", "Dados Bancários", "Documentos"]);
+    $objeto->set_align(["center", "left", "left", "left", "left", "left"]);
 
-    $objeto->set_classe([null, "RpaPrestador", "RpaPrestador", "RpaPrestador", "RpaPrestador"]);
-    $objeto->set_metodo([null, "exibePrestador", "exibeEndereco", "exibeContatos", "exibeDocumentos"]);
+    $objeto->set_classe([null, "RpaPrestador", "RpaPrestador", "RpaPrestador","RpaPrestador", "RpaPrestador"]);
+    $objeto->set_metodo([null, "exibePrestador", "exibeEndereco", "exibeContatos", "exibeDadosBancarios","exibeDocumentos"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -128,6 +131,13 @@ if ($acesso) {
         $autoFocusCpf = false;
         $autoFocusPrestador = true;
     }
+
+    # Pega os dados da combo dos bancos
+    $banco = $pessoal->select('SELECT idBanco,
+                                      CONCAT(codigo," (", banco,")")
+                                 FROM tbbanco
+                             ORDER BY codigo');
+    array_unshift($banco, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -191,6 +201,27 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 15,
             'title' => 'Data de Emissão.'),
+        array('linha' => 4,
+            'col' => 4,
+            'nome' => 'idBanco',
+            'label' => 'Número do Banco - Banco:',
+            'tipo' => 'combo',
+            'array' => $banco,
+            'title' => 'Banco do prestador',
+            'size' => 20),
+        array('linha' => 4,
+            'col' => 3,
+            'nome' => 'agencia',
+            'label' => 'Agência:',
+            'tipo' => 'texto',
+            'title' => 'Agência bancaria',
+            'size' => 20),
+        array('linha' => 4,
+            'col' => 3,
+            'nome' => 'conta',
+            'label' => 'Conta Corrente:',
+            'tipo' => 'texto',
+            'size' => 20),
         array('linha' => 5,
             'nome' => 'endereco',
             'label' => 'Endereço:',

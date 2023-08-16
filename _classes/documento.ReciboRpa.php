@@ -143,7 +143,7 @@ class ReciboRpa
         $div = new Div("divRpaDadosContribuinte");
         $div->abre();
 
-        p("DADOS do CONTRIBUINTE INDIVIDUAL", "pRpaLabel");
+        p("DADOS DO CONTRIBUINTE INDIVIDUAL", "pRpaLabel");
         hr("rpa");
 
         $valores = [
@@ -152,7 +152,10 @@ class ReciboRpa
             ["Cidade:", "{$dadosPrestador["cidade"]} - {$dadosPrestador["estado"]}"],
             ["Cep:", "{$dadosPrestador["cep"]}"],
             ["CPF:", "{$dadosPrestador["cpf"]}"],
-            ["RG:", "{$dadosPrestador["identidade"]}"]
+            ["RG:", "{$dadosPrestador["identidade"]}"],
+            ["Banco:", "{$dadosPrestador["banco"]}"],
+            ["Agência:", "{$dadosPrestador["agencia"]}"],
+            ["C/C:", "{$dadosPrestador["conta"]}"],
         ];
 
         $tabela = new Tabela(null, "tabelaRpa");

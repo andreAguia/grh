@@ -87,18 +87,21 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Pega os dados da combo dos bancos
+    $banco = $pessoal->select('SELECT idBanco,
+                                       CONCAT(codigo," (", banco,")")
+                                  FROM tbbanco
+                              ORDER BY codigo');
+    array_unshift($banco, array(null, null));
 
-    # Pega os dados da combo parentesco
-    $bancos = new Pessoal();
-    $result = $bancos->select('SELECT idBanco, banco FROM tbbanco order by banco');
-    array_push($result, array(null, null)); # Adiciona o valor de nulo
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
             'nome' => 'banco',
             'label' => 'Banco:',
             'tipo' => 'combo',
-            'array' => $result,
+            'array' => $banco,
             'required' => true,
             'autofocus' => true,
             'col' => 4,
@@ -109,14 +112,14 @@ if ($acesso) {
             'label' => 'Agência:',
             'tipo' => 'texto',
             'required' => true,
-            'col' => 4,
+            'col' => 3,
             'title' => 'Número da Agência',
             'size' => 10),
         array('linha' => 1,
             'nome' => 'conta',
             'label' => 'Conta Corrente:',
             'tipo' => 'texto',
-            'col' => 4,
+            'col' => 3,
             'required' => true,
             'title' => 'Número da conta corrente do servidor',
             'size' => 20),

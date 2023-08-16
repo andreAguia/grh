@@ -83,7 +83,8 @@ if ($acesso) {
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")
                                   FROM tbcidade JOIN tbestado USING (idEstado)
                               ORDER BY proximidade,tbestado.uf,tbcidade.nome');
-    array_unshift($cidade, array(null, null)); # Adiciona o valor de nulo
+    array_unshift($cidade, array(null, null));
+    
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 5,

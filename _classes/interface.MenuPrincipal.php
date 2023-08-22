@@ -724,10 +724,10 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Licença / Afastamentos Sem Vencimentos');
+        $botao->set_label('Licença Sem Vencimentos');
         $botao->set_url('areaLicencaSemVencimentos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'semVencimento.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Controle de Servidores com Licença / Afastamentos Sem Vencimentos');
+        $botao->set_title('Controle de Servidores com Licença Sem Vencimentos');
         $menu->add_item($botao);
 
         # Prestador de Contas

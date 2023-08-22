@@ -321,7 +321,6 @@ if ($acesso) {
             $limite = menorValor(array($postMax, $uploadMax));
 
             $texto = "Extensões Permitidas:";
-
             foreach ($extensoes as $pp) {
                 $texto .= " $pp";
             }
@@ -335,6 +334,7 @@ if ($acesso) {
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
+                    
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");

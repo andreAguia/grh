@@ -100,6 +100,9 @@ if ($acesso) {
 
     # Area de Licença Médica
     set_session('parametroAlta');
+    
+    # Procedimentos
+    set_session('abertos');
 
     # Pega os parâmetros dos aniversariantes
     $parametroMes = post('parametroMes', date("m"));
@@ -158,7 +161,7 @@ if ($acesso) {
                 $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
                 $linkProc->set_class('button success');
                 $linkProc->set_title('Acessa a área de procedimentos');
-                $linkProc->set_target("_blank3");
+                $linkProc->set_target("_blank4");
                 $menu->add_link($linkProc, "right");
 
                 $menu->show();

@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -61,10 +62,10 @@ if ($acesso) {
     $relatorio->set_totalRegistro(false);
     $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_label(array("Status", "Tipo", "Licença / Afastamanto", "Dados", "Período", "Rioprevidência"));
-    $relatorio->set_align(array("center", "center", "left", "left", "left"));
-    $relatorio->set_classe(array("LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"));
-    $relatorio->set_metodo(array("exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"));
+    $relatorio->set_label(["Status", "Tipo", "Licença / Afastamanto", "Dados", "Período", "Rioprevidência"]);
+    $relatorio->set_align(["center", "center", "left", "left", "left"]);
+    $relatorio->set_classe(["LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+    $relatorio->set_metodo(["exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);

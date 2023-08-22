@@ -391,7 +391,7 @@ class LicencaSemVencimentos {
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
 
-        $titulo = 'Licença / Afastamento Sem Vencimentos';
+        $titulo = 'Licença Sem Vencimentos';
 
         $tabela = new Tabela();
         $tabela->set_titulo($titulo);
@@ -470,7 +470,7 @@ class LicencaSemVencimentos {
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
 
-        $titulo = 'Servidores Em Licença Sem vencimentos';
+        $titulo = 'Servidores Em Licença Sem Vencimentos';
 
         # Monta o Relatório        
         $relatorio->set_titulo($titulo);

@@ -975,11 +975,14 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+        if ($exibeComissao) {
+            $comissao = $this->get_cargoComissaoDescricao($idServidor);
+        }
 
         if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+            p($comissao, "pLinha2");
         } else {
             plista(
                     $row["cargo"],
@@ -1013,8 +1016,10 @@ class Pessoal extends Bd {
                     WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-
-        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+        
+        if ($exibeComissao) {
+            $comissao = $this->get_cargoComissaoDescricao($idServidor);
+        }
 
         if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
@@ -1052,7 +1057,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
@@ -1090,7 +1095,7 @@ class Pessoal extends Bd {
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
@@ -5703,7 +5708,7 @@ class Pessoal extends Bd {
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbcomissao.dtExo is null AND (tbtipocomissao.idTipoComissao = 21 OR tbtipocomissao.idTipoComissao = 17)
                      AND (tblotacao.idlotacao = {$idLotacao})";
-        
+
         $row = parent::select($select, false);
 
         # trata o retorno

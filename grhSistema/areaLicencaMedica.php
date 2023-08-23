@@ -375,7 +375,7 @@ if ($acesso) {
             
             br();
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimentoFilhos("Licença Médica");
+            $procedimento->exibeProcedimentoSubCategoria("Licença Médica");
             break;
 
         ############################################################################    

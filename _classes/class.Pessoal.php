@@ -723,7 +723,7 @@ class Pessoal extends Bd {
 
         if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
-            if ($row["idPerfil"] == 2) {
+            if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
                 $retorno .= "Exercendo função equivalente ao ";
             }
 
@@ -805,7 +805,7 @@ class Pessoal extends Bd {
 
         if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
-            if ($row["idPerfil"] == 2) {
+            if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
                 p("Exercendo função equivalente ao", "pLinha3");
             }
 
@@ -863,7 +863,7 @@ class Pessoal extends Bd {
             return $retorno;
         } else {
             # Verifica se é cedido
-            if ($row["idPerfil"] == 2) {
+            if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
                 $retorno = "exercendo função equivalente ao ";
             }
 
@@ -913,7 +913,7 @@ class Pessoal extends Bd {
         $retorno = null;
 
         # Verifica se é cedido
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             $retorno .= "exercendo função equivalente ao ";
         }
 
@@ -977,7 +977,7 @@ class Pessoal extends Bd {
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
@@ -1016,7 +1016,7 @@ class Pessoal extends Bd {
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
@@ -1051,7 +1051,7 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {
@@ -1089,7 +1089,7 @@ class Pessoal extends Bd {
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);
 
-        if ($row["idPerfil"] == 2) {
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
             p("Exercendo função equivalente ao", "pLinha3");
             p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
         } else {

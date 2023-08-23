@@ -187,8 +187,8 @@ if ($acesso) {
 
         $objeto->set_exibeTempoPesquisa(false);
         $objeto->set_numeroOrdem(true);
-        $objeto->set_numeroOrdemTipo("d");        
-        
+        $objeto->set_numeroOrdemTipo("d");
+
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
 
@@ -289,11 +289,11 @@ if ($acesso) {
         $botaoAfastPremio->set_title("Verifica os afastamentos que interferem no período aquisitido da licença prêmio deste servidor");
         $botaoAfastPremio->set_target("_blank");
 
-        # Site
-        $botaoSite = new Button("Site da GRH");
-        $botaoSite->set_target('_blank');
-        $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
-        $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/requerimento-de-licenca-especial/");
+        # Procedimentos
+        $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
+        $botaoProcedimentos->set_class('button');
+        $botaoProcedimentos->set_title('Exibe os procedimentos');
+        $botaoProcedimentos->set_target("_blank");
 
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
@@ -306,7 +306,7 @@ if ($acesso) {
         if (Verifica::acesso($idUsuario, [1, 2])) {
             $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
-            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoSite]);
+            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos]);
         }
 
         if (Verifica::acesso($idUsuario, 12)) {
@@ -445,7 +445,16 @@ if ($acesso) {
                 loadPage('servidorLicencaPremio.php');
                 break;
 
-            ###############################
+            ############################################################################
+
+            case "procedimentos" :
+
+                br();
+                $procedimento = new Procedimento();
+                $procedimento->exibeProcedimentoSubCategoria("Licença Prêmio");
+                break;
+
+            ############################################################################    
         }
     }
     $page->terminaPagina();

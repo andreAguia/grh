@@ -1237,9 +1237,12 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
+            
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimentoSubCategoria("Readaptação");
 
-            $rotina = new Rotina();
-            $rotina->exibeRotinaCategoria("Readaptação");
+//            $rotina = new Rotina();
+//            $rotina->exibeRotinaCategoria("Readaptação");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

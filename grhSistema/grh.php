@@ -100,7 +100,7 @@ if ($acesso) {
 
     # Area de Licença Médica
     set_session('parametroAlta');
-    
+
     # Procedimentos
     set_session('abertos');
 
@@ -137,37 +137,20 @@ if ($acesso) {
 
             # Exibe a Versão e o usuário logado
             p(SISTEMA, 'grhTitulo');
-            p("Versão: " . VERSAO . "<br/>Atualizado em: " . ATUALIZACAO, "versao");
+            
+            # Div
+            $div = new Div("menuAdmin");
+            $div->abre();
+            $linkAdm = new Link("Versão: " . VERSAO . " - Atualizado em: " . ATUALIZACAO, "?fase=atualizacoes&grh=1");
+            $linkAdm->set_id('versao');
+            $linkAdm->set_target('_blank');
+            $linkAdm->show();
+            $div->fecha();
+            br();
 
             # Limita o tamanho da tela
             $grid = new Grid();
             $grid->abreColuna(12);
-
-            # Cria um menu Administrador
-            if (Verifica::acesso($idUsuario, 1)) {
-                # Div
-                $div = new Div("menuAdmin");
-                $div->abre();
-
-                $menu = new MenuBar();
-
-                # Area do Servidor
-                $linkAdm = new Link("Area do Servidor", "../../areaServidor/sistema/areaServidor.php");
-                $linkAdm->set_class('button success');
-                $linkAdm->set_title('Área do Servidor');
-                $menu->add_link($linkAdm, "right");
-
-                # Procedimentos
-                $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
-                $linkProc->set_class('button success');
-                $linkProc->set_title('Acessa a área de procedimentos');
-                $linkProc->set_target("_blank4");
-                $menu->add_link($linkProc, "right");
-
-                $menu->show();
-
-                $div->fecha();
-            }
 
             # Cria um menu
             $menu = new MenuBar();
@@ -178,13 +161,28 @@ if ($acesso) {
             $linkVoltar->set_title('Sair do Sistema');
             $linkVoltar->set_confirma('Tem certeza que deseja sair do sistema?');
             $menu->add_link($linkVoltar, "left");
-            
-            # Alterações
-            $linkArea = new Link("Atualizações", '?fase=atualizacoes&grh=1');
-            $linkArea->set_class('button');
-            $linkArea->set_target('_blank');
-            $linkArea->set_title('Exibe o histórico de atualizações do sistema');
-            $menu->add_link($linkArea, "right");
+
+            if (Verifica::acesso($idUsuario, 1)) {
+                # Area do Servidor
+                $linkAdm = new Link("Area do Servidor", "../../areaServidor/sistema/areaServidor.php");
+                $linkAdm->set_class('button success');
+                $linkAdm->set_title('Área do Servidor');
+                $menu->add_link($linkAdm, "right");
+            }
+
+            # Procedimentos
+            $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
+            $linkProc->set_class('button');
+            $linkProc->set_title('Acessa a área de procedimentos');
+            $linkProc->set_target("_blank4");
+            $menu->add_link($linkProc, "right");
+
+//            # Atualizações
+//            $linkArea = new Link("Atualizações", '?fase=atualizacoes&grh=1');
+//            $linkArea->set_class('button');
+//            $linkArea->set_target('_blank');
+//            $linkArea->set_title('Exibe o histórico de atualizações do sistema');
+//            $menu->add_link($linkArea, "right");
 
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

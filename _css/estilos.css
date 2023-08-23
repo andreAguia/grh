@@ -17,6 +17,12 @@ p#versao{
     margin: 0px;
 }
 
+a#versao{
+    font-size: 11px;
+    text-align: center;
+    color: #02548b;
+}
+
 p#ip{
     font-size: 11px;
     text-align: right;
@@ -194,9 +200,7 @@ p#calloutMensagemPremio{
  *******************************************/
 
 div#menuAdmin{
-    position: absolute;
-    top: 90px;
-    right: 15px;
+    text-align: center;
 }
 
 /*******************************************

@@ -579,6 +579,9 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Processo Eleitoral'); ### parei aqui
 
+            $menu->add_item('titulo1', 'Geral');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - com CPF, RG e Cargo - por Locação - Agrupado por Diretoria', '../grhRelatorios/eleitoral.geral.porLotacao.php');
+            
             $menu->add_item('titulo1', 'Administrativo e Técnico');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo - por Locação - Agrupado por Gerência', '../grhRelatorios/eleitoral.estatutarios.admTec.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Ativos - com Cargo - por Locação - Agrupado por Nivel do Cargo', '../grhRelatorios/eleitoral.estatutarios.admTec.nivelCargo.porLotacao.php');

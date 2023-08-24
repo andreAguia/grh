@@ -28,9 +28,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "atualizacoes") {
-        AreaServidor::cabecalho();
-    }
+    AreaServidor::cabecalho();
 
     # Zera sessions
     set_session('origem');
@@ -438,6 +436,7 @@ if ($acesso) {
             # Limita a tela
             $grid = new Grid();
             $grid->abreColuna(12);
+            br();
 
             # Verifica se veio menu grh e registra o acesso no log
             $grh = get('grh', false);

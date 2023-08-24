@@ -408,7 +408,7 @@ if ($acesso) {
     $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
     $botaoProcedimentos->set_class('button');
     $botaoProcedimentos->set_title('Exibe os procedimentos');
-    $botaoProcedimentos->set_target("_blank");
+    $botaoProcedimentos->set_target("_blank4");
 
     $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos]);
     $objeto->set_botaoEditarExtra([$botao2, $botaoProcedimentos]);

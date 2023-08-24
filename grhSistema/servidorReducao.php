@@ -653,9 +653,12 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
+            
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimentoSubCategoria("Redução de Carga Horária");
 
-            $rotina = new Rotina();
-            $rotina->exibeRotinaCategoria("Redução de Carga Horária");
+//            $rotina = new Rotina();
+//            $rotina->exibeRotinaCategoria("Redução de Carga Horária");
 
             $grid->fechaColuna();
             $grid->fechaGrid();

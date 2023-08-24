@@ -69,42 +69,42 @@ if ($acesso) {
             $callout = new Callout('primary');
             $callout->abre();
 
-            $categorias = [
-            
-            $menu->add_item('titulo', 'Categorias de Relatórios');
-            $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Afastamentos', '?fase=afastamentos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
-            $menu->add_item('linkAjax', 'Contatos & Endereços', '?fase=contatos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Dependentes & Auxílio Creche', '?fase=dependentes', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Diárias', '?fase=diarias', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Estatutários', '?fase=estatutarios', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Férias', '?fase=ferias', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Ativos', '?fase=geralAtivos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Licença Prêmio', '?fase=licencaPremio', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Seguro Anual', '?fase=seguro', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Histórico', '?fase=historico', '', '', 'divMenuRelatorioGrh');
-            ];
+//            $categorias = [
+//            
+//            $menu->add_item('titulo', 'Categorias de Relatórios');
+//            $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Afastamentos', '?fase=afastamentos', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
+//            $menu->add_item('linkAjax', 'Contatos & Endereços', '?fase=contatos', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Dependentes & Auxílio Creche', '?fase=dependentes', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax', 'Diárias', '?fase=diarias', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Estatutários', '?fase=estatutarios', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Férias', '?fase=ferias', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Geral - Servidores Ativos', '?fase=geralAtivos', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Licença Prêmio', '?fase=licencaPremio', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Seguro Anual', '?fase=seguro', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
+//            #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
+//            $menu->add_item('linkAjax', 'Histórico', '?fase=historico', '', '', 'divMenuRelatorioGrh');
+//            ];
 
             # Menu de tipos de relatórios
             $menu = new Menu();

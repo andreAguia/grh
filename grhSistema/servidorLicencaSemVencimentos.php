@@ -404,12 +404,14 @@ if ($acesso) {
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
 
-    # Rotina
-    $botao3 = new Button("Rotina");
-    $botao3->set_title("Exibe as rotina");
-    $botao3->set_onClick("window.open('https://docs.google.com/document/d/e/2PACX-1vRtF8IcxuFFwZqhdfYVBENWVVa6CbhLzO9rXjZbIhZcsAa4bqlnYyDROChUIpXwXGD_zDxF0QPYpMXq/pub','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $objeto->set_botaoListarExtra(array($botaoRel, $botao2, $botao3));
-    $objeto->set_botaoEditarExtra(array($botao2, $botao3));
+    # Procedimentos
+    $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
+    $botaoProcedimentos->set_class('button');
+    $botaoProcedimentos->set_title('Exibe os procedimentos');
+    $botaoProcedimentos->set_target("_blank");
+
+    $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos]);
+    $objeto->set_botaoEditarExtra([$botao2, $botaoProcedimentos]);
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -520,8 +522,18 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ################################################################################################################
+        ############################################################################
+
+        case "procedimentos" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimentoSubCategoria("LSV - para Trato de Interesses Particulares");
+            break;
+
+        ############################################################################    
     }
+
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");

@@ -479,7 +479,7 @@ class Pessoal extends Bd {
                     $orgao = "-";
                 }
                 #$retorno = $row[0].'-'.$row[1].'-'.$row[2].'<br/><span id="orgaoCedido">('.$orgao.')</span>';
-                $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
+                $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
             } else {
                 $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
             }
@@ -543,7 +543,7 @@ class Pessoal extends Bd {
             if ($orgao == "") {
                 $orgao = "-";
             }
-            $retorno = "Cedido para <span id='orgaoCedido'>$orgao</span>";
+            $retorno = "Cedido para<br/><span id='orgaoCedido'>$orgao</span>";
             #$retorno = $row[0].'-'.$row[1].'-'.$row[2].' ('.$orgao.')</span>';
         } else {
             $retorno = $row[0] . '-' . $row[1] . '-' . $row[2];
@@ -1196,7 +1196,7 @@ class Pessoal extends Bd {
         # Verifica se e cedido para exibir o orgao de origem
         if ($row[0] == 2) {
             $orgaoOrigem = $this->get_orgaoOrigem($idServidor);
-            if (!vazio($orgaoOrigem)) {
+            if (!empty($orgaoOrigem)) {
                 $retorno .= '<br/><span id="orgaoCedido">(' . $orgaoOrigem . ')';
             }
         }

@@ -528,7 +528,7 @@ if ($acesso) {
 
             br();
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimentoSubCategoria("LSV - para Trato de Interesses Particulares");
+            $procedimento->exibeProcedimentoSubCategoria("Licença Sem Vencimentos");
             break;
 
         ############################################################################    

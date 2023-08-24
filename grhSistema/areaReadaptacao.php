@@ -103,7 +103,7 @@ if ($acesso) {
             $linkBotao3 = new Link("Procedimentos", "servidorReadaptacao.php?fase=procedimentos");
             $linkBotao3->set_class('button');
             $linkBotao3->set_title('Regras da readaptação');
-            $linkBotao3->set_target("_blank4");
+            $linkBotao3->set_target("_blank3");
             $menu1->add_link($linkBotao3, "right");
 
             # Site

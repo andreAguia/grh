@@ -724,7 +724,7 @@ class Pessoal extends Bd {
         if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
-                $retorno .= "Exercendo função equivalente ao<br/>";
+                $retorno .= "Exercendo função equivalente ao";
             }
 
             # Define o cargo
@@ -806,7 +806,7 @@ class Pessoal extends Bd {
         if (!empty($row["idTipoCargo"])) {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
-                p("Exercendo função equivalente ao<br/>", "pLinha3");
+                p("Exercendo função equivalente ao", "pLinha3");
             }
 
             # Define o cargo
@@ -864,7 +864,7 @@ class Pessoal extends Bd {
         } else {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
-                $retorno = "exercendo função equivalente ao<br/>";
+                $retorno = "exercendo função equivalente ao";
             }
 
             # Define o cargo
@@ -914,7 +914,7 @@ class Pessoal extends Bd {
 
         # Verifica se é cedido
         if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
-            $retorno .= "exercendo função equivalente ao<br/>";
+            $retorno .= "exercendo função equivalente ao";
         }
 
         $comissao = $this->get_cargoComissaoDescricao($idServidor);

@@ -3870,86 +3870,6 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_servidorComTerminoLicencaSemVencimentosMenos90Dias
-     * 
-     * Servidor Com Licença Sem Vencimentos terminando em menos de 90 dias
-     */
-    public function get_servidorComTerminoLicencaSemVencimentosMenos90Dias($idServidor = null, $catEscolhida = null) {
-
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
-
-            $servidor = new Pessoal();
-            $metodo = explode(":", __METHOD__);
-
-            $select = 'SELECT idfuncional,
-                          matricula,
-                          tbpessoa.nome,
-                          tbperfil.nome,
-                          idServidor,
-                          idServidor,
-                          CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")),
-                          DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY),
-                          TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY))
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tblicenca USING (idServidor)
-                                     LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                                     LEFT JOIN tbperfil USING (idPerfil)
-                    WHERE tblicenca.dtInicial IS NOT null
-                      AND (idTpLicenca = 5 OR idTpLicenca = 8 OR idTpLicenca = 16)
-                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) >= 0 
-                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicenca.dtInicial, INTERVAL tblicenca.numDias DAY),INTERVAL 1 DAY)) <=90';
-            if (!empty($idServidor)) {
-                $select .= ' AND idServidor = "' . $idServidor . '"';
-            }
-            $select .= ' ORDER BY 7 desc';
-
-            $result = $servidor->select($select);
-            $count = $servidor->count($select);
-            $titulo = 'Licença Sem Vencimentos terminando em menos de 90 dias.';
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Licença', 'Data Final', 'Dias Faltantes']);
-            $tabela->set_align(['center', 'center', 'left', 'center', 'left', 'left', 'left']);
-            $tabela->set_titulo($titulo);
-            $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
-            $tabela->set_funcao([null, "dv", null, null, null, null, null, "date_to_php"]);
-            $tabela->set_editar($this->linkEditar);
-            $tabela->set_idCampo('idServidor');
-
-            # Verifica se é de um único servidor
-            if (!empty($idServidor)) {
-                if ($count > 0) {
-                    return $titulo;
-                }
-            } else {  # Vários servidores
-                if ($this->lista) {
-                    if ($count > 0) {
-                        $tabela->show();
-                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
-                    } else {
-                        br();
-                        tituloTable($titulo);
-                        $callout = new Callout();
-                        $callout->abre();
-                        p('Nenhum item encontrado !!', 'center');
-                        $callout->fecha();
-                    }
-                } else {
-                    if ($count > 0) {
-                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
-                        return $retorna;
-                    }
-                }
-            }
-        }
-    }
-
-    ##########################################################
-
-    /**
      * Método get_servidorInativoComCargoEmComissao
      * 
      * Servidor Inativo com cargo em comissao
@@ -4934,11 +4854,11 @@ class Checkup {
     /**
      * Método get_servidorComTerminoReadaptacaoMenos45Dias
      * 
-     * Servidor Com Readaptação terminando em menos de 45 dias
+     * Servidor Com licença sem vencimentos terminando em menos de 45 dias
      */
-    public function get_servidorComLicencaSemVencimentosMenos30Dias($idServidor = null, $catEscolhida = null) {
+    public function get_servidorComLicencaSemVencimentosMenos45Dias($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
 
 
             $servidor = new Pessoal();
@@ -4956,7 +4876,7 @@ class Checkup {
                                      LEFT JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tblicencasemvencimentos.dtInicial IS NOT null
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) >= 0 
-                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) <=30';
+                      AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }
@@ -4964,7 +4884,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Licença Sem Vencimentos terminando em menos de 30 dias.';
+            $titulo = 'Licença Sem Vencimentos terminando em menos de 45 dias.';
 
             # Exibe a tabela
             $tabela = new Tabela();

@@ -20,124 +20,87 @@ if ($acesso) {
     $pessoal = new Pessoal();
 
     # Verifica a fase do programa
-    $fase = get('fase', 'menu');
+    $fase = get('fase', 'abono');
 
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
+    # Cabeçalho da Página
+    AreaServidor::cabecalho();
+
+    # Limita o tamanho da tela
+    $grid = new Grid();
+    $grid->abreColuna(12);
+
+    # Botão voltar
+    botaoVoltar('grh.php');
+    
+    # Verifica se veio da fase de ferias e se tem que mudar a data de entrega
+    $dataDev = post("dtEntrega");
+
+    # Salva o novo valor
+    if (!vazio($dataDev)) {
+        # Arquiva a data
+        $intra->set_variavel("dataDevolucaoGrh", date_to_php($dataDev));
+        loadPage('?fase=ferias');
+    }
+
+    $grid->fechaColuna();
+    $grid->abreColuna(5, 4);
+
+    # Array do menu
+    $array = [
+        ['Abono Permanencia', 'abono'],
+        ['Aniversariantes', 'aniversariantes'],
+        ['Afastamentos', 'afastamentos'],
+        ['Aposentadoria e Tempo Averbado', 'aposentados'],
+        ['Atestado', 'atestado'],
+        ['Cargo Efetivo', 'cargoEfetivo'],
+        ['Cargo em Comissão', 'cargoEmComissao'],
+        ['Cedidos', 'cedidos'],
+        ['Contatos & Endereços', 'contatos'],
+        ['Dependentes & Auxílio Creche', 'dependentes'],
+        ['Estatutários', 'estatutarios'],
+        ['Férias', 'ferias'],
+        ['Financeiro', 'financeiro'],
+        ['Folha de Frequência', 'frequencia'],
+        ['Geral - Servidores Ativos', 'geralAtivos'],
+        ['Geral - Servidores Inativos', 'geralInativos'],
+        ['Geral - Servidores Ativos e Inativos', 'geralGeral'],
+        ['Licença Prêmio', 'licencaPremio'],
+        ['Lotação', 'lotacao'],
+        ['Movimentação de Pessoal', 'movimentacao'],
+        ['Parentes', 'parentes'],
+        ['Professores (Docentes)', 'professores'],
+        ['Processo Eleitoral', 'eleitoral'],
+        ['Seguro Anual', 'seguro'],
+        ['Triênio', 'trienio'],
+        ['Histórico', 'historico']
+    ];
+
+    # Menu de tipos de relatórios
+    $menu = new Menu();
+    $menu->add_item('titulo', 'Relatórios');
+
+    foreach ($array as $item) {
+        if ($fase == $item[1]) {
+            $menu->add_item('link', "<b>| {$item[0]} |</b>", "?fase={$item[1]}");
+        } else {
+            $menu->add_item('link', $item[0], "?fase={$item[1]}", "?fase={$item[1]}");
+        }
+    }
+
+    $menu->show();
+    $grid->fechaColuna();
+
+    ##########################################################
+    # Menu dos Relatórios
+    $grid->abreColuna(7, 8);
+
+    ######################################
+
     switch ($fase) {
-        # Exibe o Menu Inicial
-
-        case "menu" :
-            # Cabeçalho da Página
-            AreaServidor::cabecalho();
-
-            # Limita o tamanho da tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            # Botão voltar
-            botaoVoltar('grh.php');
-
-            # Título do menu
-            titulo('Menu de Relatórios');
-
-            # Verifica se veio da fase de ferias e se tem que mudar a data de entrega
-            $dataDev = post("dtEntrega");
-
-            # Salva o novo valor
-            if (!vazio($dataDev)) {
-                # Arquiva a data
-                $intra->set_variavel("dataDevolucaoGrh", date_to_php($dataDev));
-                ajaxLoadPage('?fase=ferias', 'divMenuRelatorioGrh');
-            }
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
-            br();
-
-            # Área do Menu
-            $grid = new Grid();
-            $grid->abreColuna(5, 4);
-
-            $divMenu2 = new Div("divMenuRelatorioGrhCategoria");
-            $divMenu2->abre();
-
-            # Cria uma borda
-            $callout = new Callout('primary');
-            $callout->abre();
-
-            # Menu de tipos de relatórios
-            $menu = new Menu();
-            $menu->add_item('titulo', 'Categorias de Relatórios');
-            $menu->add_item('linkAjax', 'Abono Permanencia', '?fase=abono', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Aniversariantes', '?fase=aniversariantes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Afastamentos', '?fase=afastamentos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Aposentadoria e Tempo Averbado', '?fase=aposentados', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Atestado', '?fase=atestado', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cargo Efetivo', '?fase=cargoEfetivo', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cargo em Comissão', '?fase=cargoEmComissao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Cedidos', '?fase=cedidos', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','Concursos','?fase=concursos','','','divMenuRelatorioGrh'); 
-            $menu->add_item('linkAjax', 'Contatos & Endereços', '?fase=contatos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Dependentes & Auxílio Creche', '?fase=dependentes', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Diárias', '?fase=diarias', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Estatutários', '?fase=estatutarios', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Férias', '?fase=ferias', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Financeiro', '?fase=financeiro', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Folha de Frequência', '?fase=frequencia', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Ativos', '?fase=geralAtivos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Inativos', '?fase=geralInativos', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Geral - Servidores Ativos e Inativos', '?fase=geralGeral', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','Licença e Afastamentos','?fase=licenca','','','divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Licença Prêmio', '?fase=licencaPremio', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Lotação', '?fase=lotacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Movimentação de Pessoal', '?fase=movimentacao', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Parentes', '?fase=parentes', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Professores (Docentes)', '?fase=professores', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Processo Eleitoral', '?fase=eleitoral', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Recadastramento 2018', '?fase=recad2018', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Seguro Anual', '?fase=seguro', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax', 'Sispatri', '?fase=sispatri', '', '', 'divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Triênio', '?fase=trienio', '', '', 'divMenuRelatorioGrh');
-            #$menu->add_item('linkAjax','TRE','?fase=tre','','','divMenuRelatorioGrh');
-            $menu->add_item('linkAjax', 'Histórico', '?fase=historico', '', '', 'divMenuRelatorioGrh');
-            $menu->show();
-            $callout->fecha();
-            $divMenu2->fecha();
-
-            $grid->fechaColuna();
-
-            ##########################################################
-            # Menu dos Relatórios
-            $grid->abreColuna(7, 8);
-
-            # Cria uma borda
-            $callout = new Callout("success");
-            $callout->abre();
-
-            # div principal - onde o menu dos relatórios aparecem
-            $divPrincipal = new Div("divMenuRelatorioGrh");
-            $divPrincipal->abre();
-
-            # Conteúdo
-            br(4);
-            p("Escolha uma categoria de relatório", "center");
-            br(6);
-
-            $divPrincipal->fecha();
-
-            # Fecha a borda
-            $callout->fecha();
-
-            # Fecha o grid
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ######################################
 
         case "abono";
             $menu = new Menu();
@@ -816,6 +779,10 @@ if ($acesso) {
 
         ######################################
     }
+
+    # Fecha o grid
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 } else {

@@ -58,6 +58,7 @@ if ($acesso) {
     ################################################################
     # Nome do Modelo
     $objeto->set_nome('Controle de RPAs');
+    $objeto->set_subtitulo(get_nomeMes($parametroMes)." / ".$parametroAno);
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');

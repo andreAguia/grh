@@ -209,24 +209,30 @@ if ($acesso) {
 
             # Continua
             $select .= ") AND idPerfil = 1";
+            
+            $subtitulo = null;
+            $titulo = null;
 
             # Alta
             if ($parametroAlta == 2) {
                 # Última licença sem alta a vencer
                 $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
-                $titulo = "Servidores Com a Última Licença Médica SEM ALTA - A VENCER";
+                $titulo = "Servidores Com a Última Licença Médica";
+                $subtitulo = "SEM ALTA - A VENCER";
                 $mensagem1 = "Servidores devem se apresentar para um novo exame pericial até 5 (cinco) dias antes do término da licença anterior.";
             } elseif ($parametroAlta == 3) {
                 # Última licença Sem Alta - Em Aberto
                 $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) < 0";
-                $titulo = "Servidores Com a Última Licença Médica <b>SEM ALTA - EM ABERTO</b>";
+                $titulo = "Servidores Com a Última Licença Médica";
+                $subtitulo = "<b>SEM ALTA - EM ABERTO</b>";
                 $mensagem1 = "Servidores com a licença em aberto deverão se apresentar com <b>URGÊNCIA</b> para um novo exame pericial.";
             } elseif ($parametroAlta == 1) {
                 # Última licença com Alta
                 $select .= " AND alta = 1";
-                $titulo = "Servidores Com a Última Licença Médica COM ALTA";
+                $titulo = "Servidores Com a Última Licença Médica";
+                $subtitulo = "COM ALTA";
                 $mensagem1 = "Servidores já devem estar em seus setores no dia imediatamente após ao término da licença. ";
             } elseif ($parametroAlta == 4) {
                 # Todas as Licenças
@@ -295,12 +301,15 @@ if ($acesso) {
 
             # Monta a tabela
             $tabela = new Tabela();
+            $tabela->set_titulo($titulo);
+            if(!empty($subtitulo)){
+                $tabela->set_subtitulo($subtitulo);
+            }
             $tabela->set_conteudo($resumo);
             $tabela->set_label(["Servidor", "Período", "Situação", "Tipo"]);
             $tabela->set_align(["left", "left", "center", "left"]);
             $tabela->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
             $tabela->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
-            $tabela->set_titulo($titulo);
 
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->set_nomeColunaEditar("Acessar");

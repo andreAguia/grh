@@ -63,28 +63,24 @@ if ($acesso) {
     $objeto->set_voltarLista('grh.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT LPAD(idRecibo,4,'0'),
-                                     dtPgto,                                     
+    $objeto->set_selectLista("SELECT LPAD(idRecibo,4,'0'),                     
                                      idPrestador,                                     
-                                     servico,
-                                     idRecibo,
-                                     idRecibo,
                                      idRecibo,
                                      idRecibo,
                                      idRecibo
+                                     idRecibo,
+                                     idRecibo
                                 FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
-                                WHERE YEAR(dtPgto) = '{$parametroAno}'
-                                  AND MONTH(dtPgto) = '{$parametroMes}'
-                             ORDER BY dtPgto desc");
+                                WHERE YEAR(dtInicial) = '{$parametroAno}'
+                                  AND MONTH(dtInicial) = '{$parametroMes}'
+                             ORDER BY dtInicial desc");
 
     # select do edita
     $objeto->set_selectEdita("SELECT idPrestador,
-                                     dtPgto,
                                      dtInicial,
                                      dias,
                                      valor,
                                      processo,
-                                     rubrica,
                                      servico,
                                      obs
                                 FROM tbrpa_recibo
@@ -102,13 +98,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Número", "Pgto", "Prestador", "Serviço", "Período", "Valores", "Processo e Rubrica", "Rpa"]);
-    $objeto->set_width([5, 8, 15, 15, 8, 17, 18, 4]);
-    $objeto->set_align(["center", "center", "left", "left"]);
-    $objeto->set_funcao([null, "date_to_php"]);
+    $objeto->set_label(["Número", "Prestador", "Serviço / Processo", "Período", "Valores", "Rpa"]);
+    $objeto->set_width([5, 25, 30, 10, 15, 5]);
+    $objeto->set_align(["center", "left", "left"]);
 
-    $objeto->set_classe([null, null, "RpaPrestador", null, "Rpa", "Rpa", "Rpa", "Rpa"]);
-    $objeto->set_metodo([null, null, "exibePrestador", null, "exibePeriodo", "exibeValores", "exibeProcessoRubrica", "exibeBotaoRpa"]);
+    $objeto->set_classe([null, "RpaPrestador", "Rpa", "Rpa", "Rpa", "Rpa"]);
+    $objeto->set_metodo([null, "exibePrestador2", "exibeServicoProcesso", "exibePeriodo", "exibeValores", "exibeBotaoRpa"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -141,14 +136,6 @@ if ($acesso) {
             'padrao' => $sessionidPrestador,
             'col' => 9,
             'size' => 200),
-        array('linha' => 1,
-            'nome' => 'dtPgto',
-            'label' => 'Data do Pgto:',
-            'tipo' => 'date',
-            'required' => true,
-            'autofocus' => true,
-            'col' => 3,
-            'size' => 20),
         array('linha' => 2,
             'nome' => 'dtInicial',
             'label' => 'Data do Serviço:',
@@ -177,17 +164,11 @@ if ($acesso) {
             'col' => 4,
             'size' => 30),
         array('linha' => 3,
-            'nome' => 'rubrica',
-            'label' => 'Rubrica:',
-            'tipo' => 'texto',
-            'col' => 2,
-            'size' => 30),
-        array('linha' => 3,
             'nome' => 'servico',
             'label' => 'Serviço:',
             'tipo' => 'texto',
             'required' => true,
-            'col' => 10,
+            'col' => 12,
             'size' => 255),
         array('linha' => 4,
             'nome' => 'obs',
@@ -221,13 +202,7 @@ if ($acesso) {
     $botao4->set_target("_blank");
     $botao4->set_url('../grhRelatorios/rpa.anual.php');
 
-    # Relatório Anual
-    $botao5 = new Button("Relatório Anual TCE");
-    $botao5->set_title("Relatório Anual para o TCE");
-    $botao5->set_target("_blank");
-    $botao5->set_url('../grhRelatorios/rpa.anual.tce.php');
-
-    $objeto->set_botaoListarExtra([$botao1, $botao2, $botao3, $botao4, $botao5]);
+    $objeto->set_botaoListarExtra([$botao1, $botao2, $botao3, $botao4]);
 
     ################################################################
     switch ($fase) {
@@ -246,7 +221,7 @@ if ($acesso) {
                                             FROM tbrpa_recibo
                                            WHERE dtInicial IS NOT NULL
                                         ORDER BY YEAR(dtInicial)');
-            
+
             # Ano
             $controle = new Input('parametroAno', 'combo', 'Ano:', 1);
             $controle->set_size(5);
@@ -271,6 +246,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             $objeto->set_formExtra($form);
+
             $objeto->listar();
             break;
 

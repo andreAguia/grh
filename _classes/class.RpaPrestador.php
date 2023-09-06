@@ -1,7 +1,6 @@
 <?php
 
-class RpaPrestador
-{
+class RpaPrestador {
 
     /**
      * Classe que abriga as várias rotina dos Prestadores de serviço
@@ -10,8 +9,7 @@ class RpaPrestador
      */
     ###########################################################
 
-    public function get_dados($idPrestador = null)
-    {
+    public function get_dados($idPrestador = null) {
         /**
          * Retorna todos os dados 
          * 
@@ -37,8 +35,7 @@ class RpaPrestador
 
     ##############################################################
 
-    public function exibePrestador($idPrestador)
-    {
+    public function exibePrestador($idPrestador) {
         /*
          * Exibe Prestador e o CPF
          */
@@ -46,14 +43,35 @@ class RpaPrestador
         # Pega os dados 
         $dados = $this->get_dados($idPrestador);
 
-        p($dados["prestador"], "pvalor");
-        p($dados["especialidade"], "paliquota");
+        plista(
+                $dados["prestador"],
+                $dados["especialidade"],
+                "CPF: " . $dados["cpf"]
+        );
     }
 
     ##############################################################
 
-    public function getIdPrestador($cpf)
-    {
+    public function exibePrestador2($idPrestador) {
+        /*
+         * Exibe Prestador e o CPF
+         */
+
+        # Pega os dados 
+        $dados = $this->get_dados($idPrestador);
+
+        plista(
+                $dados["prestador"],
+                $dados["especialidade"],
+                "CPF: " . $dados["cpf"],
+                "Pis/Pasep: " . $dados["inss"],
+                "Nascimento: " . date_to_php($dados["dtNascimento"])
+        );
+    }
+
+    ##############################################################
+
+    public function getIdPrestador($cpf) {
         /*
          * informa o idPrestador pelo cpf
          */
@@ -75,8 +93,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function get_emails($idPrestador)
-    {
+    public function get_emails($idPrestador) {
 
         # Função que retorna os emails do prestador
         #
@@ -94,8 +111,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function get_telefones($idPrestador)
-    {
+    public function get_telefones($idPrestador) {
 
         # Função que retorna os telefones 
         #
@@ -123,8 +139,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function exibeContatos($idPrestador)
-    {
+    public function exibeContatos($idPrestador) {
 
         # Função que retorna os contatos
         #
@@ -136,8 +151,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function exibeEndereco($idPrestador)
-    {
+    public function exibeEndereco($idPrestador) {
 
         # Função que retorna os telefones 
         #
@@ -175,8 +189,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function exibeDocumentos($idPrestador)
-    {
+    public function exibeDocumentos($idPrestador) {
 
         # Função que retorna os telefones 
         #
@@ -202,7 +215,7 @@ class RpaPrestador
         }
 
         if (!empty($row["dataId"])) {
-            $retorno .= "Emitido em: ".date_to_php($row['dataId'])."<br/>";
+            $retorno .= "Emitido em: " . date_to_php($row['dataId']) . "<br/>";
         }
 
         if (!empty($row["inss"])) {
@@ -214,8 +227,7 @@ class RpaPrestador
 
     ##########################################################################################
 
-    public function exibeDadosBancarios($idPrestador)
-    {
+    public function exibeDadosBancarios($idPrestador) {
 
         # Função que retorna os telefones 
         #
@@ -239,7 +251,7 @@ class RpaPrestador
         if (!empty($row["agencia"])) {
             $retorno .= "Agência: {$row['agencia']}<br/>";
         }
-        
+
         if (!empty($row["conta"])) {
             $retorno .= "Conta: {$row['agencia']}<br/>";
         }

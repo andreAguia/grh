@@ -1,7 +1,6 @@
 <?php
 
-class Rpa
-{
+class Rpa {
 
     /**
      * Classe que abriga as várias rotina de RPA
@@ -10,8 +9,7 @@ class Rpa
      */
     ###########################################################
 
-    public function get_dados($idRecibo = null)
-    {
+    public function get_dados($idRecibo = null) {
         /**
          * Retorna todos os dados 
          * 
@@ -31,10 +29,9 @@ class Rpa
         }
     }
 
-     ###########################################################
+    ###########################################################
 
-    public function getValor($idRecibo = null)
-    {
+    public function getValor($idRecibo = null) {
         /**
          * Retorna o valor do serviço
          * 
@@ -56,8 +53,7 @@ class Rpa
 
     ##############################################################
 
-    public function exibeValorTotal($idRecibo)
-    {
+    public function exibeValorTotal($idRecibo) {
         /*
          * Exibe o Valor
          */
@@ -78,8 +74,7 @@ class Rpa
 
     ###########################################################
 
-    public function exibeBotaoRpa($idRecibo)
-    {
+    public function exibeBotaoRpa($idRecibo) {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -94,8 +89,7 @@ class Rpa
 
     ##############################################################
 
-    public function exibePeriodo($idRecibo)
-    {
+    public function exibePeriodo($idRecibo) {
         /*
          * Exibe a data Inicial os dias e a data final
          */
@@ -119,8 +113,7 @@ class Rpa
 
     ##############################################################
 
-    public function exibeValores($idRecibo)
-    {
+    public function exibeValores($idRecibo) {
         /*
          * Exibe a data Inicial os dias e a data final
          */
@@ -141,17 +134,17 @@ class Rpa
 
             $valores = [
                 ["Valor:", formataMoeda2($dados["valor"])],
-                ["INSS:",$valorInss[1]. "% (" . formataMoeda2($valorInss[0]) . ")"],
-                ["IRRS:",$valorIr[1]. "% (" . formataMoeda2($valorIr[0]) . ")"],
+                ["INSS:", $valorInss[1] . "% (" . formataMoeda2($valorInss[0]) . ")"],
+                ["IRRS:", $valorIr[1] . "% (" . formataMoeda2($valorIr[0]) . ")"],
                 ["Total:", formataMoeda2($dados["valor"] - $valorInss[0] - $valorIr[0])]
             ];
-            
+
             $tabela = new Tabela(null, "tabelaRpa");
             $tabela->set_conteudo($valores);
             $tabela->set_label([null, null]);
             $tabela->set_align(["left", "right"]);
             $tabela->set_totalRegistro(false);
-            
+
             $formatacaoCondicional = array(
                 array(
                     'coluna' => 0,
@@ -181,8 +174,37 @@ class Rpa
 
     ##############################################################
 
-    public function exibeProcessoRubrica($idRecibo)
-    {
+    public function exibeValoresRelatorio($idRecibo) {
+        /*
+         * Exibe a data Inicial os dias e a data final
+         */
+
+        if (empty($idRecibo)) {
+            return null;
+        } else {
+            # Pega os dados deste rpa
+            $dados = $this->get_dados($idRecibo);
+
+            # Pega o valor do INSS
+            $inss = new RpaInss();
+            $valorInss = $inss->getValor($idRecibo);
+
+            # Pega o valor do IR
+            $ir = new RpaIr();
+            $valorIr = $ir->getValor($idRecibo);
+
+            echo "<table>";
+            echo "<tr><td>Valor:</td><td id='right'>" . formataMoeda2($dados["valor"]) . "</td></tr>";
+            echo "<tr><td>INSS:</td><td id='right'>" . $valorInss[1] . "% (" . formataMoeda2($valorInss[0]) . ")" . "</td></tr>";
+            echo "<tr><td>IRRS:</td><td id='right'>" . $valorIr[1] . "% (" . formataMoeda2($valorIr[0]) . ")</td></tr>";
+            echo "<tr><td>Total:</td><td id='right'>" . formataMoeda2($dados["valor"] - $valorInss[0] - $valorIr[0]) . "</td></tr>";
+            echo "</table>";
+        }
+    }
+
+    ##############################################################
+
+    public function exibeServicoProcesso($idRecibo) {
         /*
          * Exibe o processo e a rubrica do RPA
          */
@@ -192,17 +214,16 @@ class Rpa
         } else {
             # Pega os dados
             $select = "SELECT processo,
-                              rubrica
+                              servico
                        FROM tbrpa_recibo
                       WHERE idRecibo = $idRecibo";
 
             $pessoal = new Pessoal();
             $dados = $pessoal->select($select, false);
 
-            return "{$dados['processo']}<hr id='alerta'/>{$dados['rubrica']}";
+            return "{$dados['servico']}<hr id='alerta'/>{$dados['processo']}";
         }
     }
 
     ##############################################################
-
 }

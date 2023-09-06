@@ -30,12 +30,8 @@ if ($acesso) {
 
     ######
 
-    $select = "SELECT LPAD(idRecibo,4,'0'),
-                        dtPgto,                                     
-                        tbrpa_prestador.prestador,
-                        tbrpa_prestador.dtNascimento,
-                        inss,
-                        idRecibo,
+    $select = "SELECT LPAD(idRecibo,4,'0'),                       
+                        tbrpa_prestador.idPrestador,
                         idRecibo,
                         idRecibo,
                         idRecibo,
@@ -43,21 +39,22 @@ if ($acesso) {
                    FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
                    WHERE YEAR(dtPgto) = '{$parametroAno}'
                      AND MONTH(dtPgto) = '{$parametroMes}'
-                ORDER BY dtPgto";
+                ORDER BY dtInicial";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Mensal de RPA');
-    $relatorio->set_subtitulo('Ordenados pela Data de Pagamento');
+    $relatorio->set_subtitulo('Ordenados pela Data Inicial');
     $relatorio->set_tituloLinha2(get_nomeMes($parametroMes) . ' / ' . $parametroAno);
 
-    $relatorio->set_label(['Número', 'Pagamento', 'Prestador', 'Nascimento', 'PIS/PASEP', 'Valor', 'INSS', 'IRRS', 'Total']);
-    $relatorio->set_align(["center", "center", "left", "center", "center", "right", "right", "right", "right", "right"]);
+    $relatorio->set_label(['Número', 'Prestador', 'Serviço / Processo', 'Período', 'Valores']);
+    $relatorio->set_align(["center", "left", "left", "center"]);
+    $relatorio->set_width([5, 20, 20, 10, 15, 15, 5]);
+    $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_classe([null, null, null, null, null, "Rpa", "RpaInss", "RpaIr", "Rpa"]);
-    $relatorio->set_metodo([null, null, null, null, null, "getValor", "exibeValor", "exibeValor", "exibeValorTotal"]);
-    $relatorio->set_funcao([null, "date_to_php", null, "date_to_php", null, "formataMoeda2"]);
+    $relatorio->set_classe([null, "RpaPrestador", "Rpa", "Rpa", "Rpa"]);
+    $relatorio->set_metodo([null, "exibePrestador2", "exibeServicoProcesso", "exibePeriodo", "exibeValoresRelatorio"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

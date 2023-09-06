@@ -36,7 +36,7 @@ if ($acesso) {
                         idRecibo,
                         idRecibo
                    FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
-                   WHERE YEAR(dtPgto) = '{$parametroAno}'
+                   WHERE YEAR(dtInicial) = '{$parametroAno}'
                 ORDER BY dtInicial";
 
     $result = $servidor->select($select);

@@ -37,8 +37,8 @@ if ($acesso) {
                         idRecibo,
                         idRecibo
                    FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
-                   WHERE YEAR(dtPgto) = '{$parametroAno}'
-                     AND MONTH(dtPgto) = '{$parametroMes}'
+                   WHERE YEAR(dtInicial) = '{$parametroAno}'
+                     AND MONTH(dtInicial) = '{$parametroMes}'
                 ORDER BY dtInicial";
 
     $result = $servidor->select($select);

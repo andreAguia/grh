@@ -118,14 +118,12 @@ if ($acesso) {
             'nome' => 'valorInicial',
             'label' => 'Valor Inicial:',
             'tipo' => 'moeda',
-            'required' => true,
             'col' => 4,
             'size' => 10),
         array('linha' => 2,
             'nome' => 'valorFinal',
             'label' => 'Valor Final:',
             'tipo' => 'moeda',
-            'required' => true,
             'col' => 4,
             'size' => 10),
         array('linha' => 2,
@@ -138,7 +136,6 @@ if ($acesso) {
             'nome' => 'deducao',
             'label' => 'Dedução:',
             'tipo' => 'moeda',
-            'required' => true,
             'col' => 4,
             'size' => 10),
         array('linha' => 4,
@@ -159,8 +156,11 @@ if ($acesso) {
 
         case "editar" :
         case "excluir" :
-        case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :
+            $objeto->gravar($id, 'cadastroRpaIrExtra.php');
             break;
     }
 

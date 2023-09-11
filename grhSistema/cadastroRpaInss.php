@@ -117,7 +117,7 @@ if ($acesso) {
             'nome' => 'valorInicial',
             'label' => 'Valor Inicial:',
             'tipo' => 'moeda',
-            'required' => true,
+            'padrao' => 0,
             'col' => 4,
             'size' => 10),
         array('linha' => 2,
@@ -131,8 +131,9 @@ if ($acesso) {
             'nome' => 'aliquota',
             'label' => 'Aliquota:',
             'tipo' => 'porcentagem',
+            'required' => true,
             'col' => 4,
-            'size' => 3),
+            'size' => 5),
         array('linha' => 3,
             'nome' => 'obs',
             'label' => 'Observação:',
@@ -151,8 +152,11 @@ if ($acesso) {
 
         case "editar" :
         case "excluir" :
-        case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :
+            $objeto->gravar($id, 'cadastroRpaInssExtra.php');
             break;
     }
 

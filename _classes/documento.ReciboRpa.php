@@ -279,7 +279,7 @@ class ReciboRpa
         $div->abre();
 
         $valores = [
-            ["Campos dos Goytacazes, " . dataExtenso(date_to_php($dados["dtPgto"]))]
+            ["Campos dos Goytacazes, " . dataExtenso(date_to_php($dados["dtInicial"]))]
         ];
 
         $tabela = new Tabela(null, "tabelaRpa");

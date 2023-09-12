@@ -151,7 +151,7 @@ if ($acesso) {
             'col' => 12,
             'label' => 'Observação:',
             'tipo' => 'textarea',
-            'size' => array(80, 5)),
+            'size' => array(80, 10)),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',

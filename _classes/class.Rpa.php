@@ -221,7 +221,7 @@ class Rpa {
             $pessoal = new Pessoal();
             $dados = $pessoal->select($select, false);
 
-            return "{$dados['servico']}<hr id='alerta'/>{$dados['processo']}";
+            return "{$dados['servico']}<hr id='alerta'/>Processo: {$dados['processo']}";
         }
     }
 

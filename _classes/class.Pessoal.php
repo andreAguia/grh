@@ -960,6 +960,79 @@ class Pessoal extends Bd {
      * @param string $idServidor    null idServidor do servidor
      * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
      */
+    public function get_cargoCompletoDeclaracao($idServidor, $exibeComissao = true) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        if (($row[0] == 1) or ($row[0] == 2)) { // Se é professor
+            $tipoCargo = null;
+            $area = null;
+        } else {
+            $tipoCargo = $row[1];
+            $area = $row[2];
+        }
+
+        $nomeCargo = $row[3];
+        $retorno = null;
+
+        # Verifica se é cedido
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
+            $retorno .= "exercendo função equivalente ao ";
+        }
+
+        $comissao = $this->get_cargoComissaoDescricao($idServidor);
+
+        if (!empty($tipoCargo)) {
+            $retorno .= $tipoCargo;
+        }
+
+        if (!empty($area)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $area;
+            } else {
+                $retorno .= $area;
+            }
+        }
+
+        if (!empty($nomeCargo)) {
+            if (!empty($tipoCargo)) {
+                $retorno .= ' - ' . $nomeCargo;
+            } else {
+                $retorno .= $nomeCargo;
+            }
+        }
+
+        if ((!empty($comissao)) and ($exibeComissao)) {
+
+            if (empty($retorno)) {
+                $retorno .= " ocupando o cargo em comissao de {$comissao}";
+            } else {
+                $retorno .= " e, atualmente, ocupando o cargo em comissao de {$comissao}";
+            }
+        }
+
+        return $retorno;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
     public function get_cargoCompleto2($idServidor, $exibeComissao = true) {
         # Pega o cargo do servidor
         $select = 'SELECT tbtipocargo.idTipoCargo,
@@ -1806,11 +1879,34 @@ class Pessoal extends Bd {
         # Monta o select		
         $select = "SELECT orgao 
                      FROM tbhistcessao
-                    WHERE idServidor = '$idServidor'
+                    WHERE idServidor = '{$idServidor}'
                       AND current_date() >= dtInicio
                       AND (isnull(dtFim) OR current_date() <= dtFim)";
 
         $row = parent::select($select, false);
+        
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ##########################################################################################
+
+    function get_orgaoCedidoFora($idServidor) {
+
+
+        # Função que informa de qual órgão o servidor de fora da Uenf veio cedido
+        #
+        # Parâmetro: a matrícula a ser pesquisada
+        # Monta o select		
+        $select = "SELECT orgaoOrigem 
+                     FROM tbcedido
+                    WHERE idServidor = '{$idServidor}'";
+
+        $row = parent::select($select, false);
+        
         if (empty($row[0])) {
             return null;
         } else {
@@ -3844,7 +3940,6 @@ class Pessoal extends Bd {
                     WHERE idPerfil = {$id}";
 
         $row = parent::select($select, false);
-
         return $row[0];
     }
 

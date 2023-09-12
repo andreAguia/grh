@@ -39,6 +39,9 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMes = post('parametroMes', get_session('parametroMes', date("m")));
+    
+    # Monta uma data fictícia com o ano e mês da pesquisa
+    $data = "{$parametroAno}-{$parametroMes}-01";
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
@@ -58,7 +61,7 @@ if ($acesso) {
     ################################################################
     # Nome do Modelo
     $objeto->set_nome('Controle de RPAs');
-    $objeto->set_subtitulo(get_nomeMes($parametroMes)." / ".$parametroAno);
+    $objeto->set_subtitulo(get_nomeMes($parametroMes) . " / " . $parametroAno);
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -72,14 +75,17 @@ if ($acesso) {
                                      idRecibo,
                                      idRecibo
                                 FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
-                                WHERE YEAR(dtInicial) = '{$parametroAno}'
-                                  AND MONTH(dtInicial) = '{$parametroMes}'
+                                WHERE (((YEAR(dtInicial) = '{$parametroAno}') OR (YEAR(ADDDATE(dtInicial,numDias-1)) = '{$parametroAno}')) 
+                                   OR ((YEAR(dtInicial) < '{$parametroAno}') AND (YEAR(ADDDATE(dtInicial,numDias-1)) > '{$parametroAno}')))
+                                  AND (('{$data}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                                   OR  (LAST_DAY('{$data}') BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                                   OR  ('{$data}' < dtInicial AND LAST_DAY('{$data}') > ADDDATE(dtInicial,numDias-1)))
                              ORDER BY dtInicial desc");
 
     # select do edita
     $objeto->set_selectEdita("SELECT idPrestador,
                                      dtInicial,
-                                     dias,
+                                     numDias,
                                      valor,
                                      processo,
                                      servico,
@@ -145,7 +151,7 @@ if ($acesso) {
             'col' => 3,
             'size' => 20),
         array('linha' => 2,
-            'nome' => 'dias',
+            'nome' => 'numDias',
             'label' => 'Duração (em dias):',
             'tipo' => 'numero',
             'required' => true,

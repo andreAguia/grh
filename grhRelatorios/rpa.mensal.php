@@ -27,6 +27,9 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroAno = get_session('parametroAno', date("Y"));
     $parametroMes = get_session('parametroMes', date("m"));
+    
+    # Monta uma data fictícia com o ano e mês da pesquisa
+    $data = "{$parametroAno}-{$parametroMes}-01";
 
     ######
 
@@ -37,9 +40,12 @@ if ($acesso) {
                         idRecibo,
                         idRecibo
                    FROM tbrpa_recibo JOIN tbrpa_prestador USING (idPrestador)
-                   WHERE YEAR(dtInicial) = '{$parametroAno}'
-                     AND MONTH(dtInicial) = '{$parametroMes}'
-                ORDER BY dtInicial";
+                  WHERE (((YEAR(dtInicial) = '{$parametroAno}') OR (YEAR(ADDDATE(dtInicial,numDias-1)) = '{$parametroAno}')) 
+                     OR ((YEAR(dtInicial) < '{$parametroAno}') AND (YEAR(ADDDATE(dtInicial,numDias-1)) > '{$parametroAno}')))
+                    AND (('{$data}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                     OR  (LAST_DAY('{$data}') BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1))
+                     OR  ('{$data}' < dtInicial AND LAST_DAY('{$data}') > ADDDATE(dtInicial,numDias-1)))
+               ORDER BY dtInicial desc";
 
     $result = $servidor->select($select);
 

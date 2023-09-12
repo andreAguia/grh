@@ -35,7 +35,7 @@ if ($acesso) {
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado);
+    $cargoEfetivo = $pessoal->get_cargoCompletoDeclaracao($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
@@ -48,26 +48,32 @@ if ($acesso) {
         $cargoEfetivo .= ",";
     }
 
-    # Gênero do servidor
-    if ($idPerfil == 1) {
+    # Altera parte do texto de acordo com o sexo (gênero) do servidor
+    if ($pessoal->get_perfilTipo($idPerfil) == "Concursados") {
         if ($sexo == "Masculino") {
-            $sexoServidor = "o servidor";
+            $texto1 = "o servidor";
         } else {
-            $sexoServidor = "a servidora";
+            $texto1 = "a servidora";
         }
     } else {
-        $sexoServidor = "";
+        $texto1 = null;
+    }
+    
+    # Altera o texto de acordo com o perfil do servidor
+    $textoExtra = null;
+    if ($idPerfil == 2) {
+        $textoExtra = "cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade, ";
     }
 
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
-    $identificacao = "Declaro, para os devidos fins, que {$sexoServidor}"
+    $identificacao = "Declaro, para os devidos fins, que {$texto1}"
             . " <b>" . strtoupper($nomeServidor) . "</b>,"
             . " ID funcional nº {$idFuncional}, "
             . " admitido(a) em {$dtAdmin},"
-            . " {$cargoEfetivo} "
+            . " {$textoExtra}{$cargoEfetivo} "
             . "lotado(a) no(a) {$lotacao}, ";
 
     # Monta a Declaração

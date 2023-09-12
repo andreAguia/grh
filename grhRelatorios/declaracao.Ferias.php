@@ -33,6 +33,7 @@ if ($acesso) {
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $situacao = $pessoal->get_idSituacao($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
+    $sexo = $pessoal->get_sexo($idServidorPesquisado);
 
     # Começa uma nova página
     $page = new Page();
@@ -130,15 +131,32 @@ if ($acesso) {
 
     $dec->set_formFocus('parametroAno');
     $dec->set_formLink('?');
+    
+    # Altera parte do texto de acordo com o sexo (gênero) do servidor
+    if ($pessoal->get_perfilTipo($idPerfil) == "Concursados") {
+        if ($sexo == "Masculino") {
+            $texto1 = "o servidor";
+        } else {
+            $texto1 = "a servidora";
+        }
+    } else {
+        $texto1 = null;
+    }
+    
+    # Altera o texto de acordo com o perfil do servidor
+    $textoExtra = null;
+    if ($idPerfil == 2) {
+        $textoExtra = "cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade, ";
+    }
 
     # Somente se for estatutário
     if ($idPerfil == 1) {
-        $texto = "Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
+        $texto = "Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                 . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
                 . " {$lotacao}, ";
     } else {
-        $texto = "Declaro para os devidor fins que o(a) servidor(a) <b>" . strtoupper($nomeServidor) . "</b>,"
-                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, lotado(a) no(a) {$lotacao}, ";
+        $texto = "Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
+                . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, {$textoExtra} lotado(a) no(a) {$lotacao}, ";
     }
 
     $dec->set_texto($texto . $dadosFerias);

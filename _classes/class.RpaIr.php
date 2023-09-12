@@ -182,7 +182,7 @@ class RpaIr {
                                     FROM tbrpa_ir
                                    WHERE {$valor} BETWEEN ValorInicial AND ValorFinal
                                      AND dtInicial = '{$dtInicialtabela}'", false, true);
-
+                                     
         return str_replace(",", ".", $row["aliquota"]);
     }
 
@@ -199,9 +199,9 @@ class RpaIr {
         # Pega a aliquota de acordo com o valor
         $pessoal = new Pessoal();
         $row = $pessoal->select("SELECT deducao
-                                    FROM tbrpa_ir
-                                   WHERE {$valor} BETWEEN ValorInicial AND ValorFinal
-                                     AND dtInicial = '{$dtInicialtabela}'", false, true);
+                                   FROM tbrpa_ir
+                                  WHERE {$valor} BETWEEN ValorInicial AND ValorFinal
+                                    AND dtInicial = '{$dtInicialtabela}'", false, true);
 
         return $row["deducao"];
     }

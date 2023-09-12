@@ -20,7 +20,7 @@ class Rpa {
         } else {
             # Pega os dados
             $select = "SELECT *,
-                              ADDDATE(dtInicial,dias-1) as dtFinal
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
                        FROM tbrpa_recibo
                       WHERE idRecibo = $idRecibo";
 
@@ -99,15 +99,15 @@ class Rpa {
         } else {
             # Pega os dados
             $select = "SELECT dtInicial,
-                              dias,
-                              ADDDATE(dtInicial,dias-1) as dtFinal
+                              numDias,
+                              ADDDATE(dtInicial,numDias-1) as dtFinal
                        FROM tbrpa_recibo
                       WHERE idRecibo = $idRecibo";
 
             $pessoal = new Pessoal();
             $dados = $pessoal->select($select, false);
 
-            return date_to_php($dados["dtInicial"]) . "<br/>(" . $dados["dias"] . " dias)<br/>" . date_to_php($dados["dtFinal"]);
+            return date_to_php($dados["dtInicial"]) . "<br/>(" . $dados["numDias"] . " dias)<br/>" . date_to_php($dados["dtFinal"]);
         }
     }
 

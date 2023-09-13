@@ -114,7 +114,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Ver"]);
-    $objeto->set_width([10, 30, 35, 10, 5]);
+    $objeto->set_width([10, 40, 25, 10, 5]);
     $objeto->set_align(["center", "left", "left"]);
 
     $objeto->set_classe([null, null, null, null, "Formacao"]);

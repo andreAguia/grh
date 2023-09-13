@@ -3069,20 +3069,19 @@ class Pessoal extends Bd {
         foreach ($row as $rr) {
 
             # Pega a descrição 
-            if (!is_null($rr[0])) {
-                if (empty($comissao->get_descricaoCargo($rr[0]))) {
+            if (!is_null($rr['idComissao'])) {
+                if (empty($comissao->get_descricaoCargo($rr['idComissao']))) {
                     $tipoComissao = new TipoComissao();
                     $retorno .= $tipoComissao->get_descricao($rr['idTipoComissao']);
                 } else {
-                    $retorno .= $comissao->get_descricaoCargo($rr[0]);
+                    $retorno .= $comissao->get_descricaoCargo($rr['idComissao']);
                 }
             }
 
-            if (!empty($rr[1])) {
+            if (!empty($rr["tipo"])) {
                 # Informa o tipo
-                if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
-                    $cargoComissao = new CargoComissao();
-                    $retorno .= "<br>({$cargoComissao->tipos[$rr[1]][1]})";
+                if ($rr["tipo"] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+                    $retorno .= "<br>({$comissao->get_tipo($rr['idComissao'])})";
                 }
             }
 

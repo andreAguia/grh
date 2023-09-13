@@ -1872,7 +1872,6 @@ class Pessoal extends Bd {
 
     function get_orgaoCedido($idServidor) {
 
-
         # Função que informa o órgão onde o servidor da uenf está cedido
         #
         # Parâmetro: a matrícula a ser pesquisada

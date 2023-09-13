@@ -33,7 +33,7 @@ class Declaracao {
 
     ###########################################################
 
-    public function __construct() {
+    public function __construct($declaracaoNome = null) {
         /**
          * Inicia a Ci e preenche oas variáveis com valores padrão
          */
@@ -51,6 +51,10 @@ class Declaracao {
         $this->origemSetor = "UENF/DGA/GRH";
         $this->origemIdFuncional = $idFuncionalGerente;
         $this->origemDescricao = $descricao;
+        
+        if(!empty($declaracaoNome)){
+            $this->declaracaoNome = $declaracaoNome;
+        }
     }
 
     ###########################################################

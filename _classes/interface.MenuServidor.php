@@ -595,18 +595,18 @@ class MenuServidor {
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
         }
+        
+        if ($this->situacao == "Ativo") {
+            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
+
+            if ($this->perfil == 1) {
+                $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
+            }
+        }
 
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
-            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.VinculoEmpregaticio.php');
-        }
-
-        if ($this->situacao == "Ativo") {
-            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
-        }
-
-        if ($this->perfil == 1 AND $this->situacao == "Ativo") {
-            $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.Exercicio.php');
+            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
         }
 
         $licencaMaternidade = new LicencaMaternidade();

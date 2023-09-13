@@ -19,6 +19,10 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Começa uma nova página
+    $page = new Page();
+    $page->iniciaPagina();
 
     # Desde de qual data?
     $dataInicial = "02/01/2020";
@@ -59,25 +63,42 @@ if ($acesso) {
     $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
+    
+    # Começa o texto
+    $texto = "Declaro para fins de afastamento eleitoral, que ";
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($pessoal->get_perfilTipo($idPerfil) == "Concursados") {
         if ($sexo == "Masculino") {
-            $texto1 = "o servidor";
+            $texto .= "o servidor";
         } else {
-            $texto1 = "a servidora";
+            $texto .= "a servidora";
         }
-    } else {
-        $texto1 = null;
     }
+    
+    # O nome do servidor
+    $texto .= " <b>" . strtoupper($nomeServidor) . "</b>,";
 
-    # Começa uma nova página
-    $page = new Page();
-    $page->iniciaPagina();
+    # O id(se tiver)
+    if (!empty($idFuncional)) {
+        $texto .= " ID funcional nº {$idFuncional},";
+    }
+    
+    # Altera o texto de acordo com o perfil do servidor
+    $textoExtra = null;
+    if ($idPerfil == 2) {
+        if ($sexo == "Masculino") {
+            $texto .= " cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade, ";
+        } else {
+            $texto .= " cedida do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade, ";
+        }
+    }
+    
+    # Continua o texto
+    $texto .= " {$cargoEfetivo}, teve sua frequência INTEGRAL no período de {$dataInicial} até a presente data.";
 
     # Monta a Declaração
-    $dec = new Declaracao();
-    #$dec->set_carimboCnpj(true);
+    $dec = new Declaracao("DECLARAÇÃO ELEITORAL DE FREQUÊNCIA");
     $dec->set_assinatura(true);
 
     # Verifica e avisa se tem ou não faltas para este servidor
@@ -87,16 +108,8 @@ if ($acesso) {
         $dec->set_aviso("Não existe nenhuma falta cadastrada no sistema para este servidor.");
     }
 
-    # Altera o texto de acordo com o perfil do servidor
-    $textoExtra = null;
-    if ($idPerfil == 2) {
-        $textoExtra = "cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade, ";
-    }
-
     $dec->set_data(date("d/m/Y"));
-
-    $dec->set_texto("Declaro para fins de afastamento eleitoral, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, {$textoExtra}{$cargoEfetivo}, teve sua frequência INTEGRAL no período de {$dataInicial} até a presente data.");
+    $dec->set_texto($texto);
 
     $dec->set_saltoAssinatura(2);
     if (!$erro) {

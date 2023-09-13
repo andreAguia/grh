@@ -8,8 +8,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -45,22 +46,33 @@ if ($acesso) {
     if (!empty($idFuncional)) {
         $texto .= " ID funcional nº {$idFuncional},";
     }
+    
+    # Altera parte do texto de acordo com o sexo (gênero) do servidor
+    if ($sexo == "Masculino") {
+        $texto1 = "cedido";
+        $texto2 = "servidor";
+        $texto3 = "admitido";
+    } else {
+        $texto1 = "cedida";
+        $texto2 = "servidora";
+        $texto3 = "admitida";
+    }
 
     # Cedido
     if ($idPerfil == 2) {
         if ($idSituacao == 1) {
-            $texto .= " é cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade em {$dtAdmin}, {$cargoEfetivo}.";
+            $texto .= " é {$texto1} do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade desde {$dtAdmin}, {$cargoEfetivo}.";
         } else {
-            $texto .= " foi cedido do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade do período de {$dtAdmin} a {$dtSaida}, {$cargoEfetivo}.";
+            $texto .= " foi {$texto1} do(a) {$pessoal->get_orgaoCedidoFora($idServidorPesquisado)} a esta Universidade do período de {$dtAdmin} a {$dtSaida}, {$cargoEfetivo}.";
         }
     }
 
     # Estatutário
     if ($idPerfil == 1) {
         if ($idSituacao == 1) {
-            $texto .= " é servidor desta Universidade, admitido(a) em {$dtAdmin}, através de Concurso Público, para o cargo de {$cargoEfetivo}.";
+            $texto .= " é {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público, para o cargo de {$cargoEfetivo}.";
         } else {
-            $texto .= " foi servidor desta Universidade, admitido(a) em {$dtAdmin}, através de Concurso Público para o cargo de {$cargoEfetivo}, até {$dtSaida}";
+            $texto .= " foi {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público para o cargo de {$cargoEfetivo}, até {$dtSaida}";
 
             # Continua de acordo com o motido de saída
             switch ($idMotivo) {

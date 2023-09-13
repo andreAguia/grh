@@ -32,15 +32,35 @@ if ($acesso) {
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $nomeLotacao = $pessoal->get_nomeLotacao2($idLotacao);
     
-    if($idPerfil == 2){
-        $cargoEfetivo = "exercendo a função equivalente ao {$cargoEfetivo}";
+    # Começa o texto
+    $texto = "Declaro, para os devidos fins, que ";
+    
+    # O nome do servidor
+    $texto .= " <b>" . strtoupper($nomeServidor) . "</b>,";
+    
+    # O id(se tiver)
+    if (!empty($idFuncional)) {
+        $texto .= " ID funcional nº {$idFuncional},";
     }
-
+    
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
-        $texto1 = "o servidor";
+        $texto .= " é servidor desta Universidade, admitido";
+        $texto1 = "cedido";
     } else {
-        $texto1 = "a servidora";
+        $texto .= " é servidora desta Universidade, admitida";
+        $texto1 = "cedida";
+    }
+
+    # Continua o texto
+    $texto .= " através de concurso público,"
+            . " na data de {$dtAdmissao}, para o cargo de {$cargoEfetivo},";
+            
+    # Verifica se está cedido para outro órgão        
+    if($idLotacao = 113){        
+        $texto .= " e se encontra atualmente {$texto1} para {$pessoal->get_orgaoCedido($idServidorPesquisado)}.";
+    }else{        
+        $texto .= " desempenhando suas atribuições no(a) {$nomeLotacao}.";
     }
 
     # Começa uma nova página
@@ -48,17 +68,11 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Monta a Declaração
-    $dec = new Declaracao();
+    $dec = new Declaracao("DECLARAÇÃO DE EFETIVO EXERCÍCIO");
     $dec->set_carimboCnpj(true);
-    $dec->set_assinatura(true);
-    
+    $dec->set_assinatura(true);    
     $dec->set_data(date("d/m/Y"));
-
-    $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, é servidor(a) desta Universidade admitido através de concurso"
-            . " público na data de {$dtAdmissao} para o cargo de {$cargoEfetivo}, desempenhando suas"
-            . " atribuições no(a) {$nomeLotacao}.");
-
+    $dec->set_texto($texto);
     $dec->set_saltoRodape(10);    
     $dec->show();
 

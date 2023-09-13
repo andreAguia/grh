@@ -2347,6 +2347,28 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idMotivo
+     * informa o motivo de saída de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_idMotivo($idServidor) {
+        $select = "SELECT motivo
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $motivo = parent::select($select, false);
+
+        if (empty($motivo[0])) {
+            return null;
+        } else {
+            return $motivo[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_motivo
      * informa o motivo de saída de um servidor
      * 

@@ -579,15 +579,27 @@ class MenuServidor {
             $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
         }
 
-        $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
-        $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
-        $menu->add_item('linkWindow', 'Documento Termo de Responsabilidade', '../grhRelatorios/declaracao.Eleitoral.Termo.Responsabilidade.php');
-        $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilizacao.php');
+        if ($this->situacao == "Ativo") {
+            $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
+            $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
+            $menu->add_item('linkWindow', 'Documento Termo de Responsabilidade', '../grhRelatorios/declaracao.Eleitoral.Termo.Responsabilidade.php');
+            $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilizacao.php');
+        }
 
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
-        $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
-        $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
+        if ($this->perfil == 1) {
+            $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
+        }
+
+        if ($this->situacao == "Ativo") {
+            $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
+        }
+
+        // Somente estatutários e cedidos
+        if ($this->perfil == 1 OR $this->perfil == 2) {
+            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.VinculoEmpregaticio.php');
+        }
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
@@ -616,8 +628,14 @@ class MenuServidor {
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
-        $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
-        $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
+
+        if ($this->situacao == "Ativo") {
+            $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
+        }
+
+        if ($this->perfil == 1) {
+            $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
+        }
         $menu->add_item('linkWindow', 'Relatório para Cadastro de Responsáveis - SETCONT', '../grhRelatorios/setcont.responsavel.php');
 
         #$menu->add_item('link','Declaração para o INSS','#');

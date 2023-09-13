@@ -98,7 +98,7 @@ if ($acesso) {
     $texto .= " {$cargoEfetivo}, teve sua frequência INTEGRAL no período de {$dataInicial} até a presente data.";
 
     # Monta a Declaração
-    $dec = new Declaracao("DECLARAÇÃO ELEITORAL DE FREQUÊNCIA");
+    $dec = new Declaracao("DECLARAÇÃO DE FREQUÊNCIA");
     $dec->set_assinatura(true);
 
     # Verifica e avisa se tem ou não faltas para este servidor

@@ -40,7 +40,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
-    $parametroFoto = post('parametroFoto', retiraAspas(get_session('parametroFoto')));
+    $parametroFoto = post('parametroFoto', retiraAspas(get_session('parametroFoto',"Todos")));
     $parametroOrdenacao = post('parametroOrdenacao', retiraAspas(get_session('parametroOrdenacao', "tbpessoa.nome asc")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
@@ -223,6 +223,8 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY {$parametroOrdenacao}";
+            $resumo = $pessoal->select($select);
+            $resumo2[] = null;
 
             #echo $select;
             # Monta a tabela
@@ -234,7 +236,6 @@ if ($acesso) {
             $tabela->set_classe([null, "Pessoal"]);
             $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil"]);
 
-            $resumo = $pessoal->select($select);
 
             if ($parametroFoto == "Com Foto" AND count($resumo) > 0) {
                 foreach ($resumo as $item) {
@@ -244,7 +245,7 @@ if ($acesso) {
                     }
                 }
 
-                $tabela->set_conteudo($resumo2);
+                $tabela->set_conteudo(array_filter($resumo2));
             }
 
             if ($parametroFoto == "Sem Foto" AND count($resumo) > 0) {
@@ -256,7 +257,7 @@ if ($acesso) {
                     }
                 }
 
-                $tabela->set_conteudo($resumo2);
+               $tabela->set_conteudo(array_filter($resumo2));
             }
 
             if ($parametroFoto == "Todos" AND count($resumo) > 0) {

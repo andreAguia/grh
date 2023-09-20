@@ -38,7 +38,9 @@ if ($acesso) {
                                              JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1
+                WHERE idPerfil = 1
+                  AND year(tbservidor.dtadmissao) <= {$parametroAno}
+                  AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})
                   AND NOT acumula
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND anoReferencia = '{$parametroAno}'";
@@ -64,7 +66,7 @@ if ($acesso) {
     $relatorio->set_align(["center", "left", "left", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
 
-    $relatorio->set_metodo([null, "get_nome", "get_cargo"]);
+    $relatorio->set_metodo([null, "get_nome", "get_cargoSimples"]);
     $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
 
     if ($parametroLotacao <> "*") {

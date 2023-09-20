@@ -1089,7 +1089,7 @@ class Pessoal extends Bd {
                     WHERE idServidor = ' . $idServidor;
 
         $row = parent::select($select, false);
-        
+
         if ($exibeComissao) {
             $comissao = $this->get_cargoComissaoDescricao($idServidor);
         }
@@ -1883,7 +1883,7 @@ class Pessoal extends Bd {
                       AND (isnull(dtFim) OR current_date() <= dtFim)";
 
         $row = parent::select($select, false);
-        
+
         if (empty($row[0])) {
             return null;
         } else {
@@ -1905,7 +1905,7 @@ class Pessoal extends Bd {
                     WHERE idServidor = '{$idServidor}'";
 
         $row = parent::select($select, false);
-        
+
         if (empty($row[0])) {
             return null;
         } else {
@@ -2612,6 +2612,33 @@ class Pessoal extends Bd {
                     $this->get_lotacao($idServidor),
                     $this->get_perfil($idServidor)
             );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacaoEPerfilESituacao
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoELotacaoEPerfilESituacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_lotacao($idServidor),
+                    $this->get_perfil($idServidor)
+            );
+
+            if ($this->get_situacao($idServidor) == "Ativo") {
+                p($this->get_situacao($idServidor), "verde");
+            } else {
+                p($this->get_situacao($idServidor)." - ".$this->get_dtSaida($idServidor), "vermelho");
+            }
         }
     }
 
@@ -4367,9 +4394,9 @@ class Pessoal extends Bd {
      * @param	string $id  id do parentesco
      */
     public function get_parentesco($id) {
-        $select = 'SELECT  parentesco
-                      FROM tbparentesco
-                     WHERE idparentesco = ' . $id;
+        $select = "SELECT  parentesco
+                     FROM tbparentesco
+                    WHERE idparentesco = {$id}";
 
         $row = parent::select($select, false);
 

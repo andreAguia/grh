@@ -36,14 +36,18 @@ if ($acesso) {
                                       JOIN tbperfil USING (idPerfil)  
                                       LEFT JOIN tbhistlot USING (idServidor)
                                       LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE situacao = 1
-                     AND tbperfil.tipo <> 'Outros'
+                     WHERE idPerfil = 1
+                     AND year(tbservidor.dtadmissao) <= {$parametroAno}
+                     AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})
                      AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
+                     AND tbservidor.idServidor NOT IN 
+                     (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)
                                              LEFT JOIN tbhistlot USING (idServidor)
                                              LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1                  
+                WHERE idPerfil = 1
+                  AND year(tbservidor.dtadmissao) <= {$parametroAno}
+                  AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})                
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                   AND year(tbservidor.dtadmissao) <= '{$parametroAno}'
                   AND anoReferencia = '{$parametroAno}'";

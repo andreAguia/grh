@@ -230,7 +230,7 @@ if ($acesso) {
                                                      LEFT JOIN tbpessoa USING (idPessoa)
                                                      LEFT JOIN tbhistlot USING (idServidor)
                                                      LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE situacao = 1
+                        WHERE idPerfil = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND anoReferencia = '{$parametroAno}'";
 
@@ -250,7 +250,7 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY anoReferencia, tbpessoa.nome";
-
+            
             $resumo = $pessoal->select($select);
 
             # Monta a tabela
@@ -261,7 +261,11 @@ if ($acesso) {
             $tabela->set_align(["center", "center", "left"]);
             $tabela->set_funcao(["date_to_php", null, null, "date_to_php"]);
             $tabela->set_classe([null, null, "Pessoal"]);
-            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfil"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfilESituacao"]);
+            
+            $tabela->set_rowspan(2);
+            $tabela->set_grupoCorColuna(2);
+            
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 1,
                     'valor' => 'SIM',
@@ -288,16 +292,18 @@ if ($acesso) {
                                          JOIN tbperfil USING (idPerfil)  
                                          LEFT JOIN tbhistlot USING (idServidor)
                                          LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE situacao = 1
-                          AND tbperfil.tipo <> 'Outros'
+                        WHERE idPerfil = 1
+                          AND year(tbservidor.dtadmissao) <= {$parametroAno}
+                          AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbservidor.idServidor NOT IN (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
-                                             LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbhistlot USING (idServidor)
-                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                WHERE situacao = 1                  
-                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
-                  AND anoReferencia = '{$parametroAno}'";
+                          AND tbservidor.idServidor NOT IN 
+                          (SELECT tbacumulacaodeclaracao.idServidor FROM tbacumulacaodeclaracao 
+                                                                    LEFT JOIN tbservidor USING (idServidor)
+                                                                    LEFT JOIN tbpessoa USING (idPessoa)
+                                                                    LEFT JOIN tbhistlot USING (idServidor)
+                                                                    LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
+                                                                     AND anoReferencia = '{$parametroAno}'";
 
             # lotacao
             if ($parametroLotacao <> "*") {
@@ -325,7 +331,7 @@ if ($acesso) {
                 $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
             }
 
-            $select .= " AND year(tbservidor.dtAdmissao) < {$parametroAno} ORDER BY tbpessoa.nome";
+            $select .= " ORDER BY tbpessoa.nome";
 
             $resumo = $pessoal->select($select);
 
@@ -337,7 +343,7 @@ if ($acesso) {
             $tabela->set_align(["center", "center", "left"]);
             $tabela->set_classe([null, null, "Pessoal"]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
-            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfil"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoEPerfilESituacao"]);
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();

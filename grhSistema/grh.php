@@ -83,6 +83,7 @@ if ($acesso) {
     set_session('parametroCentro');
     set_session('parametroLab');
     set_session('parametroSituacao');
+    set_session('parametroFoto');
 
     set_session('sessionParametro'); # Zera a session do parâmetro de pesquisa da classe modelo
     set_session('sessionPaginacao'); # Zera a session de paginação da classe modelo

@@ -40,11 +40,13 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
+    $parametroFoto = post('parametroFoto', retiraAspas(get_session('parametroFoto')));
     $parametroOrdenacao = post('parametroOrdenacao', retiraAspas(get_session('parametroOrdenacao', "tbpessoa.nome asc")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
+    set_session('parametroFoto', $parametroFoto);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroOrdenacao', $parametroOrdenacao);
 
@@ -141,7 +143,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -164,6 +166,16 @@ if ($acesso) {
             $controle->set_col(4);
             $form->add_item($controle);
 
+            $controle = new Input('parametroFoto', 'combo', 'Fotos:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Fotos');
+            $controle->set_array(["Todos", "Com Foto", "Sem Foto"]);
+            $controle->set_valor($parametroFoto);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
             $ordenacaoCombo = array(
                 array("tbpessoa.nome asc", "por Nome asc"),
                 array("tbpessoa.nome desc", "por Nome desc"),
@@ -180,7 +192,7 @@ if ($acesso) {
             $controle->set_valor($parametroOrdenacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -211,24 +223,48 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY {$parametroOrdenacao}";
-            
+
             #echo $select;
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Área de Fotografias dos Servidores");
+            $tabela->set_label(["IdFuncional", "Servidor", "Admissão", "Foto"]);
+            $tabela->set_align(["center", "left"]);
+            $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
+            $tabela->set_classe([null, "Pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil"]);
 
             $resumo = $pessoal->select($select);
 
-            if (count($resumo) > 0) {
+            if ($parametroFoto == "Com Foto" AND count($resumo) > 0) {
+                foreach ($resumo as $item) {
+                    # Verifica se tem pasta desse servidor
+                    if (file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
+                        $resumo2[] = $item;
+                    }
+                }
 
-                # Monta a tabela
-                $tabela = new Tabela();
-                $tabela->set_conteudo($resumo);
-                $tabela->set_titulo("Área de Fotografias dos Servidores");
-                $tabela->set_label(["IdFuncional", "Servidor", "Admissão", "Foto"]);
-                $tabela->set_align(["center", "left"]);
-                $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
-                $tabela->set_classe([null, "Pessoal"]);
-                $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil"]);
-                $tabela->show();
+                $tabela->set_conteudo($resumo2);
             }
+
+            if ($parametroFoto == "Sem Foto" AND count($resumo) > 0) {
+                foreach ($resumo as $item) {
+
+                    # Verifica se tem pasta desse servidor
+                    if (!file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
+                        $resumo2[] = $item;
+                    }
+                }
+
+                $tabela->set_conteudo($resumo2);
+            }
+
+            if ($parametroFoto == "Todos" AND count($resumo) > 0) {
+                $tabela->set_conteudo($resumo);
+            }
+
+            # Exibe a tabela
+            $tabela->show();
 
             # Pega o time final
             $time_end = microtime(true);
@@ -334,7 +370,7 @@ if ($acesso) {
 
                 # Salva e verifica se houve erro
                 if ($upload->salvar()) {
-                    
+
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
@@ -365,3 +401,4 @@ if ($acesso) {
 }
 
 
+    

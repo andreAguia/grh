@@ -19,11 +19,11 @@ class AcumulacaoDeclaracao {
          * @syntax $AcumulacaoDeclaracao->getNumDecEntregues([$ano]);
          */
         # slq
-        $select = "SELECT COUNT(idAcumulacaoDeclaracao)
+        $select = "SELECT COUNT(DISTINCT(idServidor))
                      FROM tbacumulacaodeclaracao LEFT JOIN tbservidor USING (idServidor)
-                                             LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbhistlot USING (idServidor)
-                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                 LEFT JOIN tbpessoa USING (idPessoa)
+                                                 LEFT JOIN tbhistlot USING (idServidor)
+                                                 LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbacumulacaodeclaracao.idServidor)
                       AND anoReferencia = '{$ano}'";
 
@@ -192,7 +192,7 @@ class AcumulacaoDeclaracao {
     function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNome = null) {
 
         /**
-         * informa o número de Servidores Ativos
+         * informa o número de Servidores Estatutários Ativos no ano específico
          * 
          * @param integer $parametroAno A partir de que ano
          * @param integer $idLotacao o idLotacao do servidor
@@ -200,11 +200,12 @@ class AcumulacaoDeclaracao {
          */
         $select = "SELECT idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                             LEFT JOIN tbhistlot USING (idServidor)
-                                             LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     LEFT JOIN tbhistlot USING (idServidor)
+                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND situacao = 1
-                      AND year(tbservidor.dtadmissao) <= '{$parametroAno}'";
+                      AND idPerfil = 1
+                      AND year(tbservidor.dtadmissao) <= {$parametroAno}
+                      AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})";
         # nome
         if (!empty($parametroNome)) {
             $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
@@ -213,9 +214,9 @@ class AcumulacaoDeclaracao {
         # Lotação
         if ((!is_null($idLotacao)) and ($idLotacao <> "*")) {
             if (is_numeric($idLotacao)) {
-                $select .= ' AND (tblotacao.idlotacao = "' . $idLotacao . '")';
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
             } else { # senão é uma diretoria genérica
-                $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
         }
 

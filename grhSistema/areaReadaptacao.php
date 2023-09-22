@@ -106,13 +106,6 @@ if ($acesso) {
             $linkBotao3->set_target("_blank3");
             $menu1->add_link($linkBotao3, "right");
 
-            # Site
-            $botaoSite = new Button("Site da GRH");
-            $botaoSite->set_target('_blank');
-            $botaoSite->set_title("Pagina da GRH");
-            $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/readaptacao/");
-            $menu1->add_link($botaoSite, "right");
-
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

@@ -388,7 +388,7 @@ if ($acesso) {
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
     $botaoDec->set_url("servidorAcumulacaoDeclaracao.php");
 
-    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite, $botaoDec]);
+    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoDec]);
     
     # Botão exibe declaração
     $botaoDec = new Button("Declarações");

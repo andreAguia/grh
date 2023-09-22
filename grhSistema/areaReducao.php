@@ -99,13 +99,6 @@ if ($acesso) {
             $linkBotao3->set_target("_blank");
             $menu1->add_link($linkBotao3, "right");
 
-            # Site
-            $botaoSite = new Button("Site da GRH");
-            $botaoSite->set_target('_blank');
-            $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
-            $botaoSite->set_url("http://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/");
-            $menu1->add_link($botaoSite, "right");
-
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

@@ -432,9 +432,12 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
+            
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimentoSubCategoria("Acumulação de Cargos Públicos");
 
-            $rotina = new Rotina();
-            $rotina->exibeRotina(7);
+//            $rotina = new Rotina();
+//            $rotina->exibeRotina(7);
 
             $grid->fechaColuna();
             $grid->fechaGrid();

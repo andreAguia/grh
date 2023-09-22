@@ -215,7 +215,7 @@ if ($acesso) {
 //    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
     $botaoDec->set_url("servidorAcumulacao.php");
 
-    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
+    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoDec]);
 
     # Botão exibe Processos
     $botaoDec = new Button("Processos de ACP");

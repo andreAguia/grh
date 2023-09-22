@@ -383,12 +383,6 @@ if ($acesso) {
     $linkBotao3->set_title('Procedimentos');
     $linkBotao3->set_target("_blank");
 
-    # Site
-    $botaoSite = new Button("Site da GRH");
-    $botaoSite->set_target('_blank');
-    $botaoSite->set_title("Pagina no site da GRH sobre Redução da Carga Horária");
-    $botaoSite->set_url("https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/");
-
     # Botão exibe declaração
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");

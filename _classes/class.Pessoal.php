@@ -1329,15 +1329,20 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     public function get_idCargo($idServidor) {
-        # Pega o cargo do servidor
-        $select = 'SELECT tbcargo.idCargo
-                         FROM tbservidor LEFT JOIN tbcargo ON (tbservidor.idCargo=tbcargo.idCargo)
-                        WHERE idServidor = ' . $idServidor;
 
-        $row = parent::select($select, false);
-        $idcargo = $row[0];
+        # Verifica o idservidor
+        if (empty($idServidor)) {
+            return null;
+        } else {
 
-        return $idcargo;
+            # Pega o cargo do servidor
+            $select = "SELECT idCargo
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+            $row = parent::select($select, false);
+            return $row[0];
+        }
     }
 
     ###########################################################
@@ -2637,7 +2642,7 @@ class Pessoal extends Bd {
             if ($this->get_situacao($idServidor) == "Ativo") {
                 p($this->get_situacao($idServidor), "verde");
             } else {
-                p($this->get_situacao($idServidor)." - ".$this->get_dtSaida($idServidor), "vermelho");
+                p($this->get_situacao($idServidor) . " - " . $this->get_dtSaida($idServidor), "vermelho");
             }
         }
     }

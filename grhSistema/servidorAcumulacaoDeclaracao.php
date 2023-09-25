@@ -239,8 +239,11 @@ if ($acesso) {
 
         case "editar" :
         case "excluir" :
-        case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :
+            $objeto->gravar($id, "servidorAcumulacaoDeclaracaoExtra.php");
             break;
 
         ###################################################################

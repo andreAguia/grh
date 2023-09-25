@@ -1412,8 +1412,12 @@ function array_sort($array, $on, $order = SORT_ASC) {
  */
 function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
 
-    $painel = new Callout();
-    $painel->abre();
+    # Colunas
+    $grid = new Grid();
+    $grid->abreColuna(8);
+
+    # Conecta ao Banco de Dados
+    $pessoal = new Pessoal();
 
     tituloTable("Despachos:");
     br();
@@ -1424,13 +1428,66 @@ function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
     $menu->add_item("linkWindow", "Despacho: Solicitação de Declaração Pendente", "?fase=despachoDeclaracaoPendente");
     $menu->add_item("linkWindow", "Despacho: Solicitação de Modelo Padrão", "?fase=despachoModeloPadrao");
     $menu->add_item("linkWindow", "Despacho: Solicitação de Correção", "?fase=despachoCorrecao");
-    $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise","?fase=despachoAnalise");
-    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada","?fase=despachoConfianca");
+    $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise", "?fase=despachoAnalise");
+    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada", "?fase=despachoConfianca");
     $menu->add_item("linkWindow", "Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
 
     $menu->show();
 
-    $painel->fecha();
+    $grid->fechaColuna();
+    $grid->abreColuna(4);
+
+    #######################################################
+    # Vinculos do servidor
+    $numVinculos = $pessoal->get_numVinculos($idServidor);
+
+    tituloTable("Outros Vínculos:");
+    br();
+
+    # Número de Vinculos
+    if ($numVinculos > 1) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Exibe os vinculos
+        $vinculos = $pessoal->get_vinculos($idServidor);
+
+        # Percorre os vínculos
+        foreach ($vinculos as $rr) {
+
+            # Descarta o vinculo em tela
+            if ($rr[0] <> $idServidor) {
+                $dtAdm = $pessoal->get_dtAdmissao($rr[0]);
+                $dtSai = $pessoal->get_dtSaida($rr[0]);
+                $perfil = $pessoal->get_perfilSimples($rr[0]);
+                $cargo = $pessoal->get_cargoSimples($rr[0]);
+                $idSituacao = $pessoal->get_idSituacao($rr[0]);
+
+                # Quando o cargo for null
+                if (!empty($cargo)) {
+                    $cargo = "Cargo: {$cargo}";
+                }
+
+                # Cria um motivo Ativo
+                if ($idSituacao == 1) {
+                    $motivo = "Ativo";
+                } else {
+                    $motivo = $pessoal->get_motivo($rr[0]) . " - " . $pessoal->get_dtAdmissao($rr[0]) . " - " . $pessoal->get_dtSaida($rr[0]);
+                }
+
+                plista($cargo, $perfil, $motivo);
+                hr();
+            }
+        }
+    } else {
+        br();
+        p("Não há outros vinculos deste servidor na Uenf.", "center", "f12");
+        br(3);
+    }
+
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 }
 
 ##################################################################

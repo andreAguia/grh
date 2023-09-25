@@ -458,7 +458,7 @@ class MenuServidor {
         $painel = new Callout("primary");
         $painel->abre();
 
-        p("Vínculos", "palertaServidor");
+        p("Outros Vínculos", "palertaServidor");
 
         # Número de Vinculos
         if ($numVinculos > 1) {
@@ -503,7 +503,7 @@ class MenuServidor {
             # Exibe o menu
             $menu->show();
         } else {
-            p("Não há vinculos anteriores deste servidor na Uenf.", "center", "f12");
+            p("Não há outros vinculos deste servidor na Uenf.", "center", "f12");
         }
         $painel->fecha();
     }

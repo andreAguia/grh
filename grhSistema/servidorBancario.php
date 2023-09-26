@@ -53,13 +53,13 @@ if ($acesso) {
     $objeto->set_nome('Dados Bancários');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT banco,
+    $objeto->set_selectEdita("SELECT banco,
                                      agencia,
                                      conta,
                                      obsFinanceiro
                                 FROM tbpessoa
-                               WHERE idPessoa = ' . $idPessoa);
-    
+                               WHERE idPessoa = {$idPessoa}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -87,7 +87,7 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
-    
+
     # Pega os dados da combo dos bancos
     $banco = $pessoal->select('SELECT idBanco,
                                        CONCAT(codigo," (", banco,")")

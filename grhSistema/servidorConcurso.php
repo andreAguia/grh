@@ -419,6 +419,77 @@ if ($acesso) {
     switch ($fase) {
         case "ver" :
         case "editar" :
+            # Verifica se é professor e informa a lotação de origem do concurso
+            $idCargo = $pessoal->get_idCargo($idServidorPesquisado);
+            if ($idCargo == 128 OR $idCargo == 129) {
+
+                function exibeDadosVagas($array) {
+
+                    $idVaga = $array[0];
+                    $idServidor = $array[1];
+
+                    $vaga = new Vaga();
+                    $servidor = new Pessoal();
+                    $conteudo = $vaga->get_dados($idVaga);
+
+                    $painel = new Callout();
+                    $painel->abre();
+
+                    $grid = new Grid();
+                    $grid->abreColuna(4);
+
+                    titulotable("Vaga");
+                    p($idVaga, "vagaId");
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(4);
+
+                    titulotable("Lotação de Origem");
+
+                    $centro = $conteudo["centro"];
+                    $idCargo = $conteudo["idCargo"];
+
+                    $labOrigem = $servidor->get_nomeLotacao3($vaga->get_laboratorioOrigem($idVaga));
+
+                    $cargo = $servidor->get_nomeCargo($idCargo);
+                    $status = $vaga->get_status($idVaga);
+
+                    p($centro, "vagaCentro");
+                    p($cargo, "vagaCargo");
+
+                    $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
+
+                    p("Laboratório de Origem:", "vagaOrigem", null, $title);
+                    p($labOrigem, "vagaCargo", null, $title);
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(4);
+
+                    if ($status == "Disponível") {
+                        tituloTable("Vaga Disponível");
+                        br();
+                        p("Ninguém ocupa esta vaga atualmente!", "center", "f14");
+                        br();
+                    } else {
+                        tituloTable("Ocupante Atual");
+                        br();
+                        $ocupante = $vaga->get_servidorOcupante($idVaga);
+
+                        if ($vaga->get_laboratorioOrigem($idVaga) <> $servidor->get_idLotacao($idServidor)) {
+                            p("Atenção !!<br/>Lotação atual Diferente da<br/>Lotação de Origem do Concurso!","pconcursadoLotacaoDiferente");
+                        }
+                    }
+
+                    $grid->fechaColuna();
+                    $grid->fechaGrid();
+                    $painel->fecha();
+                }
+
+                $vaga = new Vaga();
+                $objeto->set_rotinaExtraEditar("exibeDadosVagas");
+                $objeto->set_rotinaExtraEditarParametro([$vaga->get_idVaga($idServidorPesquisado), $idServidorPesquisado]);
+            }
+
             $objeto->$fase($idServidorPesquisado);
             break;
 

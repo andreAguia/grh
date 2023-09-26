@@ -113,6 +113,25 @@ p#pInativo{
 }
 
 /*******************************************
+* Auxilio Educação
+********************************************/
+div#divExterna{
+    display : flex;
+    flex-direction : row;
+}
+
+div#divCol1{
+    text-align:center;
+    width: 70%;
+}
+
+div#divCol2{
+    padding-top: 5%;
+    text-align:center;
+    width: 30%;
+}
+
+/*******************************************
  * Check up
  *******************************************/
 
@@ -241,6 +260,14 @@ p#pObservacaoConcurso{
     margin: 0px;
     font-size: 11px;
     color: green;
+}
+
+p#pconcursadoLotacaoDiferente{
+    font-size: 10px;
+    color: red;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 10px;
 }
 
 /*******************************************

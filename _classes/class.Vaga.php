@@ -22,7 +22,7 @@ class Vaga {
             # Pega os dados
             $select = "SELECT *
                        FROM tbvaga
-                      WHERE idVaga = $idVaga";
+                      WHERE idVaga = {$idVaga}";
 
             $pessoal = new Pessoal();
             return $pessoal->select($select, false);
@@ -271,13 +271,13 @@ class Vaga {
             # Pega os dados
             $pessoal = new Pessoal();
 
-            $select = 'SELECT idServidor,
+            $select = "SELECT idServidor,
                               idConcurso,
                               idLotacao,
                               area,
                               tbvagahistorico.obs
                          FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                        WHERE idVaga = ' . $idVaga . ' ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1';
+                        WHERE idVaga = {$idVaga} ORDER BY tbconcurso.dtPublicacaoEdital desc LIMIT 1";
 
             $dados = $pessoal->select($select, false);
 
@@ -1382,6 +1382,27 @@ class Vaga {
 
         $painel->fecha();
     }
+    
+    ###########################################################
 
+    function get_idVaga($idServidor) {
+
+        if (is_numeric($idServidor)) {
+
+            # Pega os dados
+            $pessoal = new Pessoal();
+
+            $select = "SELECT idVaga
+                         FROM tbvagahistorico
+                        WHERE idServidor = {$idServidor}";
+
+            $dados = $pessoal->select($select, false);
+
+            return $dados[0];
+        } else {
+            return null;
+        }
+    }
+    
     ###########################################################
 }

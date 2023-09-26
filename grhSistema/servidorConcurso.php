@@ -476,7 +476,7 @@ if ($acesso) {
                         $ocupante = $vaga->get_servidorOcupante($idVaga);
 
                         if ($vaga->get_laboratorioOrigem($idVaga) <> $servidor->get_idLotacao($idServidor)) {
-                            p("Atenção !!<br/>Lotação atual Diferente da<br/>Lotação de Origem do Concurso!","pconcursadoLotacaoDiferente");
+                            p("Atenção !!<br/>Lotação atual diferente da<br/>Lotação de Origem do Concurso!","pconcursadoLotacaoDiferente");
                         }
                     }
 

@@ -657,116 +657,11 @@ class LicencaPremio {
 
         # Pega o número de vínculos
         $numVinculos = $this->get_numVinculosPremio($idServidor);
-
-        /*
-         * Exibe o número do processo
-         */
-
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(4);
-
+        
         if ($numVinculos > 1) {
+
             # Carrega um array com os idServidor de cada vinculo
             $vinculos = $this->get_vinculosPremio($idServidor, false);
-
-            # Percorre os vinculos
-            foreach ($vinculos as $tt) {
-                # Insere no array o vinculo e o processo
-                $conteudo1[] = [
-                    $pessoal->get_cargoSigla($tt[0]),
-                    $this->get_numProcesso($tt[0])
-                ];
-            }
-
-            tituloRelatorio('Processo');
-
-            $relatorio = new Relatorio();
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_width([40, 60]);
-            $relatorio->set_label(["Vínculo", "Processos"]);
-            $relatorio->set_align(["left", "left"]);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_conteudo($conteudo1);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        } else {
-            tituloRelatorio('Processo');
-            p($this->get_numProcesso($idServidor), "pFichaCadastralProcessoPremio");
-            hr("nenhumItem");
-        }
-
-        /*
-         * Exibe o número de publicação
-         */
-
-//        # Verifica qual rotina vai executar
-//        if ($numVinculos > 1) {
-//            # Carrega um array com os idServidor de cada vinculo
-//            $vinculos = $pessoal->get_vinculos($idServidor, false);
-//
-//            # Percorre os vinculos
-//            foreach ($vinculos as $tt) {
-//                # Insere no array o vinculo e o processo
-//                $conteudo2[] = [
-//                    $pessoal->get_cargoSigla($tt[0]),
-//                    $this->get_numPublicacoesPossiveis($tt[0]),
-//                    $this->get_numPublicacoes($tt[0]),
-//                    $this->get_numPublicacoesFaltantes($tt[0])
-//                ];
-//            }
-//
-//            tituloRelatorio('"N° de Publicações"');
-//
-//            $relatorio = new Relatorio();
-//            $relatorio->set_cabecalhoRelatorio(false);
-//            $relatorio->set_menuRelatorio(false);
-//            $relatorio->set_subTotal(false);
-//            $relatorio->set_totalRegistro(false);
-//            $relatorio->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
-//            $relatorio->set_colunaSomatorio([1, 2, 3]);
-//            $relatorio->set_align(["left"]);
-//            $relatorio->set_totalRegistro(false);
-//            $relatorio->set_dataImpressao(false);
-//            $relatorio->set_conteudo($conteudo2);
-//            $relatorio->set_log(false);
-//            $relatorio->show();
-//        } else {
-//
-//            $conteudo[] = [
-//                $this->get_numPublicacoesPossiveis($idServidor),
-//                $this->get_numPublicacoes($idServidor),
-//                $this->get_numPublicacoesFaltantes($idServidor)
-//            ];
-//
-//            tituloRelatorio("N° de Publicações");
-//
-//            $relatorio = new Relatorio();
-//            $relatorio->set_cabecalhoRelatorio(false);
-//            $relatorio->set_menuRelatorio(false);
-//            $relatorio->set_subTotal(false);
-//            $relatorio->set_totalRegistro(false);
-//            $relatorio->set_label(["Possíveis", "Publicadas", "Pendentes"]);
-//            $relatorio->set_align(["center"]);
-//            $relatorio->set_totalRegistro(false);
-//            $relatorio->set_dataImpressao(false);
-//            $relatorio->set_conteudo($conteudo);
-//            $relatorio->set_log(false);
-//            $relatorio->show();
-//        }
-
-        /*
-         * Exibe a lista de publicações
-         */
-
-        $grid->fechaColuna();
-        $grid->abreColuna(8);
-
-        if ($numVinculos > 1) {
 
             # Exibe as Publicações
             $select = 'SELECT idServidor, 
@@ -835,7 +730,7 @@ class LicencaPremio {
             $relatorio->set_subTotal(false);
             $relatorio->set_totalRegistro(false);
             $relatorio->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
-            $relatorio->set_align(["left"]);
+            $relatorio->set_align(["center"]);
             $relatorio->set_funcao(['date_to_php']);
             #$relatorio->set_width([23, 12, 23, 10, 10, 10, 12]);
             $relatorio->set_classe([null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
@@ -849,9 +744,6 @@ class LicencaPremio {
             $relatorio->set_log(false);
             $relatorio->show();
         }
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
     }
 
 ###########################################################

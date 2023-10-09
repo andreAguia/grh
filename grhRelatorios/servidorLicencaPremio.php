@@ -48,6 +48,7 @@ if ($acesso) {
                       dtInicial,
                       tblicencapremio.numdias,
                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                      processo,
                       idLicencaPremio
                  FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                 WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
@@ -64,13 +65,10 @@ if ($acesso) {
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo("d");
     #$relatorio->set_subtitulo("Licenças Fruídas");
-    $relatorio->set_label(array("Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término"));
+    $relatorio->set_label(array("Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término","Processo"));
     #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
     $relatorio->set_align(array('center'));
     $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-//    $relatorio->set_classe(array(null, 'LicencaPremio'));
-//    $relatorio->set_metodo(array(null, 'exibePeriodoAquisitivo'));
-
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(2);
     $relatorio->set_botaoVoltar(false);

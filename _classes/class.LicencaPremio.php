@@ -466,13 +466,13 @@ class LicencaPremio {
             $tabela->set_conteudo($conteudo1);
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_titulo("Processo");
+            $tabela->set_titulo("Processo de Contagem");
             $tabela->set_width([50, 50]);
             $tabela->set_label(["Vínculo", "Processos"]);
             $tabela->set_grupoCorColuna(0);
             $tabela->show();
         } else {
-            titulotable("Processo");
+            titulotable("Processo de Contagem");
             $painel = new Callout();
             $painel->abre();
             p($this->get_numProcesso($idServidor), "f20", "center");

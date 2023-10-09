@@ -149,6 +149,7 @@ if ($acesso) {
                                          dtInicial,
                                          tblicencapremio.numdias,
                                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                                         processo,
                                          idLicencaPremio,
                                          idLicencaPremio
                                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
@@ -159,6 +160,7 @@ if ($acesso) {
         $objeto->set_selectEdita('SELECT dtInicial,
                                          numDias,
                                          dtTermino,
+                                         processo,
                                          idPublicacaoPremio,
                                          obs,
                                          idServidor
@@ -177,11 +179,11 @@ if ($acesso) {
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"]);
-        $objeto->set_width([17, 22, 17, 10, 17, 12]);
+        $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Solicitação", "Obs"]);
+        #$objeto->set_width([17, 22, 17, 10, 17, 12]);
         $objeto->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
-        $objeto->set_classe([null, null, null, null, null, 'LicencaPremio']);
-        $objeto->set_metodo([null, null, null, null, null, 'exibeObs']);
+        $objeto->set_classe([null, null, null, null, null, null, 'LicencaPremio']);
+        $objeto->set_metodo([null, null, null, null, null, null, 'exibeObs']);
         $objeto->set_colunaSomatorio(3);
         $objeto->set_totalRegistro(false);
 
@@ -255,6 +257,13 @@ if ($acesso) {
                 'col' => 3,
                 'title' => 'Data de término da licença.',
                 'linha' => 1),
+            array('nome' => 'processo',
+                'label' => 'Processo:',
+                'tipo' => 'texto',
+                'size' => 30,
+                'col' => 3,
+                'title' => 'Número do Processo',
+                'linha' => 2),
             array('nome' => 'idPublicacaoPremio',
                 'label' => 'Publicação:',
                 'tipo' => 'combo',
@@ -263,7 +272,7 @@ if ($acesso) {
                 'title' => 'Publicação.',
                 'required' => true,
                 'col' => 4,
-                'linha' => 1),
+                'linha' => 2),
             array('linha' => 3,
                 'nome' => 'obs',
                 'label' => 'Observação:',
@@ -400,7 +409,7 @@ if ($acesso) {
                     # Editar Processo
                     $linkBotao1 = new Link("Editar Processo", "servidorProcessoPremio.php");
                     $linkBotao1->set_class('button');
-                    $linkBotao1->set_title("Edita o número do processo de licença prêmio");
+                    $linkBotao1->set_title("Edita o número do processo de contagem de licença prêmio");
                     $menu->add_link($linkBotao1, "left");
 
                     # Cadastro de Publicações

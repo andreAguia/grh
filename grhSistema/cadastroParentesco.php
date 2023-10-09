@@ -75,18 +75,22 @@ if ($acesso) {
         $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista('SELECT idparentesco,parentesco,obs,
-                                      idparentesco
-                                 FROM tbparentesco
-                                WHERE parentesco LIKE "%' . $parametro . '%"
-                             ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+    $objeto->set_selectLista("SELECT idparentesco,
+                                     parentesco,
+                                     auxEducacao,
+                                     obs,
+                                     idparentesco
+                                FROM tbparentesco
+                               WHERE parentesco LIKE '%{$parametro}%'
+                            ORDER BY {$orderCampo} {$orderTipo}");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT parentesco,
+    $objeto->set_selectEdita("SELECT parentesco,
+                                     auxEducacao,
                                      obs
                                 FROM tbparentesco
-                               WHERE idparentesco = ' . $id);
-    
+                               WHERE idparentesco = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -104,9 +108,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Parentesco", "Obs"));
-    $objeto->set_width(array(5, 40, 45));
-    $objeto->set_align(array("center", "center", "left"));
+    $objeto->set_label(["id", "Parentesco", "Tem direito ao<br/>Auxílio Educação", "Obs"]);
+    $objeto->set_width([5, 20, 10, 55]);
+    $objeto->set_align(["center", "center", "center", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -130,6 +134,14 @@ if ($acesso) {
             'autofocus' => true,
             'size' => 45),
         array('linha' => 2,
+            'col' => 3,
+            'nome' => 'auxEducacao',
+            'title' => 'Informa se esse tipo de parentesco tem direito ao auxílio educação.',
+            'label' => 'Tem Direito ao Aux.Educação?',
+            'tipo' => 'combo',
+            'array' => array("Sim", "Não"),
+            'size' => 10),
+        array('linha' => 3,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

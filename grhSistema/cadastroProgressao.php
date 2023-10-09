@@ -6,7 +6,7 @@
  * By Alat
  */
 # Reservado para o servidor logado
-$idUsuario = null;
+$idUsuario = null
 
 # Configuração
 include ("_config.php");

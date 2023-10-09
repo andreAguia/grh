@@ -702,7 +702,7 @@ if ($acesso) {
                           dependente,
                           auxCreche,
                           dtTermino
-                     FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                     FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.idParentesco)
                     WHERE idPessoa=' . $idPessoa . '
                  ORDER BY dtNasc desc';
 
@@ -1066,27 +1066,25 @@ if ($acesso) {
         tituloRelatorio('Histórico de Fruição de Licença Especial (Prêmio)');
 
         $select = 'SELECT idLicencaPremio,
-                            dtInicial,
-                            tblicencapremio.numdias,
-                            ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                            CONCAT("6&",tblicencapremio.idServidor),
-                            tbpublicacaopremio.dtPublicacao,
-                            idLicencaPremio
-                       FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                      WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
-                    ORDER BY dtInicial desc';
+                          dtInicial,
+                          tblicencapremio.numdias,
+                          ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          processo,
+                          tbpublicacaopremio.dtPublicacao,
+                          idLicencaPremio
+                     FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                    WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
+                 ORDER BY dtInicial desc';
 
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array("Período Aquisitivo", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-        #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
-        $relatorio->set_classe(array('LicencaPremio'));
-        $relatorio->set_metodo(array('exibePeriodoAquisitivo'));
-        #$relatorio->set_align(array('left'));
+        $relatorio->set_label(["Período Aquisitivo", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
+        $relatorio->set_funcao([null, 'date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $relatorio->set_classe(['LicencaPremio']);
+        $relatorio->set_metodo(['exibePeriodoAquisitivo']);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);

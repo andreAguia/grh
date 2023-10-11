@@ -788,6 +788,13 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
+        $botao->set_label('Auxílio Educação');
+        $botao->set_url('areaAuxilioEducacao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'auxEducacao.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área do Controle do Auxílio Educação');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
         $botao->set_label('Parentes');
         $botao->set_url('areaParente.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'parente.png', $tamanhoImage, $tamanhoImage);

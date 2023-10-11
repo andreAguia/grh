@@ -40,7 +40,7 @@ if ($acesso) {
                 FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                   JOIN tbservidor USING (idPessoa)
                                   JOIN tbperfil USING (idPerfil)
-                                  JOIN tbparentesco ON (tbdependente.parentesco = tbparentesco.idParentesco)
+                                  JOIN tbparentesco USING (idParentesco)
               WHERE situacao = 1
                 AND tbperfil.tipo <> 'Outros'  
            ORDER BY tbdependente.nome";

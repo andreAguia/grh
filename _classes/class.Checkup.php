@@ -3661,8 +3661,8 @@ class Checkup {
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)                                     
                                      JOIN tbdependente USING (idPessoa)
-                                     LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-                    WHERE tbdependente.parentesco IS null ';
+                                     LEFT JOIN tbparentesco USING (idParentesco)
+                    WHERE tbdependente.idParentesco IS null ';
 
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';

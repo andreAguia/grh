@@ -111,7 +111,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
-            
+
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
@@ -139,20 +139,36 @@ if ($acesso) {
                               idDependente,
                               tbparentesco.Parentesco,
                               TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
-                              idDependente,
-                              dependente
+                              idDependente
                          FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                            JOIN tbservidor USING (idPessoa)
                                            JOIN tbparentesco USING (idParentesco)
                                            JOIN tbhistlot USING (idServidor)
                                            JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
-                         AND situacao = 1';
+                         AND situacao = 1
+                         AND (';
+
+            # Pega os parentesco com direito ao auxílio Educação
+            $dep = new Dependente();
+            $array = $dep->get_arrayTipoParentescoAuxEduca();
+            $numItem = count($array);
+
+            foreach ($array as $item) {
+                $select .= 'tbdependente.idParentesco = ' . $item;
+
+                if ($numItem > 1) {
+                    $numItem--;
+                    $select .= ' OR ';
+                }
+            }
+            
+             $select .= ') ';
 
             if (!empty($parametroNome)) {
                 $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
             }
-            
+
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
@@ -162,16 +178,16 @@ if ($acesso) {
                 }
             }
 
-            $select .= ' ORDER BY tbpessoa.nome, tbdependente.nome';
+            $select .= ' ORDER BY tbpessoa.nome, tbdependente.dtNasc';
 
             #echo $select;
 
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Cadastro de Parentes de Servidores');
+            $tabela->set_titulo('Controle de Auxílio Educação');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Idade", "Aux.Educação", "Dependente IR"]);
+            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Idade", "Aux.Educação"]);
             #$tabela->set_width([30, 30, 10, 10, 10, 10]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "left"]);

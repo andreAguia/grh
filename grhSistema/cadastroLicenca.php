@@ -93,7 +93,7 @@ if ($acesso) {
                                      obs
                                 FROM tbtipolicenca
                                WHERE idTpLicenca = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -110,7 +110,8 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"]);
-    $objeto->set_width([5, 27, 9,9, 9, 9, 9, 9, 9]);
+    $objeto->set_width([5, 27, 9, 9, 9, 9, 9, 9, 9]);
+    $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao"]);
     $objeto->set_align(["center", "left"]);
     $objeto->set_classe([null, "Licenca"]);
     $objeto->set_metodo([null, "exibeNome"]);
@@ -142,7 +143,7 @@ if ($acesso) {
             'nome' => 'periodo',
             'title' => 'Período (em dias) da licença/afastamento',
             'label' => 'Período (em dias):',
-            'tipo' => 'texto',            
+            'tipo' => 'texto',
             'size' => 10),
         array('linha' => 2,
             'col' => 3,

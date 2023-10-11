@@ -32,11 +32,11 @@ if ($acesso) {
                       YEAR(CURDATE( )) - YEAR(tbdependente.dtNasc) - IF(RIGHT(CURDATE( ),5) < RIGHT(tbdependente.dtNasc,5),1,0)                 
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                       JOIN tbdependente ON (tbdependente.idPessoa = tbpessoa.idPessoa)
-                                      JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                                      JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.idParentesco)
                                       JOIN tbperfil USING (idPerfil)
                 WHERE tbservidor.situacao = 1
                   AND tbperfil.tipo <> "Outros"
-                  AND tbdependente.parentesco = 2
+                  AND tbdependente.idParentesco = 2
              ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);

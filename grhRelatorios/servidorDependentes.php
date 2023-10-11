@@ -42,7 +42,7 @@ if ($acesso) {
                       auxCreche,
                       dtTermino,
                       idDependente
-                 FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                 FROM tbdependente JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.idParentesco)
                 WHERE idPessoa = $idPessoa
              ORDER BY dtNasc desc";
 

@@ -35,11 +35,11 @@ if ($acesso) {
                       tbdependente.ciExclusao                 
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                       JOIN tbdependente ON (tbdependente.idPessoa = tbpessoa.idPessoa)
-                                      JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
+                                      JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.idParentesco)
                                       JOIN tbperfil USING (idPerfil)
                  WHERE tbservidor.situacao = 1
                    AND tbperfil.tipo <> "Outros"
-                   AND tbdependente.parentesco = 2
+                   AND tbdependente.idParentesco = 2
                    AND auxCreche = "Sim"
                    AND dtTermino >= CURDATE()
               ORDER BY tbpessoa.nome';
@@ -69,8 +69,8 @@ if ($acesso) {
                      tbdependente.ciExclusao                 
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                         JOIN tbdependente ON (tbdependente.idPessoa = tbpessoa.idPessoa)
-                                        JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-               WHERE tbdependente.parentesco = 2
+                                        JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.idParentesco)
+               WHERE tbdependente.idParentesco = 2
                  AND tbservidor.situacao=1
                  AND auxCreche = "Sim"
                  AND dtTermino < CURDATE()

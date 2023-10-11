@@ -111,6 +111,7 @@ if ($acesso) {
     $objeto->set_label(["id", "Parentesco", "Tem direito ao<br/>Auxílio Educação", "Obs"]);
     $objeto->set_width([5, 20, 10, 55]);
     $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_funcao([null, null, "ressaltaSimNao"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -4399,7 +4399,7 @@ class Pessoal extends Bd {
      * @param	string $id  id do parentesco
      */
     public function get_parentesco($id) {
-        $select = "SELECT  parentesco
+        $select = "SELECT parentesco
                      FROM tbparentesco
                     WHERE idparentesco = {$id}";
 

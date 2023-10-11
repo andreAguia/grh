@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -37,79 +38,49 @@ if ($acesso) {
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-    $jscript = '$("#parentesco").change(function(){
-                    var t1 = $("#parentesco").val();
-                    switch (t1) {
-                        case "2":
-                        case "8":
-                        case "9":
-                            $("#labelauxCreche").show();
-                            $("#auxCreche").show();
-                            
-                            var t2 = $("#auxCreche").val();
-                            switch (t2) {
-                                case "Sim":
-                                    $("#div7").show();
-                                    break;
+    $jscript = ' // Rotina ao alterar o parentesco
+                  $("#idParentesco").change(function(){
+                    var t1 = $("#idParentesco").val();
+                    switch (t1) {';
 
-                                default:
-                                    $("#div7").hide();
-                                    break;
-                            }
+    # Pega os parentesco com direito ao auxílio Educação
+    $dep = new Dependente();
+    $array = $dep->get_arrayTipoParentescoAuxEduca();
+
+    foreach ($array as $item) {
+        $jscript .= ' case "' . $item . '": ';
+    }
+
+    $jscript .= '          $("#div6").show();
+                            $("#div8").show();
                             break;
                             
                         default:
-                            $("#labelauxCreche").hide();
-                            $("#auxCreche").hide();
-                            $("#div7").hide();
+                            $("#div6").hide();
+                            $("#div8").hide();    
                             break;
                     }
                     
                 });
                 
-                $("#auxCreche").change(function(){
-                    var t2 = $("#auxCreche").val();
-                    switch (t2) {
-                        case "Sim":
-                            $("#div7").show();
+                ////////////////////
+                // Rotina ao iniciar o formulário
+
+                var t1 = $("#idParentesco").val();
+                switch (t1) {';
+    foreach ($array as $item) {
+        $jscript .= ' case "' . $item . '": ';
+    }
+
+    $jscript .= '    $("#div6").show();
+                            $("#div8").show();
                             break;
                             
                         default:
-                            $("#div7").hide();
+                            $("#div6").hide();
+                            $("#div8").hide();    
                             break;
-                    }
-                    
-                });
-                
-                var t1 = $("#parentesco").val();
-                switch (t1) {
-                    case "2":
-                    case "8":
-                    case "9":
-                        $("#labelauxCreche").show();
-                        $("#auxCreche").show();
-                        break;
-
-                    default:
-                        $("#labelauxCreche").hide();
-                        $("#auxCreche").hide();
-                        $("#div7").hide();
-                        break;
-                }
-                
-                var t2 = $("#auxCreche").val();
-                switch (t2) {
-                    case "Sim":
-                        $("#div7").show();
-                        break;
-
-                    default:
-                        $("#div7").hide();
-                        break;
-                }
-                
-                    
-                    ';
+                    }';
 
     # Começa uma nova página
     $page = new Page();
@@ -139,40 +110,39 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT nome,
-                                     cpf,
-                                     dtNasc,
+    $objeto->set_selectLista("SELECT idDependente,
                                      tbparentesco.parentesco,
                                      CASE sexo
-                                        WHEN "F" THEN "Feminino"
-                                        WHEN "M" THEN "Masculino"
+                                        WHEN 'F' THEN 'Feminino'
+                                        WHEN 'M' THEN 'Masculino'
                                      end,
-                                     TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
+                                     dtNasc,
+                                     TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),                                     
                                      dependente,
-                                     auxCreche,
-                                     dtTermino,
+                                     idDependente,
                                      idDependente
-                                FROM tbdependente LEFT JOIN tbparentesco ON (tbparentesco.idParentesco = tbdependente.parentesco)
-                          WHERE idPessoa=' . $idPessoa . '
-                       ORDER BY dtNasc desc');
+                                FROM tbdependente LEFT JOIN tbparentesco USING (idParentesco)
+                          WHERE idPessoa={$idPessoa}
+                       ORDER BY dtNasc desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
+    $objeto->set_selectEdita("SELECT nome,
                                      dtNasc,
-                                     CPF,
-                                     parentesco,
+                                     cpf,
+                                     idParentesco,
                                      sexo,
                                      dependente,
+                                     auxEducacao,
+                                     auxEducacaoDtInicial,
                                      auxCreche,
-                                     dtTermino,
-                                     processo,                                 
-                                     ciExclusao,
                                      auxCrecheDo,
                                      auxCrecheProcesso,
+                                     dtTermino,
+                                     processo,
                                      obs,
                                      idPessoa
                                 FROM tbdependente
-                               WHERE idDependente = ' . $id);
+                               WHERE idDependente = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -186,21 +156,17 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nome", "CPF", "Nascimento", "Parentesco", "Sexo", "Idade", "Dependente no IR", "Auxílio Creche", "Término do Aux. Creche"]);
-    #$objeto->set_width(array(20,10,10,10,10,10,10,10));	
+    $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Dependente no IR", "Aux. Educação", ""]);
+    $objeto->set_colspanLabel([null, null, null, null, null, null, 2]);
     $objeto->set_align(["left"]);
-    $objeto->set_funcao([null, null, "date_to_php", null, null, null, null, null, "date_to_php"]);
 
-    $objeto->set_formatacaoCondicional(array(
-        array('coluna' => 6,
-            'valor' => "Sim",
-            'operador' => '<>',
-            'id' => 'normal'),
-        array('coluna' => 6,
-            'valor' => "Sim",
-            'operador' => '=',
-            'id' => 'diasAntes')
-    ));
+    $objeto->set_funcao([null, null, null, "date_to_php"]);
+    $objeto->set_classe(["Dependente", null, null, null, null, null, "Dependente", "Dependente"]);
+    $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle"]);
+
+    $objeto->set_numeroOrdem(true);
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -220,9 +186,11 @@ if ($acesso) {
                                           parentesco
                                      FROM tbparentesco
                                  ORDER BY idParentesco');
-    array_push($result, array(null, null)); # Adiciona o valor de nulo
+    array_push($result, array(null, null));
+
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'nome',
+    $objeto->set_campos(array(
+        array('nome' => 'nome',
             'label' => 'Nome do Parente:',
             'tipo' => 'texto',
             'size' => 50,
@@ -241,14 +209,14 @@ if ($acesso) {
             'title' => 'Data de Nascimento.',
             'col' => 3,
             'linha' => 1),
-        array('nome' => 'CPF',
+        array('nome' => 'cpf',
             'label' => 'CPF (quando houver):',
             'tipo' => 'cpf',
             'size' => 20,
             'title' => 'CPF do Parente',
             'col' => 3,
-            'linha' => 1),
-        array('nome' => 'parentesco',
+            'linha' => 2),
+        array('nome' => 'idParentesco',
             'label' => 'Parentesco:',
             'tipo' => 'combo',
             'array' => $result,
@@ -275,52 +243,62 @@ if ($acesso) {
             'col' => 2,
             'title' => 'Dependente no Imposto de Renda.',
             'linha' => 2),
-        array('nome' => 'auxCreche',
-            'label' => 'Auxílio Creche:',
+        array('nome' => 'auxEducacao',
+            'label' => 'Recebe ou Recebeu?:',
+            'fieldset' => 'Auxílio Educação',
             'tipo' => 'combo',
             'array' => array("Não", "Sim"),
             'size' => 20,
             'title' => 'Dependente tem Auxílio Creche.',
             'col' => 2,
-            'linha' => 2),
-        array('nome' => 'auxCrecheDo',
-            'label' => 'Data de Publicação do Início do Benefício:',
+            'linha' => 3),
+        array('nome' => 'auxEducacaoDtInicial',
+            'label' => 'Data de Início:',
             'tipo' => 'data',
             'size' => 12,
-            'fieldset' => 'Auxílio Creche',
-            'title' => 'Data de Publicação no DO do início do benefício.',
+            'title' => 'Data de Início do auxílio Educação.',
             'col' => 3,
             'linha' => 3),
+        array('nome' => 'auxCreche',
+            'label' => 'Recebeu Auxílio Creche?:',
+            'fieldset' => 'Auxílio Creche',
+            'tipo' => 'combo',
+            'array' => array("Não", "Sim"),
+            'size' => 20,
+            'title' => 'Dependente tem Auxílio Creche.',
+            'col' => 2,
+            'linha' => 4),
+        array('nome' => 'auxCrecheDo',
+            'label' => 'Data Pub. do DO de Início:',
+            'tipo' => 'data',
+            'size' => 12,
+            'title' => 'Data de Publicação no DO do início do benefício.',
+            'col' => 3,
+            'linha' => 5),
         array('nome' => 'auxCrecheProcesso',
             'label' => 'Processo do Início do Benecício:',
             'tipo' => 'texto',
             'size' => 40,
             'title' => 'Processo do início do Benecício:',
-            'col' => 4,
-            'linha' => 3),
+            'col' => 3,
+            'linha' => 5),
         array('nome' => 'dtTermino',
-            'label' => 'Data de Término:',
+            'label' => 'Data do Término:',
             'tipo' => 'data',
             'size' => 12,
-            'title' => 'Data de Termino do Auxílio Creche.',
+            'title' => 'Data do término do recebimento do Auxílio Creche.',
             'col' => 3,
-            'linha' => 4),
+            'linha' => 5),
         array('nome' => 'processo',
             'label' => 'Processo do Término do Benecício:',
             'tipo' => 'texto',
             'size' => 40,
             'title' => 'Processo de exclusão do auxílio Creche.',
-            'col' => 4,
-            'linha' => 4),
-        array('nome' => 'ciExclusao',
-            'label' => 'Documento de Exclusão:',
-            'tipo' => 'texto',
-            'size' => 30,
-            'title' => 'Documento de Exclusão do auxílio Creche.',
-            'col' => 4,
-            'linha' => 4),
-        array('linha' => 5,
+            'col' => 3,
+            'linha' => 5),
+        array('linha' => 6,
             'fieldset' => 'fecha',
+            'col' => 12,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
@@ -331,7 +309,7 @@ if ($acesso) {
             'padrao' => $idPessoa,
             'size' => 5,
             'title' => 'idPessoa',
-            'linha' => 5)));
+            'linha' => 7)));
 
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -346,10 +324,6 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-    # Paginação
-    #$objeto->set_paginacao(true);
-    #$objeto->set_paginacaoInicial($paginacao);
-    #$objeto->set_paginacaoItens(20);
     ################################################################
 
     switch ($fase) {
@@ -368,6 +342,11 @@ if ($acesso) {
 
         case "excluir" :
             $objeto->excluir($id);
+            break;
+
+        case "comprovante" :
+            set_session('idDependente', $id);
+            loadPage("servidorCompAuxEduca.php");
             break;
     }
     $page->terminaPagina();

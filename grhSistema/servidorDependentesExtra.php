@@ -5,34 +5,46 @@
  * 
  */
 
+# Conecta ao Banco de Dados
+$pessoal = new Pessoal();
 
-# Pega a data de Nascimento
+# Dados do Dependente
+$parentesco = $campoValor[3];
 $dtNasc = date_to_php($campoValor[1]);
+$auxEducacaoDtInicial = date_to_php($campoValor[7]);
+
+# Dados do Servidor
+$idPessoa = $campoValor[14];
+$idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+/*
+ *  Auxílio Creche
+ */
 
 # verifica se dependente é filho
-if ((($campoValor[3] == 2) OR ($campoValor[3] == 8) OR ($campoValor[3] == 9)) AND ($campoValor[6] == "Sim")) {
+if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
 
-    # verifica a data limite do auxílio creche (6 anos e 11 meses)
-    $dataLimite = addAnos($dtNasc, 6);                   // acrescenta os 6 anos
-    $dataLimite = addMeses($dataLimite, 11);             // acrescenta os 11 meses
-    # verifica se a data de término está vazia e preenche
-    if (is_null($campoValor[9])) {
-        $campoValor[9] = date_to_bd($dataLimite); // passa a data para o formato do bd
-    }
+
+    # Calcula a data limite de termino
+    $dataHistoricaFinal = "22/12/2021";     // Data da Publicação da Portaria 95/2021
+    $dataIdade = addMeses(addAnos($dtNasc, 6), 11);
+    $dataLimite = dataMenor($dataIdade, $dataHistoricaFinal);
 
     # verifica se data é posterior a data limite
-    if ($campoValor[9] > date_to_bd($dataLimite)) {
+    if ($campoValor[11] > date_to_bd($dataLimite)) {
         $erro = 1;
-        $msgErro .= 'A data de término está alem da data limite!\n';
+        $msgErro .= 'A data de término está alem da data limite! (' . $dataLimite . ')\n';
     }
-} else {
-    # passa o campo de aux creche para não
-    $campoValor[6] = "Não";
+}
 
-    # passa os dados do aux para nulo
-    $campoValor[7] = null;  # data início
-    $campoValor[8] = null;  # processo inicio
-    $campoValor[9] = null;  # data término
-    $campoValor[10] = null;  # processo término
-    $campoValor[11] = null;  # documento
+
+/*
+ * Auxílio Educação
+ */
+$dep = new Dependente();
+if ($dep->verificaDireitoAuxEduca($parentesco)) {
+    $intra = new Intra();
+    $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+    $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
 }

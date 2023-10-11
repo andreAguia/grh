@@ -1490,4 +1490,21 @@ function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
     $grid->fechaGrid();
 }
 
-##################################################################
+###########################################################
+
+/**
+ * Função que retorna o afastamento atual de um servidor (se houver)
+ * Obs esta função acessa a classe verifica afastamento
+ */
+function ressaltaSimNao($texto) {
+
+    if ($texto == "Sim") {
+        p($texto, "verde");
+    } elseif ($texto == "Não") {
+        p($texto, "vermelho");
+    } else {
+        echo $texto;
+    }
+}
+
+###########################################################

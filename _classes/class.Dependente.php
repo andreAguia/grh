@@ -143,6 +143,8 @@ class Dependente {
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
 
+            echo " -> ",$dataHistoricaInicial," - ",$anos24;
+            
             # Verifica se perdeu o direito antes da data histórica
             if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
                 p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");

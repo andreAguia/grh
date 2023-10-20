@@ -139,6 +139,8 @@ class Dependente {
             $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
             $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
 
+            echo " -> ",$anos21," - ",$anos24;br();
+            
             # Data Histórica Inicial
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');

@@ -138,14 +138,10 @@ class Dependente {
             # Pega as datas limites
             $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
             $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
-
-            echo " ==> ",$anos21," - ",$anos24;br();
             
             # Data Histórica Inicial
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-
-            echo " -> ",$dataHistoricaInicial," - ",$anos24;
             
             # Verifica se perdeu o direito antes da data histórica
             if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {

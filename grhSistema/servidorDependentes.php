@@ -158,7 +158,7 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Dependente no IR", "Aux. Educação", ""]);
     $objeto->set_colspanLabel([null, null, null, null, null, null, 2]);
-    $objeto->set_align(["left"]);
+    $objeto->set_align(["left", "center", "center", "center", "center", "center", "left"]);
 
     $objeto->set_funcao([null, null, null, "date_to_php"]);
     $objeto->set_classe(["Dependente", null, null, null, null, null, "Dependente", "Dependente"]);
@@ -187,6 +187,21 @@ if ($acesso) {
                                      FROM tbparentesco
                                  ORDER BY idParentesco');
     array_push($result, array(null, null));
+
+    # Verifica se o dependente é filho e tinha mais de 24 anos na data histórica do aux educação e saúde
+    if (!empty($id)) {
+        $dep = new Dependente();
+        if ($dep->tinhaDireitoDataHistorica($id)) {
+            $readonly = false;
+            $helptext = null;
+        } else {
+            $readonly = true;
+            $helptext = "Dependente estava com mais de 24 anos quando da data de Publicação da Portaria nº 95/2021";
+        }
+    } else {
+        $readonly = false;
+        $helptext = null;
+    }
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -247,17 +262,20 @@ if ($acesso) {
             'label' => 'Recebe ou Recebeu?:',
             'fieldset' => 'Auxílio Educação',
             'tipo' => 'combo',
-            'array' => array("Não", "Sim"),
+            'array' => [[null, "N/D"], ["Não", "Não"], ["Sim", "Sim"]],
             'size' => 20,
             'title' => 'Dependente tem Auxílio Creche.',
+            'disabled' => $readonly,
             'col' => 2,
             'linha' => 3),
         array('nome' => 'auxEducacaoDtInicial',
             'label' => 'Data de Início:',
             'tipo' => 'data',
+            'disabled' => $readonly,
             'size' => 12,
             'title' => 'Data de Início do auxílio Educação.',
             'col' => 3,
+            'helptext' => $helptext,
             'linha' => 3),
         array('nome' => 'auxCreche',
             'label' => 'Recebeu Auxílio Creche?:',

@@ -115,22 +115,50 @@ p#pInativo{
 /*******************************************
 * Auxilio Educação
 ********************************************/
-div#divExterna{
-    display : flex;
-    flex-direction : row;
+p#pDependenteSDireito{
+    padding: 0px 0px 0px 0px;
+    font-size: 12px;
+    color: darkred;
+    margin: 0px;
 }
 
-div#divCol1{
-    text-align:center;
-    width: 70%;
+p#pAvisoRegularizarVermelho{
+    padding: 0px 0px 0px 0px;
+    font-size: 12px;
+    color: red;
+    font-weight: bold;
+    margin: 0px;
 }
 
-div#divCol2{
-    padding-top: 5%;
-    text-align:center;
-    width: 30%;
+p#pAvisoRegularizarAzul{
+    padding: 0px 0px 0px 0px;
+    font-size: 12px;
+    color: darkblue;
+    margin: 0px;
 }
 
+p#plistaDeclaracaoRecebida{
+    padding: 0px 0px 0px 0px;
+    font-size: 12px;
+    color: darkblue;
+    margin: 0px;
+}
+
+p#pAvisoEncerramento{
+    padding: 0px 0px 0px 0px;
+    font-size: 12px;
+    text-align: center;
+    color: red;
+    font-weight: bold;
+    margin: 0px;
+}
+
+p#pAviso24Anos{
+    padding: 0px 0px 0px 0px;
+    font-size: 14px;
+    text-align: center;
+    margin: 0px;
+}
 /*******************************************
  * Check up
  *******************************************/

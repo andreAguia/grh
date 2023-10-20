@@ -111,7 +111,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
-            
+
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
@@ -136,11 +136,11 @@ if ($acesso) {
             ##############
             # Pega os dados
             $select = 'SELECT tbservidor.idServidor,
-                              idDependente,
+                              tbdependente.nome,
+                              tbdependente.cpf,
                               tbparentesco.Parentesco,
-                              TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
-                              idDependente,
-                              dependente
+                              tbdependente.dtNasc,
+                              TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE())
                          FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                            JOIN tbservidor USING (idPessoa)
                                            JOIN tbparentesco USING (idParentesco)
@@ -152,7 +152,7 @@ if ($acesso) {
             if (!empty($parametroNome)) {
                 $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
             }
-            
+
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
@@ -171,13 +171,14 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Parentes de Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Idade", "Aux.Educação", "Dependente IR"]);
+            $tabela->set_label(["Servidor", "Parente", "CPF", "Parentesco", "Nascimento", "Idade"]);
             #$tabela->set_width([30, 30, 10, 10, 10, 10]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "left"]);
 
-            $tabela->set_classe(["Pessoal", "Dependente", null, null, "Dependente"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, "exibeauxEducacao"]);
+            $tabela->set_classe(["Pessoal"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

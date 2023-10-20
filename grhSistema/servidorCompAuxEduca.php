@@ -25,6 +25,9 @@ if ($acesso) {
     $intra = new Intra();
     $classeDependente = new Dependente();
 
+    # Pega a Origem
+    $origem = get_session("origem");
+
     # Pega o idDependente
     $idDependente = get_session("idDependente");
     $nomeDependente = $classeDependente->get_nome($idDependente);
@@ -66,7 +69,11 @@ if ($acesso) {
     $objeto->set_nome("Comprovantes de Escolaridade para o Auxílio Educação Recebidos");
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('servidorDependentes.php');
+    if (empty($origem)) {
+        $objeto->set_voltarLista('servidorDependentes.php');
+    } else {
+        $objeto->set_voltarLista($origem);
+    }
 
     # select da lista
     $objeto->set_selectLista("SELECT year(dtInicio),
@@ -92,6 +99,9 @@ if ($acesso) {
         $objeto->set_modoLeitura(true);
     }
 
+    # subtitulo
+    $objeto->set_subtitulo($nomeDependente);
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -100,7 +110,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Ano", "Data Início", "Data Término", "Comprovante", " Observação"]);
-    $objeto->set_width([10, 10, 10, 10, 50]);
+    $objeto->set_width([10, 15, 15, 15, 30]);
     $objeto->set_align(["center", "center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
 
@@ -177,126 +187,25 @@ if ($acesso) {
         $objeto->set_botaoEditarExtra([$botao]);
     }
 
-    # Extra
-    if (!empty($idDependente)) {
-
-        function exibeDadosDependentes($id) {
-            $dependente = new Dependente();
-            $dados = $dependente->get_dados($id);
-
-            if ($dados["idParentesco"] == 2 OR $dados["idParentesco"] == 8 OR $dados["idParentesco"] == 9) {
-
-                $dtNasc = date_to_php($dados["dtNasc"]);
-                $anos21 = get_dataIdade($dtNasc, 21);
-                $anos24 = get_dataIdade($dtNasc, 24);
-                $idade = idade($dtNasc);
-
-                # Dados do Servidor
-                $idPessoa = $dados["idPessoa"];
-                $pessoal = new Pessoal();
-                $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
-                $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-
-                $intra = new Intra();
-                $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-
-                $grid = new Grid("center");
-                $grid->abreColuna(12);
-
-                $nomeDependente = $dependente->get_nome($id);
-                tituloTable("Dependente: {$nomeDependente}");
-                br();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(4);
-
-                # monta a tabela
-                $array = array(
-                    array("Data de Nascimento:", $dtNasc),
-                    array("Admissão do Servidor:", $dtAdmissao),
-                    array("Publicação da Portaria", $dataHistoricaInicial));
-
-                $tabela = new Tabela();
-                $tabela->set_titulo("Datas Possíveis do Inicio do Auxílio");
-                $tabela->set_conteudo($array);
-                $tabela->set_label(["Descrição", "Valor"]);
-                $tabela->set_width([50, 50]);
-                $tabela->set_align(["left"]);
-                $tabela->set_totalRegistro(false);
-                $tabela->set_formatacaoCondicional(array(
-                    array('coluna' => 1,
-                        'valor' => $dependente->get_dtInicialAuxEducacao($id),
-                        'operador' => '=',
-                        'id' => 'alerta')));
-
-                $tabela->show();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(4);
-
-                # monta a tabela
-                $array = array(
-                    array("Inicia em:", $dependente->get_dtInicialAuxEducacao($id)),
-                    array("Somente com Declaração", $anos21),
-                    array("Encerra o direito", $anos24));
-
-                $tabela = new Tabela();
-                $tabela->set_titulo("Período do Auxílio Educação");
-                $tabela->set_conteudo($array);
-                $tabela->set_label(["Descrição", "Valor"]);
-                $tabela->set_width([50, 50]);
-                $tabela->set_align(["left"]);
-                $tabela->set_totalRegistro(false);
-                $tabela->show();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(4);
-
-                # monta a tabela
-                $array = array(
-                    array("Idade Atual:", "{$idade} anos"),
-                    array("Faz 21 anos:", $anos21),
-                    array("Faz 24 anos:", $anos24));
-
-                $tabela = new Tabela();
-                $tabela->set_titulo("Idades");
-                $tabela->set_conteudo($array);
-                $tabela->set_label(["Descrição", "Valor"]);
-                $tabela->set_width([50, 50]);
-                $tabela->set_align(["left"]);
-                $tabela->set_totalRegistro(false);
-                $tabela->show();
-
-                $grid->fechaColuna();
-                $grid->fechaGrid();
-            }
-        }
-
-        $dependente = new Dependente();
-        $dados = $dependente->get_dados($idDependente);
-
-        if ($dados["idParentesco"] == 2 OR $dados["idParentesco"] == 8 OR $dados["idParentesco"] == 9) {
-
-            $objeto->set_rotinaExtraListar("exibeDadosDependentes");
-            $objeto->set_rotinaExtraListarParametro($idDependente);
-            
-            $objeto->set_rotinaExtraEditar("exibeDadosDependentes");
-            $objeto->set_rotinaExtraEditarParametro($idDependente);
-        }
-    }
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
+
+            # cria a área lateral
+            $objeto->set_objetoLateralListar("AuxilioEducacao");
+            $objeto->set_objetoLateralListarMetodo("exibeQuadroLista");
+            $objeto->set_objetoLateralListarParametro($idDependente);
+
         case "editar" :
             $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->gravar($id,"servidorCompAuxEducaExtra.php");
+            $objeto->gravar($id, "servidorCompAuxEducaExtra.php");
             break;
-        
+
         case "excluir" :
             # Verifica se tem arquivo vinculado
             if (file_exists("{$pasta}{$id}.pdf")) {

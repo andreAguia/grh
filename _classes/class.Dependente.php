@@ -85,8 +85,41 @@ class Dependente {
         # Exibe os dados
         plista(
                 date_to_php($dados["dtNasc"]),
-                idade(date_to_php($dados["dtNasc"]))." anos"
+                idade(date_to_php($dados["dtNasc"])) . " anos"
         );
+    }
+
+    ###########################################################
+    /*
+     * Verifica se o dependente tinha mais de 24 ou não na data da publicação da lei 9450/2021
+     */
+
+    public function tinhaDireitoDataHistorica($id) {
+
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        # Pega os parentescos com direito au auxEducação
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
+
+        # Verifica se tem direito
+        if (in_array($dados["idParentesco"], $tipos)) {
+
+            # Pega as datas limites
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+
+            # Data Histórica Inicial
+            $intra = new Intra();
+            $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+            if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 
     ###########################################################
@@ -112,7 +145,7 @@ class Dependente {
 
             # Verifica se perdeu o direito antes da data histórica
             if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
-                p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria - {$dataHistoricaInicial}", "vermelho", "f12");
+                p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
             } else {
 
                 if ($dados["auxEducacao"] == "Sim") {
@@ -120,31 +153,32 @@ class Dependente {
                     # Informa O tempo que tem direito sem comprovar escolaridade
                     # Verifica se fez 21 antes da data historica inicial
                     if (dataMenor($dataHistoricaInicial, $anos21) == $dataHistoricaInicial) {
-                        echo "Período com direito sem precisar";
+                        echo "- Período sem precisar da escolaridade:";
                         br();
-                        echo " da declaração de Escolaridade:";
-                        br();
-                        echo " de " . date_to_php($dados["auxEducacaoDtInicial"]) . " a " . $this->get_dtTerminoAuxEducacao($id);
+                        p("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;de " . date_to_php($dados["auxEducacaoDtInicial"]) . " a " . $this->get_dtTerminoAuxEducacao($id), "plistaDeclaracaoRecebida");
                         hr("grosso1");
                     }
 
-                    if (idade(date_to_php($dados["dtNasc"])) > 21) {
-                        echo "Fez 21 anos em: {$anos21}";
+                    if (idade(date_to_php($dados["dtNasc"])) >= 21) {
+                        echo "- Fez 21 anos em: {$anos21}";
+                        hr("grosso1");
                     } else {
-                        echo "Faz 21 anos em: {$anos21}";
+                        echo "- Fará 21 anos em: {$anos21}";
+                        hr("grosso1");
                     }
 
                     if (idade(date_to_php($dados["dtNasc"])) > 21) {
-                        hr("grosso1");
                         $auxEdu = new AuxilioEducacao();
                         $dadosComprovantes = $auxEdu->get_dadosIdDependente($id);
                         $ultimaDatacomprovada = $auxEdu->get_ultimaDataComprovada($id);
 
                         if (count($dadosComprovantes) > 0) {
-                            p("Comprovantes Recebidos", "azul", "f12");
+                            echo "- Comprovantes Recebidos";
+                            br();
                             foreach ($dadosComprovantes as $item) {
-                                p(date_to_php($item['dtInicio']) . " a " . date_to_php($item['dtTermino']), "verde", "f12");
+                                p("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . date_to_php($item['dtInicio']) . " a " . date_to_php($item['dtTermino']), "plistaDeclaracaoRecebida");
                             }
+                            hr("grosso1");
                         }
 
                         # Verifica se tem mais que 21 e não comprovou nada
@@ -154,18 +188,28 @@ class Dependente {
 
                         # Verifica se existe ainda algum período possível
                         if ($anos24 <> $ultimaDatacomprovada) {
-                            p("Regularizar a partir de " . addDias($ultimaDatacomprovada, 1, false), "vermelho", "f12");
+                            if (jaPassou($ultimaDatacomprovada)) {
+                                p("- Regularizar a partir de " . addDias($ultimaDatacomprovada, 1, false), "pAvisoRegularizarVermelho");
+                            } else {
+                                p("- Regularizar a partir de " . addDias($ultimaDatacomprovada, 1, false), "pAvisoRegularizarAzul");
+                            }
+                            hr("grosso1");
                         }
                     }
-                    
-                    hr("grosso1");
-                    if (idade(date_to_php($dados["dtNasc"])) > 24) {
-                        echo "Fez 24 anos em: {$anos24}";
+
+                    if (idade(date_to_php($dados["dtNasc"])) >= 24) {
+                        echo "- Fez 24 anos em: {$anos24}";
+                        br();
                     } else {
-                        echo "Faz 24 anos em: {$anos24}";
+                        echo "- Fará 24 anos em: {$anos24}";
+                        br();
                     }
                 } else {
-                    p("Não", "vermelho");
+                    if ($dados["auxEducacao"] == "Não") {
+                        p("Não", "vermelho", "center");
+                    } else {
+                        p("N/D", "vermelho", "center");
+                    }
                 }
             }
         } else {
@@ -263,6 +307,21 @@ class Dependente {
             # Pega os dados
             $dados = $this->get_dados($id);
             return $dados["idParentesco"];
+        }
+    }
+
+     ###########################################################
+
+    public function get_idServidor($id) {
+
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
+            
+            $pessoal = new Pessoal();            
+            return $pessoal->get_idServidoridPessoa($dados["idPessoa"]);
         }
     }
 

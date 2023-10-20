@@ -48,3 +48,16 @@ if ($dep->verificaDireitoAuxEduca($parentesco)) {
     $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
     $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
 }
+
+# salva sempre Não para quando o dependente ja tinha mais de 24 na data histórica
+# Pega as datas limites
+$anos24 = get_dataIdade($dtNasc, 24);
+
+# Data Histórica Inicial
+$intra = new Intra();
+$dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+    $campoValor[6] = "Não";
+    $campoValor[7] = null;
+}

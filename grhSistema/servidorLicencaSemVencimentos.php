@@ -245,6 +245,7 @@ if ($acesso) {
                                  WHERE (idTpLicenca = 5) 
                                     OR (idTpLicenca = 8) 
                                     OR (idTpLicenca = 16)
+                                    OR (idTpLicenca = 37)
                               ORDER BY 2');
     array_unshift($result, array(null, ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
     # Campos para o formulario

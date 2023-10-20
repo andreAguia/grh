@@ -44,6 +44,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    #$page->set_jscript("<script>CKEDITOR.replace('ramais');</script>");
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -81,10 +82,10 @@ if ($acesso) {
                              ORDER BY DIR asc, GER asc, nome asc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT ramais,
+    $objeto->set_selectEdita("SELECT ramais,
                                      email
                                 FROM tblotacao
-                               WHERE idLotacao = ' . $id);
+                               WHERE idLotacao = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -106,8 +107,8 @@ if ($acesso) {
     $objeto->set_subtitulo('Para transferir clica em OK, digita o ramal desejado, espera começar a chamar e desligue.');
     $objeto->set_label(["Diretoria", "Gerência", "Nome", "Telefones / Ramais", "Email", "Servidores"]);
     $objeto->set_align(["center", "center", "left", "left", "left", "center"]);
-    $objeto->set_funcao([null, null, null, "nl2br"]);
-    
+    $objeto->set_funcao([null, null, null, "nl2br2"]);
+
     # Ver servidores
     $servAtivos = new Link(null, '?fase=listaServidoresAtivos&id=' . $id);
     $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
@@ -139,7 +140,6 @@ if ($acesso) {
             'label' => 'Ramais:',
             'title' => 'Número dos telefones/ramais/faxes da lotação',
             'tipo' => 'textarea',
-            'tagHtml' => true,
             'autofocus' => true,
             'size' => array(80, 8)),
         array('linha' => 2,
@@ -223,7 +223,7 @@ if ($acesso) {
             break;
     }
 
-    ################################################################
+    $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");
 }

@@ -37,10 +37,12 @@ if ($acesso) {
     # Pega os parâmetros    
     $parametroNome = post('parametroNome', get_session('parametroNome'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroStatus = post('parametroStatus', get_session('parametroStatus'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroNome', $parametroNome);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroStatus', $parametroStatus);
 
     # Começa uma nova página
     $page = new Page();
@@ -128,7 +130,18 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(5);
+            $form->add_item($controle);
+
+            # Status
+            $controle = new Input('parametroStatus', 'combo', 'Status:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Status');
+            $controle->set_array(["Todos", "Com Pendência"]);
+            $controle->set_valor($parametroStatus);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -138,7 +151,10 @@ if ($acesso) {
             $select = 'SELECT tbservidor.idServidor,
                               idDependente,
                               tbparentesco.Parentesco,
+                              tbdependente.dtNasc,
                               TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
+                              idDependente,
+                              idDependente,
                               idDependente
                          FROM tbdependente JOIN tbpessoa USING (idPessoa)
                                            JOIN tbservidor USING (idPessoa)
@@ -162,8 +178,8 @@ if ($acesso) {
                     $select .= ' OR ';
                 }
             }
-            
-             $select .= ') ';
+
+            $select .= ') ';
 
             if (!empty($parametroNome)) {
                 $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
@@ -184,24 +200,44 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
+            # Com Pendência
+            if ($parametroStatus == "Com Pendência") {
+                $auxEduc = new AuxilioEducacao();
+                $contador = 0;
+
+                # Percorre os registros
+                foreach ($result as $item) {
+                    # Verifica se tem pendência
+                    if ($auxEduc->temPendencia($item[1]) <> "Sim") {
+                        unset($result[$contador]);
+                    }
+
+                    $contador++;
+                }
+            }
+
             $tabela = new Tabela();
             $tabela->set_titulo('Controle de Auxílio Educação');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Idade", "Aux.Educação"]);
-            #$tabela->set_width([30, 30, 10, 10, 10, 10]);
+            if ($parametroStatus == "Com Pendência") {
+                $tabela->set_subtitulo("COM PENDÊNCIAS");
+            }
+            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Nascimento", "Idade", "Detalhado", "Editar Comprovantes", "Tem Pendência?"]);
+            $tabela->set_width([20, 20, 5, 10, 5, 20, 5, 5]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["left", "left"]);
+            $tabela->set_align(["left", "left", "center", "center", "center", "left"]);
 
-            $tabela->set_classe(["Pessoal", "Dependente", null, null, "Dependente"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, "exibeauxEducacao"]);
+            $tabela->set_classe(["Pessoal", "Dependente", null, null, null, "Dependente", "Dependente", "AuxilioEducacao"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle", "exibeTemPendencia"]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
-
+            $tabela->set_nomeColunaEditar('Editar Servidor');
+            
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
-            if (!vazio($parametroNome)) {
+            if (!empty($parametroNome)) {
                 $tabela->set_textoRessaltado($parametroNome);
             }
 
@@ -221,7 +257,7 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', 'areaParente.php');
+            set_session('origem', 'areaAuxilioEducacao.php');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');
@@ -281,6 +317,25 @@ if ($acesso) {
             $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, "Formacao"));
             $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_curso"));
             $relatorio->show();
+            break;
+
+        ################################################################    
+        case "comprovante" :
+            
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            $dep = new Dependente();
+            echo $dep->get_idServidor($id);
+            set_session('idServidorPesquisado', $dep->get_idServidor($id));
+            set_session('idDependente', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAuxilioEducacao.php');
+
+            # Carrega a página específica
+            loadPage('servidorCompAuxEduca.php');
             break;
     }
 

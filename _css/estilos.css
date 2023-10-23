@@ -126,7 +126,7 @@ p#pAvisoRegularizarVermelho{
     padding: 0px 0px 0px 0px;
     font-size: 12px;
     color: red;
-    font-weight: bold;
+    text-align: center;
     margin: 0px;
 }
 

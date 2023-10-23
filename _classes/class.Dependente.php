@@ -177,6 +177,7 @@ class Dependente {
                             br();
                             foreach ($dadosComprovantes as $item) {
                                 p("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . date_to_php($item['dtInicio']) . " a " . date_to_php($item['dtTermino']), "plistaDeclaracaoRecebida");
+                                hr("geral");
                             }
                             hr("grosso1");
                         }
@@ -188,10 +189,13 @@ class Dependente {
 
                         # Verifica se existe ainda algum período possível
                         if ($anos24 <> $ultimaDatacomprovada) {
-                            if (jaPassou($ultimaDatacomprovada)) {
-                                p("- Regularizar a partir de " . addDias($ultimaDatacomprovada, 1, false), "pAvisoRegularizarVermelho");
-                            } else {
-                                p("- Regularizar a partir de " . addDias($ultimaDatacomprovada, 1, false), "pAvisoRegularizarAzul");
+                            
+                            # Pega a data do téwrmino desse semestre
+                            $dtTermino = $this->get_dtFinalAuxEducacaoControle($id);
+                            
+                            
+                            if (jaPassou($dtTermino)) {
+                                p("Regularizar o período:<br/>de {$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarVermelho");
                             }
                             hr("grosso1");
                         }

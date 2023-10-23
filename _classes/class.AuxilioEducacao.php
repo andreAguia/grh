@@ -195,10 +195,10 @@ class AuxilioEducacao {
         # Pega os parentescos com direito au auxEducação
         $tipos = $dependente->get_arrayTipoParentescoAuxEduca();
 
-        # Verifica se tem direito ao auxilio
+        # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
 
-            # Exibe as datas possíveis do início do direito
+            # Pega as datas limites
             $dtNasc = date_to_php($dados["dtNasc"]);
             $anos21 = get_dataIdade($dtNasc, 21);
             $anos24 = get_dataIdade($dtNasc, 24);
@@ -239,25 +239,17 @@ class AuxilioEducacao {
              * enviar a declaração de escolaridade
              */
 
+            tituloTable("Sem Declaração de Escolaridade");
+            $painel = new Callout("warning");
+            $painel->abre();
+
             # Verifica se teve período sem precisar comprovar
             if (dataMenor($dataHistoricaInicial, $anos21) == $anos21) {
-                tituloTable("Sem Declaração de Escolaridade");
-                $painel = new Callout("warning");
-                $painel->abre();
                 p("Dependente já tinha mais de 21 anos quando adquiriu o direito!", "center", "f14");
-                $painel->fecha();
             } else {
-                # Exibe o período
-                $array = [[$dependente->get_dtInicialAuxEducacao($id), $anos21]];
-
-                $tabela = new Tabela();
-                $tabela->set_titulo("Sem Declaração de Escolaridade");
-                $tabela->set_conteudo($array);
-                $tabela->set_label(["Início", "Término"]);
-                $tabela->set_width([50, 50]);
-                $tabela->set_totalRegistro(false);
-                $tabela->show();
+                p($dependente->get_dtInicialAuxEducacao($id) . " a " . $anos21, "center", "f14");
             }
+            $painel->fecha();
 
             /*
              * Informa a data em que faz 21 anos
@@ -280,20 +272,16 @@ class AuxilioEducacao {
 
             # Verifica a data de início
             if (dataMenor($dataHistoricaInicial, $anos21) == $anos21) {
-                $array = [[$dataHistoricaInicial, $anos24]];
+                $array = [$dataHistoricaInicial, $anos24];
             } else {
-                $array = [[$anos21, $anos24]];
+                $array = [$anos21, $anos24];
             }
 
-            $tabela = new Tabela();
-            $tabela->set_titulo("Com Declaração de Escolaridade");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Início", "Término"]);
-            $tabela->set_width([50, 50]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_rowspan(1);
-            $tabela->set_grupoCorColuna(1);
-            $tabela->show();
+            titulotable("Com Declaração de Escolaridade");
+            $painel = new Callout("warning");
+            $painel->abre();
+            p($array[0] . " a " . $array[1], "center", "f14");
+            $painel->fecha();
 
             /*
              * Informa a data em que faz 24 anos
@@ -314,4 +302,5 @@ class AuxilioEducacao {
     }
 
 ###########################################################
+    
 }

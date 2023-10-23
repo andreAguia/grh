@@ -162,7 +162,7 @@ if ($acesso) {
 
     $objeto->set_funcao([null, null, null, "date_to_php"]);
     $objeto->set_classe(["Dependente", null, null, null, null, null, "AuxilioEducacao", "AuxilioEducacao"]);
-    $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle"]);
+    $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, null, "exibeSituacao", "exibeBotaoControle"]);
 
     $objeto->set_numeroOrdem(true);
     $objeto->set_rowspan(0);

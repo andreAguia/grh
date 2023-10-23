@@ -107,64 +107,7 @@ class AuxilioEducacao {
          * 
          * @param $idFormacao integer null O idDependente
          */
-        #####################################m Parei aqui
-        # Pega os dados
-        $dependente = new Dependente();
-        $dados = $dependente->get_dados($id);
-
-        # Pega os parentescos com direito au auxEducação
-        $tipos = $this->get_arrayTipoParentescoAuxEduca();
-
-        # Verifica se tem direito
-        if (in_array($dados["idParentesco"], $tipos)) {
-
-            # Pega as datas limites
-            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
-
-            # Data Histórica Inicial
-            $intra = new Intra();
-            $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-
-            # Verifica se perdeu o direito antes da data histórica
-            if (dataMenor($dataHistoricaInicial, $anos24) <> $anos24) {
-
-                if ($dados["auxEducacao"] == "Sim") {
-
-                    if (idade(date_to_php($dados["dtNasc"])) > 21) {
-                        $dadosComprovantes = $this->get_dadosIdDependente($id);
-                        $ultimaDatacomprovada = $this->get_ultimaDataComprovada($id);
-
-                        # Verifica se tem mais que 21 e não comprovou nada
-                        if (empty($ultimaDatacomprovada)) {
-                            $ultimaDatacomprovada = $anos21;
-                        }
-
-                        # Verifica se existe ainda algum período possível
-                        if ($anos24 <> $ultimaDatacomprovada) {
-                            if (jaPassou($ultimaDatacomprovada)) {
-                                return "Sim";
-                            } else {
-                                return "Não";
-                            }
-                        }
-                    } else {
-                        return "Não";
-                    }
-                }
-                if ($dados["auxEducacao"] == "Não") {
-                    return "Não";
-                }
-
-                if (is_null($dados["auxEducacao"])) {
-                    return "N/D";
-                }
-            } else {
-                return "Não";
-            }
-        } else {
-            return "---";
-        }
+        return $this->exibeSituacao($id, true);
     }
 
 ###########################################################
@@ -212,7 +155,7 @@ class AuxilioEducacao {
             $painel = new Callout("warning");
             $painel->abre();
 
-            $this->exibeauxEducacao($id);
+            $this->exibeSituacao($id);
 
             $painel->fecha();
 
@@ -321,7 +264,7 @@ class AuxilioEducacao {
 
 ###########################################################
 
-    public function exibeauxEducacao($id) {
+    public function exibeSituacao($id, $pendencia = false) {
 
         # Pega os dados do dependente
         $dependente = new Dependente();
@@ -343,7 +286,11 @@ class AuxilioEducacao {
 
             # Verifica se perdeu o direito antes da data histórica
             if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
-                p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
+                if ($pendencia) {
+                    return "Não";
+                } else {
+                    p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
+                }
             } else {
 
                 # Verifica se marcou Sim no aux Educação
@@ -352,7 +299,11 @@ class AuxilioEducacao {
                     # Verifica se e menor de 21 anos e 
                     # informa a partir de quando fica sem precisar compravar escolaridade
                     if (idade(date_to_php($dados["dtNasc"])) < 21) {
-                        p("Situação regular até:<br/>{$anos21} (21 anos)", "pAvisoRegularizarAzul");
+                        if ($pendencia) {
+                            return "Não";
+                        } else {
+                            p("Situação regular até:<br/>{$anos21} (21 anos)", "pAvisoRegularizarAzul");
+                        }
                     }
 
                     # Verifica se tem mais de 21 anos
@@ -366,34 +317,60 @@ class AuxilioEducacao {
                         }
 
                         # Verifica se existe ainda algum período possível
-                        if ($anos24 <> $ultimaDatacomprovada) {
+                        if (strtotime(date_to_bd($ultimaDatacomprovada)) < strtotime(date_to_bd($anos24))) {
 
                             # Pega a data do téwrmino desse semestre
                             $dtTermino = $this->get_dtFinalAuxEducacaoControle($id);
 
                             if (jaPassou($dtTermino)) {
-                                p("Regularizar o período:<br/>de {$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarVermelho");
+                                if ($pendencia) {
+                                    return "Sim";
+                                } else {
+                                    p("Regularizar o período:<br/>de {$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarVermelho");
+                                }
                             } else {
-                                p("Situação regular até:<br/>{$ultimaDatacomprovada}", "pAvisoRegularizarAzul");
+                                if ($pendencia) {
+                                    return "Não";
+                                } else {
+                                    p("Situação regular até:<br/>{$dtTermino}", "pAvisoRegularizarAzul");
+                                }
+                            }
+                        } else {
+                            if ($pendencia) {
+                                return "Não";
+                            } else {
+                                p("Dependente já encerrou o direito e comprovou todos os período possíveis", "pAvisoRegularizarAzul");
                             }
                         }
                     }
                 } else {
                     if ($dados["auxEducacao"] == "Não") {
-                        p("Não", "vermelho", "center");
+                        if ($pendencia) {
+                            return "Não";
+                        } else {
+                            p("Não", "vermelho", "center");
+                        }
                     } else {
-                        p("N/D", "vermelho", "center");
+                        if ($pendencia) {
+                            return "Não";
+                        } else {
+                            p("N/D", "vermelho", "center");
+                        }
                     }
                 }
             }
         } else {
-            echo "---";
+            if ($pendencia) {
+                return "Não";
+            } else {
+                echo "---";
+            }
         }
     }
 
     ###########################################################
 
-    public function exibeauxEducacaoControle($id) {
+    public function exibeBotaoControle($id) {
 
         # Pega os dados do dependente
         $dependente = new Dependente();

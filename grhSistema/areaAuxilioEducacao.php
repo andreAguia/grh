@@ -227,7 +227,7 @@ if ($acesso) {
             $tabela->set_align(["left", "left", "center", "center", "center", "left"]);
 
             $tabela->set_classe(["Pessoal", "Dependente", null, null, null, "AuxilioEducacao", "AuxilioEducacao", "AuxilioEducacao"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle", "exibeTemPendencia"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, null, "exibeSituacao", "exibeBotaoControle", "exibeTemPendencia"]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
 
             $tabela->set_idCampo('idServidor');

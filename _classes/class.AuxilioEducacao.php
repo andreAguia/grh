@@ -32,7 +32,7 @@ class AuxilioEducacao {
     public function get_dadosIdDependente($idDependente = null) {
 
         /**
-         * Informa os dados da base de dados
+         * Informa os dados da base de dados de um idDependente específico
          * 
          * @param $id integer null O id 
          * 
@@ -113,7 +113,7 @@ class AuxilioEducacao {
         $dados = $dependente->get_dados($id);
 
         # Pega os parentescos com direito au auxEducação
-        $tipos = $dependente->get_arrayTipoParentescoAuxEduca();
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
 
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
@@ -151,9 +151,16 @@ class AuxilioEducacao {
                     } else {
                         return "Não";
                     }
-                } else {
-                    return "---";
                 }
+                if ($dados["auxEducacao"] == "Não") {
+                    return "Não";
+                }
+
+                if (is_null($dados["auxEducacao"])) {
+                    return "N/D";
+                }
+            } else {
+                return "Não";
             }
         } else {
             return "---";
@@ -172,9 +179,11 @@ class AuxilioEducacao {
         $dado = $this->temPendencia($id);
 
         if ($dado == "Sim") {
-            p("Sim", "pAvisoRegularizarVermelho");
+            label("Sim", "alert");
         } elseif ($dado == "Não") {
             p("Não", "pAvisoRegularizarAzul");
+        } elseif ($dado == "N/D") {
+            p("N/D", "vermelho", "center");
         } else {
             echo "---";
         }
@@ -193,10 +202,19 @@ class AuxilioEducacao {
         $dados = $dependente->get_dados($id);
 
         # Pega os parentescos com direito au auxEducação
-        $tipos = $dependente->get_arrayTipoParentescoAuxEduca();
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
 
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
+
+            # Exibe Situação
+            tituloTable("Situação");
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            $this->exibeauxEducacao($id);
+
+            $painel->fecha();
 
             # Pega as datas limites
             $dtNasc = date_to_php($dados["dtNasc"]);
@@ -228,7 +246,7 @@ class AuxilioEducacao {
             $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 1,
-                    'valor' => $dependente->get_dtInicialAuxEducacao($id),
+                    'valor' => $this->get_dtInicialAuxEducacao($id),
                     'operador' => '=',
                     'id' => 'alerta')));
 
@@ -247,7 +265,7 @@ class AuxilioEducacao {
             if (dataMenor($dataHistoricaInicial, $anos21) == $anos21) {
                 p("Dependente já tinha mais de 21 anos quando adquiriu o direito!", "center", "f14");
             } else {
-                p($dependente->get_dtInicialAuxEducacao($id) . " a " . $anos21, "center", "f14");
+                p($this->get_dtInicialAuxEducacao($id) . " a " . $anos21, "center", "f14");
             }
             $painel->fecha();
 
@@ -302,5 +320,278 @@ class AuxilioEducacao {
     }
 
 ###########################################################
-    
+
+    public function exibeauxEducacao($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+
+        # Pega os parentescos com direito au auxEducação
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
+
+        # Verifica se tem direito
+        if (in_array($dados["idParentesco"], $tipos)) {
+
+            # Pega as datas limites
+            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+
+            # Data Histórica Inicial
+            $intra = new Intra();
+            $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+            # Verifica se perdeu o direito antes da data histórica
+            if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+                p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
+            } else {
+
+                # Verifica se marcou Sim no aux Educação
+                if ($dados["auxEducacao"] == "Sim") {
+
+                    # Verifica se e menor de 21 anos e 
+                    # informa a partir de quando fica sem precisar compravar escolaridade
+                    if (idade(date_to_php($dados["dtNasc"])) < 21) {
+                        p("Situação regular até:<br/>{$anos21} (21 anos)", "pAvisoRegularizarAzul");
+                    }
+
+                    # Verifica se tem mais de 21 anos
+                    if (idade(date_to_php($dados["dtNasc"])) > 21) {
+                        $dadosComprovantes = $this->get_dadosIdDependente($id);
+                        $ultimaDatacomprovada = $this->get_ultimaDataComprovada($id);
+
+                        # Verifica se tem mais que 21 e não comprovou nada
+                        if (empty($ultimaDatacomprovada)) {
+                            $ultimaDatacomprovada = $anos21;
+                        }
+
+                        # Verifica se existe ainda algum período possível
+                        if ($anos24 <> $ultimaDatacomprovada) {
+
+                            # Pega a data do téwrmino desse semestre
+                            $dtTermino = $this->get_dtFinalAuxEducacaoControle($id);
+
+                            if (jaPassou($dtTermino)) {
+                                p("Regularizar o período:<br/>de {$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarVermelho");
+                            } else {
+                                p("Situação regular até:<br/>{$ultimaDatacomprovada}", "pAvisoRegularizarAzul");
+                            }
+                        }
+                    }
+                } else {
+                    if ($dados["auxEducacao"] == "Não") {
+                        p("Não", "vermelho", "center");
+                    } else {
+                        p("N/D", "vermelho", "center");
+                    }
+                }
+            }
+        } else {
+            echo "---";
+        }
+    }
+
+    ###########################################################
+
+    public function exibeauxEducacaoControle($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+
+        # Pega os parentescos com direito au auxEducação
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
+
+        # Verifica se tem direito
+        if (in_array($dados["idParentesco"], $tipos)) {
+
+            if ($dados["auxEducacao"] == "Sim") {
+                # botão
+                $link = new Link(null, "?fase=comprovante&id={$id}");
+                $link->set_id("btnAuxEduc");
+                $link->set_imagem(PASTA_FIGURAS . 'declaracao.png', 20, 20);
+                $link->set_title("Controle do envio de comprovante de escolaridade");
+                $link->show();
+            } else {
+                echo "---";
+            }
+        } else {
+            echo "---";
+        }
+    }
+
+###########################################################
+
+    public function get_arrayTipoParentescoAuxEduca() {
+
+        /**
+         * Retorna um array com todos os tipos de parentescos que tem direito ao auxílio Educação
+         *          * 
+         * @syntax $dependente->get_arrayTipoParentescoAuxEduca();
+         */
+        # Pega o array multi do banco de dados
+        $pessoal = new Pessoal();
+        $arrayM = $pessoal->select("SELECT idParentesco FROM tbparentesco WHERE auxEducacao = 'Sim'");
+
+        # Transforma em uni
+        foreach ($arrayM as $item) {
+            $arrayU[] = $item[0];
+        }
+
+        return $arrayU;
+    }
+
+    ###########################################################
+
+    public function get_dtFinalAuxEducacaoControle($id) {
+
+        /**
+         * fornece a data inicial de um lançamento do controle de declaração escolar para o Auxílio educação
+         * 
+         * @param $id integer null O id 
+         * 
+         * @syntax $dependente->get_dtInicialAuxEducacaoControle([$id]);
+         */
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados do dependente
+            $dependente = new Dependente();
+            $dados = $dependente->get_dados($id);
+
+            # Pega as datas limites
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+
+            # Pega a data Inicial
+            $dtInicial = $this->get_dtInicialAuxEducacaoControle($id);
+
+            if (month($dtInicial) < 6) {
+                return dataMenor("30/06/" . year($dtInicial), $anos24);
+            } else {
+                return dataMenor("31/12/" . year($dtInicial), $anos24);
+            }
+        }
+    }
+
+###########################################################
+
+    public function get_dtInicialAuxEducacao($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+        $dtNasc = date_to_php($dados["dtNasc"]);
+
+        # Dados do Servidor
+        $idPessoa = $dados["idPessoa"];
+        $pessoal = new Pessoal();
+        $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+        $intra = new Intra();
+        $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+        return dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]);
+    }
+
+    ###########################################################
+
+    public function get_dtInicialAuxEducacaoControle($id) {
+
+        /**
+         * fornece a data inicial de um lançamento do controle de declaração escolar para o Auxílio educação
+         * 
+         * @param $id integer null O id 
+         * 
+         * @syntax $dependente->get_dtInicialAuxEducacaoControle([$id]);
+         */
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados do dependente
+            $dependente = new Dependente();
+            $dados = $dependente->get_dados($id);
+
+            # Pega as datas limites
+            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
+            $dtInicioGeral = $this->get_dtInicialAuxEducacao($id);
+
+            # Pega o último comprovante deste dependente
+            $pessoal = new Pessoal();
+            $comprovantes = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$id} ORDER BY dtInicio desc LIMIT 1", false);
+
+            if (empty($comprovantes[0])) {
+                # Verifica se fez 21 anos apos a data inicial limite
+                if (dataMaior($dtInicioGeral, $anos21) == $dtInicioGeral) {
+                    return $dtInicioGeral;
+                } else {
+                    return addDias($anos21, 1, false);
+                }
+            } else {
+                return addDias(date_to_php($comprovantes["dtTermino"]), 1, false);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_dtTerminoAuxEducacao($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+        return get_dataIdade(date_to_php($dados["dtNasc"]), 21);
+    }
+
+    ###########################################################
+
+
+    /*
+     * Verifica se o dependente tinha mais de 24 ou não na data da publicação da lei 9450/2021
+     */
+
+    public function tinhaDireitoDataHistorica($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+
+        # Pega os parentescos com direito au auxEducação
+        $tipos = $this->get_arrayTipoParentescoAuxEduca();
+
+        # Verifica se tem direito
+        if (in_array($dados["idParentesco"], $tipos)) {
+
+            # Pega as datas limites
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+
+            # Data Histórica Inicial
+            $intra = new Intra();
+            $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+            if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    public function verificaDireitoAuxEduca($idParentesco) {
+
+        /**
+         * Verifica se o idinserido tem direito ao auxílio educação
+         */
+        if (in_array($idParentesco, $this->get_arrayTipoParentescoAuxEduca())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
 }

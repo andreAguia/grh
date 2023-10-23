@@ -42,8 +42,9 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
 /*
  * Auxílio Educação
  */
-$dep = new Dependente();
-if ($dep->verificaDireitoAuxEduca($parentesco)) {
+
+$aux = new AuxilioEducacao();
+if ($aux->verificaDireitoAuxEduca($parentesco)) {
     $intra = new Intra();
     $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
     $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));

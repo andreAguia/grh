@@ -23,19 +23,20 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     $intra = new Intra();
-    $classeDependente = new Dependente();
+    $dependente = new Dependente();
+    $aux = new AuxilioEducacao();
 
     # Pega a Origem
     $origem = get_session("origem");
 
     # Pega o idDependente
     $idDependente = get_session("idDependente");
-    $nomeDependente = $classeDependente->get_nome($idDependente);
+    $nomeDependente = $dependente->get_nome($idDependente);
 
     # Faz os cálculos dos valores padrão para quando for inclusão    
     if (empty($id)) {
-        $dtInicio = date_to_bd($classeDependente->get_dtInicialAuxEducacaoControle($idDependente));
-        $dtTermino = date_to_bd($classeDependente->get_dtFinalAuxEducacaoControle($idDependente));
+        $dtInicio = date_to_bd($aux->get_dtInicialAuxEducacaoControle($idDependente));
+        $dtTermino = date_to_bd($aux->get_dtFinalAuxEducacaoControle($idDependente));
     } else {
         $dtInicio = null;
         $dtTermino = null;
@@ -110,7 +111,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Ano", "Data Início", "Data Término", "Comprovante", " Observação"]);
-    $objeto->set_width([10, 15, 15, 15, 30]);
+    $objeto->set_width([10, 10, 10, 10, 50]);
     $objeto->set_align(["center", "center", "center", "center", "left"]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
 

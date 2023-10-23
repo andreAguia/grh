@@ -166,8 +166,8 @@ if ($acesso) {
                          AND (';
 
             # Pega os parentesco com direito ao auxílio Educação
-            $dep = new Dependente();
-            $array = $dep->get_arrayTipoParentescoAuxEduca();
+            $aux = new AuxilioEducacao();
+            $array = $aux->get_arrayTipoParentescoAuxEduca();
             $numItem = count($array);
 
             foreach ($array as $item) {
@@ -226,7 +226,7 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "left", "center", "center", "center", "left"]);
 
-            $tabela->set_classe(["Pessoal", "Dependente", null, null, null, "Dependente", "Dependente", "AuxilioEducacao"]);
+            $tabela->set_classe(["Pessoal", "Dependente", null, null, null, "AuxilioEducacao", "AuxilioEducacao", "AuxilioEducacao"]);
             $tabela->set_metodo(["get_nomeECargoELotacao", "exibeNomeCpf", null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle", "exibeTemPendencia"]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
 

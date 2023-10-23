@@ -44,8 +44,8 @@ if ($acesso) {
                     switch (t1) {';
 
     # Pega os parentesco com direito ao auxílio Educação
-    $dep = new Dependente();
-    $array = $dep->get_arrayTipoParentescoAuxEduca();
+    $aux = new AuxilioEducacao();
+    $array = $aux->get_arrayTipoParentescoAuxEduca();
 
     foreach ($array as $item) {
         $jscript .= ' case "' . $item . '": ';
@@ -161,7 +161,7 @@ if ($acesso) {
     $objeto->set_align(["left", "center", "center", "center", "center", "center", "left"]);
 
     $objeto->set_funcao([null, null, null, "date_to_php"]);
-    $objeto->set_classe(["Dependente", null, null, null, null, null, "Dependente", "Dependente"]);
+    $objeto->set_classe(["Dependente", null, null, null, null, null, "AuxilioEducacao", "AuxilioEducacao"]);
     $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, null, "exibeauxEducacao", "exibeauxEducacaoControle"]);
 
     $objeto->set_numeroOrdem(true);
@@ -190,8 +190,7 @@ if ($acesso) {
 
     # Verifica se o dependente é filho e tinha mais de 24 anos na data histórica do aux educação e saúde
     if (!empty($id)) {
-        $dep = new Dependente();
-        if ($dep->tinhaDireitoDataHistorica($id)) {
+        if ($aux->tinhaDireitoDataHistorica($id)) {
             $readonly = false;
             $helptext = null;
         } else {

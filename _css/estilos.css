@@ -117,36 +117,33 @@ p#pInativo{
 ********************************************/
 p#pDependenteSDireito{
     padding: 0px 0px 0px 0px;
-    font-size: 12px;
     color: darkred;
     margin: 0px;
+    text-align: center;
 }
 
 p#pAvisoRegularizarVermelho{
     padding: 0px 0px 0px 0px;
-    font-size: 12px;
     color: red;
-    text-align: center;
     margin: 0px;
+    text-align: center;
 }
 
 p#pAvisoRegularizarAzul{
     padding: 0px 0px 0px 0px;
-    font-size: 12px;
     color: darkblue;
     margin: 0px;
+    text-align: center;
 }
 
 p#plistaDeclaracaoRecebida{
     padding: 0px 0px 0px 0px;
-    font-size: 12px;
     color: darkblue;
     margin: 0px;
 }
 
 p#pAvisoEncerramento{
     padding: 0px 0px 0px 0px;
-    font-size: 12px;
     text-align: center;
     color: red;
     font-weight: bold;

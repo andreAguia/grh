@@ -327,7 +327,7 @@ if ($acesso) {
 
             # Informa o $id Servidor
             $dep = new Dependente();
-            echo $dep->get_idServidor($id);
+            
             set_session('idServidorPesquisado', $dep->get_idServidor($id));
             set_session('idDependente', $id);
 
@@ -335,7 +335,7 @@ if ($acesso) {
             set_session('origem', 'areaAuxilioEducacao.php');
 
             # Carrega a página específica
-            loadPage('servidorCompAuxEduca.php');
+            loadPage('servidorCompAuxEduca.php?grh=true');
             break;
     }
 

@@ -363,7 +363,7 @@ if ($acesso) {
 
         case "comprovante" :
             set_session('idDependente', $id);
-            loadPage("servidorCompAuxEduca.php");
+            loadPage("servidorCompAuxEduca.php?grh=true");
             break;
     }
     $page->terminaPagina();

@@ -78,6 +78,7 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT idparentesco,
                                      parentesco,
                                      auxEducacao,
+                                     idparentesco,
                                      obs,
                                      idparentesco
                                 FROM tbparentesco
@@ -108,10 +109,16 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Parentesco", "Tem direito ao<br/>Auxílio Educação", "Obs"]);
-    $objeto->set_width([5, 20, 10, 55]);
-    $objeto->set_align(["center", "center", "center", "left"]);
+    $objeto->set_label(["id", "Parentesco", "Tem direito ao<br/>Auxílio Educação", "Quantidade", "Obs"]);
+    $objeto->set_width([5, 20, 10, 10, 40]);
+    $objeto->set_align(["center", "center", "center", "center", "left"]);
+
+    $objeto->set_classe([null, null, null, "Parente"]);
+    $objeto->set_metodo([null, null, null, "get_numDependenteParentesco"]);
     $objeto->set_funcao([null, null, "ressaltaSimNao"]);
+    
+    $objeto->set_colunaSomatorio(3);
+
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

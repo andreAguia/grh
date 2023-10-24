@@ -37,10 +37,12 @@ if ($acesso) {
     # Pega os parâmetros    
     $parametroNome = post('parametroNome', get_session('parametroNome'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroParentesco = post('parametroParentesco', get_session('parametroParentesco'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroNome', $parametroNome);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroParentesco', $parametroParentesco);
 
     # Começa uma nova página
     $page = new Page();
@@ -128,14 +130,31 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(5);
+            $form->add_item($controle);
+
+            # Parentesco
+            $parente = $pessoal->select('SELECT idParentesco, Parentesco
+                                           FROM tbparentesco
+                                         ORDER BY Parentesco');
+            array_unshift($parente, array('*', '-- Todos --'));
+
+            # Parentesco
+            $controle = new Input('parametroParentesco', 'combo', 'Parentesco:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Parentesco');
+            $controle->set_array($parente);
+            $controle->set_valor($parametroParentesco);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
 
             ##############
             # Pega os dados
-            $select = 'SELECT tbservidor.idServidor,
+            $select = "SELECT tbservidor.idServidor,
                               tbdependente.nome,
                               tbdependente.cpf,
                               tbparentesco.Parentesco,
@@ -147,24 +166,26 @@ if ($acesso) {
                                            JOIN tbhistlot USING (idServidor)
                                            JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
-                         AND situacao = 1';
+                         AND situacao = 1";
 
             if (!empty($parametroNome)) {
-                $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
+                $select .= " AND tbdependente.nome LIKE '%{$parametroNome}%'";
+            }
+            
+            if (($parametroParentesco <> "*") AND ($parametroParentesco <> "")) {
+                $select .= " AND idParentesco = {$parametroParentesco}";
             }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
 
-            $select .= ' ORDER BY tbpessoa.nome, tbdependente.nome';
-
-            #echo $select;
+            $select .= " ORDER BY tbpessoa.nome, tbdependente.nome";
 
             $result = $pessoal->select($select);
 

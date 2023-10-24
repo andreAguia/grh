@@ -72,6 +72,7 @@ if ($acesso) {
     set_session('parametroTrimestre');
     set_session('parametroVaga');
     set_session('idServidorPesquisado');
+    set_session('parametroParentesco');
 
     set_session('concursoTipo');
 

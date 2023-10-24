@@ -38,4 +38,19 @@ class Parente {
     }
 
 ###########################################################
+    
+    public function get_numDependenteParentesco($idParentesco) {
+         /**
+         * Informa o número d dependentes com esse tipo de parentesco
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idDependente
+                     FROM tbdependente
+                    WHERE idParentesco = {$idParentesco}";
+        
+        return $pessoal->count($select);
+    }
 }

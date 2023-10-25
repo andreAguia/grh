@@ -501,7 +501,7 @@ class LicencaPremio {
             titulotable("Processo de Contagem");
             $painel = new Callout();
             $painel->abre();
-            p($this->get_numProcesso($idServidor), "f20", "center");
+            p($this->get_numProcessoContagem($idServidor), "f20", "center");
             $painel->fecha();
         }
 

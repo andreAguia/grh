@@ -235,10 +235,10 @@ class LicencaPremio {
 
     ###########################################################
 
-    function get_numProcesso($idServidor) {
+    function get_numProcessoContagem($idServidor) {
 
         /**
-         * Informe o número do processo da licença prêmio de um servidor
+         * Informe o número do processo de Contagem da licença prêmio de um servidor
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
@@ -256,6 +256,32 @@ class LicencaPremio {
             return $retorno[0];
         } else {
             return $idServidor;
+        }
+    }
+
+    ###########################################################
+
+    function get_numProcessoFruicao($id) {
+
+        /**
+         * Informe o número do processo de Fruicao da licença prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (is_numeric($id)) {
+
+            # Pega os dias publicados
+            $select = "SELECT processo
+                         FROM tblicencapremio
+                        WHERE idLicencaPremio = {$id}";
+
+            $retorno = $pessoal->select($select, false);
+
+            # Retorno
+            return $retorno[0];
+        } else {
+            return $id;
         }
     }
 
@@ -458,7 +484,7 @@ class LicencaPremio {
                 # Insere no array o vinculo e o processo
                 $conteudo1[] = [
                     $pessoal->get_cargoSigla($tt[0]),
-                    $this->get_numProcesso($tt[0])
+                    $this->get_numProcessoContagem($tt[0])
                 ];
             }
 
@@ -658,7 +684,7 @@ class LicencaPremio {
 
         # Pega o número de vínculos
         $numVinculos = $this->get_numVinculosPremio($idServidor);
-        
+
         if ($numVinculos > 1) {
 
             # Carrega um array com os idServidor de cada vinculo
@@ -788,6 +814,7 @@ class LicencaPremio {
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          processo,
                           idLicencaPremio,
                           idLicencaPremio
                      FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
@@ -824,12 +851,11 @@ class LicencaPremio {
         $tabela = new Tabela();
         $tabela->set_titulo($titulo);
         $tabela->set_conteudo($result);
-        $tabela->set_label(array("Data da Publicaçãod", "Período Aquisitivo", "Inicio", "Dias", "Término", "Obs"));
-        $tabela->set_align(array("center"));
-        $tabela->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
-        $tabela->set_width(array(17, 22, 17, 10, 17, 12));
-        $tabela->set_classe(array(null, null, null, null, null, 'LicencaPremio'));
-        $tabela->set_metodo(array(null, null, null, null, null, 'exibeObs'));
+        $tabela->set_label(["Data da Publicaçãod", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Fruição", "Obs"]);
+        $tabela->set_align(["center"]);
+        $tabela->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $tabela->set_classe([null, null, null, null, null, null, 'LicencaPremio']);
+        $tabela->set_metodo([null, null, null, null, null, null, 'exibeObs']);
         $tabela->set_numeroOrdem(true);
         $tabela->set_numeroOrdemTipo("d");
         $tabela->set_exibeTempoPesquisa(false);
@@ -853,6 +879,7 @@ class LicencaPremio {
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                          processo,
                           idLicencaPremio
                      FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                     WHERE tblicencapremio.idServidor = ' . $idServidor . '
@@ -883,10 +910,9 @@ class LicencaPremio {
         $relatorio->set_numeroOrdem(true);
         $relatorio->set_numeroOrdemTipo("d");
         #$relatorio->set_subtitulo("Licenças Fruídas");
-        $relatorio->set_label(array("Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término"));
-        #$relatorio->set_width(array(23,10,5,10,17,10,10,10,5));
-        $relatorio->set_align(array('center'));
-        $relatorio->set_funcao(array('date_to_php', null, 'date_to_php', null, 'date_to_php'));
+        $relatorio->set_label(["Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo"]);
+        $relatorio->set_align(['center']);
+        $relatorio->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
 
         $relatorio->set_conteudo($result);
         $relatorio->show();
@@ -1085,7 +1111,7 @@ class LicencaPremio {
         $diasPublicados = $this->get_numDiasPublicadosTotal($idServidor);
         $diasFruidos = $this->get_numDiasFruidosTotal($idServidor);
         $diasDisponiveis = $this->get_numDiasDisponiveisTotal($idServidor);
-        $numProcesso = $this->get_numProcesso($idServidor);
+        $numProcesso = $this->get_numProcessoContagem($idServidor);
 
         $nome = $pessoal->get_licencaNome(6);
         $idSituacao = $pessoal->get_idSituacao($idServidor);

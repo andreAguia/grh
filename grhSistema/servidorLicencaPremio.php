@@ -335,7 +335,7 @@ if ($acesso) {
                 $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
                 $diasDisponiveis = $licenca->get_numDiasDisponiveisTotal($idServidorPesquisado);
-                $numProcesso = $licenca->get_numProcesso($idServidorPesquisado);
+                $numProcesso = $licenca->get_numProcessoContagem($idServidorPesquisado);
 
                 $nome = $pessoal->get_licencaNome(6);
                 $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
@@ -350,7 +350,7 @@ if ($acesso) {
                     $objeto->set_botaoIncluir(false);
                 }
 
-                # Servidor sem processo cadastrado
+                # Servidor sem processo de contagem cadastrado
                 if (is_null($numProcesso)) {
                     $objeto->set_botaoIncluir(false);
                 }

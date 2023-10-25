@@ -220,7 +220,7 @@ function exibeProcesso($texto) {
             $licenca = new LicencaPremio();
 
             # Pega o processo 
-            $processo = $licenca->get_numProcesso($id);
+            $processo = $licenca->get_numProcessoFruicao($id);
             break;
 
         # Licença Sem Vencimentos

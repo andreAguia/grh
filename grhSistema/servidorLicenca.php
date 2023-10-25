@@ -367,7 +367,7 @@ if ($acesso) {
                                        dtInicial,
                                        tblicencapremio.numdias,
                                        ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                                       CONCAT("6&",tblicencapremio.idServidor),
+                                       CONCAT("6&",idLicencaPremio),
                                        tbpublicacaopremio.dtPublicacao,
                                        CONCAT("tblicencapremio","&",tblicencapremio.idServidor),
                                        "-"

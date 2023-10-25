@@ -583,7 +583,7 @@ class LicencaPremio {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_titulo('Publicaçõessss');
+            $tabela->set_titulo('Publicações');
             $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DOERJ", "Obs"]);
             $tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
             $tabela->set_align(["left"]);

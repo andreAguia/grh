@@ -185,7 +185,7 @@ class Checkup {
         }
     }
 
-    ##########################################################
+    ##################################################
 
     /**
      * Método get_trienioVencendo
@@ -4884,7 +4884,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Licença Sem Vencimentos terminando em menos de 45 dias.';
+            $titulo = 'Servidor(es) com licença sem vencimentos terminando em menos de 45 dias.';
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -4895,6 +4895,84 @@ class Checkup {
             $tabela->set_classe([null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, "get_nome", "get_lotacao"]);
             $tabela->set_funcao([null, null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+    
+
+    /**
+     * Método get_licencaSemVencimentosVencendo
+     * 
+     * Servidores com Licença vencendo este ano
+     */
+    public function get_licencaSemVencimentosVencendo($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "licencas" OR !empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT tbservidor.idFuncional,
+                          tbpessoa.nome,
+                        tbperfil.nome,
+                        tbtipolicenca.nome,
+                        tblicencasemvencimentos.dtInicial,
+                        tblicencasemvencimentos.numDias,
+                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                        tbservidor.idServidor
+                   FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                   LEFT JOIN tblicencasemvencimentos USING (idServidor)
+                                   LEFT JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
+                                   LEFT JOIN tbperfil USING (idPerfil)
+                  WHERE tbservidor.situacao = 1
+                    AND YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = "' . date('Y') . '"';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY 7';
+
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Servidor(es) com licença sem vencimentos terminando em ' . date('Y');
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_titulo($titulo);
+            $tabela->set_label(['IdFuncional', 'Servidor', 'Perfil', 'Licença', 'Data Inicial', 'Dias', 'Data Final']);
+            $tabela->set_align(['center', 'left', 'center', 'left']);
+            #$tabela->set_classe([null, "Pessoal"]);
+            #$tabela->set_metodo([null, "get_nomeECargo"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php"]);
             $tabela->set_editar($this->linkEditar);
             $tabela->set_idCampo('idServidor');
 

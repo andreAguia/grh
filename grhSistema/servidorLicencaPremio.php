@@ -179,7 +179,7 @@ if ($acesso) {
         $objeto->set_linkListar('?fase=listar');
 
         # Parametros da tabela
-        $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Solicitação", "Obs"]);
+        $objeto->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Fruição", "Obs"]);
         #$objeto->set_width([17, 22, 17, 10, 17, 12]);
         $objeto->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
         $objeto->set_classe([null, null, null, null, null, null, 'LicencaPremio']);

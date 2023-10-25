@@ -561,7 +561,8 @@ class LicencaPremio {
                               idPublicacaoPremio,
                               idPublicacaoPremio,
                               idPublicacaoPremio
-                         FROM tbpublicacaopremio
+                         FROM tbpublicacaopremio JOIN tbservidor USING (idServidor)
+                                                 JOIN tbcargo USING (idCargo)
                         WHERE idServidor = ' . $idServidor;
 
             # Inclui as publicações de outros vinculos
@@ -574,7 +575,7 @@ class LicencaPremio {
                 }
             }
 
-            $select .= ' ORDER BY dtInicioPeriodo desc';
+            $select .= ' ORDER BY idTipoCargo, dtInicioPeriodo desc';
 
             $result = $pessoal->select($select);
             $count = $pessoal->count($select);
@@ -582,7 +583,7 @@ class LicencaPremio {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_titulo('Publicações');
+            $tabela->set_titulo('Publicaçõessss');
             $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DOERJ", "Obs"]);
             $tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
             $tabela->set_align(["left"]);

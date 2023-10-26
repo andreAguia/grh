@@ -844,6 +844,20 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de servidores com direito ao auxílio transporte');
         $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Área de Penalidades');
+        $botao->set_url('areaPenalidades.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área de Penalidades');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Calendário de PGTO');
+        $botao->set_url('calendarioPgto.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'calpgto.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Calendário de Pagamento');
+        #$menu->add_item($botao);
 
         if (Verifica::acesso($this->idUsuario, 1)) {
             $botao = new BotaoGrafico();

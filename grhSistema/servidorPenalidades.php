@@ -56,6 +56,7 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista('SELECT data,
                                      penalidade,
+                                     falta,
                                      processo,
                                      dtPublicacao,
                                      pgPublicacao,
@@ -68,6 +69,7 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita('SELECT data,
                                      idTipoPenalidade,
+                                     falta,
                                      processo,
                                      dtPublicacao,
                                      pgPublicacao,
@@ -80,7 +82,7 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
-    
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -88,10 +90,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Data", "Tipo", "Processo","Publicação","Pag","Descrição"));
-    $objeto->set_width(array(10, 10, 15,15,5,35));
-    $objeto->set_align(array("center", "center","center","center","center", "left"));
-    $objeto->set_funcao(array("date_to_php",null,null,"date_to_php"));
+    $objeto->set_label(["Data", "Tipo", "Referente a Faltas", "Processo", "Publicação", "Pag", "Descrição"]);
+    $objeto->set_width([10, 10, 10, 15, 15, 5, 25]);
+    $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", null, null, null, "date_to_php"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -104,7 +106,7 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formLabelTipo(1);
-    
+
     # Pega os dados da combo tipo de penalidade
     $parentesco = new Pessoal();
     $result = $parentesco->select('SELECT idTipoPenalidade, 
@@ -112,9 +114,9 @@ if ($acesso) {
                                      FROM tbtipopenalidade
                                  ORDER BY penalidade');
     array_push($result, array(null, null)); # Adiciona o valor de nulo
-
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'data',
+    $objeto->set_campos(array(
+        array('nome' => 'data',
             'label' => 'Data:',
             'tipo' => 'data',
             'size' => 20,
@@ -128,10 +130,18 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'array' => $result,
-            'required' => true,            
+            'required' => true,
             'size' => 20,
             'title' => 'Qual o tipo de penalidade',
             'col' => 4,
+            'linha' => 1),
+        array('nome' => 'falta',
+            'label' => 'É referente a faltas?:',
+            'tipo' => 'combo',
+            'array' => array("Não", "Sim"),
+            'size' => 20,
+            'title' => 'A Penalidade é referente a faltas',
+            'col' => 2,
             'linha' => 1),
         array('nome' => 'processo',
             'label' => 'Processo:',
@@ -185,7 +195,7 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($id, 'servidorPenalidadeExtra.php');
+            $objeto->gravar($id, 'servidorPenalidadesExtra.php');
             break;
     }
 

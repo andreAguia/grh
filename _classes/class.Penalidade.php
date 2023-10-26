@@ -71,4 +71,31 @@ class Penalidade {
     }
 
 ###########################################################
+
+    public function temPADFaltas($idServidor) {
+
+        /**
+         * Verifica se tem allguma penalidade (PADS) por faltas
+         */
+        # Verifica se o $id tem valor
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega os dados
+            $select = "SELECT idPenalidade
+                         FROM tbpenalidade
+                        WHERE idServidor = {$idServidor}
+                          AND falta = 'Sim'";                        
+                        
+            $pessoal = new Pessoal();
+
+            if ($pessoal->count($select) > 0) {
+               return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+###########################################################
 }

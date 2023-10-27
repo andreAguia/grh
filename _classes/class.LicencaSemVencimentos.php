@@ -501,6 +501,7 @@ class LicencaSemVencimentos {
         $menu->add_item('linkWindow', "\u{1F5A8} Rioprev - Padrão", '../grhRelatorios/lsv.despacho.rioprev.padrao.php?id=' . $idLicencaSemVencimentos, "Despacho padrão ao Rioprev para emissão dos boletos de pgto");
         $menu->add_item('linkWindow', "\u{1F5A8} Carta de Reassunção", '?fase=cartaReassuncao&id=' . $idLicencaSemVencimentos);
         $menu->add_item('linkWindow', "\u{1F5A8} Rioprev - CSP/CRP", '../grhRelatorios/lsv.despacho.rioprev.crp.php?id=' . $idLicencaSemVencimentos, "Despacho ao Rioprev para emissão de CSP/CRP");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho - Servidor Com Débito", '../grhRelatorios/lsv.despacho.debito.php?id=' . $idLicencaSemVencimentos, "Despacho ao Servidor");
 
         $menu->show();
     }

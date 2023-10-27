@@ -22,6 +22,11 @@ class Despacho {
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
     private $rodapeTelefone = "(22) 2739-7064";
 
+    # do menu do relatório
+    private $formCampos = null;    // array com campos para o formulario
+    private $formFocus = null;     // Campos a receber foco no form
+    private $formLink = null;    // para onde vai o post
+
     ###########################################################
 
     public function __construct() {
@@ -105,7 +110,15 @@ class Despacho {
         # Menu
         $menuRelatorio = new menuRelatorio();
         $menuRelatorio->set_botaoVoltar(null);
-        $menuRelatorio->show();
+        
+        # Abre uma classe de menu do relatório
+        if (!empty($this->formCampos)) {
+            $menuRelatorio->set_formCampos($this->formCampos);
+            $menuRelatorio->set_formFocus($this->formFocus);
+            $menuRelatorio->set_formLink($this->formLink);
+        }
+        
+        $menuRelatorio->show();        
 
         # Cabeçalho do Relatório (com o logotipo)
         $relatorio = new Relatorio();
@@ -128,16 +141,23 @@ class Despacho {
         br($this->saltoRodape);
 
         # Assinatura
-        if (empty($this->origemLotacao)) {
-            p("{$this->origemNome}<br/>{$this->origemDescricao}<br/>Id Funcional n° {$this->origemIdFuncional}", 'pCiAssinatura');
-        } else {
-            p("{$this->origemNome}<br/>{$this->origemDescricao}<br/>{$this->origemLotacao}<br/>Id Funcional n° {$this->origemIdFuncional}", 'pCiAssinatura');
+        $textoAssinatura = "{$this->origemNome}<br/>";
+        
+        if (!empty($this->origemDescricao)) {
+            $textoAssinatura .= "{$this->origemDescricao}<br/>";
         }
+        
+        if (!empty($this->origemLotacao)) {
+            $textoAssinatura .= "{$this->origemLotacao}<br/>";
+        }
+        
+        $textoAssinatura .= "Id Funcional n° {$this->origemIdFuncional}";
+        
+        p($textoAssinatura, 'pCiAssinatura');
 
         $grid->fechaColuna();
         $grid->fechaGrid();
 
         #$this->rodape();
     }
-
 }

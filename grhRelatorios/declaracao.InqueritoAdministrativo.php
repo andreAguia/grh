@@ -36,12 +36,10 @@ if ($acesso) {
         # Limita o tamanho da tela
         $grid = new Grid("center");
         $grid->abreColuna(8);
-
-        p("Atenção!!", "vermelho", "center");
-        br(3);
-        p("Este servidor tem PADs (Processo Administrativo Disciplinar) (penalidades) referentes a faltas cadastradas no sistema.", "center", "f16");
-        br();
-        p("Portanto, não é possível emitir esta Declaração.", "center", "f16");
+        
+        $mensagem = "Este servidor tem PADs (Processo Administrativo Disciplinar) (penalidades) referentes a faltas cadastradas no sistema.";
+        $mensagem .= "<br/><br/>Portanto, não é possível emitir esta Declaração.";
+        calloutAlert($mensagem," Atenção !");
 
         $grid->fechaColuna();
         $grid->fechaGrid();

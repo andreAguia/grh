@@ -82,24 +82,26 @@ class ListaServidores {
     public function __construct($nome) {
         $this->nomeLista = $nome;
 
-        $this->ordenacaoCombo = array(
-            array("1 asc", "por Id Funcional asc"),
-            array("1 desc", "por Id Funcional desc"),
-            array("tbpessoa.nome asc", "por Nome asc"),
-            array("tbpessoa.nome desc", "por Nome desc"),
-            array("tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"),
-            array("tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"),
-            array("UADM asc, DIR asc, GER asc", "por Lotação asc"),
-            array("UADM desc, DIR desc, GER desc", "por Lotação desc"),
-            array("tbperfil.nome asc", "por Perfil asc"),
-            array("tbperfil.nome desc", "por Perfil desc"),
-            array("6 asc", "por Admissão asc"),
-            array("6 desc", "por Admissão desc"),
-            array("tbsituacao.situacao asc", "por Situação asc"),
-            array("tbsituacao.situacao desc", "por Situação desc"),
-            array("tbservidor.dtDemissao asc", "pela Data de Saída asc"),
-            array("tbservidor.dtDemissao desc", "pela Data de Saída desc"),
-        );
+        $this->ordenacaoCombo = [
+            ["1 asc", "por Id Funcional asc"],
+            ["1 desc", "por Id Funcional desc"],
+            ["tbservidor.matricula asc", "por Matrícula asc"],
+            ["tbservidor.matricula desc", "por Matrícula desc"],
+            ["tbpessoa.nome asc", "por Nome asc"],
+            ["tbpessoa.nome desc", "por Nome desc"],
+            ["tbtipocargo.sigla asc,tbcargo.nome asc", "por Cargo asc"],
+            ["tbtipocargo.sigla desc,tbcargo.nome desc", "por Cargo desc"],
+            ["UADM asc, DIR asc, GER asc", "por Lotação asc"],
+            ["UADM desc, DIR desc, GER desc", "por Lotação desc"],
+            ["tbperfil.nome asc", "por Perfil asc"],
+            ["tbperfil.nome desc", "por Perfil desc"],
+            ["6 asc", "por Admissão asc"],
+            ["6 desc", "por Admissão desc"],
+            ["tbsituacao.situacao asc", "por Situação asc"],
+            ["tbsituacao.situacao desc", "por Situação desc"],
+            ["tbservidor.dtDemissao asc", "pela Data de Saída asc"],
+            ["tbservidor.dtDemissao desc", "pela Data de Saída desc"],
+        ];
     }
 
     ###########################################################

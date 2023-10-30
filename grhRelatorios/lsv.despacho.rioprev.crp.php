@@ -25,6 +25,11 @@ if ($acesso) {
     # Pega o id
     $id = get('id');
 
+    # Pega os parâmetros dos relatórios
+    # idServidor do usuario
+    $idServidor = $intra->get_idServidor($idUsuario);
+    $assina = get('assina', post('assina', $idServidor));
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -53,13 +58,28 @@ if ($acesso) {
     $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
     $idFuncional = $pessoal->get_idFuncional($idGerente);
 
-    # Monta a CI
+    # Pega o idServidor do gerente GRH
+    $idGerente = $pessoal->get_gerente(66);
+
+    if ($assina == $idGerente) {
+        $nome = $pessoal->get_nome($idGerente);
+        $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
+        $idFuncional = $pessoal->get_idFuncional($idGerente);
+    } else {
+        $nome = $pessoal->get_nome($assina);
+        $cargo = $pessoal->get_cargoSimples($assina);
+        $idFuncional = $pessoal->get_idFuncional($assina);
+    }
+
+    # Monta o despacho
     $despacho = new Despacho();
 
-    $despacho->set_origemNome($gerente);
-    $despacho->set_origemDescricao($cargo);
+    $despacho->set_origemNome($nome);
+    if (!empty($cargo)) {
+        $despacho->set_origemDescricao($cargo);
+    }
     $despacho->set_origemIdFuncional($idFuncional);
-
+    
     # Trata parte do texto
     if (vazio($dtRetorno)) {
         $retorno = "conforme previsto";
@@ -82,6 +102,31 @@ if ($acesso) {
     $despacho->set_texto($texto1);
     $despacho->set_texto($texto2);
     $despacho->set_saltoRodape(3);
+
+    $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,
+                                              tbpessoa.nome
+                                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                                         LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                         LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                        WHERE situacao = 1
+                                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                          AND tblotacao.idlotacao = 66
+                                          ORDER BY tbpessoa.nome');
+
+    $despacho->set_formCampos(array(
+        array('nome' => 'assina',
+            'label' => 'Assinatura:',
+            'tipo' => 'combo',
+            'array' => $listaServidor,
+            'size' => 30,
+            'padrao' => $assina,
+            'title' => 'Mês',
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1)));
+
+    $despacho->set_formFocus('assina');
+    $despacho->set_formLink('?id=' . $id);
+
     $despacho->show();
 
     # Grava o log da visualização do relatório

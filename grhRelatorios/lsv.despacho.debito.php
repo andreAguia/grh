@@ -60,8 +60,7 @@ if ($acesso) {
         $idFuncional = $pessoal->get_idFuncional($idGerente);
     } else {
         $nome = $pessoal->get_nome($assina);
-        #$cargo = $pessoal->get_cargoSimples($assina);
-        $cargo = null;
+        $cargo = $pessoal->get_cargoSimples($assina);
         $idFuncional = $pessoal->get_idFuncional($assina);
     }
 

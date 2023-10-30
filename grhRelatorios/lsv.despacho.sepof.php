@@ -7,9 +7,10 @@
  *   
  * By Alat
  */
-# Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+# Inicia as variáveis
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -31,7 +32,7 @@ if ($acesso) {
     $assina = get('assina', post('assina', $idServidor));
 
     # Começa uma nova página
-    $page = new Page();
+    $page = new Page();    
     $page->iniciaPagina();
 
     # Pega os Dados

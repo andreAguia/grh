@@ -19,16 +19,17 @@ $parametroNomeMat = get_session('parametroNomeMat');
 if ($acesso) {
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();
-
-    # Começa uma nova página
-    $page = new Page();
-    $page->iniciaPagina();
+    $pessoal = new Pessoal();   
 
     ######   
     # Título & Subtitulo
     $subTitulo = null;
     $titulo = "Servidores com Acumulação de Cargo Público";
+    
+    # Começa uma nova página
+    $page = new Page();
+    $page->set_title($titulo);
+    $page->iniciaPagina();
 
     # Pega os dados
     $select = "SELECT CASE conclusao

@@ -5,8 +5,9 @@
  *    
  * By Alat
  */
-# Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
+# Inicia as variáveis
+$idUsuario = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -19,6 +20,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Servidores com Abono Permanência Deferido");
     $page->iniciaPagina();
 
     ######   

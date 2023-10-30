@@ -24,6 +24,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Servidores que Declararam Não Acumular");
     $page->iniciaPagina();
 
     ######  

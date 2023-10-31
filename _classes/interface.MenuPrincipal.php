@@ -1104,7 +1104,7 @@ class MenuPrincipal {
         $tabela->set_conteudo($row);
         $tabela->set_label(["Ramais da GRH"]);
         $tabela->set_align(["left"]);
-        $tabela->set_funcao(["nl2br"]);
+        $tabela->set_funcao(["nl2br2"]);
         $tabela->set_rodape("Para Transferir clica em OK e no ramal desejado");
         $tabela->set_totalRegistro(false);
         $tabela->show();

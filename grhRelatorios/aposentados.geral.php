@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Relatório Geral de Servidores Aposentados");
     $page->iniciaPagina();
 
     ######

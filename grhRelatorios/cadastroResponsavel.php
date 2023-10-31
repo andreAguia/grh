@@ -28,6 +28,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Cadastro de Responsável");
     $page->iniciaPagina();
 
     # Limita a página
@@ -189,7 +190,7 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_log(false);
     $relatorio->show();
-    
+
     /*
      * Observação
      */
@@ -214,11 +215,11 @@ if ($acesso) {
      * autenticações
      */
 
-    $array = [[date('d/m/Y'), "Francisco de Oliveira Balbi Junior<br/>ID: 6399991","Christiane Assis da Silva Melo<br/>ID: 41301471"]];
+    $array = [[date('d/m/Y'), "Francisco de Oliveira Balbi Junior<br/>ID: 6399991", "Christiane Assis da Silva Melo<br/>ID: 41301471"]];
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
     $relatorio->set_topico("6 - Autenticação");
-    $relatorio->set_label(['Elaborado em:','Preenchido por:','Revisado por:']);
+    $relatorio->set_label(['Elaborado em:', 'Preenchido por:', 'Revisado por:']);
     $relatorio->set_align(['center']);
     $relatorio->set_conteudo($array);
     $relatorio->set_botaoVoltar(false);
@@ -230,7 +231,6 @@ if ($acesso) {
     $relatorio->set_log(false);
     $relatorio->show();
 
-    
     # Data da Impressão
     p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
 

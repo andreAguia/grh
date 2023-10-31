@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Professores com Mais de 15 Dias de Afastamento");
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios

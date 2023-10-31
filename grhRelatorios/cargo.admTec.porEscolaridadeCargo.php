@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Cadastro de Responsável");
     $page->iniciaPagina();
 
     ######

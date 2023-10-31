@@ -22,8 +22,9 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Servidores Aposentados");
     $page->iniciaPagina();
-
+    
     # Pega os parâmetros dos relatórios
     $relatorioDtInicial = post('dtInicial', date('Y') . "-01-01");
     $relatorioDtfinal = post('dtFinal', date('Y') . "-12-31");

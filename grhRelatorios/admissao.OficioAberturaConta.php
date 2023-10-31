@@ -31,6 +31,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Ofício de Abertura de Conta");
     $page->iniciaPagina();
 
     # Servidor

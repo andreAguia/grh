@@ -89,7 +89,7 @@ if ($acesso) {
                                       IF(ativo = 1,DIR,CONCAT(DIR,"<br/>","(",UADM,")")),
                                       campus,
                                       GER,
-                                      nome,
+                                      idLotacao,
                                       idLotacao,
                                       idLotacao,
                                       idLotacao,
@@ -113,7 +113,9 @@ if ($acesso) {
                                      idCampus,
                                      GER,
                                      nome,
+                                     email,
                                      ativo,
+                                     ramais,
                                      obs
                                 FROM tblotacao
                                WHERE idLotacao = ' . $id);
@@ -135,8 +137,8 @@ if ($acesso) {
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(["center", "center", "center", "center", "left"]);
 
-    $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
+    $objeto->set_classe([null, null, null, null, "Lotacao", "Pessoal", null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, "exibeNomeEmail", "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -200,7 +202,7 @@ if ($acesso) {
         array('linha' => 1,
             'col' => 2,
             'nome' => 'DIR',
-            'label' => 'Sigla da Diretoria:',
+            'label' => 'Sigla da Diretoria/Centro:',
             'title' => 'Sigla da Diretoria',
             'tipo' => 'texto',
             'required' => true,
@@ -216,15 +218,23 @@ if ($acesso) {
         array('linha' => 1,
             'col' => 2,
             'nome' => 'GER',
-            'label' => 'Sigla da Gerência:',
+            'label' => 'Sigla da Gerência/Laboratório:',
             'title' => 'Sigla da Gerência',
             'tipo' => 'texto',
             'size' => 15),
         array('linha' => 2,
-            'col' => 10,
+            'col' => 6,
             'nome' => 'nome',
             'label' => 'Nome completo da lotação:',
             'title' => 'Nome completo da lotação sem siglas',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 100),
+        array('linha' => 2,
+            'col' => 4,
+            'nome' => 'email',
+            'label' => 'E-mail:',
+            'title' => 'E-mail oficiaL da lotação',
             'tipo' => 'texto',
             'required' => true,
             'size' => 100),
@@ -239,10 +249,15 @@ if ($acesso) {
             'padrao' => 'Sim',
             'size' => 5),
         array('linha' => 5,
+            'nome' => 'ramais',
+            'label' => 'Ramais:',
+            'tipo' => 'textarea',
+            'size' => array(80, 6)),
+        array('linha' => 6,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
-            'size' => array(80, 4))));
+            'size' => array(80, 6))));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Relatório de Servidores Administrativos e Técnicos Aposentados");
     $page->iniciaPagina();
 
     ######
@@ -55,8 +56,6 @@ if ($acesso) {
     $relatorio->set_metodo([null, null, null, "get_Lotacao"]);
 
     $relatorio->set_conteudo($result);
-    #$relatorio->set_numGrupo(3);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

@@ -47,12 +47,12 @@ class Lotacao {
         if (empty($idHistLot)) {
             return null;
         } else {
-            $pessoal = new Pessoal();            
-            echo $this->getLotacao($this->getLotacaoAnterior($idHistLot));            
+            $pessoal = new Pessoal();
+            echo $this->getLotacao($this->getLotacaoAnterior($idHistLot));
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     public function getLotacaoAnterior($idHistLot = null) {
         /**
@@ -64,7 +64,7 @@ class Lotacao {
             return null;
         } else {
             $pessoal = new Pessoal();
-            
+
             # Pega o servidor desta alteração de lotação
             $select1 = "SELECT idServidor
                           FROM tbhistlot
@@ -322,7 +322,7 @@ class Lotacao {
                           AND (GER = 'SECR' OR GER = 'GAB')";
 
             $pessoal = new Pessoal();
-            $row2 = $pessoal->select($select, false);            
+            $row2 = $pessoal->select($select, false);
 
             if (!empty($row2['nome'])) {
                 # Verifica o nome
@@ -332,11 +332,11 @@ class Lotacao {
                     $nome = substr($row2['nome'], 12);
                 }
             }
-            
-            if($sigla == "Reitoria"){
+
+            if ($sigla == "Reitoria") {
                 $nome = $sigla;
             }
-            
+
             return $nome;
         }
     }
@@ -533,6 +533,32 @@ class Lotacao {
 
             $row = $pessoal->select($select1, false);
             return date_to_php($row["data"]);
+        }
+    }
+
+    ###########################################################
+
+    public function exibeNomeEmail($idLotacao = null) {
+        /**
+         * Exibe o nome da lotação e o e-mail cadastrado
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT nome, email
+                          FROM tblotacao
+                         WHERE idLotacao = {$idLotacao}";
+
+            $row = $pessoal->select($select1, false);
+            plista(
+                    $row["nome"],
+                    $row["email"]
+            );
         }
     }
 

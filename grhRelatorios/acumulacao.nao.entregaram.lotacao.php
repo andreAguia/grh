@@ -24,6 +24,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Servidores que Não Entregaram Declaração");
     $page->iniciaPagina();
 
     ######  
@@ -86,11 +87,11 @@ if ($acesso) {
     $relatorio->set_metodo([null, "get_nome", "get_cargo"]);
     $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
     $relatorio->set_numGrupo(3);
-    
+
     if ($parametroLotacao <> "*") {
         $relatorio->set_titulo("Relatório de Servidores Ativos");
         $relatorio->set_tituloLinha2("da Lotação: {$pessoal->get_nomeLotacao($parametroLotacao)}");
-    }else{
+    } else {
         $relatorio->set_titulo("Relatório Geral de Servidores Ativos");
     }
     $relatorio->set_tituloLinha3("que NÃO Entregaram a Declaração Anual de Acumulação - {$parametroAno}");

@@ -23,6 +23,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Relatório de Aniversariantes");
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios

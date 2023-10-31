@@ -628,7 +628,7 @@ class MenuServidor {
         
         $menu->add_item('titulo', 'Cadastro de Responsável', '#');
         $menu->add_item('linkWindow', 'Relatório - SETCONT', '../grhRelatorios/setcont.responsavel.php');
-        $menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel1.php');
+        $menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel.php');
 
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");

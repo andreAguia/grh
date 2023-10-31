@@ -3,7 +3,7 @@
 /**
  * Sistema GRH
  * 
- * Capa da Pasta do Servidor
+ * Servidores no balcão
  *   
  * By Alat
  */
@@ -27,6 +27,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Servidores no Balcão de Atendimento");
     $page->iniciaPagina();
 
     $grid1 = new Grid("center");

@@ -557,7 +557,7 @@ class Lotacao {
             $row = $pessoal->select($select1, false);
             plista(
                     $row["nome"],
-                    str_replace(" ", "<br/>", $row["email"])
+                    espaco2br($row["email"])
             );
         }
     }

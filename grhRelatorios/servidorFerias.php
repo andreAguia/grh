@@ -32,42 +32,42 @@ if ($acesso) {
     $grid->abreColuna(12);    
 
     # Exibe as férias pendentes
-    $ferias = new Ferias();
-    $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
-    if (!empty($pendentes)) {
-        $callout = new Callout();
-        $callout->abre();
-        p("Atenção:<br/> {$pendentes}", 'center','f14');
-        $callout->fecha();
-    }
-    
-    $grid->fechaColuna();
-    $grid->abreColuna(4);
+//    $ferias = new Ferias();
+//    $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
+//    if (!empty($pendentes)) {
+//        $callout = new Callout();
+//        $callout->abre();
+//        p("Atenção:<br/> {$pendentes}", 'center','f14');
+//        $callout->fecha();
+//    }
+//    
+//    $grid->fechaColuna();
+//    $grid->abreColuna(4);
+//
+//    $listaFerias = new Ferias();
+//    $lista = $listaFerias->get_feriasResumo($idServidorPesquisado);
+//
+//    p("Férias Fruídas & Solicitadas", "center", "f14");
+//
+//    $relatorio = new Relatorio();
+//    $relatorio->set_cabecalhoRelatorio(false);
+//    $relatorio->set_menuRelatorio(false);
+//    $relatorio->set_subTotal(true);
+//    $relatorio->set_totalRegistro(false);
+//    $relatorio->set_label(["Exercício", "Dias", "Faltam"]);
+//    $relatorio->set_bordaInterna(true);
+//
+//    $relatorio->set_conteudo($lista);
+//    $relatorio->set_botaoVoltar(false);
+//    $relatorio->set_totalRegistro(false);
+//    $relatorio->set_dataImpressao(false);
+//
+//    $relatorio->show();
+//
+//    $grid->fechaColuna();
+//    $grid->abreColuna(8);
 
-    $listaFerias = new Ferias();
-    $lista = $listaFerias->get_feriasResumo($idServidorPesquisado);
-
-    p("Férias Fruídas & Solicitadas", "center", "f14");
-
-    $relatorio = new Relatorio();
-    $relatorio->set_cabecalhoRelatorio(false);
-    $relatorio->set_menuRelatorio(false);
-    $relatorio->set_subTotal(true);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(["Exercício", "Dias", "Faltam"]);
-    $relatorio->set_bordaInterna(true);
-
-    $relatorio->set_conteudo($lista);
-    $relatorio->set_botaoVoltar(false);
-    $relatorio->set_totalRegistro(false);
-    $relatorio->set_dataImpressao(false);
-
-    $relatorio->show();
-
-    $grid->fechaColuna();
-    $grid->abreColuna(8);
-
-    p("Histórico", "center", "f14");
+    #p("Histórico", "center", "f14");
 
     $select = "SELECT anoExercicio,
                         status,
@@ -82,6 +82,7 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio();
+    #$relatorio->set_titulo($titulo);
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);

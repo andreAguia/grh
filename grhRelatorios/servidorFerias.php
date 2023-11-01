@@ -29,7 +29,7 @@ if ($acesso) {
 
     # Limita o tamanho da tela
     $grid = new Grid();
-    $grid->abreColuna(12);    
+    $grid->abreColuna(12);
 
     # Exibe as férias pendentes
 //    $ferias = new Ferias();
@@ -66,15 +66,14 @@ if ($acesso) {
 //
 //    $grid->fechaColuna();
 //    $grid->abreColuna(8);
-
     #p("Histórico", "center", "f14");
 
     $select = "SELECT anoExercicio,
                         status,
                         dtInicial,
                         numDias,
-                        idFerias,
-                        ADDDATE(dtInicial,numDias-1)
+                        ADDDATE(dtInicial,numDias-1),
+                        idFerias
                    FROM tbferias
                   WHERE idServidor = $idServidorPesquisado
                ORDER BY anoExercicio desc, dtInicial desc";
@@ -87,12 +86,12 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "P", "Data Final"]);
+    $relatorio->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período"]);
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(['center']);
-    $relatorio->set_funcao([null, null, 'date_to_php', null, null, 'date_to_php']);
-    $relatorio->set_classe([null, null, null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, null, null, "get_feriasPeriodo"]);
+    $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php']);
+    $relatorio->set_classe([null, null, null, null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, null, "get_feriasPeriodo"]);
 
     $relatorio->set_rowspan(0);
     $relatorio->set_grupoCorColuna(0);

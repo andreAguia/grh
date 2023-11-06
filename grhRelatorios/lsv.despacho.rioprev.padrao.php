@@ -25,13 +25,12 @@ if ($acesso) {
     # Pega o id
     $id = get('id');
 
-    # Pega os parâmetros dos relatórios
-    # idServidor do usuario
-    $idServidor = $intra->get_idServidor($idUsuario);
-    $assina = get('assina', post('assina', $idServidor));
+    # Pega quem assina
+    $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Rioprev");
     $page->iniciaPagina();
 
     # Pega os Dados

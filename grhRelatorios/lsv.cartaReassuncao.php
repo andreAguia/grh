@@ -24,6 +24,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Carta de Reassunção");
     $page->iniciaPagina();
 
     # Conecta ao Banco de Dados
@@ -52,7 +53,6 @@ if ($acesso) {
     if (empty($pgPublicacaoDigitado)) {
         $pgPublicacaoDigitado = null;
     }
-
 
     # Valida os dados digitados
     $msgErro = null;
@@ -102,7 +102,6 @@ if ($acesso) {
         } else {
             $dtRetornoTexto = date_to_php($dtTermino);
         }
-
 
         # Trata a publicação
         if (empty($pgPublicacaoDigitado)) {

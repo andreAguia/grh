@@ -8,8 +8,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null; 
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -25,13 +26,12 @@ if ($acesso) {
     # Pega o id
     $id = get('id');
 
-    # Pega os parâmetros dos relatórios
     # idServidor do usuario
-    $idServidor = $intra->get_idServidor($idUsuario);
-    $assina = get('assina', post('assina', $idServidor));
+    $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Reitoria");
     $page->iniciaPagina();
 
     # Pega os Dados
@@ -104,7 +104,6 @@ if ($acesso) {
 
     $despacho->set_formFocus('assina');
     $despacho->set_formLink('?id=' . $id);
-
     $despacho->show();
 
     # Grava o log da visualização do relatório

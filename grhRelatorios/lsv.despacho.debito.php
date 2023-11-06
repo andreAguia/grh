@@ -29,14 +29,12 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Servidor");
     $page->iniciaPagina();
 
-    # idServidor do usuario
-    $idServidor = $intra->get_idServidor($idUsuario);
-
-    # Pega os parâmetros dos relatórios
-    $assina = get('assina', post('assina', $idServidor));
-
+    # Pega quem assina
+    $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
+    
     # Pega os Dados
     $dados = $lsv->get_dados($id);
 
@@ -63,7 +61,6 @@ if ($acesso) {
         $cargo = $pessoal->get_cargoSimples($assina);
         $idFuncional = $pessoal->get_idFuncional($assina);
     }
-
 
     # Monta o despacho
     $despacho = new Despacho();

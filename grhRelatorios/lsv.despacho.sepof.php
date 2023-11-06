@@ -26,13 +26,12 @@ if ($acesso) {
     # Pega o id
     $id = get('id');
 
-    # Pega os parâmetros dos relatórios
-    # idServidor do usuario
-    $idServidor = $intra->get_idServidor($idUsuario);
-    $assina = get('assina', post('assina', $idServidor));
+    # Pega quem assina
+    $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
 
     # Começa uma nova página
-    $page = new Page();    
+    $page = new Page();
+    $page->set_title("Despacho Sepof");
     $page->iniciaPagina();
 
     # Pega os Dados
@@ -76,7 +75,7 @@ if ($acesso) {
         $despacho->set_origemDescricao($cargo);
     }
     $despacho->set_origemIdFuncional($idFuncional);
-    
+
     $despacho->set_destino("Ao Setor de Publicações Oficiais da UENF - SEPOF");
     $despacho->set_texto('Para publicação no DOERJ');
     $despacho->set_saltoRodape(3);

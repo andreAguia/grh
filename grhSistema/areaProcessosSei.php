@@ -129,7 +129,6 @@ if ($acesso) {
                                OR tbsei.descricao LIKE '%{$parametro}%'
                                OR tbsei.assunto LIKE '%{$parametro}%'
                                OR tbsei.numero LIKE '%{$parametro}%'
-                               OR tbsei.numeroAntigo LIKE '%{$parametro}%'
                          ";
             }
 

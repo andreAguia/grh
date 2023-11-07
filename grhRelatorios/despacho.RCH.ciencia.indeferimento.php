@@ -14,44 +14,41 @@ $idServidorPesquisado = null;
 # Configuração
 include ("../grhSistema/_config.php");
 
-# Pega as variáveis
-$postAssinatura = post('postAssinatura');
-
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();       
+    $pessoal = new Pessoal();
     $intra = new Intra();
     $reducao = new ReducaoCargaHoraria();
 
     # Pega o id
     $id = get('id');
 
-    # pega os dados
+    # Pega os Dados
     $dados = $reducao->get_dados($id);
+    $processo = $reducao->get_numProcesso($idServidorPesquisado);
 
     # Começa uma nova página
     $page = new Page();
     $page->set_title("Despacho Ciência do Servidor");
     $page->iniciaPagina();
-    
+
     # Pega quem assina
     $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
+    $numDocumento = post("numDocumento");
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("À SES/SUPCPMSO,");
-    if ($dados['tipo'] == 1) {
-        $despacho->set_texto("Encaminhamos o presente processo para análise no pedido de Redução de Carga Horária do(a) servidor(a) em tela.");
-    } else {
-        $despacho->set_texto("Encaminhamos o presente processo para análise no pedido de prorrogação da Redução de Carga Horária do(a) servidor(a) em tela.");
-    }
+    $despacho->set_destino("Prezado(a) servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
+    $despacho->set_texto("Informamos o INDEFERIMENTO do requerimento, conforme Despacho da Superintendência Central"
+            . " de Perícias Médicas e Saúde Ocupacional da Secretaria de Estado de Saúde, presente no Documento SEI n° {$numDocumento}, do Processo {$processo}.");
+    $despacho->set_texto("Solicitamos <b>ciência do(a) servidor(a)</b> para a devida conclusão do presente processo.");
     $despacho->set_texto("Atenciosamente,");
     $despacho->set_saltoRodape(3);
-    
+
     # Pega o idServidor do gerente GRH
     $idGerente = $pessoal->get_gerente(66);
 
@@ -64,11 +61,11 @@ if ($acesso) {
         $cargo = $pessoal->get_cargoSimples($assina);
         $idFuncional = $pessoal->get_idFuncional($assina);
     }
-    
+
     $despacho->set_origemNome($nome);
     $despacho->set_origemDescricao($cargo);
-    $despacho->set_origemIdFuncional($idFuncional);    
-    
+    $despacho->set_origemIdFuncional($idFuncional);
+
     $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,
                                               tbpessoa.nome
                                          FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -78,7 +75,7 @@ if ($acesso) {
                                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                           AND tblotacao.idlotacao = 66
                                           ORDER BY tbpessoa.nome');
-    
+
     $despacho->set_formCampos(array(
         array('nome' => 'assina',
             'label' => 'Assinatura:',
@@ -88,7 +85,18 @@ if ($acesso) {
             'padrao' => $assina,
             'title' => 'Quem assina o documento',
             'onChange' => 'formPadrao.submit();',
-            'linha' => 1)));
+            'col' => 6,
+            'linha' => 1),
+        array('nome' => 'numDocumento',
+            'label' => 'Número do documento da publicação no SEI:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'padrao' => $numDocumento,
+            'title' => 'O número do documento da publicação no SEI.',
+            'onChange' => 'formPadrao.submit();',
+            'col' => 6,
+            'linha' => 1),
+    ));
 
     $despacho->set_formFocus('assina');
     $despacho->set_formLink("?id={$id}");
@@ -96,7 +104,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho de RCH para perícia";
+    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 

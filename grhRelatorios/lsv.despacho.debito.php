@@ -34,7 +34,7 @@ if ($acesso) {
 
     # Pega quem assina
     $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
-    
+
     # Pega os Dados
     $dados = $lsv->get_dados($id);
 
@@ -66,9 +66,7 @@ if ($acesso) {
     $despacho = new Despacho();
 
     $despacho->set_origemNome($nome);
-    if (!empty($cargo)) {
-        $despacho->set_origemDescricao($cargo);
-    }
+    $despacho->set_origemDescricao($cargo);
     $despacho->set_origemIdFuncional($idFuncional);
 
     $despacho->set_destino("Prezado(a) servidor(a),");
@@ -93,13 +91,12 @@ if ($acesso) {
             'array' => $listaServidor,
             'size' => 30,
             'padrao' => $assina,
-            'title' => 'Mês',
+            'title' => 'Quem assina o documento',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
     $despacho->set_formFocus('assina');
-    $despacho->set_formLink('?id=' . $id);
-
+    $despacho->set_formLink("?id={$id}");
     $despacho->show();
 
     # Grava o log da visualização do relatório

@@ -468,16 +468,18 @@ class ReducaoCargaHoraria {
 
         # Despacho: Ciência do Indeferimento por Inquérito
         if ($resultado == 2) {
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento por Inquérito", '?fase=despachoCienciaIndeferimentoInquerito');
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento por Inquérito", "../grhRelatorios/despacho.RCH.ciencia.indeferimento.inquerito.php");
         }
 
         # Despacho para Perícia
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPericia&id=' . $idReducao);
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia","../grhRelatorios/despacho.RCH.pericia.php?id={$idReducao}");
 
         # Despacho: Ciência do Indeferimento
         if ($resultado == 2) {
-            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", '?fase=despachoCienciaIndeferimento&id=' . $idReducao);
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", "../grhRelatorios/despacho.RCH.ciencia.indeferimento.php?id={$idReducao}");
         }
+        
+        ###### até aqui
 
         # Ato do Reitor
         if ($resultado == 1) {
@@ -515,6 +517,8 @@ class ReducaoCargaHoraria {
 
         # Despacho de conclusão temporária
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
+        
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho - Servidor Com Débito", '../grhRelatorios/lsv.despacho.debito.php?id=' . $idLicencaSemVencimentos, "Despacho ao Servidor");
 
         $menu->show();
     }

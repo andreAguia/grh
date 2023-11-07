@@ -76,7 +76,6 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'padrao' => $cargo,
-            'title' => 'Mês',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1),
         array('nome' => 'parametroAno',

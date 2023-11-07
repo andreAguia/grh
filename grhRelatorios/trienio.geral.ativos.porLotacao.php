@@ -91,8 +91,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $listaLotacao,
             'size' => 30,
-            'padrao' => $relatorioLotacao,
-            'title' => 'Mês',
+            'padrao' => $relatorioLotacao,            
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 

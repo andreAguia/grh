@@ -68,7 +68,6 @@ if ($acesso) {
             'array' => array("Masculino", "Feminino"),
             'size' => 30,
             'padrao' => $sexo,
-            'title' => 'Mês',
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
             'linha' => 1)));

@@ -114,7 +114,6 @@ if ($acesso) {
             'size' => 30,
             'padrao' => $parametroLotacao,
             'onChange' => 'formPadrao.submit();',
-            'title' => 'Mês',
             'col' => 5,
             'linha' => 1),
         array('nome' => 'Salva',

@@ -143,7 +143,6 @@ if ($acesso) {
             'size' => 30,
             'padrao' => $parametroLotacao,
             'onChange' => 'formPadrao.submit();',
-            'title' => 'Mês',
             'col' => 3,
             'linha' => 1),
         array('nome' => 'Salva',

@@ -130,7 +130,6 @@ if ($acesso) {
             'size' => 30,
             'col' => 12,
             'padrao' => $lotacao,
-            'title' => 'Mês',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1),
         array('nome' => 'cargo',
@@ -140,7 +139,6 @@ if ($acesso) {
             'size' => 30,
             'col' => 12,
             'padrao' => $cargo,
-            'title' => 'Mês',
             'onChange' => 'formPadrao.submit();',
             'linha' => 2)
     ));

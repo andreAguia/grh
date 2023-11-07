@@ -1,4 +1,4 @@
- <?php
+<?php
 
 /**
  * Controle do Redução de Carega Horária
@@ -29,11 +29,10 @@ if ($acesso) {
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
- 
+
     # Pega o número do processo (Quando tem)
-    $processo = trataNulo($reducao->get_numProcesso());    
+    $processo = trataNulo($reducao->get_numProcesso());
     $processoAntigo = $reducao->get_numProcessoAntigo();
-    
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -646,66 +645,12 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $procedimento = new Procedimento();
             $procedimento->exibeProcedimentoSubCategoria("Redução de Carga Horária");
 
 //            $rotina = new Rotina();
 //            $rotina->exibeRotinaCategoria("Redução de Carga Horária");
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ###################################################################
-        # Despacho: Ciência do Indeferimento por Inquérito
-        case "despachoCienciaIndeferimentoInquerito" :
-
-            # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
-
-            # Título
-            tituloTable("Despacho: Ciência do Indeferimento por Inquérito");
-            br();
-
-            # Pega os dados da combo assinatura
-            $select = 'SELECT idServidor,
-                              tbpessoa.nome
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbhistlot.lotacao = 66
-                          AND situacao = 1
-                     ORDER BY tbpessoa.nome asc';
-
-            $lista = $pessoal->select($select);
-
-            # Monta o formulário
-            $form = new Form("../grhRelatorios/despacho.RCH.cienciaIndeferimentoInquerito.php");
-
-            # Assinatura
-            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $controle->set_array($lista);
-            $controle->set_valor($intra->get_idServidor($idUsuario));
-            $controle->set_autofocus(true);
-            $controle->set_required(true);
-            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
-            $form->add_item($controle);
-
-            # submit
-            $controle = new Input('salvar', 'submit');
-            $controle->set_valor('Imprimir');
-            $controle->set_linha(5);
-            $controle->set_col(2);
-            $form->add_item($controle);
-
-            $form->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -750,123 +695,6 @@ if ($acesso) {
             $controle->set_autofocus(true);
             $controle->set_required(true);
             $controle->set_title('O nome do servidor da GRH que assina o despacho.');
-            $form->add_item($controle);
-
-            # submit
-            $controle = new Input('salvar', 'submit');
-            $controle->set_valor('Imprimir');
-            $controle->set_linha(5);
-            $controle->set_col(2);
-            $form->add_item($controle);
-
-            $form->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ###################################################################
-        # Despacho para perícia
-        case "despachoPericia" :
-
-            # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
-
-            # Título
-            tituloTable("Despacho para Perícia");
-            br();
-
-            # Pega os dados da combo assinatura
-            $select = 'SELECT idServidor,
-                              tbpessoa.nome
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbhistlot.lotacao = 66
-                          AND situacao = 1
-                     ORDER BY tbpessoa.nome asc';
-
-            $lista = $pessoal->select($select);
-
-            # Monta o formulário
-            $form = new Form("../grhRelatorios/despacho.RCH.pericia.php?id={$id}");
-
-            # Assinatura
-            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $controle->set_array($lista);
-            $controle->set_valor($intra->get_idServidor($idUsuario));
-            $controle->set_autofocus(true);
-            $controle->set_required(true);
-            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
-            $form->add_item($controle);
-
-            # submit
-            $controle = new Input('salvar', 'submit');
-            $controle->set_valor('Imprimir');
-            $controle->set_linha(5);
-            $controle->set_col(2);
-            $form->add_item($controle);
-
-            $form->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ###################################################################
-        # Despacho: Ciência do Indeferimento
-        case "despachoCienciaIndeferimento" :
-
-            # Limita a tela
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
-
-            # Título
-            tituloTable("Despacho: Ciência do Indeferimento");
-            br();
-
-            # Pega os dados da combo assinatura
-            $select = 'SELECT idServidor,
-                              tbpessoa.nome
-                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND tbhistlot.lotacao = 66
-                          AND situacao = 1
-                     ORDER BY tbpessoa.nome asc';
-
-            $lista = $pessoal->select($select);
-
-            # Monta o formulário
-            $form = new Form("../grhRelatorios/despacho.RCH.cienciaIndeferimento.php?id={$id}");
-
-            # Assinatura
-            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
-            $controle->set_size(10);
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $controle->set_array($lista);
-            $controle->set_valor($intra->get_idServidor($idUsuario));
-            $controle->set_autofocus(true);
-            $controle->set_required(true);
-            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
-            $form->add_item($controle);
-            
-            # número do documento da publicação no SEI
-            $controle = new Input('numDocumento', 'texto', 'Número do documento da publicação no SEI:', 1);
-            $controle->set_size(200);
-            $controle->set_linha(4);
-            $controle->set_col(12);
-            $controle->set_required(true);
-            $controle->set_title('O número do documento da publicação no SEI.');
             $form->add_item($controle);
 
             # submit
@@ -1059,7 +887,7 @@ if ($acesso) {
             $controle->set_required(true);
             $controle->set_title('O Cargo em comissão da chefia.');
             $form->add_item($controle);
-            
+
             # número do documento da publicação no SEI
             $controle = new Input('numDocumento', 'texto', 'Número do documento da publicação no SEI:', 1);
             $controle->set_size(200);

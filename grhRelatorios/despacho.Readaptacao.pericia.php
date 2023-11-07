@@ -116,7 +116,7 @@ if ($acesso) {
             'array' => $listaServidor,
             'size' => 30,
             'padrao' => $assina,
-            'title' => 'Mês',
+            'title' => 'Quem assina o documento',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 

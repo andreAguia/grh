@@ -14,24 +14,14 @@ $idServidorPesquisado = null;
 # Configuração
 include ("../grhSistema/_config.php");
 
-# Pega as variáveis
-$postAssinatura = post('postAssinatura');
-
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
-
+    
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();       
+    $pessoal = new Pessoal();    
     $intra = new Intra();
-    $reducao = new ReducaoCargaHoraria();
-
-    # Pega o id
-    $id = get('id');
-
-    # pega os dados
-    $dados = $reducao->get_dados($id);
 
     # Começa uma nova página
     $page = new Page();
@@ -43,12 +33,9 @@ if ($acesso) {
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("À SES/SUPCPMSO,");
-    if ($dados['tipo'] == 1) {
-        $despacho->set_texto("Encaminhamos o presente processo para análise no pedido de Redução de Carga Horária do(a) servidor(a) em tela.");
-    } else {
-        $despacho->set_texto("Encaminhamos o presente processo para análise no pedido de prorrogação da Redução de Carga Horária do(a) servidor(a) em tela.");
-    }
+    $despacho->set_destino("Prezado(a) servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
+    $despacho->set_texto("Informamos o INDEFERIMENTO na solicitação por existir instaurado Inquérito Administrativo em fase de tramitação.");
+    $despacho->set_texto("Solicitamos <b>ciência do(a) servidor(a)</b> para a devida conclusão do presente processo.");
     $despacho->set_texto("Atenciosamente,");
     $despacho->set_saltoRodape(3);
     
@@ -67,7 +54,7 @@ if ($acesso) {
     
     $despacho->set_origemNome($nome);
     $despacho->set_origemDescricao($cargo);
-    $despacho->set_origemIdFuncional($idFuncional);    
+    $despacho->set_origemIdFuncional($idFuncional);
     
     $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,
                                               tbpessoa.nome
@@ -78,7 +65,7 @@ if ($acesso) {
                                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                                           AND tblotacao.idlotacao = 66
                                           ORDER BY tbpessoa.nome');
-    
+
     $despacho->set_formCampos(array(
         array('nome' => 'assina',
             'label' => 'Assinatura:',
@@ -91,12 +78,12 @@ if ($acesso) {
             'linha' => 1)));
 
     $despacho->set_formFocus('assina');
-    $despacho->set_formLink("?id={$id}");
+    $despacho->set_formLink('?');
     $despacho->show();
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho de RCH para perícia";
+    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento por Inquérito";
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
 

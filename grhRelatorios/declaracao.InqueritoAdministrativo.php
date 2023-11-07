@@ -23,8 +23,9 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Declaração Inquérito");
     $page->iniciaPagina();
-
+    
     # Verifica se tem PAD
     $penalidades = new Penalidade();
 

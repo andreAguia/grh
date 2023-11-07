@@ -83,7 +83,6 @@ if ($acesso) {
                 'array' => $listaCargo,
                 'size' => 30,
                 'padrao' => $cargo,
-                'title' => 'Mês',
                 'onChange' => 'formPadrao.submit();',
                 'linha' => 1)));
 

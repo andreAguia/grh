@@ -92,7 +92,6 @@ if ($acesso) {
             'array' => $listaLotacao,
             'size' => 30,
             'padrao' => $relatorioLotacao,
-            'title' => 'Mês',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 

@@ -76,7 +76,6 @@ if ($acesso) {
             'array' => array(array(1, 'Primeiro'), array(2, 'Segundo'), array(3, 'Terceiro'), array(4, 'Quarto')),
             'size' => 10,
             'padrao' => $trimestre,
-            'title' => 'Mês',
             'col' => 3,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));

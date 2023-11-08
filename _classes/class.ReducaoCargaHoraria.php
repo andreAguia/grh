@@ -472,14 +472,12 @@ class ReducaoCargaHoraria {
         }
 
         # Despacho para Perícia
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia","../grhRelatorios/despacho.RCH.pericia.php?id={$idReducao}");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", "../grhRelatorios/despacho.RCH.pericia.php?id={$idReducao}");
 
         # Despacho: Ciência do Indeferimento
         if ($resultado == 2) {
             $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência do Indeferimento", "../grhRelatorios/despacho.RCH.ciencia.indeferimento.php?id={$idReducao}");
         }
-        
-        ###### até aqui
 
         # Ato do Reitor
         if ($resultado == 1) {
@@ -491,12 +489,8 @@ class ReducaoCargaHoraria {
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoAto, '?fase=atoReitor&id=' . $idReducao);
         }
 
-//        # Despacho à Reitoria
-//        if ($resultado == 1) {
-//            $menu->add_item('linkWindow', "\u{1F5A8} Despacho à Reitoria", '?fase=despachoReitoria');
-//        }
         # Despacho para Publicação
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", '?fase=despachoPublicacao');
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Publicação", "../grhRelatorios/despacho.RCH.publicacao.php");
 
         if ($resultado == 1) {
 
@@ -508,7 +502,7 @@ class ReducaoCargaHoraria {
 
             # Despacho: Aviso 45 Dias
             if (abs($dias) <= 45) {
-                $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", '?fase=despacho45dias&id=' . $idReducao);
+                $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso 45 Dias", "../grhRelatorios/despacho.RCH.aviso45dias.php?id={$idReducao}");
             }
 
             # Despacho: Aviso de Término
@@ -516,10 +510,7 @@ class ReducaoCargaHoraria {
         }
 
         # Despacho de conclusão temporária
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", '?fase=despachoConclusaoTemporaria');
-        
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho - Servidor Com Débito", '../grhRelatorios/lsv.despacho.debito.php?id=' . $idLicencaSemVencimentos, "Despacho ao Servidor");
-
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "../grhRelatorios/despacho.RCH.conclusaoTemporaria.php");
         $menu->show();
     }
 

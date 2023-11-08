@@ -43,6 +43,8 @@ if ($acesso) {
     $periodo = $dados["periodo"];
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
     $dtTermino = date_to_php($dados["dtTermino"]);
+    $lotacao = $pessoal->get_lotacaoRel($idServidorPesquisado);
+    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
 
     $hoje = date("d/m/Y");
     $dias = dataDif($hoje, $dtTermino);
@@ -56,7 +58,9 @@ if ($acesso) {
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("Prezado(a) Senhor(a),");
+    $despacho->set_destino("Ao {$lotacao}<br/>A/C {$nomeServidor}");
+    
+    $despacho->set_texto("Prezado(a) Senhor(a),");    
 
     $despacho->set_texto("Vimos alertar que faltam <b>{$dias} dias</b> para o "
             . "<b>TÉRMINO da Redução de Carga Horária</b>, conforme publicação"
@@ -67,7 +71,7 @@ if ($acesso) {
     $despacho->set_texto("Para tanto, segue o link com as orientações:");
     $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/">'
             . 'https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/</a>');
-    $despacho->set_texto("Atenciosamente,");
+    $despacho->set_texto("<br/>Atenciosamente,");
     $despacho->set_saltoRodape(3);
 
     # Pega o idServidor do gerente GRH

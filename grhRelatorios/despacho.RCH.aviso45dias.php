@@ -20,7 +20,7 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();       
+    $pessoal = new Pessoal();
     $intra = new Intra();
     $reducao = new ReducaoCargaHoraria();
 
@@ -32,7 +32,7 @@ if ($acesso) {
     # Pega os Dados
     $id = get('id');
     $dados = $reducao->get_dados($id);
-    
+
     # Pega quem assina
     $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
 
@@ -43,12 +43,12 @@ if ($acesso) {
     $periodo = $dados["periodo"];
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
     $dtTermino = date_to_php($dados["dtTermino"]);
-    
+
     $hoje = date("d/m/Y");
     $dias = dataDif($hoje, $dtTermino);
 
     # Trata a publicação
-    if (vazio($pgPublicacao)) {
+    if (empty($pgPublicacao)) {
         $publicacao = $dtPublicacao;
     } else {
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
@@ -56,12 +56,17 @@ if ($acesso) {
 
     # despacho
     $despacho = new Despacho();
-    $despacho->set_destino("Ao Servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
+    $despacho->set_destino("Prezado(a) Senhor(a),");
 
-    $despacho->set_texto("Comunicamos que faltam <b>{$dias} dias</b> para o <b>TÉRMINO da Redução de Carga Horária</b> do(a) servidor(a) "
-                . "<b>{$pessoal->get_nome($idServidorPesquisado)}</b>, ID {$pessoal->get_idFuncional($idServidorPesquisado)}, "
-                . "em {$dtTermino}, conforme Ato do Reitor, publicado no DOERJ de {$dtPublicacao}, "
-                . "concedendo o benefício pelo prazo de {$periodo} meses.");
+    $despacho->set_texto("Vimos alertar que faltam <b>{$dias} dias</b> para o "
+            . "<b>TÉRMINO da Redução de Carga Horária</b>, conforme publicação"
+            . " no DOERJ de {$publicacao}, concedendo o benefício até {$dtTermino}.");
+    $despacho->set_texto("Caso haja interesse em renovar, solicitamos manifestação o "
+            . "quanto antes no processo {$processo}, para que os procedimentos "
+            . "administrativos sejam providenciados com a devida antecedência.");
+    $despacho->set_texto("Para tanto, segue o link com as orientações:");
+    $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/">'
+            . 'https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/</a>');
     $despacho->set_texto("Atenciosamente,");
     $despacho->set_saltoRodape(3);
 
@@ -108,7 +113,7 @@ if ($acesso) {
     $despacho->set_formFocus('assina');
     $despacho->set_formLink("?id={$id}");
     $despacho->show();
-    
+
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
     $atividades = "Visualizou o Despacho de RCH: Aviso 45 dias";

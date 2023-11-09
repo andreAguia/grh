@@ -22,28 +22,26 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    $reducao = new ReducaoCargaHoraria();
-
-    # Pega os Dados
-    $id = get('id');
-    $dados = $reducao->get_dados($id);
-    $processo = $reducao->get_numProcesso($idServidorPesquisado);
+    $acumulacao = new Acumulacao();
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_title("Despacho Ciência do Servidor");
+    $page->set_title("Despacho Solicita Documento");
     $page->iniciaPagina();
-
+    
     # Pega quem assina
     $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
-    $numDocumento = post("numDocumento");
+    
+    # Pega os Dados
+    $id = get('id');
+    $dados = $acumulacao->get_dados($id);
+    $processo = $dados ['processo'];
 
     # despacho
     $despacho = new Despacho();
     $despacho->set_destino("Prezado(a) servidor(a) {$pessoal->get_nome($idServidorPesquisado)}");
-    $despacho->set_texto("Informamos o INDEFERIMENTO do requerimento, conforme Despacho da Superintendência Central"
-            . " de Perícias Médicas e Saúde Ocupacional da Secretaria de Estado de Saúde, presente no Documento SEI n° {$numDocumento}, do Processo {$processo}.");
-    $despacho->set_texto("Solicitamos <b>ciência do(a) servidor(a)</b> para a devida conclusão do presente processo.");
+    $despacho->set_texto("Para prosseguirmos com a tramitação devida do processo {$processo}, faz-se necessária a inclusão de todos os documentos relacionados no link abaixo, com vistas à correta análise na Acumulação de Cargos Públicos.");
+    $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/abertura-de-processo/">Vhttps://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/abertura-de-processo/</a>');
     $despacho->set_texto("Atenciosamente,");
     $despacho->set_saltoRodape(3);
 
@@ -84,16 +82,7 @@ if ($acesso) {
             'title' => 'Quem assina o documento',
             'onChange' => 'formPadrao.submit();',
             'col' => 6,
-            'linha' => 1),
-        array('nome' => 'numDocumento',
-            'label' => 'Número do documento da publicação no SEI:',
-            'tipo' => 'texto',
-            'size' => 30,
-            'padrao' => $numDocumento,
-            'title' => 'O número do documento da publicação no SEI.',
-            'onChange' => 'formPadrao.submit();',
-            'col' => 6,
-            'linha' => 1),
+            'linha' => 1)
     ));
 
     $despacho->set_formFocus('assina');
@@ -102,9 +91,9 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = "Visualizou o Despacho de RCH: Ciência do Indeferimento";
+    $atividades = "Visualizou o Despacho de Solicitação de Documentos para Acumulação";
     $tipoLog = 4;
-    $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", null, $tipoLog, $idServidorPesquisado);
+    $intra->registraLog($idUsuario, $data, $atividades, "tbacumulacao", null, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
 }

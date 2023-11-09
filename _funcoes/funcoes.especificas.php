@@ -1426,11 +1426,11 @@ function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
     #$menu->add_item('titulo','Documentos');
 
     $menu->add_item("linkWindow", "Despacho: Solicitação de Declaração Pendente", "?fase=despachoDeclaracaoPendente");
-    $menu->add_item("linkWindow", "Despacho: Solicitação de Modelo Padrão", "?fase=despachoModeloPadrao");
+    $menu->add_item("linkWindow", "Despacho: Solicitação de Modelo Padrão", "../grhRelatorios/despacho.Acumulacao.SolicitaModeloPadrao.php");
     $menu->add_item("linkWindow", "Despacho: Solicitação de Correção", "?fase=despachoCorrecao");
-    $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise", "?fase=despachoAnalise");
-    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada", "?fase=despachoConfianca");
-    $menu->add_item("linkWindow", "Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
+    $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise", "../grhRelatorios/despacho.Acumulacao.DeclaracaoAnalise.php");
+    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada","../grhRelatorios/despacho.Acumulacao.DeclaracaoConfianca.php");
+    $menu->add_item("linkWindow", "Despacho de Conclusão Temporária", "../grhRelatorios/despacho.Acumulacao.ConclusaoTemporaria.php");
 
     $menu->show();
 

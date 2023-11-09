@@ -30,6 +30,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Acumulação Pendente");
     $page->iniciaPagina();
 
     # despacho

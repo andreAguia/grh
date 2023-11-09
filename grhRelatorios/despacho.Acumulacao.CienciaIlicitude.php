@@ -31,6 +31,11 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $acumulacao = new Acumulacao();
+
+    # Começa uma nova página
+    $page = new Page();    
+    $page->set_title("Despacho Ciência Ilicitude");
+    $page->iniciaPagina();
     
     # Pega os dados da acumulação
     $dados = $acumulacao->get_dados($id);
@@ -43,10 +48,6 @@ if ($acesso) {
     } else {
         $publicacao = "$dtPublicacao, pág. $pgPublicacao";
     }
-
-    # Começa uma nova página
-    $page = new Page();
-    $page->iniciaPagina();
 
     # despacho
     $despacho = new Despacho();

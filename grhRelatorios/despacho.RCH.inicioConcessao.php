@@ -34,6 +34,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Início da Concessão");
     $page->iniciaPagina();
 
     # Pega os Dados

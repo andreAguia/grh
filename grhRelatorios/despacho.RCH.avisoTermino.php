@@ -33,6 +33,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Despacho Aviso de Término");
     $page->iniciaPagina();
 
     # Pega os Dados

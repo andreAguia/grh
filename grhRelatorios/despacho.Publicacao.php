@@ -25,7 +25,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->set_title("Despacho Reitoria");
+    $page->set_title("Despacho Publicação");
     $page->iniciaPagina();
     
     # Pega quem assina

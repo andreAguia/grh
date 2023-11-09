@@ -28,6 +28,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Ato do Reitor");
     $page->iniciaPagina();
 
     # pega os dados

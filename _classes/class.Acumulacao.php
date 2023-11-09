@@ -395,10 +395,10 @@ class Acumulacao {
         $menu = new Menu("menuBeneficios");
         $menu->add_item('linkWindow', "\u{1F5A8} Declaração de Atribuições do Cargo", "../grhRelatorios/declaracao.AtribuicoesCargo.php");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Solicitação de Documentos", "../grhRelatorios/despacho.Acumulacao.SolicitaDocumento.php?id={$idAcumulacao}");
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Análise", '?fase=despachoAnalise');
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Licitude", '?fase=despachoCienciaLicitude');
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho para Análise", "../grhRelatorios/despacho.Acumulacao.Analise.php");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Licitude", "../grhRelatorios/despacho.Acumulacao.CienciaLicitude.php");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Ilicitude", "?fase=despachoCienciaIlicitude&id={$idAcumulacao}");
-        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "?fase=despachoConclusaoTemporaria");
+        $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "../grhRelatorios/despacho.Acumulacao.ConclusaoTemporaria.php");
         $menu->show();
     }
 

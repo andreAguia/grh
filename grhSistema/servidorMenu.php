@@ -254,43 +254,6 @@ if ($acesso) {
 
         ##################################################################
 
-        case "despacho" :
-            # Limita a tela
-            $grid = new Grid("center");
-            $grid->abreColuna(10);
-            br(3);
-
-            # Título
-            titulo("Despacho Para Abertura de Processo no Protocolo");
-            $painel = new Callout();
-            $painel->abre();
-
-            # Monta o formulário
-            $form = new Form('../grhRelatorios/despacho.Protocolo.php');
-
-            # folha da publicação no processo 
-            $controle = new Input('assunto', 'texto', 'Assunto:', 1);
-            $controle->set_size(200);
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $controle->set_autofocus(true);
-            $controle->set_title('O assunto do processo.');
-            $form->add_item($controle);
-
-            # submit
-            $controle = new Input('imprimir', 'submit');
-            $controle->set_valor('Imprimir');
-            $controle->set_linha(5);
-            $controle->set_col(2);
-            $form->add_item($controle);
-
-            $form->show();
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-        ##################################################################
-
         case "despachoChefia" :
             # Limita a tela
             $grid = new Grid("center");

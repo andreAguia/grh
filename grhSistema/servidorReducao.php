@@ -399,15 +399,15 @@ if ($acesso) {
             $emails = null;
 
             # junta os Emails
-            if (!vazio($emailOutro)) {
+            if (!empty($emailOutro)) {
                 $emails .= "$emailOutro<br/>";
             }
 
-            if (!vazio($emailPessoal)) {
+            if (!empty($emailPessoal)) {
                 $emails .= "$emailPessoal<br/>";
             }
 
-            if (!vazio($emailUenf)) {
+            if (!empty($emailUenf)) {
                 $emails .= "$emailUenf<br/>";
             }
 
@@ -419,17 +419,8 @@ if ($acesso) {
             tituloTable("Contatos:");
             br();
 
-            #p("Telefone(s)","center","f12");
             p($telefones, "center", "f14");
-            #p("E-mail(s)","center","f12");
             p($emails, "center", "f14");
-
-            #$div = new Div("divEditaProcesso");
-            #$div->abre();
-            #    $link = new Link("Editar Contatos",'?fase=editaContatos',"Edita os contatos do servidor");
-            #    $link->set_id("editaProcesso");
-            #    $link->show();
-            #$div->fecha();  
 
             $painel->fecha();
 
@@ -447,8 +438,7 @@ if ($acesso) {
 
             $menu = new Menu();
             #$menu->add_item('titulo','Documentos');
-
-            $menu->add_item("linkWindow", "Despacho ao Protocolo para Abertura de Processo", "servidorMenu.php?fase=despacho");
+            
             $menu->add_item("linkWindow", "Despacho à Reitoria para Assinatura de Ato", "../grhRelatorios/despacho.Reitoria.php");
             $menu->add_item("linkWindow", "Despacho ao SEPOF para Publicação de Ato", "../grhRelatorios/despacho.Publicacao.php");
             $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "servidorMenu.php?fase=despachoChefia");
@@ -591,20 +581,20 @@ if ($acesso) {
 
             if ($botaoEscolhido == "imprimir") {
                 # Verifica a necessidade
-                if (vazio($necessidade)) {
+                if (empty($necessidade)) {
                     $msgErro .= 'A necessidade deve ser informada!\n';
                     $erro = 1;
                 }
             }
 
             # Verifica o número da Ci
-            if (vazio($dtAtoReitorDigitados)) {
+            if (empty($dtAtoReitorDigitados)) {
                 $msgErro .= 'Não tem data do Ato do Reitor cadastrada!\n';
                 $erro = 1;
             }
 
             # Verifica a data da Publicação
-            if (vazio($dtDespachoDigitado)) {
+            if (empty($dtDespachoDigitado)) {
                 $msgErro .= 'A Data do Despacho da Perícia deve ser Preenchida!\n';
                 $erro = 1;
             }

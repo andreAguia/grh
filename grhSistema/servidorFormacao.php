@@ -82,7 +82,8 @@ if ($acesso) {
     $objeto->set_selectLista('SELECT escolaridade,
                                      habilitacao,
                                      instEnsino,
-                                     anoTerm,                              
+                                     anoTerm,
+                                     horas,
                                      idFormacao,
                                      idFormacao,
                                      idFormacao
@@ -113,12 +114,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Ver"]);
-    $objeto->set_width([10, 40, 25, 10, 5]);
+    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Horas", "Ver"]);
+    $objeto->set_width([10, 35, 25, 10, 5, 5]);
     $objeto->set_align(["center", "left", "left"]);
 
-    $objeto->set_classe([null, null, null, null, "Formacao"]);
-    $objeto->set_metodo([null, null, null, null, "exibeCertificado"]);
+    $objeto->set_classe([null, null, null, null, null, "Formacao"]);
+    $objeto->set_metodo([null, null, null, null, null, "exibeCertificado"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

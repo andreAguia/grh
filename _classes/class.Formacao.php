@@ -9,25 +9,36 @@ class Formacao {
      */
     ###########################################################
 
-    function exibeCurso($idFormacao) {
+    function get_dados($id) {
 
         /**
-         * fornece Detalhes do curso
+         * Fornece os todos os dados de um id
          */
         # Pega os dados
-        $select = "SELECT habilitacao,
-                          instEnsino,
-                          anoTerm
-                     FROM tbformacao
-                    WHERE idFormacao = $idFormacao";
+        $select = "SELECT *
+                   FROM tbformacao
+                 WHERE idFormacao = {$id}";
 
         $pessoal = new Pessoal();
-        $dados = $pessoal->select($select, false);
+        return $pessoal->select($select, false);
+    }
+
+    ###########################################################
+
+
+    function exibeCurso($id) {
+
+        /**
+         * Fornece Detalhes do curso
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
 
         pLista(
                 $dados['habilitacao'],
                 $dados['instEnsino'],
-                $dados['anoTerm']
+                $dados['anoTerm'],
+                $dados['horas'] . " horas"
         );
     }
 

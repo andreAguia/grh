@@ -182,13 +182,21 @@ if ($acesso) {
             $form->add_item($controle);
             
             # Pega os dados da combo ano
-            $anoExercicio = $pessoal->select('SELECT DISTINCT anoTerm, 
-                                              anoTerm
-                                         FROM tbformacao
-                                     ORDER BY anoTerm');
+            $selectano = "SELECT DISTINCT anoTerm, 
+                                          anoTerm
+                                     FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbservidor USING (idPessoa)";
+            
+            if ($parametroSituacao <> "Todos") {
+                $select .= " WHERE situacao = {$parametroSituacao}";
+            }
+                                     
+            $selectano .= " ORDER BY anoTerm";
+            
+            $anoExercicio = $pessoal->select($selectano);
             array_unshift($anoExercicio, array("Todos", "Todos"));
 
-            $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
+            $controle = new Input('parametroAno', 'combo', 'Ano Término:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Ano exercício');
             $controle->set_array($anoExercicio);

@@ -42,7 +42,7 @@ if ($acesso) {
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
     $parametroCurso = post('parametroCurso', get_session('parametroCurso'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao'));
-    $parametroAno = post('parametroAno', get_session('parametroAno'));
+    $parametroAno = post('parametroAno', get_session('parametroAno', 'Todos'));
 
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);

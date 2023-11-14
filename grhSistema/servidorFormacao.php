@@ -118,6 +118,8 @@ if ($acesso) {
     $objeto->set_width([10, 35, 25, 10, 5, 5]);
     $objeto->set_align(["center", "left", "left"]);
 
+    $objeto->set_funcao([null, null, null, null, "trataNulo"]);
+
     $objeto->set_classe([null, null, null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, null, null, null, "exibeCertificado"]);
 

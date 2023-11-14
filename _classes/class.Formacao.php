@@ -33,12 +33,17 @@ class Formacao {
          */
         # Pega os dados
         $dados = $this->get_dados($id);
+        
+        # Trata carga horária
+        if(!empty($dados['horas'])){
+            $dados['horas'] .= " horas";
+        }
 
         pLista(
                 $dados['habilitacao'],
                 $dados['instEnsino'],
                 $dados['anoTerm'],
-                $dados['horas'] . " horas"
+                $dados['horas']
         );
     }
 

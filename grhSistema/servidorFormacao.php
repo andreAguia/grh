@@ -86,7 +86,7 @@ if ($acesso) {
                                      idFormacao,
                                      idFormacao,
                                      idFormacao
-                                FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
+                                FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
                           WHERE idPessoa=' . $idPessoa . '
                        ORDER BY anoTerm desc');
 
@@ -193,6 +193,8 @@ if ($acesso) {
         array('nome' => 'anoTerm',
             'label' => 'Ano de Término:',
             'tipo' => 'numero',
+            'max' => date("Y"),
+            'min' => year($pessoal->get_dataNascimento($idServidorPesquisado)),
             'size' => 5,
             'col' => 3,
             'title' => 'Nome da Instituição de Ensino.',

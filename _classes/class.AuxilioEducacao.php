@@ -143,6 +143,7 @@ class AuxilioEducacao {
         # Pega os dados do dependente
         $dependente = new Dependente();
         $dados = $dependente->get_dados($id);
+        $cpfDependente = $dependente->get_cpf($id);
 
         # Pega os parentescos com direito au auxEducação
         $tipos = $this->get_arrayTipoParentescoAuxEduca();
@@ -156,6 +157,11 @@ class AuxilioEducacao {
             $painel->abre();
 
             $this->exibeSituacao($id);
+
+            if (empty($cpfDependente)) {
+                br();
+                p("Dependente SEM CPF Cadastrado!", "vermelho", "center");
+            }
 
             $painel->fecha();
 

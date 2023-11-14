@@ -9,7 +9,7 @@ class Alertas {
      */
     private $itens = array(
         array('Aposentadoria', 'aposentadoria'),
-        array('Auxílio Creche', 'creche'),
+        array('Auxílios', 'auxilios'),
         array('Benefícios', 'beneficios'),
         array('Cadastro Geral', 'cadastro'),
         array('Cargo em Comissão', 'comissao'),

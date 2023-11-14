@@ -32,6 +32,7 @@ if ($acesso) {
     # Pega o idDependente
     $idDependente = get_session("idDependente");
     $nomeDependente = $dependente->get_nome($idDependente);
+    $cpfDependente = $dependente->get_cpf($idDependente);
 
     # Faz os cálculos dos valores padrão para quando for inclusão    
     if (empty($id)) {
@@ -67,7 +68,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Comprovantes de Escolaridade para o Auxílio Educação Recebidos");
+    $objeto->set_nome("Comprovantes de Escolaridade para o Auxílio Educação Recebidos<br/>{$nomeDependente}");
 
     # botão de voltar da lista
     if (empty($origem)) {
@@ -101,7 +102,7 @@ if ($acesso) {
     }
 
     # subtitulo
-    $objeto->set_subtitulo($nomeDependente);
+    $objeto->set_subtitulo($cpfDependente);
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -187,6 +188,12 @@ if ($acesso) {
 
         $objeto->set_botaoEditarExtra([$botao]);
     }
+
+    # btn edita Dependente
+    $botao2 = new Link("Edita Dependente", "servidorDependentes.php?fase=editar&id={$idDependente}");
+    $botao2->set_class('button');
+    $botao2->set_title('Edita os Dependentes');
+    $objeto->set_botaoListarExtra([$botao2]);
 
     ################################################################
 

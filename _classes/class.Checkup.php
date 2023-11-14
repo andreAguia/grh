@@ -393,7 +393,7 @@ class Checkup {
      */
     public function get_auxilioCrecheVencido($idServidor = null, $catEscolhida = null) {
 
-        if (empty($catEscolhida) OR $catEscolhida == "creche" OR !empty($idServidor)) {
+        if (empty($catEscolhida) OR $catEscolhida == "auxilios" OR !empty($idServidor)) {
 
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
@@ -425,12 +425,109 @@ class Checkup {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(["IdFuncional", "Servidor", "Dependente", "Nascimento", "Término do Aux.", "CI Exclusão", "Processo"]);
+            $tabela->set_label($label);
             $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
             $tabela->set_titulo($titulo);
             $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
             $tabela->set_editar($this->linkEditar);
             $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_auxilioEducacaoRepetido
+     * 
+     * Servidores com o auxílio creche vencendo este ano
+     */
+    public function get_auxilioEducacaoDependenteSemCPF($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "auxilios" OR !empty($idServidor)) {
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT tbservidor.idFuncional,
+                  tbpessoa.nome,
+                  tbdependente.nome,
+                  tbdependente.dtNasc,
+                  TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()),
+                  tbparentesco.Parentesco,
+                  tbdependente.cpf,
+                  tbservidor.idServidor
+             FROM tbdependente JOIN tbpessoa USING (idpessoa)
+                               JOIN tbservidor USING (idpessoa)
+                               JOIN tbparentesco USING (idParentesco)
+            WHERE tbservidor.situacao = 1
+              AND idPerfil = 1
+              AND cpf is null
+              AND TIMESTAMPDIFF (YEAR,tbdependente.dtNasc,CURDATE()) <= 24
+              AND (';
+
+            # Pega os parentesco com direito ao auxílio Educação
+            $aux = new AuxilioEducacao();
+            $array = $aux->get_arrayTipoParentescoAuxEduca();
+            $numItem = count($array);
+
+            foreach ($array as $item) {
+                $select .= 'tbdependente.idParentesco = ' . $item;
+
+                if ($numItem > 1) {
+                    $numItem--;
+                    $select .= ' OR ';
+                }
+            }
+
+            $select .= ') ';
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY tbpessoa.nome, tbdependente.dtNasc';
+            
+            $result = $servidor->select($select);
+            $count = $servidor->count($select);
+            $titulo = 'Parente, até 24 anos, Sem CPF Cadastrado';
+            $label = ["IdFuncional", "Servidor", "Dependente", "Nascimento", "Idade", "Parentesco", "CPF"];
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label($label);
+            $tabela->set_align(['center', 'left', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+            
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
             # Verifica se é de um único servidor
             if (!empty($idServidor)) {
@@ -4927,7 +5024,6 @@ class Checkup {
     }
 
     ##########################################################
-    
 
     /**
      * Método get_licencaSemVencimentosVencendo

@@ -122,6 +122,19 @@ class Dependente {
 
     ###########################################################
 
+    public function get_cpf($id) {
+
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
+            return $dados["cpf"];
+        }
+    }
+
+    ###########################################################
+
     public function get_idParentesco($id) {
 
         if (empty($id)) {

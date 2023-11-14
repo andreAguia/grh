@@ -513,7 +513,7 @@ class Checkup {
             
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = 'Parente, até 24 anos, Sem CPF Cadastrado';
+            $titulo = 'Parentes com idade até 24 anos sem CPF Cadastrado';
             $label = ["IdFuncional", "Servidor", "Dependente", "Nascimento", "Idade", "Parentesco", "CPF"];
 
             # Exibe a tabela

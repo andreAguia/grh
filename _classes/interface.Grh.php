@@ -342,7 +342,7 @@ class Grh {
      * @param string $titulo     null O título do relatório 
      * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio($idServidor, $titulo = null, $cabecalho = true) {
+    public static function listaDadosServidorRelatorio($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true) {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -364,8 +364,8 @@ class Grh {
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo($titulo);
+        $relatorio->set_subtitulo($subTitulo);
         $relatorio->set_label(["Id", "Servidor", "Perfil", "Cargo - Área - Função (Comissão)", "Admissão", "Lotação", "Situação"]);
-        #$relatorio->set_width(array(8,20,10,20,10,20,5));
         $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "pessoal", null, "pessoal", "pessoal"]);
         $relatorio->set_metodo([null, null, null, "get_cargo", null, "get_Lotacao", "get_Situacao"]);

@@ -40,10 +40,14 @@ if ($acesso) {
     #$parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
-    $parametroCurso = post('parametroCurso', get_session('parametroCurso'));
-    $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao'));
-    $parametroAno = post('parametroAno', get_session('parametroAno', 'Todos'));
+    $parametroCurso = post('parametroCurso', get_session('parametroCurso', 'Todos'));
+    $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
+    $parametroAno = post('parametroAno', get_session('parametroAno'));
 
+    if ($grh) {
+        $parametroAno = 'Todos';
+    }
+    
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
     set_session('parametroEscolaridade', $parametroEscolaridade);
@@ -161,7 +165,6 @@ if ($acesso) {
 //            $controle->set_linha(1);
 //            $controle->set_col(2);
 //            $form->add_item($controle);
-
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -315,10 +318,7 @@ if ($acesso) {
                                          LEFT JOIN tbcargo USING (idCargo)
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-
-//            if ($parametroSituacao <> "Todos") {
-//                $select .= " AND situacao = {$parametroSituacao}";
-//            }
+            
             $select .= " AND situacao = 1";
 
             if ($parametroPerfil <> "Todos") {
@@ -342,7 +342,11 @@ if ($acesso) {
             }
 
             if ($parametroAno <> "Todos") {
-                $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
+                if (empty($parametroAno)) {
+                    $select .= " AND tbformacao.anoTerm IS NULL";
+                } else {
+                    $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
+                }
             }
 
             # Verifica se tem filtro por lotação
@@ -402,22 +406,18 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT tbservidor.idServidor,
-                      tbescolaridade.escolaridade,
-                      idFormacao
-                 FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
-                                 JOIN tbservidor USING (idPessoa)
-                                 LEFT JOIN tbescolaridade USING (idEscolaridade)
-                                 JOIN tbhistlot USING (idServidor)
-                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                 
-                                 LEFT JOIN tbcargo USING (idCargo)
-                                 LEFT JOIN tbtipocargo USING (idTipoCargo)
-                 WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                              tbescolaridade.escolaridade,
+                              idFormacao
+                         FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbservidor USING (idPessoa)
+                                         LEFT JOIN tbescolaridade USING (idEscolaridade)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
+                                         LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-            if ($parametroSituacao <> "Todos") {
-                $select .= " AND situacao = {$parametroSituacao}";
-                $subTitulo .= "Filtro Situação: {$pessoal->get_nomeSituacao($parametroSituacao)}<br/>";
-            }
+            $select .= " AND situacao = 1";
 
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";
@@ -461,6 +461,7 @@ if ($acesso) {
             }
 
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
+            echo $select;
 
             # Monta o Relatório
             $relatorio = new Relatorio();

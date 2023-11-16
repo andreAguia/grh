@@ -42,11 +42,11 @@ if ($acesso) {
     $idTpLicenca = soNumeros(get('idTpLicenca'));
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro não vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
+    if (is_null(post('parametro'))) {
+        $parametro = retiraAspas(get_session('sessionParametro'));
     } else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
+        $parametro = post('parametro');
+        set_session('sessionParametro', $parametro);
     }
 
     # Ordem da tabela

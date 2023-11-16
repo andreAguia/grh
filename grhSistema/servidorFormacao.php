@@ -46,6 +46,14 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))) {
+        $parametro = retiraAspas(get_session('sessionParametro'));
+    } else {
+        $parametro = post('parametro');
+        set_session('sessionParametro', $parametro);
+    }
+
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -61,8 +69,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento")
+    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento"){
         AreaServidor::cabecalho();
+    }
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -79,17 +88,28 @@ if ($acesso) {
     $objeto->set_voltarLista($voltar);
 
     # select da lista
-    $objeto->set_selectLista('SELECT escolaridade,
-                                     habilitacao,
-                                     instEnsino,
-                                     anoTerm,
-                                     horas,
-                                     idFormacao,
-                                     idFormacao,
-                                     idFormacao
-                                FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
-                          WHERE idPessoa=' . $idPessoa . '
-                       ORDER BY anoTerm desc');
+    $selectFormacao = "SELECT escolaridade,
+                              habilitacao,
+                              instEnsino,
+                              anoTerm,
+                              horas,
+                              idFormacao,
+                              idFormacao,
+                              idFormacao
+                         FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
+                        WHERE idPessoa={$idPessoa}";
+
+    if (!empty($parametro)) {
+        $selectFormacao .= " AND (escolaridade LIKE '%{$parametro}%' 
+                              OR habilitacao LIKE '%{$parametro}%'
+                              OR instEnsino LIKE '%{$parametro}%'
+                              OR anoTerm LIKE '%{$parametro}%'
+                              OR horas LIKE '%{$parametro}%')";    
+    }
+
+    $selectFormacao .= " ORDER BY anoTerm desc";
+
+    $objeto->set_selectLista($selectFormacao);
 
     # select do edita
     $objeto->set_selectEdita('SELECT idEscolaridade,
@@ -122,6 +142,11 @@ if ($acesso) {
 
     $objeto->set_classe([null, null, null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, null, null, null, "exibeCertificado"]);
+
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
+    $objeto->set_arrayPesquisa($result);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

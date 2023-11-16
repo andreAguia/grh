@@ -11,6 +11,8 @@ $pessoal = new Pessoal();
 # Dados do Dependente
 $parentesco = $campoValor[3];
 $dtNasc = date_to_php($campoValor[1]);
+$cpf = $campoValor[2];
+$auxEduc = $campoValor[6];
 $auxEducacaoDtInicial = date_to_php($campoValor[7]);
 
 # Dados do Servidor
@@ -43,21 +45,28 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
  * Auxílio Educação
  */
 
-$aux = new AuxilioEducacao();
-if ($aux->verificaDireitoAuxEduca($parentesco)) {
-    $intra = new Intra();
-    $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-    $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+if ($auxEduc == "Sim") {
+    $aux = new AuxilioEducacao();
+    if ($aux->verificaDireitoAuxEduca($parentesco)) {
+        $intra = new Intra();
+        $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+        $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+    } else {
+        $erro = 1;
+        $msgErro .= 'esse dependente não tem direito ao Auxílio Educação\n';
+    }
 }
 
-# salva sempre Não para quando o dependente ja tinha mais de 24 na data histórica
-# Pega as datas limites
-$anos24 = get_dataIdade($dtNasc, 24);
+# Verifica se o CPF foi preenchido quando se cadastra SIM para o auxilio Educação
+if ($auxEduc == "Sim" AND empty($cpf)) {
+    $erro = 1;
+    $msgErro .= 'O CPF deverá ser informado para o dependente com Auxílio Educação\n';
+}
 
-# Data Histórica Inicial
+# Coloca o auxEducação como Não quando tinha 24 anos ou mais na data da publicação da lei
 $intra = new Intra();
 $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-
+$anos24 = get_dataIdade($dtNasc, 24);
 if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
     $campoValor[6] = "Não";
     $campoValor[7] = null;

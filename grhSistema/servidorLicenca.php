@@ -319,10 +319,19 @@ if ($acesso) {
         $objeto->set_voltarLista('servidorMenu.php');
 
         # Pega os dados da combo licenca da pesquisa
-        $result = $pessoal->select('SELECT distinct tblicenca.idTpLicenca, tbtipolicenca.nome
-                                      FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                                     WHERE idServidor=' . $idServidorPesquisado . '                                         
-                                  ORDER BY 2');
+        $result = $pessoal->select("(
+                                 SELECT distinct tblicenca.idTpLicenca, tbtipolicenca.nome
+                                   FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                                  WHERE idServidor={$idServidorPesquisado}
+                              ) UNION (
+                                 SELECT 6, 'Licença Prêmio'
+                                   FROM tblicencapremio
+                                  WHERE idServidor={$idServidorPesquisado}
+                              ) UNION (
+                                SELECT distinct tblicencasemvencimentos.idTpLicenca, tbtipolicenca.nome
+                                   FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca ON tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca
+                                  WHERE idServidor={$idServidorPesquisado})        
+                                  ORDER BY 2");
         array_unshift($result, array(null, '-- Todos --'));
 
         # controle de pesquisa
@@ -352,29 +361,36 @@ if ($acesso) {
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE idServidor=' . $idServidorPesquisado;
-        if (!vazio($parametro)) {
-            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro . ' ORDER BY 4 desc)';
-        } else {
-            /*
-             * Licença prêmio e sem vencimentos
-             */
-            $selectLicença .= ')
-                               UNION
-                               (SELECT YEAR(dtInicial),
-                                       6,
-                                       "",
-                                       "",
-                                       dtInicial,
-                                       tblicencapremio.numdias,
-                                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                                       CONCAT("6&",idLicencaPremio),
-                                       tbpublicacaopremio.dtPublicacao,
-                                       CONCAT("tblicencapremio","&",tblicencapremio.idServidor),
-                                       "-"
-                                  FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                                 WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . ')
-                                     UNION
-                               (SELECT YEAR(tblicencasemvencimentos.dtInicial),
+        if (!empty($parametro)) {
+            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro;
+        }
+        
+        /*
+         * Licença prêmio
+         */
+        $selectLicença .= ') UNION (
+                     SELECT YEAR(dtInicial),
+                            6,
+                            "",
+                            "",
+                            dtInicial,
+                            tblicencapremio.numdias,
+                            ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                            CONCAT("6&",idLicencaPremio),
+                            tbpublicacaopremio.dtPublicacao,
+                            CONCAT("tblicencapremio","&",tblicencapremio.idServidor),                                       "-"
+                       FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                      WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado;
+        
+        if (!empty($parametro)) {
+            $selectLicença .= ' AND ' . $parametro . ' = 6';
+        }
+        
+        /*
+         * Licença sem vencimentos
+         */
+         $selectLicença .= ') UNION (
+                               SELECT YEAR(tblicencasemvencimentos.dtInicial),
                                        tblicencasemvencimentos.idTpLicenca,
                                        "",
                                        "",
@@ -386,10 +402,14 @@ if ($acesso) {
                                        CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
                                        "-"
                                   FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
-                                 WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado . ')
-                              ORDER BY 5 desc';
+                                 WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado;
+         
+        if (!empty($parametro)) {
+            $selectLicença .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $parametro;
         }
-
+        
+        $selectLicença .= ' ) ORDER BY 5 desc';
+         
         $objeto->set_selectLista($selectLicença);
 
         # select do edita
@@ -464,7 +484,8 @@ if ($acesso) {
                                        AND idTpLicenca <> 8
                                        AND idTpLicenca <> 16
                                   ORDER BY 2');
-        array_unshift($result, array('Inicial', ' -- Selecione o Tipo de Afastamento ou Licença --')); # Adiciona o valor de nulo
+        array_unshift($result, array('Inicial', ' -- Selecione o Tipo de Afastamento ou Licença --'));
+
         # Habilita ou não os controles de acordo com a licença
         # Campos para o formulario
         $objeto->set_campos(array(

@@ -360,30 +360,33 @@ if ($acesso) {
                                      CONCAT("tblicenca","&",idLicenca),
                                      idLicenca
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
-                               WHERE idServidor=' . $idServidorPesquisado;
+                               WHERE tblicenca.idTpLicenca <> 26
+                                 AND idServidor=' . $idServidorPesquisado;
         if (!empty($parametro)) {
             $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro;
         }
         
         /*
-         * Licença prêmio
+         * suspensão
          */
         $selectLicença .= ') UNION (
                      SELECT YEAR(dtInicial),
-                            6,
-                            "",
-                            "",
-                            dtInicial,
-                            tblicencapremio.numdias,
-                            ADDDATE(dtInicial,tblicencapremio.numDias-1),
-                            CONCAT("6&",idLicencaPremio),
-                            tbpublicacaopremio.dtPublicacao,
-                            CONCAT("tblicencapremio","&",tblicencapremio.idServidor),                                       "-"
-                       FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
-                      WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado;
+                                  tblicenca.idTpLicenca,
+                                     "-",
+                                     idLicenca,   
+                                     dtInicial,
+                                     numdias,
+                                     ADDDATE(dtInicial,numDias-1),
+                                     CONCAT(tblicenca.idTpLicenca,"&",idLicenca),
+                                     dtPublicacao,
+                                     CONCAT("tblicenca","&",idLicenca),
+                                     "-"
+                                FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
+                               WHERE tblicenca.idTpLicenca = 26
+                                 AND idServidor=' . $idServidorPesquisado;
         
         if (!empty($parametro)) {
-            $selectLicença .= ' AND ' . $parametro . ' = 6';
+            $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro;
         }
         
         

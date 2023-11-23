@@ -328,17 +328,7 @@ class MenuServidor {
             $botao->set_imagem(PASTA_FIGURAS . 'elogios.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
             $menu->add_item($botao);
-        }
-
-        # Advertências
-        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $botao = new BotaoGrafico();
-            $botao->set_label('Penalidades');
-            $botao->set_url('servidorPenalidades.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
-            $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
-            $menu->add_item($botao);
-        }
+        }        
 
         # Avaliação
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
@@ -366,6 +356,24 @@ class MenuServidor {
 //        $botao->set_title('Cadastro de atos de investidura');
 //        $botao->set_target("_blank");
 //        $menu->add_item($botao);
+        
+        # Advertências
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $botao = new BotaoGrafico();
+            $botao->set_label('Penalidades');
+            $botao->set_url('servidorPenalidades.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
+            $menu->add_item($botao);
+        }
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Suspensão');
+        $botao->set_url('servidorSuspensao.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'suspensao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro dos dias suspensos');
+        #$botao->set_accessKey('i');
+        $menu->add_item($botao);
 
         $menu->show();
         br();

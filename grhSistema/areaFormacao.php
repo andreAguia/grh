@@ -461,7 +461,7 @@ if ($acesso) {
             }
 
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
-            echo $select;
+            #echo $select;
 
             # Monta o Relatório
             $relatorio = new Relatorio();

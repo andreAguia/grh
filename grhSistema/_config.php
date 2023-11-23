@@ -56,7 +56,8 @@ define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");          # Pa
 define("PASTA_PLANOCARGOS", "../../_arquivos/planoCargos/");                # Pasta da publicação dos planos de cargos
 define("PASTA_TRANSPORTE", "../../_arquivos/transporte/");                  # servidores que receberam auxílio transporte naquele mês
 define("PASTA_PROCEDIMENTOS", "../../_arquivos/procedimentos/");            # arquivos para a rotina de procedimentos
-define("PASTA_COMP_AUX_EDUCA", "../../_arquivos/compAuxEduca/");            # arquivos para a rotina de procedimentos
+define("PASTA_COMP_AUX_EDUCA", "../../_arquivos/compAuxEduca/");            # documentos para o aux Educação
+define("PASTA_SUSPENSAO", "../../_arquivos/suspensao/");            # publicação da suspensão de servidor
 /*
  *  Tags aceitas em campos com htmlTag = true
  */

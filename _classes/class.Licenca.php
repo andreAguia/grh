@@ -50,7 +50,6 @@ class Licenca {
 
 ##############################################################
 
-
     public function exibeNomeSimples($idTpLicenca = null) {
         # Verifica se o id foi informado
         if (vazio($idTpLicenca)) {
@@ -155,5 +154,36 @@ class Licenca {
         }
     }
 
-########################################################### 
+##########################################################################################
+
+    public function exibePublicacao($idLicenca = null) {
+
+        # Verifica se o id foi informado
+        if (empty($idLicenca)) {
+            return "---";
+        } else {
+
+            # Pega os dados
+            $servidor = new Pessoal();
+            $select = "SELECT dtPublicacao,
+                              pgPublicacao
+                         FROM tblicenca
+                        WHERE idLicenca = {$idLicenca}";
+
+            $row = $servidor->select($select, false);
+            
+            # trata a página
+            if(!empty($row["pgPublicacao"])){
+                $row["pgPublicacao"] = "pag: " . $row['pgPublicacao'];
+            }
+            
+            # Exibe a publicação
+            plista(
+                    date_to_php($row['dtPublicacao']),
+                    $row['pgPublicacao']
+            );
+        }
+    }
+
+########################################################################################## 
 }

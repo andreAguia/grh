@@ -44,7 +44,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     # Limita o tamanho da tela
     $grid1 = new Grid();
@@ -260,7 +262,6 @@ if ($acesso) {
                  */
 
                 $select = "SELECT tbservidor.idServidor,
-                                  CONCAT(tbservidor.idServidor,'&',tbferiassigrh.anoExercicio),
                                   tbferiassigrh.idFuncional,
                                   tbferiassigrh.anoExercicio,
                                   tbferiassigrh.dtInicial,
@@ -286,6 +287,15 @@ if ($acesso) {
                     # Cria um menu
                     $menu2 = new MenuBar();
 
+                    # Relatórios
+                    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+                    $botaoRel = new Button();
+                    $botaoRel->set_title("Relatório de {$parametroAno}");
+                    $botaoRel->set_url("?fase=relatorio");
+                    $botaoRel->set_target("_blank");
+                    $botaoRel->set_imagem($imagem);
+                    $menu2->add_link($botaoRel, "left");
+
                     # Excluir
                     $linkApagar = new Link("Excluir todos os {$contagem} registros de {$parametroAno}", "?fase=excluiRegistroAno");
                     $linkApagar->set_class('button alert');
@@ -298,11 +308,11 @@ if ($acesso) {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("Dados do Arquivo CSV");
-                $tabela->set_label(['Nome', 'Duplicidade', 'idfunciional', 'Exercício', 'Inicio', 'Dias', 'Fim']);
+                $tabela->set_label(['Nome', 'idfunciional', 'Exercício', 'Inicio', 'Dias', 'Fim']);
                 $tabela->set_align(["left"]);
-                $tabela->set_funcao([null, null, null, null, "date_to_php"]);
-                $tabela->set_classe(["pessoal", "Ferias", null, null, null, null, null, null]);
-                $tabela->set_metodo(["get_nomeECargoELotacao", "exibe_diasFerias", null, null, null, null, null]);
+                $tabela->set_funcao([null, null, null, "date_to_php"]);
+                $tabela->set_classe(["pessoal"]);
+                $tabela->set_metodo(["get_nomeECargoELotacao"]);
                 $tabela->set_conteudo($result);
                 $tabela->set_rowspan([0, 1]);
                 $tabela->set_grupoCorColuna(0);
@@ -338,6 +348,56 @@ if ($acesso) {
             break;
 
         #################################################
+        /*
+         * Imprimir relação de férias do ano
+         */
+
+        case "relatorio" :
+
+            $subTitulo = null;
+
+            # Pega os dados
+            $select = "SELECT tbferiassigrh.idFuncional,
+                              tbservidor.idServidor,                              
+                              tbservidor.idServidor,                              
+                              tbferiassigrh.anoExercicio,
+                              tbferiassigrh.dtInicial,
+                              tbferiassigrh.numDias,
+                              date_format(ADDDATE(tbferiassigrh.dtInicial,tbferiassigrh.numDias-1),'%d/%m/%Y') as dtf,                              
+                              idFeriasSigrh
+                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                              JOIN tbferiassigrh ON (tbservidor.idServidor = tbferiassigrh.idServidor)
+                        WHERE tbferiassigrh.idServidor <> 0";
+
+            # Verifica se tem filtro por perfil
+            if (($parametroAno <> "*") AND ($parametroAno <> "")) {
+                $select .= " AND tbferiassigrh.anoExercicio = '{$parametroAno}'";
+                $subTitulo = $parametroAno;
+            }
+
+            $select .= " ORDER BY tbpessoa.nome, tbferiassigrh.anoExercicio, dtInicial";
+
+            # Monta o Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Dados do Arquivo CSV");
+
+            if (!is_null($subTitulo)) {
+                $relatorio->set_subtitulo($subTitulo);
+            }
+
+            $result = $pessoal->select($select);
+
+            $relatorio->set_label(['idfunciional', 'Nome', 'Lotação', 'Exercício', 'Inicio', 'Dias', 'Fim']);
+            $relatorio->set_conteudo($result);
+            $relatorio->set_align(["center", "left", "left"]);
+            $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+            $relatorio->set_classe([null, "pessoal", "pessoal"]);
+            $relatorio->set_metodo([null, "get_nomeECargo", "get_lotacaosimples"]);
+            $relatorio->set_bordaInterna(true);
+            $relatorio->show();
+            break;
+
+        #################################################
 
         /*
          * Acessa as férias já cadastradas no sistema do servidor
@@ -357,6 +417,14 @@ if ($acesso) {
          */
 
         case "importar" :
+
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            botaoVoltar("?");
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
 
             $grid = new Grid("center");
             $grid->abreColuna(6);
@@ -461,6 +529,10 @@ if ($acesso) {
             # Define o arquivo a ser importado
             $arquivo = "../_temp/ferias.csv";
 
+            # Altere o divisor de acordo com o arquivo
+            $divisor = ",";
+
+            # Flags
             $certos = 0;
             $linhas = 0;
 
@@ -470,37 +542,38 @@ if ($acesso) {
                 $linhaDados = false;
 
                 # Pega o cabeçalho
-                $cabecalho = explode(";", $lines[0]);
+                $cabecalho = explode($divisor, $lines[0]);
+
                 if (isset($cabecalho[14]) AND $cabecalho[14] == "obs") {
                     alert("Foi encontrado a coluna obs neste arquivo! Apague a coluna obs e importe novamente.");
                     loadPage("?");
                 } else {
+                    # Campos
+                    $campos = array(
+                        "idServidor",
+                        "idFuncional",
+                        "dtInicial",
+                        "numDias",
+                        "anoExercicio",
+                        "erro",
+                        "obs"
+                    );
+
+                    #var_dump($campos);
                     # Percorre o arquivo e guarda os dados em um array
                     foreach ($lines as $linha) {
 
-                        $colunas = explode(";", $linha);
+                        $colunas = explode(",", $linha);
 
                         # Verifica se é cabeçalho
                         if ($colunas[0] <> "numfunc") {
-                            if (!empty($colunas[0])) {
+                            if (!empty($colunas[$colunaIdfuncional])) {
 
                                 # Inicia a variável de erro
                                 $erro = null;
 
-                                # Campos
-                                $campos = array(
-                                    "idServidor",
-                                    "idFuncional",
-                                    "dtInicial",
-                                    "numDias",
-                                    "anoExercicio",
-                                    "erro",
-                                    "obs"
-                                );
-
-                                $idServidorImportado = $pessoal->get_idServidoridFuncionalAtivo($colunas[0]);
+                                $idServidorImportado = $pessoal->get_idServidoridFuncionalAtivo($colunas[$colunaIdfuncional]);
                                 $numDias = null;
-                                $anoExercicio = null;
 
                                 # Verifica se o idFuncional está correto
                                 if (empty($idServidorImportado)) {
@@ -509,45 +582,61 @@ if ($acesso) {
                                 }
 
                                 # Verifica se tem data Inicial
-                                if (empty($colunas[4])) {
+                                if (empty($colunas[$colunaDtInicial])) {
                                     $erro = "A Data Inicial está em branco";
                                     $dtInicial = null;
                                 } else {
-                                    $dtInicial = substr($colunas[4], 0, 10);
+                                    $dtInicial = substr($colunas[$colunaDtInicial], 0, 10);
 
-                                    if (!empty($colunas[5])) {
-                                        $numDias = getNumDias($dtInicial, substr($colunas[5], 0, 10));
+                                    if (!empty($colunas[$colunaDtfinal])) {
+                                        $numDias = getNumDias($dtInicial, substr($colunas[$colunaDtfinal], 0, 10));
                                     }
 
                                     $dtInicial = date_to_bd($dtInicial);
                                 }
 
                                 # Verifica se tem data Final
-                                if (empty($colunas[5])) {
+                                if (empty($colunas[$colunaDtfinal])) {
                                     $erro = "A Data Final está em branco";
                                 }
 
-                                # Verifica se tem data do período
-                                if (empty($colunas[12])) {
-                                    $erro = "A Data do Início do período está em branco";
-                                } else {
-                                    $anoExercicio = year(substr($colunas[12], 0, 10));
-                                }
+                                $anoExercicio = year($colunas[$colunaAno]);
 
+//                                echo $colunas[$colunaAno];
+//                                br();
                                 # Valores
                                 $valor = array(
                                     $idServidorImportado,
-                                    $colunas[0],
+                                    $colunas[$colunaIdfuncional],
                                     $dtInicial,
                                     $numDias,
                                     $anoExercicio,
                                     $erro,
-                                    "IdFuncional: " . $colunas[0] . "<br/>" . $colunas[3] . "<br/>" . $colunas[11],
+                                    "IdFuncional: " . $colunas[$colunaIdfuncional] . "<br/>" . $colunas[$colunaNome],
                                 );
 
+                                #var_dump($valor);
                                 # Grava
                                 $pessoal->gravar($campos, $valor, null, "tbferiassigrh", "idFeriasSigrh");
                             }
+                        } else {
+
+                            # Define as colunas
+                            $colunaIdfuncional = 0;
+                            $colunaNome = array_search('nome', $colunas);
+                            $colunaDtInicial = array_search('dtini', $colunas);
+                            $colunaDtfinal = array_search('dtfim', $colunas);
+                            $colunaAno = array_search('dtfim_per', $colunas);
+
+                            #var_dump($colunas);
+//                            br();
+//                            echo "Nome: ", $colunaNome;
+//                            br();
+//                            echo "Inicial: ", $colunaDtInicial;
+//                            br();
+//                            echo "Final: ", $colunaDtfinal;
+//                            br();
+//                            echo "Ano: ", $colunaAno;
                         }
                     }
                 }

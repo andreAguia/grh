@@ -386,6 +386,28 @@ if ($acesso) {
             $selectLicença .= ' AND ' . $parametro . ' = 6';
         }
         
+        
+        /*
+         * Licença prêmio
+         */
+        $selectLicença .= ') UNION (
+                     SELECT YEAR(dtInicial),
+                            6,
+                            "",
+                            "",
+                            dtInicial,
+                            tblicencapremio.numdias,
+                            ADDDATE(dtInicial,tblicencapremio.numDias-1),
+                            CONCAT("6&",idLicencaPremio),
+                            tbpublicacaopremio.dtPublicacao,
+                            CONCAT("tblicencapremio","&",tblicencapremio.idServidor),                                       "-"
+                       FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
+                      WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado;
+        
+        if (!empty($parametro)) {
+            $selectLicença .= ' AND ' . $parametro . ' = 6';
+        }
+        
         /*
          * Licença sem vencimentos
          */

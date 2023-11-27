@@ -126,11 +126,6 @@ if ($acesso) {
         array_unshift($result, 'Todos');
     }
 
-    if (Verifica::acesso($idUsuario, 1)) {
-        echo $parametroDias;
-        var_dump($result);
-    }
-
     $controle = new Input('parametroDias', 'combo', 'Dias:', 1);
     $controle->set_size(30);
     $controle->set_title('Filtra por Dias de férias');

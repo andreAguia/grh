@@ -123,11 +123,12 @@ if ($acesso) {
     # Dias
     $result = $lista1->getArrayPorDia();
     if (!is_null($result)) {
-        array_unshift($result, 'Todos');
+        array_unshift($result, ['Todos', 'Todos']);
     }
-    
-    if(Verifica::acesso($idUsuario, 1)){
+
+    if (Verifica::acesso($idUsuario, 1)) {
         echo $parametroDias;
+        var_dump($result);
     }
 
     $controle = new Input('parametroDias', 'combo', 'Dias:', 1);

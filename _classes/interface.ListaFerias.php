@@ -655,13 +655,13 @@ class ListaFerias {
 
         # Percorre o array e alimenta o array de retorno
         foreach ($diasTotais as $itens) {
-            $retorno[] = $itens['soma'];
+            $retorno[] = [$itens['soma'], $itens['soma']];
         }
 
         # Verifica se exite servidores que não marcou/tirou férias
         $totalSem = $this->getNumServidoresSemFerias();
         if ($totalSem > 0) {
-            array_push($retorno, 0);
+            array_push($retorno, [0, 0]);
         }
 
         return $retorno;

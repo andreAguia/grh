@@ -49,7 +49,7 @@ if ($acesso) {
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroPerfil', $parametroPerfil);
-    set_session('parametroDias', $parametroDias);
+    set_session('parametroDias', $parametroDias, "Todos");
 
     # Começa uma nova página
     $page = new Page();
@@ -66,7 +66,7 @@ if ($acesso) {
     $lista1->set_lotacao($parametroLotacao);
     $lista1->set_situacao($parametroSituacao);
     $lista1->set_perfil($parametroPerfil);
-    
+
     # trata o parâmetro dias
     if ($parametroDias <> "Todos") {
         $lista1->set_dias($parametroDias);

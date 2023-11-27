@@ -66,6 +66,8 @@ if ($acesso) {
     $lista1->set_lotacao($parametroLotacao);
     $lista1->set_situacao($parametroSituacao);
     $lista1->set_perfil($parametroPerfil);
+    
+    # trata o parâmetro dias
     if ($parametroDias <> "Todos") {
         $lista1->set_dias($parametroDias);
     }

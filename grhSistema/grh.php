@@ -73,7 +73,8 @@ if ($acesso) {
     set_session('parametroVaga');
     set_session('idServidorPesquisado');
     set_session('parametroParentesco');
-
+    set_session('parametroDias');
+    
     set_session('concursoTipo');
 
     set_session('parametroMotivo');

@@ -42,12 +42,14 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
+    $parametroDias = post('parametroDias', get_session('parametroDias', 'Todos'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroPerfil', $parametroPerfil);
+    set_session('parametroDias', $parametroDias);
 
     # Começa uma nova página
     $page = new Page();
@@ -58,6 +60,15 @@ if ($acesso) {
 
     $grid = new Grid();
     $grid->abreColuna(12);
+
+    # Informa a classe com os parâmetros
+    $lista1 = new ListaFerias($parametroAno);
+    $lista1->set_lotacao($parametroLotacao);
+    $lista1->set_situacao($parametroSituacao);
+    $lista1->set_perfil($parametroPerfil);
+    if ($parametroDias <> "Todos") {
+        $lista1->set_dias($parametroDias);
+    }
 
     # Cria um menu
     $menu1 = new MenuBar();
@@ -74,7 +85,7 @@ if ($acesso) {
     $botaoProcesso->set_class('button');
     $botaoProcesso->set_title('Acessa o controle dos processos de férias');
     $menu1->add_link($botaoProcesso, "right");
-    
+
     # Importa fèrias do SigRH
     $botaoProcesso = new Link("Importa do SigRH", "importaFerias.php");
     $botaoProcesso->set_class('button warning');
@@ -107,6 +118,22 @@ if ($acesso) {
     $controle->set_autofocus(true);
     $form->add_item($controle);
 
+    # Dias
+    $result = $lista1->getArrayPorDia();
+    if (!is_null($result)) {
+        array_unshift($result, 'Todos');
+    }
+
+    $controle = new Input('parametroDias', 'combo', 'Dias:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Dias de férias');
+    $controle->set_array($result);
+    $controle->set_valor($parametroDias);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
+    $form->add_item($controle);
+
     # Lotação
     $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -123,7 +150,7 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(6);
+    $controle->set_col(4);
     $form->add_item($controle);
 
     # Perfil
@@ -133,7 +160,7 @@ if ($acesso) {
                                   FROM tbperfil
                                  WHERE tipo <> "Outros"  
                               ORDER BY tipo, nome');
-    
+
     array_unshift($result, array('*', '-- Todos --'));
 
     $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
@@ -195,7 +222,7 @@ if ($acesso) {
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
             $classeFerias->exibeProcesso($parametroLotacao);
-            
+
             ########################################
             # Menu
             tituloTable("Menu");
@@ -214,14 +241,7 @@ if ($acesso) {
             $menu->show();
 
             #######################################
-            # Resumo GeralS
-            # Informa a classe com os parâmetros
-            $lista1 = new ListaFerias($parametroAno);
-            $lista1->set_lotacao($parametroLotacao);
-            $lista1->set_situacao($parametroSituacao);
-            $lista1->set_perfil($parametroPerfil);
-
-            # resumo geral
+            # Resumo Geral
             $lista1->showResumoGeral();
 
             # por dias

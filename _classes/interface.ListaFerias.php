@@ -15,6 +15,7 @@ class ListaFerias {
     private $lotacao = null;
     private $situacao = null;
     private $perfil = null;
+    private $dias = null;
     private $permiteEditar = true;
 
     ###########################################################
@@ -106,6 +107,38 @@ class ListaFerias {
 
     ###########################################################
 
+    public function set_dias($dias = null) {
+        /**
+         * Informa o total de dias a serem exibidas
+         * 
+         * @param $dias integer null o total de dias
+         * 
+         * @note Quando o $dias não é informado será exibido todos os dias
+         * 
+         * @syntax $ListaFerias->set_dias([$dias]);  
+         */
+        if ($dias <> 0) {
+            # Força a ser nulo mesmo quando for ""        
+            if (empty($dias)) {
+                $dias = null;
+            }
+
+            # Transforma em nulo o texto Todos
+            if ($dias == "Todos") {
+                $dias = null;
+            }
+
+            # Transforma em nulo a máscara *
+            if ($dias == "*") {
+                $dias = null;
+            }
+        }
+
+        $this->dias = $dias;
+    }
+
+    ###########################################################
+
     public function showResumoGeral() {
 
         /**
@@ -160,8 +193,12 @@ class ListaFerias {
         # Conta o número de dias 
         $totalFerias = count($diasTotais);
 
-        $conta = array();   // Array para exibir na tela    
-        $tt = 0;            // Totalizador de servidores que pediram férias
+        # Array para exibir na tela   
+        $conta = array();
+
+        # Totalizador de servidores que pediram férias
+        $tt = 0;
+
         # Informa quantos servidores em cada total de dias
         if ($totalFerias > 0) {
             $conta = $this->getTotalServidorDiasFerias($diasTotais);
@@ -175,6 +212,13 @@ class ListaFerias {
         # Exibe os servidores desse setor que solicitaram férias
         $servset = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
         $totalServidores = count($servset);                    // Conta o número de servidores
+
+        $totalSem = $this->getNumServidoresSemFerias();
+        if ($totalSem > 0) {
+            array_push($conta, array("0", $totalSem));
+            $totalServidores += $totalSem;
+        }
+
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conta);
@@ -196,41 +240,33 @@ class ListaFerias {
      */
     public function showPorDia() {
 
-        # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
-        $diasTotais = $this->getDiasFerias();
-
-        # Conta o número de dias 
-        $totalFerias = count($diasTotais);
-
-        $conta = array();   // Array para exibir na tela    
-        $tt = 0;            // Totalizador de servidores que pediram férias
-        # Informa quantos servidores em cada total de dias
-        if ($totalFerias > 0) {
-            $conta = $this->getTotalServidorDiasFerias($diasTotais);
-
-            # Soma os servidores que periram férias nesse exercício e nessa lotação
-            foreach ($conta as $contaSomada) {
-                $tt += $contaSomada[0];
-            }
-        }
-
         # Exibe os servidores desse setor
         $servset1 = $this->getServidoresComTotalDiasFerias();   // Os que pediram férias
+        $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
 
         if ($this->situacao == 1 OR is_null($this->situacao)) {
-            $servset2 = $this->getServidoresSemFerias();            // Os que não pediram férias
-            $servset3 = array_merge_recursive($servset2, $servset1); // Junta os dois
-            $totalServidores = count($servset3);
+
+            IF (is_null($this->dias)) {
+                $resultado = array_merge_recursive($servset2, $servset1); // Junta os dois
+            } else {
+                if ($this->dias == 0) {
+                    $resultado = $servset2;
+                } else {
+                    $resultado = $servset1;
+                }
+            }
         } else {
-            $servset3 = $servset1;
-            $totalServidores = count($servset1);
+            $resultado = $servset1;
         }
-        // Conta o número de servidores
+
+        # Pega o tatal de servidores
+        $totalServidores = count($resultado);
+
         # Monta a tabela de Servidores.
         if ($totalServidores > 0) {
 
             # Ordena o array
-            $servset4 = array_sort($servset3, 'nome', SORT_ASC);
+            $resultadoOrdenado = array_sort($resultado, 'nome', SORT_ASC);
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
@@ -267,7 +303,7 @@ class ListaFerias {
                 $tabela->set_editarBotao("olho.png");
             }
 
-            $tabela->set_conteudo($servset4);
+            $tabela->set_conteudo($resultadoOrdenado);
             $tabela->show();
         }
     }
@@ -424,8 +460,14 @@ class ListaFerias {
 
         $select .= "
               AND anoExercicio = $this->anoExercicio
-        GROUP BY tbpessoa.nome
-         ORDER BY soma,tbpessoa.nome)";
+        GROUP BY tbpessoa.nome";
+
+        # dias
+        if (!is_null($this->dias)) {
+            $select .= " HAVING soma = {$this->dias}";
+        }
+
+        $select .= " ORDER BY soma,tbpessoa.nome)";
 
         # Pega os dados do banco
         $retorno = $servidor->select($select, true);
@@ -510,11 +552,120 @@ class ListaFerias {
            ORDER BY tbpessoa.nome asc)
               ORDER BY tbpessoa.nome asc";
 
-            # Pega os dados do banco
-            $retorno = $servidor->select($select2, true);
-
-            return $retorno;
+            # retorna o array
+            return $servidor->select($select2, true);
         }
     }
 
+    ###########################################################
+
+    /**
+     * Método getNumServidoresSemFerias
+     * 
+     * Informa numero de servidores que não pediram férias desse setor
+     *
+     */
+    private function getNumServidoresSemFerias() {
+        # Varifica se a situação é ativo ou todos
+        if ($this->situacao == 1 OR is_null($this->situacao)) {
+
+            # Conecta com o banco de dados
+            $servidor = new Pessoal();
+
+            $select2 = "SELECT tbservidor.idFuncional,
+                            tbservidor.idServidor,
+                           tbservidor.idServidor,
+                           tbservidor.dtAdmissao,
+                           '-',
+                           tbservidor.idServidor,
+                           tbservidor.idServidor,
+                           tbpessoa.nome as nome
+                      FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tbperfil USING (idPerfil)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND YEAR(tbservidor.dtAdmissao) < {$this->anoExercicio}
+                      ";
+
+            # Verifica se tem filtro por lotação
+            if (!is_null($this->lotacao)) {  // senão verifica o da classe
+                if (is_numeric($this->lotacao)) {
+                    $select2 .= " AND (tblotacao.idlotacao = {$this->lotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select2 .= " AND (tblotacao.DIR = '{$this->lotacao}')";
+                }
+            }
+
+            # Verifica se tem filtro por perfil
+            if (is_null($this->perfil)) {
+                $select2 .= " AND tbperfil.tipo <> 'Outros'";
+            } else {
+                $select2 .= " AND idPerfil = {$this->perfil}";
+            }
+
+            $select2 .= "
+             AND tbservidor.situacao = 1
+             AND tbpessoa.nome NOT IN 
+             (SELECT tbpessoa.nome
+             FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                JOIN tbferias USING (idservidor)
+                                JOIN tbhistlot USING (idServidor)
+                                JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
+            WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                  AND anoExercicio = {$this->anoExercicio}";
+
+            if (!is_null($this->lotacao)) {
+
+                if (is_numeric($this->lotacao)) {
+                    $select2 .= " AND (tblotacao.idlotacao = {$this->lotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select2 .= " AND (tblotacao.DIR = '{$this->lotacao}')";
+                }
+            }
+
+            # Verifica se tem filtro por perfil
+            if (!is_null($this->perfil)) {
+                $select2 .= " AND idPerfil = {$this->perfil}";
+            }
+
+            $select2 .= "
+                AND tbservidor.situacao = 1
+           ORDER BY tbpessoa.nome asc)
+              ORDER BY tbpessoa.nome asc";
+
+            # retorna o array
+            return $servidor->count($select2);
+        }
+    }
+
+    ###########################################################
+
+    public function getArrayPorDia() {
+
+        /**
+         * Retorna um array simples com os totais de férias dos servidores de acordo com o filtro
+         * 
+         * @syntax $ListaFerias->showResumoPorDia();  
+         *
+         */
+        # Pega um array com os totais dos dias de férias dessa lotação nesse anoexercicio
+        $diasTotais = $this->getDiasFerias();
+        $retorno = null;
+
+        # Percorre o array e alimenta o array de retorno
+        foreach ($diasTotais as $itens) {
+            $retorno[] = $itens['soma'];
+        }
+
+        # Verifica se exite servidores que não marcou/tirou férias
+        $totalSem = $this->getNumServidoresSemFerias();
+        if ($totalSem > 0) {
+            array_push($retorno, 0);
+        }
+
+        return $retorno;
+    }
+
+    ###########################################################
 }

@@ -49,7 +49,7 @@ if ($acesso) {
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroPerfil', $parametroPerfil);
-    set_session('parametroDias', $parametroDias, "Todos");
+    set_session('parametroDias', $parametroDias);
 
     # Começa uma nova página
     $page = new Page();

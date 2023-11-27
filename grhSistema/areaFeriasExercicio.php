@@ -123,7 +123,7 @@ if ($acesso) {
     # Dias
     $result = $lista1->getArrayPorDia();
     if (!is_null($result)) {
-        array_unshift($result, ['Todos', 'Todos']);
+        array_unshift($result, 'Todos');
     }
 
     if (Verifica::acesso($idUsuario, 1)) {

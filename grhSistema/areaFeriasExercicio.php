@@ -125,6 +125,10 @@ if ($acesso) {
     if (!is_null($result)) {
         array_unshift($result, 'Todos');
     }
+    
+    if(Verifica::acesso($idUsuario, 1)){
+        echo $parametroDias;
+    }
 
     $controle = new Input('parametroDias', 'combo', 'Dias:', 1);
     $controle->set_size(30);

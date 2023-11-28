@@ -65,7 +65,7 @@ if ($acesso) {
     } elseif ($areaFerias == "fruicao") {
         $voltarLista = 'areaFeriasFruicao.php';
     } elseif ($areaFerias == "importa") {
-        $voltarLista = 'importaFerias.php';    
+        $voltarLista = 'importaFerias.php';
     } else {
         $voltarLista = 'servidorMenu.php';
     }
@@ -79,6 +79,7 @@ if ($acesso) {
                                      dtInicial,
                                      numDias,
                                      ADDDATE(dtInicial,numDias-1),
+                                     idFerias,
                                      idFerias,
                                      idFerias,
                                      idFerias
@@ -106,12 +107,11 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
 
     # Parametros da tabela
-    $objeto->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs"]);
+    $objeto->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs", "Problemas"]);
     $objeto->set_align(["center"]);
     $objeto->set_funcao([null, null, 'date_to_php', null, 'date_to_php', null]);
-    #$objeto->set_width([10, 10, 15, 10, 15, 10, 10]);
-    $objeto->set_classe([null, null, null, null, null, "pessoal", "Ferias"]);
-    $objeto->set_metodo([null, null, null, null, null, "get_feriasPeriodo", "exibeObs"]);
+    $objeto->set_classe([null, null, null, null, null, "pessoal", "Ferias", "Ferias"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_feriasPeriodo", "exibeObs", "exibeProblemas"]);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -254,7 +254,7 @@ if ($acesso) {
                 $tabela->set_titulo('Resumo');
                 $tabela->set_label(["Exercício", "Dias", "Faltam"]);
                 $tabela->set_align(["center"]);
-                $tabela->set_formatacaoCondicional(array(                    
+                $tabela->set_formatacaoCondicional(array(
                     array('coluna' => 1,
                         'valor' => '30',
                         'operador' => '<',
@@ -279,7 +279,7 @@ if ($acesso) {
             if (!empty($pendentes)) {
                 $callout = new Callout("warning");
                 $callout->abre();
-                p("Atenção:<br/> {$pendentes}", 'center','f14');
+                p("Atenção:<br/> {$pendentes}", 'center', 'f14');
                 $callout->fecha();
             }
 

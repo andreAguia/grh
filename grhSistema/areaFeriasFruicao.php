@@ -170,7 +170,7 @@ if ($acesso) {
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
             $classeFerias->exibeProcesso($parametroLotacao);
-            
+
             ########################################
             # Menu            
             tituloTable("Menu");
@@ -211,7 +211,7 @@ if ($acesso) {
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
-            
+
             # Verifica se tem filtro por perfil
             if (($parametroPerfil <> "*") AND ($parametroPerfil <> "")) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
@@ -270,14 +270,14 @@ if ($acesso) {
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
                 $select .= " AND (tbferias.status = '{$parametroStatus}')";
             }
-            
+
             # Verifica se tem filtro por perfil
             if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             $select .= " GROUP BY year(dtInicial),month(dtInicial) ORDER BY year(dtInicial),month(dtInicial)";
-            
+
             $resumo = $servidor->select($select);
 
             # Pega a soma dos campos
@@ -327,7 +327,7 @@ if ($acesso) {
             }
 
             $select .= " GROUP BY status ORDER BY status";
-            
+
             $resumo = $servidor->select($select);
 
             # Pega a soma dos campos
@@ -363,6 +363,7 @@ if ($acesso) {
                              idFerias,
                              tbferias.status,
                              tbsituacao.situacao,
+                             tbferias.idFerias,
                              tbferias.idFerias
                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -385,23 +386,23 @@ if ($acesso) {
             if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
                 $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
             }
-            
+
             # Verifica se tem filtro por perfil
             if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
             $select .= " ORDER BY tbpessoa.nome, tbferias.anoExercicio, dtInicial";
-            
+
             $result = $servidor->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano de Fruição: " . $parametroAno . " (Data Inicial)");
-            $tabela->set_label(array('Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs'));
-            $tabela->set_align(array("left"));
-            $tabela->set_funcao(array(null, null, "date_to_php", null, null, null, null));
-            $tabela->set_classe(array("pessoal", null, null, null, null, "pessoal", null, null, "Ferias"));
-            $tabela->set_metodo(array("get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs"));
+            $tabela->set_label(['Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs', 'Problemas']);
+            $tabela->set_align(["left"]);
+            $tabela->set_funcao([null, null, "date_to_php", null, null, null, null]);
+            $tabela->set_classe(["pessoal", null, null, null, null, "pessoal", null, null, "Ferias", "Ferias"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs", "exibeProblemasSimNao"]);
             $tabela->set_conteudo($result);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

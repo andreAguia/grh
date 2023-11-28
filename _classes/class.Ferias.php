@@ -99,15 +99,80 @@ class Ferias {
         $pessoal = new Pessoal();
 
         # Pega array com os dias publicados
-        $select = 'SELECT obs
+        $select = "SELECT obs
                      FROM tbferias
-                    WHERE idFerias = ' . $id;
+                    WHERE idFerias = {$id}";
 
-        $retorno = $pessoal->select($select, false);
-        if (empty($retorno[0])) {
+        $row = $pessoal->select($select, false);
+
+        # Pega a obs
+        if (empty($row["obs"])) {
             echo "---";
         } else {
-            toolTip("Obs", $retorno[0]);
+            toolTip("Obs", $row["obs"]);
+        }
+    }
+
+###########################################################
+
+    public function exibeProblemas($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idServidor,
+                          dtInicial,
+                          numDias
+                     FROM tbferias
+                    WHERE idFerias = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Exibe problema com outro afastamento
+        $verifica = new VerificaAfastamentos($row["idServidor"]);
+        $verifica->setPeriodo(date_to_php($row["dtInicial"]), addDias(date_to_php($row["dtInicial"]), $row["numDias"]));
+        $verifica->setIsento("tbferias", $id);
+
+        if ($verifica->verifica()) {
+            br();
+            echo 'Existe um(a) ' . $verifica->getAfastamento() . '<br/>(' . $verifica->getDetalhe() . ')<br/>nesse período!';
+        } else {
+            echo "---";
+        }
+    }
+
+###########################################################
+
+    public function exibeProblemasSimNao($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idServidor,
+                          dtInicial,
+                          numDias
+                     FROM tbferias
+                    WHERE idFerias = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Exibe problema com outro afastamento
+        $verifica = new VerificaAfastamentos($row["idServidor"]);
+        $verifica->setPeriodo(date_to_php($row["dtInicial"]), addDias(date_to_php($row["dtInicial"]), $row["numDias"]));
+        $verifica->setIsento("tbferias", $id);
+
+        if ($verifica->verifica()) {
+            label("Sim", "alert", null, 'Existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!');
+        } else {
+            echo "---";
         }
     }
 
@@ -436,7 +501,7 @@ class Ferias {
         }
 
         if ($this->get_diasSolicitadosFruidos($idServidor, $ano) > 0) {
-            
+
             $link = new Button("Editar", "?fase=editaServidorFerias&idServidor={$idServidor}");
             $link->set_class('button tiny');
             $link->set_id('btnEditarServidorImporta');
@@ -485,7 +550,7 @@ class Ferias {
         }
 
         if ($this->get_diasSolicitadosFruidos($idServidor, $ano) > 0) {
-            
+
             $link = new Button("Editar", "?fase=editaServidorFerias&idServidor={$idServidor}");
             $link->set_class('button tiny');
             $link->set_id('btnEditarServidorImporta');

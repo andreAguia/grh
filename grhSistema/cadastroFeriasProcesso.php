@@ -53,19 +53,21 @@ if ($acesso) {
 
     # select da lista
     $objeto->set_selectLista('SELECT lotacao,
+                                     periodo,
                                      processo,
                                      obs,
                                      idFeriasProcesso
                                 FROM tbferiasprocesso
-                            ORDER BY lotacao');
+                            ORDER BY lotacao, periodo desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT lotacao,
+                                     periodo,
                                      processo,
                                      obs
                                 FROM tbferiasprocesso
                                WHERE idFeriasProcesso = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -78,10 +80,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Lotação", "Processo", "Obs"]);
-    $objeto->set_width([20, 30, 30]);
-    $objeto->set_align(["left", "left", "left"]);
-
+    $objeto->set_label(["Lotação", "Período", "Processo", "Obs"]);
+    $objeto->set_width([20, 20, 20, 30]);
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
+    
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -95,18 +98,11 @@ if ($acesso) {
     $objeto->set_formlabelTipo(1);
 
     # Lotação
-    if (empty($id)) {
-        $result = $pessoal->select('SELECT DISTINCT DIR, DIR
-                                      FROM tblotacao
-                                     WHERE ativo
-                                       AND DIR NOT IN (SELECT lotacao FROM tbferiasprocesso)
-                                  ORDER BY DIR');
-    } else {
-        $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+    $result = $pessoal->select('SELECT DISTINCT DIR, DIR
                                       FROM tblotacao
                                      WHERE ativo
                                   ORDER BY DIR');
-    }
+    
     array_unshift($result, array(null, null));
 
     # Campos para o formulario
@@ -120,14 +116,21 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'size' => 50),
-        array('linha' => 1,
+        array('linha' => 2,
+            'col' => 4,
+            'nome' => 'periodo',
+            'label' => 'Período:',
+            'tipo' => 'texto',
+            'required' => true,
+            'size' => 100),
+        array('linha' => 3,
             'col' => 4,
             'nome' => 'processo',
             'label' => 'N° do Processo:',
             'tipo' => 'texto',
             'required' => true,
             'size' => 50),
-        array('linha' => 2,
+        array('linha' => 4,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

@@ -178,6 +178,37 @@ class Ferias {
 
 ###########################################################
 
+    public function temProblemas($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idServidor,
+                          dtInicial,
+                          numDias
+                     FROM tbferias
+                    WHERE idFerias = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Exibe problema com outro afastamento
+        $verifica = new VerificaAfastamentos($row["idServidor"]);
+        $verifica->setPeriodo(date_to_php($row["dtInicial"]), addDias(date_to_php($row["dtInicial"]), $row["numDias"]));
+        $verifica->setIsento("tbferias", $id);
+
+        if ($verifica->verifica()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+###########################################################
+
     public function getProcesso($lotacao) {
 
         /**

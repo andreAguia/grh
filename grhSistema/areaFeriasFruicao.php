@@ -42,12 +42,14 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroStatus = post('parametroStatus', get_session('parametroStatus'));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
+    $parametroProblemas = post('parametroProblemas', get_session('parametroProblemas'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroStatus', $parametroStatus);
     set_session('parametroPerfil', $parametroPerfil);
+    set_session('parametroProblemas', $parametroProblemas);
 
     # Começa uma nova página
     $page = new Page();
@@ -108,7 +110,7 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(6);
+    $controle->set_col(4);
     $form->add_item($controle);
 
     # Perfil
@@ -133,6 +135,17 @@ if ($acesso) {
     $controle->set_title('Filtra por Status');
     $controle->set_array(["Todos", "solicitada", "fruída"]);
     $controle->set_valor($parametroStatus);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(2);
+    $form->add_item($controle);
+
+    # Problemas    
+    $controle = new Input('parametroProblemas', 'combo', 'Problemas:', 1);
+    $controle->set_size(10);
+    $controle->set_title('Filtra por Status');
+    $controle->set_array(["Todos", "Sim", "Não"]);
+    $controle->set_valor($parametroProblemas);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
     $controle->set_col(2);
@@ -403,14 +416,40 @@ if ($acesso) {
             $tabela->set_funcao([null, null, "date_to_php", null, null, null, null]);
             $tabela->set_classe(["pessoal", null, null, null, null, "pessoal", null, null, "Ferias", "Ferias"]);
             $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs", "exibeProblemasSimNao"]);
-            $tabela->set_conteudo($result);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
-
             $tabela->set_editar('?fase=editaServidorFerias&id=');
             $tabela->set_nomeColunaEditar("Acessar");
             $tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idServidor');
+
+            # Retira o elementos do array que são diferentes de Sim
+            if ($parametroProblemas == "Sim") {
+                $ferias = new Ferias();
+                $contador = 0;
+
+                foreach ($result as $item) {
+                    if (!$ferias->temProblemas($item["idFerias"])) {
+                        unset($result[$contador]);
+                    }
+                    $contador++;
+                }
+            }
+            
+            # Retira o elementos do array que são diferentes de Não
+            if ($parametroProblemas == "Não") {
+                $ferias = new Ferias();
+                $contador = 0;
+
+                foreach ($result as $item) {
+                    if ($ferias->temProblemas($item["idFerias"])) {
+                        unset($result[$contador]);
+                    }
+                    $contador++;
+                }
+            }
+            
+            $tabela->set_conteudo($result);
             $tabela->show();
 
             $grid2->fechaColuna();

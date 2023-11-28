@@ -209,7 +209,7 @@ class Ferias {
 
 ###########################################################
 
-    public function getProcesso($lotacao) {
+    public function getProcesso($lotacao = null, $ano = null) {
 
         /**
          * Retorna o número do processo de férias de uma lotação
@@ -228,22 +228,82 @@ class Ferias {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
+        # Variável de retorno
+        $retorno = null;
+
         # Pega array com os dias publicados
-        $select = "SELECT processo
+        $select = "SELECT processo,
+                          periodo
                      FROM tbferiasprocesso
                     WHERE lotacao = '{$lotacao}'";
 
-        $retorno = $pessoal->select($select, false);
-        if (empty($retorno[0])) {
+        $row = $pessoal->select($select);
+
+        # Percorre procurando o ano
+        foreach ($row as $item) {
+            if (strpos($item["periodo"], $ano) !== false) {
+                $retorno = $item["processo"];
+            }
+        }
+
+
+        if (empty($retorno)) {
             return null;
         } else {
-            return $retorno[0];
+            return $retorno;
         }
     }
 
 ###########################################################
 
-    public function exibeProcesso($lotacao) {
+    public function getPeriodo($lotacao = null, $ano = null) {
+
+        /**
+         * Retorna o número do processo de férias de uma lotação
+         */
+        # verifica se foi informado a lotação
+        if (empty($lotacao)) {
+            return null;
+        }
+
+        # Exibe o processo
+        if (is_numeric($lotacao)) {
+            $pessoal = new Pessoal();
+            $lotacao = $pessoal->get_lotacaoDiretoria($lotacao);
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Variável de retorno
+        $retorno = null;
+
+        # Pega array com os dias publicados
+        $select = "SELECT processo,
+                          periodo
+                     FROM tbferiasprocesso
+                    WHERE lotacao = '{$lotacao}'";
+
+        $row = $pessoal->select($select);
+
+        # Percorre procurando o ano
+        foreach ($row as $item) {
+            if (strpos($item["periodo"], $ano) !== false) {
+                $retorno = $item["periodo"];
+            }
+        }
+
+
+        if (empty($retorno)) {
+            return null;
+        } else {
+            return "({$retorno})";
+        }
+    }
+
+###########################################################
+
+    public function exibeProcesso($lotacao = null, $ano = null) {
 
         # verifica se foi informado a lotação
         if (empty($lotacao)) {
@@ -253,7 +313,8 @@ class Ferias {
         titulotable("Processo de Férias");
         $painel = new Callout();
         $painel->abre();
-        p(trataNulo($this->getProcesso($lotacao)), "f16", "center");
+        p(trataNulo($this->getProcesso($lotacao, $ano)), "pferiasProcesso");
+        p(trataNulo($this->getPeriodo($lotacao, $ano)), "pferiasPeriodo");
         $painel->fecha();
     }
 

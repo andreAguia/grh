@@ -223,7 +223,7 @@ if ($acesso) {
             ########################################
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
-            $classeFerias->exibeProcesso($parametroLotacao);
+            $classeFerias->exibeProcesso($parametroLotacao, $parametroAno);
 
             ########################################
             # Menu

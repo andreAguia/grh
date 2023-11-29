@@ -121,7 +121,6 @@ if ($acesso) {
             'nome' => 'periodo',
             'label' => 'Período:',
             'tipo' => 'texto',
-            'required' => true,
             'size' => 100),
         array('linha' => 3,
             'col' => 4,

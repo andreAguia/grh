@@ -73,7 +73,7 @@ if ($acesso) {
 
     # Limita a página
     $grid = new Grid();
-    $grid->abreColuna(6);
+    $grid->abreColuna(7);
 
     /*
      * Dados Principais
@@ -91,14 +91,14 @@ if ($acesso) {
     $nome = $pessoal->get_nome($idServidorPesquisado);
     
     br();
-    echo "<table id='etiqueta' border='2px'>";
+    echo "<table width='100%' id='etiqueta' border='2px'>";
 
     for ($i = 1; $i <= $numEtiquetas; $i++) {
 
         if ($conteudo == "Matrícula e Nome") {
 
             # Define a fonte a partir do número de letras no nome do servidor
-            if (strlen($nome) > 30) {
+            if (strlen($nome) > 25) {
                 $matriculacss = "pmatriculaEtiqueta2";
                 $nomecss = "pnomeEtiqueta2";
             } else {

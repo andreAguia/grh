@@ -314,7 +314,9 @@ class Ferias {
         $painel = new Callout();
         $painel->abre();
         p(trataNulo($this->getProcesso($lotacao, $ano)), "pferiasProcesso");
-        p(trataNulo($this->getPeriodo($lotacao, $ano)), "pferiasPeriodo");
+        if (!is_null($this->getProcesso($lotacao, $ano))) {
+            p(trataNulo($this->getPeriodo($lotacao, $ano)), "pferiasPeriodo");
+        }
         $painel->fecha();
     }
 

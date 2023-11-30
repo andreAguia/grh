@@ -649,7 +649,7 @@ class MenuServidor {
             $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         }
         
-        #$menu->add_item('link','Declaração para o INSS','#');
+        $menu->add_item('linkWindow','Etiqueta para a Pasta Funcional',"../grhRelatorios/etiquetaServidor.php");
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
         #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
         $menu->show();

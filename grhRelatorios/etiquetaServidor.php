@@ -90,6 +90,17 @@ if ($acesso) {
     $matricula = dv($result["matricula"]);
     $nome = $pessoal->get_nome($idServidorPesquisado);
     
+    # Grava no log a atividade
+    $atividade = "Visualizou a etiqueta da pasta funcional de {$nome}";
+    if ($conteudo == "Matrícula e Nome") {
+        $atividade .= " - (Matrícula e Nome)";
+    }else{
+        $atividade .= " - (Matrícula)";
+    }
+    $Objetolog = new Intra();
+    $data = date("Y-m-d H:i:s");
+    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
+    
     br();
     echo "<table width='100%' id='etiqueta' border='2px'>";
 

@@ -55,7 +55,7 @@ if ($acesso) {
     set_session('parametroInstituicao', $parametroInstituicao);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroPerfil', $parametroPerfil);
-    set_session('parametroSituacao', $parametroSituacao);
+    #set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroAno', $parametroAno);
 
     # Começa uma nova página

@@ -146,7 +146,6 @@ if ($acesso) {
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-    $objeto->set_arrayPesquisa($result);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

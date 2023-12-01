@@ -84,7 +84,7 @@ if ($acesso) {
     $objeto->set_width([20, 20, 20, 30]);
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
-    
+
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -96,13 +96,20 @@ if ($acesso) {
 
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
+    
+    # Lista de períodos
+    $listaPeriodo = $pessoal->select('SELECT DISTINCT periodo
+                                  FROM tbferiasprocesso
+                                  ORDER BY periodo');
+
+    array_unshift($listaPeriodo, null);
 
     # Lotação
     $result = $pessoal->select('SELECT DISTINCT DIR, DIR
                                       FROM tblotacao
                                      WHERE ativo
                                   ORDER BY DIR');
-    
+
     array_unshift($result, array(null, null));
 
     # Campos para o formulario
@@ -117,6 +124,7 @@ if ($acesso) {
             'autofocus' => true,
             'size' => 50),
         array('linha' => 2,
+            'datalist' => $listaPeriodo,
             'col' => 4,
             'nome' => 'periodo',
             'label' => 'Período:',

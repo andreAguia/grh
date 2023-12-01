@@ -182,7 +182,7 @@ if ($acesso) {
 
         # Parametros da tabela
         $objeto->set_label(["Inicio", "Dias", "Término", "Processo", "Publicação", "Ver", "Obs"]);
-        $objeto->set_width([15, 8, 15, 20, 15, 8, 8]);
+        $objeto->set_width([15, 5, 15, 15, 15, 5, 20]);
         $objeto->set_align([null, null, null, null, null, null, "left"]);
         $objeto->set_funcao(['date_to_php', null, 'date_to_php']);
         $objeto->set_classe([null, null, null, null, "Licenca", "Suspensao"]);

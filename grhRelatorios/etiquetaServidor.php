@@ -73,7 +73,7 @@ if ($acesso) {
 
     # Limita a página
     $grid = new Grid();
-    $grid->abreColuna(7);
+    $grid->abreColuna(6);
 
     /*
      * Dados Principais

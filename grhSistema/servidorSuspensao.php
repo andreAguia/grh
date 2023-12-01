@@ -150,6 +150,7 @@ if ($acesso) {
                                          processo,
                                          idLicenca,
                                          idLicenca,
+                                         obs,
                                          idLicenca
                                     FROM tblicenca
                                    WHERE idServidor = {$idServidorPesquisado}
@@ -182,10 +183,10 @@ if ($acesso) {
         # Parametros da tabela
         $objeto->set_label(["Inicio", "Dias", "Término", "Processo", "Publicação", "Ver", "Obs"]);
         $objeto->set_width([15, 8, 15, 20, 15, 8, 8]);
-        #$objeto->set_align([null, "left"]);
+        $objeto->set_align([null, null, null, null, null, null, "left"]);
         $objeto->set_funcao(['date_to_php', null, 'date_to_php']);
-        $objeto->set_classe([null, null, null, null, "Licenca", "Suspensao", "Licenca"]);
-        $objeto->set_metodo([null, null, null, null, "exibePublicacao", "exibePublicacaoPdf", "exibeObs"]);
+        $objeto->set_classe([null, null, null, null, "Licenca", "Suspensao"]);
+        $objeto->set_metodo([null, null, null, null, "exibePublicacao", "exibePublicacaoPdf"]);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');

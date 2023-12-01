@@ -112,8 +112,10 @@ if ($acesso) {
     $result = $parentesco->select('SELECT idTipoPenalidade, 
                                           penalidade
                                      FROM tbtipopenalidade
+                                    WHERE idTipoPenalidade <> 3   
                                  ORDER BY penalidade');
-    array_push($result, array(null, null)); # Adiciona o valor de nulo
+    array_push($result, array(null, null));
+    
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'data',

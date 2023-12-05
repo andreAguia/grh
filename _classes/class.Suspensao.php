@@ -63,12 +63,25 @@ class suspensao {
         } else {
             # Pega os dados
             $dados = $this->get_dados($id);
+            
+            # trata os daados
+            if (empty($dados["dtPublicacao"])) {
+                $dtPublicacao = null;
+                $pagina = null;
+            } else {
+                $dtPublicacao = "DO: " . date_to_php($dados["dtPublicacao"]);
+                if (empty($dados["pgPublicacao"])) {
+                    $pagina = null;
+                } else {
+                    $pagina = "Pág.: {$dados["pgPublicacao"]}";
+                }
+            }
 
             # Exibe os dados
             pLista(
                     $dados["processo"],
-                    "DO: " . date_to_php($dados["dtPublicacao"]),
-                    "Pág.: {$dados["pgPublicacao"]}"
+                    $dtPublicacao,
+                    $pagina
             );
         }
     }

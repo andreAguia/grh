@@ -78,7 +78,7 @@ if ($acesso) {
             $menu1->show();
 
             # Pega os dados
-            $select = "(SELECT tbservidor.idfuncional,
+            $select = "(SELECT tbservidor.idServidor,
                                tbservidor.idServidor,
                                data,
                               penalidade,
@@ -93,7 +93,7 @@ if ($acesso) {
                                            JOIN tbpessoa USING (idPessoa)
                        WHERE situacao = 1)
                        UNION
-                       (SELECT tbservidor.idfuncional,
+                       (SELECT tbservidor.idServidor,
                                tbservidor.idServidor,
                                dtInicial,
                                'suspensão',
@@ -114,12 +114,12 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Area de Penalidades");
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Data", "Tipo", "Referente a Faltas?", "Processo / Publicação", "Descrição", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matricula", "Servidor", "Data", "Tipo", "Referente a Faltas?", "Processo / Publicação", "Descrição", "Editar"]);
             $tabela->set_width([10, 15, 10, 10, 10, 15, 25, 5]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "center", "center", "center", "center", "left"]);
-            $tabela->set_classe([null, "pessoal", null, null, null, "Penalidade", null, "Penalidade"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, null, null, "exibeProcessoPublicacaoGeral", null, "editarGeral"]);
+            $tabela->set_classe(["pessoal", "pessoal", null, null, null, "Penalidade", null, "Penalidade"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, null, null, "exibeProcessoPublicacaoGeral", null, "editarGeral"]);
             $tabela->set_funcao([null, null, "date_to_php"]);
             $tabela->set_rowspan([0, 1]);
             $tabela->set_grupoCorColuna(1);

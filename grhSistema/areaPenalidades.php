@@ -78,18 +78,35 @@ if ($acesso) {
             $menu1->show();
 
             # Pega os dados
-            $select = "SELECT tbservidor.idfuncional,
-                              tbservidor.idServidor,
-                              data,
+            $select = "(SELECT tbservidor.idfuncional,
+                               tbservidor.idServidor,
+                               data,
                               penalidade,
                               falta,
+                              concat('p',idPenalidade),
+                              descricao,
+                               concat('p',tbservidor.idServidor),
                               idPenalidade,
-                              descricao,                           
-                              idPenalidade
+                              tbpessoa.nome
                          FROM tbpenalidade JOIN tbtipopenalidade USING (idTipoPenalidade)
                                            JOIN tbservidor USING (idServidor)
                                            JOIN tbpessoa USING (idPessoa)
-                      ORDER BY tbpessoa.nome, tbpenalidade.data";
+                       WHERE situacao = 1)
+                       UNION
+                       (SELECT tbservidor.idfuncional,
+                               tbservidor.idServidor,
+                               dtInicial,
+                               'suspensão',
+                               '-',
+                               concat('s',idLicenca),
+                               tblicenca.obs,
+                               concat('s',tbservidor.idServidor),
+                               idLicenca,
+                               tbpessoa.nome
+                          FROM tblicenca JOIN tbservidor USING (idServidor)
+                                         JOIN tbpessoa USING (idPessoa)
+                         WHERE idTpLicenca = 26 AND situacao = 1)                
+                      ORDER BY 10, 3";
             #echo $select;
 
             $result = $pessoal->select($select);
@@ -97,18 +114,18 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Area de Penalidades");
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional", "Servidor", "Data", "Tipo", "Referente a Faltas?", "Processo / Publicação", "Descrição"]);
-            $tabela->set_width([10, 15, 10, 10, 10, 15, 35]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Data", "Tipo", "Referente a Faltas?", "Processo / Publicação", "Descrição", "Editar"]);
+            $tabela->set_width([10, 15, 10, 10, 10, 15, 25, 5]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "center", "center", "center", "center", "left"]);
-            $tabela->set_classe([null, "pessoal", null, null, null, "Penalidade"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, null, null, "exibeProcessoPublicacao"]);
+            $tabela->set_classe([null, "pessoal", null, null, null, "Penalidade", null, "Penalidade"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", null, null, null, "exibeProcessoPublicacaoGeral", null, "editarGeral"]);
             $tabela->set_funcao([null, null, "date_to_php"]);
             $tabela->set_rowspan([0, 1]);
             $tabela->set_grupoCorColuna(1);
 
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');
+//            $tabela->set_idCampo('idServidor');
+//            $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
 
             $grid->fechaColuna();
@@ -129,6 +146,22 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorPenalidades.php');
+            break;
+
+        ################################################################
+
+        case "editaServidorSuspensao" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaPenalidades.php');
+
+            # Carrega a página específica
+            loadPage('servidorSuspensao.php');
             break;
 
         ################################################################

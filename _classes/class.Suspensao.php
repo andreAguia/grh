@@ -7,7 +7,25 @@ class suspensao {
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-##############################################################
+###########################################################
+
+    function get_dados($id) {
+
+        /**
+         * Fornece os todos os dados de um $id
+         */
+        # Pega os dados
+        $select = "SELECT *
+                   FROM tblicenca
+                  WHERE idLicenca = {$id}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        return $dados;
+    }
+
+    ###########################################################
 
     public function exibePublicacaoPdf($idLicenca = null) {
         # Verifica se o id foi informado
@@ -33,4 +51,27 @@ class suspensao {
     }
 
     ###########################################################
+
+    public function exibeProcessoPublicacao($id) {
+
+        /**
+         * Exibe a data de publicação e a página
+         */
+        # Verifica se o $id tem valor
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
+
+            # Exibe os dados
+            pLista(
+                    $dados["processo"],
+                    "DO: " . date_to_php($dados["dtPublicacao"]),
+                    "Pág.: {$dados["pgPublicacao"]}"
+            );
+        }
+    }
+
+###########################################################
 }

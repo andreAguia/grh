@@ -34,6 +34,13 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "upload") {
+        $page->set_ready('$(document).ready(function(){
+                                $("form input").change(function(){
+                                    $("form p").text(this.files.length + " arquivo(s) selecionado");
+                                });
+                            });');
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -58,8 +65,8 @@ if ($acesso) {
                                      penalidade,
                                      falta,
                                      processo,
-                                     dtPublicacao,
-                                     pgPublicacao,
+                                     idPenalidade,
+                                     idPenalidade,
                                      descricao,                           
                                      idPenalidade
                                 FROM tbpenalidade JOIN tbtipopenalidade USING (idTipoPenalidade)
@@ -90,10 +97,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data", "Tipo", "Referente a Faltas", "Processo", "Publicação", "Pag", "Descrição"]);
+    $objeto->set_label(["Data", "Tipo", "Referente a Faltas", "Processo", "Publicação", "Ver", "Descrição"]);
     $objeto->set_width([10, 10, 10, 15, 15, 5, 25]);
     $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
-    $objeto->set_funcao(["date_to_php", null, null, null, "date_to_php"]);
+    $objeto->set_funcao(["date_to_php"]);
+    
+    $objeto->set_classe([null, null, null, null, "Penalidade", "Penalidade"]);
+    $objeto->set_metodo([null, null, null, null, "exibePublicacao", "exibePDF"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -115,7 +125,7 @@ if ($acesso) {
                                     WHERE idTipoPenalidade <> 3   
                                  ORDER BY penalidade');
     array_push($result, array(null, null));
-    
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'data',
@@ -185,6 +195,24 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+
+    # Dados da rotina de Upload
+    $pasta = PASTA_PENALIDADES;
+    $nome = "Penalidades";
+    $tabela = "tbpenalidade";
+    $extensoes = ["pdf"];
+
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Botão de Upload
+        $botao = new Button("Upload {$nome}");
+        $botao->set_url("servidorPenalidadesUpload.php?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload do {$nome}");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
 
     ################################################################
 

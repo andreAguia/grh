@@ -1,13 +1,13 @@
-<?php
+ <?php
 
 /**
  * Histórico de Formação Escolar do Servidor
  *  
  * By Alat
  */
-
 # Inicia as variáveis que receberão as sessions
 $idUsuario = null;
+$idServidorPesquisado = null;
 
 # Configuração
 include ("_config.php");
@@ -16,10 +16,11 @@ include ("_config.php");
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
+
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica a fase do programa
     $fase = get('fase', 'upload');
 
@@ -36,11 +37,11 @@ if ($acesso) {
                             });');
     }
     $page->iniciaPagina();
-    
+
     # Dados da rotina de Upload
-    $pasta = PASTA_CONCURSO;
-    $nome = "Publicacao";
-    $tabela = "tbconcursopublicacao";
+    $pasta = PASTA_PENALIDADES;
+    $nome = "Penalidades";
+    $tabela = "tbpenalidade";
     $extensoes = ["pdf"];
 
     ################################################################
@@ -170,7 +171,7 @@ if ($acesso) {
                 $atividade = "Excluiu o arquivo do {$nome}";
                 $Objetolog = new Intra();
                 $data = date("Y-m-d H:i:s");
-                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3);
+                $Objetolog->registraLog($idUsuario, $data, $atividade, $tabela, $id, 3, $idServidorPesquisado);
 
                 # Fecha a janela
                 echo '<script type="text/javascript" language="javascript">window.close();</script>';

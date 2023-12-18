@@ -99,6 +99,12 @@ if ($acesso) {
                 $botaoInserir->set_title("Incluir um Servidor");
                 $menu1->add_link($botaoInserir, "right");
             }
+            # Calendário
+            $botaoCalendario = new Link("Calendário", "calendario.php");
+            $botaoCalendario->set_class('button');
+            $botaoCalendario->set_title('Exibe o calendário');
+            $botaoCalendario->set_target("_calenmdario");
+            $menu1->add_link($botaoCalendario, "right");
 
             $linkBotao3 = new Link("Procedimentos", "servidorReadaptacao.php?fase=procedimentos");
             $linkBotao3->set_class('button');

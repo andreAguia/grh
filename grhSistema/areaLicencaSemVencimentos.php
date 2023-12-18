@@ -87,6 +87,13 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
+            # Calendário
+            $botaoCalendario = new Link("Calendário", "calendario.php");
+            $botaoCalendario->set_class('button');
+            $botaoCalendario->set_title('Exibe o calendário');
+            $botaoCalendario->set_target("_calenmdario");
+            $menu1->add_link($botaoCalendario, "right");
+
             # Status
             $botao2 = new Button("Status");
             $botao2->set_title("Exibe as regras de mudança automática do status");
@@ -156,7 +163,7 @@ if ($acesso) {
         # Relatório
         case "relatorio" :
             $lsv = new LicencaSemVencimentos();
-            
+
             if (empty($parametroNome)) {
                 $lsv->exibeRelatorio();
             } else {

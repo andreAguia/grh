@@ -71,6 +71,13 @@ if ($acesso) {
         $botaoVoltar->set_accessKey('V');
         $menu1->add_link($botaoVoltar, "left");
 
+        # Calendário
+        $botaoCalendario = new Link("Calendário", "calendario.php");
+        $botaoCalendario->set_class('button');
+        $botaoCalendario->set_title('Exibe o calendário');
+        $botaoCalendario->set_target("_calenmdario");
+        $menu1->add_link($botaoCalendario, "right");
+
         # Procedimentos
         if (Verifica::acesso($idUsuario, 1)) {
             $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
@@ -209,7 +216,7 @@ if ($acesso) {
 
             # Continua
             $select .= ") AND idPerfil = 1";
-            
+
             $subtitulo = null;
             $titulo = null;
 
@@ -302,7 +309,7 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_titulo($titulo);
-            if(!empty($subtitulo)){
+            if (!empty($subtitulo)) {
                 $tabela->set_subtitulo($subtitulo);
             }
             $tabela->set_conteudo($resumo);
@@ -381,7 +388,7 @@ if ($acesso) {
         ############################################################################
 
         case "procedimentos" :
-            
+
             br();
             $procedimento = new Procedimento();
             $procedimento->exibeProcedimentoSubCategoria("Licença Médica");

@@ -405,13 +405,19 @@ if ($acesso) {
     $botao2->set_title("Exibe as regras de mudança automática do status");
     $botao2->set_onClick("abreFechaDivId('divRegrasLsv');");
 
+    # Calendário
+    $botaoCalendario = new Link("Calendário", "calendario.php");
+    $botaoCalendario->set_class('button');
+    $botaoCalendario->set_title('Exibe o calendário');
+    $botaoCalendario->set_target("_calenmdario");
+
     # Procedimentos
     $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
     $botaoProcedimentos->set_class('button');
     $botaoProcedimentos->set_title('Exibe os procedimentos');
     $botaoProcedimentos->set_target("_blank4");
 
-    $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos]);
+    $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos, $botaoCalendario]);
     $objeto->set_botaoEditarExtra([$botao2, $botaoProcedimentos]);
 
     # Log

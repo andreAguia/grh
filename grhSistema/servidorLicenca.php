@@ -365,7 +365,7 @@ if ($acesso) {
         if (!empty($parametro)) {
             $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro;
         }
-        
+
         /*
          * suspensão
          */
@@ -384,12 +384,12 @@ if ($acesso) {
                                 FROM tblicenca LEFT JOIN tbtipolicenca ON tblicenca.idTpLicenca = tbtipolicenca.idTpLicenca
                                WHERE tblicenca.idTpLicenca = 26
                                  AND idServidor=' . $idServidorPesquisado;
-        
+
         if (!empty($parametro)) {
             $selectLicença .= ' AND tbtipolicenca.idTpLicenca = ' . $parametro;
         }
-        
-        
+
+
         /*
          * Licença prêmio
          */
@@ -406,15 +406,15 @@ if ($acesso) {
                             CONCAT("tblicencapremio","&",tblicencapremio.idServidor),                                       "-"
                        FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                       WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado;
-        
+
         if (!empty($parametro)) {
             $selectLicença .= ' AND ' . $parametro . ' = 6';
         }
-        
+
         /*
          * Licença sem vencimentos
          */
-         $selectLicença .= ') UNION (
+        $selectLicença .= ') UNION (
                                SELECT YEAR(tblicencasemvencimentos.dtInicial),
                                        tblicencasemvencimentos.idTpLicenca,
                                        "",
@@ -428,13 +428,13 @@ if ($acesso) {
                                        "-"
                                   FROM tblicencasemvencimentos LEFT JOIN tbtipolicenca USING (idTpLicenca)
                                  WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado;
-         
+
         if (!empty($parametro)) {
             $selectLicença .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $parametro;
         }
-        
+
         $selectLicença .= ' ) ORDER BY 5 desc';
-         
+
         $objeto->set_selectLista($selectLicença);
 
         # select do edita
@@ -619,6 +619,12 @@ if ($acesso) {
         $botaoPremio->set_url('servidorLicencaPremio.php');
         $botaoPremio->set_accessKey('L');
 
+        # Calendário
+        $botaoCalendario = new Link("Calendário", "calendario.php");
+        $botaoCalendario->set_class('button');
+        $botaoCalendario->set_title('Exibe o calendário');
+        $botaoCalendario->set_target("_calenmdario");
+
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
@@ -626,7 +632,7 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicenca.php?parametro=" . $parametro);
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra([$botaoRel]);
+        $objeto->set_botaoListarExtra([$botaoRel,$botaoCalendario]);
 
         # Dados da rotina de Upload
         $pasta = PASTA_BIM;

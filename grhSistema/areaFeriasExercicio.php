@@ -87,6 +87,13 @@ if ($acesso) {
     $botaoProcesso->set_class('button');
     $botaoProcesso->set_title('Acessa o controle dos processos de férias');
     $menu1->add_link($botaoProcesso, "right");
+    
+    # Calendário
+    $botaoCalendario = new Link("Calendário", "calendario.php");
+    $botaoCalendario->set_class('button');
+    $botaoCalendario->set_title('Exibe o calendário');
+    $botaoCalendario->set_target("_calenmdario");
+    $menu1->add_link($botaoCalendario, "right");
 
     # Importa fèrias do SigRH
     $botaoProcesso = new Link("Importa do SigRH", "importaFerias.php");

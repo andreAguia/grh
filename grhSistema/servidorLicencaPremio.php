@@ -298,6 +298,12 @@ if ($acesso) {
         $botaoAfastPremio->set_title("Verifica os afastamentos que interferem no período aquisitido da licença prêmio deste servidor");
         $botaoAfastPremio->set_target("_blank");
 
+        # Calendário
+        $botaoCalendario = new Link("Calendário", "calendario.php");
+        $botaoCalendario->set_class('button');
+        $botaoCalendario->set_title('Exibe o calendário');
+        $botaoCalendario->set_target("_calenmdario");
+
         # Procedimentos
         $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
         $botaoProcedimentos->set_class('button');
@@ -315,11 +321,11 @@ if ($acesso) {
         if (Verifica::acesso($idUsuario, [1, 2])) {
             $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
-            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos]);
+            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoCalendario]);
         }
 
         if (Verifica::acesso($idUsuario, 12)) {
-            $objeto->set_botaoListarExtra([$botaoRel, $botaoAfastPremio, $botaoAfast]);
+            $objeto->set_botaoListarExtra([$botaoRel, $botaoAfastPremio, $botaoAfast, $botaoCalendario]);
         }
 
 

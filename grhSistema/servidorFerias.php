@@ -209,6 +209,13 @@ if ($acesso) {
             $linkVoltar->set_class('button');
             $menu1->add_link($linkVoltar, "left");
 
+            # Calendário
+            $botaoCalendario = new Link("Calendário", "calendario.php");
+            $botaoCalendario->set_class('button');
+            $botaoCalendario->set_title('Exibe o calendário');
+            $botaoCalendario->set_target("_calenmdario");
+            $menu1->add_link($botaoCalendario, "right");
+
             # Relatório
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

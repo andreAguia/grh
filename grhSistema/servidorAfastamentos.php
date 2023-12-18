@@ -53,6 +53,13 @@ if ($acesso) {
         $linkBotaoVoltar->set_title('Volta para a página anterior');
         $linkBotaoVoltar->set_accessKey('V');
         $menu->add_link($linkBotaoVoltar, "left");
+
+        # Calendário
+        $botaoCalendario = new Link("Calendário", "calendario.php");
+        $botaoCalendario->set_class('button');
+        $botaoCalendario->set_title('Exibe o calendário');
+        $botaoCalendario->set_target("_calenmdario");
+        $menu->add_link($botaoCalendario, "right");
         $menu->show();
     } else {
         br();

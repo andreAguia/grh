@@ -70,6 +70,13 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
+    
+    # Calendário
+    $botaoCalendario = new Link("Calendário", "calendario.php");
+    $botaoCalendario->set_class('button');
+    $botaoCalendario->set_title('Exibe o calendário');
+    $botaoCalendario->set_target("_calenmdario");
+    $menu1->add_link($botaoCalendario, "right");
     $menu1->show();
 
     # Título

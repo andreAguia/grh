@@ -92,6 +92,13 @@ if ($acesso) {
                 $menu1->add_link($botaoInserir, "right");
             }
 
+            # Calendário
+            $botaoCalendario = new Link("Calendário", "calendario.php");
+            $botaoCalendario->set_class('button');
+            $botaoCalendario->set_title('Exibe o calendário');
+            $botaoCalendario->set_target("_calenmdario");
+            $menu1->add_link($botaoCalendario, "right");
+
             # Procedimentos
             $linkBotao3 = new Link("Procedimentos", "servidorReducao.php?fase=procedimentos");
             $linkBotao3->set_class('button');

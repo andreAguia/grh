@@ -77,9 +77,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Campus", "Obs"));
-    $objeto->set_width(array(5, 40, 45));
-    $objeto->set_align(array("center", "center", "left"));
+    $objeto->set_label(["Id", "Campus", "Obs"]);
+    $objeto->set_width([5, 25, 60]);
+    $objeto->set_align(["center", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

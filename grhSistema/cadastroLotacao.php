@@ -236,7 +236,6 @@ if ($acesso) {
             'label' => 'E-mail:',
             'title' => 'E-mail oficiaL da lotação',
             'tipo' => 'texto',
-            'required' => true,
             'size' => 100),
         array('linha' => 2,
             'col' => 2,

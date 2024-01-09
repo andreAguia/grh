@@ -69,7 +69,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento"){
+    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento") {
         AreaServidor::cabecalho();
     }
 
@@ -88,10 +88,10 @@ if ($acesso) {
     $objeto->set_voltarLista($voltar);
 
     # select da lista
-    $selectFormacao = "SELECT escolaridade,
-                              habilitacao,
+    $selectFormacao = "SELECT anoTerm,
                               instEnsino,
-                              anoTerm,
+                              escolaridade,
+                              habilitacao,                              
                               horas,
                               idFormacao,
                               idFormacao,
@@ -104,7 +104,7 @@ if ($acesso) {
                               OR habilitacao LIKE '%{$parametro}%'
                               OR instEnsino LIKE '%{$parametro}%'
                               OR anoTerm LIKE '%{$parametro}%'
-                              OR horas LIKE '%{$parametro}%')";    
+                              OR horas LIKE '%{$parametro}%')";
     }
 
     $selectFormacao .= " ORDER BY anoTerm desc";
@@ -134,14 +134,17 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nível", "Curso", "Instituição", "Ano de Término", "Horas", "Ver"]);
-    $objeto->set_width([10, 35, 25, 10, 5, 5]);
-    $objeto->set_align(["center", "left", "left"]);
+    $objeto->set_label(["Ano de Término", "Instituição", "Nível", "Curso", "Horas", "Ver"]);
+    $objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
+    $objeto->set_align(["center", "left", "center", "left"]);
 
     $objeto->set_funcao([null, null, null, null, "trataNulo"]);
 
     $objeto->set_classe([null, null, null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, null, null, null, "exibeCertificado"]);
+
+    $objeto->set_rowspan(0);
+    $objeto->set_grupoCorColuna(0);
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

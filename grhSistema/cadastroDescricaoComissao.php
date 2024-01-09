@@ -139,7 +139,7 @@ if ($acesso) {
             'autofocus' => true,
             'array' => $comissao,
             'size' => 20,
-            'col' => 8,
+            'col' => 4,
             'title' => 'Tipo dp Cargo em Comissão',
             'linha' => 1),
         array('linha' => 1,

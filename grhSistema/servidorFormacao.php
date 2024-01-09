@@ -135,7 +135,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Ano de Término", "Instituição", "Nível", "Curso", "Horas", "Ver"]);
-    $objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
+    #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
     $objeto->set_align(["center", "left", "center", "left"]);
 
     $objeto->set_funcao([null, null, null, null, "trataNulo"]);

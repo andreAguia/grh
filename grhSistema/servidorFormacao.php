@@ -89,9 +89,9 @@ if ($acesso) {
 
     # select da lista
     $selectFormacao = "SELECT anoTerm,
-                              instEnsino,
                               escolaridade,
                               habilitacao,                              
+                              instEnsino,
                               horas,
                               idFormacao,
                               idFormacao,
@@ -134,9 +134,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano de Término", "Instituição", "Nível", "Curso", "Horas", "Ver"]);
+    $objeto->set_label(["Ano de Término", "Nível", "Curso", "Instituição", "Horas", "Ver"]);
     #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
-    $objeto->set_align(["center", "left", "center", "left"]);
+    $objeto->set_align(["center", "center", "left", "left"]);
 
     $objeto->set_funcao([null, null, null, null, "trataNulo"]);
 

@@ -54,6 +54,9 @@ class MenuPrincipal {
 
         # Área Especial
         $this->moduloAreaEspecial();
+        
+        # Calendário de PGTO
+        $this->moduloCalendarioPgto();
 
         # Links Externos
         $this->moduloLinksExternos();
@@ -837,21 +840,21 @@ class MenuPrincipal {
         $botao->set_title('Cadastro de atos de investidura');
         $botao->set_target("_blank");
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Auxílio Transporte');
         $botao->set_url('areaAuxilioTransporte.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'onibus.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Controle de servidores com direito ao auxílio transporte');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Área de Penalidades');
         $botao->set_url('areaPenalidades.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'penalidades.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área de Penalidades');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Calendário de PGTO');
         $botao->set_url('calendarioPgto.php?grh=1');
@@ -1181,6 +1184,46 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $menu->show();
+        $painel->fecha();
+    }
+
+    ######################################################################################################################
+
+    /**
+     * Método moduloCalendarioPgto
+     * 
+     * Exibe o menu de Plano de Cargos
+     */
+    private function moduloCalendarioPgto() {
+
+        $painel = new Callout();
+        $painel->abre();
+        
+        $array = [
+            ["JANEIRO","05/02"],
+            ["FEVEREIRO","05/03"],
+            ["MARÇO","03/04"],
+            ["ABRIL","06/05"],
+            ["MAIO","05/06"],
+            ["13º SALÁRIO (1ª PARCELA)","28/06"],
+            ["JUNHO","03/07"],
+            ["JULHO","05/08"],
+            ["AGOSTO","04/09"],
+            ["SETEMBRO","03/10"],
+            ["OUTUBRO","05/11"],
+            ["NOVEMBRO","04/12"],
+            ["13º SALÁRIO (2ª PARCELA)","20/12"],
+            ["DEZEMBRO","06/01/2025"]
+        ];
+
+        # Exemplo mais complexo
+        $tabela = new Tabela();
+        $tabela->set_titulo("Calendário de Pagamento - 2024");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Mês de Competência", "Data do Pagamento"]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->show();
+
         $painel->fecha();
     }
 

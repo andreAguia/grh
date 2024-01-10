@@ -128,6 +128,7 @@ if ($acesso) {
     }
 
     switch ($fase) {
+        ##################################################################
         # Exibe o Menu Inicial
         case "menu" :
             # monta o menu do servidor
@@ -374,7 +375,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             tituloTable("Ofício de Abertura de Conta");
             br();
 

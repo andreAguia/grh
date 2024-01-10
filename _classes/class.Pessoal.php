@@ -2299,9 +2299,9 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_situacao($idServidor) {
-        $select = 'SELECT tbsituacao.situacao
+        $select = "SELECT tbsituacao.situacao
                      FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                    WHERE idServidor = ' . $idServidor;
+                    WHERE idServidor = {$idServidor}";
 
         $situacao = parent::select($select, false);
 
@@ -2309,6 +2309,44 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+    /**
+     * Função que retorna a situaçao do servidor e os afastamentos
+     * Obs esta função só existe para ser usada na classe modelo
+     */
+
+    function get_situacaoDetalhada($idServidor) {
+        $pessoal = new Pessoal();
+
+        # Preenche retorno com a situação
+        $retorno = $pessoal->get_situacao($idServidor);
+
+        # Somente exibe dados da cessão ou de afastamentos se o servidor for ativo
+        if ($retorno == "Ativo") {
+            # Verifica se está cedido
+            if ($pessoal->emCessao($idServidor)) {
+                $retorno .= "<br/><span title='{$pessoal->get_orgaoCedido($idServidor)}' class='primary label'>Cedido</span>";
+            }
+
+            # Pega os afastamentos
+            $verifica = new VerificaAfastamentos($idServidor);
+
+            if ($verifica->verifica()) {
+                $retorno .= "<br/><span title='{$verifica->getDetalhe()}' class='warning label'>{$verifica->getAfastamento()}</span>";
+            }
+
+            # Verifica se está em vias de aposentadoria Compulsória
+            $idade = $pessoal->get_idade($idServidor);
+            $idPerfil = $pessoal->get_idPerfil($idServidor);
+
+            if ($idade >= 75 AND $idPerfil == 1) {
+                $retorno .= "<br/><span title='Servidor com {$idade} anos. Deverá aposentar Compulsoriamente.' class='primary label'>Aguardando<br/>Aposentadoria<br/>Compulsória</span>";
+            }
+        }
+
+        return $retorno;
+    }
+
+###########################################################
 
     /**
      * Método get_idSituacao

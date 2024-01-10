@@ -137,7 +137,7 @@ class Grh {
      * 
      * @param    string $idServidor -> idServidor do servidor
      */
-    public static function listaDadosServidor($idServidor) {
+    public static function listaDadosServidor($idServidor = null, $detalhado = true) {
 
         # Limita o tamanho da tela
         $grid = new Grid();
@@ -168,16 +168,21 @@ class Grh {
         $situacao = $servidor->get_situacao($idServidor);
 
         if ($situacao == "Ativo") {
-            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação");
-            $function = array(null, null, null, null, null, "date_to_php");
+            $label = ["Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação"];
+            $function = [null, null, null, null, null, "date_to_php"];
         } else {
-            $label = array("Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação", "Saída");
-            $function = array(null, null, null, null, null, "date_to_php", null, "date_to_php");
+            $label = ["Id Funcional / Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação", "Saída"];
+            $function = [null, null, null, null, null, "date_to_php", null, "date_to_php"];
         }
         #$align = array("center");
 
-        $classe = array("pessoal", null, "pessoal", "pessoal", "pessoal", null, "pessoal");
-        $metodo = array("get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_Situacao");
+        $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal", null, "pessoal"];
+
+        if ($detalhado) {
+            $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_situacaoDetalhada"];
+        } else {
+            $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_Situacao"];
+        }
 
         $formatacaoCondicional = array(
             array('coluna' => 1,

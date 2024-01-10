@@ -101,7 +101,7 @@ if ($acesso) {
     $objeto->set_width([10, 10, 10, 15, 15, 5, 25]);
     $objeto->set_align(["center", "center", "center", "center", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php"]);
-    
+
     $objeto->set_classe([null, null, null, null, "Penalidade", "Penalidade"]);
     $objeto->set_metodo([null, null, null, null, "exibePublicacao", "exibePDF"]);
 
@@ -195,6 +195,12 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+
+    # Exibe Mensagem sobre suspensão
+    $mensagem1 = 'Atenção<br/>O cadastro de SUSPENSÃO é feito em rotina própria.';
+    
+    $objeto->set_rotinaExtraListar("callout");
+    $objeto->set_rotinaExtraListarParametro($mensagem1);
 
     # Dados da rotina de Upload
     $pasta = PASTA_PENALIDADES;

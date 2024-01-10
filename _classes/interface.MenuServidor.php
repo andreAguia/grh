@@ -59,14 +59,28 @@ class MenuServidor {
         }
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(12, 6, 6);
+            if ($situacao == "Ativo") {
+                $grid->abreColuna(12, 6, 4);
+            } else {
+                $grid->abreColuna(12, 6, 6);
+            }
             $this->moduloOcorrencias();
             $grid->fechaColuna();
         }
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(12, 6, 6);
+            if ($situacao == "Ativo") {
+                $grid->abreColuna(12, 6, 4);
+            } else {
+                $grid->abreColuna(12, 6, 6);
+            }
             $this->moduloVinculos();
+            $grid->fechaColuna();
+        }
+
+        if ($situacao == "Ativo") {
+            $grid->abreColuna(12, 6, 4);
+            $this->moduloRamais();
             $grid->fechaColuna();
         }
 
@@ -328,7 +342,7 @@ class MenuServidor {
             $botao->set_imagem(PASTA_FIGURAS . 'elogios.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
             $menu->add_item($botao);
-        }        
+        }
 
         # Avaliação
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
@@ -356,7 +370,6 @@ class MenuServidor {
 //        $botao->set_title('Cadastro de atos de investidura');
 //        $botao->set_target("_blank");
 //        $menu->add_item($botao);
-        
         # Advertências
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
@@ -366,7 +379,7 @@ class MenuServidor {
             $botao->set_title('Cadastro de Elogios e Advertências do Servidor');
             $menu->add_item($botao);
         }
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Suspensão');
         $botao->set_url('servidorSuspensao.php?grh=1');
@@ -603,7 +616,7 @@ class MenuServidor {
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
         }
-        
+
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
 
@@ -633,7 +646,7 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Despacho para Reitoria", "../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow", "Despacho para Publicação de Ato do Reitor", "../grhRelatorios/despacho.Publicacao.php");
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
-        
+
         $menu->add_item('titulo', 'Cadastro de Responsável', '#');
         $menu->add_item('linkWindow', 'Relatório - SETCONT', '../grhRelatorios/setcont.responsavel.php');
         $menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel.php');
@@ -648,8 +661,8 @@ class MenuServidor {
         if ($this->perfil == 1) {
             $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
         }
-        
-        $menu->add_item('linkWindow','Etiqueta para a Pasta Funcional',"../grhRelatorios/etiquetaServidor.php");
+
+        $menu->add_item('linkWindow', 'Etiqueta para a Pasta Funcional', "../grhRelatorios/etiquetaServidor.php");
         #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
         #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
         $menu->show();
@@ -1011,4 +1024,33 @@ class MenuServidor {
     }
 
     ######################################################################################################################
+
+    /**
+     * Método moduloRamais
+     * 
+     * Exibe os remais do setor do servidor
+     */
+    private function moduloRamais() {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        $idLotacao = $pessoal->get_idLotacao($this->idServidor);
+        $ramais = $lotacao->getRamais($idLotacao);
+
+        $painel = new Callout("success");
+        $painel->abre();
+
+        p("Ramais - {$pessoal->get_lotacao($this->idServidor)}", "palertaServidor");
+
+        if (empty($ramais)) {
+            p("---", "center");
+        } else {
+            p(nl2br2($ramais), "f12");
+        }
+
+        $painel->fecha();
+    }
+
+######################################################################################################################
 }

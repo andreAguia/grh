@@ -38,6 +38,29 @@ class Lotacao {
 
     ###########################################################
 
+    public function getRamais($idLotacao = null) {
+        /**
+         * Retorna o nome da lotação
+         * 
+         * @syntax $this->get_dados($idRpa);
+         */
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega os dados
+            $select = "SELECT ramais
+                         FROM tblotacao
+                        WHERE idLotacao = {$idLotacao}";
+
+            $row = $pessoal->select($select, false);
+            return $row["ramais"];
+        }
+    }
+
+    ###########################################################
+
     public function getNomeLotacaoAnterior($idHistLot = null) {
         /**
          * Retorna a lotação anterior deste servidor a partir de uma mudança de lotação no histórico 

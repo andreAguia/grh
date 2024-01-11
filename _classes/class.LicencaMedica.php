@@ -36,14 +36,7 @@ class LicencaMedica {
                         $botao->set_target("_blank");
                         $botao->show();
                     } else {
-
-//                        $botao = new BotaoGrafico();
-//                        $botao->set_label($this->getnumBim($idLicenca));
-//                        $botao->set_url("?fase=uploadBim&id={$idLicenca}&tipo=novo");
-//                        $botao->set_imagem(PASTA_FIGURAS . 'upload.png', 20, 20);
-//                        $botao->set_title("Faz o Upload do Bim");
-//                        $botao->show();
-                        return "Sem PDF<br/>" . $this->getnumBim($idLicenca);
+                        return "---<br/>" . $this->getnumBim($idLicenca);
                     }
                 } else {
                     return "---";

@@ -352,6 +352,7 @@ if ($acesso) {
                                         WHEN 2 THEN "Não"
                                         end,
                                      idLicenca,   
+                                     idLicenca,   
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
@@ -373,6 +374,7 @@ if ($acesso) {
                      SELECT YEAR(dtInicial),
                                   tblicenca.idTpLicenca,
                                      "-",
+                                     idLicenca,   
                                      idLicenca,   
                                      dtInicial,
                                      numdias,
@@ -398,6 +400,7 @@ if ($acesso) {
                             6,
                             "",
                             "",
+                            "",
                             dtInicial,
                             tblicencapremio.numdias,
                             ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -419,6 +422,7 @@ if ($acesso) {
                                        tblicencasemvencimentos.idTpLicenca,
                                        "",
                                        "",
+                                       "",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),                                 
@@ -433,7 +437,7 @@ if ($acesso) {
             $selectLicença .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $parametro;
         }
 
-        $selectLicença .= ' ) ORDER BY 5 desc';
+        $selectLicença .= ' ) ORDER BY 6 desc';
 
         $objeto->set_selectLista($selectLicença);
 
@@ -480,12 +484,12 @@ if ($acesso) {
         }
 
         # Parametros da tabela
-        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Doc", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
         #$objeto->set_width([5, 20, 5, 5, 10, 10, 5, 10, 10, 10, 5]);
         $objeto->set_align([null, "left"]);
-        $objeto->set_funcao([null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
-        $objeto->set_classe([null, "Licenca", null, "LicencaMedica"]);
-        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim"]);
+        $objeto->set_funcao([null, null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
+        $objeto->set_classe([null, "Licenca", null, "LicencaMedica", "Faltas"]);
+        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim", "ExibeDoc"]);
         $objeto->set_rowspan(0);
         $objeto->set_grupoCorColuna(0);
 
@@ -632,13 +636,7 @@ if ($acesso) {
         $botaoRel->set_url("../grhRelatorios/servidorLicenca.php?parametro=" . $parametro);
         $botaoRel->set_target("_blank");
 
-        $objeto->set_botaoListarExtra([$botaoRel,$botaoCalendario]);
-
-        # Dados da rotina de Upload
-        $pasta = PASTA_BIM;
-        $nome = "Bim";
-        $tabela = "tblicenca";
-        $extensoes = ["pdf"];
+        $objeto->set_botaoListarExtra([$botaoRel, $botaoCalendario]);
 
         # Botão de Upload Bim (somente no ver de licenças médicas)
         if (!empty($id)) {
@@ -649,6 +647,31 @@ if ($acesso) {
             if ($pessoal->get_licencaPericia($tipo) == "Sim") {
 
                 if (Verifica::acesso($idUsuario, [1, 16])) {
+
+                    # Dados da rotina de Upload
+                    $pasta = PASTA_BIM;
+                    $nome = "Bim";
+                    $tabela = "tblicenca";
+                    $extensoes = ["pdf"];
+
+                    # Botão de Upload
+                    $botao = new Button("Upload {$nome}");
+                    $botao->set_url("servidorLicencaUpload.php?fase=upload&id={$id}");
+                    $botao->set_title("Faz o Upload do {$nome}");
+                    $botao->set_target("_blank");
+
+                    $objeto->set_botaoEditarExtra([$botao]);
+                }
+            }
+
+            if ($tipo == 25) { //Faltas
+                if (Verifica::acesso($idUsuario, [1, 16])) {
+
+                    # Dados da rotina de Upload
+                    $pasta = PASTA_FALTAS;
+                    $nome = "Documento";
+                    $tabela = "tblicenca";
+                    $extensoes = ["pdf"];
 
                     # Botão de Upload
                     $botao = new Button("Upload {$nome}");

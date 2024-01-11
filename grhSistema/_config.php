@@ -51,6 +51,7 @@ define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");               # Fo
 define("PASTA_CERTIFICADO", "../../_arquivos/certificados/");               # Fotos dos certificados de cursos
 define("PASTA_DOCUMENTOS", "../../_arquivos/documentos/");                  # Documentos Gerais
 define("PASTA_BIM", "../../_arquivos/bim/");                                # BIM
+define("PASTA_FALTAS", "../../_arquivos/faltas/");                          # Faltas
 define("PASTA_ATESTADO", "../../_arquivos/atestados/");                     # atestados
 define("PASTA_ATOINVESTIDURA", "../../_arquivos/atoInvestidura/");          # Pasta do ato de investidura
 define("PASTA_PLANOCARGOS", "../../_arquivos/planoCargos/");                # Pasta da publicação dos planos de cargos

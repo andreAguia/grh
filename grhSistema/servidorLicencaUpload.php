@@ -27,6 +27,9 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    # Pega o tipo de licença
+    $tipo = $pessoal->get_tipoLicenca($id);
+
     # Começa uma nova página
     $page = new Page();
     if ($fase == "upload") {
@@ -38,11 +41,19 @@ if ($acesso) {
     }
     $page->iniciaPagina();
 
-    # Dados da rotina de Upload
-    $pasta = PASTA_BIM;
-    $nome = "Bim";
-    $tabela = "tblicenca";
-    $extensoes = ["pdf"];
+    if ($tipo == 25) { //Faltas
+        # Dados da rotina de Upload
+        $pasta = PASTA_FALTAS;
+        $nome = "Documento";
+        $tabela = "tblicenca";
+        $extensoes = ["pdf"];
+    } else {
+        # Dados da rotina de Upload
+        $pasta = PASTA_BIM;
+        $nome = "Bim";
+        $tabela = "tblicenca";
+        $extensoes = ["pdf"];
+    }
 
     ################################################################
 
@@ -145,7 +156,7 @@ if ($acesso) {
 
         case "uploadTerminado" :
             # Informa que o aquivo foi substituído
-            alert("Arquivo do {$nome} Cadastrado !!");
+            alert("Arquivo Cadastrado !!");
 
             # Registra nas variáveis
             $intra->set_variavel('dataUploadArquivos', date("d/m/Y H:i:s"));

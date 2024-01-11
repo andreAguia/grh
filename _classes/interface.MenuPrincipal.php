@@ -54,9 +54,6 @@ class MenuPrincipal {
 
         # Área Especial
         $this->moduloAreaEspecial();
-        
-        # Calendário de PGTO
-        $this->moduloCalendarioPgto();
 
         # Links Externos
         $this->moduloLinksExternos();
@@ -90,6 +87,9 @@ class MenuPrincipal {
 
         $this->moduloGrh();
         $this->moduloRamais();
+        
+        # Calendário de PGTO
+        $this->moduloCalendarioPgto();
 
         $grid1->fechaColuna();
         $grid1->fechaGrid();

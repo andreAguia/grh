@@ -1194,35 +1194,13 @@ class MenuPrincipal {
      * 
      * Exibe o menu de Plano de Cargos
      */
-    private function moduloCalendarioPgto() {
+    public function moduloCalendarioPgto() {
 
         $painel = new Callout();
         $painel->abre();
         
-        $array = [
-            ["JANEIRO","05/02"],
-            ["FEVEREIRO","05/03"],
-            ["MARÇO","03/04"],
-            ["ABRIL","06/05"],
-            ["MAIO","05/06"],
-            ["13º SALÁRIO (1ª PARCELA)","28/06"],
-            ["JUNHO","03/07"],
-            ["JULHO","05/08"],
-            ["AGOSTO","04/09"],
-            ["SETEMBRO","03/10"],
-            ["OUTUBRO","05/11"],
-            ["NOVEMBRO","04/12"],
-            ["13º SALÁRIO (2ª PARCELA)","20/12"],
-            ["DEZEMBRO","06/01/2025"]
-        ];
-
-        # Exemplo mais complexo
-        $tabela = new Tabela();
-        $tabela->set_titulo("Calendário de Pagamento - 2024");
-        $tabela->set_conteudo($array);
-        $tabela->set_label(["Mês de Competência", "Data do Pagamento"]);
-        $tabela->set_align(["left", "center"]);
-        $tabela->show();
+        $calend = new CalendarioPgto();
+        $calend->exibeCalendario();
 
         $painel->fecha();
     }

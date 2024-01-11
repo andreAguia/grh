@@ -406,7 +406,8 @@ if ($acesso) {
                             ADDDATE(dtInicial,tblicencapremio.numDias-1),
                             CONCAT("6&",idLicencaPremio),
                             tbpublicacaopremio.dtPublicacao,
-                            CONCAT("tblicencapremio","&",tblicencapremio.idServidor),                                       "-"
+                            CONCAT("tblicencapremio","&",tblicencapremio.idServidor),
+                            "-"
                        FROM tblicencapremio LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
                       WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado;
 
@@ -442,7 +443,7 @@ if ($acesso) {
         $objeto->set_selectLista($selectLicença);
 
         # select do edita
-        $objeto->set_selectEdita('SELECT idTpLicenca,
+        $objeto->set_selectEdita("SELECT idTpLicenca,
                                    alta,
                                    dtInicioPeriodo,
                                    dtFimPeriodo,
@@ -455,7 +456,7 @@ if ($acesso) {
                                    num_Bim,
                                    obs,
                                    idServidor
-                              FROM tblicenca WHERE idLicenca = ' . $id);
+                              FROM tblicenca WHERE idLicenca = {$id}");
 
         # Habilita o modo leitura para usuario de regra 12
         if (Verifica::acesso($idUsuario, 12)) {
@@ -478,18 +479,18 @@ if ($acesso) {
         $stringComparacao = $nome . "<br/>" . $lei;
 
         # Editar e excluir condicional
-        $objeto->set_editarCondicional('?fase=editar', '-', 10, "<>");
+        $objeto->set_editarCondicional('?fase=editar', '-', 11, "<>");
         if (Verifica::acesso($idUsuario, [1, 2])) {
-            $objeto->set_excluirCondicional('?fase=excluir', '-', 10, "<>");
+            $objeto->set_excluirCondicional('?fase=excluir', '-', 11, "<>");
         }
 
         # Parametros da tabela
-        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Doc", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Documento", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
         #$objeto->set_width([5, 20, 5, 5, 10, 10, 5, 10, 10, 10, 5]);
         $objeto->set_align([null, "left"]);
         $objeto->set_funcao([null, null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
-        $objeto->set_classe([null, "Licenca", null, "LicencaMedica", "Faltas"]);
-        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim", "ExibeDoc"]);
+        $objeto->set_classe([null, "Licenca", null, "LicencaMedica", "Licenca"]);
+        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim", "exibeDoc"]);
         $objeto->set_rowspan(0);
         $objeto->set_grupoCorColuna(0);
 

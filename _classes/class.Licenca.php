@@ -162,7 +162,6 @@ class Licenca {
         if (empty($idLicenca)) {
             return "---";
         } else {
-
             # Pega os dados
             $servidor = new Pessoal();
             $select = "SELECT dtPublicacao,
@@ -171,12 +170,12 @@ class Licenca {
                         WHERE idLicenca = {$idLicenca}";
 
             $row = $servidor->select($select, false);
-            
+
             # trata a página
-            if(!empty($row["pgPublicacao"])){
+            if (!empty($row["pgPublicacao"])) {
                 $row["pgPublicacao"] = "pag: " . $row['pgPublicacao'];
             }
-            
+
             # Exibe a publicação
             plista(
                     date_to_php($row['dtPublicacao']),
@@ -185,5 +184,34 @@ class Licenca {
         }
     }
 
-########################################################################################## 
+##############################################################
+
+    public function exibeDoc($id = null) {
+        # Verifica se o id foi informado
+        if (empty($id)) {
+            return "---";
+        } else {
+            # Pega o tipo de licença
+            $pessoal = new Pessoal();
+            $tipo = $pessoal->get_tipoLicenca($id);
+
+            switch ($tipo) {
+                case 25:
+                    $faltas = new Faltas();
+                    $faltas->exibeDoc($id);
+                    break;
+                
+                case 26:
+                    $suspensao = new Suspensao();
+                    $suspensao->exibePublicacaoPdf($id);
+                    break;
+                
+                default:
+                    echo "---";
+                    break;
+            }
+        }
+    }
+
+########################################################### 
 }

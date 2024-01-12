@@ -49,8 +49,13 @@ class Ferias {
 
         # Passa para o ano seguinte caso venha vazio
         if (empty($anoFinal) OR ($anoFinal > date('Y'))) {
-            # Pega o maior ano (anoatual +1)
-            $anoFinal = date('Y') + 1;
+
+            # Passa a ijnformar o ano seguinte como pendente a partir de outubro
+            if (date('m') > 9) {
+                $anoFinal = date('Y') + 1;
+            } else {
+                $anoFinal = date('Y');
+            }
         }
 
         # Conecta o banco de dados
@@ -461,10 +466,15 @@ class Ferias {
 
             # Passa para o ano seguinte caso venha vazio
             if (empty($maiorAno) OR ($maiorAno > date('Y'))) {
-                # Pega o maior ano (anoatual +1)
-                $maiorAno = date('Y') + 1;
+
+                # Passa a ijnformar o ano seguinte como pendente a partir de outubro
+                if (date('m') > 9) {
+                    $maiorAno = date('Y') + 1;
+                } else {
+                    $maiorAno = date('Y');
+                }
             }
-            
+
             # Percorre os anos
             for ($ano = $maiorAno; $ano >= $menorAno; $ano--) {
 

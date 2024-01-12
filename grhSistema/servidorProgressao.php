@@ -87,7 +87,7 @@ if ($acesso) {
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT tbprogressao.dtInicial,
+    $objeto->set_selectLista("SELECT tbprogressao.dtInicial,
                                      tbtipoprogressao.nome,
                                      idClasse,
                                      dtPublicacao,
@@ -95,11 +95,11 @@ if ($acesso) {
                                      tbprogressao.idProgressao,
                                      tbprogressao.idProgressao
                                 FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
-                               WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY {$orderCampo} {$orderTipo}");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT dtInicial,
+    $objeto->set_selectEdita("SELECT dtInicial,
                                      idTpProgressao,
                                      idClasse,
                                      documento,
@@ -108,7 +108,7 @@ if ($acesso) {
                                      obs,
                                      idServidor
                                 FROM tbprogressao
-                               WHERE idProgressao = ' . $id);
+                               WHERE idProgressao = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {

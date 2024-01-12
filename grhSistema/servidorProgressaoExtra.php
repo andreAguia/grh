@@ -26,7 +26,7 @@ $dtSaida = $pessoal->get_dtSaida($idServidor);
 
 # Se tiver data de saida
 if (!is_null($dtSaida)) {
-    if (date_to_bd(strtotime($dtInicial)) > date_to_bd(strtotime($dtSaida))) {
+    if (strtotime(date_to_bd($dtInicial)) > strtotime(date_to_bd($dtSaida))) {
         $erro = 1;
         $msgErro .= 'O servidor não pode progredir DEPOIS de sair da UENF!\n';
     }

@@ -206,7 +206,7 @@ class AuxilioEducacao {
              * enviar a declaração de escolaridade
              */
 
-            tituloTable("Sem Declaração de Escolaridade");
+            tituloTable("Sem Precisar da Declaração de Escolaridade");
             $painel = new Callout("warning");
             $painel->abre();
 
@@ -334,7 +334,7 @@ class AuxilioEducacao {
     public function get_dtFinalAuxEducacaoControle($id) {
 
         /**
-         * fornece a data inicial de um lançamento do controle de declaração escolar para o Auxílio educação
+         * fornece a data final de um lançamento do controle de declaração escolar para o Auxílio educação
          * 
          * @param $id integer null O id 
          * 
@@ -538,20 +538,21 @@ class AuxilioEducacao {
                         # Verifica se existe ainda algum período possível
                         if (strtotime(date_to_bd($ultimaDatacomprovada)) < strtotime(date_to_bd($anos24))) {
 
-                            # Pega a data do téwrmino desse semestre
+                            # Pega a data Inicial e de término desse semestre
                             $dtTermino = $this->get_dtFinalAuxEducacaoControle($id);
+                            $dtInicial = $this->get_dtInicialAuxEducacaoControle($id);
 
-                            if (jaPassou($dtTermino)) {
+                            if (jaPassou($dtInicial)) {
                                 if ($pendencia) {
                                     return "Sim";
                                 } else {
-                                    p("Regularizar o período:<br/>de {$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarVermelho");
+                                    p("Regularizar o período:<br/>de " . addDias($ultimaDatacomprovada, 1, false) . " até {$dtTermino}", "pAvisoRegularizarVermelho");
                                 }
                             } else {
                                 if ($pendencia) {
                                     return "Não";
                                 } else {
-                                    p("Em {$dtTermino}<br/>comprovar o periodo de<br/>{$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarAzul");
+                                    p("Em {$dtInicial}<br/>comprovar o periodo de<br/>{$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarAzul");
                                     if ($dtTermino == $anos24) {
                                         p("(Quando encerra o direito)", "pAvisoRegularizarVermelho");
                                     }

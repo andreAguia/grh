@@ -1212,6 +1212,24 @@ div#servidorCargo {
 }
 
 /*******************************************
+* Menu do Servidor
+********************************************/
+
+p#pramalLotacao{
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0px;
+    text-align: center;
+}
+
+p#pramalDetalhe{
+    font-size: 11px;
+    margin: 0px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/*******************************************
  * Relatórios
  *******************************************/
 

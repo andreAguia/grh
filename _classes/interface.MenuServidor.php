@@ -1041,12 +1041,32 @@ class MenuServidor {
         $painel = new Callout("success");
         $painel->abre();
 
-        p("Ramais - {$pessoal->get_lotacao($this->idServidor)}", "palertaServidor");
+        if ($idLotacao <> 113) {
+            
+            p($pessoal->get_lotacao($this->idServidor), "pramalLotacao");
+            p("Tel / Ramais", "pramalDetalhe");
 
-        if (empty($ramais)) {
-            p("---", "center");
+            if (empty($ramais)) {
+                p("---", "center");
+            } else {
+                p(nl2br2($ramais), "f12");
+            }
         } else {
-            p(nl2br2($ramais), "f12");
+
+            # Pega os dados da cessao
+            $cessao = new Cessao();
+            $dados = $cessao->getDados($cessao->getidCessaoVigente($this->idServidor));
+
+            p($dados["orgao"], "pramalLotacao");
+            p("Tel / Ramais / E-mails", "pramalDetalhe");
+
+            if (!empty($dados["orgaoTel"])) {
+                p("Tel: " . $dados["orgaoTel"], "f12", "center");
+            }
+
+            if (!empty($dados["orgaoEmail"])) {
+                p("Email: " . $dados["orgaoEmail"], "f12");
+            }
         }
 
         $painel->fecha();

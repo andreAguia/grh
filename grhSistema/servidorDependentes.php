@@ -156,9 +156,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Dependente no IR", "Aux. Educação", ""]);
+    $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Dependente<br/>no IR", "Aux. Educação", ""]);
     $objeto->set_colspanLabel([null, null, null, null, null, null, 2]);
     $objeto->set_align(["left", "center", "center", "center", "center", "center", "left"]);
+    $objeto->set_width([25, 10, 10, 10, 5, 10, 20, 5]);
 
     $objeto->set_funcao([null, null, null, "date_to_php"]);
     $objeto->set_classe(["Dependente", null, null, null, null, null, "AuxilioEducacao", "AuxilioEducacao"]);

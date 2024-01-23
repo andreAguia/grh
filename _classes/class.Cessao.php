@@ -256,7 +256,7 @@ class Cessao {
 
     public function lotacaoCorreta($idServidor) {
         /*
-         * Verifica se o Servidor cedido está na lotaçãop correta
+         * Verifica se o Servidor cedido está na lotação correta
          */
 
         # Conecta com o banco de dados
@@ -286,6 +286,28 @@ class Cessao {
                      AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
 
         return $servidor->count($select);
+    }
+
+###########################################################
+
+    public function getidCessaoVigente($idServidor) {
+        /*
+         * Retorna o número de cessões vigentes
+         * Objetivo é encontrar problemas de servidor com mais de 1 cessão vigente
+         */
+
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        $select = "SELECT idHistCessao
+                     FROM tbhistcessao
+                    WHERE idServidor = {$idServidor}
+                     AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))
+                   ORDER BY dtInicio desc 
+                   LIMIT 1";
+
+        $row = $servidor->select($select, false);
+        return $row[0];
     }
 
 ###########################################################
@@ -332,16 +354,13 @@ class Cessao {
 
             $row = $servidor->select($select, false);
 
-            if (empty($row["orgaoTel"])) {
-                $row["orgaoTel"] = "---";
-            } else {
-                $row["orgaoTel"] = "Tel: " . $row["orgaoTel"];
+            if (!empty($row["orgaoTel"])) {
+                echo "Tel: " . $row["orgaoTel"];
             }
 
-            plista(
-                    $row["orgaoTel"],
-                    $row["orgaoEmail"]
-            );
+            if (!empty($row["orgaoEmail"])) {
+                echo "Email: " . $row["orgaoEmail"];
+            }
         }
     }
 

@@ -179,9 +179,9 @@ class Grh {
         $classe = ["pessoal", null, "pessoal", "pessoal", "pessoal", null, "pessoal"];
 
         if ($detalhado) {
-            $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_situacaoDetalhada"];
+            $metodo = ["exibe_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_situacaoDetalhada"];
         } else {
-            $metodo = ["get_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_Situacao"];
+            $metodo = ["exibe_idFuncionalEMatricula", null, "get_cargoCompleto2", "get_Lotacao", "get_Perfil", null, "get_Situacao"];
         }
 
         $formatacaoCondicional = array(

@@ -254,6 +254,20 @@ tr#listaDados{
     background-color: #D7D7D7;
 }
 
+p#pidFuncional{
+    padding: 0px;
+    margin: 0px;
+    font-size: 18px;
+    color: green;
+}
+
+p#pmatricula{
+    padding: 0px;
+    margin: -7px;
+    font-size: 18px;
+    color: blue;
+}
+
 /*******************************************
  * Cadastro de Lotação e de Plano de cargos
  *******************************************/

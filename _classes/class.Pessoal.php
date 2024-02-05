@@ -2309,11 +2309,11 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
     /**
      * Função que retorna a situaçao do servidor e os afastamentos
      * Obs esta função só existe para ser usada na classe modelo
      */
-
     function get_situacaoDetalhada($idServidor) {
         $pessoal = new Pessoal();
 
@@ -4690,6 +4690,26 @@ class Pessoal extends Bd {
         $matricula = $this->get_matricula($idServidor);
 
         pLista($idFuncional, $matricula);
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_idFuncional
+     * Informa a idFuncional de um servidor
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
+    public function exibe_idFuncionalEMatricula($idServidor) {
+
+        # Pega o idFuncional
+        $idFuncional = $this->get_idFuncional($idServidor);
+
+        # Pega a matrícula
+        $matricula = $this->get_matricula($idServidor);
+
+        p($idFuncional, "pidFuncional");
+        p($matricula, "pmatricula");
     }
 
     ###########################################################

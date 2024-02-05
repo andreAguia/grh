@@ -330,7 +330,7 @@ if ($acesso) {
         case "etiquetas";
             $menu = new Menu();
             $menu->add_item('titulo', 'Etiquetas');
-            $menu->add_item('linkWindow', 'Etiquetas Geral', '../grhRelatorios/etiqueta.geral.ativos.php');
+            $menu->add_item('linkWindow', 'Etiquetas Geral', '../grhRelatorios/etiqueta.geral.php');
 
             $menu->show();
             break;

@@ -32,19 +32,9 @@ if ($acesso) {
 
     # Pega quem assina
     $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
-    $conteudo = get('conteudo', post('conteudo', "Só Matrícula"));
+    $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
 
     $menuRelatorio = new menuRelatorio();
-    $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,
-                                              tbpessoa.nome
-                                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                                         LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
-                                                         LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                        WHERE situacao = 1
-                                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                          AND tblotacao.idlotacao = 66
-                                          ORDER BY tbpessoa.nome');
-
     $menuRelatorio->set_formCampos(array(
         array('nome' => 'numEtiquetas',
             'label' => 'Número de Etiquetas:',

@@ -62,6 +62,7 @@ if ($acesso) {
         ['Contatos & Endereços', 'contatos'],
         ['Dependentes & Auxílio Creche', 'dependentes'],
         ['Estatutários', 'estatutarios'],
+        ['Etiquetas', 'etiquetas'],
         ['Férias', 'ferias'],
         ['Financeiro', 'financeiro'],
         ['Folha de Frequência', 'frequencia'],
@@ -320,6 +321,16 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Inativos');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários Inativos - por Lotação', '../grhRelatorios/estatutarios.inativos.porLotacao.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "etiquetas";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Etiquetas');
+            $menu->add_item('linkWindow', 'Etiquetas Geral', '../grhRelatorios/etiqueta.geral.ativos.php');
 
             $menu->show();
             break;

@@ -24,7 +24,7 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    # Pega quem assina
+    # Pega os parâmetros
     $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
     $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
     $situacao = post('situacao', "*");
@@ -37,7 +37,7 @@ if ($acesso) {
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
-            array('nome' => 'numEtiquetas',
+        array('nome' => 'numEtiquetas',
             'label' => 'Número de Etiquetas:',
             'tipo' => 'combo',
             'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -46,7 +46,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
-            array('nome' => 'conteudo',
+        array('nome' => 'conteudo',
             'label' => 'Conteúdo:',
             'tipo' => 'combo',
             'array' => ["Matrícula e Nome", "Só Matrícula"],
@@ -55,7 +55,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
             'linha' => 1),
-            array('nome' => 'situacao',
+        array('nome' => 'situacao',
             'label' => 'Situação:',
             'tipo' => 'combo',
             'array' => $situacaoCombo,
@@ -84,17 +84,22 @@ if ($acesso) {
                       idServidor
                  FROM tbservidor JOIN tbperfil USING (idPerfil)
                 WHERE tbperfil.tipo <> 'Outros'";
-    
-    if($situacao <> "*"){
+
+    if ($situacao <> "*") {
         $select .= " AND situacao = {$situacao}";
     }
-    
+
     $select .= " ORDER BY matricula";
 
     $result = $pessoal->select($select);
 
-    # Inicializa conadores
+    # Quantas etiquetas por coluna  (Não funcionou)
+    $pulaColuna = 17;
+
+    # Pega a metade
     $metade = intval(count($result) / 2);
+
+    # Inicializa o contador
     $contador = 0;
 
     # Grava no log a atividade
@@ -116,9 +121,6 @@ if ($acesso) {
 
     foreach ($result as $item) {
 
-        # Contadores
-        $contador++;
-
         # Verifica se habilita a segunda coluna
         if ($contador == $metade) {
             echo "</table>";
@@ -126,6 +128,9 @@ if ($acesso) {
             $grid->abreColuna(6);
             echo "<table width='100%' id='etiqueta' border='2px'>";
         }
+
+        # Contadores
+        $contador++;
 
         # Pega os dados
         $matricula = dv($item["matricula"]);
@@ -135,7 +140,7 @@ if ($acesso) {
             if ($conteudo == "Matrícula e Nome") {
 
                 # Define a fonte a partir do número de letras no nome do servidor
-                if (strlen($nome) > 25) {
+                if (strlen($nome) > 20) {
                     $matriculacss = "pmatriculaEtiqueta2";
                     $nomecss = "pnomeEtiqueta2";
                 } else {

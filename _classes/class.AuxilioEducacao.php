@@ -160,7 +160,7 @@ class AuxilioEducacao {
 
             if (empty($cpfDependente)) {
                 br();
-                p("Dependente SEM CPF Cadastrado!", "vermelho", "center");
+                p("Dependente sem<br/>CPF Cadastrado!", "pAvisoRegularizarVermelho");
             }
 
             $painel->fecha();

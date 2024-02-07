@@ -58,10 +58,11 @@ if ($auxEduc == "Sim") {
 }
 
 # Verifica se o CPF foi preenchido quando se cadastra SIM para o auxilio Educação
-if ($auxEduc == "Sim" AND empty($cpf)) {
-    $erro = 1;
-    $msgErro .= 'O CPF deverá ser informado para o dependente com Auxílio Educação\n';
-}
+# Retirado a pedido de Débora
+//if ($auxEduc == "Sim" AND empty($cpf)) {
+//    $erro = 1;
+//    $msgErro .= 'O CPF deverá ser informado para o dependente com Auxílio Educação\n';
+//}
 
 # Coloca o auxEducação como Não quando tinha 24 anos ou mais na data da publicação da lei
 $intra = new Intra();

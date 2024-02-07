@@ -47,7 +47,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do comprovante para Auxílio Educação de {$nomeDependente}";
+        $atividade = "Cadastro do comprovante para Auxílio Educação<br/>de {$nomeDependente}";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -227,6 +227,15 @@ if ($acesso) {
                 rename("{$pasta}{$id}.pdf", "{$pasta}_apagados/{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
             }
 
+            $classeDependente = new Dependente();
+            $classeAuxEducacao = new AuxilioEducacao();
+
+            $dados = $classeAuxEducacao->get_dados($id);
+            $dtInicio = date_to_php($dados['dtInicio']);
+            $dtTermino = date_to_php($dados['dtTermino']);
+
+            $objeto->excluir($id, "Excluiu o comprovante de Escolaridade<br/>{$dtInicio} - {$dtTermino}<br/>" . $classeDependente->get_nome($idDependente));
+            break;
 
             # Exclui o registro
             $objeto->excluir($id);

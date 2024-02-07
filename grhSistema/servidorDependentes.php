@@ -359,7 +359,8 @@ if ($acesso) {
             break;
 
         case "excluir" :
-            $objeto->excluir($id);
+            $classeDependente = new Dependente();
+            $objeto->excluir($id, "Excluiu o parente " . $pessoal->get_parentesco($classeDependente->get_idParentesco($id)) . "<br/>" . $classeDependente->get_nome($id));
             break;
 
         case "comprovante" :

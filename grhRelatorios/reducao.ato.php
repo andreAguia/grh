@@ -45,6 +45,9 @@ if ($acesso) {
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
 
+    # do(a) Reitor(a)
+    $generoReitor = $pessoal->get_sexo($pessoal->get_reitor());
+
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
         $texto1 = "do servidor";
@@ -58,8 +61,13 @@ if ($acesso) {
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
 
     # do Ato
-    $textoReitor = "O <b>REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
-            . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
+    if ($this->generoReitor == "Masculino") {
+        $textoReitor = "O <b>REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
+                . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
+    } else {
+        $textoReitor = "A <b>REITORA DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
+                . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
+    }
 
     $textoPrincipal = "Reduz em 50% a carga horária de trabalho $texto1 <b>" . strtoupper($nomeServidor) . "</b>, {$cargoEfetivo}, ID nº {$idFuncional}, {$texto2} na {$lotacao},
                        pelo prazo de {$periodo} (" . numero_to_letra($periodo) . ") meses ou enquanto responsável legal por pessoa portadora de necessidade caracterizada como " . strtolower($necessidade) . ",

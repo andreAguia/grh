@@ -14,15 +14,38 @@ class AuxilioEducacao {
     ##############################################################
 
     public function get_idadeInicial() {
-    
+
         return $this->idadeInicial;
     }
 
     ##############################################################
 
     public function get_idadeFinal() {
-    
+
         return $this->idadeFinal;
+    }
+
+    ##############################################################
+
+    public function get_dataInicialCobranca($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+
+        return get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
+    }
+
+    ##############################################################
+
+    public function get_dataFinalCobranca($id) {
+
+        # Pega os dados do dependente
+        $dependente = new Dependente();
+        $dados = $dependente->get_dados($id);
+
+        # Retorna a data anterior - um dia antes
+        return addDias(get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal), -1, false);
     }
 
     ##############################################################
@@ -113,7 +136,7 @@ class AuxilioEducacao {
             $link->set_target("_blank");
             $link->show();
         } else {
-            p("SEM COMPROVAÇÃO","pAvisoRegularizarVermelho");
+            p("SEM COMPROVAÇÃO", "pAvisoRegularizarVermelho");
         }
     }
 
@@ -185,9 +208,10 @@ class AuxilioEducacao {
 
             # Pega as datas limites
             $dtNasc = date_to_php($dados["dtNasc"]);
-            $anos21 = get_dataIdade($dtNasc, $this->idadeInicial);
-            $anos24 = get_dataIdade($dtNasc, $this->idadeFinal);
             $idade = idade($dtNasc);
+
+            $anos21 = $this->get_dataInicialCobranca($id);
+            $anos24 = $this->get_dataFinalCobranca($id);
 
             # Dados do Servidor
             $idPessoa = $dados["idPessoa"];
@@ -269,15 +293,11 @@ class AuxilioEducacao {
             $painel->fecha();
 
             /*
-             * Informa a data em que faz 24 anos
+             * Informa a data em que faz 25 anos menos um dia
              * Término do Direito
              */
 
-            if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeFinal) {
-                titulotable("Fez {$this->idadeFinal} anos em:");
-            } else {
-                titulotable("Fará {$this->idadeFinal} anos em:");
-            }
+            titulotable("Um dia Antes do<br/>Aniversário de {$this->idadeFinal} anos:");
             $painel = new Callout("warning");
             $painel->abre();
             p($anos24, "pAviso24Anos");

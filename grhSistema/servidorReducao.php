@@ -189,7 +189,7 @@ if ($acesso) {
                                      idReducao
                                 FROM tbreducao
                                WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY status, dtTermino, dtInicio');
+                            ORDER BY status, dtTermino desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT tipo,

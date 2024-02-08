@@ -215,7 +215,7 @@ if ($acesso) {
      * autenticações
      */
 
-    $array = [[date('d/m/Y'), "Francisco de Oliveira Balbi Junior<br/>ID: 6399991", "Christiane Assis da Silva Melo<br/>ID: 41301471"]];
+    $array = [[date('d/m/Y'), "Christiane Assis da Silva Melo<br/>ID: 41301471", "Francisco de Oliveira Balbi Junior<br/>ID: 6399991"]];
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
     $relatorio->set_topico("6 - Autenticação");

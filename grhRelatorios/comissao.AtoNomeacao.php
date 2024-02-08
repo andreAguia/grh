@@ -14,8 +14,6 @@ $idServidorPesquisado = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
-# Configuração
-include ("../grhSistema/_config.php");
 
 # Pega o idComissao 
 $idComissao = get('id');
@@ -59,11 +57,6 @@ if ($acesso) {
 
     # Outras variaveis
     $reitor = $pessoal->get_nomeReitor();
-    
-    
-    
-    
-    
 
     # Limita a página
     $grid = new Grid();
@@ -79,7 +72,11 @@ if ($acesso) {
     $ato->show();
 
     # Preambulo
-    p("O REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    if ($generoReitor == "Masculino") {
+        p("O REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    } else {
+        p("A REITORA DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
@@ -129,7 +126,11 @@ if ($acesso) {
     br(4);
 
     # Reitor
-    p("<b>" . $reitor . "<br/>REITOR</b>", "reitor");
+    if ($generoReitor == "Masculino") {
+        p("<b>" . $reitor . "<br/>REITOR</b>", "reitor");
+    } else {
+        p("<b>" . $reitor . "<br/>REITORA</b>", "reitor");
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(8);

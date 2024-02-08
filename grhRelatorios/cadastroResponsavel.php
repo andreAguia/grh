@@ -9,15 +9,12 @@
  */
 # Inicia as variáveis que receberão as sessions
 $idUsuario = null;
-$idServidorPesquisado = null;
 
 # Configuração
 include ("../grhSistema/_config.php");
 
 # Verifica qual será o id
-if (empty($idServidorPesquisado)) {
-    alert("É necessário informar o id do Servidor.");
-}
+$id = soNumeros(get('id'));
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
@@ -35,11 +32,13 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
+    $parametroAno = get_session('parametroAno');
+
     /*
      * Classificação
      */
 
-    $select = 'SELECT tbpessoa.nome,
+    $select = "SELECT tbpessoa.nome,
                       nomePai,
                       nomeMae,
                       dtNasc,
@@ -47,7 +46,7 @@ if ($acesso) {
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                  LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
+                WHERE tbservidor.idServidor = {$id}";
 
     $result = $pessoal->select($select);
 
@@ -79,7 +78,7 @@ if ($acesso) {
      */
 
     # Pega o idPessoa
-    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+    $idPessoa = $pessoal->get_idPessoa($id);
 
     $select = 'SELECT concat(identidade," - ",
                       orgaoId," - ",
@@ -105,18 +104,24 @@ if ($acesso) {
     br();
 
     /*
-     * Se Servidor
+     * Dados Funcionais
      */
 
-    $select = 'SELECT matricula,
+    $select = "SELECT matricula,
                       tbservidor.idFuncional,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor,
-                      tbservidor.idServidor
+                      tbservidor.idServidor,";
+
+    if ($parametroAno == "Vigente") {
+        $select .= " tbservidor.idServidor,";
+    } else {
+        $select .= " CONCAT(tbservidor.idServidor,'&',{$parametroAno}), ";
+    }
+
+    $select .= "       tbservidor.idServidor
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                  LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
-                WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
+                WHERE tbservidor.idServidor = {$id}";
 
     $result = $pessoal->select($select);
 
@@ -125,7 +130,13 @@ if ($acesso) {
     $relatorio->set_label(['Matrícula', 'IdFuncional', 'Cargo Efetivo', 'Cargo em Comissão', 'Lotaçao']);
     $relatorio->set_funcao(["dv"]);
     $relatorio->set_classe([null, null, "pessoal", "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_cargoEfetivo", 'get_cargoComissao2', "get_lotacao"]);
+
+    if ($parametroAno == "Vigente") {
+        $relatorio->set_metodo([null, null, "get_cargoEfetivo", 'get_cargoComissao2', "get_lotacao"]);
+    } else {
+        $relatorio->set_metodo([null, null, "get_cargoEfetivo", 'get_cargoComissaoAno', "get_lotacao"]);
+    }
+
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -145,16 +156,16 @@ if ($acesso) {
      * Endereço
      */
 
-    $select = 'SELECT endereco,
+    $select = "SELECT endereco,
                       bairro,
                       tbcidade.nome,
                       tbestado.uf,
                       cep,
-                      CONCAT("(",IFnull(telResidencialDDD,"--"),") ",IFnull(telResidencial,"---")),
-                      CONCAT("(",IFnull(telCelularDDD,"--"),") ",IFnull(telCelular,"---"))
+                      CONCAT('(',IFnull(telResidencialDDD,'--'),') ',IFnull(telResidencial,'---')),
+                      CONCAT('(',IFnull(telCelularDDD,'--'),') ',IFnull(telCelular,'---'))
                  FROM tbpessoa LEFT JOIN tbcidade USING (idCidade)
                                LEFT JOIN tbestado USING (idEstado)
-                WHERE idPessoa = ' . $idPessoa;
+                WHERE idPessoa = {$idPessoa}";
 
     $result = $pessoal->select($select);
 

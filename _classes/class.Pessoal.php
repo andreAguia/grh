@@ -3090,6 +3090,90 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor  idServidor do servidor
      */
+    function get_cargoComissaoAno($texto) {
+
+        # Classes
+        $cargoComissao = new CargoComissao();
+        $tipoNomeacao = new TipoNomeacao();
+        
+        # Pega os dados
+        $item = explode("&", $texto);
+        $idServidor = $item[0];
+        $ano = $item[1];        
+
+        # Pega o id do cargo em comissão (se houver)		 
+        $select = "SELECT idComissao, tipo, dtNom, dtExo
+                     FROM tbcomissao JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE tbtiponomeacao.visibilidade <> 2
+                      AND (({$ano} BETWEEN year(dtNom) AND year(dtExo))
+                       OR ({$ano} >= year(dtNom) AND dtExo is null))
+                    AND idServidor = {$idServidor}";
+
+        $row = parent::select($select);
+        $num = parent::count($select);
+
+        $tipo = null;
+        $retorno = null;
+        $contador = 1;
+
+        # Percorre os cargos
+        foreach ($row as $rr) {
+
+            # Pega o $idComissao
+            $idComissao = $rr[0];
+
+            # Informa o tipo
+            if ($rr[1] <> 1) { // O tipo 1 (padrão) não precisa ser ressaltado
+                $tipo = " - {$tipoNomeacao->get_nome($rr[1])}";
+            }
+
+            # Verifica se tem cargo
+            if (!is_null($idComissao)) {
+
+                # Pega o nome do cargo em comissão
+                $select = 'SELECT tbtipocomissao.descricao 
+                            FROM tbcomissao 
+                            JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                           WHERE idcomissao = ' . $idComissao;
+
+                $row2 = parent::select($select, false);
+                $tipoCargo = $row2[0];
+
+                # Pega a descrição do cargo
+                $descricao = $cargoComissao->get_descricaoCargo($idComissao);
+
+                # Verifica se tem tipo
+                if (!empty($tipo)) {
+                    $tipoCargo .= $tipo;
+                    #$descricao .= $tipo;
+                }
+                
+                # Acesta as datas
+                $dataInicial = date_to_php($rr[2]);
+                $dataFinal = date_to_php($rr[3]);
+
+                # Coloca na variável retorno
+                $retorno .= "{$descricao}<br/>({$tipoCargo})<br/>{$dataInicial} - {$dataFinal}";
+                #$retorno .= "<span id='orgaoCedido'>[{$descricao}]</span>";
+            }
+
+            if ($contador < $num) {
+                $contador++;
+                $retorno .= "<br/>";
+            }
+        }
+
+        return $retorno;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoComissao
+     * Informa o cargo em Comiss�o do Servidor (se tiver)
+     * 
+     * @param	string $idServidor  idServidor do servidor
+     */
     function get_cargoComissaoDados($idServidor) {
 
         # Classe CargoComissão

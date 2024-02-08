@@ -110,6 +110,7 @@ if ($acesso) {
                                tbcomissao.dtNom,
                                tbcomissao.dtPublicNom,                               
                                "Reitor",
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           LEFT JOIN tbcomissao USING (idservidor)
@@ -122,6 +123,7 @@ if ($acesso) {
                                tbcomissao.dtNom,
                                tbcomissao.dtPublicNom,                               
                                tbdescricaocomissao.descricao,
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           LEFT JOIN tbcomissao USING (idservidor)
@@ -135,6 +137,7 @@ if ($acesso) {
                                tbordenador.dtDesignacao,
                                tbordenador.dtPublicDesignacao,
                                descricao,
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbordenador LEFT JOIN tbservidor USING (idservidor)
                                            LEFT JOIN tbpessoa USING (idPessoa)                                          
@@ -146,12 +149,15 @@ if ($acesso) {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo('Responsáveis pela Prestação de Contas');
-                $tabela->set_label(array("Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Detalhe"));
+                $tabela->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Detalhe", "Relatório"]);
                 $tabela->set_conteudo($result);
                 $tabela->set_align(array("left", "center", "left", "center", "center", "left"));
-                $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php"));
-//            $tabela->set_classe(array(null,"Pessoal", null, "CargoComissao"));
-//            $tabela->set_metodo(array(null,"get_nomeECargo", null, "exibeDadosNomeacao"));
+
+                $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+                $tabela->set_classe([null, null, null, null, null, null, "CadastroResponsavel"]);
+                $tabela->set_metodo([null, null, null, null, null, null, "exibeAnexo"]);
+
+                $tabela->set_idCampo('idServidor');
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
 
@@ -168,6 +174,7 @@ if ($acesso) {
                                tbcomissao.dtExo,
                                tbcomissao.dtPublicExo,    
                                'Reitor',
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           LEFT JOIN tbcomissao USING (idservidor)
@@ -183,6 +190,7 @@ if ($acesso) {
                                tbcomissao.dtExo,
                                tbcomissao.dtPublicExo,    
                                tbdescricaocomissao.descricao,
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           LEFT JOIN tbcomissao USING (idservidor)
@@ -199,6 +207,7 @@ if ($acesso) {
                                tbordenador.dtTermino,
                                tbordenador.dtPublicTermino,    
                                descricao,
+                               tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbordenador LEFT JOIN tbservidor USING (idservidor)
                                            LEFT JOIN tbpessoa USING (idPessoa)    
@@ -210,13 +219,16 @@ if ($acesso) {
                 $result = $pessoal->select($select);
 
                 $tabela = new Tabela();
-                $tabela->set_titulo("Responsáveis pela Prestação de Contas em {$parametroAno}");
-                $tabela->set_label(array("Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe"));
+                $tabela->set_titulo("Responsáveis pela Prestação de Contas");
+                $tabela->set_subtitulo("Em {$parametroAno}");
+                $tabela->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe", "Relatório"]);
                 $tabela->set_conteudo($result);
-                $tabela->set_align(array("left", "center", "left", "center", "center", "center", "center", "left"));
-                $tabela->set_funcao(array(null, null, null, "date_to_php", "date_to_php", "date_to_php", "date_to_php"));
-//            $tabela->set_classe(array(null,"Pessoal", null, "CargoComissao"));
-//            $tabela->set_metodo(array(null,"get_nomeECargo", null, "exibeDadosNomeacao"));
+                $tabela->set_align(["left", "center", "left", "center", "center", "center", "center", "left"]);
+
+                $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php", "date_to_php", "date_to_php"]);
+                $tabela->set_classe([null, null, null, null, null, null, null, null, "CadastroResponsavel"]);
+                $tabela->set_metodo([null, null, null, null, null, null, null, null, "exibeAnexo"]);
+
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
 
@@ -352,7 +364,7 @@ if ($acesso) {
 
                 $relatorio = new Relatorio();
                 $relatorio->set_titulo("Responsáveis pela Prestação de Contas em {$parametroAno}");
-                $relatorio->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe"]);                
+                $relatorio->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Exoneração", "Publicação", "Detalhe"]);
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(["left", "center", "left", "center", "center", "center", "center", "left"]);
                 $relatorio->set_funcao([null, null, null, "date_to_php", "date_to_php", "date_to_php", "date_to_php"]);

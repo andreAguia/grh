@@ -12,6 +12,7 @@ class AtoReitor {
     private $textoReitor = null;
     private $textoPrincipal = null;
     private $reitor = null;
+    private $generoReitor = null;
     private $saltoRodape = 3;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
@@ -26,12 +27,9 @@ class AtoReitor {
         # Conecta ao banco de dados
         $pessoal = new Pessoal();
 
-        # Gerente do GRH (id 66)
-        $idReitor = $pessoal->get_reitor();
-        $nomeReitor = $pessoal->get_nome($idReitor);
-
         # Valores padrão de Origem
-        $this->reitor = $nomeReitor;
+        $this->reitor = $pessoal->get_nome($pessoal->get_reitor());
+        $this->generoReitor = $pessoal->get_sexo($pessoal->get_reitor());
     }
 
     ###########################################################
@@ -108,7 +106,11 @@ class AtoReitor {
         br();
 
         # Declaração
-        p('ATO DO REITOR', 'pAtoTitulo');
+        if ($this->generoReitor == "Masculino") {
+            p('ATO DO REITOR', 'pAtoTitulo');
+        } else {
+            p('ATO DA REITORA', 'pAtoTitulo');
+        }
         p('DE ' . $this->data, 'pAtoTitulo');
         br(2);
 
@@ -126,12 +128,16 @@ class AtoReitor {
 
         # Assinatura
         #p('____________________________________________________','pCiAssinatura');
-        p('<b>' . strtoupper($this->reitor) . '<br/>REITOR</b>', 'pCiAssinatura');
+
+        if ($this->generoReitor == "Masculino") {
+            p('<b>' . strtoupper($this->reitor) . '<br/>REITOR</b>', 'pCiAssinatura');
+        } else {
+            p('<b>' . strtoupper($this->reitor) . '<br/>REITORA</b>', 'pCiAssinatura');
+        }
 
         $grid->fechaColuna();
         $grid->fechaGrid();
 
         $this->rodape();
     }
-
 }

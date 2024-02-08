@@ -61,7 +61,7 @@ if ($acesso) {
     $processo = $reducao->get_numProcesso($idServidorPesquisado);
 
     # do Ato
-    if ($this->generoReitor == "Masculino") {
+    if ($generoReitor == "Masculino") {
         $textoReitor = "O <b>REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO – UENF</b>,"
                 . " tendo em vista as suas atribuições estabelecidas no Decreto nº 30.672, de 18/02/2002 e o que consta no Processo nº $processo,";
     } else {

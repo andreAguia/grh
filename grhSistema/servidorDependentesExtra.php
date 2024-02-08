@@ -27,7 +27,6 @@ $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 # verifica se dependente é filho
 if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
 
-
     # Calcula a data limite de termino
     $dataHistoricaFinal = "22/12/2021";     // Data da Publicação da Portaria 95/2021
     $dataIdade = addMeses(addAnos($dtNasc, 6), 11);
@@ -45,8 +44,12 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
  * Auxílio Educação
  */
 
+# Inicia a classe
+$aux = new AuxilioEducacao();
+$idadeLimite = $aux->get_idadeFinal();
+
 if ($auxEduc == "Sim") {
-    $aux = new AuxilioEducacao();
+
     if ($aux->verificaDireitoAuxEduca($parentesco)) {
         $intra = new Intra();
         $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
@@ -63,11 +66,11 @@ if ($auxEduc == "Sim") {
 //    $erro = 1;
 //    $msgErro .= 'O CPF deverá ser informado para o dependente com Auxílio Educação\n';
 //}
-
 # Coloca o auxEducação como Não quando tinha 24 anos ou mais na data da publicação da lei
 $intra = new Intra();
 $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-$anos24 = get_dataIdade($dtNasc, 24);
+
+$anos24 = get_dataIdade($dtNasc, $idadeLimite);
 if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
     $campoValor[6] = "Não";
     $campoValor[7] = null;

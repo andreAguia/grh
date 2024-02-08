@@ -13,8 +13,12 @@ $dependente = new Dependente();
 $idDependente = $campoValor[3];
 $dados = $dependente->get_dados($idDependente);
 $dtNasc = date_to_php($dados["dtNasc"]);
-$anos21 = get_dataIdade($dtNasc, 21);
-$anos24 = get_dataIdade($dtNasc, 24);
+
+# Datas Limite
+$aux = new AuxilioEducacao();
+
+$anos21 = get_dataIdade($dtNasc, $aux->get_idadeInicial());
+$anos24 = get_dataIdade($dtNasc, $aux->get_idadeFinal());
 $anos24Mais1 = addDias($anos24, 1, false);
 $dataInicial = date_to_php($campoValor[0]);
 $dataTermino = date_to_php($campoValor[1]);

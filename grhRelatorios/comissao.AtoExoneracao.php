@@ -17,7 +17,7 @@ $idComissao = get('id');
 $postData = post('dataEmissao', date("Y-m-d"));
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario,[1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 
@@ -30,10 +30,13 @@ if ($acesso) {
     $cargoComissao = new CargoComissao();
 
     # Pega os dados da comissao
-    $dadosComissao = $cargoComissao->get_dados($idComissao);           // dados da comissao
+    $dadosComissao = $cargoComissao->get_dados($idComissao);
     $idTipoComissao = $dadosComissao['idTipoComissao'];
+    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);
 
-    $tipoComissao = $pessoal->get_dadosTipoComissao($idTipoComissao);   // dados do tipo de comissao
+    # do(a) Reitor(a)
+    $generoReitor = $pessoal->get_sexo($pessoal->get_reitor());
+
     # Preenche as variaveis da comissao
     $nome = strtoupper($pessoal->get_nome($dadosComissao['idServidor'])); // Nome do servidor
     $idFuncional = $pessoal->get_idFuncional($dadosComissao['idServidor']);  // idFuncional
@@ -64,7 +67,11 @@ if ($acesso) {
     $ato->show();
 
     # Preambulo
-    p("O REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    if ($generoReitor == "Masculino") {
+        p("O REITOR DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    } else {
+        p("A REITORA DA UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE DARCY RIBEIRO,  no uso das atribuiçoes legais;", "preambulo");
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
@@ -93,7 +100,11 @@ if ($acesso) {
     br(4);
 
     # Reitor
-    p("<b>" . $reitor . "<br/>REITOR</b>", "reitor");
+    if ($generoReitor == "Masculino") {
+        p("<b>" . $reitor . "<br/>REITOR</b>", "reitor");
+    } else {
+        p("<b>" . $reitor . "<br/>REITORA</b>", "reitor");
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(8);

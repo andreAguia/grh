@@ -7,6 +7,24 @@ class AuxilioEducacao {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
+    # Define as idades de acordo com a lei
+    private $idadeInicial = 21;
+    private $idadeFinal = 25;
+
+    ##############################################################
+
+    public function get_idadeInicial() {
+    
+        return $this->idadeInicial;
+    }
+
+    ##############################################################
+
+    public function get_idadeFinal() {
+    
+        return $this->idadeFinal;
+    }
+
     ##############################################################
 
     public function get_dados($id = null) {
@@ -90,12 +108,12 @@ class AuxilioEducacao {
         if (file_exists($arquivo)) {
 
             # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o cOMPROVANTE");
+            $link = new Link(null, $arquivo, "Exibe o comprovante");
             $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
             $link->set_target("_blank");
             $link->show();
         } else {
-            echo "-";
+            p("SEM COMPROVAÇÃO","pAvisoRegularizarVermelho");
         }
     }
 
@@ -167,8 +185,8 @@ class AuxilioEducacao {
 
             # Pega as datas limites
             $dtNasc = date_to_php($dados["dtNasc"]);
-            $anos21 = get_dataIdade($dtNasc, 21);
-            $anos24 = get_dataIdade($dtNasc, 24);
+            $anos21 = get_dataIdade($dtNasc, $this->idadeInicial);
+            $anos24 = get_dataIdade($dtNasc, $this->idadeFinal);
             $idade = idade($dtNasc);
 
             # Dados do Servidor
@@ -222,10 +240,10 @@ class AuxilioEducacao {
              * Informa a data em que faz 21 anos
              */
 
-            if (idade(date_to_php($dados["dtNasc"])) >= 21) {
-                titulotable("Fez 21 anos em:");
+            if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeInicial) {
+                titulotable("Fez {$this->idadeInicial} anos em:");
             } else {
-                titulotable("Fará 21 anos em:");
+                titulotable("Fará {$this->idadeInicial} anos em:");
             }
             $painel = new Callout("warning");
             $painel->abre();
@@ -255,10 +273,10 @@ class AuxilioEducacao {
              * Término do Direito
              */
 
-            if (idade(date_to_php($dados["dtNasc"])) >= 24) {
-                titulotable("Fez 24 anos em:");
+            if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeFinal) {
+                titulotable("Fez {$this->idadeFinal} anos em:");
             } else {
-                titulotable("Fará 24 anos em:");
+                titulotable("Fará {$this->idadeFinal} anos em:");
             }
             $painel = new Callout("warning");
             $painel->abre();
@@ -348,7 +366,7 @@ class AuxilioEducacao {
             $dados = $dependente->get_dados($id);
 
             # Pega as datas limites
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
 
             # Pega a data Inicial
             $dtInicial = $this->get_dtInicialAuxEducacaoControle($id);
@@ -401,7 +419,7 @@ class AuxilioEducacao {
             $dados = $dependente->get_dados($id);
 
             # Pega as datas limites
-            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
+            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
             $dtInicioGeral = $this->get_dtInicialAuxEducacao($id);
 
             # Pega o último comprovante deste dependente
@@ -428,7 +446,7 @@ class AuxilioEducacao {
         # Pega os dados do dependente
         $dependente = new Dependente();
         $dados = $dependente->get_dados($id);
-        return get_dataIdade(date_to_php($dados["dtNasc"]), 21);
+        return get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
     }
 
     ###########################################################
@@ -451,7 +469,7 @@ class AuxilioEducacao {
         if (in_array($dados["idParentesco"], $tipos)) {
 
             # Pega as datas limites
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
 
             # Data Histórica Inicial
             $intra = new Intra();
@@ -496,8 +514,8 @@ class AuxilioEducacao {
         if (in_array($dados["idParentesco"], $tipos)) {
 
             # Pega as datas limites
-            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), 21);
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), 24);
+            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
+            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
 
             # Data Histórica Inicial
             $intra = new Intra();
@@ -508,7 +526,7 @@ class AuxilioEducacao {
                 if ($pendencia) {
                     return "Não";
                 } else {
-                    p("Estava com mais de 24 anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
+                    p("Estava com mais de {$this->idadeFinal} anos<br/>na data de Publicação<br/>da Portaria nº95 - {$dataHistoricaInicial}", "pDependenteSDireito");
                 }
             } else {
 
@@ -517,16 +535,16 @@ class AuxilioEducacao {
 
                     # Verifica se e menor de 21 anos e 
                     # informa a partir de quando fica sem precisar compravar escolaridade
-                    if (idade(date_to_php($dados["dtNasc"])) < 21) {
+                    if (idade(date_to_php($dados["dtNasc"])) < $this->idadeInicial) {
                         if ($pendencia) {
                             return "Não";
                         } else {
-                            p("Situação regular até:<br/>{$anos21} (21 anos)", "pAvisoRegularizarAzul");
+                            p("Situação regular até:<br/>{$anos21} ({$this->idadeInicial} anos)", "pAvisoRegularizarAzul");
                         }
                     }
 
                     # Verifica se tem mais de 21 anos
-                    if (idade(date_to_php($dados["dtNasc"])) >= 21) {
+                    if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeInicial) {
                         $dadosComprovantes = $this->get_dadosIdDependente($id);
                         $ultimaDatacomprovada = $this->get_ultimaDataComprovada($id);
 

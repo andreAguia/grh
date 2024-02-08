@@ -311,11 +311,11 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            $relatorio->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso"));
+            $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Escolaridade", "Curso"]);
             $relatorio->set_conteudo($result);
-            $relatorio->set_align(array("center", "left", "left", "left", "left", "left"));
-            $relatorio->set_classe(array(null, null, "pessoal", "pessoal", null, "Formacao"));
-            $relatorio->set_metodo(array(null, null, "get_Cargo", "get_Lotacao", null, "get_curso"));
+            $relatorio->set_align(["center", "left", "left", "left", "left", "left"]);
+            $relatorio->set_classe([null, null, "pessoal", "pessoal", null, "Formacao"]);
+            $relatorio->set_metodo([null, null, "get_Cargo", "get_Lotacao", null, "get_curso"]);
             $relatorio->show();
             break;
 

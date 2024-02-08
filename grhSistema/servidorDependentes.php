@@ -191,12 +191,16 @@ if ($acesso) {
 
     # Verifica se o dependente é filho e tinha mais de 24 anos na data histórica do aux educação e saúde
     if (!empty($id)) {
+        # Pega a idade máxima
+        $auxilio = new AuxilioEducacao();
+        $idadeLimite = $auxilio->get_idadeFinal();
+        
         if ($aux->tinhaDireitoDataHistorica($id)) {
             $readonly = false;
             $helptext = null;
         } else {
             $readonly = true;
-            $helptext = "Dependente estava com mais de 24 anos quando da data de Publicação da Portaria nº 95/2021";
+            $helptext = "Dependente estava com mais de {$idadeLimite} anos quando da data de Publicação da Portaria nº 95/2021";
         }
     } else {
         $readonly = false;

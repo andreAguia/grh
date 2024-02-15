@@ -1196,13 +1196,8 @@ class MenuPrincipal {
      */
     public function moduloCalendarioPgto() {
 
-        $painel = new Callout();
-        $painel->abre();
-        
         $calend = new CalendarioPgto();
         $calend->exibeCalendario();
-
-        $painel->fecha();
     }
 
     ######################################################################################################################

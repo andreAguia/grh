@@ -467,8 +467,8 @@ class AuxilioEducacao {
             $dados = $dependente->get_dados($id);
 
             # Pega as datas limites
-            $anos21 = $this->get_data21Anos($id);
-            $dtInicioGeral = $this->get_dataInicialDireito($id);
+            $data21Anos = $this->get_data21Anos($id);
+            $dataInicialControle = $this->get_dataInicialControle($id);
 
             # Pega o último comprovante deste dependente
             $pessoal = new Pessoal();
@@ -476,10 +476,10 @@ class AuxilioEducacao {
 
             if (empty($comprovantes[0])) {
                 # Verifica se fez 21 anos apos a data inicial limite
-                if (dataMaior($dtInicioGeral, $anos21) == $dtInicioGeral) {
-                    return $dtInicioGeral;
+                if (dataMaior($dataInicialControle, $data21Anos) == $dataInicialControle) {
+                    return $dataInicialControle;
                 } else {
-                    return $anos21;
+                    return $data21Anos;
                 }
             } else {
                 return addDias(date_to_php($comprovantes["dtTermino"]), 1, false);
@@ -629,25 +629,16 @@ class AuxilioEducacao {
                             $dataInicial = date_to_php($item["dtInicio"]);
                             $dataFinal = date_to_php($item["dtTermino"]);
 
-                            echo "Contador: {$contador}";
-                            br();
-
                             # Verfica se existe algum período faltando
                             if ($contador == 1) {
                                 # Atualiza a data anterior
                                 $dataFinalAnterior = addDias($dataFinal, 1, false);
-
-                                echo "DataInicialControle: {$dataInicialControle}";
-                                br();
-                                echo "DataFinal: {$dataFinal}";
-                                br();
                             } else {
-                                echo "{$dataInicial} <> {$dataFinalAnterior}<br/>";
                                 if ($dataInicial <> $dataFinalAnterior) {
                                     if ($pendencia) {
                                         return "Sim";
                                     } else {
-                                        p("Falta cadastrar o período<br/>de {$dataFinalAnterior} até {$dataInicial}", "pAvisoRegularizarAzul");
+                                        p("Falta CADASTRARyy o período<br/>de {$dataFinalAnterior} até {$dataInicial}", "pAvisoRegularizarAzul");
                                         hr("alerta");
                                     }
                                     # Atualiza a data anterior
@@ -656,12 +647,11 @@ class AuxilioEducacao {
                             }
 
                             # Verifica a primeira data cadastrada bate com a data inicial do controle
-                            if (dataMenor($dataInicial, $dataInicialControle) == $dataInicialControle AND $contador == 1) {
-
+                            if ($contador == 1 AND $dataInicial <> $dataInicialControle) {
                                 if ($pendencia) {
                                     return "Sim";
                                 } else {
-                                    p("Falta cadastrar o período<br/>de {$dataInicialControle} até {$dataInicial}", "pAvisoRegularizarAzul");
+                                    p("Falta CADASTRAR o período<br/>de {$dataInicialControle} até " . addDias($dataInicial, -1, false), "pAvisoRegularizarAzul");
                                     hr("alerta");
                                 }
                             }
@@ -671,7 +661,7 @@ class AuxilioEducacao {
                                 if ($pendencia) {
                                     return "Sim";
                                 } else {
-                                    p("Falta regularizar período<br/>de {$dataInicial} até {$dataFinal}", "pAvisoRegularizarAzul");
+                                    p("Falta COMPROVAR o período<br/>de {$dataInicial} até {$dataFinal}", "pAvisoRegularizarAzul");
                                     hr("alerta");
                                 }
                             }

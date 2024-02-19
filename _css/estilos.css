@@ -120,6 +120,7 @@ p#pDependenteSDireito{
     color: darkred;
     margin: 0px;
     text-align: center;
+    font-size: 14px;
 }
 
 p#pAvisoRegularizarVermelho{
@@ -127,6 +128,7 @@ p#pAvisoRegularizarVermelho{
     color: red;
     margin: 0px;
     text-align: center;
+    font-size: 14px;
 }
 
 p#pAvisoRegularizarAzul{
@@ -134,12 +136,14 @@ p#pAvisoRegularizarAzul{
     color: darkblue;
     margin: 0px;
     text-align: center;
+    font-size: 14px;
 }
 
 p#plistaDeclaracaoRecebida{
     padding: 0px 0px 0px 0px;
     color: darkblue;
     margin: 0px;
+    font-size: 14px;
 }
 
 p#pAvisoEncerramento{
@@ -148,6 +152,7 @@ p#pAvisoEncerramento{
     color: red;
     font-weight: bold;
     margin: 0px;
+    font-size: 14px;
 }
 
 p#pAviso24Anos{

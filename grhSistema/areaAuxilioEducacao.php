@@ -221,7 +221,7 @@ if ($acesso) {
             if ($parametroStatus == "Com Pendência") {
                 $tabela->set_subtitulo("COM PENDÊNCIAS");
             }
-            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Nascimento", "Idade", "Detalhado", "Editar Comprovantes", "Tem Pendência?"]);
+            $tabela->set_label(["Servidor", "Parente", "Parentesco", "Nascimento", "Idade Atual", "Detalhado", "Editar Comprovantes", "Tem Pendência?"]);
             $tabela->set_width([20, 20, 5, 10, 5, 20, 5, 5]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "left", "center", "center", "center", "left"]);

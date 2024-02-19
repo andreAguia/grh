@@ -36,8 +36,8 @@ if ($acesso) {
 
     # Faz os cálculos dos valores padrão para quando for inclusão    
     if (empty($id)) {
-        $dtInicio = date_to_bd($aux->get_dtInicialAuxEducacaoControle($idDependente));
-        $dtTermino = date_to_bd($aux->get_dtFinalAuxEducacaoControle($idDependente));
+        $dtInicio = date_to_bd($aux->get_auxEducacaoControleDataInicial($idDependente));
+        $dtTermino = date_to_bd($aux->get_auxEducacaoControleDataFinal($idDependente));
     } else {
         $dtInicio = null;
         $dtTermino = null;
@@ -68,7 +68,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Comprovantes de Escolaridade para o Auxílio Educação Recebidos<br/>{$nomeDependente}");
+    $objeto->set_nome("Dados Cadastrados");
 
     # botão de voltar da lista
     if (empty($origem)) {
@@ -91,6 +91,7 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita("SELECT dtInicio,
                                      dtTermino,
+                                     estudou,
                                      obs,
                                      idDependente
                                 FROM tbauxeducacao
@@ -102,8 +103,7 @@ if ($acesso) {
     }
 
     # subtitulo
-    $objeto->set_subtitulo($cpfDependente);
-
+    #$objeto->set_subtitulo($cpfDependente);
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -153,6 +153,14 @@ if ($acesso) {
             'padrao' => $dtTermino,
             'col' => 4,
             'linha' => 1),
+        array('linha' => 1,
+            'col' => 2,
+            'nome' => 'estudou',
+            'title' => 'Estudou no Período',
+            'label' => 'Estudou?',
+            'tipo' => 'combo',
+            'array' => array("Sim", "Não"),
+            'size' => 20),
         array('nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
@@ -201,12 +209,85 @@ if ($acesso) {
         case "" :
         case "listar" :
 
+            function exibeDadosCompAuxEduc($id) {
+                # Pega os dados do dependente
+                $dependente = new Dependente();
+                $dados = $dependente->get_dados($id);
+                $cpfDependente = $dependente->get_cpf($id);
+
+                $aux = new AuxilioEducacao();
+
+                # Pega os parentescos com direito au auxEducação
+                $tipos = $aux->get_arrayTipoParentescoAuxEduca();
+
+                # Verifica se tem direito
+                if (in_array($dados["idParentesco"], $tipos)) {
+
+                    # Pega os dados do dependente
+                    $dtNasc = date_to_php($dados["dtNasc"]);
+                    $idade = idade($dtNasc);
+
+                    # Pega as datas limites
+                    $dataInicioCobranca = $aux->get_auxEducacaoCobrancaDataInicial($id);
+                    $dataFinalCobranca = $aux->get_auxEducacaoCobrancaDataFinal($id);
+
+                    # Dados do Servidor
+                    $idPessoa = $dados["idPessoa"];
+                    $pessoal = new Pessoal();
+
+                    $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+                    $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+                    $intra = new Intra();
+                    $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+                    #########################################
+                    # Define período SEM comprovação
+                    if (dataMenor($dataHistoricaInicial, $dataInicioCobranca) == $dataInicioCobranca) {
+                        $scomp = "Já tinha mais de 21 anos<br/>quando adquiriu o direito!";
+                        $ccomp = "{$dataHistoricaInicial} a {$dataFinalCobranca}";
+                    } else {
+                        $scomp = "{$aux->get_auxEducacaoDataInicial($id)} a {$dataInicioCobranca}";
+                        $ccomp = "{$dataInicioCobranca} a {$dataFinalCobranca}";
+                    }
+
+                    $array = array(
+                        array($dataInicioCobranca, get_dataIdade(date_to_php($dados["dtNasc"]), $aux->get_idadeFinalLei()), $scomp, $ccomp, $dataFinalCobranca)
+                    );
+
+                    $tabela = new Tabela();
+                    $tabela->set_titulo($dados["nome"]);
+                    $tabela->set_subtitulo($dados["cpf"]);
+                    $tabela->set_conteudo($array);
+                    $tabela->set_label(["{$aux->get_idadeInicialLei()} anos:", "{$aux->get_idadeFinalLei()} anos:", "Período SEM Comprovação", "Período COM Comprovação", "Encerra o Direito:"]);
+                    $tabela->set_width([15, 15, 27, 27, 15]);
+                    #$tabela->set_align(["left"]);
+                    $tabela->set_totalRegistro(false);
+                    $tabela->set_formatacaoCondicional(array(
+                        array('coluna' => 0,
+                            'valor' => $dataInicioCobranca,
+                            'operador' => '=',
+                            'id' => 'alerta')));
+                    $tabela->show();
+                }
+            }
+
+            # Exibe dados do Dependente
+            $objeto->set_rotinaExtraAntesTabela("exibeDadosCompAuxEduc");
+            $objeto->set_rotinaExtraAntesTabelaParametro($idDependente);
+
             # cria a área lateral
             $objeto->set_objetoLateralListar("AuxilioEducacao");
             $objeto->set_objetoLateralListarMetodo("exibeQuadroLista");
             $objeto->set_objetoLateralListarParametro($idDependente);
 
         case "editar" :
+
+            # cria a área lateral
+            $objeto->set_objetoLateralEditar("AuxilioEducacao");
+            $objeto->set_objetoLateralEditarMetodo("exibeQuadroEdita");
+            $objeto->set_objetoLateralEditarParametro($idDependente);
+
             $objeto->$fase($id);
             break;
 

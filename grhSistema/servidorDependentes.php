@@ -193,7 +193,7 @@ if ($acesso) {
     if (!empty($id)) {
         # Pega a idade máxima
         $auxilio = new AuxilioEducacao();
-        $idadeLimite = $auxilio->get_idadeFinal();
+        $idadeLimite = $auxilio->get_idadeFinalLei();
         
         if ($aux->tinhaDireitoDataHistorica($id)) {
             $readonly = false;

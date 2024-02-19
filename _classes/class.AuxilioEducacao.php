@@ -13,22 +13,33 @@ class AuxilioEducacao {
 
     ##############################################################
 
-    public function get_idadeInicial() {
+    public function get_idadeInicialLei() {
 
+        /**
+         * Informa, conforme a lei, a idade inicial 
+         * da exigência dos comprovantes
+         */
         return $this->idadeInicial;
     }
 
     ##############################################################
 
-    public function get_idadeFinal() {
+    public function get_idadeFinalLei() {
 
+        /**
+         * Informa, conforme a lei, a idade final 
+         * da exigência dos comprovantes
+         */
         return $this->idadeFinal;
     }
 
     ##############################################################
 
-    public function get_dataInicialCobranca($id) {
+    public function get_auxEducacaoCobrancaDataInicial($id) {
 
+        /**
+         * Informa a data em que o dependente faz a idade inicial do direito
+         */
         # Pega os dados do dependente
         $dependente = new Dependente();
         $dados = $dependente->get_dados($id);
@@ -38,14 +49,29 @@ class AuxilioEducacao {
 
     ##############################################################
 
-    public function get_dataFinalCobranca($id) {
+    public function get_auxEducacaoCobrancaDataFinal($id) {
 
+        /**
+         * Informa a data em que o dependente faz a idade final do direito
+         * menos um para atender a lei
+         */
         # Pega os dados do dependente
         $dependente = new Dependente();
         $dados = $dependente->get_dados($id);
 
         # Retorna a data anterior - um dia antes
         return addDias(get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal), -1, false);
+    }
+
+    ##############################################################
+
+    public function get_dataInicialDeFato($id) {
+
+        /**
+         * Informa, comprarando todas as variáveis, a data que,
+         * de fato, o servidor tem o direito ao benefício
+         */
+        # Pega as possíveis datas a serem analisadas
     }
 
     ##############################################################
@@ -65,26 +91,6 @@ class AuxilioEducacao {
         } else {
             $pessoal = new Pessoal();
             return $pessoal->select("SELECT * FROM tbauxeducacao WHERE idAuxEducacao = {$id}", false);
-        }
-    }
-
-    ##############################################################
-
-    public function get_dadosIdDependente($idDependente = null) {
-
-        /**
-         * Informa os dados da base de dados de um idDependente específico
-         * 
-         * @param $id integer null O id 
-         * 
-         * @syntax $dependente->get_dados([$id]);
-         */
-        # Joga o valor informado para a variável da classe
-        if (empty($idDependente)) {
-            return null;
-        } else {
-            $pessoal = new Pessoal();
-            return $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$idDependente}");
         }
     }
 
@@ -124,23 +130,51 @@ class AuxilioEducacao {
          * 
          * @syntax $formacao->exibeCertificado($idFormacao);
          */
-        # Monta o arquivo
-        $arquivo = PASTA_COMP_AUX_EDUCA . $id . ".pdf";
+        # Verifica se estudou no período
+        $dados = $this->get_dados($id);
 
-        # Verifica se ele existe
-        if (file_exists($arquivo)) {
-
-            # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o comprovante");
-            $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
-            $link->set_target("_blank");
-            $link->show();
+        if ($dados["estudou"] == "Não") {
+            label("Não estudou", "primary");
         } else {
-            p("SEM COMPROVAÇÃO", "pAvisoRegularizarVermelho");
+
+
+            # Monta o arquivo
+            $arquivo = PASTA_COMP_AUX_EDUCA . $id . ".pdf";
+
+            # Verifica se ele existe
+            if (file_exists($arquivo)) {
+
+                # Monta o link
+                $link = new Link(null, $arquivo, "Exibe o comprovante");
+                $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+                $link->set_target("_blank");
+                $link->show();
+            } else {
+                label("Sem Comprovação", "alert");
+            }
         }
     }
 
-###########################################################
+    ###########################################################
+
+    private function temComprovante($id) {
+        /**
+         * Retorna true se tiver comprovante em pdf para esse cadastro
+         * 
+         * @param $id integer null O id
+         */
+        if (empty($id)) {
+            return false;
+        } else {
+            if (file_exists(PASTA_COMP_AUX_EDUCA . $id . ".pdf")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    ###########################################################
 
     public function temPendencia($id) {
         /**
@@ -151,7 +185,7 @@ class AuxilioEducacao {
         return $this->fazAnalise($id, true);
     }
 
-###########################################################
+    ###########################################################
 
     public function exibeTemPendencia($id) {
         /**
@@ -171,6 +205,33 @@ class AuxilioEducacao {
         } else {
             echo "---";
         }
+    }
+
+    ###########################################################
+
+    public function exibeQuadroEdita($id) {
+        /**
+         * Exibe um quadro para ser exibida na rotina de controle dos comprovantes na área lateral
+         * 
+         * @param $id integer null O idDependente
+         */
+        # Cpf
+        $dependente = new Dependente();
+        $cpfDependente = $dependente->get_cpf($id);
+
+        # Exibe Situação
+        tituloTable("Situação");
+
+        $painel = new Callout("warning");
+        $painel->abre();
+
+        $this->exibeSituacao($id);
+
+        if (empty($cpfDependente)) {
+            p("Sem CPF Cadastrado!", "pAvisoRegularizarVermelho");
+        }
+
+        $painel->fecha();
     }
 
 ###########################################################
@@ -194,28 +255,39 @@ class AuxilioEducacao {
 
             # Exibe Situação
             tituloTable("Situação");
+
             $painel = new Callout("warning");
             $painel->abre();
 
             $this->exibeSituacao($id);
 
             if (empty($cpfDependente)) {
-                br();
-                p("Dependente sem<br/>CPF Cadastrado!", "pAvisoRegularizarVermelho");
+                p("Sem CPF Cadastrado!", "pAvisoRegularizarVermelho");
             }
 
             $painel->fecha();
 
-            # Pega as datas limites
+            # Pega os dados do dependente
             $dtNasc = date_to_php($dados["dtNasc"]);
             $idade = idade($dtNasc);
 
-            $anos21 = $this->get_dataInicialCobranca($id);
-            $anos24 = $this->get_dataFinalCobranca($id);
+            # Exibe a Idade do Dependente
+            tituloTable("Idade Atual do Dependente");
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("{$idade} anos", "center", "f16");
+
+            $painel->fecha();
+
+            # Pega as datas limites
+            $dataInicioCobranca = $this->get_auxEducacaoCobrancaDataInicial($id);
+            $dataFinalCobranca = $this->get_auxEducacaoCobrancaDataFinal($id);
 
             # Dados do Servidor
             $idPessoa = $dados["idPessoa"];
             $pessoal = new Pessoal();
+
             $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
             $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
@@ -229,7 +301,7 @@ class AuxilioEducacao {
                 array("Publicação da Portaria", $dataHistoricaInicial));
 
             $tabela = new Tabela();
-            #$tabela->set_titulo("Datas Inicial");
+            $tabela->set_titulo("Define a Data Inicial");
             $tabela->set_conteudo($array);
             $tabela->set_label(["Descrição", "Data"]);
             $tabela->set_width([50, 50]);
@@ -237,72 +309,11 @@ class AuxilioEducacao {
             $tabela->set_totalRegistro(false);
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 1,
-                    'valor' => $this->get_dtInicialAuxEducacao($id),
+                    'valor' => $this->get_auxEducacaoDataInicial($id),
                     'operador' => '=',
                     'id' => 'alerta')));
 
             $tabela->show();
-
-            /*
-             * Exibe o período sem obrigação de 
-             * enviar a declaração de escolaridade
-             */
-
-            tituloTable("Sem Precisar da Declaração de Escolaridade");
-            $painel = new Callout("warning");
-            $painel->abre();
-
-            # Verifica se teve período sem precisar comprovar
-            if (dataMenor($dataHistoricaInicial, $anos21) == $anos21) {
-                p("Dependente já tinha mais de 21 anos quando adquiriu o direito!", "center", "f14");
-            } else {
-                p($this->get_dtInicialAuxEducacao($id) . " a " . $anos21, "center", "f14");
-            }
-            $painel->fecha();
-
-            /*
-             * Informa a data em que faz 21 anos
-             */
-
-            if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeInicial) {
-                titulotable("Fez {$this->idadeInicial} anos em:");
-            } else {
-                titulotable("Fará {$this->idadeInicial} anos em:");
-            }
-            $painel = new Callout("warning");
-            $painel->abre();
-            p($anos21, "center", "f14");
-            $painel->fecha();
-
-            /*
-             * Exibe período com obrigatoriedade
-             * da entrega da declaração
-             */
-
-            # Verifica a data de início
-            if (dataMenor($dataHistoricaInicial, $anos21) == $anos21) {
-                $array = [$dataHistoricaInicial, $anos24];
-            } else {
-                $array = [$anos21, $anos24];
-            }
-
-            titulotable("Com Declaração de Escolaridade");
-            $painel = new Callout("warning");
-            $painel->abre();
-            p($array[0] . " a " . $array[1], "center", "f14");
-            $painel->fecha();
-
-            /*
-             * Informa a data em que faz 25 anos menos um dia
-             * Término do Direito
-             */
-
-            titulotable("Um dia Antes do<br/>Aniversário de {$this->idadeFinal} anos:");
-            $painel = new Callout("warning");
-            $painel->abre();
-            p($anos24, "pAviso24Anos");
-            p("Encerra o Direito!", "pAvisoEncerramento");
-            $painel->fecha();
         }
     }
 
@@ -369,14 +380,14 @@ class AuxilioEducacao {
 
     ###########################################################
 
-    public function get_dtFinalAuxEducacaoControle($id) {
+    public function get_auxEducacaoControleDataInicial($id) {
 
         /**
-         * fornece a data final de um lançamento do controle de declaração escolar para o Auxílio educação
+         * fornece a data inicial de um lançamento do controle de declaração escolar para o Auxílio educação
          * 
          * @param $id integer null O id 
          * 
-         * @syntax $dependente->get_dtInicialAuxEducacaoControle([$id]);
+         * @syntax $dependente->get_auxEducacaoControleDataInicial([$id]);
          */
         if (empty($id)) {
             return null;
@@ -386,22 +397,63 @@ class AuxilioEducacao {
             $dados = $dependente->get_dados($id);
 
             # Pega as datas limites
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
+            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
+            $dtInicioGeral = $this->get_auxEducacaoDataInicial($id);
 
-            # Pega a data Inicial
-            $dtInicial = $this->get_dtInicialAuxEducacaoControle($id);
+            # Pega o último comprovante deste dependente
+            $pessoal = new Pessoal();
+            $comprovantes = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$id} ORDER BY dtInicio desc LIMIT 1", false);
+
+            if (empty($comprovantes[0])) {
+                # Verifica se fez 21 anos apos a data inicial limite
+                if (dataMaior($dtInicioGeral, $anos21) == $dtInicioGeral) {
+                    return $dtInicioGeral;
+                } else {
+                    return $anos21;
+                }
+            } else {
+                return addDias(date_to_php($comprovantes["dtTermino"]), 1, false);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_auxEducacaoControleDataFinal($id) {
+
+        /**
+         * fornece a data final de um lançamento do controle de declaração escolar para o Auxílio educação
+         * 
+         * @param $id integer null O id 
+         * 
+         * @syntax $dependente->get_auxEducacaoControleDataFinal([$id]);
+         */
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados do dependente
+            $dependente = new Dependente();
+            $dados = $dependente->get_dados($id);
+
+            # Pega as datas
+            $dtInicial = $this->get_auxEducacaoControleDataInicial($id);
+            $dataFinal = $this->get_auxEducacaoCobrancaDataFinal($id);
 
             if (month($dtInicial) < 6) {
-                return dataMenor("30/06/" . year($dtInicial), $anos24);
+                return dataMenor("30/06/" . year($dtInicial), $dataFinal);
             } else {
-                return dataMenor("31/12/" . year($dtInicial), $anos24);
+                return dataMenor("31/12/" . year($dtInicial), $dataFinal);
             }
         }
     }
 
 ###########################################################
 
-    public function get_dtInicialAuxEducacao($id) {
+    public function get_auxEducacaoDataInicial($id) {
+
+        /*
+         * Informa a data em que o servidor passou a ter direito a receber o banefício
+         */
 
         # Pega os dados do dependente
         $dependente = new Dependente();
@@ -422,58 +474,12 @@ class AuxilioEducacao {
 
     ###########################################################
 
-    public function get_dtInicialAuxEducacaoControle($id) {
-
-        /**
-         * fornece a data inicial de um lançamento do controle de declaração escolar para o Auxílio educação
-         * 
-         * @param $id integer null O id 
-         * 
-         * @syntax $dependente->get_dtInicialAuxEducacaoControle([$id]);
-         */
-        if (empty($id)) {
-            return null;
-        } else {
-            # Pega os dados do dependente
-            $dependente = new Dependente();
-            $dados = $dependente->get_dados($id);
-
-            # Pega as datas limites
-            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
-            $dtInicioGeral = $this->get_dtInicialAuxEducacao($id);
-
-            # Pega o último comprovante deste dependente
-            $pessoal = new Pessoal();
-            $comprovantes = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$id} ORDER BY dtInicio desc LIMIT 1", false);
-
-            if (empty($comprovantes[0])) {
-                # Verifica se fez 21 anos apos a data inicial limite
-                if (dataMaior($dtInicioGeral, $anos21) == $dtInicioGeral) {
-                    return $dtInicioGeral;
-                } else {
-                    return addDias($anos21, 1, false);
-                }
-            } else {
-                return addDias(date_to_php($comprovantes["dtTermino"]), 1, false);
-            }
-        }
-    }
-
-    ###########################################################
-
-    public function get_dtTerminoAuxEducacao($id) {
-
-        # Pega os dados do dependente
-        $dependente = new Dependente();
-        $dados = $dependente->get_dados($id);
-        return get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
-    }
-
-    ###########################################################
-
-
     /*
      * Verifica se o dependente tinha mais de 24 ou não na data da publicação da lei 9450/2021
+     * 
+     * 
+     * VERRRRR
+     * 
      */
 
     public function tinhaDireitoDataHistorica($id) {
@@ -488,14 +494,11 @@ class AuxilioEducacao {
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
 
-            # Pega as datas limites
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
-
             # Data Histórica Inicial
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
 
-            if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+            if (dataMenor($dataHistoricaInicial, $this->get_auxEducacaoCobrancaDataFinal($id)) == $this->get_auxEducacaoCobrancaDataFinal($id)) {
                 return false;
             } else {
                 return true;
@@ -510,7 +513,7 @@ class AuxilioEducacao {
     public function verificaDireitoAuxEduca($idParentesco) {
 
         /**
-         * Verifica se o idinserido tem direito ao auxílio educação
+         * Verifica se o parentesco tem direito ao auxílio educação
          */
         if (in_array($idParentesco, $this->get_arrayTipoParentescoAuxEduca())) {
             return true;
@@ -533,16 +536,19 @@ class AuxilioEducacao {
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
 
-            # Pega as datas limites
-            $anos21 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeInicial);
-            $anos24 = get_dataIdade(date_to_php($dados["dtNasc"]), $this->idadeFinal);
+            # Datas de acordo com a idade
+            $dataInicioCobranca = $this->get_auxEducacaoCobrancaDataInicial($id);
+            $dataFinalCobranca = $this->get_auxEducacaoCobrancaDataFinal($id);
 
-            # Data Histórica Inicial
+            # Data Inicial (data de fato)
+            $dataInicialDeFato = $this->get_auxEducacaoDataInicial($id);
+
+            # Data em que iniciou a portaria
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
 
             # Verifica se perdeu o direito antes da data histórica
-            if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+            if (dataMenor($dataHistoricaInicial, $dataFinalCobranca) == $dataFinalCobranca) {
                 if ($pendencia) {
                     return "Não";
                 } else {
@@ -554,56 +560,121 @@ class AuxilioEducacao {
                 if ($dados["auxEducacao"] == "Sim") {
 
                     # Verifica se e menor de 21 anos e 
-                    # informa a partir de quando fica sem precisar compravar escolaridade
+                    # informa a partir de quando fica sem precisar comprovar escolaridade
                     if (idade(date_to_php($dados["dtNasc"])) < $this->idadeInicial) {
                         if ($pendencia) {
                             return "Não";
                         } else {
-                            p("Situação regular até:<br/>{$anos21} ({$this->idadeInicial} anos)", "pAvisoRegularizarAzul");
+                            p("Situação regular até:<br/>{$dataInicioCobranca} ({$this->idadeInicial} anos)", "pAvisoRegularizarAzul");
                         }
                     }
 
-                    # Verifica se tem mais de 21 anos
+                    ###########################################################
+                    # Verifica se tem mais que a idade inicial de cobrança (21 anos)
                     if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeInicial) {
-                        $dadosComprovantes = $this->get_dadosIdDependente($id);
-                        $ultimaDatacomprovada = $this->get_ultimaDataComprovada($id);
 
-                        # Verifica se tem mais que 21 e não comprovou nada
-                        if (empty($ultimaDatacomprovada)) {
-                            $ultimaDatacomprovada = $anos21;
-                        }
+                        # Pega os dados de todos os comprovantes entregues
+                        $pessoal = new Pessoal();
+                        $row = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$id} ORDER BY dtInicio");
 
-                        # Verifica se existe ainda algum período possível
-                        if (strtotime(date_to_bd($ultimaDatacomprovada)) < strtotime(date_to_bd($anos24))) {
+                        # Variáveis uteis
+                        $contador = 1;
+                        $ultDataCadastrada = null;
 
-                            # Pega a data Inicial e de término desse semestre
-                            $dtTermino = $this->get_dtFinalAuxEducacaoControle($id);
-                            $dtInicial = $this->get_dtInicialAuxEducacaoControle($id);
+                        # Percorre os dados
+                        foreach ($row as $item) {
+                            # Acerta os dados
+                            $dataInicial = date_to_php($item["dtInicio"]);
+                            $dataFinal = date_to_php($item["dtTermino"]);
 
-                            if (jaPassou($dtInicial)) {
+                            #echo $dataInicial, " - ", $dataInicialDeFato;br();
+                            # Verfica se existe algum período faltando
+                            if ($contador == 1) {
+                                # Atualiza a data anterior
+                                $dataFinalAnterior = addDias($dataFinal, 1, false);
+                            } else {  ##################################################################### Parei aqui
+                                if ($dataInicial <> $dataFinalAnterior) {
+                                    if ($pendencia) {
+                                        return "Sim";
+                                    } else {
+                                        p("Falta cadastrar o período<br/>de {$dataFinalAnterior} até {$dataInicial}", "pAvisoRegularizarAzul");
+                                        hr("alerta");
+                                    }
+                                    # Atualiza a data anterior
+                                    $dataFinalAnterior = addDias($dataFinal, 1, false);
+                                }
+                            }
+                            
+                            echo $dataInicial,"->",$dataFinal," [",$dataFinalAnterior,"]<br/>";
+
+                            # Verifica a primeira data cadastrada bate com a data inicial do controle
+                            if (dataMenor($dataInicial, $dataInicialDeFato) == $dataInicialDeFato AND $contador == 1) {
+
                                 if ($pendencia) {
                                     return "Sim";
                                 } else {
-                                    p("Regularizar o período:<br/>de " . addDias($ultimaDatacomprovada, 1, false) . " até {$dtTermino}", "pAvisoRegularizarVermelho");
+                                    p("Falta cadastrar o período<br/>de {$dataInicialDeFato} até {$dataInicial}", "pAvisoRegularizarAzul");
+                                    hr("alerta");
                                 }
-                            } else {
+                            }
+
+                            # Verifica se informou que estudou e tem comprovante
+                            if (!$this->temComprovante($item["idAuxEducacao"]) AND $item["estudou"] <> "Não") {
                                 if ($pendencia) {
-                                    return "Não";
+                                    return "Sim";
                                 } else {
-                                    p("Em {$dtInicial}<br/>comprovar o periodo de<br/>{$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarAzul");
-                                    if ($dtTermino == $anos24) {
-                                        p("(Quando encerra o direito)", "pAvisoRegularizarVermelho");
-                                    }
+                                    p("Falta regularizar período<br/>de {$dataInicial} até {$dataFinal}", "pAvisoRegularizarAzul");
+                                    hr("alerta");
                                 }
                             }
-                        } else {
-                            if ($pendencia) {
-                                return "Não";
-                            } else {
-                                p("Dependente já encerrou o direito e comprovou todos os período possíveis", "pAvisoRegularizarAzul");
-                            }
+
+                            # acrescenta o contador
+                            $contador++;
                         }
+
+
+
+
+//                        $ultimaDatacomprovada = $this->get_ultimaDataComprovada($id);
+//
+//                        # Verifica se tem mais que 21 e não comprovou nada
+//                        if (empty($ultimaDatacomprovada)) {
+//                            $ultimaDatacomprovada = $dataInicioCobranca;
+//                        }
+//
+//                        # Verifica se existe ainda algum período possível
+//                        if (strtotime(date_to_bd($ultimaDatacomprovada)) < strtotime(date_to_bd($dataFinalCobranca))) {
+//
+//                            # Pega a data Inicial e de término desse semestre
+//                            $dtTermino = $this->get_auxEducacaoControleDataFinal($id);
+//                            $dtInicial = $this->get_auxEducacaoControleDataInicial($id);
+//
+//                            if (jaPassou($dtInicial)) {
+//                                if ($pendencia) {
+//                                    return "Sim";
+//                                } else {
+//                                    p("Regularizar o período:<br/>de " . addDias($ultimaDatacomprovada, 1, false) . " até {$dtTermino}", "pAvisoRegularizarVermelho");
+//                                }
+//                            } else {
+//                                if ($pendencia) {
+//                                    return "Não";
+//                                } else {
+//                                    p("Em {$dtInicial}<br/>comprovar o periodo de<br/>{$ultimaDatacomprovada} até {$dtTermino}", "pAvisoRegularizarAzul");
+//                                    if ($dtTermino == $dataFinalCobranca) {
+//                                        p("(Quando encerra o direito)", "pAvisoRegularizarVermelho");
+//                                    }
+//                                }
+//                            }
+//                        } else {
+//                            if ($pendencia) {
+//                                return "Não";
+//                            } else {
+//                                p("Dependente já encerrou o direito e comprovou todos os período possíveis", "pAvisoRegularizarAzul");
+//                            }
+//                        }
                     }
+
+                    ###########################################################
                 } else {
                     if ($dados["auxEducacao"] == "Não") {
                         if ($pendencia) {

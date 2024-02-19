@@ -46,7 +46,7 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
 
 # Inicia a classe
 $aux = new AuxilioEducacao();
-$idadeLimite = $aux->get_idadeFinal();
+$idadeLimite = $aux->get_idadeFinalLei();
 
 if ($auxEduc == "Sim") {
 

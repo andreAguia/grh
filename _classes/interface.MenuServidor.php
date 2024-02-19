@@ -10,6 +10,7 @@ class MenuServidor {
     private $idUsuario = null;
     private $idServidor = null;
     private $perfil = null;
+    private $perfilTipo = null;
     private $situacao = null;
     private $cargoComissao = null;
     private $orgaoCedido = null;

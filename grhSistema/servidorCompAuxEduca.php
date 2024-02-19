@@ -36,8 +36,8 @@ if ($acesso) {
 
     # Faz os cálculos dos valores padrão para quando for inclusão    
     if (empty($id)) {
-        $dtInicio = date_to_bd($aux->get_auxEducacaoControleDataInicial($idDependente));
-        $dtTermino = date_to_bd($aux->get_auxEducacaoControleDataFinal($idDependente));
+        $dtInicio = date_to_bd($aux->get_dataInicialFormulario($idDependente));
+        $dtTermino = date_to_bd($aux->get_dataFinalFormulario($idDependente));
     } else {
         $dtInicio = null;
         $dtTermino = null;
@@ -228,8 +228,8 @@ if ($acesso) {
                     $idade = idade($dtNasc);
 
                     # Pega as datas limites
-                    $dataInicioCobranca = $aux->get_auxEducacaoCobrancaDataInicial($id);
-                    $dataFinalCobranca = $aux->get_auxEducacaoCobrancaDataFinal($id);
+                    $dataInicioCobranca = $aux->get_data21Anos($id);
+                    $dataFinalCobranca = $aux->get_data25AnosMenos1Dia($id);
 
                     # Dados do Servidor
                     $idPessoa = $dados["idPessoa"];
@@ -247,7 +247,7 @@ if ($acesso) {
                         $scomp = "Já tinha mais de 21 anos<br/>quando adquiriu o direito!";
                         $ccomp = "{$dataHistoricaInicial} a {$dataFinalCobranca}";
                     } else {
-                        $scomp = "{$aux->get_auxEducacaoDataInicial($id)} a {$dataInicioCobranca}";
+                        $scomp = "{$aux->get_dataInicialDireito($id)} a {$dataInicioCobranca}";
                         $ccomp = "{$dataInicioCobranca} a {$dataFinalCobranca}";
                     }
 

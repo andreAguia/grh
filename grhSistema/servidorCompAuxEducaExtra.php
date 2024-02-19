@@ -18,8 +18,8 @@ $dtNasc = date_to_php($dados["dtNasc"]);
 $aux = new AuxilioEducacao();
 
 # Pega as datas limite desse dependente
-$dataInicialCobranca = $aux->get_auxEducacaoCobrancaDataInicial($idDependente);
-$dataFinalCobranca = $aux->get_auxEducacaoCobrancaDataFinal($idDependente);
+$dataInicialCobranca = $aux->get_data21Anos($idDependente);
+$dataFinalCobranca = $aux->get_data25AnosMenos1Dia($idDependente);
 $dataFinalCobrancaMaisUmDia = addDias($dataFinalCobranca, 1, false);
 
 # Pega as datas digitadas

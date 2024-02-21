@@ -26,6 +26,12 @@ $dataFinalCobrancaMaisUmDia = addDias($dataFinalCobranca, 1, false);
 $dataInicial = date_to_php($campoValor[0]);
 $dataTermino = date_to_php($campoValor[1]);
 
+# Verifica se a data inicial é posterior a data de término
+if (dataMenor($dataInicial, $dataTermino) == $dataTermino) {
+    $erro = 1;
+    $msgErro .= 'A data de início está alem da data de término!\n';
+}
+
 # Verifica se a data inicial é posterior a data de encerramento do direito
 if (dataMenor($dataInicial, $dataFinalCobrancaMaisUmDia) == $dataFinalCobrancaMaisUmDia) {
     $erro = 1;

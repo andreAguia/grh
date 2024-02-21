@@ -575,6 +575,27 @@ class AuxilioEducacao {
         # Pega os parentescos com direito au auxEducação
         $tipos = $this->get_arrayTipoParentescoAuxEduca();
 
+        # Datas de acordo com a idade
+        $data21Anos = $this->get_data21Anos($idDependente);
+        $data25AnosMenos1Dia = $this->get_data25AnosMenos1Dia($idDependente);
+
+        # Data Final do pŕoximo semestra
+        $hoje = date("d/m/Y");
+        $ano = year($hoje);
+        $proximoAno = $ano + 1;
+
+        # Define a última data do semestre a ser comprovada
+        if (month($hoje) <= 6) {
+            $datafinalProximoSemestre = "31/12/{$ano}";
+        } else {
+            $datafinalProximoSemestre = "30/06/{$proximoAno}";
+        }
+
+        # Verifica com a data de 25 anos
+        if (strtotime(date_to_bd($datafinalProximoSemestre)) > strtotime(date_to_bd($data25AnosMenos1Dia))) {
+            $datafinalProximoSemestre = $data25AnosMenos1Dia;
+        }
+
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
 
@@ -608,115 +629,162 @@ class AuxilioEducacao {
                         if ($pendencia) {
                             return "Não";
                         } else {
-                            p("Situação regular até:<br/>{$data21Anos} ({$this->idadeInicial} anos)", "pAvisoRegularizarAzul");
+                            p("Situação Regular até:<br/>{$data21Anos} ({$this->idadeInicial} anos)", "pAvisoRegularizarAzul");
                         }
-                    }
-
-                    ###########################################################
-                    # Verifica se tem mais que a idade inicial de cobrança (21 anos)
-                    if (idade(date_to_php($dados["dtNasc"])) >= $this->idadeInicial) {
-
+                    } else {
                         # Pega os dados de todos os comprovantes entregues
                         $pessoal = new Pessoal();
                         $row = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$idDependente} ORDER BY dtInicio");
+                        
+                        # flag de ocorrências
+                        $ocorrencia = false;
 
-                        # Variáveis uteis
-                        $contador = 1;
+                        if (count($row) > 0) {
+                            # Variáveis uteis
+                            $contador = 1;
 
-                        # Percorre os dados
-                        foreach ($row as $item) {
-                            # Acerta os dados
-                            $dataInicial = date_to_php($item["dtInicio"]);
-                            $dataFinal = date_to_php($item["dtTermino"]);
+                            # Percorre os dados
+                            foreach ($row as $item) {
+                                # Acerta os dados
+                                $dataInicial = date_to_php($item["dtInicio"]);
+                                $dataFinal = date_to_php($item["dtTermino"]);
 
-                            #####################################################################
-                            # Verfica se existe no INÍCIO algum período faltando
-                            #####################################################################
-                            if ($contador == 1 AND $dataInicial <> $dataInicialControle) {
-                                if ($pendencia) {
-                                    return "Sim";
-                                } else {
-                                    p("Falta CADASTRAR o período Inicial<br/>de {$dataInicialControle} até " . addDias($dataInicial, -1, false), "pAvisoRegularizarVermelho");
-                                    hr("alerta");
-                                }
-                            }
-
-                            #####################################################################
-                            # Verfica se existe no MEIO algum período faltando
-                            #####################################################################
-                            if ($contador == 1) {
-                                # Atualiza a data anterior
-                                $dataFinalAnterior = addDias($dataFinal, 1, false);
-                            } else {
-                                if ($dataInicial <> $dataFinalAnterior) {
+                                #####################################################################
+                                # Verfica se existe no INÍCIO algum período faltando
+                                #####################################################################
+                                if ($contador == 1 AND $dataInicial <> $dataInicialControle) {
                                     if ($pendencia) {
                                         return "Sim";
                                     } else {
-                                        p("Falta CADASTRAR o período<br/>de " . $dataFinalAnterior . " até " . addDias($dataInicial, -1, false), "pAvisoRegularizarVermelho");
+                                        p("Falta CADASTRAR o período Inicial<br/>de {$dataInicialControle} até " . addDias($dataInicial, -1, false), "pAvisoRegularizarVermelho");
                                         hr("alerta");
+                                        $ocorrencia = true;
                                     }
                                 }
-                                # Atualiza a data anterior
-                                $dataFinalAnterior = addDias($dataFinal, 1, false);
-                            }
 
-                            #####################################################################
-                            # Verifica se informou que estudou e tem comprovante
-                            #####################################################################
-                            if (!$this->temComprovante($item["idAuxEducacao"]) AND $item["estudou"] <> "Não") {
-                                if ($pendencia) {
-                                    return "Sim";
+                                #####################################################################
+                                # Verfica se existe no MEIO algum período faltando
+                                #####################################################################
+                                if ($contador == 1) {
+                                    # Atualiza a data anterior
+                                    $dataFinalAnterior = addDias($dataFinal, 1, false);
                                 } else {
-                                    p("Falta COMPROVAR o período<br/>de {$dataInicial} até {$dataFinal}", "pAvisoRegularizarVermelho");
-                                    hr("alerta");
-                                }
-                            }
-
-                            #####################################################################
-                            # Verifica se existe no FINAL algum período
-                            #####################################################################
-                            # Última data cadastrada
-                            $ultimaDataCadastrada = $this->get_ultimaDataComprovada($idDependente);
-
-                            # Data Final do pŕoximo semestra
-                            $hoje = date("d/m/Y");
-                            $ano = year($hoje);
-                            $proximoAno = $ano + 1;
-
-                            if (month($hoje) <= 6) {
-                                $datafinalProximoSemestre = "31/12/{$ano}";
-                            } else {
-                                $datafinalProximoSemestre = "30/07/{$proximoAno}";
-                            }
-
-                            # Verifica com a data de 25 anos
-                            if (strtotime(date_to_bd($datafinalProximoSemestre)) > strtotime(date_to_bd($data25AnosMenos1Dia))) {
-                                $datafinalProximoSemestre = $data25AnosMenos1Dia;
-                            }
-
-                            # Informa o aviso
-                            if (strtotime(date_to_bd($ultimaDataCadastrada)) < strtotime(date_to_bd($data25AnosMenos1Dia))) {
-
-                                # Verifica se é o último lançamento
-                                if ($dataFinal == $ultimaDataCadastrada) {
-
-                                    # Verifica se ultima data cadastrada é diferente a do próximo semestre
-                                    if ($ultimaDataCadastrada <> $datafinalProximoSemestre) {
+                                    if ($dataInicial <> $dataFinalAnterior) {
                                         if ($pendencia) {
                                             return "Sim";
                                         } else {
-                                            $dataInicialTemp = addDias($ultimaDataCadastrada, 1, false);
-                                            $dataFinalTemp = $this->get_dataFinalFormulario($idDependente);
-
-                                            p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
+                                            p("Falta CADASTRAR o período<br/>de " . $dataFinalAnterior . " até " . addDias($dataInicial, -1, false), "pAvisoRegularizarVermelho");
                                             hr("alerta");
+                                            $ocorrencia = true;
+                                        }
+                                    }
+                                    # Atualiza a data anterior
+                                    $dataFinalAnterior = addDias($dataFinal, 1, false);
+                                }
+
+                                #####################################################################
+                                # Verifica se informou que estudou e tem comprovante
+                                #####################################################################
+                                if (!$this->temComprovante($item["idAuxEducacao"]) AND $item["estudou"] <> "Não") {
+                                    if ($pendencia) {
+                                        return "Sim";
+                                    } else {
+                                        p("Falta COMPROVAR o período<br/>de {$dataInicial} até {$dataFinal}", "pAvisoRegularizarVermelho");
+                                        hr("alerta");
+                                        $ocorrencia = true;
+                                    }
+                                }
+
+                                #####################################################################
+                                # Verifica se existe no FINAL algum período
+                                #####################################################################
+                                # Última data cadastrada
+                                $ultimaDataCadastrada = $this->get_ultimaDataComprovada($idDependente);
+
+                                # Informa o aviso
+                                if (strtotime(date_to_bd($ultimaDataCadastrada)) < strtotime(date_to_bd($data25AnosMenos1Dia))) {
+
+                                    # Verifica se é o último lançamento
+                                    if ($dataFinal == $ultimaDataCadastrada) {
+
+                                        # Verifica se ultima data cadastrada é diferente a do próximo semestre
+                                        if ($ultimaDataCadastrada <> $datafinalProximoSemestre) {
+                                            if ($pendencia) {
+                                                return "Sim";
+                                            } else {
+                                                $dataInicialTemp = addDias($ultimaDataCadastrada, 1, false);
+                                                $dataFinalTemp = $this->get_dataFinalFormulario($idDependente);
+
+                                                p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
+                                                $ocorrencia = true;
+                                                
+                                                # Verifica se tem mais meses
+                                                while (strtotime(date_to_bd($dataFinalTemp)) < strtotime(date_to_bd($datafinalProximoSemestre))) {
+
+                                                    # Define a data inicial
+                                                    $dataInicialTemp = addDias($dataFinalTemp, 1, false);
+
+                                                    # Define a data final
+                                                    $ano = year($dataInicialTemp);
+                                                    if (month($dataInicialTemp) <= 6) {
+                                                        $dataFinalTemp = "30/06/{$ano}";
+                                                    } else {
+                                                        $dataFinalTemp = "31/12/{$ano}";
+                                                    }
+
+                                                    # Verifica se passou a data final do semestre
+                                                    if (dataMenor($dataFinalTemp, $datafinalProximoSemestre) == $datafinalProximoSemestre) {
+                                                        $dataFinalTemp = $datafinalProximoSemestre;
+                                                    }
+
+                                                    hr("alerta");
+                                                    p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            # acrescenta o contador
-                            $contador++;
+                                # acrescenta o contador
+                                $contador++;
+                            }
+                            
+                            if(!$ocorrencia){
+                                p("Situação Regular", "pAvisoRegularizarAzul");
+                            }
+                        } else {
+
+                            if ($pendencia) {
+                                return "Sim";
+                            } else {
+                                $dataInicialTemp = $this->get_dataInicialFormulario($idDependente);
+                                $dataFinalTemp = $this->get_dataFinalFormulario($idDependente);
+
+                                p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
+
+                                # Verifica se tem mais meses
+                                while (strtotime(date_to_bd($dataFinalTemp)) < strtotime(date_to_bd($datafinalProximoSemestre))) {
+
+                                    # Define a data inicial
+                                    $dataInicialTemp = addDias($dataFinalTemp, 1, false);
+
+                                    # Define a data final
+                                    $ano = year($dataInicialTemp);
+                                    if (month($dataInicialTemp) <= 6) {
+                                        $dataFinalTemp = "30/06/{$ano}";
+                                    } else {
+                                        $dataFinalTemp = "31/12/{$ano}";
+                                    }
+
+                                    # Verifica se passou a data final do semestre
+                                    if (dataMenor($dataFinalTemp, $datafinalProximoSemestre) == $datafinalProximoSemestre) {
+                                        $dataFinalTemp = $datafinalProximoSemestre;
+                                    }
+
+                                    hr("alerta");
+                                    p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
+                                }
+                            }
                         }
                     }
 
@@ -726,7 +794,7 @@ class AuxilioEducacao {
                         if ($pendencia) {
                             return "Não";
                         } else {
-                            p("Não", "pAvisoRegularizarVermelho");
+                            p("Não Recebe o Auxílio", "pAvisoRegularizarVermelho");
                         }
                     } else {
                         if ($pendencia) {

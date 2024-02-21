@@ -36,8 +36,18 @@ if ($acesso) {
 
     # Faz os cálculos dos valores padrão para quando for inclusão    
     if (empty($id)) {
-        $dtInicio = date_to_bd($aux->get_dataInicialFormulario($idDependente));
-        $dtTermino = date_to_bd($aux->get_dataFinalFormulario($idDependente));
+        $dtInicio = $aux->get_dataInicialFormulario($idDependente);
+        $dtTermino = $aux->get_dataFinalFormulario($idDependente);
+        $dataFinalCobranca = $aux->get_data25AnosMenos1Dia($idDependente);
+
+        # Verifica se a data de inicio é maior que a de termino do direito
+        if (dataMenor($dtInicio, $dataFinalCobranca) == $dataFinalCobranca) {
+            $dtInicio = null;
+            $dtTermino = null;
+        }else{
+            $dtInicio = date_to_bd($dtInicio);
+            $dtTermino = date_to_bd($dtTermino);
+        }
     } else {
         $dtInicio = null;
         $dtTermino = null;

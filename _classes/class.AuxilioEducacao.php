@@ -635,7 +635,7 @@ class AuxilioEducacao {
                         # Pega os dados de todos os comprovantes entregues
                         $pessoal = new Pessoal();
                         $row = $pessoal->select("SELECT * FROM tbauxeducacao WHERE idDependente = {$idDependente} ORDER BY dtInicio");
-                        
+
                         # flag de ocorrências
                         $ocorrencia = false;
 
@@ -717,7 +717,7 @@ class AuxilioEducacao {
 
                                                 p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
                                                 $ocorrencia = true;
-                                                
+
                                                 # Verifica se tem mais meses
                                                 while (strtotime(date_to_bd($dataFinalTemp)) < strtotime(date_to_bd($datafinalProximoSemestre))) {
 
@@ -748,9 +748,13 @@ class AuxilioEducacao {
                                 # acrescenta o contador
                                 $contador++;
                             }
-                            
-                            if(!$ocorrencia){
-                                p("Situação Regular", "pAvisoRegularizarAzul");
+
+                            if (!$ocorrencia) {
+                                if ($pendencia) {
+                                    return "Não";
+                                } else {
+                                    p("Situação Regular", "pAvisoRegularizarAzul");
+                                }
                             }
                         } else {
 

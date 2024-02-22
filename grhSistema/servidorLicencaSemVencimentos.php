@@ -148,11 +148,12 @@ if ($acesso) {
     }
 
     # select da lista
-    $objeto->set_selectLista('SELECT idLicencaSemVencimentos,
+    $objeto->set_selectLista("SELECT idLicencaSemVencimentos,
+                                     idLicencaSemVencimentos,
                                      CASE tipo
-                                         WHEN 1 THEN "Inicial"
-                                         WHEN 2 THEN "Renovação"
-                                         ELSE "--"
+                                         WHEN 1 THEN 'Inicial'
+                                         WHEN 2 THEN 'Renovação'
+                                         ELSE '--'
                                      END,
                                      idTpLicenca,
                                      idLicencaSemVencimentos,
@@ -160,11 +161,11 @@ if ($acesso) {
                                      idLicencaSemVencimentos,
                                      idLicencaSemVencimentos
                                 FROM tblicencasemvencimentos
-                          WHERE idServidor=' . $idServidorPesquisado . '
-                       ORDER BY dtSolicitacao desc, dtInicial desc');
+                          WHERE idServidor={$idServidorPesquisado}
+                       ORDER BY dtSolicitacao desc, dtInicial desc");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idTpLicenca,
+    $objeto->set_selectEdita("SELECT idTpLicenca,
                                      tipo,
                                      dtSolicitacao,
                                      processo,
@@ -184,7 +185,7 @@ if ($acesso) {
                                      obs,
                                      idServidor
                                 FROM tblicencasemvencimentos
-                               WHERE idLicencaSemVencimentos = ' . $id);
+                               WHERE idLicencaSemVencimentos = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -198,30 +199,30 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Status", "Tipo", "Tipo", "Dados", "Período", "Rioprevidência", "Documentos"]);
+    $objeto->set_label(["#", "Status", "Tipo", "Tipo", "Dados", "Período", "Rioprevidência", "Documentos"]);
     #$objeto->set_width([10, 5, 15, 20, 20, 5, 20]);
-    $objeto->set_align(["center", "center", "left", "left", "left"]);
-    $objeto->set_classe(["LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
-    $objeto->set_metodo(["exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia", "exibeBotaoDocumentos"]);
+    $objeto->set_align([null, "center", "center", "left", "left", "left"]);
+    $objeto->set_classe([null, "LicencaSemVencimentos", null, "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+    $objeto->set_metodo([null, "exibeStatus", null, "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia", "exibeBotaoDocumentos"]);
 
     $objeto->set_formatacaoCondicional(array(
-        array('coluna' => 0,
+        array('coluna' => 1,
             'valor' => 'Em Aberto',
             'operador' => '=',
             'id' => 'emAberto'),
-        array('coluna' => 0,
+        array('coluna' => 1,
             'valor' => 'Arquivado',
             'operador' => '=',
             'id' => 'arquivado'),
-        array('coluna' => 0,
+        array('coluna' => 1,
             'valor' => 'Aguardando CRP',
             'operador' => '=',
             'id' => 'agurdando'),
-        array('coluna' => 0,
+        array('coluna' => 1,
             'valor' => 'INCOMPLETO',
             'operador' => '=',
             'id' => 'incompleto'),
-        array('coluna' => 0,
+        array('coluna' => 1,
             'valor' => 'Vigente',
             'operador' => '=',
             'id' => 'vigenteReducao')

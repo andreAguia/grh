@@ -365,11 +365,12 @@ class LicencaSemVencimentos {
         $data = date("Y-m-d");
 
         # Licença
-        $select = 'SELECT idLicencaSemVencimentos,
+        $select = "SELECT idLicencaSemVencimentos,
+                          idLicencaSemVencimentos,   
                          CASE tipo
-                             WHEN 1 THEN "Inicial"
-                             WHEN 2 THEN "Renovação"
-                             ELSE "--"
+                             WHEN 1 THEN 'Inicial'
+                             WHEN 2 THEN 'Renovação'
+                             ELSE '--'
                          END,
                          idServidor,
                          idTpLicenca,
@@ -379,14 +380,14 @@ class LicencaSemVencimentos {
                          idServidor
                     FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                  JOIN tbpessoa USING (idPessoa)
-                    WHERE TRUE';
+                    WHERE TRUE";
 
         # Matrícula, nome ou id ou cpf
         if (!empty($nome)) {
-            $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+            $select .= " AND tbpessoa.nome LIKE '%{$nome}%'";
         }
 
-        $select .= ' ORDER BY dtSolicitacao desc, dtInicial desc';
+        $select .= " ORDER BY dtSolicitacao desc, dtInicial desc";
 
         $result = $pessoal->select($select);
         $count = $pessoal->count($select);
@@ -397,21 +398,21 @@ class LicencaSemVencimentos {
         $tabela->set_titulo($titulo);
         $tabela->set_conteudo($result);
 
-        $tabela->set_label(["Status", "Tipo", "Nome", "Licença / Afastemento", "Dados", "Período", "Rioprevidência"]);
-        $tabela->set_align(["center", "center", "left", "left", "left", "left"]);
-        $tabela->set_classe(["LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
-        $tabela->set_metodo(["exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
+        $tabela->set_label(["#", "Status", "Tipo", "Nome", "Licença / Afastemento", "Dados", "Período", "Rioprevidência"]);
+        $tabela->set_align([null, "center", "center", "left", "left", "left", "left"]);
+        $tabela->set_classe([null, "LicencaSemVencimentos", null, "Pessoal", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos", "LicencaSemVencimentos"]);
+        $tabela->set_metodo([null, "exibeStatus", null, "get_nome", "get_nomeLicenca", "exibeDados", "exibePeriodo", "exibeRioprevidencia"]);
 
         $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 0,
+            array('coluna' => 1,
                 'valor' => 'Em Aberto',
                 'operador' => '=',
                 'id' => 'emAberto'),
-            array('coluna' => 0,
+            array('coluna' => 1,
                 'valor' => 'Arquivado',
                 'operador' => '=',
                 'id' => 'arquivado'),
-            array('coluna' => 0,
+            array('coluna' => 1,
                 'valor' => 'Vigente',
                 'operador' => '=',
                 'id' => 'vigenteReducao')

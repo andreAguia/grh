@@ -102,7 +102,7 @@ class Aposentadoria {
         if ($num > 0) {
             # Percorre o array 
             foreach ($dados as $valor) {
-                
+
                 if (empty($valor["title"])) {
                     $title = $valor["texto"];
                 } else {
@@ -346,6 +346,44 @@ class Aposentadoria {
             $dtFinal = $pessoal->get_dtSaida($idServidor);
         }
 
+        return getNumDias($dtInicial, $dtFinal);
+    }
+
+##############################################################################################################################################    
+
+    /**
+     * Método get_tempoServicoUenfAntes31_12_21
+     * informa o total de dias corridos de tempo de serviço 
+     * dentro da uenf antes de 31/12/2021
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_tempoServicoUenfAntes31_12_21($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Define as datas
+        $dataAlvo = "31/12/2021";
+        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
+
+        # Verifica se a admissão é posterior a data alvo
+        if (dataMenor($dataAlvo, $dtInicial) == $dataAlvo) {
+            return 0;
+        } else {
+            # Verifica se o servidor é inativo e pega a data de saída dele
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtFinal = $dataAlvo;
+            } else {
+                $dtFinal = $pessoal->get_dtSaida($idServidor);
+
+                # Verifica se saiu antes ou depois da data alvo
+                if (dataMenor($dataAlvo, $dtFinal) == $dataAlvo) {
+                    $dtFinal = $dataAlvo;
+                }
+            }
+        }
+        
         return getNumDias($dtInicial, $dtFinal);
     }
 

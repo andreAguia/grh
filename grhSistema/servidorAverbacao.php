@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -141,7 +142,7 @@ if ($acesso) {
     $objeto->set_totalRegistro(false);
 
     $objeto->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-    $objeto->set_metodo([null, null, null, "getNumDias", "getDiasAnterior151298"]);
+    $objeto->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 4,

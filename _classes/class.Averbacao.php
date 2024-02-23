@@ -24,7 +24,7 @@ class Averbacao {
 
     #####################################################
 
-    function getDiasAnterior151298($idAverbacao) {
+    function getDiasAnterior15_12_98($idAverbacao) {
 
         # Verifica se foi informado o id
         if (empty($idAverbacao)) {
@@ -32,7 +32,7 @@ class Averbacao {
         }
 
         # Data a ser verificada 
-        $dtalvo = date_to_bd("15/12/1998");
+        $dtAlvo = date_to_bd("15/12/1998");
 
         # Pega os valores
         $select = "SELECT dtInicial,
@@ -45,16 +45,63 @@ class Averbacao {
         $dados = $pessoal->select($select, false);
 
         # Verifica se data inicial é maior que mais recente 
-        if ($dados[0] > $dtalvo) {
+        if ($dados[0] > $dtAlvo) {
             return 0;
         } else {
             # Verifica se a data final é anterior a data alvo
-            if ($dados[1] < $dtalvo) {
+            if ($dados[1] < $dtAlvo) {
                 return $dados[2];
             } else {
-                return getNumDias(date_to_php($dados[0]), date_to_php($dtalvo));
+                return getNumDias(date_to_php($dados[0]), date_to_php($dtAlvo));
             }
         }
+    }
+
+    #####################################################
+
+    function getTempoAverbadoAntes31_12_21($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega os valores
+        $select = "SELECT dtInicial,
+                          dtFinal,
+                          dias
+                     FROM tbaverbacao
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtInicial";
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+
+        # Define a variavel de retorno
+        $tempo = 0;
+
+        # Define as datas
+        $dataAlvo = "31/12/2021";
+
+        # Percorre os registros
+        foreach ($row as $itens) {
+            # As datas
+            $dtInicial = date_to_php($itens["dtInicial"]);
+            $dtFinal = date_to_php($itens["dtFinal"]);            
+            
+            # Verifica se a data Alvo está após o período
+            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
+                $tempo += $itens["dias"];
+            }
+            
+            # Verifica se a data Alvo está dentro  do período
+            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
+                $tempo += getNumDias($dtInicial, $dataAlvo);
+            }
+        }
+
+        return $tempo;
     }
 
     #####################################################

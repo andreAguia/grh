@@ -126,9 +126,25 @@ if ($acesso) {
         ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidorPesquisado)]
     ];
 
-    # Tabela
+    # Tabela Tempo Geral
     $tabela = new Tabela();
     $tabela->set_titulo("Tempo Geral");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
+    
+    $array = [
+        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenfAntes31_12_21($idServidorPesquisado)],
+        ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)]
+    ];
+    
+    # Tabela Tempo até 31/12/2021
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo até 31/12/2021");
     $tabela->set_conteudo($array);
     $tabela->set_label(["Descrição", "Dias"]);
     $tabela->set_width([60, 40]);
@@ -260,7 +276,7 @@ if ($acesso) {
     $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
     $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-    $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior151298"]);
+    $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
     
     $tabela->set_formatacaoCondicional(array(
         array('coluna' => 4,

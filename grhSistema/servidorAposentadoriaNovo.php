@@ -194,7 +194,7 @@ if ($acesso) {
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
             $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior151298"]);
+            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
 
             $tabela->set_formatacaoCondicional([
                 ['coluna' => 4,

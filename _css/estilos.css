@@ -139,6 +139,14 @@ p#pAvisoRegularizarAzul{
     font-size: 14px;
 }
 
+p#pAvisoRegularizarCinza{
+    padding: 0px 0px 0px 0px;
+    color: black;
+    margin: 0px;
+    text-align: center;
+    font-size: 14px;
+}
+
 p#plistaDeclaracaoRecebida{
     padding: 0px 0px 0px 0px;
     color: darkblue;

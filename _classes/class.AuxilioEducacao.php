@@ -267,6 +267,7 @@ class AuxilioEducacao {
             $this->exibeSituacao($id);
 
             if (empty($cpfDependente)) {
+                hr("alerta");
                 p("Sem CPF Cadastrado!", "pAvisoRegularizarVermelho");
             }
 
@@ -581,14 +582,13 @@ class AuxilioEducacao {
 
         # Data Final do pŕoximo semestra
         $hoje = date("d/m/Y");
-        $ano = year($hoje);
-        $proximoAno = $ano + 1;
+        $anoHoje = year($hoje);
 
         # Define a última data do semestre a ser comprovada
         if (month($hoje) <= 6) {
-            $datafinalProximoSemestre = "30/06/{$ano}";
+            $datafinalProximoSemestre = "30/06/{$anoHoje}";
         } else {
-            $datafinalProximoSemestre = "31/12/{$ano}";
+            $datafinalProximoSemestre = "31/12/{$anoHoje}";
         }
 
         # Verifica com a data de 25 anos
@@ -789,6 +789,30 @@ class AuxilioEducacao {
                                     p("Falta CADASTRAR o período <br/>de {$dataInicialTemp} até {$dataFinalTemp}", "pAvisoRegularizarVermelho");
                                 }
                             }
+                        }
+
+
+                        # Informa o semestre seguinte ao informado pela variável próximo semestre
+                        $proximoAno = $anoHoje + 1;
+
+                        # Define a última data do semestre a ser comprovada
+                        if (month($hoje) <= 6) {
+                            $primeiraData = "01/07/{$anoHoje}";
+                            $ultimaData = "31/12/{$anoHoje}";
+                        } else {
+                            $primeiraData = "01/01/{$proximoAno}";
+                            $ultimaData = "30/06/{$proximoAno}";
+                        }
+
+                        # Verifica com a data de 25 anos
+                        if (strtotime(date_to_bd($ultimaData)) > strtotime(date_to_bd($data25AnosMenos1Dia))) {
+                            $ultimaData = $data25AnosMenos1Dia;
+                        }
+
+                        # Verifica se ainda tem um semestre 
+                        if (dataMenor($primeiraData, $data25AnosMenos1Dia) == $primeiraData) {
+                            hr("alerta");
+                            p("A partir de {$primeiraData},<br/>CADASTRAR o período <br/>de {$primeiraData} até {$ultimaData}", "pAvisoRegularizarCinza");
                         }
                     }
 

@@ -586,9 +586,9 @@ class AuxilioEducacao {
 
         # Define a última data do semestre a ser comprovada
         if (month($hoje) <= 6) {
-            $datafinalProximoSemestre = "31/12/{$ano}";
+            $datafinalProximoSemestre = "30/06/{$ano}";
         } else {
-            $datafinalProximoSemestre = "30/06/{$proximoAno}";
+            $datafinalProximoSemestre = "31/12/{$ano}";
         }
 
         # Verifica com a data de 25 anos
@@ -798,7 +798,7 @@ class AuxilioEducacao {
                         if ($pendencia) {
                             return "Não";
                         } else {
-                            p("Não Recebe o Auxílio", "pAvisoRegularizarVermelho");
+                            p("Não Recebe o Auxílio", "pAvisoRegularizarAzul");
                         }
                     } else {
                         if ($pendencia) {
@@ -813,7 +813,7 @@ class AuxilioEducacao {
             if ($pendencia) {
                 return "Não";
             } else {
-                echo "---";
+                p("---", "pAvisoRegularizarAzul");
             }
         }
     }

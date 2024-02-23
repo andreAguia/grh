@@ -44,7 +44,7 @@ if ($acesso) {
         if (dataMenor($dtInicio, $dataFinalCobranca) == $dataFinalCobranca) {
             $dtInicio = null;
             $dtTermino = null;
-        }else{
+        } else {
             $dtInicio = date_to_bd($dtInicio);
             $dtTermino = date_to_bd($dtTermino);
         }
@@ -262,20 +262,32 @@ if ($acesso) {
                     }
 
                     $array = array(
-                        array($dataInicioCobranca, get_dataIdade(date_to_php($dados["dtNasc"]), $aux->get_idadeFinalLei()), $scomp, $ccomp, $dataFinalCobranca)
+                        array(
+                            $scomp,
+                            $dataInicioCobranca,
+                            $ccomp,
+                            $dataFinalCobranca,
+                            get_dataIdade(date_to_php($dados["dtNasc"]), $aux->get_idadeFinalLei())
+                        )
                     );
 
                     $tabela = new Tabela();
                     $tabela->set_titulo($dados["nome"]);
                     $tabela->set_subtitulo($dados["cpf"]);
                     $tabela->set_conteudo($array);
-                    $tabela->set_label(["{$aux->get_idadeInicialLei()} anos:", "{$aux->get_idadeFinalLei()} anos:", "Período SEM Comprovação", "Período COM Comprovação", "Encerra o Direito:"]);
-                    $tabela->set_width([15, 15, 27, 27, 15]);
+                    $tabela->set_label([
+                        "Período SEM Comprovação",
+                        "{$aux->get_idadeInicialLei()} anos:",
+                        "Período COM Comprovação",
+                        "Encerra o Direito:",
+                        "{$aux->get_idadeFinalLei()} anos:"
+                    ]);
+                    $tabela->set_width([27, 15, 27, 15, 15]);
                     #$tabela->set_align(["left"]);
                     $tabela->set_totalRegistro(false);
                     $tabela->set_formatacaoCondicional(array(
                         array('coluna' => 0,
-                            'valor' => $dataInicioCobranca,
+                            'valor' => $scomp,
                             'operador' => '=',
                             'id' => 'alerta')));
                     $tabela->show();

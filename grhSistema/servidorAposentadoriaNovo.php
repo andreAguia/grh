@@ -85,8 +85,8 @@ if ($acesso) {
             $array = [
                 ["Idade", $pessoal->get_idade($idServidorPesquisado)],
                 ["Data de Admissão", $pessoal->get_dtAdmissao($idServidorPesquisado)],
-                ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
-                ["Tempo Público Ininterrupto (Dias)", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
+                ["Data de Ingresso<br/>no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
+                ["Tempo Público<br/>Ininterrupto (Dias)", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
             ];
 
             # Tabela
@@ -94,7 +94,7 @@ if ($acesso) {
             $tabela->set_titulo("Dados do Servidor");
             $tabela->set_conteudo($array);
             $tabela->set_label(["Descrição", "Valor"]);
-            $tabela->set_width([60, 40]);
+            $tabela->set_width([50, 50]);
             $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
             $tabela->show();

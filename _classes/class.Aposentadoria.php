@@ -495,7 +495,7 @@ class Aposentadoria {
         return $totalDias;
     }
 
-##############################################################################################################################################
+#####################################################################################################################################
 
     /**
      * Método get_tempoTotal
@@ -506,11 +506,41 @@ class Aposentadoria {
     public function get_tempoTotal($idServidor) {
 
         $averbacao = new Averbacao();
-        $tempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($idServidor);
-        $tempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($idServidor);
+        $tempoAverbado = $averbacao->get_tempoAverbadoTotal($idServidor);
         $tempoUenf = $this->get_tempoServicoUenf($idServidor);
 
-        return $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
+        return $tempoAverbado + $tempoUenf;
+    }
+
+#####################################################################################################################################
+
+    /**
+     * Método get_tempoTotal
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoTotalAntes31_12_21($idServidor) {
+
+        $averbacao = new Averbacao();
+        $tempoUenf = $this->get_tempoServicoUenfAntes31_12_21($idServidor);
+        $tempoAverbado = $averbacao->getTempoAverbadoAntes31_12_21($idServidor);
+
+        return $tempoUenf + $tempoAverbado;
+    }
+
+#####################################################################################################################################
+
+    /**
+     * Método get_tempoTotal
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data20anosPublicos($idServidor) {
+        
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        return day($dtIngresso)."/".month($dtIngresso)."/".year($dtIngresso)+20;
     }
 
 #####################################################################################################################################

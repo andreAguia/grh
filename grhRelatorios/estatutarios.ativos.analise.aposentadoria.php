@@ -69,7 +69,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
-    $relatorio->set_subtitulo($subTitulo . 'Análise de Aposentadoria<br/>Em Oerdem Decrescente de Idade');
+    $relatorio->set_subtitulo($subTitulo . 'Análise de Aposentadoria<br/>Em Ordem Decrescente de Idade');
     $relatorio->set_label(['IdFuncional', 'Nome', 'Data de Ingresso<br/>no Serv.Público', 'Idade', 'Tempo de Contribuição<br/>até 31/12/2021 (dias)', 'Tempo de Contribuição<br/>Geral (dias)', 'Tempo Averbado<br/>Público (dias)', 'Tempo Averbado<br/>Privado (dias)', "Data com<br/>5 anos de Cargo", "Data com<br/>20 anos Públicos"]);
 #$relatorio->set_width([30, 20, 25, 15, 10]);
     $relatorio->set_align(["center", "left"]);

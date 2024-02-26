@@ -540,7 +540,7 @@ class Aposentadoria {
     public function get_data20anosPublicos($idServidor) {
         
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".year($dtIngresso)+20;
+        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+20);
     }
 
 #####################################################################################################################################

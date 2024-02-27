@@ -37,8 +37,10 @@ if ($acesso) {
 
     $select = 'SELECT tbservidor.idFuncional, 
                       tbpessoa.nome,
+                      tbpessoa.sexo,
+                      DATE_FORMAT(tbpessoa.dtNasc, "%d/%m/%Y"),
+                      DATE_FORMAT(tbservidor.dtAdmissao, "%d/%m/%Y"),
                       tbservidor.idservidor,
-                      DATE_FORMAT(tbpessoa.dtNasc, "%d/%m/%Y") ,
                       tbservidor.idservidor,
                       tbservidor.idservidor,
                       tbservidor.idservidor,
@@ -70,12 +72,12 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
     $relatorio->set_subtitulo($subTitulo . 'Análise de Aposentadoria<br/>Em Ordem Decrescente de Idade');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Data de Ingresso<br/>no Serv.Público', 'Idade', 'Tempo de Contribuição<br/>até 31/12/2021 (dias)', 'Tempo de Contribuição<br/>Geral (dias)', 'Tempo Averbado<br/>Público (dias)', 'Tempo Averbado<br/>Privado (dias)', "Data com<br/>5 anos de Cargo", "Data com<br/>20 anos Públicos"]);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Sexo', 'Idade', 'Data de Admissão', 'Data de Ingresso<br/>no Serv.Público', 'Tempo de Contribuição<br/>até 31/12/2021 (dias)', 'Tempo de Contribuição<br/>Geral (dias)', 'Tempo Averbado<br/>Público (dias)', 'Tempo Averbado<br/>Privado (dias)', "Data com<br/>5 anos de Cargo", "Data com<br/>20 anos Públicos"]);
 #$relatorio->set_width([30, 20, 25, 15, 10]);
     $relatorio->set_align(["center", "left"]);
-    $relatorio->set_funcao([null, null, null, "idade", null, null, null, null, "date_to_php"]);
-    $relatorio->set_classe([null, null, "Aposentadoria", null, "Aposentadoria", "Aposentadoria", "Averbacao", "Averbacao", null, "Aposentadoria"]);
-    $relatorio->set_metodo([null, null, "get_dtIngresso", null, "get_tempoTotalAntes31_12_21", "get_tempoTotal", "get_tempoAverbadoPublico", "get_tempoAverbadoPrivado", null, "get_data20anosPublicos"]);
+    $relatorio->set_funcao([null, null, null, "idade", null, null, null, null, null, null, "date_to_php"]);
+    $relatorio->set_classe([null, null, null, null, null, "Aposentadoria", "Aposentadoria", "Aposentadoria", "Averbacao", "Averbacao", null, "Aposentadoria"]);
+    $relatorio->set_metodo([null, null, null, null, null, "get_dtIngresso", "get_tempoTotalAntes31_12_21", "get_tempoTotal", "get_tempoAverbadoPublico", "get_tempoAverbadoPrivado", null, "get_data20anosPublicos"]);
     $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

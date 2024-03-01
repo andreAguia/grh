@@ -45,6 +45,7 @@ if ($acesso) {
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
+    br();
 
     # Cria um menu
     $menu = new MenuBar();
@@ -54,6 +55,26 @@ if ($acesso) {
     $linkBotaoVoltar->set_title('Volta para a página anterior');
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
+
+    # Dados do Servidor
+    $linkBotaoVoltar = new Button('Dados do Servidor', '?');
+    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
+    $menu->add_link($linkBotaoVoltar, "right");
+
+    # Regras Permanentes
+    $linkBotaoVoltar = new Button('Regras Permanentes', '?fase=regrasPermanentes');
+    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
+    $menu->add_link($linkBotaoVoltar, "right");
+
+    # Regras de Transição
+    $linkBotaoVoltar = new Button('Regras de Transição', '?');
+    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
+    $menu->add_link($linkBotaoVoltar, "right");
+
+    # Direito Adquirido
+    $linkBotaoVoltar = new Button('Direito Adquirido', '?');
+    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
+    $menu->add_link($linkBotaoVoltar, "right");
 
     $menu->show();
 
@@ -284,6 +305,87 @@ if ($acesso) {
         /*
          * Regras Premanentes
          */
+
+        case "regrasPermanentes":
+
+            titulo("Regras Permanentes");
+
+            $tabPrincipal = new Tab(["Aposentadoria<br/>Voluntária", "Aposentadoria<br/>Compulsória", "Incapacidade<br/>Permanente", "Incapacidade Permanente<br/>por Acidente de trabalho"]);
+            $tabPrincipal->abreConteudo();
+
+            /*
+             *  Aposentadoria Voluntária
+             */
+
+            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+
+            $aposentadoria->exibeAnaliseResumo();
+            $aposentadoria->exibeAnalise();
+
+            $grid1 = new Grid();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeRegras();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeRemuneração();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            
+            br();
+
+            $grid1 = new Grid();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeResumoCartilha(1);
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeResumoCartilha(2);
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            $tabPrincipal->fechaConteudo();
+
+            /*
+             *  Aposentadoria Compulsória
+             */
+
+            $tabPrincipal->abreConteudo();
+
+            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+
+            $aposentadoria->exibeAnaliseResumo();
+            $aposentadoria->exibeAnalise();
+
+            $grid1 = new Grid();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeRegras();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 6);
+
+            $aposentadoria->exibeRemuneração();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            $aposentadoria->exibeResumoCartilha();
+            $tabPrincipal->fechaConteudo();
+
+            $tabPrincipal->abreConteudo();
+            $tabPrincipal->fechaConteudo();
+
+            $tabPrincipal->abreConteudo();
+            $tabPrincipal->fechaConteudo();
+            break;
 
         ########################################################
 
@@ -672,7 +774,7 @@ if ($acesso) {
          */
 
         case "41_2":
-            
+
             # OBS regra retirada pelo sistema pois é desfavorável para o servidor
 
             $grid->fechaColuna();

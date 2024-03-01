@@ -532,7 +532,7 @@ class Aposentadoria {
 #####################################################################################################################################
 
     /**
-     * Método get_tempoTotal
+     * Método get_data20anosPublicos
      * informa em dias o tempo total do servidor
      * 
      * @param	string $idServidor idServidor do servidor
@@ -541,6 +541,34 @@ class Aposentadoria {
         
         $dtIngresso = $this->get_dtIngresso($idServidor);
         return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+20);
+    }
+
+#####################################################################################################################################
+
+    /**
+     * Método get_data10anosPublicos
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data10anosPublicos($idServidor) {
+        
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+10);
+    }
+
+#####################################################################################################################################
+
+    /**
+     * Método get_data25anosPublicos
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data25anosPublicos($idServidor) {
+        
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+25);
     }
 
 #####################################################################################################################################

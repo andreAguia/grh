@@ -572,4 +572,32 @@ class Aposentadoria {
     }
 
 #####################################################################################################################################
+
+    /**
+     * Método get_data30anosPublicos
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data30anosPublicos($idServidor) {
+        
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+30);
+    }
+
+#####################################################################################################################################
+
+    /**
+     * Método get_data35anosPublicos
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data35anosPublicos($idServidor) {
+        
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+35);
+    }
+
+#####################################################################################################################################
 }

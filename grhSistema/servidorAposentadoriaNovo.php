@@ -310,7 +310,7 @@ if ($acesso) {
 
             titulo("Regras Permanentes");
 
-            $tabPrincipal = new Tab(["Aposentadoria<br/>Voluntária", "Aposentadoria<br/>Compulsória", "Incapacidade<br/>Permanente", "Incapacidade Permanente<br/>por Acidente de trabalho"]);
+            $tabPrincipal = new Tab(["Aposentadoria Voluntária", "Aposentadoria Compulsória", "Incapacidade Permanente"]);
             $tabPrincipal->abreConteudo();
 
             /*

@@ -22,9 +22,6 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
     $averbacao = new Averbacao();
 
-    # Verifica a fase do programa
-    $fase = get('fase');
-
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -41,11 +38,10 @@ if ($acesso) {
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
-########################################################
+    ########################################################
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
-    br();
 
     # Cria um menu
     $menu = new MenuBar();
@@ -55,129 +51,174 @@ if ($acesso) {
     $linkBotaoVoltar->set_title('Volta para a página anterior');
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
-
-    # Dados do Servidor
-    $linkBotaoVoltar = new Button('Dados do Servidor', '?');
-    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
-    $menu->add_link($linkBotaoVoltar, "right");
-
-    # Regras Permanentes
-    $linkBotaoVoltar = new Button('Regras Permanentes', '?fase=regrasPermanentes');
-    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
-    $menu->add_link($linkBotaoVoltar, "right");
-
-    # Regras de Transição
-    $linkBotaoVoltar = new Button('Regras de Transição', '?');
-    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
-    $menu->add_link($linkBotaoVoltar, "right");
-
-    # Direito Adquirido
-    $linkBotaoVoltar = new Button('Direito Adquirido', '?');
-    $linkBotaoVoltar->set_title('Exibe os dados gerais do servidor');
-    $menu->add_link($linkBotaoVoltar, "right");
-
     $menu->show();
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
 
-########################################################
+    ########################################################
+    # Menu de Abas
+    $tab = new Tab([
+        "Dados do Servidor",
+        "Tempo Averbado",
+        "Vínculos Anteriores",
+        "Afastamentos",
+        "Regras Permanentes",
+        "Regras de Transição",
+        "Direito Adquirido",
+        "Documentação"
+    ]);
 
-    switch ($fase) {
-        /*
-         *  Resumo Geral
-         */
-        case "":
-            # Dados do Servidor
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    ####################################################
+    /*
+     *  Dados do Servidor
+     */
 
-            $aposentadoria->exibeMenuServidor(1);
+    $tab->abreConteudo();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $grid1 = new Grid();
+    $grid1->abreColuna(12, 6, 3);
 
-            tituloTable("Resumo Geral");
-            br();
+    $array = [
+        ["Idade", $pessoal->get_idade($idServidorPesquisado)],
+        ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)]
+    ];
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(12, 12, 5);
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Dados do Servidor");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Valor"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->show();
 
-            $array = [
-                ["Idade", $pessoal->get_idade($idServidorPesquisado)],
-                ["Data de Admissão", $pessoal->get_dtAdmissao($idServidorPesquisado)],
-                ["Data de Ingresso<br/>no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)],
-                ["Tempo Público<br/>Ininterrupto (Dias)", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
-            ];
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 6, 3);
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Dados do Servidor");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Valor"]);
-            $tabela->set_width([50, 50]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
+    /*
+     *  Tempo Geral
+     */
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 12, 7);
+    $array = [
+        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
+        ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidorPesquisado)]
+    ];
 
-            /*
-             *  Tempo de Serviço
-             */
+    # Tabela Tempo Geral
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Geral");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
 
-            $array = [
-                ["Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado), $aposentadoria->get_tempoServicoUenf($idServidorPesquisado), $averbacao->get_tempoAverbadoPublico($idServidorPesquisado) + $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
-                ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado), 0, $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)]
-            ];
+    $array = [
+        ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenfAntes31_12_21($idServidorPesquisado)],
+        ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)]
+    ];
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo de Serviço (em dias)");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["", "Averbado", "Uenf", "Total"]);
-            $tabela->set_width([25, 25, 25, 25]);
-            $tabela->set_align(["left"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio([1, 2, 3]);
-            $tabela->show();
+    # Tabela Tempo até 31/12/2021
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo até 31/12/2021");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            break;
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 6, 3);
 
-        ########################################################
+    /*
+     *  Tempo Averbado
+     */
+    $array = [
+        ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)],
+        ["Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
+    ];
 
-        /*
-         *  Tempo Averbado Detalhado
-         */
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Averbado");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
 
-        case "averbado":
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 6, 3);
 
-            # Dados do Servidor
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    /*
+     *  Tempo Público
+     */
+    $array = [
+        ["Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
+        ["Averbado Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)]
+    ];
 
-            $aposentadoria->exibeMenuServidor(2);
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Público");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["Descrição", "Dias"]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio(1);
+    $tabela->show();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $array = [
+        ["Tempo Ininterrupto", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
+    ];
 
-            # Variáveis
-            $empresaTipo = [
-                [1, "Pública"],
-                [2, "Privada"]
-            ];
+    $tabela = new Tabela();
+    #$tabela->set_titulo("Tempo Público");
+    $tabela->set_conteudo($array);
+    $tabela->set_label(["", ""]);
+    $tabela->set_width([60, 40]);
+    $tabela->set_align(["left", "center"]);
+    $tabela->set_totalRegistro(false);
+    $tabela->show();
 
-            $regime = [
-                [1, "Celetista"],
-                [2, "Estatutário"],
-                [3, "Próprio"],
-                [4, "Militar"]
-            ];
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-            $select = "SELECT dtInicial,
+    $tab->fechaConteudo();
+
+    ####################################################
+    /*
+     *  Tempo Averbado Detalhado
+     */
+
+    $tab->abreConteudo();
+
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
+
+    # Variáveis
+    $empresaTipo = [
+        [1, "Pública"],
+        [2, "Privada"]
+    ];
+
+    $regime = [
+        [1, "Celetista"],
+        [2, "Estatutário"],
+        [3, "Próprio"],
+        [4, "Militar"]
+    ];
+
+    $select = "SELECT dtInicial,
                       dtFinal,
                       dias,
                       idAverbacao,
@@ -185,17 +226,17 @@ if ($acesso) {
                       empresa,
                       CASE empresaTipo ";
 
-            foreach ($empresaTipo as $tipo) {
-                $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
-            }
+    foreach ($empresaTipo as $tipo) {
+        $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+    }
 
-            $select .= "      END,
+    $select .= "      END,
                       CASE regime ";
-            foreach ($regime as $tipo2) {
-                $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
-            }
+    foreach ($regime as $tipo2) {
+        $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+    }
 
-            $select .= "      END,
+    $select .= "      END,
                       cargo,
                       dtPublicacao,
                       processo
@@ -203,56 +244,54 @@ if ($acesso) {
                 WHERE idServidor = {$idServidorPesquisado}
              ORDER BY dtInicial desc";
 
-            $result = $pessoal->select($select);
+    $result = $pessoal->select($select);
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Averbado - Detalhado");
-            $tabela->set_conteudo($result);
-            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-            #$tabela->set_width(array(60, 40));
-            $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
-            $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Tempo Averbado - Detalhado");
+    $tabela->set_conteudo($result);
+    $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+    #$tabela->set_width(array(60, 40));
+    $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
+    $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
-            $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
+    $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
+    $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
 
-            $tabela->set_formatacaoCondicional([
-                ['coluna' => 4,
-                    'valor' => 0,
-                    'operador' => '<>',
-                    'id' => 'diasAntes'],
-                ['coluna' => 4,
-                    'valor' => 0,
-                    'operador' => '=',
-                    'id' => 'normal']
-            ]);
+    $tabela->set_formatacaoCondicional(array(
+        array('coluna' => 4,
+            'valor' => 0,
+            'operador' => '<>',
+            'id' => 'diasAntes'),
+        array('coluna' => 4,
+            'valor' => 0,
+            'operador' => '=',
+            'id' => 'normal')
+    ));
 
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio([2, 3]);
-            $tabela->show();
-            break;
+    $tabela->set_totalRegistro(false);
+    $tabela->set_colunaSomatorio([2, 3]);
+    $tabela->show();
 
-        ########################################################
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-        /*
-         * Vínculos Anteriores
-         */
+    $tab->fechaConteudo();
 
-        case "vinculos":
-            # Dados do Servidor
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    ####################################################
+    /*
+     *  Vinculos Anteriores do servidor
+     */
 
-            $aposentadoria->exibeMenuServidor(3);
+    $tab->abreConteudo();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
 
-            # Pega o idPessoa desse idServidor
-            $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+    # Pega o idPessoa desse idServidor
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-            $select = "SELECT dtAdmissao,
+    $select = "SELECT dtAdmissao,
                       dtDemissao,
                       idServidor,
                       idServidor,
@@ -263,691 +302,345 @@ if ($acesso) {
                   AND idServidor <> {$idServidorPesquisado}  
              ORDER BY dtadmissao desc";
 
-            $result = $pessoal->select($select);
+    $result = $pessoal->select($select);
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Vínculos Anteriores");
-            $tabela->set_conteudo($result);
-            $tabela->set_label(["Admissão", "Saída", "Cargo", "Perfil", "Situação", "Motivo"]);
-            #$tabela->set_width(array(60, 40));
-            $tabela->set_align(["center", "center", "left"]);
-            $tabela->set_funcao(["date_to_php", "date_to_php"]);
+    # Tabela
+    $tabela = new Tabela();
+    $tabela->set_titulo("Vínculos Anteriores");
+    $tabela->set_conteudo($result);
+    $tabela->set_label(["Admissão", "Saída", "Cargo", "Perfil", "Situação", "Motivo"]);
+    #$tabela->set_width(array(60, 40));
+    $tabela->set_align(["center", "center", "left"]);
+    $tabela->set_funcao(["date_to_php", "date_to_php"]);
 
-            $tabela->set_classe([null, null, "Pessoal", "Pessoal", "Pessoal", "Pessoal"]);
-            $tabela->set_metodo([null, null, "get_cargo", "get_perfil", "get_situacao", "get_motivo"]);
+    $tabela->set_classe([null, null, "Pessoal", "Pessoal", "Pessoal", "Pessoal"]);
+    $tabela->set_metodo([null, null, "get_cargo", "get_perfil", "get_situacao", "get_motivo"]);
 
-            $tabela->show();
-            break;
+    $tabela->show();
 
-        ########################################################
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-        /*
-         *  Afastamentos
-         */
+    $tab->fechaConteudo();
 
-        case "afastamentos":
-            # Dados do Servidor
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    ####################################################
+    /*
+     *  Afastamentos
+     */
 
-            $aposentadoria->exibeMenuServidor(4);
+    $tab->abreConteudo();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $afast = new ListaAfastamentosServidor($idServidorPesquisado);
+    $afast->exibeTabela();
 
-            $afast = new ListaAfastamentosServidor($idServidorPesquisado);
-            $afast->exibeTabela();
-            break;
+    $tab->fechaConteudo();
 
-        ########################################################
+    ####################################################
 
-        /*
-         * Regras Premanentes
-         */
+    /*
+     * Regras Permanentes
+     */
 
-        case "regrasPermanentes":
+    $tab->abreConteudo();
 
-            titulo("Regras Permanentes");
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
 
-            $tabPrincipal = new Tab(["Aposentadoria Voluntária", "Aposentadoria Compulsória", "Incapacidade Permanente"]);
-            $tabPrincipal->abreConteudo();
+    tituloTable("Regras Permanentes");
+    br();
 
-            /*
-             *  Aposentadoria Voluntária
-             */
+    /*
+     *  Aposentadoria Voluntária
+     */
 
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
+    $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+    tituloTable($aposentadoria->get_descricao());
+    $aposentadoria->exibeAnaliseResumo();
 
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 8);
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(12, 6);
+    $aposentadoria->exibeAnalise();
 
-            $aposentadoria->exibeRegras();
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+    $aposentadoria->exibeRemuneração();
+    #$aposentadoria->exibeRegras();
+    #$aposentadoria->exibeResumoCartilha(1);
+    #$aposentadoria->exibeResumoCartilha(2);
 
-            $aposentadoria->exibeRemuneração();
+    $grid1->fechaColuna();
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            
-            br();
+    /*
+     *  Aposentadoria Compulsória
+     */
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(12, 6);
+    $grid1->abreColuna(12);
+    hr("grosso");
+    br();
 
-            $aposentadoria->exibeResumoCartilha(1);
+    $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
+    tituloTable($aposentadoria->get_descricao());
+    $aposentadoria->exibeAnaliseResumo();
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 8);
 
-            $aposentadoria->exibeResumoCartilha(2);
+    $aposentadoria->exibeAnalise();
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            $tabPrincipal->fechaConteudo();
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
 
-            /*
-             *  Aposentadoria Compulsória
-             */
+    $aposentadoria->exibeRemuneração();
+    #$aposentadoria->exibeRegras();
+    #$aposentadoria->exibeResumoCartilha(1);
+    #$aposentadoria->exibeResumoCartilha(2);
 
-            $tabPrincipal->abreConteudo();
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
+    $tab->fechaConteudo();
 
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
+    ########################################################
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(12, 6);
+    /*
+     * Regras de Transição - Regra dos Pontos
+     */
 
-            $aposentadoria->exibeRegras();
+    $tab->abreConteudo();
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
 
-            $aposentadoria->exibeRemuneração();
+    tituloTable("Regras de Transição");
+    br();
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+    /*
+     *  Integralidade e Paridade
+     */
 
-            $aposentadoria->exibeResumoCartilha();
-            $tabPrincipal->fechaConteudo();
+    tituloTable("Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade");
+    emConstrucao("Em breve esta área estará disponível.");
 
-            $tabPrincipal->abreConteudo();
-            $tabPrincipal->fechaConteudo();
+    hr("grosso");
+    br();
 
-            $tabPrincipal->abreConteudo();
-            $tabPrincipal->fechaConteudo();
-            break;
+    /*
+     *  Média da Lei Federal nº 10.887/2004
+     */
 
-        ########################################################
+    tituloTable("Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Média da Lei Federal nº 10.887/2004");
+    emConstrucao("Em breve esta área estará disponível.");
 
-        /*
-         * Aposentadoria Voluntária
-         */
+    hr("grosso");
+    br();
 
-        case "permanenteVoluntaria":
+    /*
+     *  Integralidade e Paridade
+     */
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    tituloTable("Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade");
+    emConstrucao("Em breve esta área estará disponível.");
 
-            $aposentadoria->exibeMenuServidor(6);
+    hr("grosso");
+    br();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
+    /*
+     *  Média da Lei Federal nº 10.887/2004
+     */
 
-            $tab = new Tab(["Servidor", "Regras", "Cartilha"]);
+    tituloTable("Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Média da Lei Federal nº 10.887/2004");
+    emConstrucao("Em breve esta área estará disponível.");
 
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
+    hr("grosso");
+    br();
 
-            $tab->fechaConteudo();
+    /*
+     *  Com Redutor de Idade
+     */
 
-            ###
+    tituloTable("Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Com Redutor de Idade");
+    emConstrucao("Em breve esta área estará disponível.");
 
-            $tab->abreConteudo();
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
+    $tab->fechaConteudo();
 
-            $aposentadoria->exibeRegras();
+    ########################################################
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
+    /*
+     * Direito Adquirido
+     */
 
-            $aposentadoria->exibeRemuneração();
+    $tab->abreConteudo();
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
 
-            $tab->fechaConteudo();
+    tituloTable("Direito Adquirido");
+    br();
 
-            ###
+    /*
+     *  C.F. Art. 40, §1º, III, alínea a
+     */
 
-            $tab->abreConteudo();
+    $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
+    tituloTable($aposentadoria->get_descricao());
+    $aposentadoria->exibeAnaliseResumo();
 
-            $aposentadoria->exibeResumoCartilha();
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 8);
 
-            $tab->fechaConteudo();
+    $aposentadoria->exibeAnalise();
 
-            ###
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
 
-            $tab->show();
-            break;
+    $aposentadoria->exibeRemuneração();
+    #$aposentadoria->exibeRegras();
+    #$aposentadoria->exibeResumoCartilha(1);
+    #$aposentadoria->exibeResumoCartilha(2);
 
-        ########################################################
+    $grid1->fechaColuna();
 
-        /*
-         * Aposentadoria Compulsória
-         */
+    /*
+     *  C.F. Art. 40, §1º, III, alínea b
+     */
 
-        case "permanenteCompulsoria":
+    $grid1->abreColuna(12);
+    hr("grosso");
+    br();
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
+    tituloTable($aposentadoria->get_descricao());
+    $aposentadoria->exibeAnaliseResumo();
 
-            $aposentadoria->exibeMenuServidor(7);
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 8);
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $aposentadoria->exibeAnalise();
 
-            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
 
-            $tab = new Tab(["Servidor", "Regras", "Cartilha"]);
+    $aposentadoria->exibeRemuneração();
+    #$aposentadoria->exibeRegras();
+    #$aposentadoria->exibeResumoCartilha(1);
+    #$aposentadoria->exibeResumoCartilha(2);
 
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
+    $grid1->fechaColuna();
 
-            $tab->fechaConteudo();
+    /*
+     *  Art. 6º DA EC Nº 41/2003
+     */
 
-            ###
+    $grid1->abreColuna(12);
+    hr("grosso");
+    br();
 
-            $tab->abreConteudo();
+    $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+    tituloTable($aposentadoria->get_descricao());
+    $aposentadoria->exibeAnaliseResumo();
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 8);
 
-            $aposentadoria->exibeRegras();
+    $aposentadoria->exibeAnalise();
 
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
+    $grid1->fechaColuna();
+    $grid1->abreColuna(12, 4);
 
-            $aposentadoria->exibeRemuneração();
+    $aposentadoria->exibeRemuneração();
+    #$aposentadoria->exibeRegras();
+    #$aposentadoria->exibeResumoCartilha(1);
+    #$aposentadoria->exibeResumoCartilha(2);
 
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+    $grid1->fechaColuna();
 
-            $tab->fechaConteudo();
+    /*
+     *  Artigo 3º da EC nº 47/2005
+     */
 
-            ###
+    $grid1->abreColuna(12);
+    hr("grosso");
+    br();
 
-            $tab->abreConteudo();
+    tituloTable("Por Idade e Tempo de Contribuição<br/>Com Redutor de Idade");
+    emConstrucao("Em breve esta área estará disponível.");
 
-            $aposentadoria->exibeResumoCartilha();
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
 
-            $tab->fechaConteudo();
+    $tab->fechaConteudo();
 
-            ###
+########################################################
 
-            $tab->show();
-            break;
+    /*
+     * Direito Adquirido
+     */
 
-        ########################################################
+    $tab->abreConteudo();
 
-        /*
-         * Incapacidade Permanente
-         */
+    $grid1 = new Grid();
+    $grid1->abreColuna(12);
+    
+    $menu = new Menu("menuAposentadoria");
 
-        case "incapacidadePermanente":
+    $menu->add_item("titulo", "Documentação");
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
+    # Banco de dados
+    $pessoal = new Pessoal();
 
-            $aposentadoria->exibeMenuServidor(8);
+    # Pega os projetos cadastrados
+    $select = 'SELECT idMenuDocumentos,
+                          categoria,
+                          texto,
+                          title
+                     FROM tbmenudocumentos
+                     WHERE categoria = "Regras de Aposentadoria"
+                  ORDER BY categoria, texto';
 
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
+    $dados = $pessoal->select($select);
+    $num = $pessoal->count($select);
 
-            $figura = new Imagem(PASTA_FIGURAS . 'lc195incapacidadePermanente.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
+    # Verifica se tem itens no menu
+    if ($num > 0) {
+        # Percorre o array 
+        foreach ($dados as $valor) {
 
-        ########################################################
+            if (empty($valor["title"])) {
+                $title = $valor["texto"];
+            } else {
+                $title = $valor["title"];
+            }
 
-        /*
-         * Incapacidade Permanente por Acidente de trabalho
-         */
-
-        case "incapacidadeAcidenteAT":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(9);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'lc195incapacidadePermanenteAT.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regras de Transição
-         */
-
-        ########################################################
-
-        /*
-         * Regra dos Pontos - Integralidade e Paridade
-         */
-
-        case "pontosIntegral":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(12);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'transicaoPontos1.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regra dos Pontos - Média da Lei Federal nº 10.887/2004
-         */
-
-        case "pontosMedia":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(13);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'transicaoPontos2.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regra do Pedágio - Integralidade e Paridade
-         */
-
-        case "pedagioIntegral":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(15);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'transicaoPedagio1.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regra do Pedágio - Redutor de idade
-         */
-
-        case "pedagioRedutor":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(16);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'transicaoPedagio2.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regra do Pedágio - Média
-         */
-
-        case "pedagioMedia":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(17);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $figura = new Imagem(PASTA_FIGURAS . 'transicaoPedagio3.png', null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Direito Adquirido
-         */
-
-        ########################################################
-        /*
-         * Aposentadoria Permanente por Idade e Contribuição
-         */
-
-        case "idadeContribuicao":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(19);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
-
-            $tab = new Tab(["Servidor", "Regras"]);
-
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
-
-            $tab->fechaConteudo();
-
-            ###
-
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRemuneração();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
-
-            $tab->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Aposentadoria Permanente por Idade 
-         */
-
-        case "idade":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(20);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
-
-            $tab = new Tab(["Servidor", "Regras"]);
-
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
-
-            $tab->fechaConteudo();
-
-            ###
-
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRemuneração();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
-
-            $tab->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regras de transição - Artigo 2º da EC nº 41/2003
-         */
-
-        case "41_2":
-
-            # OBS regra retirada pelo sistema pois é desfavorável para o servidor
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(21);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
-
-            $tab = new Tab(["Servidor", "Regras"]);
-
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
-
-            $tab->fechaConteudo();
-
-            ###
-
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRemuneração();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
-
-            $tab->show();
-            break;
-
-        ########################################################
-
-        /*
-         * Regras de transição - Artigo 6º da EC nº 41/2003
-         */
-
-        case "41_6":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(21);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            $aposentadoria = new AposentadoriaDiretoAdquirido4($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
-
-            $tab = new Tab(["Servidor", "Regras"]);
-
-            $tab->abreConteudo();
-            $aposentadoria->exibeAnaliseResumo();
-            $aposentadoria->exibeAnalise();
-
-            $tab->fechaConteudo();
-
-            ###
-
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            $aposentadoria->exibeRemuneração();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
-
-            $tab->show();
-            break;
-
-        ########################################################
-
-
-        /*
-         * Regras de transição - Artigo 3º da EC nº 47/2003
-         */
-
-        case "47_3":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(22);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            emConstrucao("Em breve esta área estará disponível.");
-            break;
-
-        #######################################################################################
-
-        /*
-         * Regras de transição 1
-         */
-
-        case "transicao1":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(13);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            emConstrucao("Em breve esta área estará disponível.");
-            break;
-
-        #######################################################################################
-
-        /*
-         * Regras de transição 2
-         */
-
-        case "transicao2":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(14);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            emConstrucao("Em breve esta área estará disponível.");
-            break;
-
-        #######################################################################################
-
-        /*
-         * Aposentadoria Compulsória
-         */
-
-        case "compulsoria":
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 3);
-
-            $aposentadoria->exibeMenuServidor(16);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 9);
-
-            emConstrucao("Em breve esta área estará disponível.");
-            break;
-
-        #######################################################################################
+            # Verifica qual documento
+            $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+            if (file_exists($arquivoDocumento)) {
+                # Caso seja PDF abre uma janela com o pdf
+                $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+            } else {
+                # Caso seja um .doc, somente faz o download
+                $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+            }
+        }
     }
 
-#############################    
+    $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
+    $menu->add_item("linkWindow", "Regras Vigentes até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
+
+    $menu->show();
+    $grid1->fechaColuna();
+    $grid1->fechaGrid();
+
+    $tab->fechaConteudo();
+
+########################################################
+
+    $tab->show();
+    br();
 
     $grid->fechaColuna();
     $grid->fechaGrid();

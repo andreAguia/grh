@@ -70,13 +70,6 @@ if ($acesso) {
     $linkBotaoVoltar->set_accessKey('V');
     $menu->add_link($linkBotaoVoltar, "left");
 
-    # Regras
-    $botaoVoltar = new Link("Regras", "areaAposentadoria.php?fase=regras");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_target('_blank');
-    $botaoVoltar->set_title('Regras de aposentadoria');
-    #$menu->add_link($botaoVoltar, "right");
-
     $menu->show();
 
     # Exibe os dados do servidor

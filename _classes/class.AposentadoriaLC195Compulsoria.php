@@ -261,15 +261,15 @@ class AposentadoriaLC195Compulsoria {
     }
 
     ###########################################################
+    
+    public function exibeResumoCartilha($numero = 1) {
 
-    public function exibeResumoCartilha() {
-
-        $figura = new Imagem(PASTA_FIGURAS . 'lc195compulsoria.png',null, "100%", "100%");
+        $figura = new Imagem(PASTA_FIGURAS . "lc195compulsoria{$numero}.png", null, "100%", "100%");
         $figura->set_id('imgCasa');
         $figura->set_class('imagem');
         $figura->show();
     }
-
+    
     ###########################################################
 
     public function get_descricao() {

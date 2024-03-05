@@ -302,8 +302,6 @@ class AposentadoriaLC195Voluntaria {
 
     public function exibeResumoCartilha($numero = 1) {
 
-        tituloTable(null);
-        hr("grosso");
         $figura = new Imagem(PASTA_FIGURAS . "lc195voluntaria{$numero}.png", null, "100%", "100%");
         $figura->set_id('imgCasa');
         $figura->set_class('imagem');

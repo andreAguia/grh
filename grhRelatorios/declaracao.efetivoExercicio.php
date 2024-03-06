@@ -57,7 +57,7 @@ if ($acesso) {
             . " na data de {$dtAdmissao}, para o cargo de {$cargoEfetivo},";
             
     # Verifica se está cedido para outro órgão        
-    if($idLotacao = 113){        
+    if($idLotacao == 113){        
         $texto .= " e se encontra atualmente {$texto1} para {$pessoal->get_orgaoCedido($idServidorPesquisado)}.";
     }else{        
         $texto .= " desempenhando suas atribuições no(a) {$nomeLotacao}.";

@@ -237,7 +237,7 @@ class VerificaAfastamentos {
                     if (dataMaior(date_to_php($row2["dtInicial"]), date_to_php($this->dtInicial)) == date_to_php($this->dtInicial)) {
 
                         # Agora Verifica se é a que está sendo incluída não é continuação desta ultima
-                        if (!empty($this->tipoLicenca) AND ($this->tipoLicenca == 1 OR $this->tipoLicenca == 30)) {
+                        if (!empty($this->tipoLicenca) AND ($this->tipoLicenca == 1 OR $this->tipoLicenca == 2 OR $this->tipoLicenca == 30)) {
                             return false;
                         } else {
                             # Se não for é uma outra licença sendo incluída sem que a licença anterior tenha alta

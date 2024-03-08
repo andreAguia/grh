@@ -254,6 +254,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => ['Simples', 'Completo', 'Como no Ato'],
             'size' => 1,
+            'padrao' => 'Completo',
             'title' => 'Exibe ou não os dados do usuário que emitiu a ficha',
             'valor' => $postCargoComissao,
             'onChange' => 'formPadrao.submit();',
@@ -360,7 +361,7 @@ if ($acesso) {
     tituloRelatorio('Dados Funcionais');
 
     # Analisa o cargo
-    $metodo = "get_CargoCompleto3";
+    $metodo = "get_CargoCompleto4";
     switch ($postCargoComissao) {
         case 'Simples' :
             $metodo = "get_cargoSimples";

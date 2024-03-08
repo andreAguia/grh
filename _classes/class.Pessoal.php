@@ -1137,7 +1137,47 @@ class Pessoal extends Bd {
             plista(
                     $row["cargo"],
                     $row["area"],
-                    $row["nome"],
+                    $row["nome"]
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_cargoCompleto
+     * Informa o cargo completo do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     * @param bool   $exibeComissao true Se exibe ou não o cargo em comissão quando houver 
+     */
+    public function get_cargoCompleto5($idServidor, $exibeComissao = true) {
+        # Pega o cargo do servidor
+        $select = 'SELECT tbtipocargo.idTipoCargo,
+                          tbtipocargo.cargo,
+                          tbtipocargo.sigla,
+                          tbarea.area,
+                          tbcargo.nome,
+                          idPerfil
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                     LEFt JOIN tbarea USING (idarea)
+                    WHERE idServidor = ' . $idServidor;
+
+        $row = parent::select($select, false);
+
+        if ($exibeComissao) {
+            $comissao = $this->get_cargoComissaoDescricao($idServidor);
+        }
+
+        if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
+            p("Exercendo função equivalente ao", "pLinha3");
+            p("{$row["sigla"]} - {$row["nome"]}", "pLinha1");
+            p($comissao, "pLinha2");
+        } else {
+            plista(
+                    $row["cargo"],
+                    $row["nome"]
             );
         }
     }

@@ -38,6 +38,7 @@ $postPenalidade = post('penalidade');
 $postElogio = post('elogio');
 $postAcumulacao = post('acumulacao');
 $postDadosUsuario = post('dadosUsuario');
+$postCargoComissao = post('cargoComissao');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
@@ -247,6 +248,16 @@ if ($acesso) {
             'valor' => $postDadosUsuario,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
+            'linha' => 4),
+        array('nome' => 'cargoComissao',
+            'label' => 'Cargo do Servidor',
+            'tipo' => 'combo',
+            'array' => ['Simples', 'Completo', 'Como no Ato'],
+            'size' => 1,
+            'title' => 'Exibe ou não os dados do usuário que emitiu a ficha',
+            'valor' => $postCargoComissao,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 4,
             'linha' => 4)
     ));
 
@@ -348,6 +359,23 @@ if ($acesso) {
 
     tituloRelatorio('Dados Funcionais');
 
+    # Analisa o cargo
+    $metodo = "get_CargoCompleto3";
+    switch ($postCargoComissao) {
+        case 'Simples' :
+            $metodo = "get_cargoSimples";
+            break;
+
+        case 'Completo':
+            $metodo = "get_CargoCompleto4";
+            break;
+
+        case 'Como no Ato':
+            $metodo = "get_CargoCompleto5";
+            break;
+    }
+
+
     $select = 'SELECT tbservidor.dtAdmissao,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
@@ -362,12 +390,12 @@ if ($acesso) {
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(['Admissão', 'Cargo - Área - Função (Comissão)', 'Concurso', 'Data de Saída', 'Motivo']);
+    $relatorio->set_label(['Admissão', 'Cargo', 'Concurso', 'Data de Saída', 'Motivo']);
     $relatorio->set_width([12, 30, 20, 12, 26]);
     $relatorio->set_align(['center']);
     $relatorio->set_funcao(["date_to_php", null, null, "date_to_php"]);
     $relatorio->set_classe([null, "Pessoal", "Pessoal"]);
-    $relatorio->set_metodo([null, "get_CargoCompleto4", "get_concursoRelatorio"]);
+    $relatorio->set_metodo([null, $metodo, "get_concursoRelatorio"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -1201,7 +1229,7 @@ if ($acesso) {
         $relatorio->set_label(["Tipo", "RioPrevidência", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
         $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php']);
         $relatorio->set_align(['left', 'center', 'center', 'center', 'center', 'left']);
-        $relatorio->set_conteudo($result);        
+        $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1267,7 +1295,7 @@ if ($acesso) {
         $relatorio->set_conteudo($result);
         $relatorio->set_colunaSomatorio(2);
         #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
-        $relatorio->set_exibeSomatorioGeral(false);        
+        $relatorio->set_exibeSomatorioGeral(false);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
@@ -1380,7 +1408,7 @@ if ($acesso) {
         $relatorio->set_width(array(10, 10, 15, 15, 5, 35));
         $relatorio->set_align(array("center", "center", "center", "center", "center", "left"));
         $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
-        $relatorio->set_conteudo($result);        
+        $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1411,7 +1439,7 @@ if ($acesso) {
         $relatorio->set_width(array(15, 85));
         $relatorio->set_align(array("center", "left"));
         $relatorio->set_funcao(array("date_to_php"));
-        $relatorio->set_conteudo($result);        
+        $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);
@@ -1448,8 +1476,8 @@ if ($acesso) {
         $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
         $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
         $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
-        $relatorio->set_conteudo($result); 
-        
+        $relatorio->set_conteudo($result);
+
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);
         $relatorio->set_dataImpressao(false);

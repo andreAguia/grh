@@ -44,7 +44,7 @@ class AposentadoriaLC195Voluntaria {
 
     # Remuneração
     private $calculoInicial = "Média aritmética simples de TODAS as remunerações a partir de julho de 1994 - Lei Federal 10.887";
-    private $teto = "Remuneração do servidor no cargo efetivo";
+    private $percentualDevido = "60% + 2% para cada ano que exceder 20 anos de contribuição";
     private $reajuste = "INPC – Lei 6.244/2012";
     private $paridade = "SEM PARIDADE";
 
@@ -283,7 +283,7 @@ class AposentadoriaLC195Voluntaria {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
-            ["Teto", $this->teto],
+            ["Percentual Devido", $this->percentualDevido],
             ["Reajuste", $this->reajuste],
             ["Paridade", $this->paridade]
         ];

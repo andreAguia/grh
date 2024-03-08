@@ -32,8 +32,7 @@ if ($acesso) {
                      tbservidor.idServidor,
                      concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")) lotacao,
                      tbperfil.nome,
-                     tbservidor.dtAdmissao,
-                     tbservidor.idServidor
+                     tbcomissao.dtNom
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -46,23 +45,23 @@ if ($acesso) {
                  AND tbtipocomissao.ativo IS true
                  AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                  AND tbcomissao.tipo <> 3
+                 AND (tbcomissao.idTipoComissao = 16 OR tbcomissao.idTipoComissao = 19 OR tbcomissao.idTipoComissao = 23)
                  AND tbservidor.situacao = 1
-                 AND tbservidor.idPerfil = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-            ORDER BY lotacao, tbpessoa.nome';
+            ORDER BY lotacao,tbcomissao.tipo, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
-    $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação'));
-    $relatorio->set_width(array(10, 30, 30, 0, 10, 10, 10));
-    $relatorio->set_align(array("center", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
+    $relatorio->set_titulo('Relatório de Servodores com Cargo em Comissão Eletivos');
+    $relatorio->set_subtitulo('Agrupados por Lotação');
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Comissão', 'Lotação', 'Perfil', 'Nomeação']);
+    #$relatorio->set_width([10, 30, 30, 0, 10, 10, 10]);
+    $relatorio->set_align(["center", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, null, null, "date_to_php"]);
 
-    $relatorio->set_classe(array(null, null, "pessoal","pessoal", null, null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_CargoSimples","get_CargoComissao", null, null, null, "get_Situacao"));
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_CargoSimples", "get_CargoComissao1"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(4);

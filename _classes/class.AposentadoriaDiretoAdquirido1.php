@@ -26,8 +26,8 @@ class AposentadoriaDiretoAdquirido1 {
 
     # Remuneração
     private $calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Lei Federal 10.887";
-    private $teto = "Remuneração do servidor no cargo efetivo";
-    private $reajuste = "INPC – Aplicado em Janeiro – Lei 6.244/2012";
+    private $teto = "Última remuneração do servidor no cargo efetivo";
+    private $reajuste = "Os proventos deverão ser reajustados na mesma data e índice adotados para o reajuste dos benefícios do regime geral de previdência social";
     private $paridade = "SEM PARIDADE";
 
     # Descrições
@@ -303,5 +303,15 @@ class AposentadoriaDiretoAdquirido1 {
         return $this->descricao;
     }
 
+    ###########################################################
+
+    public function exibeRegraSite() {
+
+        $figura = new Imagem(PASTA_FIGURAS . "aposentadoriaDireitoAdquirido1.jpg", null, "100%", "100%");
+        $figura->set_id('imgCasa');
+        $figura->set_class('imagem');
+        $figura->show();
+    }
+    
     ###########################################################
 }

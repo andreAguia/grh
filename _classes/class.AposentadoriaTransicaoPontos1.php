@@ -11,7 +11,7 @@ class AposentadoriaTransicaoPontos1 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade<br/>art. 3º da EC nº 90/2021";
+    private $descricao = "Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade<br/>art. 3º da EC nº 90/2021";
 
     # Regras
     private $dtIngresso = "31/12/2003";

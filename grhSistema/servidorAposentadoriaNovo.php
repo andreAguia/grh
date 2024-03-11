@@ -356,13 +356,11 @@ if ($acesso) {
         ["link", "Aposentadoria Compulsória", "compulsoria"],
         ["link", "Incapacidade Permanente", "incapacidade"],
         ["titulo", "Regras de Transição", "transicao"],
-        ["titulo1", "Regras dos Pontos", "pontos"],
-        ["link", "Integralidade e Paridade", "pontosIntegral"],
-        ["link", "Média", "pontosMedia"],
-        ["titulo1", "Regras do Pedágio", "pedagio"],
-        ["link", "Integralidade e Paridade", "pedagioIntegral"],
-        ["link", "Média", "pedagioMedia"],
-        ["link", "Redutor de Idade", "pedagioRedutor"],
+        ["link", "Pontos - Integral. e Paridade", "pontosIntegral"],
+        ["link", "Pontos - Média", "pontosMedia"],
+        ["link", "Pedágio - Integral. e Paridade", "pedagioIntegral"],
+        ["link", "Pedágio - Média", "pedagioMedia"],
+        ["link", "Pedágio - Redutor de Idade", "pedagioRedutor"],
         ["titulo", "Direito Adquirido", "direitoAdquirido"],
         ["link", "C.F. Art. 40, §1º, III, alínea a", "direitoAdquirido1"],
         ["link", "C.F. Art. 40, §1º, III, alínea b", "direitoAdquirido2"],
@@ -540,20 +538,9 @@ if ($acesso) {
             $grid1->fechaColuna();
             break;
 
-        case "pontos" :
-            $grid1->abreColuna(9);
-            titulo("Regras de Transição");
-            br();
-            tituloTable("Regras dos Pontos");
-            br();
-            $grid1->fechaColuna();
-            break;
-
         case "pontosIntegral" :
             $grid1->abreColuna(9);
             titulo("Regras de Transição");
-            br();
-            tituloTable("Regras dos Pontos");
             br();
 
             $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
@@ -571,6 +558,29 @@ if ($acesso) {
 
             $aposentadoria->exibeRemuneração();
 
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12);
+
+            tituloTable("Pontuação");
+            br();
+            
+            $aposentadoria->exibeResumoCartilha(4);
+            br();
+            
+            tituloTable("Cartilha");
+            br();
+            $aposentadoria->exibeResumoCartilha(3);
+            br();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+
+            $aposentadoria->exibeResumoCartilha(1);
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+
+            $aposentadoria->exibeResumoCartilha(2);
             $grid2->fechaColuna();
             $grid2->fechaGrid();
             $grid1->fechaColuna();

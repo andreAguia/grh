@@ -710,7 +710,7 @@ class CargoComissao {
             # Pega o nome do nomeado anterio
             $dados2 = $this->get_dados($idAnterior);
 
-            if (!empty($dados)) {
+            if (!empty($dados2)) {
                 $idServidorAnterior = $dados2['idServidor'];
 
                 $pessoal = new Pessoal();

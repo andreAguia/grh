@@ -709,17 +709,22 @@ class CargoComissao {
 
             # Pega o nome do nomeado anterio
             $dados2 = $this->get_dados($idAnterior);
-            $idServidorAnterior = $dados2['idServidor'];
 
-            $pessoal = new Pessoal();
+            if (!empty($dados)) {
+                $idServidorAnterior = $dados2['idServidor'];
 
-            pLista(
-                    $pessoal->get_nome($idServidorAnterior),
-                    $pessoal->get_cargoSimples($idServidorAnterior),
-                    $pessoal->get_lotacao($idServidorAnterior),
-                    date_to_php($dados2['dtNom']) . ' - ' . date_to_php($dados2['dtExo']),
-                    $this->get_tipo($idAnterior)
-            );
+                $pessoal = new Pessoal();
+
+                pLista(
+                        $pessoal->get_nome($idServidorAnterior),
+                        $pessoal->get_cargoSimples($idServidorAnterior),
+                        $pessoal->get_lotacao($idServidorAnterior),
+                        date_to_php($dados2['dtNom']) . ' - ' . date_to_php($dados2['dtExo']),
+                        $this->get_tipo($idAnterior)
+                );
+            } else {
+                return "---";
+            }
         }
     }
 

@@ -561,11 +561,9 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(12);
 
-            tituloTable("Pontuação");
+            $aposentadoria->exibeHistoricoPontuacao();
             br();
-            
-            $aposentadoria->exibeResumoCartilha(4);
-            br();
+            $aposentadoria->exibeGraficoPontuacao();
             
             tituloTable("Cartilha");
             br();

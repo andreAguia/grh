@@ -350,6 +350,7 @@ if ($acesso) {
 
     # Monta o array do menu
     $arrayMenu = [
+        ["link", "Resumão", "resumao"],
         ["titulo", "Regras Permanentes", "permanente"],
         ["link", "Aposentadoria Voluntária", "voluntaria"],
         ["link", "Aposentadoria Compulsória", "compulsoria"],
@@ -425,6 +426,55 @@ if ($acesso) {
 
     switch ($fase) {
 
+        /*
+         * Regras Permanentes
+         */
+
+        case "resumao" :
+            
+            $grid1->abreColuna(9);
+            titulo("Regras Permanentes");
+            br();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(6);
+            
+            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+            $aposentadoria->exibeAnaliseResumo();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+            
+            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+            $aposentadoria->exibeAnaliseResumo();
+            
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            
+            titulo("Regras de Transição");
+            br();
+            
+            $grid2 = new Grid();
+            $grid2->abreColuna(6);
+
+            $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+            $aposentadoria->exibeAnaliseResumo();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(6);
+
+            $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
+            tituloTable($aposentadoria->get_descricao());
+            $aposentadoria->exibeAnaliseResumo();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();            
+
+            $grid1->fechaColuna();
+            break;
         /*
          * Regras Permanentes
          */
@@ -719,7 +769,7 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(6);
 
-            $aposentadoria->exibeResumoCartilha(1);            
+            $aposentadoria->exibeResumoCartilha(1);
 
             $grid2->fechaColuna();
             $grid2->abreColuna(6);

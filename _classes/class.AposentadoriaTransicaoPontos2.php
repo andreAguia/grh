@@ -1,6 +1,6 @@
 <?php
 
-class AposentadoriaTransicaoPontos1 {
+class AposentadoriaTransicaoPontos2 {
 
     /**
      * Aposentadoria Regras de Transição Pontos 1
@@ -11,24 +11,24 @@ class AposentadoriaTransicaoPontos1 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade art. 3º da EC nº 90/2021";
+    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Média da Lei Federal nº 10.887/2004";
 
     # Regras
     private $dtIngresso = "31/12/2003";
-    private $idadeHomem = 65;
-    private $idadeMulher = 62;
+    private $idadeHomem = 61;
+    private $idadeMulher = 56;
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
     private $cargoEfetivo = 5;
-    private $pontosHomem = 96;
+    private $pontosHomem = 90;
     private $pontosMulher = 86;
 
     # Remuneração
-    private $calculoInicial = "Ingresso até 31/12/2003 - Última remuneração<br/>Ingresso após 31/12/2003 - Média de acordo com o art. 1º da Lei 10.887/04";
+    private $calculoInicial = "Média aritmética simples das 80% maiores remunerações a partir de julho de 1994";
     private $teto = "Remuneração do servidor no cargo efetivo";
-    private $reajuste = "Ingresso até 31/12/2003 - Na mesma data e índice dos servidores ativos<br/>Ingresso após 31/12/2003 - Índice do RGPS";
-    private $paridade = "Ingresso até 31/12/2003 - COM PARIDADE<br/>Ingresso após 31/12/2003 - SEM PARIDADE";
+    private $reajuste = "INPC - Lei 6.2442012";
+    private $paridade = "SEM PARIDADE";
 
     # Descrições
     private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
@@ -334,7 +334,7 @@ class AposentadoriaTransicaoPontos1 {
 
     public function exibeResumoCartilha($numero = 1) {
 
-        $figura = new Imagem(PASTA_FIGURAS . "transicaoPontos1{$numero}.png", null, "100%", "100%");
+        $figura = new Imagem(PASTA_FIGURAS . "transicaoPontos2{$numero}.png", null, "100%", "100%");
         $figura->set_id('imgCasa');
         $figura->set_class('imagem');
         $figura->show();

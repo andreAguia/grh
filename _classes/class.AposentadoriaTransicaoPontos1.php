@@ -11,7 +11,7 @@ class AposentadoriaTransicaoPontos1 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade art. 3º da EC nº 90/2021";
+    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - art. 3º da EC nº 90/2021";
 
     # Regras
     private $dtIngresso = "31/12/2003";
@@ -25,10 +25,10 @@ class AposentadoriaTransicaoPontos1 {
     private $pontosMulher = 86;
 
     # Remuneração
-    private $calculoInicial = "Ingresso até 31/12/2003 - Última remuneração<br/>Ingresso após 31/12/2003 - Média de acordo com o art. 1º da Lei 10.887/04";
+    private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
-    private $reajuste = "Ingresso até 31/12/2003 - Na mesma data e índice dos servidores ativos<br/>Ingresso após 31/12/2003 - Índice do RGPS";
-    private $paridade = "Ingresso até 31/12/2003 - COM PARIDADE<br/>Ingresso após 31/12/2003 - SEM PARIDADE";
+    private $reajuste = "Na mesma data e índice dos servidores ativos";
+    private $paridade = "COM PARIDADE";
 
     # Descrições
     private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
@@ -71,6 +71,56 @@ class AposentadoriaTransicaoPontos1 {
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+
+    # Tabela de Pontos
+    public $tabelaM = [
+        [2023, 97],
+        [2024, 97],
+        [2025, 98],
+        [2026, 98],
+        [2027, 99],
+        [2028, 99],
+        [2029, 100],
+        [2030, 100],
+        [2031, 101],
+        [2032, 101],
+        [2033, 102],
+        [2034, 102],
+        [2035, 103],
+        [2036, 103],
+        [2037, 104],
+        [2038, 104],
+        [2039, 105],
+        [2040, 105],
+    ];
+    public $tabelaF = [
+        [2023, 87],
+        [2024, 87],
+        [2025, 88],
+        [2026, 88],
+        [2027, 89],
+        [2028, 89],
+        [2029, 90],
+        [2030, 90],
+        [2031, 91],
+        [2032, 91],
+        [2033, 92],
+        [2034, 92],
+        [2035, 93],
+        [2036, 93],
+        [2037, 94],
+        [2038, 94],
+        [2039, 95],
+        [2040, 95],
+        [2041, 96],
+        [2042, 96],
+        [2043, 97],
+        [2044, 97],
+        [2045, 98],
+        [2046, 98],
+        [2047, 99],
+        [2048, 99],
+    ];
 
     ###########################################################
 
@@ -359,7 +409,7 @@ class AposentadoriaTransicaoPontos1 {
         # Pega os pontos
         $pontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
         $pontoAtual = $this->get_regraPontos($anoAtual);
-        
+
         # Verifica se ja possui a pontuação em 2022
         if ($pontos > $this->get_regraPontos($anoInicial)) {
             return null;
@@ -373,16 +423,16 @@ class AposentadoriaTransicaoPontos1 {
             # Se alcançou com a data maior
             if ($pontos == $pontosRegra) {
 
-                $data1 = day($this->servidorDataNascimento)."/".month($this->servidorDataNascimento)."/".$i;
-                $data2 = day($this->servidorDataIngresso)."/".month($this->servidorDataIngresso)."/".$i;
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMaior($data1, $data2);
             }
-            
+
             # Se alcançou com a data menor
             if ($pontos > $pontosRegra) {
 
-                $data1 = day($this->servidorDataNascimento)."/".month($this->servidorDataNascimento)."/".$i;
-                $data2 = day($this->servidorDataIngresso)."/".month($this->servidorDataIngresso)."/".$i;
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMenor($data1, $data2);
             }
         }
@@ -424,7 +474,7 @@ class AposentadoriaTransicaoPontos1 {
         $tabela->set_titulo("Histórico da Pontuação");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Ano", "Pontos do Servidor", "Regra", "Diferença"]);
-        $tabela->set_width([25, 25, 25, 25]);
+        $tabela->set_width([20, 20, 20, 40]);
         $tabela->set_totalRegistro(false);
 
         $tabela->set_formatacaoCondicional(array(
@@ -451,29 +501,8 @@ class AposentadoriaTransicaoPontos1 {
             return null;
         }
 
+        # Escolhe a tabela masculina
         if ($this->servidorSexo == "Masculino") {
-
-            # Tabela
-            $tabela = [
-                [2023, 97],
-                [2024, 97],
-                [2025, 98],
-                [2026, 98],
-                [2027, 99],
-                [2028, 99],
-                [2029, 100],
-                [2030, 100],
-                [2031, 101],
-                [2032, 101],
-                [2033, 102],
-                [2034, 102],
-                [2035, 103],
-                [2036, 103],
-                [2037, 104],
-                [2038, 104],
-                [2039, 105],
-                [2040, 105],
-            ];
 
             # Limite máximo
             if ($ano >= 2041) {
@@ -486,43 +515,13 @@ class AposentadoriaTransicaoPontos1 {
             }
 
             # Busca o valor no array
-            foreach ($tabela as $item) {
+            foreach ($this->tabelaM as $item) {
                 if ($item[0] == $ano) {
                     return $item[1];
                 }
             }
         } else {
-
-            # Tabela
-            $tabela = [
-                [2023, 87],
-                [2024, 87],
-                [2025, 88],
-                [2026, 88],
-                [2027, 89],
-                [2028, 89],
-                [2029, 90],
-                [2030, 90],
-                [2031, 91],
-                [2032, 91],
-                [2033, 92],
-                [2034, 92],
-                [2035, 93],
-                [2036, 93],
-                [2037, 94],
-                [2038, 94],
-                [2039, 95],
-                [2040, 95],
-                [2041, 96],
-                [2042, 96],
-                [2043, 97],
-                [2044, 97],
-                [2045, 98],
-                [2046, 98],
-                [2047, 99],
-                [2048, 99],
-            ];
-
+            # Escolhe a tabela Feminina            
             # Limite máximo
             if ($ano >= 2049) {
                 return 100;
@@ -535,12 +534,57 @@ class AposentadoriaTransicaoPontos1 {
 
 
             # Busca o valor no array
-            foreach ($tabela as $item) {
+            foreach ($this->tabelaF as $item) {
                 if ($item[0] == $ano) {
                     return $item[1];
                 }
             }
         }
+    }
+
+    ###########################################################
+
+    public function exibeTabelaRegras() {
+
+        # Escolhe a tabela masculina
+        if ($this->servidorSexo == "Masculino") {
+
+            # Limite máximo
+//            if ($ano >= 2041) {
+//                return 105;
+//            }
+//
+//            # Limite mínimo
+//            if ($ano <= 2022) {
+//                return 96;
+//            }
+
+            $array = $this->tabelaM;
+        } else {
+            # Escolhe a tabela Feminina            
+//            # Limite máximo
+//            if ($ano >= 2049) {
+//                return 100;
+//            }
+//
+//            # Limite mínimo
+//            if ($ano <= 2022) {
+//                return 86;
+//            }
+
+            $array = $this->tabelaF;
+        }
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Regra dos Pontos");
+        $tabela->set_subtitulo($this->servidorSexo);
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Ano", "Pontos"]);
+        $tabela->set_width([50, 50]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_rowspan(1);
+        $tabela->set_grupoCorColuna(1);
+        $tabela->show();
     }
 
     ###########################################################

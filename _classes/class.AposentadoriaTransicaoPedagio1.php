@@ -14,7 +14,7 @@ class AposentadoriaTransicaoPedagio1 {
     private $descricao = "Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - inciso V do art. 4º da EC nº 90/2021";
 
     # Regras
-    private $dtIngresso = "16/12/1998";
+    private $dtIngresso = "31/12/2003";
     private $idadeHomem = 60;
     private $idadeMulher = 55;
     private $contribuicaoHomem = 35;
@@ -24,10 +24,10 @@ class AposentadoriaTransicaoPedagio1 {
     private $pedagio = 20;
 
     # Remuneração
-    private $calculoInicial = "Ingresso até 31/12/2003 - Última remuneração<br/>Ingresso após 31/12/2003 - Média de acordo com o art. 1º da Lei 10.887/04";
+    private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
-    private $reajuste = "Ingresso até 31/12/2003 - Na mesma data e índice dos servidores ativos<br/>Ingresso após 31/12/2003 - Índice do RGPS";
-    private $paridade = "Ingresso até 31/12/2003 - COM PARIDADE<br/>Ingresso após 31/12/2003 - SEM PARIDADE";
+    private $reajuste = "Na mesma data e índice dos servidores ativos";
+    private $paridade = "COM PARIDADE";
 
     # Descrições
     private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";

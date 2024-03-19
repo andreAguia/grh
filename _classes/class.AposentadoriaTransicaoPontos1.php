@@ -14,9 +14,10 @@ class AposentadoriaTransicaoPontos1 {
     private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - art. 3º da EC nº 90/2021";
 
     # Regras
-    private $dtIngresso = "31/12/2003";
     private $idadeHomem = 65;
     private $idadeMulher = 62;
+    
+    private $dtIngresso = "31/12/2003";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
@@ -24,6 +25,9 @@ class AposentadoriaTransicaoPontos1 {
     private $pontosHomem = 96;
     private $pontosMulher = 86;
 
+    private $regraIdade = null;
+    private $regraContribuicao = null;
+    
     # Remuneração
     private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
@@ -152,11 +156,11 @@ class AposentadoriaTransicaoPontos1 {
         $this->servidorPontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
 
         if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
+            $this->regraIdade = $this->idadeHomem;
+            $this->regraContribuicao = $this->contribuicaoHomem;
         } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
+            $this->regraIdade = $this->idadeMulher;
+            $this->regraContribuicao = $this->contribuicaoMulher;
         }
 
         $hoje = date("d/m/Y");
@@ -173,8 +177,8 @@ class AposentadoriaTransicaoPontos1 {
         }
 
         # Idade
-        $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $regraIdade);
-        if ($this->servidorIdade >= $regraIdade) {
+        $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+        if ($this->servidorIdade >= $this->regraIdade) {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
@@ -182,9 +186,9 @@ class AposentadoriaTransicaoPontos1 {
         }
 
         # Tempo de Contribuição
-        $resta1 = ($regraContribuicao * 365) - $this->servidorTempoTotal;
+        $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoTotal;
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
-        if ($this->servidorTempoTotal >= ($regraContribuicao * 365)) {
+        if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
             $this->analiseContribuicao = "Ainda faltam {$resta1} dias<br/>Somente em {$this->dataCriterioTempoContribuicao}.";
@@ -243,22 +247,14 @@ class AposentadoriaTransicaoPontos1 {
         # Pega os dados
         $regraPontos = $this->get_regraPontos(date("Y"));
 
-        if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
-        } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
-        }
-
         /*
          *  Tabela
          */
 
         $array = [
             ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
-            ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
-            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$regraContribuicao} anos<br/>(" . ($regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
+            ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
+            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
             ["Pontuação", "Pontuação Atual (" . date("Y") . ")", "{$regraPontos} pontos", "{$this->servidorPontos} pontos", $this->dataCriterioPontos, $this->analisePontos],
             ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$this->servidorTempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
             ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$this->servidorTempoUenf} dias", $this->dataCriterioTempoCargo, $this->analiseCargoEfetivo]

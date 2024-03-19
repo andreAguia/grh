@@ -11,18 +11,23 @@ class AposentadoriaTransicaoPontos2 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Média - art. 3º da EC nº 90/20214";
+    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Média - art. 3º da EC nº 90/2021";
 
     # Regras
+    private $dataDivisorIdade = "01/01/2025";
+    private $idadeHomemAntes = 61;
+    private $idadeHomemDepois = 62;
+    private $idadeMulherAntes = 56;
+    private $idadeMulherDepois = 57;
     private $dtIngresso = "31/12/2003";
-    private $idadeHomem = 61;
-    private $idadeMulher = 56;
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
     private $cargoEfetivo = 5;
     private $pontosHomem = 90;
     private $pontosMulher = 86;
+    private $regraIdade = null;
+    private $regraContribuicao = null;
 
     # Remuneração
     private $calculoInicial = "Média aritmética simples das 80% maiores remunerações a partir de julho de 1994";
@@ -124,7 +129,6 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-
     public function __construct($idServidor) {
 
         if (empty($idServidor)) {
@@ -152,13 +156,32 @@ class AposentadoriaTransicaoPontos2 {
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
         $this->servidorPontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
 
+        # Idade
         if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
+            $this->regraContribuicao = $this->contribuicaoHomem;
+            $this->regraIdade = $this->idadeHomemAntes;
+
+            # Calcula a data
+            $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+            
+            # Verifica se é antes a data divisor de idade
+            if (year($this->dataDivisorIdade) < year($this->dataCriterioIdade)) {
+                $this->regraIdade = $this->idadeHomemDepois;
+                $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+            }
         } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
-        }
+            $this->regraContribuicao = $this->contribuicaoMulher;
+            $this->regraIdade = $this->idadeMulherAntes;
+            
+            # Calcula a data
+            $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+            
+            # Verifica se é antes a data divisor de idade
+            if (year($this->dataDivisorIdade) < year($this->dataCriterioIdade)) {
+                $this->regraIdade = $this->idadeMulherDepois;
+                $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+            }
+        }        
 
         $hoje = date("d/m/Y");
 
@@ -166,16 +189,8 @@ class AposentadoriaTransicaoPontos2 {
          * Análise
          */
 
-//        # Data de Ingresso - Diferente, pois é após e não é proibitiva mas não aconselhável
-//        if (dataMaior($this->dtIngresso, $this->servidorDataIngresso) == $this->dtIngresso) {
-//            $this->analisaDtIngresso = "OK";
-//        } else {
-//            $this->analisaDtIngresso = "NÃO TEM DIREITO";
-//        }
 
-        # Idade
-        $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $regraIdade);
-        if ($this->servidorIdade >= $regraIdade) {
+        if ($this->servidorIdade >= $this->regraIdade) {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
@@ -183,9 +198,9 @@ class AposentadoriaTransicaoPontos2 {
         }
 
         # Tempo de Contribuição
-        $resta1 = ($regraContribuicao * 365) - $this->servidorTempoTotal;
+        $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoTotal;
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
-        if ($this->servidorTempoTotal >= ($regraContribuicao * 365)) {
+        if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
             $this->analiseContribuicao = "Ainda faltam {$resta1} dias<br/>Somente em {$this->dataCriterioTempoContribuicao}.";
@@ -244,21 +259,13 @@ class AposentadoriaTransicaoPontos2 {
         # Pega os dados
         $regraPontos = $this->get_regraPontos(date("Y"));
 
-        if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
-        } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
-        }
-
         /*
          *  Tabela
          */
 
         $array = [
-            ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
-            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$regraContribuicao} anos<br/>(" . ($regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
+            ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
+            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
             ["Pontuação", "Pontuação Atual (" . date("Y") . ")", "{$regraPontos} pontos", "{$this->servidorPontos} pontos", $this->dataCriterioPontos, $this->analisePontos],
             ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$this->servidorTempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
             ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$this->servidorTempoUenf} dias", $this->dataCriterioTempoCargo, $this->analiseCargoEfetivo]
@@ -301,7 +308,7 @@ class AposentadoriaTransicaoPontos2 {
             $texto = "O Servidor terá direito a esta modalidade de aposentadoria em: <b>{$this->dataDireitoAposentadoria}</b>.";
             $cor = "warning";
         }
-        
+
         # Exibe o resumo
         $painel = new Callout($cor);
         $painel->abre();
@@ -334,7 +341,7 @@ class AposentadoriaTransicaoPontos2 {
     public function exibeRegras() {
 
         $array = [
-            ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
+            ["<p id='pLinha1'>Idade<br/>Antes de {$this->dataDivisorIdade}</p><hr/ id='geral'><p id='pLinha1'>Depois de {$this->dataDivisorIdade}</p><p id='pLinha4'>{$this->idadeDescricao}</p>", "{$this->idadeMulherAntes} anos<hr/ id='geral'>{$this->idadeMulherDepois} anos<br/>", "{$this->idadeHomemAntes} anos<hr/ id='geral'>{$this->idadeHomemDepois} anos<br/>"],
             ["<p id='pLinha1'>Contribuição</p><p id='pLinha4'>{$this->tempoContribuiçãoDescricao}</p>", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
             ["<p id='pLinha1'>Pontuação Iniciall</p><p id='pLinha4'>{$this->pontuacaoInicialDescricao}</p>", $this->pontosMulher . " pontos", $this->pontosHomem . " pontos"],
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
@@ -402,7 +409,7 @@ class AposentadoriaTransicaoPontos2 {
         # Pega os pontos
         $pontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
         $pontoAtual = $this->get_regraPontos($anoAtual);
-        
+
         # Verifica se ja possui a pontuação em 2022
         if ($pontos > $this->get_regraPontos($anoInicial)) {
             return null;
@@ -416,16 +423,16 @@ class AposentadoriaTransicaoPontos2 {
             # Se alcançou com a data maior
             if ($pontos == $pontosRegra) {
 
-                $data1 = day($this->servidorDataNascimento)."/".month($this->servidorDataNascimento)."/".$i;
-                $data2 = day($this->servidorDataIngresso)."/".month($this->servidorDataIngresso)."/".$i;
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMaior($data1, $data2);
             }
-            
+
             # Se alcançou com a data menor
             if ($pontos > $pontosRegra) {
 
-                $data1 = day($this->servidorDataNascimento)."/".month($this->servidorDataNascimento)."/".$i;
-                $data2 = day($this->servidorDataIngresso)."/".month($this->servidorDataIngresso)."/".$i;
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMenor($data1, $data2);
             }
         }
@@ -485,7 +492,7 @@ class AposentadoriaTransicaoPontos2 {
         $this->exibeResumoCartilha(4);
     }
 
-   ###########################################################
+    ###########################################################
 
     private function get_regraPontos($ano = null) {
 

@@ -1004,13 +1004,14 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . "enap.png", $largura, $altura);
         $botao->set_url("https://www.enap.gov.br");
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
-        #$botao->set_label(SISTEMA_GRH);
-        $botao->set_title('Site da UENF');
-        $botao->set_imagem(PASTA_FIGURAS . "uenf.png", 120, 50);
-        $botao->set_url("http://www.uenf.br/portal/index.php/br/");
+        $botao->set_title('Portal do Servidor');
+        $botao->set_imagem(PASTA_FIGURAS . "portalServidor.png", 180, 60);
+        $botao->set_url("https://www.servidor.rj.gov.br/portal-web/index");
         $menu->add_item($botao);
+
+        
 
         $menu->show();
 
@@ -1023,13 +1024,14 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . "processoDigital.png", $largura, $altura);
         $botao->set_url("https://www.processodigital.rj.gov.br/");
         $menu->add_item($botao);
-
+        
         $botao = new BotaoGrafico();
         #$botao->set_label(SISTEMA_GRH);
-        $botao->set_title('Site da GRH');
-        $botao->set_imagem(PASTA_FIGURAS . "GRH.png", 120, 50);
-        $botao->set_url("http://uenf.br/dga/grh/");
+        $botao->set_title('Site da UENF');
+        $botao->set_imagem(PASTA_FIGURAS . "uenf.png", 120, 50);
+        $botao->set_url("http://www.uenf.br/portal/index.php/br/");
         $menu->add_item($botao);
+        
 
         $menu->show();
 
@@ -1042,6 +1044,13 @@ class MenuPrincipal {
         $botao->set_title('Sistema do Almoxarifado da Uenf');
         $botao->set_imagem(PASTA_FIGURAS . "almoxarifado.png", 50, 50);
         $botao->set_url("https://almoxarifado.uenf.br/usuarios/sign_in/");
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        #$botao->set_label(SISTEMA_GRH);
+        $botao->set_title('Site da GRH');
+        $botao->set_imagem(PASTA_FIGURAS . "GRH.png", 120, 50);
+        $botao->set_url("http://uenf.br/dga/grh/");
         $menu->add_item($botao);
 
         $menu->show();

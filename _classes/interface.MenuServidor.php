@@ -240,7 +240,7 @@ class MenuServidor {
                 $botao = new BotaoGrafico();
                 $botao->set_label('Aposentadoria Nova');
                 $botao->set_url('servidorAposentadoriaNovo.php?grh=1');
-                $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria.png', $this->tamanhoImagem, $this->tamanhoImagem);
+                $botao->set_imagem(PASTA_FIGURAS . 'aposentadoria2.png', $this->tamanhoImagem, $this->tamanhoImagem);
                 $botao->set_title('Avalia a posentadoria do Servidor');
                 $menu->add_item($botao);
             }

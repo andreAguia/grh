@@ -85,6 +85,13 @@ if ($acesso) {
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1, "left");
 
+        # Procedimentos
+        $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");
+        $linkProc->set_class('button');
+        $linkProc->set_title('Acessa a área de procedimentos');
+        $linkProc->set_target("_blank4");
+        $menu->add_link($linkProc, "right");
+
         if (Verifica::acesso($idUsuario, 1)) {
 
             # Histórico

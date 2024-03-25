@@ -13,7 +13,7 @@ class AposentadoriaLC195Voluntaria {
 
     # Descrição
     private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>Art. 2º, inciso III, da Lei Complementar nº 195/2021";
-    
+
     # Texto
     private $texto = "A regra permanente é aplicável a todos os servidores, independentemente da data do
 ingresso no serviço público. Para se aposentar segundo os critérios das regras permanentes, os
@@ -324,7 +324,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         $figura->set_class('imagem');
         $figura->show();
     }
-    
+
     ###########################################################
 
     public function get_descricao() {
@@ -334,4 +334,11 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
+    public function exibeDescricaoLink($link = null) {
+
+        $link = new Link($this->descricao, $link);
+        $link->show();
+    }
+
+    ###########################################################
 }

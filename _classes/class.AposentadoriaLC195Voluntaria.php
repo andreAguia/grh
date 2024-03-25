@@ -235,14 +235,14 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         # Verifica a data limite        
         if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
             if (jaPassou($this->dataDireitoAposentadoria)) {
-                $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde: <b>{$this->dataDireitoAposentadoria}</b>.";
+                $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $cor = "success";
             } else {
-                $texto = "O Servidor terá direito a esta modalidade de aposentadoria em: <b>{$this->dataDireitoAposentadoria}</b>.";
+                $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $cor = "warning";
             }
         } else {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
+            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

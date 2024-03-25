@@ -19,13 +19,15 @@ class AposentadoriaTransicaoPontos2 {
     private $idadeHomemDepois = 62;
     private $idadeMulherAntes = 56;
     private $idadeMulherDepois = 57;
-    private $dtIngresso = "31/12/2003";
+    
+    private $dtIngresso = "31/12/2021";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
     private $cargoEfetivo = 5;
     private $pontosHomem = 90;
     private $pontosMulher = 86;
+    
     private $regraIdade = null;
     private $regraContribuicao = null;
 
@@ -189,7 +191,14 @@ class AposentadoriaTransicaoPontos2 {
          * Análise
          */
 
+        # Data de Ingresso        
+        if (dataMaior($this->dtIngresso, $this->servidorDataIngresso) == $this->dtIngresso) {
+            $this->analisaDtIngresso = "OK";
+        } else {
+            $this->analisaDtIngresso = "NÃO TEM DIREITO";
+        }
 
+        # Idade
         if ($this->servidorIdade >= $this->regraIdade) {
             $this->analiseIdade = "OK";
         } else {
@@ -264,6 +273,7 @@ class AposentadoriaTransicaoPontos2 {
          */
 
         $array = [
+            ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
             ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
             ["Contribuição", $this->tempoContribuiçãoDescricao, "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
             ["Pontuação", "Pontuação Atual (" . date("Y") . ")", "{$regraPontos} pontos", "{$this->servidorPontos} pontos", $this->dataCriterioPontos, $this->analisePontos],
@@ -302,11 +312,17 @@ class AposentadoriaTransicaoPontos2 {
 
         # Verifica a data limite
         if (jaPassou($this->dataDireitoAposentadoria)) {
-            $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde: <b>{$this->dataDireitoAposentadoria}</b>.";
+            $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $cor = "success";
         } else {
-            $texto = "O Servidor terá direito a esta modalidade de aposentadoria em: <b>{$this->dataDireitoAposentadoria}</b>.";
+            $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $cor = "warning";
+        }
+        
+        # Verifica a regra extra da data de ingresso
+        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
+            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+            $cor = "alert";
         }
 
         # Exibe o resumo

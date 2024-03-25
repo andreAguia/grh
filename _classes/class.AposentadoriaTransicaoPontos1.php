@@ -301,7 +301,7 @@ class AposentadoriaTransicaoPontos1 {
         # Verifica a regra extra da data de ingresso
         if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
             $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
-            $cor = "warning";
+            $cor = "alert";
         }
 
         # Exibe o resumo

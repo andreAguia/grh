@@ -202,7 +202,7 @@ class AposentadoriaDiretoAdquirido2 {
             }
         } else {
             $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
-            $cor = "warning";
+            $cor = "alert";
         }
 
         # Exibe o resumo

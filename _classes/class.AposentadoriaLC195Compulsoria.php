@@ -160,18 +160,18 @@ class AposentadoriaLC195Compulsoria {
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 5,
+             array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '=',
-                'id' => 'emAberto'),
+                'id' => 'pode'),
             array('coluna' => 5,
                 'valor' => "NÃO TEM DIREITO",
                 'operador' => '=',
-                'id' => 'indeferido'),
+                'id' => 'naoPode'),
             array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '<>',
-                'id' => 'arquivado')
+                'id' => 'podera')
         ));
         $tabela->show();
     }

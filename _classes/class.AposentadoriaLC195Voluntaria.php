@@ -215,15 +215,15 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '=',
-                'id' => 'emAberto'),
+                'id' => 'pode'),
             array('coluna' => 5,
                 'valor' => "NÃO TEM DIREITO",
                 'operador' => '=',
-                'id' => 'indeferido'),
+                'id' => 'naoPode'),
             array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '<>',
-                'id' => 'arquivado')
+                'id' => 'podera')
         ));
         $tabela->show();
     }

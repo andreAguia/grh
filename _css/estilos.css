@@ -614,11 +614,15 @@ p#pferiasPeriodo{
  * Área de Aposentadoria
  *******************************************/
 tr#pode{
-    background-color:#8FBC8F;
+    background-color:#e6f7d9;
 }
 
 tr#naoPode{
     background-color:#f4c6c6;
+}
+
+tr#podera{
+    background-color:#fff3d9;
 }
 
 div#divRegrasAposentadoria{

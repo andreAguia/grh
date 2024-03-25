@@ -48,23 +48,35 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
+    # Cria um menu
+    $menu = new MenuBar();
+
+    # Verifica a rotina e define o link
+    if($fase == "tabs"){
+        $linkvoltar = 'servidorMenu.php';
+    }elseif($fase == "voluntaria" OR $fase == "compulsoria"){
+        $linkvoltar = '?fase=tabs&aba=3';
+    }elseif($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor"){
+        $linkvoltar = '?fase=tabs&aba=4';
+    }elseif($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4"){
+        $linkvoltar = '?fase=tabs&aba=5';
+    }        
+        
+    # Botão voltar    
+    $linkBotaoVoltar = new Button('Voltar', $linkvoltar);
+    $linkBotaoVoltar->set_title('Volta para a página anterior');
+    $linkBotaoVoltar->set_accessKey('V');
+    $menu->add_link($linkBotaoVoltar, "left");
+    $menu->show();
+
+    # Exibe os dados do servidor
+    get_DadosServidor($idServidorPesquisado);
+
+    calloutAlert("ATENÇÃO!!<br/>Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!! Use-a por sua própria conta e risco!");
+
     switch ($fase) {
         case "tabs" :
 
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', 'servidorMenu.php');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
-            ########################################################
             # Menu de Abas
             $tab = new Tab([
                 "Dados do Servidor",
@@ -76,7 +88,7 @@ if ($acesso) {
                     ], $aba);
 
             ####################################################
-            
+
             /*
              *  Dados do Servidor
              */
@@ -198,11 +210,11 @@ if ($acesso) {
             $tabela->show();
 
             $grid1->fechaColuna();
-            
+
             /*
              *  Tempo Averbado Detalhado
              */
-            
+
             $grid1->abreColuna(12);
 
             # Variáveis
@@ -272,12 +284,12 @@ if ($acesso) {
             $tabela->set_totalRegistro(false);
             $tabela->set_colunaSomatorio([2, 3]);
             $tabela->show();
-            
+
             /*
              *  Vinculos Anteriores do servidor
              */
-            
-            
+
+
             # Pega o idPessoa desse idServidor
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -350,7 +362,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=voluntaria","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=voluntaria", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -358,7 +370,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=compulsoria","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=compulsoria", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -388,7 +400,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosIntegral","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosIntegral", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -396,7 +408,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosMedia","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosMedia", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -426,7 +438,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -434,7 +446,7 @@ if ($acesso) {
             $grid2->abreColuna(6);
 
             $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -442,7 +454,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3","(clique no texto acima para maiores detalhes)");
+            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -534,19 +546,6 @@ if ($acesso) {
 
         case "voluntaria" :
 
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=3');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -587,19 +586,6 @@ if ($acesso) {
             break;
 
         case "compulsoria" :
-
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=3');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
 
             # Exibe a regra
             $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
@@ -690,7 +676,7 @@ if ($acesso) {
             $grid2->fechaGrid();
             $grid1->fechaColuna();
             break;
-        
+
         ########################################################
 
         /*
@@ -698,20 +684,7 @@ if ($acesso) {
          */
 
         case "pontosIntegral" :
-
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=4');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
+            
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -754,19 +727,6 @@ if ($acesso) {
 
         case "pontosMedia" :
 
-            # Cria um menu
-            $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=4');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -804,16 +764,6 @@ if ($acesso) {
             $aposentadoria->exibeResumoCartilha(2);
             $grid2->fechaColuna();
             $grid2->fechaGrid();
-            $grid1->fechaColuna();
-            break;
-
-        case "pedagio" :
-            $grid1->abreColuna(9);
-            titulo("Regra do Pedágio");
-            br();
-
-            emConstrucao("Em breve esta área estará disponível.");
-
             $grid1->fechaColuna();
             break;
 
@@ -888,16 +838,6 @@ if ($acesso) {
             # Cria um menu
             $menu = new MenuBar();
 
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=5');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -924,16 +864,6 @@ if ($acesso) {
             # Cria um menu
             $menu = new MenuBar();
 
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=5');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
-
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -959,16 +889,6 @@ if ($acesso) {
             # Art. 6º DA EC Nº 41/2003
             # Cria um menu
             $menu = new MenuBar();
-
-            # Botão voltar    
-            $linkBotaoVoltar = new Button('Voltar', '?fase=tabs&aba=5');
-            $linkBotaoVoltar->set_title('Volta para a página anterior');
-            $linkBotaoVoltar->set_accessKey('V');
-            $menu->add_link($linkBotaoVoltar, "left");
-            $menu->show();
-
-            # Exibe os dados do servidor
-            get_DadosServidor($idServidorPesquisado);
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);

@@ -329,7 +329,8 @@ if ($acesso) {
                 $dtFinal = $dtHoje;
             }
 
-            $mensagem1 = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema. Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
+            $mensagem1 = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema.<br/>
+                 Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
                  O problema consiste em que nem sempre o que se publica é fruto de um cálculo perfeito.<br/>
                  Dessa forma, para verificar possíveis equívocos, a tabela abaixo informa, além dos dias digitados, o cálculo desses dias considerando a data Inicial e a data Final.";
 
@@ -339,7 +340,7 @@ if ($acesso) {
                 $mensagem2 = "Atenção - Períodos com Sobreposição de Dias !!!<br/>
                               Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao);
 
-                calloutAlert($mensagem2);
+                calloutAlert($mensagem2,"ff");
             }
 
 

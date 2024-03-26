@@ -35,7 +35,7 @@ class AposentadoriaTransicaoPontos1 {
     private $paridade = "COM PARIDADE";
 
     # Descrições
-    private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
+    private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção (Somente Tempo Estatutário).";
     private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $pontuacaoInicialDescricao = "Pontuação Inicial.";
     private $idadeDescricao = "Idade do servidor.";

@@ -249,6 +249,41 @@ class Averbacao {
 ##############################################################################################################################################
 
     /**
+     * Método get_tempoAverbadoPublicoRegime
+     * informa o total de dias de tempo averbado em empresa Pública por Regime
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoAverbadoPublicoRegime($idServidor, $regime) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega os valores
+        $select = "SELECT SUM(dias) as total
+                     FROM tbaverbacao
+                    WHERE empresaTipo = 1 
+                      AND regime = {$regime}
+                      AND idServidor = {$idServidor}
+                         ORDER BY total";
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        $row = $pessoal->select($select, false);
+
+        if (is_null($row[0])) {
+            return 0;
+        } else {
+            return $row[0];
+        }
+    }
+
+##############################################################################################################################################
+
+    /**
      * Método get_tempoAverbadoTotal
      * informa o total de dias de tempo averbado em empresa Pública e privada
      * 

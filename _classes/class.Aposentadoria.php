@@ -352,6 +352,102 @@ class Aposentadoria {
 ##############################################################################################################################################    
 
     /**
+     * Método get_tempoServicoUenfCeletista
+     * informa o total de dias corridos de tempo de serviço celetista dentro da uenf
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_tempoServicoUenfCeletista($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # define a data em que houve a transformação em estatutário (menos um dia)
+        $dataEstatutario = "08/09/2003";
+
+        # Data Inicial (data de admissão)
+        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
+
+        # Verifica se a data de admissao é anterior a data de transformação para estatutário
+        if (dataMaior($dataEstatutario, $dtInicial) == $dtInicial) {
+            return 0;
+        } else {
+            # Verifica se o servidor é ativo ou inativo
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtFinal = $dataEstatutario;
+            } else {
+                # Pega a data de saída
+                $dtSaida = $pessoal->get_dtSaida($idServidor);
+
+                # Verifica se foi antes ou depois da transformação
+                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
+                    $dtFinal = $dataEstatutario;
+                } else {
+                    $dtFinal = $dtSaida;
+                }
+            }
+        }
+
+        return getNumDias($dtInicial, $dtFinal);
+    }
+
+##############################################################################################################################################    
+
+    /**
+     * Método get_tempoServicoUenfEstatutario
+     * informa o total de dias corridos de tempo de serviço estatutario dentro da uenf
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_tempoServicoUenfEstatutario($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # define a data em que houve a transformação em estatutário
+        $dataEstatutario = "09/09/2003";
+
+        # Data Inicial (data de admissão)
+        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
+
+        # Pega a data de saída
+        $dtSaida = $pessoal->get_dtSaida($idServidor);
+
+        # Verifica se a data é anterior a data de transformação para estatutário
+        if (dataMaior($dataEstatutario, $dtInicial) == $dtInicial) {
+            # Verifica se o servidor é ativo ou inativo
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtFinal = date("d/m/Y");
+            } else {
+                # Verifica se foi antes ou depois da transformação
+                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
+                    $dtFinal = $dtSaida;
+                } else {
+                    $dtFinal = $dtSaida;
+                }
+            }
+        } else {
+
+            # Verifica se o servidor é ativo ou inativo
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtInicial = $dataEstatutario;
+                $dtFinal = date("d/m/Y");
+            } else {
+                # Verifica se foi antes ou depois da transformação
+                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
+                    $dtInicial = $dataEstatutario;
+                } else {
+                    return 0;
+                }
+            }
+        }
+
+        return getNumDias($dtInicial, $dtFinal);
+    }
+
+##############################################################################################################################################        
+
+    /**
      * Método get_tempoServicoUenfAntes31_12_21
      * informa o total de dias corridos de tempo de serviço 
      * dentro da uenf antes de 31/12/2021
@@ -383,7 +479,7 @@ class Aposentadoria {
                 }
             }
         }
-        
+
         return getNumDias($dtInicial, $dtFinal);
     }
 
@@ -538,9 +634,9 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_data20anosPublicos($idServidor) {
-        
+
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+20);
+        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 20);
     }
 
 #####################################################################################################################################
@@ -552,9 +648,9 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_data10anosPublicos($idServidor) {
-        
+
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+10);
+        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 10);
     }
 
 #####################################################################################################################################
@@ -566,9 +662,9 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_data25anosPublicos($idServidor) {
-        
+
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+25);
+        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 25);
     }
 
 #####################################################################################################################################
@@ -580,9 +676,9 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_data30anosPublicos($idServidor) {
-        
+
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+30);
+        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 30);
     }
 
 #####################################################################################################################################
@@ -594,9 +690,9 @@ class Aposentadoria {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_data35anosPublicos($idServidor) {
-        
+
         $dtIngresso = $this->get_dtIngresso($idServidor);
-        return day($dtIngresso)."/".month($dtIngresso)."/".(year($dtIngresso)+35);
+        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 35);
     }
 
 #####################################################################################################################################

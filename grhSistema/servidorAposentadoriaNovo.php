@@ -22,6 +22,19 @@ if ($acesso) {
     $aposentadoria = new Aposentadoria();
     $averbacao = new Averbacao();
 
+    # Variáveis
+    $empresaTipo = [
+        [1, "Pública"],
+        [2, "Privada"]
+    ];
+
+    $regime = [
+        [1, "Celetista"],
+        [2, "Estatutário"],
+        [3, "Próprio"],
+        [4, "Militar"]
+    ];
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -52,16 +65,16 @@ if ($acesso) {
     $menu = new MenuBar();
 
     # Verifica a rotina e define o link
-    if($fase == "tabs"){
+    if ($fase == "tabs") {
         $linkvoltar = 'servidorMenu.php';
-    }elseif($fase == "voluntaria" OR $fase == "compulsoria"){
+    } elseif ($fase == "voluntaria" OR $fase == "compulsoria") {
         $linkvoltar = '?fase=tabs&aba=3';
-    }elseif($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor"){
+    } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor") {
         $linkvoltar = '?fase=tabs&aba=4';
-    }elseif($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4"){
+    } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
         $linkvoltar = '?fase=tabs&aba=5';
-    }        
-        
+    }
+
     # Botão voltar    
     $linkBotaoVoltar = new Button('Voltar', $linkvoltar);
     $linkBotaoVoltar->set_title('Volta para a página anterior');
@@ -158,10 +171,34 @@ if ($acesso) {
             /*
              *  Tempo Averbado
              */
+
             $array = [
-                ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)],
-                ["Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)],
+                ["Uenf Celetista", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
+                ["Uenf Estatutária", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
             ];
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Uenf");
+            $tabela->set_conteudo($array);
+            $tabela->set_label(["Descrição", "Dias"]);
+            $tabela->set_width([60, 40]);
+            $tabela->set_align(["left", "center"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_colunaSomatorio(1);
+            $tabela->show();
+
+            /*
+             *  Tempo Averbado
+             */
+            $array = [
+                ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)]];
+
+            foreach ($regime as $item) {
+                if ($averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0]) > 0) {
+                    array_unshift($array, array("Público Regime " . $item[1], $averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0])));
+                }
+            }
 
             # Tabela
             $tabela = new Tabela();
@@ -684,7 +721,7 @@ if ($acesso) {
          */
 
         case "pontosIntegral" :
-            
+
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 

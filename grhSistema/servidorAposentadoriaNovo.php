@@ -173,8 +173,8 @@ if ($acesso) {
              */
 
             $array = [
-                ["Uenf Celetista", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
-                ["Uenf Estatutária", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
+                ["Uenf Celetista<br/><p id='psubtitulo'>Antes de 09/09/2003</p>", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
+                ["Uenf Estatutária<br/><p id='psubtitulo'>Depois de 09/09/2003</p>", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
             ];
 
             # Tabela
@@ -196,7 +196,7 @@ if ($acesso) {
 
             foreach ($regime as $item) {
                 if ($averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0]) > 0) {
-                    array_unshift($array, array("Público Regime " . $item[1], $averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0])));
+                    array_unshift($array, array("Público<br/><p id='psubtitulo'>Regime {$item[1]}</p>", $averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0])));
                 }
             }
 

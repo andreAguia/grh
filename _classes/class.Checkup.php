@@ -3913,6 +3913,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbreducao USING (idServidor)
                     WHERE tbreducao.dtInicio IS NOT null
+                      AND resultado = 1
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreducao.dtInicio, INTERVAL tbreducao.periodo MONTH),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {

@@ -278,6 +278,14 @@ class AposentadoriaTransicaoPontos2 {
         /*
          *  Tabela
          */
+        
+        # Exibe obs para quando o servidor tem tempo celetista
+        if ($this->servidorDataIngresso == "09/09/2003") {
+            $this->servidorDataIngresso .= " *";
+            $mensagem = "* Todo servidor admitido na Uenf como celetista tem a data de ingresso em 09/09/2003.";
+        } else {
+            $mensagem = null;
+        }
 
         $array = [
             ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
@@ -310,6 +318,7 @@ class AposentadoriaTransicaoPontos2 {
                 'operador' => '<>',
                 'id' => 'podera')
         ));
+        $tabela->set_subtitulo($mensagem);
         $tabela->show();
     }
 
@@ -364,6 +373,7 @@ class AposentadoriaTransicaoPontos2 {
     public function exibeRegras() {
 
         $array = [
+            ["<p id='pLinha1'>Data de Ingresso</p><p id='pLinha4'>{$this->dtIngressoDescricao}</p>", $this->dtIngresso, $this->dtIngresso],
             ["<p id='pLinha1'>Idade<br/>Antes de {$this->dataDivisorIdade}</p><hr/ id='geral'><p id='pLinha1'>Depois de {$this->dataDivisorIdade}</p><p id='pLinha4'>{$this->idadeDescricao}</p>", "{$this->idadeMulherAntes} anos<hr/ id='geral'>{$this->idadeMulherDepois} anos<br/>", "{$this->idadeHomemAntes} anos<hr/ id='geral'>{$this->idadeHomemDepois} anos<br/>"],
             ["<p id='pLinha1'>Contribuição</p><p id='pLinha4'>{$this->tempoContribuiçãoDescricao}</p>", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
             ["<p id='pLinha1'>Pontuação Iniciall</p><p id='pLinha4'>{$this->pontuacaoInicialDescricao}</p>", $this->pontosMulher . " pontos", $this->pontosHomem . " pontos"],

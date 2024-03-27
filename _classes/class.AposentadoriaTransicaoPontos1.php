@@ -16,7 +16,6 @@ class AposentadoriaTransicaoPontos1 {
     # Regras
     private $idadeHomem = 65;
     private $idadeMulher = 62;
-    
     private $dtIngresso = "31/12/2003";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
@@ -24,10 +23,9 @@ class AposentadoriaTransicaoPontos1 {
     private $cargoEfetivo = 5;
     private $pontosHomem = 96;
     private $pontosMulher = 86;
-
     private $regraIdade = null;
     private $regraContribuicao = null;
-    
+
     # Remuneração
     private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
@@ -150,7 +148,7 @@ class AposentadoriaTransicaoPontos1 {
         $aposentadoria = new Aposentadoria();
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
-                
+
         # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
         if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
             # Retorna a data da transformação em estatutários
@@ -258,6 +256,14 @@ class AposentadoriaTransicaoPontos1 {
          *  Tabela
          */
 
+        # Exibe obs para quando o servidor tem tempo celetista
+        if ($this->servidorDataIngresso == "09/09/2003") {
+            $this->servidorDataIngresso .= " *";
+            $mensagem = "* Todo servidor admitido na Uenf como celetista tem a data de ingresso em 09/09/2003.";
+        } else {
+            $mensagem = null;
+        }
+
         $array = [
             ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
             ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
@@ -276,7 +282,7 @@ class AposentadoriaTransicaoPontos1 {
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(
-             array('coluna' => 5,
+            array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '=',
                 'id' => 'pode'),
@@ -289,7 +295,9 @@ class AposentadoriaTransicaoPontos1 {
                 'operador' => '<>',
                 'id' => 'podera')
         ));
+        $tabela->set_subtitulo($mensagem);
         $tabela->show();
+        
     }
 
     ###########################################################

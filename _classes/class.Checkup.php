@@ -3836,6 +3836,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbreadaptacao USING (idServidor)
                     WHERE tbreadaptacao.dtInicio IS NOT null
+                      AND resultado = 1
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tbreadaptacao.dtInicio, INTERVAL tbreadaptacao.periodo MONTH),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {
@@ -4950,7 +4951,7 @@ class Checkup {
     ##########################################################
 
     /**
-     * Método get_servidorComTerminoReadaptacaoMenos45Dias
+     * Método get_servidorComLicencaSemVencimentosMenos45Dias
      * 
      * Servidor Com licença sem vencimentos terminando em menos de 45 dias
      */

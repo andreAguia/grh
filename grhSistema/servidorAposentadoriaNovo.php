@@ -113,7 +113,9 @@ if ($acesso) {
 
             $array = [
                 ["Idade", $pessoal->get_idade($idServidorPesquisado)],
-                ["Data de Ingresso no Serviço Público", $aposentadoria->get_dtIngresso($idServidorPesquisado)]
+                ["Data de Nascimento", $pessoal->get_dataNascimento($idServidorPesquisado)],
+                ["Data de Admissão", $pessoal->get_dtadmissao($idServidorPesquisado)],
+                ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $aposentadoria->get_dtIngresso($idServidorPesquisado)]
             ];
 
             # Tabela

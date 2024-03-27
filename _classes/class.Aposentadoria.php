@@ -518,9 +518,10 @@ class Aposentadoria {
             if (($dtFinal == $dtReferencia) OR ($dtFinal == addDias($dtReferencia, -1, false))) {
                 $dtReferencia = $dtInicial;
             } else {
-                return $dtReferencia;
+                break;
             }
         }
+        
         return $dtReferencia;
     }
 

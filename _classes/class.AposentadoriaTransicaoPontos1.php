@@ -35,7 +35,7 @@ class AposentadoriaTransicaoPontos1 {
     private $paridade = "COM PARIDADE";
 
     # Descrições
-    private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção (Somente Tempo Estatutário).";
+    private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção<br/>(Somente Tempo Estatutário).";
     private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $pontuacaoInicialDescricao = "Pontuação Inicial.";
     private $idadeDescricao = "Idade do servidor.";
@@ -150,6 +150,13 @@ class AposentadoriaTransicaoPontos1 {
         $aposentadoria = new Aposentadoria();
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
+                
+        # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
+        if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
+            # Retorna a data da transformação em estatutários
+            # Daqueles que entraram com celetistas na Uenf
+            $this->servidorDataIngresso = "09/09/2003";
+        }
 
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);

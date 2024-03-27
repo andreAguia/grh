@@ -4973,6 +4973,7 @@ class Checkup {
                                      LEFT JOIN tblicencasemvencimentos USING (idServidor)
                                      LEFT JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tblicencasemvencimentos.dtInicial IS NOT null
+                      AND resultado = 1
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) >= 0 
                       AND TIMESTAMPDIFF(DAY,CURRENT_DATE,DATE_SUB(ADDDATE(tblicencasemvencimentos.dtInicial, INTERVAL tblicencasemvencimentos.numDias DAY),INTERVAL 1 DAY)) <=45';
             if (!empty($idServidor)) {

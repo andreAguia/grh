@@ -40,14 +40,14 @@ if ($acesso) {
                                  LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
                  WHERE tbservidor.dtDemissao >= '{$relatorioData}'
                   AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <> 129)
-                  AND tbperfil.tipo <> 'Outros'
+                  AND idPerfil = 1
              ORDER BY dtDemissao";
 
 
     $result = $servidor->select($select);
     
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Administrativos');
+    $relatorio->set_titulo('Relatório de Estatutários Administrativos');
     $relatorio->set_tituloLinha2("Demitidos, Aposentados, Exonerados, Etc a Partir de " . date_to_php($relatorioData));
     $relatorio->set_subtitulo('Ordenado pela Data de Saída');
 

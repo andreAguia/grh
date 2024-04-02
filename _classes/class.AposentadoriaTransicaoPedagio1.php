@@ -3,7 +3,7 @@
 class AposentadoriaTransicaoPedagio1 {
 
     /**
-     * Aposentadoria Regras de Transição Pontos 1
+     * Aposentadoria Regras de Transição Pedagio 1
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
@@ -14,9 +14,9 @@ class AposentadoriaTransicaoPedagio1 {
     private $descricao = "Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - inciso V do art. 4º da EC nº 90/2021";
 
     # Regras
-    private $dtIngresso = "31/12/2003";
     private $idadeHomem = 60;
     private $idadeMulher = 55;
+    private $dtIngresso = "31/12/2003";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
@@ -95,6 +95,13 @@ class AposentadoriaTransicaoPedagio1 {
         $aposentadoria = new Aposentadoria();
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
+
+        # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
+        if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
+            # Retorna a data da transformação em estatutários
+            # Daqueles que entraram com celetistas na Uenf
+            $this->servidorDataIngresso = "09/09/2003";
+        }
 
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
@@ -183,6 +190,15 @@ class AposentadoriaTransicaoPedagio1 {
          *  Tabela
          */
 
+        # Exibe obs para quando o servidor tem tempo celetista
+        if ($this->servidorDataIngresso == "09/09/2003") {
+            $this->servidorDataIngresso .= " *";
+            $mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
+                    . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
+        } else {
+            $mensagem = null;
+        }
+
         $array = [
             ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
             ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
@@ -215,6 +231,11 @@ class AposentadoriaTransicaoPedagio1 {
                 'id' => 'arquivado')
         ));
         $tabela->show();
+        
+        # Mensagem
+        if (!empty($mensagem)) {
+            callout($mensagem);
+        }
     }
 
     ###########################################################

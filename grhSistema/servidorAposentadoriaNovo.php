@@ -955,22 +955,21 @@ if ($acesso) {
             $aposentadoria->exibeAnaliseResumo();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12);
+            $grid1->abreColuna(12, 12, 8);
 
             $aposentadoria->exibeAnalise();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+            $grid1->abreColuna(12, 6, 4);
 
             $aposentadoria->exibeRemuneração();
-            
+
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-            
+            $grid1->abreColuna(12, 6, 8);
+
             $aposentadoria->exibeRegras();
 
             $grid1->fechaColuna();
-
             break;
 
         case "direitoAdquirido2" :
@@ -990,22 +989,21 @@ if ($acesso) {
             $aposentadoria->exibeAnaliseResumo();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12);
+            $grid1->abreColuna(12, 12, 8);
 
             $aposentadoria->exibeAnalise();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+            $grid1->abreColuna(12, 6, 4);
 
             $aposentadoria->exibeRemuneração();
-            
+
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-            
+            $grid1->abreColuna(12, 6, 8);
+
             $aposentadoria->exibeRegras();
 
             $grid1->fechaColuna();
-
             break;
 
         case "direitoAdquirido3" :
@@ -1025,22 +1023,21 @@ if ($acesso) {
             $aposentadoria->exibeAnaliseResumo();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12);
+            $grid1->abreColuna(12, 12, 8);
 
             $aposentadoria->exibeAnalise();
 
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
+            $grid1->abreColuna(12, 6, 4);
 
             $aposentadoria->exibeRemuneração();
-            
+
             $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-            
+            $grid1->abreColuna(12, 6, 8);
+
             $aposentadoria->exibeRegras();
 
             $grid1->fechaColuna();
-
             break;
 
         case "direitoAdquirido4" :

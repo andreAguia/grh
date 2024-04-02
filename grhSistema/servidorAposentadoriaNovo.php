@@ -585,11 +585,17 @@ if ($acesso) {
 
         case "voluntaria" :
 
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
+
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            # Exibe a regra
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+            # Exibe a regra            
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -626,12 +632,17 @@ if ($acesso) {
 
         case "compulsoria" :
 
-            # Exibe a regra
+            # Inicia a classe
             $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
+            # Exibe a regra
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -724,11 +735,17 @@ if ($acesso) {
 
         case "pontosIntegral" :
 
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
+
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
             # Exibe a regra
-            $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -766,11 +783,17 @@ if ($acesso) {
 
         case "pontosMedia" :
 
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
+
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
             # Exibe a regra
-            $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -874,13 +897,17 @@ if ($acesso) {
 
         case "direitoAdquirido1" :
             # C.F. Art. 40, §1º, III, alínea a
-            # Cria um menu
-            $menu = new MenuBar();
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
+            # Exibe a regra
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -900,13 +927,17 @@ if ($acesso) {
 
         case "direitoAdquirido2" :
             # C.F. Art. 40, §1º, III, alínea b
-            # Cria um menu
-            $menu = new MenuBar();
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
+            # Exibe a regra
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 
@@ -926,13 +957,17 @@ if ($acesso) {
 
         case "direitoAdquirido3" :
             # Art. 6º DA EC Nº 41/2003
-            # Cria um menu
-            $menu = new MenuBar();
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+            # Exibe a regra
             tituloTable($aposentadoria->get_descricao());
             $aposentadoria->exibeAnaliseResumo();
 

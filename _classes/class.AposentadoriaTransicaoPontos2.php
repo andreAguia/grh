@@ -282,7 +282,8 @@ class AposentadoriaTransicaoPontos2 {
         # Exibe obs para quando o servidor tem tempo celetista
         if ($this->servidorDataIngresso == "09/09/2003") {
             $this->servidorDataIngresso .= " *";
-            $mensagem = "* Todo servidor admitido na Uenf como celetista tem a data de ingresso em 09/09/2003.";
+            $mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
+                    . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
         } else {
             $mensagem = null;
         }
@@ -318,8 +319,13 @@ class AposentadoriaTransicaoPontos2 {
                 'operador' => '<>',
                 'id' => 'podera')
         ));
-        $tabela->set_subtitulo($mensagem);
+        #$tabela->set_subtitulo($mensagem);
         $tabela->show();
+        
+        # Mensagem
+        if(!empty($mensagem)){
+            callout($mensagem);
+        }        
     }
 
     ###########################################################

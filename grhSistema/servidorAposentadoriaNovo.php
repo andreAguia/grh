@@ -589,7 +589,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -636,7 +636,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -739,7 +739,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -787,7 +787,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -901,7 +901,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -931,7 +931,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();
@@ -961,7 +961,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Acessou a Área de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
 
             $grid1 = new Grid();

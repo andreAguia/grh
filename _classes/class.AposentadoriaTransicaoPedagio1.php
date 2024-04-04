@@ -173,20 +173,24 @@ class AposentadoriaTransicaoPedagio1 {
         $this->servidorTempoAntes31_12_2021 = $aposentadoria->get_tempoTotalAntes31_12_21($this->idServidor);
         $this->servidorTempoSobra = ($this->regraContribuicao * 365) - $this->servidorTempoAntes31_12_2021;
         $this->servidorPedagio = intval($this->servidorTempoSobra * ($this->pedagio / 100));
-        
-        
-        $this->dataCriterioPedagio = addDias($this->dataCriterioTempoContribuicao, $this->servidorPedagio);
-        if (jaPassou($this->dataCriterioPedagio)) {
+
+        if ($this->servidorPedagio < 0) {
+            $this->dataCriterioPedagio = null;
             $this->analisePedagio = "OK";
         } else {
-            $resta4 = getNumDias($hoje, $this->dataCriterioPedagio);
-            if ($resta4 < 0) {
+            $this->dataCriterioPedagio = addDias($this->dataCriterioTempoContribuicao, $this->servidorPedagio);
+
+            if (jaPassou($this->dataCriterioPedagio)) {
                 $this->analisePedagio = "OK";
-                $this->dataCriterioPedagio = $this->dataCriterioTempoContribuicao;
             } else {
+                $resta4 = getNumDias($hoje, $this->dataCriterioPedagio);
                 $this->analisePedagio = "Ainda faltam {$resta4} dias<br/>Somente em {$this->dataCriterioPedagio}.";
             }
         }
+
+
+
+
 
         # Data do Direito a Aposentadoria
         $this->dataDireitoAposentadoria = dataMaiorArray([

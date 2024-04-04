@@ -170,15 +170,22 @@ class AposentadoriaTransicaoPedagio1 {
         }
 
         # Pedágio
-        $this->servidorTempoAntes31_12_2021 = $aposentadoria->get_tempoServicoUenfAntes31_12_21($this->idServidor);
+        $this->servidorTempoAntes31_12_2021 = $aposentadoria->get_tempoTotalAntes31_12_21($this->idServidor);
         $this->servidorTempoSobra = ($this->regraContribuicao * 365) - $this->servidorTempoAntes31_12_2021;
         $this->servidorPedagio = intval($this->servidorTempoSobra * ($this->pedagio / 100));
+        
+        
         $this->dataCriterioPedagio = addDias($this->dataCriterioTempoContribuicao, $this->servidorPedagio);
         if (jaPassou($this->dataCriterioPedagio)) {
             $this->analisePedagio = "OK";
         } else {
             $resta4 = getNumDias($hoje, $this->dataCriterioPedagio);
-            $this->analisePedagio = "Ainda faltam {$resta4} dias<br/>Somente em {$this->dataCriterioPedagio}.";
+            if ($resta4 < 0) {
+                $this->analisePedagio = "OK";
+                $this->dataCriterioPedagio = $this->dataCriterioTempoContribuicao;
+            } else {
+                $this->analisePedagio = "Ainda faltam {$resta4} dias<br/>Somente em {$this->dataCriterioPedagio}.";
+            }
         }
 
         # Data do Direito a Aposentadoria
@@ -383,7 +390,7 @@ class AposentadoriaTransicaoPedagio1 {
     ###########################################################
 
     public function exibeCalculoPedagio() {
-        
+
         $array = [
             ["Contribuição até 31/12/2021", "{$this->servidorTempoAntes31_12_2021} dias"],
             ["Regra da Aposentadoria", ($this->regraContribuicao * 365) . " dias<br/>({$this->regraContribuicao} anos)"],

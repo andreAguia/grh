@@ -175,7 +175,7 @@ class AposentadoriaTransicaoPedagio1 {
         $this->servidorPedagio = intval($this->servidorTempoSobra * ($this->pedagio / 100));
 
         if ($this->servidorPedagio < 0) {
-            $this->dataCriterioPedagio = null;
+            $this->dataCriterioPedagio = "---";
             $this->analisePedagio = "OK";
         } else {
             $this->dataCriterioPedagio = addDias($this->dataCriterioTempoContribuicao, $this->servidorPedagio);
@@ -187,10 +187,6 @@ class AposentadoriaTransicaoPedagio1 {
                 $this->analisePedagio = "Ainda faltam {$resta4} dias<br/>Somente em {$this->dataCriterioPedagio}.";
             }
         }
-
-
-
-
 
         # Data do Direito a Aposentadoria
         $this->dataDireitoAposentadoria = dataMaiorArray([

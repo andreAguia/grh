@@ -22,6 +22,8 @@ class AposentadoriaTransicaoPedagio1 {
     private $servicoPublico = 20;
     private $cargoEfetivo = 5;
     private $pedagio = 20;
+    private $regraIdade = null;
+    private $regraContribuicao = null;
 
     # Remuneração
     private $calculoInicial = "Última remuneração";
@@ -32,7 +34,7 @@ class AposentadoriaTransicaoPedagio1 {
     # Descrições
     private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
     private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
-    private $pedagioDescricao = "Pontuação Inicial.";
+    private $pedagioDescricao = "Período adicional de contribuição calculado apartir do tempo de contribuição que faltava ao servidor em 01/01/2021";
     private $idadeDescricao = "Idade do servidor.";
     private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
@@ -45,6 +47,9 @@ class AposentadoriaTransicaoPedagio1 {
     public $serviçoTempoTotal = null;
     public $servidorDataIngresso = null;
     public $servidorPontos = null;
+    public $servidorTempoAntes31_12_2021 = null;
+    public $servidorTempoSobra = null;
+    public $servidorPedagio = null;
 
     # Tempo do Servidor
     public $servidorTempoAverbadoPublico = null;
@@ -60,12 +65,12 @@ class AposentadoriaTransicaoPedagio1 {
     public $analisePublico = null;
     public $analiseCargoEfetivo = null;
     public $analiseDtRequesitosCumpridos = null;
-    public $analisePontos = null;
+    public $analisePedagio = null;
 
     # Variaveis de Retorno    
     public $dataCriterioIngresso = null;
     public $dataCriterioIdade = null;
-    public $dataCriterioPontos = null;
+    public $dataCriterioPedagio = null;
     public $dataCriterioTempoContribuicao = null;
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
@@ -108,11 +113,11 @@ class AposentadoriaTransicaoPedagio1 {
         $this->servidorPontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
 
         if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
+            $this->regraIdade = $this->idadeHomem;
+            $this->regraContribuicao = $this->contribuicaoHomem;
         } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
+            $this->regraIdade = $this->idadeMulher;
+            $this->regraContribuicao = $this->contribuicaoMulher;
         }
 
         $hoje = date("d/m/Y");
@@ -129,8 +134,8 @@ class AposentadoriaTransicaoPedagio1 {
         }
 
         # Idade
-        $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $regraIdade);
-        if ($this->servidorIdade >= $regraIdade) {
+        $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
+        if ($this->servidorIdade >= $this->regraIdade) {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
@@ -138,9 +143,9 @@ class AposentadoriaTransicaoPedagio1 {
         }
 
         # Tempo de Contribuição
-        $resta1 = ($regraContribuicao * 365) - $this->servidorTempoTotal;
+        $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoTotal;
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
-        if ($this->servidorTempoTotal >= ($regraContribuicao * 365)) {
+        if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
             $this->analiseContribuicao = "Ainda faltam {$resta1} dias<br/>Somente em {$this->dataCriterioTempoContribuicao}.";
@@ -164,27 +169,31 @@ class AposentadoriaTransicaoPedagio1 {
             $this->analiseCargoEfetivo = "Ainda faltam {$resta3} dias<br/>Somente em {$this->dataCriterioTempoCargo}.";
         }
 
+        # Pedágio
+        $this->servidorTempoAntes31_12_2021 = $aposentadoria->get_tempoServicoUenfAntes31_12_21($this->idServidor);
+        $this->servidorTempoSobra = ($this->regraContribuicao * 365) - $this->servidorTempoAntes31_12_2021;
+        $this->servidorPedagio = intval($this->servidorTempoSobra * ($this->pedagio / 100));
+        $this->dataCriterioPedagio = addDias($this->dataCriterioTempoContribuicao, $this->servidorPedagio);
+        if (jaPassou($this->dataCriterioPedagio)) {
+            $this->analisePedagio = "OK";
+        } else {
+            $resta4 = getNumDias($hoje, $this->dataCriterioPedagio);
+            $this->analisePedagio = "Ainda faltam {$resta4} dias<br/>Somente em {$this->dataCriterioPedagio}.";
+        }
+
         # Data do Direito a Aposentadoria
         $this->dataDireitoAposentadoria = dataMaiorArray([
             $this->dataCriterioIdade,
             $this->dataCriterioTempoContribuicao,
             $this->dataCriterioTempoServicoPublico,
-            $this->dataCriterioTempoCargo
+            $this->dataCriterioTempoCargo,
+            $this->dataCriterioPedagio
         ]);
     }
 
     ###########################################################
 
     public function exibeAnalise() {
-
-        # Pega os dados
-        if ($this->servidorSexo == "Masculino") {
-            $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
-        } else {
-            $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
-        }
 
         /*
          *  Tabela
@@ -201,9 +210,9 @@ class AposentadoriaTransicaoPedagio1 {
 
         $array = [
             ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
-            ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
-            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$regraContribuicao} anos<br/>(" . ($regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
-            ["Pedágio", "Pedágio", "---", "---", "---", "---"],
+            ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
+            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
+            ["Pedágio", $this->pedagioDescricao, "{$this->pedagio} %", "{$this->servidorPedagio} dias", $this->dataCriterioPedagio, $this->analisePedagio],
             ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$this->servidorTempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
             ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$this->servidorTempoUenf} dias", $this->dataCriterioTempoCargo, $this->analiseCargoEfetivo]
         ];
@@ -231,7 +240,7 @@ class AposentadoriaTransicaoPedagio1 {
                 'id' => 'arquivado')
         ));
         $tabela->show();
-        
+
         # Mensagem
         if (!empty($mensagem)) {
             callout($mensagem);
@@ -244,10 +253,10 @@ class AposentadoriaTransicaoPedagio1 {
 
         # Verifica a data limite
         if (jaPassou($this->dataDireitoAposentadoria)) {
-            $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde: <b>{$this->dataDireitoAposentadoria}</b>.";
+            $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
             $cor = "success";
         } else {
-            $texto = "O Servidor terá direito a esta modalidade de aposentadoria em: <b>{$this->dataDireitoAposentadoria}</b>.";
+            $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
             $cor = "warning";
         }
 
@@ -344,6 +353,54 @@ class AposentadoriaTransicaoPedagio1 {
     public function get_descricao() {
 
         return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function exibeTempoAntes31_12_21() {
+
+        $aposentadoria = new Aposentadoria();
+        $averbacao = new Averbacao();
+
+        $array = [
+            ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenfAntes31_12_21($this->idServidor)],
+            ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($this->idServidor)]
+        ];
+
+        # Tabela Tempo até 31/12/2021
+        $tabela = new Tabela();
+        $tabela->set_titulo("Tempo até 31/12/2021");
+        #$tabela->set_subtitulo("Em Dias");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    public function exibeCalculoPedagio() {
+        
+        $array = [
+            ["Contribuição até 31/12/2021", "{$this->servidorTempoAntes31_12_2021} dias"],
+            ["Regra da Aposentadoria", ($this->regraContribuicao * 365) . " dias<br/>({$this->regraContribuicao} anos)"],
+            ["Tempo que Faltava em 01/01/2022", "{$this->servidorTempoSobra} dias"],
+            ["Pedágio (20%)", $this->servidorPedagio . " dias"]
+        ];
+
+        # Cálculo do Pedágio
+        $tabela = new Tabela();
+        $tabela->set_titulo("Cálculo do Pedágio");
+        #$tabela->set_subtitulo("Em Dias");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Valor"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
     }
 
     ###########################################################

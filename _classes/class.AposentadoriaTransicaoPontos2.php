@@ -511,6 +511,7 @@ class AposentadoriaTransicaoPontos2 {
 
         $tabela = new Tabela();
         $tabela->set_titulo("Histórico da Pontuação");
+        $tabela->set_subtitulo("{A cada ano o servidor aumenta 2 pontos, a cada 2 anos a regra aumenta 1 ponto)");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Ano", "Pontos do Servidor", "Regra", "Diferença"]);
         $tabela->set_width([25, 25, 25, 25]);

@@ -654,7 +654,8 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
 
         if ($this->situacao == "Ativo") {
-            $menu->add_item("linkWindow", "Folha de Presença", "../grhRelatorios/folhaPresenca.php");
+            $menu->add_item("linkWindow", "Folha de Presença Trimestral", "../grhRelatorios/folhaPresenca.php");
+            #$menu->add_item("linkWindow", "Folha de Presença Mensal", "../grhRelatorios/folhaPresenca.mensal.php");
         }
 
         if ($this->perfil == 1) {

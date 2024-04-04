@@ -892,17 +892,27 @@ if ($acesso) {
             $aposentadoria->exibeAnalise();
 
             $grid2 = new Grid();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeTempoAntes31_12_21();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeCalculoPedagio();
+
+            $grid2->fechaColuna();
             $grid2->abreColuna(12);
 
             tituloTable("Cartilha");
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(6);
+            $grid2->abreColuna(12, 6);
 
             $aposentadoria->exibeResumoCartilha(1);
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(6);
+            $grid2->abreColuna(12, 6);
 
             $aposentadoria->exibeResumoCartilha(2);
             $grid2->fechaColuna();

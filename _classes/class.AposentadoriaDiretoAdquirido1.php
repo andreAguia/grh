@@ -106,7 +106,7 @@ class AposentadoriaDiretoAdquirido1 {
         if ($tempoTotal >= ($regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam {$resta1} dias<br/>Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoContribuicao}.";
         }
 
         # Serviço Público Initerrupto
@@ -115,7 +115,7 @@ class AposentadoriaDiretoAdquirido1 {
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam {$resta2} dias<br/>Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoServicoPublico}.";
         }
 
         # Cargo Efetivo
@@ -124,7 +124,7 @@ class AposentadoriaDiretoAdquirido1 {
         if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam {$resta3} dias<br/>Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoCargo}.";
         }
 
         # Data do Direito a Aposentadoria
@@ -187,7 +187,7 @@ class AposentadoriaDiretoAdquirido1 {
         $tabela->set_titulo("Dados");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
-        #$tabela->set_width([15, 20, 15, 15, 15, 20]);
+        $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(

@@ -156,7 +156,7 @@ class AposentadoriaLC195Compulsoria {
         $tabela->set_titulo("Dados");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
-        #$tabela->set_width([15, 20, 15, 15, 15, 20]);
+        $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(

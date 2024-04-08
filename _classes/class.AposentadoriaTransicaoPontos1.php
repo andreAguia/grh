@@ -196,7 +196,7 @@ class AposentadoriaTransicaoPontos1 {
         if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam {$resta1} dias<br/>Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
         }
 
         # Serviço Público Initerrupto
@@ -205,7 +205,7 @@ class AposentadoriaTransicaoPontos1 {
         if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam {$resta2} dias<br/>Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
         }
 
         # Cargo Efetivo
@@ -214,7 +214,7 @@ class AposentadoriaTransicaoPontos1 {
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam {$resta3} dias<br/>Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
         }
 
         # Pontos
@@ -232,7 +232,7 @@ class AposentadoriaTransicaoPontos1 {
             if (epar($resta4)) {
                 $anoFalta = $resta4 / 2;
             }
-            $this->analisePontos = "Ainda faltam {$resta4} pontos<br/>Somente em {$this->dataCriterioPontos}.";
+            $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.<hr id='geral' />Somente em {$this->dataCriterioPontos}.";
         }
 
         # Data do Direito a Aposentadoria
@@ -279,7 +279,7 @@ class AposentadoriaTransicaoPontos1 {
         $tabela->set_titulo("Dados");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
-        #$tabela->set_width([15, 20, 15, 15, 15, 20]);
+        $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(

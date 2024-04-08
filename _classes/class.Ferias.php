@@ -683,4 +683,34 @@ class Ferias {
     }
 
     ###########################################################
+
+    public function get_diasNaoFruidos($idServidor, $ano = null) {
+
+        /**
+         * retorna os dias fruidos, solicitados, etc para um servidor em um exercicio determinado
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata os parêmetros
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if (empty($ano)) {
+            $ano = date('Y');
+        }
+
+        # Pega array com os dias publicados
+        $select = "SELECT SUM(numDias) as dias
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                      AND anoExercicio = '{$ano}'
+                      AND (status = 'solicitada') ";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno["dias"];
+    }
+
+    ###########################################################
 }

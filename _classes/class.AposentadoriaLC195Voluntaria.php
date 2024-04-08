@@ -135,7 +135,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoTotal >= ($regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam {$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
         }
 
         # Serviço Público Initerrupto
@@ -144,7 +144,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam {$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
         }
 
         # Cargo Efetivo
@@ -153,7 +153,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam {$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
         }
 
         # Data do Direito a Aposentadoria

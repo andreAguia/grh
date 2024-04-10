@@ -75,7 +75,7 @@ class Avaliacao {
         # Se estive vazio ele nunca teve avaliação o próximo é AV1
         if (empty($row['idAvaliacao'])) {
             $tipo = 1;  // tipo é estágio
-            $dtPeriodo1 = $pessoal->get_dtAdmissao($idServidor);    // pega o iício do período a data de admissão
+            $dtPeriodo1 = $pessoal->get_dtAdmissao($idServidor);    // pega o início do período a data de admissão
             $dtPeriodo2 = addMeses($dtPeriodo1, 8);                 // o fim do período é 8 meses
             $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
             $referencia = "AV1";
@@ -102,16 +102,17 @@ class Avaliacao {
             }
 
             # Se o anterior foi AV3 o próximo é AV4
+            # A ultima avaliação o período é de 12 meses (Segundo Débora)
             if ($row['referencia'] == "AV3") {
                 $tipo = 1;  // tipo é estágio
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
-                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
-                $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
+                $dtPeriodo2 = addMeses($dtPeriodo1, 12);            // 12 meses
+                $dtPeriodo2 = addDias($dtPeriodo2, -1, false);      // menos 1 dia
                 $referencia = "AV4";
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
             }
 
-            # Se o anterior foi AV4 o próximo é Anual
+            # Se o anterior foi AV4 o próximo é Anual            
             if ($row['referencia'] == "AV4") {
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
 

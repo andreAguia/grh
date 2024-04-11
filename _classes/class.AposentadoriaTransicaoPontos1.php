@@ -73,6 +73,7 @@ class AposentadoriaTransicaoPontos1 {
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+    public $temDireito = true;
 
     # Tabela de Pontos
     public $tabelaM = [
@@ -126,8 +127,16 @@ class AposentadoriaTransicaoPontos1 {
 
     ###########################################################
 
-    public function __construct($idServidor) {
+    public function __construct($idServidor = null) {
 
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+    }
+
+    ###########################################################    
+
+    public function fazAnalise($idServidor) {
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
         } else {
@@ -179,6 +188,7 @@ class AposentadoriaTransicaoPontos1 {
             $this->analisaDtIngresso = "OK";
         } else {
             $this->analisaDtIngresso = "NÃO TEM DIREITO";
+            $this->temDireito = false;
         }
 
         # Idade
@@ -298,11 +308,11 @@ class AposentadoriaTransicaoPontos1 {
         ));
         #$tabela->set_subtitulo($mensagem);
         $tabela->show();
-        
+
         # Mensagem
-        if(!empty($mensagem)){
+        if (!empty($mensagem)) {
             callout($mensagem);
-        }        
+        }
     }
 
     ###########################################################
@@ -335,19 +345,39 @@ class AposentadoriaTransicaoPontos1 {
 
     ###########################################################
 
-    public function getDataAposentadoria() {
-        return $this->dataDireitoAposentadoria;
+    public function getDataAposentadoria($idServidor) {
+
+        # Faz a análise
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+
+        # Verifica se tem direito
+        if ($this->temDireito) {
+            return $this->dataDireitoAposentadoria;
+        } else {
+            return "---";
+        }
     }
 
     ###########################################################
 
-    public function getDiasFaltantes() {
+    public function getDiasFaltantes($idServidor) {
 
-        # Verifica se ja passou
-        if (jaPassou($this->dataDireitoAposentadoria)) {
-            return "0";
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+
+        # Verifica se tem direito
+        if ($this->temDireito) {
+            # Verifica se ja passou
+            if (jaPassou($this->dataDireitoAposentadoria)) {
+                return "0";
+            } else {
+                return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            }
         } else {
-            return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            return "NÃO TEM DIREITO";
         }
     }
 

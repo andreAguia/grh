@@ -148,7 +148,7 @@ class Aposentadoria {
 
     ############################################################################ 
 
-    function exibeAposentadosPorAno($parametroAno = null) {
+    function exibeAposentadosPorAno($parametroAno = null, $fase = null) {
 
         /**
          * Exibe tabela com os aposentados por ano de aposentadoria
@@ -158,23 +158,28 @@ class Aposentadoria {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        # Trata o parametro do ano
-        if (is_null($parametroAno)) {
+        # Trata os parametros
+        if (empty($parametroAno)) {
             $parametroAno = date('Y');
         }
 
+        if (empty($fase)) {
+            $fase = "editar";
+        }
+
         # Monta o select
-        $select = 'SELECT tbservidor.idfuncional,
-                              tbservidor.idServidor,
-                              tbservidor.dtAdmissao,
-                              tbservidor.dtDemissao,
-                              tbmotivo.motivo
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                        WHERE YEAR(tbservidor.dtDemissao) = "' . $parametroAno . '"
-                          AND situacao = 2
-                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
-                     ORDER BY dtDemissao';
+        $select = 'SELECT year(dtDemissao),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
+                          tbservidor.dtDemissao,
+                          tbmotivo.motivo
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                    WHERE YEAR(tbservidor.dtDemissao) = "' . $parametroAno . '"
+                      AND situacao = 2
+                      AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                 ORDER BY dtDemissao';
 
         $result = $pessoal->select($select);
 
@@ -183,17 +188,20 @@ class Aposentadoria {
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));
-        $tabela->set_align(array('center', 'left', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
+        $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
+        $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
-        $tabela->set_classe(array(null, "pessoal"));
-        $tabela->set_metodo(array(null, "get_nomeECargo"));
+        $tabela->set_classe([null, "pessoal", "pessoal"]);
+        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargo"]);
 
         $tabela->set_conteudo($result);
 
-        $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editar');
+        $tabela->set_rowspan(0);
+        $tabela->set_grupoCorColuna(0);
+
+        $tabela->set_idCampo("idServidor");
+        $tabela->set_editar("?fase={$fase}");
         $tabela->show();
     }
 
@@ -249,7 +257,7 @@ class Aposentadoria {
 
     ############################################################################
 
-    function exibeAposentadosPorTipo($parametroMotivo = null) {
+    function exibeAposentadosPorTipo($parametroMotivo = null, $fase = null) {
 
         /**
          * Exibe tabela com os aposentados por tipo de aposentadoria
@@ -259,19 +267,24 @@ class Aposentadoria {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
+        # Trata os parametros
+        if (empty($fase)) {
+            $fase = "editar";
+        }
+
         # Monta o select
-        $select = 'SELECT tbservidor.idfuncional,
-                              tbpessoa.nome,
-                              tbservidor.idServidor,
-                              tbservidor.dtAdmissao,
-                              tbservidor.dtDemissao,
-                              tbservidor.idServidor
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                        WHERE tbservidor.motivo = ' . $parametroMotivo . '
-                          AND situacao = 2
-                          AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
-                     ORDER BY dtDemissao';
+        $select = "SELECT year(dtDemissao),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
+                          tbservidor.dtDemissao,
+                          tbmotivo.motivo
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                    WHERE tbservidor.motivo = {$parametroMotivo}
+                      AND situacao = 2
+                      AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                 ORDER BY dtDemissao";
 
         $result = $pessoal->select($select);
 
@@ -280,17 +293,20 @@ class Aposentadoria {
         $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Saída', 'Perfil']);
-        $tabela->set_align(['center', 'left', 'left']);
+        $tabela->set_label(["Ano", 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
+        $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
         $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
-        $tabela->set_classe([null, null, "pessoal", null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_cargo", null, null, "get_perfil"]);
+        $tabela->set_classe([null, "pessoal", "pessoal"]);
+        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargo"]);
 
         $tabela->set_conteudo($result);
 
-        $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editar');
+        $tabela->set_rowspan(0);
+        $tabela->set_grupoCorColuna(0);
+
+        $tabela->set_idCampo("idServidor");
+        $tabela->set_editar("?fase={$fase}");
         $tabela->show();
     }
 
@@ -521,7 +537,7 @@ class Aposentadoria {
                 break;
             }
         }
-        
+
         return $dtReferencia;
     }
 

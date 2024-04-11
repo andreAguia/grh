@@ -65,7 +65,20 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function __construct($idServidor) {
+    public function __construct($idServidor = null) {
+
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+    }
+
+    ###########################################################    
+
+    public function fazAnalise($idServidor) {
+
+        if (!empty($idServidor)) {
+            $this->idServidor = $idServidor;
+        }
 
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
@@ -205,13 +218,22 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function getDataAposentadoria() {
+    public function getDataAposentadoria($idServidor) {
+
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+
         return $this->dataDireitoAposentadoria;
     }
 
     ###########################################################
 
-    public function getDiasFaltantes() {
+    public function getDiasFaltantes($idServidor) {
+
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
 
         # Verifica se ja passou
         if (jaPassou($this->dataDireitoAposentadoria)) {

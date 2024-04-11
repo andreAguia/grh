@@ -257,21 +257,8 @@ class AuxilioEducacao {
 
         # Verifica se tem direito
         if (in_array($dados["idParentesco"], $tipos)) {
-
-            # Exibe Situação
-            tituloTable("Situação");
-
-            $painel = new Callout("warning");
-            $painel->abre();
-
-            $this->exibeSituacao($id);
-
-            if (empty($cpfDependente)) {
-                hr("alerta");
-                p("Sem CPF Cadastrado!", "pAvisoRegularizarVermelho");
-            }
-
-            $painel->fecha();
+            
+            
 
             # Pega os dados do dependente
             $dtNasc = date_to_php($dados["dtNasc"]);
@@ -320,6 +307,21 @@ class AuxilioEducacao {
                     'id' => 'alerta')));
 
             $tabela->show();
+
+            # Exibe Situação
+            tituloTable("Situação");
+
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            $this->exibeSituacao($id);
+
+            if (empty($cpfDependente)) {
+                hr("alerta");
+                p("Sem CPF Cadastrado!", "pAvisoRegularizarVermelho");
+            }
+
+            $painel->fecha();
         }
     }
 

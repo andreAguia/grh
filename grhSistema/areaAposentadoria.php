@@ -115,8 +115,6 @@ if ($acesso) {
     $grid->fechaColuna();
     $grid->abreColuna(12, 9);
     
-    calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
-
     #######################################
 
     switch ($fase) {
@@ -785,6 +783,8 @@ if ($acesso) {
         #######################################
 
         case "transicao1" :
+            
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos1";
@@ -966,6 +966,8 @@ if ($acesso) {
         #######################################
 
         case "transicao2" :
+            
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos2";

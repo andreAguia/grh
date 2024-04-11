@@ -269,7 +269,7 @@ class AposentadoriaTransicaoPedagio1 {
 
         # Verifica a regra extra da data de ingresso
         if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
+            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

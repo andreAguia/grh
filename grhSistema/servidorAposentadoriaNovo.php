@@ -85,7 +85,7 @@ if ($acesso) {
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
 
-    calloutAlert("ATENÇÃO!!<br/>Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!");
+    calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
 
     switch ($fase) {
         case "tabs" :

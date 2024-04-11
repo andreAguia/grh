@@ -69,10 +69,10 @@ if ($acesso) {
     $botaoVoltar->set_accessKey('V');
     $menu->add_link($botaoVoltar, "left");
     $menu->show();
-
+    
     tituloTable("Área de Aposentadoria");
-    br();
-
+    br();    
+    
     $grid->fechaColuna();
     $grid->abreColuna(12, 3);
 
@@ -114,6 +114,8 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12, 9);
+    
+    calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
 
     #######################################
 
@@ -1145,7 +1147,7 @@ if ($acesso) {
         #######################################
 
         case "transicao3" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 5);
+            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
             break;
 
         #######################################
@@ -1169,7 +1171,7 @@ if ($acesso) {
         #######################################
 
         case "transicao4" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 5);
+            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
             break;
 
         #######################################        
@@ -1193,7 +1195,7 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido1" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 5);
+            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
             break;
 
         #######################################        
@@ -1217,7 +1219,7 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido2" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 5);
+            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
             break;
 
         #######################################        
@@ -1241,7 +1243,7 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido3" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 5);
+            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
             break;
 
         #######################################

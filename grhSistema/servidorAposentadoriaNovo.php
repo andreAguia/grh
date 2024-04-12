@@ -510,7 +510,7 @@ if ($acesso) {
             $grid2 = new Grid();
             $grid2->abreColuna(12, 12, 6);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
             linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
@@ -518,7 +518,7 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(6);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
             linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
@@ -526,7 +526,7 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 12, 6);
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido3($idServidorPesquisado);
             linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
@@ -534,7 +534,7 @@ if ($acesso) {
             $grid2->fechaColuna();
 //            $grid2->abreColuna(6);
 //
-//            $aposentadoria = new AposentadoriaDiretoAdquirido4($idServidorPesquisado);
+//            $aposentadoria = new AposentadoriaDireitoAdquirido4($idServidorPesquisado);
 //            tituloTable($aposentadoria->get_descricao());
 //            $aposentadoria->exibeAnaliseResumo();
 //            
@@ -951,7 +951,7 @@ if ($acesso) {
         case "direitoAdquirido1" :
             # C.F. Art. 40, §1º, III, alínea a
             # Inicia a classe
-            $aposentadoria = new AposentadoriaDiretoAdquirido1($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
 
             # Grava no log a atividade
             $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
@@ -985,7 +985,7 @@ if ($acesso) {
         case "direitoAdquirido2" :
             # C.F. Art. 40, §1º, III, alínea b
             # Inicia a classe
-            $aposentadoria = new AposentadoriaDiretoAdquirido2($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
 
             # Grava no log a atividade
             $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
@@ -1019,7 +1019,7 @@ if ($acesso) {
         case "direitoAdquirido3" :
             # Art. 6º DA EC Nº 41/2003
             # Inicia a classe
-            $aposentadoria = new AposentadoriaDiretoAdquirido3($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido3($idServidorPesquisado);
 
             # Grava no log a atividade
             $atividade = "Cadastro do servidor - Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
@@ -1057,7 +1057,7 @@ if ($acesso) {
             #titulo("Direito Adquirido");
             #br();
 
-            $aposentadoria = new AposentadoriaDiretoAdquirido4($idServidorPesquisado);
+            $aposentadoria = new AposentadoriaDireitoAdquirido4($idServidorPesquisado);
             tituloTable($aposentadoria->get_descricao());
             emConstrucao("Em breve esta área estará disponível.");
 //            $aposentadoria->exibeAnaliseResumo();

@@ -137,6 +137,7 @@ class AposentadoriaTransicaoPontos1 {
     ###########################################################    
 
     public function fazAnalise($idServidor) {
+        
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
         } else {

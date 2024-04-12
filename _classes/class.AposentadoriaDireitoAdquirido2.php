@@ -1,6 +1,6 @@
 <?php
 
-class AposentadoriaDiretoAdquirido3 {
+class AposentadoriaDireitoAdquirido2 {
 
     /**
      * Abriga as rotina referentes a aposentadoria do servidor
@@ -12,54 +12,53 @@ class AposentadoriaDiretoAdquirido3 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>Art. 2º da EC Nº 41/2003";
+    private $descricao = "Aposentadoria Voluntária por Idade<br/>C.F. Art. 40, §1º, III, alínea b";
 
     # Regras
-    private $dtIngresso = "16/12/1998";
-    private $idadeHomem = 53;
-    private $idadeMulher = 48;
-    private $contribuicaoHomem = 35;
-    private $contribuicaoMulher = 30;
-    private $servicoPublico = 5;
+    private $dtIngresso = null;
+    private $idadeHomem = 65;
+    private $idadeMulher = 60;
+    private $servicoPublico = 10;
     private $cargoEfetivo = 5;
     private $dtRequesitosCumpridos = "31/12/2021";
 
     # Remuneração
-    private $calculoInicial = "Média aritmética simples dos 80% das maiores remunerações corrigidas desde julho/94 - Lei Federal 10.887<br/>
-                               Redutor:<br/>
-                                       - Até 31/12/2005 - Redutor de 3,5% x nº de anos (reduzidos em relação a idade – 60 H/ 55 M)<br/>
-                                       - Após 01/01/2006 - Redutor de 5% x nº de anos (reduzidos em relação a idade – 60 H/55 M)";
+    private $calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Proporcional ao tempo de contribuição - Lei Federal 10.887";
     private $teto = "Remuneração do servidor no cargo efetivo";
     private $reajuste = "INPC – Aplicado em Janeiro – Lei 6.244/2012";
     private $paridade = "SEM PARIDADE";
 
     # Descrições
-    private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
-    private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $idadeDescricao = "Idade do servidor.";
     private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
 
     # Dados do servidor
-    public $analisaDtIngresso = null;
     public $analiseIdade = null;
-    public $analiseContribuicao = null;
     public $analisePublico = null;
     public $analiseCargoEfetivo = null;
     public $analiseDtRequesitosCumpridos = null;
 
-    # Variaveis de Retorno    
-    public $dataCriterioIngresso = null;
+    # Variaveis de Retorno
     public $dataCriterioIdade = null;
-    public $dataCriterioTempoContribuicao = null;
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+    public $temDireito = true;
 
     ###########################################################
 
-    public function __construct($idServidor) {
+    public function __construct($idServidor = null) {
+
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+    }
+
+    ###########################################################    
+
+    public function fazAnalise($idServidor) {
 
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
@@ -79,17 +78,14 @@ class AposentadoriaDiretoAdquirido3 {
 
         $aposentadoria = new Aposentadoria();
         $tempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
-        $dtIngressosServidor = $aposentadoria->get_dtIngresso($this->idServidor);
 
         $tempoTotal = $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
         $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
 
         if ($sexo == "Masculino") {
             $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
         } else {
             $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
         }
 
         $hoje = date("d/m/Y");
@@ -97,13 +93,6 @@ class AposentadoriaDiretoAdquirido3 {
         /*
          * Análise
          */
-
-        # Data de Ingresso        
-        if (dataMaior($this->dtIngresso, $dtIngressosServidor) == $this->dtIngresso) {
-            $this->analisaDtIngresso = "OK";
-        } else {
-            $this->analisaDtIngresso = "NÃO TEM DIREITO";
-        }
 
         # Idade
         $this->dataCriterioIdade = addAnos($dtNasc, $regraIdade);
@@ -114,22 +103,13 @@ class AposentadoriaDiretoAdquirido3 {
             $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
         }
 
-        # Tempo de Contribuição
-        $resta1 = ($regraContribuicao * 365) - $tempoTotal;
-        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
-        if ($tempoTotal >= ($regraContribuicao * 365)) {
-            $this->analiseContribuicao = "OK";
-        } else {
-            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoContribuicao}.";
-        }
-
         # Serviço Público Initerrupto
         $resta2 = ($this->servicoPublico * 365) - $tempoPublicoIninterrupto;
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2);
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somentee em<br/>{$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoServicoPublico}.";
         }
 
         # Cargo Efetivo
@@ -144,7 +124,6 @@ class AposentadoriaDiretoAdquirido3 {
         # Data do Direito a Aposentadoria
         $this->dataDireitoAposentadoria = dataMaiorArray([
             $this->dataCriterioIdade,
-            $this->dataCriterioTempoContribuicao,
             $this->dataCriterioTempoServicoPublico,
             $this->dataCriterioTempoCargo
         ]);
@@ -154,6 +133,7 @@ class AposentadoriaDiretoAdquirido3 {
             $this->analiseDtRequesitosCumpridos = "OK";
         } else {
             $this->analiseDtRequesitosCumpridos = "NÃO TEM DIREITO";
+            $this->temDireito = false;
         }
     }
 
@@ -172,17 +152,14 @@ class AposentadoriaDiretoAdquirido3 {
 
         $aposentadoria = new Aposentadoria();
         $tempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
-        $dtIngressosServidor = $aposentadoria->get_dtIngresso($this->idServidor);
 
         $tempoTotal = $tempoAverbadoPublico + $tempoAverbadoPrivado + $tempoUenf;
         $tempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
 
         if ($sexo == "Masculino") {
             $regraIdade = $this->idadeHomem;
-            $regraContribuicao = $this->contribuicaoHomem;
         } else {
             $regraIdade = $this->idadeMulher;
-            $regraContribuicao = $this->contribuicaoMulher;
         }
 
         /*
@@ -190,9 +167,7 @@ class AposentadoriaDiretoAdquirido3 {
          */
 
         $array = [
-            ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $dtIngressosServidor, "---", $this->analisaDtIngresso],
             ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$idadeServidor} anos", $this->dataCriterioIdade, $this->analiseIdade],
-            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$regraContribuicao} anos<br/>(" . ($regraContribuicao * 365) . " dias)", "{$tempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
             ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$tempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
             ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$tempoUenf} dias", $this->dataCriterioTempoCargo, $this->analiseCargoEfetivo],
             ["Data Limite", $this->dtRequesitosCumpridosDescicao, $this->dtRequesitosCumpridos, $this->dataDireitoAposentadoria, "-", $this->analiseDtRequesitosCumpridos],
@@ -207,7 +182,7 @@ class AposentadoriaDiretoAdquirido3 {
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->set_formatacaoCondicional(array(
-             array('coluna' => 5,
+            array('coluna' => 5,
                 'valor' => 'OK',
                 'operador' => '=',
                 'id' => 'pode'),
@@ -238,12 +213,6 @@ class AposentadoriaDiretoAdquirido3 {
             }
         } else {
             $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
-            $cor = "warning";
-        }
-
-        # Verifica a regra extra da data de ingresso
-        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 
@@ -258,19 +227,39 @@ class AposentadoriaDiretoAdquirido3 {
 
     ###########################################################
 
-    public function getDataAposentadoria() {
-        return $this->dataDireitoAposentadoria;
+    public function getDataAposentadoria($idServidor) {
+
+        # Faz a análise
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+
+        # Verifica se tem direito
+        if ($this->temDireito) {
+            return $this->dataDireitoAposentadoria;
+        } else {
+            return "---";
+        }
     }
 
     ###########################################################
 
-    public function getDiasFaltantes() {
+    public function getDiasFaltantes($idServidor) {
 
-        # Verifica se ja passou
-        if (jaPassou($this->dataDireitoAposentadoria)) {
-            return "0";
+        if (!empty($idServidor)) {
+            $this->fazAnalise($idServidor);
+        }
+
+        # Verifica se tem direito
+        if ($this->temDireito) {
+            # Verifica se ja passou
+            if (jaPassou($this->dataDireitoAposentadoria)) {
+                return "0";
+            } else {
+                return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            }
         } else {
-            return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            return "NÃO TEM DIREITO";
         }
     }
 
@@ -278,10 +267,8 @@ class AposentadoriaDiretoAdquirido3 {
 
     public function exibeRegras() {
 
-        $array = [             
-            ["<p id='pLinha1'>Data de Ingresso</p><p id='pLinha4'>{$this->dtIngressoDescricao}</p>", $this->dtIngresso, $this->dtIngresso],
+        $array = [
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
-            ["<p id='pLinha1'>Contribuição</p><p id='pLinha4'>{$this->tempoContribuiçãoDescricao}</p>", $this->contribuicaoMulher . " anos<br/>(" . ($this->contribuicaoMulher * 365) . " dias)", $this->contribuicaoHomem . " anos<br/>(" . ($this->contribuicaoHomem * 365) . " dias)"],
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
             ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"],
             ["<p id='pLinha1'>Data Limite</p><p id='pLinha4'>{$this->dtRequesitosCumpridosDescicao}</p>", $this->dtRequesitosCumpridos, $this->dtRequesitosCumpridos],

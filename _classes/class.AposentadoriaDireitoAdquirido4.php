@@ -103,7 +103,7 @@ class AposentadoriaDireitoAdquirido4 {
         if (dataMaior($this->dtIngresso, $dtAdmissao) == $this->dtIngresso) {
             $this->analisaDtIngresso = "OK";
         } else {
-            $this->analisaDtIngresso = "NÃO TEM DIREITO";
+            $this->analisaDtIngresso = "Não Tem Direito";
         }
 
         # Idade
@@ -154,7 +154,7 @@ class AposentadoriaDireitoAdquirido4 {
         if (dataMaior($this->dtRequesitosCumpridos, $this->dataDireitoAposentadoria) == $this->dtRequesitosCumpridos) {
             $this->analiseDtRequesitosCumpridos = "OK";
         } else {
-            $this->analiseDtRequesitosCumpridos = "NÃO TEM DIREITO";
+            $this->analiseDtRequesitosCumpridos = "Não Tem Direito";
         }
     }
 
@@ -213,7 +213,7 @@ class AposentadoriaDireitoAdquirido4 {
                 'operador' => '=',
                 'id' => 'pode'),
             array('coluna' => 5,
-                'valor' => "NÃO TEM DIREITO",
+                'valor' => "Não Tem Direito",
                 'operador' => '=',
                 'id' => 'naoPode'),
             array('coluna' => 5,
@@ -238,13 +238,13 @@ class AposentadoriaDireitoAdquirido4 {
                 $cor = "secondary";
             }
         } else {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "warning";
         }
 
         # Verifica a regra extra da data de ingresso
-        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b> a essa modalidade de aposentadoria.";
+        if ($this->analisaDtIngresso == "Não Tem Direito") {
+            $texto = "O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

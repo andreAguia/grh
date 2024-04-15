@@ -85,6 +85,9 @@ class AposentadoriaLC195Compulsoria {
         } else {
             $this->idServidor = $idServidor;
         }
+        
+        # Inicializa a flag
+        $this->temDireito = true;
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -178,7 +181,7 @@ class AposentadoriaLC195Compulsoria {
                 'operador' => '=',
                 'id' => 'pode'),
             array('coluna' => 5,
-                'valor' => "NÃO TEM DIREITO",
+                'valor' => "Não Tem Direito",
                 'operador' => '=',
                 'id' => 'naoPode'),
             array('coluna' => 5,
@@ -203,7 +206,7 @@ class AposentadoriaLC195Compulsoria {
                 $cor = "warning";
             }
         } else {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

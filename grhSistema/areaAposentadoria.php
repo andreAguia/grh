@@ -69,10 +69,10 @@ if ($acesso) {
     $botaoVoltar->set_accessKey('V');
     $menu->add_link($botaoVoltar, "left");
     $menu->show();
-    
+
     tituloTable("Área de Aposentadoria");
-    br();    
-    
+    br();
+
     $grid->fechaColuna();
     $grid->abreColuna(12, 3);
 
@@ -100,7 +100,7 @@ if ($acesso) {
     # Menu de tipos de relatórios
     $menu = new Menu("menuAposentadoria");
 
-    #var_dump($array);
+    $lista = null;
 
     foreach ($array as $item) {
         if ($fase == $item[2] OR $fase == "aguarde" . ucfirst($item[2])) {
@@ -114,7 +114,7 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12, 9);
-    
+
     #######################################
 
     switch ($fase) {
@@ -448,13 +448,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -463,12 +463,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -476,12 +476,12 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
@@ -491,7 +491,7 @@ if ($acesso) {
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -783,8 +783,8 @@ if ($acesso) {
         #######################################
 
         case "transicao1" :
-            
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos1";
@@ -858,13 +858,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -873,12 +873,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -886,12 +886,12 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
@@ -901,7 +901,7 @@ if ($acesso) {
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -922,7 +922,7 @@ if ($acesso) {
                     'operador' => '>',
                     'id' => 'normal'),
                 array('coluna' => 4,
-                    'valor' => 'NÃO TEM DIREITO',
+                    'valor' => 'Não Tem Direito',
                     'operador' => '=',
                     'id' => 'naoPode'),
             ));
@@ -966,8 +966,8 @@ if ($acesso) {
         #######################################
 
         case "transicao2" :
-            
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos2";
@@ -1041,13 +1041,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1056,12 +1056,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1069,22 +1069,22 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
-
+            
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -1105,7 +1105,7 @@ if ($acesso) {
                     'operador' => '>',
                     'id' => 'normal'),
                 array('coluna' => 4,
-                    'valor' => 'NÃO TEM DIREITO',
+                    'valor' => 'Não Tem Direito',
                     'operador' => '=',
                     'id' => 'naoPode'),
             ));
@@ -1197,8 +1197,8 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido1" :
-            
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido1";
@@ -1272,13 +1272,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1287,12 +1287,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1300,12 +1300,12 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
@@ -1315,7 +1315,7 @@ if ($acesso) {
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -1336,7 +1336,7 @@ if ($acesso) {
                     'operador' => '>',
                     'id' => 'normal'),
                 array('coluna' => 4,
-                    'valor' => 'NÃO TEM DIREITO',
+                    'valor' => 'Não Tem Direito',
                     'operador' => '=',
                     'id' => 'naoPode'),
             ));
@@ -1380,8 +1380,8 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido2" :
-            
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido2";
@@ -1455,13 +1455,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1470,12 +1470,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1483,22 +1483,22 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "---") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
-
+            
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -1519,7 +1519,7 @@ if ($acesso) {
                     'operador' => '>',
                     'id' => 'normal'),
                 array('coluna' => 4,
-                    'valor' => 'NÃO TEM DIREITO',
+                    'valor' => 'Não Tem Direito',
                     'operador' => '=',
                     'id' => 'naoPode'),
             ));
@@ -1563,8 +1563,8 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido3" :
-            
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido3";
@@ -1638,13 +1638,13 @@ if ($acesso) {
             # Os que já podem requerer
             if ($parametroTipo == "Já Podem requerer") {
 
-                # Inicia a classe
-                $resultado = array();
+                # Inicia o array
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "0") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1653,12 +1653,12 @@ if ($acesso) {
             if ($parametroTipo == "Ainda Não Podem Requerer") {
 
                 # Inicia a classe
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) > 0) {
-                        $resultado[] = $item;
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1666,12 +1666,12 @@ if ($acesso) {
             # Os que Não Tem Direito
             if ($parametroTipo == "Não Tem Direito") {
 
-                $resultado = array();
+                $lista = array();
 
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
-                    if ($aposentadoria1->getDiasFaltantes($item[1]) == "NÃO TEM DIREITO") {
-                        $resultado[] = $item;
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
                     }
                 }
             }
@@ -1681,7 +1681,7 @@ if ($acesso) {
             if ($parametroTipo == "Todos") {
                 $tabela->set_conteudo($result);
             } else {
-                $tabela->set_conteudo($resultado);
+                $tabela->set_conteudo($lista);
             }
             $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
             $tabela->set_align(['center', 'left']);
@@ -1702,7 +1702,7 @@ if ($acesso) {
                     'operador' => '>',
                     'id' => 'normal'),
                 array('coluna' => 4,
-                    'valor' => 'NÃO TEM DIREITO',
+                    'valor' => 'Não Tem Direito',
                     'operador' => '=',
                     'id' => 'naoPode'),
             ));

@@ -56,7 +56,7 @@ if ($auxEduc == "Sim") {
         $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
     } else {
         $erro = 1;
-        $msgErro .= 'esse dependente não tem direito ao Auxílio Educação\n';
+        $msgErro .= 'esse dependente Não Tem Direito ao Auxílio Educação\n';
     }
 }
 

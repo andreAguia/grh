@@ -210,7 +210,7 @@ class AposentadoriaTransicao1 {
             callout("É concedido aos servidores que ingressaram no serviço público até 31 de dezembro de 2003.");
             br();
 
-            p("Data de Ingresso: {$dtIngressoServidor}<br/>Não tem direito a esta modalidade de aposentadoria.", "center", "f14");
+            p("Data de Ingresso: {$dtIngressoServidor}<br/>Não Tem Direito a esta modalidade de aposentadoria.", "center", "f14");
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -258,7 +258,7 @@ class AposentadoriaTransicao1 {
         if (strtotime(date_to_bd($dtIngressoServidor)) < strtotime(date_to_bd($this->dtIngresso))) {
             # Esta rotina só serve para servidores que atendem a data de ingresso
         } else {
-            # Se não atende retorna informando que não tem direito
+            # Se não atende retorna informando que Não Tem Direito
             return "Não pode solicitar essa opção";
         }
 

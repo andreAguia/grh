@@ -563,7 +563,7 @@ class Ferias {
                         }
                     }
                 } else {
-                    # Se o servidor não trabalhou então não tem direito a férias neste ano
+                    # Se o servidor não trabalhou então Não Tem Direito a férias neste ano
                     if ($i == $anoPesquisado) {
                         if ($linhas > 0) {
                             $retorno .= "<br/>";

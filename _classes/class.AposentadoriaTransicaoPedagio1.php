@@ -130,7 +130,7 @@ class AposentadoriaTransicaoPedagio1 {
         if (dataMaior($this->dtIngresso, $this->servidorDataIngresso) == $this->dtIngresso) {
             $this->analisaDtIngresso = "OK";
         } else {
-            $this->analisaDtIngresso = "NÃO TEM DIREITO";
+            $this->analisaDtIngresso = "Não Tem Direito";
         }
 
         # Idade
@@ -238,7 +238,7 @@ class AposentadoriaTransicaoPedagio1 {
                 'operador' => '=',
                 'id' => 'emAberto'),
             array('coluna' => 5,
-                'valor' => "NÃO TEM DIREITO",
+                'valor' => "Não Tem Direito",
                 'operador' => '=',
                 'id' => 'indeferido'),
             array('coluna' => 5,
@@ -268,8 +268,8 @@ class AposentadoriaTransicaoPedagio1 {
         }
 
         # Verifica a regra extra da data de ingresso
-        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+        if ($this->analisaDtIngresso == "Não Tem Direito") {
+            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

@@ -96,6 +96,9 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if (!empty($idServidor)) {
             $this->idServidor = $idServidor;
         }
+        
+        # Inicializa a flag
+        $this->temDireito = true;
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -224,7 +227,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
                 'operador' => '=',
                 'id' => 'pode'),
             array('coluna' => 5,
-                'valor' => "NÃO TEM DIREITO",
+                'valor' => "Não Tem Direito",
                 'operador' => '=',
                 'id' => 'naoPode'),
             array('coluna' => 5,
@@ -249,7 +252,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
                 $cor = "warning";
             }
         } else {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

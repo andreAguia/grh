@@ -146,6 +146,9 @@ class AposentadoriaTransicaoPontos2 {
         } else {
             $this->idServidor = $idServidor;
         }
+        
+        # Inicializa a flag
+        $this->temDireito = true;
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -210,7 +213,7 @@ class AposentadoriaTransicaoPontos2 {
         if (dataMaior($this->dtIngresso, $this->servidorDataIngresso) == $this->dtIngresso) {
             $this->analisaDtIngresso = "OK";
         } else {
-            $this->analisaDtIngresso = "NÃO TEM DIREITO";
+            $this->analisaDtIngresso = "Não Tem Direito";
         }
 
         # Idade
@@ -319,7 +322,7 @@ class AposentadoriaTransicaoPontos2 {
                 'operador' => '=',
                 'id' => 'pode'),
             array('coluna' => 5,
-                'valor' => "NÃO TEM DIREITO",
+                'valor' => "Não Tem Direito",
                 'operador' => '=',
                 'id' => 'naoPode'),
             array('coluna' => 5,
@@ -350,8 +353,8 @@ class AposentadoriaTransicaoPontos2 {
         }
         
         # Verifica a regra extra da data de ingresso
-        if ($this->analisaDtIngresso == "NÃO TEM DIREITO") {
-            $texto = "O Servidor <b>NÃO TEM DIREITO</b><br/>a essa modalidade de aposentadoria.";
+        if ($this->analisaDtIngresso == "Não Tem Direito") {
+            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
         }
 

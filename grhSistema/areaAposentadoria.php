@@ -1149,7 +1149,166 @@ if ($acesso) {
         #######################################
 
         case "transicao3" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
+
+            # Define a classe
+            $classe = "AposentadoriaTransicaoPedagio1";
+
+            # Acessa a classe
+            $aposentadoria1 = new $classe();
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=aguardeTransicao3');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),                 
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY dtNasc";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia o array
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
+                    }
+                }
+            }
+            
+            # Exibe a tabela
+            $tabela = new Tabela();
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($lista);
+            }
+            $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_width([15, 40, 15, 15, 15]);
+            $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarTransicao3');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 4,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 4,
+                    'valor' => '0',
+                    'operador' => '>',
+                    'id' => 'normal'),
+                array('coluna' => 4,
+                    'valor' => 'Não Tem Direito',
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+            ));
+            $tabela->show();
+            break;
+
+        #######################################    
+
+        case "editarTransicao3" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardeTransicao3');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
             break;
 
         #######################################
@@ -1173,10 +1332,169 @@ if ($acesso) {
         #######################################
 
         case "transicao4" :
-            emConstrucao("Em Breve esta Rotina estará Pronta !!", 3);
+
+            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
+
+            # Define a classe
+            $classe = "AposentadoriaTransicaoPedagio2";
+
+            # Acessa a classe
+            $aposentadoria1 = new $classe();
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=aguardeTransicao4');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo');
+            $controle->set_array(["Todos", "Já Podem requerer", "Ainda Não Podem Requerer", "Não Tem Direito"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),                 
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY dtNasc";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Os que já podem requerer
+            if ($parametroTipo == "Já Podem requerer") {
+
+                # Inicia o array
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "0") {
+                        $lista[] = $item;
+                    }
+                }
+            }
+
+            # Os que Ainda Não Podem Requerer
+            if ($parametroTipo == "Ainda Não Podem Requerer") {
+
+                # Inicia a classe
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if (intval($aposentadoria1->getDiasFaltantes($item[0])) > 0) {
+                        $lista[] = $item;
+                    }
+                }
+            }
+
+            # Os que Não Tem Direito
+            if ($parametroTipo == "Não Tem Direito") {
+
+                $lista = array();
+
+                # percorre o array do banco de dados
+                foreach ($result as $item) {
+                    if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
+                        $lista[] = $item;                
+                    }
+                }
+            }
+            
+            # Exibe a tabela
+            $tabela = new Tabela();
+            if ($parametroTipo == "Todos") {
+                $tabela->set_conteudo($result);
+            } else {
+                $tabela->set_conteudo($lista);
+            }
+            $tabela->set_label(['IdFuncional<br/>Matrícula', 'Servidor', "Idade", "Aposenta em:", "Faltam<br/>(dias)"]);
+            $tabela->set_align(['center', 'left']);
+            $tabela->set_width([15, 40, 15, 15, 15]);
+            $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarTransicao4');
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 4,
+                    'valor' => '0',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 4,
+                    'valor' => '0',
+                    'operador' => '>',
+                    'id' => 'normal'),
+                array('coluna' => 4,
+                    'valor' => 'Não Tem Direito',
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+            ));
+            $tabela->show();
             break;
 
-        #######################################        
+        #######################################    
+
+        case "editarTransicao4" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardeTransicao4');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        #######################################
 
         case "aguardeDireitoAdquirido1":
 

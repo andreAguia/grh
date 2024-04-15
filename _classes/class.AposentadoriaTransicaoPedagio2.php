@@ -11,7 +11,7 @@ class AposentadoriaTransicaoPedagio2 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Média da Lei Federal nº 10.887/2004 - art. 4º da EC nº 90/2021";
+    private $descricao = "Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Média - art. 4º da EC nº 90/2021";
 
     # Regras
     private $idadeHomem = 60;

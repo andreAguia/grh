@@ -109,6 +109,46 @@ if ($acesso) {
             $menu->add_item($item[0], $item[1], (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
         }
     }
+    
+    $menu->add_item("titulo", "Documentação");
+
+            # Pega os projetos cadastrados
+            $select = 'SELECT idMenuDocumentos,
+                          categoria,
+                          texto,
+                          title
+                     FROM tbmenudocumentos
+                     WHERE categoria = "Regras de Aposentadoria"
+                  ORDER BY categoria, texto';
+
+            $dados = $pessoal->select($select);
+            $num = $pessoal->count($select);
+
+            # Verifica se tem itens no menu
+            if ($num > 0) {
+                # Percorre o array 
+                foreach ($dados as $valor) {
+
+                    if (empty($valor["title"])) {
+                        $title = $valor["texto"];
+                    } else {
+                        $title = $valor["title"];
+                    }
+
+                    # Verifica qual documento
+                    $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+                    if (file_exists($arquivoDocumento)) {
+                        # Caso seja PDF abre uma janela com o pdf
+                        $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                    } else {
+                        # Caso seja um .doc, somente faz o download
+                        $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
+                    }
+                }
+            }
+
+            $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
+            $menu->add_item("linkWindow", "Regras Vigentes até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
 
     $menu->show();
 

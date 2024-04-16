@@ -47,11 +47,11 @@ if ($acesso) {
 
     $carta->set_nomeCarta("CARTA DE APRESENTAÇÃO");   
 
-    $carta->set_destinoNomeCC($diretor);
-    $carta->set_destinoSetorCC($cargoDiretor);
+    $carta->set_destinoNome($diretor);
+    $carta->set_destinoSetor($cargoDiretor);
     
-    $carta->set_destinoNome($chefe);
-    $carta->set_destinoSetor($cargo);    
+    $carta->set_destinoNomeCC($chefe);
+    $carta->set_destinoSetorCC($cargo);    
     
     $carta->set_assinatura(true);
 

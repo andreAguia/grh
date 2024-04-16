@@ -784,8 +784,6 @@ if ($acesso) {
 
         case "transicao1" :
 
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
-
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos1";
 

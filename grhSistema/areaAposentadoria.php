@@ -967,8 +967,6 @@ if ($acesso) {
 
         case "transicao2" :
 
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
-
             # Define a classe
             $classe = "AposentadoriaTransicaoPontos2";
 
@@ -1149,8 +1147,6 @@ if ($acesso) {
         #######################################
 
         case "transicao3" :
-
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaTransicaoPedagio1";
@@ -1333,8 +1329,6 @@ if ($acesso) {
 
         case "transicao4" :
 
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
-
             # Define a classe
             $classe = "AposentadoriaTransicaoPedagio2";
 
@@ -1515,8 +1509,6 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido1" :
-
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido1";
@@ -1699,8 +1691,6 @@ if ($acesso) {
 
         case "direitoAdquirido2" :
 
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
-
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido2";
 
@@ -1881,8 +1871,6 @@ if ($acesso) {
         #######################################
 
         case "direitoAdquirido3" :
-
-            calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!", "ATENÇÃO!!");
 
             # Define a classe
             $classe = "AposentadoriaDireitoAdquirido3";

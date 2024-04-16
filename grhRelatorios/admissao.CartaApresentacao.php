@@ -45,12 +45,14 @@ if ($acesso) {
     # Monta a Carta
     $carta = new Carta();
 
-    $carta->set_nomeCarta("CARTA DE APRESENTAÇÃO");
-    $carta->set_destinoNome($chefe);
-    $carta->set_destinoSetor($cargo);
+    $carta->set_nomeCarta("CARTA DE APRESENTAÇÃO");   
 
     $carta->set_destinoNomeCC($diretor);
     $carta->set_destinoSetorCC($cargoDiretor);
+    
+    $carta->set_destinoNome($chefe);
+    $carta->set_destinoSetor($cargo);    
+    
     $carta->set_assinatura(true);
 
     $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao},"

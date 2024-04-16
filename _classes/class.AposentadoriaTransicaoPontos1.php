@@ -206,7 +206,7 @@ class AposentadoriaTransicaoPontos1 {
 
         # Tempo de Contribuição
         $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoTotal;
-        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
+        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
@@ -215,7 +215,7 @@ class AposentadoriaTransicaoPontos1 {
 
         # Serviço Público Initerrupto
         $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublicoIninterrupto;
-        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2);
+        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
@@ -224,7 +224,7 @@ class AposentadoriaTransicaoPontos1 {
 
         # Cargo Efetivo
         $resta3 = ($this->cargoEfetivo * 365) - $this->servidorTempoUenf;
-        $this->dataCriterioTempoCargo = addDias($hoje, $resta3);
+        $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {

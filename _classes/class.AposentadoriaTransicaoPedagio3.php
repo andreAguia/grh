@@ -1,6 +1,6 @@
 <?php
 
-class AposentadoriaTransicaoPedagio2 {
+class AposentadoriaTransicaoPedagio3 {
 
     /**
      * Aposentadoria Regras de Transição Pedagio 1
@@ -11,12 +11,12 @@ class AposentadoriaTransicaoPedagio2 {
     private $idServidor = null;
 
     # Descrição
-    private $descricao = "Regra do Pedágio<br/>Por Idade e Tempo de Contribuição<br/>Média - art. 4º da EC nº 90/2021";
+    private $descricao = "Regra do Pedágio com Redutor de Idade<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - art. 4º da EC nº 90/2021";
 
     # Regras
     private $idadeHomem = 60;
     private $idadeMulher = 55;
-    private $dtIngresso = "31/12/2021";
+    private $dtIngresso = "16/12/1998";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
@@ -26,10 +26,10 @@ class AposentadoriaTransicaoPedagio2 {
     private $regraContribuicao = null;
 
     # Remuneração
-    private $calculoInicial = "Média aritmética simples das 80% maiores remunerações a partir de julho de 1994";
+    private $calculoInicial = "Última remuneração";
     private $teto = "Remuneração do servidor no cargo efetivo";
-    private $reajuste = "INPC - LEI 6.2442012";
-    private $paridade = "SEM PARIDADE";
+    private $reajuste = "Na mesma data e índice dos servidores ativos";
+    private $paridade = "COM PARIDADE";
 
     # Descrições
     private $dtIngressoDescricao = "Data de ingresso no serviço público sem interrupção.";
@@ -383,7 +383,7 @@ class AposentadoriaTransicaoPedagio2 {
 
     public function exibeResumoCartilha($numero = 1) {
 
-        $figura = new Imagem(PASTA_FIGURAS . "transicaoPedagio2{$numero}.png", null, "100%", "100%");
+        $figura = new Imagem(PASTA_FIGURAS . "transicaoPedagio3{$numero}.png", null, "100%", "100%");
         $figura->set_id('imgCasa');
         $figura->set_class('imagem');
         $figura->show();

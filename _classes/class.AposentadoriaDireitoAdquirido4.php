@@ -117,7 +117,7 @@ class AposentadoriaDireitoAdquirido4 {
 
         # Tempo de Contribuição
         $resta1 = ($regraContribuicao * 365) - $tempoTotal;
-        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1);
+        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($tempoTotal >= ($regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
@@ -126,7 +126,7 @@ class AposentadoriaDireitoAdquirido4 {
 
         # Serviço Público Initerrupto
         $resta2 = ($this->servicoPublico * 365) - $tempoPublicoIninterrupto;
-        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2);
+        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
@@ -135,7 +135,7 @@ class AposentadoriaDireitoAdquirido4 {
 
         # Cargo Efetivo
         $resta3 = ($this->cargoEfetivo * 365) - $tempoUenf;
-        $this->dataCriterioTempoCargo = addDias($hoje, $resta3);
+        $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {

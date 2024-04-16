@@ -84,9 +84,9 @@ if ($acesso) {
 
     # Exibe os dados do servidor
     get_DadosServidor($idServidorPesquisado);
-
-    #calloutAlert("Esta rotina AINDA está em teste!! Os cálculos podem não estar corretos!!<br/>Use-a por sua própria conta e risco!","ATENÇÃO!!");
-
+    
+    ########################################################
+    
     switch ($fase) {
         case "tabs" :
 
@@ -484,12 +484,20 @@ if ($acesso) {
             linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioIntegral", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
-            
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaTransicaoPedagio2($idServidorPesquisado);
             linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioMedia", "(clique no texto acima para maiores detalhes)");
+            $aposentadoria->exibeAnaliseResumo();
+            #$aposentadoria->exibeAnalise();
+            
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 12, 6);
+
+            $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioRedutor", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -936,7 +944,7 @@ if ($acesso) {
             break;
 
         case "pedagioMedia" :
-             # Inicia a classe
+            # Inicia a classe
             $aposentadoria = new AposentadoriaTransicaoPedagio2($idServidorPesquisado);
 
             # Grava no log a atividade
@@ -992,12 +1000,61 @@ if ($acesso) {
             break;
 
         case "pedagioRedutor" :
-            $grid1->abreColuna(9);
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
 
-            tituloTable("Regra do Pedágio<br/>Com redutor de idade<br/>Integralidade e Paridade");
-            emConstrucao("Em breve esta área estará disponível.");
+            # Grava no log a atividade
+            $atividade = "Cadastro do servidor - Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
+
+            $grid1 = new Grid();
+            $grid1->abreColuna(12);
+
+            # Exibe a regra
+            tituloTable($aposentadoria->get_descricao());
+            $aposentadoria->exibeAnaliseResumo();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 12, 8);
+
+            $aposentadoria->exibeAnalise();
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeTempoAntes31_12_21();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeCalculoPedagio();
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12);
+
+            tituloTable("Cartilha");
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeResumoCartilha(1);
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(12, 6);
+
+            $aposentadoria->exibeResumoCartilha(2);
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+            $grid1->fechaColuna();
+
+            $grid1->abreColuna(12, 12, 4);
+
+            $aposentadoria->exibeRemuneração();
+            $aposentadoria->exibeRegras();
+
             $grid1->fechaColuna();
             break;
+
 
         ########################################################
 

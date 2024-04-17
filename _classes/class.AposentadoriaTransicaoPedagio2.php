@@ -186,7 +186,7 @@ class AposentadoriaTransicaoPedagio2 {
         # Pedágio
         $this->servidorTempoAntes31_12_2021 = $aposentadoria->get_tempoTotalAntes31_12_21($this->idServidor);
         $this->servidorTempoSobra = ($this->regraContribuicao * 365) - $this->servidorTempoAntes31_12_2021;
-        $this->servidorPedagio = intval($this->servidorTempoSobra * ($this->pedagio / 100));
+        $this->servidorPedagio = round($this->servidorTempoSobra * ($this->pedagio / 100));
 
         if ($this->servidorPedagio < 0) {
             $this->dataCriterioPedagio = "---";

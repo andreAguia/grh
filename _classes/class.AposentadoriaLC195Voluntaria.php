@@ -96,7 +96,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if (!empty($idServidor)) {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -177,7 +177,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($relatorio = false) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -214,33 +214,40 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         ];
 
         # Exibe a tabela
-        $tabela = new Tabela();
+        if ($relatorio) {
+            $tabela = new Tabela(null, "tabelaRelatorio");
+        } else {
+            $tabela = new Tabela();
+        }
         $tabela->set_titulo("Dados");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '=',
-                'id' => 'pode'),
-            array('coluna' => 5,
-                'valor' => "Não Tem Direito",
-                'operador' => '=',
-                'id' => 'naoPode'),
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '<>',
-                'id' => 'podera')
-        ));
+
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 5,
+                    'valor' => "Não Tem Direito",
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '<>',
+                    'id' => 'podera')
+            ));
+        }
         $tabela->show();
     }
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite        
         if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
@@ -254,6 +261,11 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         } else {
             $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
+        }
+
+        # retira a cor
+        if ($relatorio) {
+            $cor = "secondary";
         }
 
         # Exibe o resumo
@@ -294,7 +306,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function exibeRegras() {
+    public function exibeRegras($relatorio = false) {
 
         $array = [
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
@@ -302,7 +314,12 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
             ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"],];
 
-        $tabela = new Tabela();
+        # Exibe a tabela
+        if ($relatorio) {
+            $tabela = new Tabela(null, "tabelaRelatorio");
+        } else {
+            $tabela = new Tabela();
+        }
         $tabela->set_titulo("Regras Gerais");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
@@ -315,7 +332,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function exibeRemuneração() {
+    public function exibeRemuneração($relatorio = false) {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
@@ -324,7 +341,12 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             ["Paridade", $this->paridade]
         ];
 
-        $tabela = new Tabela();
+        # Exibe a tabela
+        if ($relatorio) {
+            $tabela = new Tabela(null, "tabelaRelatorio");
+        } else {
+            $tabela = new Tabela();
+        }
         $tabela->set_titulo("Remuneração");
         $tabela->set_conteudo($array);
         $tabela->set_label(array("Item", "Descrição"));

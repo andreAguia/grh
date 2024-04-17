@@ -54,7 +54,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if (substr($fase, 0, 9) <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     ########################################################
     # Limita o tamanho da tela
@@ -62,31 +64,45 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu = new MenuBar();
+    if (substr($fase, 0, 9) <> "relatorio") {
+        $menu = new MenuBar();
 
-    # Verifica a rotina e define o link
-    if ($fase == "tabs") {
-        $linkvoltar = 'servidorMenu.php';
-    } elseif ($fase == "voluntaria" OR $fase == "compulsoria" OR $fase == "incapacidade1" OR $fase == "incapacidade2") {
-        $linkvoltar = '?fase=tabs&aba=3';
-    } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor") {
-        $linkvoltar = '?fase=tabs&aba=4';
-    } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
-        $linkvoltar = '?fase=tabs&aba=5';
+        # Verifica a rotina e define o link
+        if ($fase == "tabs") {
+            $linkvoltar = 'servidorMenu.php';
+        } elseif ($fase == "voluntaria" OR $fase == "compulsoria" OR $fase == "incapacidade1" OR $fase == "incapacidade2") {
+            $linkvoltar = '?fase=tabs&aba=3';
+        } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor") {
+            $linkvoltar = '?fase=tabs&aba=4';
+        } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
+            $linkvoltar = '?fase=tabs&aba=5';
+        }
+
+        # Botão voltar    
+        $linkBotaoVoltar = new Button('Voltar', $linkvoltar);
+        $linkBotaoVoltar->set_title('Volta para a página anterior');
+        $linkBotaoVoltar->set_accessKey('V');
+        $menu->add_link($linkBotaoVoltar, "left");
+
+        if ($fase == "voluntaria") {
+            # Relatório   
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Relatório da Previsão de Aposentadoria");
+            $botaoRel->set_url("?fase=relatorio_{$fase}");
+            $botaoRel->set_target("_blank");
+            $menu->add_link($botaoRel, "right");
+        }
+
+        $menu->show();
+
+        # Exibe os dados do servidor
+        get_DadosServidor($idServidorPesquisado);
     }
 
-    # Botão voltar    
-    $linkBotaoVoltar = new Button('Voltar', $linkvoltar);
-    $linkBotaoVoltar->set_title('Volta para a página anterior');
-    $linkBotaoVoltar->set_accessKey('V');
-    $menu->add_link($linkBotaoVoltar, "left");
-    $menu->show();
-
-    # Exibe os dados do servidor
-    get_DadosServidor($idServidorPesquisado);
-    
     ########################################################
-    
+
     switch ($fase) {
         case "tabs" :
 
@@ -492,7 +508,7 @@ if ($acesso) {
             linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioMedia", "(clique no texto acima para maiores detalhes)");
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
-            
+
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 12, 6);
 
@@ -680,6 +696,39 @@ if ($acesso) {
             $aposentadoria->exibeRegras();
 
             $grid1->fechaColuna();
+            $grid1->fechaGrid();
+            break;
+
+        case "relatorio_voluntaria" :
+
+            # Inicia a classe
+            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+
+            # Grava no log a atividade
+            $atividade = "Visualizoiu o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
+
+            # Dados do Servidor
+            Grh::listaDadosServidorRelatorio($idServidorPesquisado, $aposentadoria->get_descricao());
+            
+            # Exibe a regra
+            $aposentadoria->exibeAnaliseResumo(true);
+            $aposentadoria->exibeAnalise(true);
+            br();
+            
+            $grid1 = new Grid();
+            $grid1->abreColuna(6);
+            
+            $aposentadoria->exibeRemuneração(true);
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(6);
+
+            
+            $aposentadoria->exibeRegras(true);
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
             break;
 
         case "compulsoria" :
@@ -727,6 +776,7 @@ if ($acesso) {
             $aposentadoria->exibeRegras();
 
             $grid1->fechaColuna();
+            $grid1->fechaGrid();
             break;
 
         case "incapacidade1" :
@@ -1054,7 +1104,6 @@ if ($acesso) {
 
             $grid1->fechaColuna();
             break;
-
 
         ########################################################
 

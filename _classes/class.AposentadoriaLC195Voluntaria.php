@@ -215,11 +215,18 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # Exibe a tabela
         if ($relatorio) {
-            $tabela = new Tabela(null, "tabelaRelatorio");
+            tituloRelatorio("Dados");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
         } else {
             $tabela = new Tabela();
+            $tabela->set_titulo("Dados");
         }
-        $tabela->set_titulo("Dados");
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
@@ -265,16 +272,17 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # retira a cor
         if ($relatorio) {
-            $cor = "secondary";
+            p($texto, "center");
+        } else {
+
+            # Exibe o resumo
+            $painel = new Callout($cor);
+            $painel->abre();
+
+            p($texto, "center");
+
+            $painel->fecha();
         }
-
-        # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
-
-        p($texto, "center");
-
-        $painel->fecha();
     }
 
     ###########################################################
@@ -316,11 +324,18 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # Exibe a tabela
         if ($relatorio) {
-            $tabela = new Tabela(null, "tabelaRelatorio");
+            tituloRelatorio("Regras Gerais");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
         } else {
             $tabela = new Tabela();
+            $tabela->set_titulo("Regras Gerais");
         }
-        $tabela->set_titulo("Regras Gerais");
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
@@ -343,11 +358,18 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # Exibe a tabela
         if ($relatorio) {
-            $tabela = new Tabela(null, "tabelaRelatorio");
+            tituloRelatorio("Remuneração");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
         } else {
             $tabela = new Tabela();
+            $tabela->set_titulo("Remuneração");
         }
-        $tabela->set_titulo("Remuneração");
+
         $tabela->set_conteudo($array);
         $tabela->set_label(array("Item", "Descrição"));
         $tabela->set_width(array(30, 70));

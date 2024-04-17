@@ -710,25 +710,13 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio($idServidorPesquisado, $aposentadoria->get_descricao());
+            br();
             
             # Exibe a regra
             $aposentadoria->exibeAnaliseResumo(true);
             $aposentadoria->exibeAnalise(true);
-            br();
-            
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-            
-            $aposentadoria->exibeRemuneração(true);
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            
             $aposentadoria->exibeRegras(true);
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+            $aposentadoria->exibeRemuneração(true);
             break;
 
         case "compulsoria" :

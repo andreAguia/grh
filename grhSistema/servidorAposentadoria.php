@@ -175,8 +175,8 @@ if ($acesso) {
              */
 
             $array = [
-                ["Uenf Celetista<br/><p id='psubtitulo'>Antes de 09/09/2003</p>", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
-                ["Uenf Estatutária<br/><p id='psubtitulo'>Depois de 09/09/2003</p>", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
+                ["Uenf Celetista", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
+                ["Uenf Estatutária", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
             ];
 
             # Tabela

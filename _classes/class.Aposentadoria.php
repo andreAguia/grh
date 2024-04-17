@@ -377,6 +377,7 @@ class Aposentadoria {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
+        $concurso = new Concurso();
 
         # define a data em que houve a transformação em estatutário (menos um dia)
         $dataEstatutario = "08/09/2003";
@@ -384,11 +385,12 @@ class Aposentadoria {
         # Data Inicial (data de admissão)
         $dtInicial = $pessoal->get_dtAdmissao($idServidor);
 
-        # Verifica se a data de admissao é anterior a data de transformação para estatutário
-        if (dataMaior($dataEstatutario, $dtInicial) == $dtInicial) {
-            return 0;
-        } else {
-            # Verifica se o servidor é ativo ou inativo
+        # Pega o regime do concurso
+        $regime = $concurso->get_regime($pessoal->get_idConcurso($idServidor));
+
+        # Define a data final do período celetista
+        if ($regime == "CLT") {
+            # Verifica se o servidor é ativo
             if ($pessoal->get_idSituacao($idServidor) == 1) {
                 $dtFinal = $dataEstatutario;
             } else {
@@ -402,6 +404,8 @@ class Aposentadoria {
                     $dtFinal = $dtSaida;
                 }
             }
+        } else {
+            return 0;
         }
 
         return getNumDias($dtInicial, $dtFinal);
@@ -419,6 +423,7 @@ class Aposentadoria {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
+        $concurso = new Concurso();
 
         # define a data em que houve a transformação em estatutário
         $dataEstatutario = "09/09/2003";
@@ -429,21 +434,11 @@ class Aposentadoria {
         # Pega a data de saída
         $dtSaida = $pessoal->get_dtSaida($idServidor);
 
-        # Verifica se a data é anterior a data de transformação para estatutário
-        if (dataMaior($dataEstatutario, $dtInicial) == $dtInicial) {
-            # Verifica se o servidor é ativo ou inativo
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtFinal = date("d/m/Y");
-            } else {
-                # Verifica se foi antes ou depois da transformação
-                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
-                    $dtFinal = $dtSaida;
-                } else {
-                    $dtFinal = $dtSaida;
-                }
-            }
-        } else {
+        # Pega o regime do concurso
+        $regime = $concurso->get_regime($pessoal->get_idConcurso($idServidor));
 
+        # Define a data final do período celetista
+        if ($regime == "CLT") {
             # Verifica se o servidor é ativo ou inativo
             if ($pessoal->get_idSituacao($idServidor) == 1) {
                 $dtInicial = $dataEstatutario;
@@ -455,6 +450,12 @@ class Aposentadoria {
                 } else {
                     return 0;
                 }
+            }
+        } else {
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtFinal = date("d/m/Y");
+            } else {
+                $dtFinal = $dtSaida;
             }
         }
 

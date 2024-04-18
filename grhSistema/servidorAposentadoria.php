@@ -73,7 +73,7 @@ if ($acesso) {
         } elseif ($fase == "voluntaria" OR $fase == "compulsoria" OR $fase == "incapacidade1" OR $fase == "incapacidade2") {
             $linkvoltar = '?fase=tabs&aba=3';
         } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioRedutor") {
-            $linkvoltar = '?fase=tabs&aba=4';
+            $linkvoltar = '?fase=tabs&aba=3';
         } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
             $linkvoltar = '?fase=tabs&aba=5';
         }
@@ -110,9 +110,10 @@ if ($acesso) {
             $tab = new Tab([
                 "Dados do Servidor",
                 "Afastamentos",
-                "Regras Permanentes",
-                "Regras de Transição",
-                "Direito Adquirido",
+                "Previsão de Aposentadoria",
+//                "Regras Permanentes",
+//                "Regras de Transição",
+//                "Direito Adquirido",
                 "Documentação"
                     ], $aba);
 
@@ -396,17 +397,17 @@ if ($acesso) {
 
             $grid1->fechaColuna();
             $grid1->fechaGrid();
-
+            
             $tab->fechaConteudo();
 
             ####################################################
 
             /*
-             * Resumo das Regras Permanentes
+             * Resumo das Regras
              */
 
             $tab->abreConteudo();
-
+            
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -430,49 +431,7 @@ if ($acesso) {
             #$aposentadoria->exibeAnalise();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $texto = "Aposentadoria por Incapacidade Permanente<br/>Art. 2º, inciso I, combinado com o art. 7º, §4º da Lei Complementar nº 195/2021";
-            linkTituloTable($texto, null, "?fase=incapacidade1", "(clique no texto acima para maiores detalhes)");
-
-            $painel = new Callout("warning");
-            $painel->abre();
-
-            p("Esta Regra não cabe previsão", "center");
-
-            $painel->fecha();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $texto = "Aposentadoria por Incapacidade Permanente<br/>Acidente de trabalho, doença profissional ou doença de trabalho<br/>Art. 2º, inciso I, combinado com o art. 7º, §5º da Lei Complementar nº 195/2021.";
-            linkTituloTable($texto, null, "?fase=incapacidade2", "(clique no texto acima para maiores detalhes)");
-
-            $painel = new Callout("warning");
-            $painel->abre();
-
-            p("Esta Regra não cabe previsão", "center");
-
-            $painel->fecha();
-
-            $grid2->fechaColuna();
             $grid2->fechaGrid();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
-
-            ####################################################
-
-            /*
-             * Resumo das Regras de Transição
-             */
-
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
 
             tituloTable("Regras de Transição");
             br();
@@ -528,55 +487,181 @@ if ($acesso) {
             ####################################################
 
             /*
+             * Resumo das Regras Permanentes
+             */
+
+//            $tab->abreConteudo();
+//
+//            $grid1 = new Grid();
+//            $grid1->abreColuna(12);
+//
+//            tituloTable("Regras Permanentes");
+//            br();
+//
+//            $grid2 = new Grid();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=voluntaria", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=compulsoria", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $texto = "Aposentadoria por Incapacidade Permanente<br/>Art. 2º, inciso I, combinado com o art. 7º, §4º da Lei Complementar nº 195/2021";
+//            linkTituloTable($texto, null, "?fase=incapacidade1", "(clique no texto acima para maiores detalhes)");
+//
+//            $painel = new Callout("warning");
+//            $painel->abre();
+//
+//            p("Esta Regra não cabe previsão", "center");
+//
+//            $painel->fecha();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $texto = "Aposentadoria por Incapacidade Permanente<br/>Acidente de trabalho, doença profissional ou doença de trabalho<br/>Art. 2º, inciso I, combinado com o art. 7º, §5º da Lei Complementar nº 195/2021.";
+//            linkTituloTable($texto, null, "?fase=incapacidade2", "(clique no texto acima para maiores detalhes)");
+//
+//            $painel = new Callout("warning");
+//            $painel->abre();
+//
+//            p("Esta Regra não cabe previsão", "center");
+//
+//            $painel->fecha();
+//
+//            $grid2->fechaColuna();
+//            $grid2->fechaGrid();
+//
+//            $grid1->fechaColuna();
+//            $grid1->fechaGrid();
+//
+//            $tab->fechaConteudo();
+//
+//            ####################################################
+//
+//            /*
+//             * Resumo das Regras de Transição
+//             */
+//
+//            $tab->abreConteudo();
+//
+//            $grid1 = new Grid();
+//            $grid1->abreColuna(12);
+//
+//            tituloTable("Regras de Transição");
+//            br();
+//
+//            $grid2 = new Grid();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosIntegral", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosMedia", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaTransicaoPedagio1($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioIntegral", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaTransicaoPedagio2($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioMedia", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioRedutor", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+//            $grid2->fechaGrid();
+//
+//            $grid1->fechaColuna();
+//            $grid1->fechaGrid();
+//
+//            $tab->fechaConteudo();
+
+            ####################################################
+
+            /*
              * Resumo das Regras de Direito Adquirido
              */
 
-            $tab->abreConteudo();
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
-
-            tituloTable("Direito Adquirido");
-            br();
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1", "(clique no texto acima para maiores detalhes)");
-            $aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2", "(clique no texto acima para maiores detalhes)");
-            $aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido3($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3", "(clique no texto acima para maiores detalhes)");
-            $aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
+//            $tab->abreConteudo();
+//
+//            $grid1 = new Grid();
+//            $grid1->abreColuna(12);
+//
+//            tituloTable("Direito Adquirido");
+//            br();
+//
+//            $grid2 = new Grid();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
 //            $grid2->abreColuna(6);
 //
-//            $aposentadoria = new AposentadoriaDireitoAdquirido4($idServidorPesquisado);
-//            tituloTable($aposentadoria->get_descricao());
+//            $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2", "(clique no texto acima para maiores detalhes)");
 //            $aposentadoria->exibeAnaliseResumo();
-//            
+//            #$aposentadoria->exibeAnalise();
+//
 //            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            $tab->fechaConteudo();
+//            $grid2->abreColuna(12, 12, 6);
+//
+//            $aposentadoria = new AposentadoriaDireitoAdquirido3($idServidorPesquisado);
+//            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3", "(clique no texto acima para maiores detalhes)");
+//            $aposentadoria->exibeAnaliseResumo();
+//            #$aposentadoria->exibeAnalise();
+//
+//            $grid2->fechaColuna();
+////            $grid2->abreColuna(6);
+////
+////            $aposentadoria = new AposentadoriaDireitoAdquirido4($idServidorPesquisado);
+////            tituloTable($aposentadoria->get_descricao());
+////            $aposentadoria->exibeAnaliseResumo();
+////            
+////            $grid2->fechaColuna();
+//            $grid2->fechaGrid();
+//
+//            $grid1->fechaColuna();
+//            $grid1->fechaGrid();
+//
+//            $tab->fechaConteudo();
 
             ####################################################
 

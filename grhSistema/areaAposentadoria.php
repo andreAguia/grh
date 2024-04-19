@@ -91,10 +91,10 @@ if ($acesso) {
         ["link", "Regra dos Pontos - Média", "transicao2"],
         ["link", "Regra do Pedágio - Integral", "transicao3"],
         ["link", "Regra do Pedágio - Média", "transicao4"],
-        ["link", "Regra do Pedágio c/Redutor - Integral", "transicao5"],
-//        ["titulo1", "Direito Adquirido", null],
-//        ["link", "C.F. Art. 40, §1º, III, alínea a", "direitoAdquirido1"],
-//        ["link", "C.F. Art. 40, §1º, III, alínea b", "direitoAdquirido2"],
+//        ["link", "Regra do Pedágio c/Redutor - Integral", "transicao5"],
+        ["titulo1", "Direito Adquirido", null],
+        ["link", "C.F. Art. 40, §1º, III, alínea a", "direitoAdquirido1"],
+        ["link", "C.F. Art. 40, §1º, III, alínea b", "direitoAdquirido2"],
 //        ["link", "Art. 2º da EC Nº 41/2003", "direitoAdquirido3"],
     ];
 

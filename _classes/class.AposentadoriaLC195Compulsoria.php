@@ -134,7 +134,7 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($relatorio = false) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -168,33 +168,47 @@ class AposentadoriaLC195Compulsoria {
         ];
             
         # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo("Dados");
+        if ($relatorio) {
+            tituloRelatorio("Dados");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Dados");
+        }
+        
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-             array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '=',
-                'id' => 'pode'),
-            array('coluna' => 5,
-                'valor' => "Não Tem Direito",
-                'operador' => '=',
-                'id' => 'naoPode'),
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '<>',
-                'id' => 'podera')
-        ));
+        
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 5,
+                    'valor' => "Não Tem Direito",
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '<>',
+                    'id' => 'podera')
+            ));
+        }
         $tabela->show();
     }
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite        
         if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
@@ -210,13 +224,19 @@ class AposentadoriaLC195Compulsoria {
             $cor = "alert";
         }
 
-        # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
+        # retira a cor
+        if ($relatorio) {
+            p($texto, "center");
+        } else {
 
-        p($texto, "center");
+            # Exibe o resumo
+            $painel = new Callout($cor);
+            $painel->abre();
 
-        $painel->fecha();
+            p($texto, "center");
+
+            $painel->fecha();
+        }
     }
 
     ###########################################################
@@ -248,13 +268,25 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function exibeRegras() {
+    public function exibeRegras($relatorio = false) {
 
         $array = [
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"]];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Regras Gerais");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Regras Gerais");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Regras Gerais");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
@@ -266,7 +298,7 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function exibeRemuneração() {
+    public function exibeRemuneração($relatorio = false) {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
@@ -275,12 +307,24 @@ class AposentadoriaLC195Compulsoria {
             ["Paridade", $this->paridade]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Remuneração");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Remuneração");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Remuneração");
+        }
+
         $tabela->set_conteudo($array);
-        $tabela->set_label(array("Item", "Descrição"));
-        $tabela->set_width(array(30, 70));
-        $tabela->set_align(array("left", "left"));
+        $tabela->set_label(["Item", "Descrição"]);
+        $tabela->set_width([30, 70]);
+        $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }

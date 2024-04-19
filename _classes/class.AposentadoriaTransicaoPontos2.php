@@ -281,7 +281,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($relatorio = false) {
 
         # Pega os dados
         $regraPontos = $this->get_regraPontos(date("Y"));
@@ -309,28 +309,41 @@ class AposentadoriaTransicaoPontos2 {
         ];
 
         # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo("Dados");
+        if ($relatorio) {
+            tituloRelatorio("Dados");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Dados");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-             array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '=',
-                'id' => 'pode'),
-            array('coluna' => 5,
-                'valor' => "Não Tem Direito",
-                'operador' => '=',
-                'id' => 'naoPode'),
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '<>',
-                'id' => 'podera')
-        ));
-        #$tabela->set_subtitulo($mensagem);
+        
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 5,
+                    'valor' => "Não Tem Direito",
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '<>',
+                    'id' => 'podera')
+            ));
+        }
         $tabela->show();
         
         # Mensagem
@@ -341,7 +354,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite
         if (jaPassou($this->dataDireitoAposentadoria)) {
@@ -358,13 +371,19 @@ class AposentadoriaTransicaoPontos2 {
             $cor = "alert";
         }
 
-        # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
+        # retira a cor
+        if ($relatorio) {
+            p($texto, "center");
+        } else {
 
-        p($texto, "center");
+            # Exibe o resumo
+            $painel = new Callout($cor);
+            $painel->abre();
 
-        $painel->fecha();
+            p($texto, "center");
+
+            $painel->fecha();
+        }
     }
 
     ###########################################################
@@ -396,7 +415,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeRegras() {
+    public function exibeRegras($relatorio = false) {
 
         $array = [
             ["<p id='pLinha1'>Data de Ingresso</p><p id='pLinha4'>{$this->dtIngressoDescricao}</p>", $this->dtIngresso, $this->dtIngresso],
@@ -407,8 +426,20 @@ class AposentadoriaTransicaoPontos2 {
             ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Regras Gerais");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Regras Gerais");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Regras Gerais");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
@@ -420,7 +451,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeRemuneração() {
+    public function exibeRemuneração($relatorio = false) {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
@@ -429,8 +460,20 @@ class AposentadoriaTransicaoPontos2 {
             ["Paridade", $this->paridade]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Remuneração");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Remuneração");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Remuneração");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição"]);
         $tabela->set_width([20, 80]);
@@ -499,7 +542,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeHistoricoPontuacao() {
+    public function exibeHistoricoPontuacao($relatorio = false) {
 
         # Define os anos
         $anoInicial = 2024;
@@ -529,19 +572,33 @@ class AposentadoriaTransicaoPontos2 {
             }
         }
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Histórico da Pontuação");
-        $tabela->set_subtitulo("{A cada ano o servidor aumenta 2 pontos, a cada 2 anos a regra aumenta 1 ponto)");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Histórico da Pontuação");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Histórico da Pontuação");
+            $tabela->set_subtitulo("(A cada ano o servidor aumenta 2 pontos, a cada 2 anos a regra aumenta 1 ponto)");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Ano", "Pontos do Servidor", "Regra", "Diferença"]);
         $tabela->set_width([25, 25, 25, 25]);
         $tabela->set_totalRegistro(false);
 
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 3,
-                'operador' => '=',
-                'valor' => "OK",
-                'id' => 'vigente')));
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
+                    'operador' => '=',
+                    'valor' => "OK",
+                    'id' => 'vigente')));
+        }
         $tabela->show();
     }
 
@@ -604,47 +661,62 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function exibeTabelaRegras() {
+    public function exibeTabelaRegras($relatorio = false) {
 
-        # Escolhe a tabela masculina
-        if ($this->servidorSexo == "Masculino") {
+        $grid = new Grid();
+        $grid->abreColuna(12);
 
-            # Limite máximo
-//            if ($ano >= 2041) {
-//                return 105;
-//            }
-//
-//            # Limite mínimo
-//            if ($ano <= 2022) {
-//                return 96;
-//            }
+        tituloTable("Regra dos Pontos");
+        
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
 
-            $array = $this->tabelaM;
-        } else {
-            # Escolhe a tabela Feminina            
-//            # Limite máximo
-//            if ($ano >= 2049) {
-//                return 100;
-//            }
-//
-//            # Limite mínimo
-//            if ($ano <= 2022) {
-//                return 86;
-//            }
+        # Exibe a tabela Masculina
+        if ($relatorio) {
 
-            $array = $this->tabelaF;
+            $tabela = new Relatorio();
+            tituloRelatorio("Masculino");
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {;
+            $tabela = new Tabela();
+            $tabela->set_titulo("Masculino");
         }
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Regra dos Pontos");
-        $tabela->set_subtitulo($this->servidorSexo);
-        $tabela->set_conteudo($array);
+        $tabela->set_conteudo($this->tabelaM);
         $tabela->set_label(["Ano", "Pontos"]);
         $tabela->set_width([50, 50]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_rowspan(1);
-        $tabela->set_grupoCorColuna(1);
         $tabela->show();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+
+        # Exibe a tabela Masculina
+        if ($relatorio) {
+            tituloRelatorio("Feminino");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {;
+            $tabela = new Tabela();
+            $tabela->set_titulo("Feminino");
+        }
+
+        $tabela->set_conteudo($this->tabelaF);
+        $tabela->set_label(["Ano", "Pontos"]);
+        $tabela->set_width([50, 50]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }
 
     ###########################################################

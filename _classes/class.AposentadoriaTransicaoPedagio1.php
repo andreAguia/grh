@@ -214,7 +214,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($relatorio = false) {
 
         /*
          *  Tabela
@@ -239,27 +239,41 @@ class AposentadoriaTransicaoPedagio1 {
         ];
 
         # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo("Dados");
+        if ($relatorio) {
+            tituloRelatorio("Dados");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Dados");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '=',
-                'id' => 'emAberto'),
-            array('coluna' => 5,
-                'valor' => "Não Tem Direito",
-                'operador' => '=',
-                'id' => 'indeferido'),
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '<>',
-                'id' => 'arquivado')
-        ));
+        
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 5,
+                    'valor' => "Não Tem Direito",
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '<>',
+                    'id' => 'podera')
+            ));
+        }
         $tabela->show();
 
         # Mensagem
@@ -270,7 +284,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite
         if (jaPassou($this->dataDireitoAposentadoria)) {
@@ -287,13 +301,19 @@ class AposentadoriaTransicaoPedagio1 {
             $cor = "alert";
         }
 
-        # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
+        # retira a cor
+        if ($relatorio) {
+            p($texto, "center");
+        } else {
 
-        p($texto, "center");
+            # Exibe o resumo
+            $painel = new Callout($cor);
+            $painel->abre();
 
-        $painel->fecha();
+            p($texto, "center");
+
+            $painel->fecha();
+        }
     }
 
     ###########################################################
@@ -336,7 +356,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeRegras() {
+    public function exibeRegras($relatorio = false) {
 
         $array = [
             ["<p id='pLinha1'>Data de Ingresso</p><p id='pLinha4'>{$this->dtIngressoDescricao}</p>", $this->dtIngresso, $this->dtIngresso],
@@ -347,8 +367,20 @@ class AposentadoriaTransicaoPedagio1 {
             ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Regras Gerais");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Regras Gerais");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Regras Gerais");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
@@ -360,7 +392,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeRemuneração() {
+    public function exibeRemuneração($relatorio = false) {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
@@ -369,8 +401,20 @@ class AposentadoriaTransicaoPedagio1 {
             ["Paridade", $this->paridade]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Remuneração");
+       # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Remuneração");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Remuneração");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição"]);
         $tabela->set_width([20, 80]);
@@ -398,7 +442,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeTempoAntes31_12_21() {
+    public function exibeTempoAntes31_12_21($relatorio = false) {
 
         $aposentadoria = new Aposentadoria();
         $averbacao = new Averbacao();
@@ -409,9 +453,19 @@ class AposentadoriaTransicaoPedagio1 {
         ];
 
         # Tabela Tempo até 31/12/2021
-        $tabela = new Tabela();
-        $tabela->set_titulo("Tempo até 31/12/2021");
-        #$tabela->set_subtitulo("Em Dias");
+        if ($relatorio) {
+            tituloRelatorio("Tempo até 31/12/2021");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo até 31/12/2021");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Dias"]);
         $tabela->set_width([60, 40]);
@@ -423,7 +477,7 @@ class AposentadoriaTransicaoPedagio1 {
 
     ###########################################################
 
-    public function exibeCalculoPedagio() {
+    public function exibeCalculoPedagio($relatorio = false) {
 
         $array = [
             ["Contribuição até 31/12/2021", "{$this->servidorTempoAntes31_12_2021} dias"],
@@ -433,9 +487,19 @@ class AposentadoriaTransicaoPedagio1 {
         ];
 
         # Cálculo do Pedágio
-        $tabela = new Tabela();
-        $tabela->set_titulo("Cálculo do Pedágio");
-        #$tabela->set_subtitulo("Em Dias");
+        if ($relatorio) {
+            tituloRelatorio("Cálculo do Pedágio");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Cálculo do Pedágio");
+        }
+        
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Valor"]);
         $tabela->set_width([60, 40]);

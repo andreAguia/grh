@@ -2698,6 +2698,26 @@ class Pessoal extends Bd {
         }
     }
 
+     ###########################################################
+
+    /**
+     * Método get_nomeECargoSimplesELotacao
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeECargoSimplesELotacao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargoSimples($idServidor),
+                    $this->get_lotacao($idServidor)
+            );
+        }
+    }
+
     ###########################################################
 
     /**

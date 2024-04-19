@@ -89,6 +89,7 @@ if ($acesso) {
                 OR $fase == "pontosIntegral"
                 OR $fase == "pontosMedia"
                 OR $fase == "pedagioIntegral"
+                OR $fase == "tabs"
                 OR $fase == "pedagioMedia") {
             # Relatório   
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -486,7 +487,7 @@ if ($acesso) {
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
-            
+
             tituloTable("Direito Adquirido");
             br();
 
@@ -513,7 +514,7 @@ if ($acesso) {
             tituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido3", "(clique no texto acima para maiores detalhes)");
             #$aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
-            
+
             $painel = new Callout();
             $painel->abre();
             p("Rotina ainda não está pronta", "f16", "center");
@@ -767,6 +768,43 @@ if ($acesso) {
 
             $tab->fechaConteudo();
             $tab->show();
+            break;
+
+        ########################################################
+
+        /*
+         * Relatório geral
+         */
+
+        case "relatorio_tabs" :
+
+            # Dados do Servidor
+            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Previsão de Aposentadoria");
+            br();
+
+            # Regras Permanentes
+            tituloRelatorio("Regras Permanentes");
+            $array = [
+                [$idServidorPesquisado, $idServidorPesquisado],
+            ];
+
+            $relatorio = new Relatorio();
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_bordaInterna(true);
+            $relatorio->set_conteudo($array);
+            $relatorio->set_label(["Voluntária", "Compulsória"]);
+            $relatorio->set_width([50, 25, 25]);
+            #$relatorio->set_align(["left"]);
+
+            $relatorio->set_classe(["AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria"]);
+            $relatorio->set_metodo(["getDataAposentadoria", "getDataAposentadoria"]);
+
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_rodape("");
+            $relatorio->show();
             break;
 
         ########################################################

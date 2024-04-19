@@ -518,7 +518,7 @@ class AposentadoriaTransicaoPontos2 {
         }
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            $pontos += 2;
+            
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -537,6 +537,8 @@ class AposentadoriaTransicaoPontos2 {
                 $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMenor($data1, $data2);
             }
+            
+            $pontos += 2;
         }
     }
 
@@ -554,7 +556,7 @@ class AposentadoriaTransicaoPontos2 {
         $pontoAtual = $this->get_regraPontos($anoAtual);
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            $pontos += 2;
+            
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -570,6 +572,8 @@ class AposentadoriaTransicaoPontos2 {
             if ($diferenca == "OK") {
                 break;
             }
+            
+            $pontos += 2;
         }
 
         # Exibe a tabela

@@ -509,7 +509,7 @@ class AposentadoriaTransicaoPontos1 {
         }
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            $pontos += 2;
+
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -528,6 +528,8 @@ class AposentadoriaTransicaoPontos1 {
                 $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMenor($data1, $data2);
             }
+
+            $pontos += 2;
         }
     }
 
@@ -545,7 +547,6 @@ class AposentadoriaTransicaoPontos1 {
         $pontoAtual = $this->get_regraPontos($anoAtual);
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            $pontos += 2;
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -561,6 +562,8 @@ class AposentadoriaTransicaoPontos1 {
             if ($diferenca == "OK") {
                 break;
             }
+
+            $pontos += 2;
         }
 
         # Exibe a tabela
@@ -658,7 +661,7 @@ class AposentadoriaTransicaoPontos1 {
         $grid->abreColuna(12);
 
         tituloTable("Regra dos Pontos");
-        
+
         $grid->fechaColuna();
         $grid->abreColuna(6);
 
@@ -671,7 +674,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
-        } else { 
+        } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Masculino");
         }

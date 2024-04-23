@@ -185,7 +185,6 @@ class Aposentadoria {
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Aposentados em ' . $parametroAno);
-        $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
         $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
@@ -290,7 +289,6 @@ class Aposentadoria {
 
         $tabela = new Tabela();
         $tabela->set_titulo($pessoal->get_motivoAposentadoria($parametroMotivo));
-        $tabela->set_tituloLinha2('Com Informaçao de Contatos');
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
         $tabela->set_label(["Ano", 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);

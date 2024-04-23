@@ -62,6 +62,7 @@ class AposentadoriaLC195Compulsoria {
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+    public $temDireito = true;
 
     ###########################################################
 
@@ -85,7 +86,7 @@ class AposentadoriaLC195Compulsoria {
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -125,7 +126,7 @@ class AposentadoriaLC195Compulsoria {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
         }
 
         # Data do Direito a Aposentadoria
@@ -166,7 +167,7 @@ class AposentadoriaLC195Compulsoria {
         $array = [
             ["Idade", $this->idadeDescricao, "{$regraIdade} anos", "{$idadeServidor} anos", $this->dataCriterioIdade, $this->analiseIdade]
         ];
-            
+
         # Exibe a tabela
         if ($relatorio) {
             tituloRelatorio("Dados");
@@ -180,13 +181,13 @@ class AposentadoriaLC195Compulsoria {
             $tabela = new Tabela();
             $tabela->set_titulo("Dados");
         }
-        
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -222,11 +223,11 @@ class AposentadoriaLC195Compulsoria {
         } else {
             $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $cor = "alert";
-        }
-
+        }        
+       
         # retira a cor
         if ($relatorio) {
-            p($texto, "center");
+            return $texto;
         } else {
 
             # Exibe o resumo
@@ -241,7 +242,7 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -252,7 +253,7 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -330,7 +331,7 @@ class AposentadoriaLC195Compulsoria {
     }
 
     ###########################################################
-    
+
     public function exibeResumoCartilha($numero = 1) {
 
         $figura = new Imagem(PASTA_FIGURAS . "lc195compulsoria{$numero}.png", null, "100%", "100%");
@@ -338,7 +339,7 @@ class AposentadoriaLC195Compulsoria {
         $figura->set_class('imagem');
         $figura->show();
     }
-    
+
     ###########################################################
 
     public function get_descricao() {

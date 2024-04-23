@@ -413,6 +413,7 @@ class Grh {
         # Dados do Servidor
         $select = 'SELECT tbservidor.idServidor,
                           tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbservidor.dtAdmissao,
                           tbservidor.idServidor,
                           tbservidor.idServidor
@@ -426,10 +427,10 @@ class Grh {
         $relatorio = new Relatorio();
         $relatorio->set_titulo($titulo);
         $relatorio->set_subtitulo($subTitulo);
-        $relatorio->set_label(["Id / Matrícula", "Servidor", "Admissão", "Perfil","Situação"]);
-        $relatorio->set_funcao([null, null, "date_to_php"]);
-        $relatorio->set_classe(["pessoal", "pessoal", null, "pessoal", "pessoal"]);
-        $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimplesELotacao", null, "get_Perfil", "get_Situacao"]);
+        $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Perfil", "Situação"]);
+        $relatorio->set_funcao([null, null, null, "date_to_php"]);
+        $relatorio->set_classe(["pessoal", "pessoal", "pessoal", null, "pessoal", "pessoal"]);
+        $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao", null, "get_Perfil", "get_Situacao"]);
         $relatorio->set_align(['center']);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);

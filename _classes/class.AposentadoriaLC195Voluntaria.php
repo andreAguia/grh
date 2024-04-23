@@ -79,6 +79,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+    public $temDireito = true;
 
     ###########################################################
 
@@ -136,7 +137,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
         }
 
         # Tempo de Contribuição
@@ -145,7 +146,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoTotal >= ($regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
 
         # Serviço Público Initerrupto
@@ -154,7 +155,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
 
         # Cargo Efetivo
@@ -163,7 +164,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
         }
 
         # Data do Direito a Aposentadoria
@@ -272,7 +273,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # retira a cor
         if ($relatorio) {
-            p($texto, "center");
+            return $texto;
         } else {
 
             # Exibe o resumo
@@ -287,7 +288,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -298,7 +299,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);

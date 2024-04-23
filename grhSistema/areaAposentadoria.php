@@ -104,7 +104,10 @@ if ($acesso) {
     $lista = null;
 
     foreach ($array as $item) {
-        if ($fase == $item[2] OR $fase == "aguarde" . ucfirst($item[2])) {
+        # Define a fase de aguarde
+        $faseAguarde = is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2]);
+        
+        if ($fase == $item[2] OR $fase == $faseAguarde) {
             $menu->add_item($item[0], "<b>{$item[1]}</b>", (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
         } else {
             $menu->add_item($item[0], $item[1], (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));

@@ -153,7 +153,7 @@ class AposentadoriaTransicaoPedagio3 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.<hr id='geral' />Somente em {$this->dataCriterioIdade}.";
         }
 
         # Tempo de Contribuição
@@ -270,7 +270,7 @@ class AposentadoriaTransicaoPedagio3 {
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite
         if (jaPassou($this->dataDireitoAposentadoria)) {
@@ -287,18 +287,24 @@ class AposentadoriaTransicaoPedagio3 {
             $cor = "alert";
         }
 
-        # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
+        # retira a cor
+        if ($relatorio) {
+            return $texto;
+        } else {
 
-        p($texto, "center");
+            # Exibe o resumo
+            $painel = new Callout($cor);
+            $painel->abre();
 
-        $painel->fecha();
+            p($texto, "center");
+
+            $painel->fecha();
+        }
     }
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         # Faz a análise
         if (!empty($idServidor)) {
@@ -315,7 +321,7 @@ class AposentadoriaTransicaoPedagio3 {
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);

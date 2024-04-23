@@ -153,7 +153,7 @@ class AposentadoriaTransicaoPedagio2 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
         }
 
         # Tempo de Contribuição
@@ -162,7 +162,7 @@ class AposentadoriaTransicaoPedagio2 {
         if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
 
         # Serviço Público Initerrupto
@@ -171,7 +171,7 @@ class AposentadoriaTransicaoPedagio2 {
         if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
 
         # Cargo Efetivo
@@ -180,7 +180,7 @@ class AposentadoriaTransicaoPedagio2 {
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
         }
 
         # Pedágio
@@ -198,7 +198,7 @@ class AposentadoriaTransicaoPedagio2 {
                 $this->analisePedagio = "OK";
             } else {
                 $resta4 = getNumDias($hoje, $this->dataCriterioPedagio);
-                $this->analisePedagio = "Ainda faltam<br/>{$resta4} dias.<hr id='geral' />Somente em {$this->dataCriterioPedagio}.";
+                $this->analisePedagio = "Ainda faltam<br/>{$resta4} dias.";
             }
         }
 
@@ -278,7 +278,11 @@ class AposentadoriaTransicaoPedagio2 {
 
         # Mensagem
         if (!empty($mensagem)) {
-            callout($mensagem);
+            if ($relatorio) {
+                p($mensagem, "left", "f12");
+            } else {
+                callout($mensagem);
+            }
         }
     }
 
@@ -303,7 +307,7 @@ class AposentadoriaTransicaoPedagio2 {
 
         # retira a cor
         if ($relatorio) {
-            p($texto, "center");
+            return $texto;
         } else {
 
             # Exibe o resumo
@@ -318,7 +322,7 @@ class AposentadoriaTransicaoPedagio2 {
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         # Faz a análise
         if (!empty($idServidor)) {
@@ -335,7 +339,7 @@ class AposentadoriaTransicaoPedagio2 {
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);

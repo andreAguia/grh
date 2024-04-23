@@ -103,7 +103,7 @@ class AposentadoriaDireitoAdquirido2 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
         }
 
         # Serviço Público Initerrupto
@@ -112,7 +112,7 @@ class AposentadoriaDireitoAdquirido2 {
         if ($tempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
 
         # Cargo Efetivo
@@ -121,7 +121,7 @@ class AposentadoriaDireitoAdquirido2 {
         if ($tempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em<br/>{$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
         }
 
         # Data do Direito a Aposentadoria
@@ -142,7 +142,7 @@ class AposentadoriaDireitoAdquirido2 {
 
     ###########################################################
 
-    public function exibeAnalise() {
+    public function exibeAnalise($relatorio = false) {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
@@ -177,33 +177,47 @@ class AposentadoriaDireitoAdquirido2 {
         ];
 
         # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo("Dados");
+        if ($relatorio) {
+            tituloRelatorio("Dados");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Dados");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '=',
-                'id' => 'pode'),
-            array('coluna' => 5,
-                'valor' => "Não Tem Direito",
-                'operador' => '=',
-                'id' => 'naoPode'),
-            array('coluna' => 5,
-                'valor' => 'OK',
-                'operador' => '<>',
-                'id' => 'podera')
-        ));
+        
+        if (!$relatorio) {
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '=',
+                    'id' => 'pode'),
+                array('coluna' => 5,
+                    'valor' => "Não Tem Direito",
+                    'operador' => '=',
+                    'id' => 'naoPode'),
+                array('coluna' => 5,
+                    'valor' => 'OK',
+                    'operador' => '<>',
+                    'id' => 'podera')
+            ));
+        }
         $tabela->show();
     }
 
     ###########################################################
 
-    public function exibeAnaliseResumo() {
+    public function exibeAnaliseResumo($relatorio = false) {
 
         # Verifica a data limite
         if ($this->analiseDtRequesitosCumpridos == "OK") {
@@ -220,17 +234,22 @@ class AposentadoriaDireitoAdquirido2 {
         }
 
         # Exibe o resumo
-        $painel = new Callout($cor);
-        $painel->abre();
+        if ($relatorio) {
+            return $texto;
+        } else {
+            
+            $painel = new Callout($cor);
+            $painel->abre();
 
-        p($texto, "center");
+            p($texto, "center");
 
-        $painel->fecha();
+            $painel->fecha();
+        }
     }
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         # Faz a análise
         if (!empty($idServidor)) {
@@ -247,7 +266,7 @@ class AposentadoriaDireitoAdquirido2 {
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -268,8 +287,8 @@ class AposentadoriaDireitoAdquirido2 {
 
     ###########################################################
 
-    public function exibeRegras() {
-
+    public function exibeRegras($relatorio = false) {
+        
         $array = [
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
@@ -277,8 +296,20 @@ class AposentadoriaDireitoAdquirido2 {
             ["<p id='pLinha1'>Data Limite</p><p id='pLinha4'>{$this->dtRequesitosCumpridosDescicao}</p>", $this->dtRequesitosCumpridos, $this->dtRequesitosCumpridos],
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Regras Gerais");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Regras Gerais");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Regras Gerais");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
@@ -290,7 +321,7 @@ class AposentadoriaDireitoAdquirido2 {
 
     ###########################################################
 
-    public function exibeRemuneração() {
+    public function exibeRemuneração($relatorio = false) {
 
         $array = [
             ["Cálculo Inicial", $this->calculoInicial],
@@ -299,8 +330,20 @@ class AposentadoriaDireitoAdquirido2 {
             ["Paridade", $this->paridade]
         ];
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Remuneração");
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Remuneração");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Remuneração");
+        }
+
         $tabela->set_conteudo($array);
         $tabela->set_label(array("Item", "Descrição"));
         $tabela->set_width(array(30, 70));

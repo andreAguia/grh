@@ -19,7 +19,6 @@ class AposentadoriaTransicaoPontos2 {
     private $idadeHomemDepois = 62;
     private $idadeMulherAntes = 56;
     private $idadeMulherDepois = 57;
-    
     private $dtIngresso = "31/12/2021";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
@@ -27,7 +26,6 @@ class AposentadoriaTransicaoPontos2 {
     private $cargoEfetivo = 5;
     private $pontosHomem = 90;
     private $pontosMulher = 86;
-    
     private $regraIdade = null;
     private $regraContribuicao = null;
 
@@ -78,6 +76,7 @@ class AposentadoriaTransicaoPontos2 {
     public $dataCriterioTempoServicoPublico = null;
     public $dataCriterioTempoCargo = null;
     public $dataDireitoAposentadoria = null;
+    public $temDireito = true;
 
     # Tabela de Pontos
     public $tabelaM = [
@@ -146,7 +145,7 @@ class AposentadoriaTransicaoPontos2 {
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -164,7 +163,7 @@ class AposentadoriaTransicaoPontos2 {
         $aposentadoria = new Aposentadoria();
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
-        
+
         # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
         if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
             # Retorna a data da transformação em estatutários
@@ -183,7 +182,7 @@ class AposentadoriaTransicaoPontos2 {
 
             # Calcula a data
             $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
-            
+
             # Verifica se é antes a data divisor de idade
             if (year($this->dataDivisorIdade) < year($this->dataCriterioIdade)) {
                 $this->regraIdade = $this->idadeHomemDepois;
@@ -192,16 +191,16 @@ class AposentadoriaTransicaoPontos2 {
         } else {
             $this->regraContribuicao = $this->contribuicaoMulher;
             $this->regraIdade = $this->idadeMulherAntes;
-            
+
             # Calcula a data
             $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
-            
+
             # Verifica se é antes a data divisor de idade
             if (year($this->dataDivisorIdade) < year($this->dataCriterioIdade)) {
                 $this->regraIdade = $this->idadeMulherDepois;
                 $this->dataCriterioIdade = addAnos($this->servidorDataNascimento, $this->regraIdade);
             }
-        }        
+        }
 
         $hoje = date("d/m/Y");
 
@@ -221,7 +220,7 @@ class AposentadoriaTransicaoPontos2 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Somente em {$this->dataCriterioIdade}.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Tempo de Contribuição
@@ -230,7 +229,7 @@ class AposentadoriaTransicaoPontos2 {
         if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
             $this->analiseContribuicao = "OK";
         } else {
-            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoContribuicao}.";
+            $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
 
         # Serviço Público Initerrupto
@@ -239,7 +238,7 @@ class AposentadoriaTransicaoPontos2 {
         if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
-            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoServicoPublico}.";
+            $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
 
         # Cargo Efetivo
@@ -248,7 +247,7 @@ class AposentadoriaTransicaoPontos2 {
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.<hr id='geral' />Somente em {$this->dataCriterioTempoCargo}.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
         }
 
         # Pontos
@@ -266,7 +265,7 @@ class AposentadoriaTransicaoPontos2 {
             if (epar($resta4)) {
                 $anoFalta = $resta4 / 2;
             }
-            $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.<hr id='geral' />Somente em {$this->dataCriterioPontos}.";
+            $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.";
         }
 
         # Data do Direito a Aposentadoria
@@ -289,7 +288,7 @@ class AposentadoriaTransicaoPontos2 {
         /*
          *  Tabela
          */
-        
+
         # Exibe obs para quando o servidor tem tempo celetista
         if ($this->servidorDataIngresso == "09/09/2003") {
             $this->servidorDataIngresso .= " *";
@@ -327,7 +326,7 @@ class AposentadoriaTransicaoPontos2 {
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -345,11 +344,15 @@ class AposentadoriaTransicaoPontos2 {
             ));
         }
         $tabela->show();
-        
+
         # Mensagem
-        if(!empty($mensagem)){
-            callout($mensagem);
-        }        
+        if (!empty($mensagem)) {
+            if ($relatorio) {
+                p($mensagem, "left", "f12");
+            } else {
+                callout($mensagem);
+            }
+        }
     }
 
     ###########################################################
@@ -364,7 +367,7 @@ class AposentadoriaTransicaoPontos2 {
             $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $cor = "warning";
         }
-        
+
         # Verifica a regra extra da data de ingresso
         if ($this->analisaDtIngresso == "Não Tem Direito") {
             $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
@@ -373,7 +376,7 @@ class AposentadoriaTransicaoPontos2 {
 
         # retira a cor
         if ($relatorio) {
-            p($texto, "center");
+            return $texto;
         } else {
 
             # Exibe o resumo
@@ -388,7 +391,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function getDataAposentadoria($idServidor) {
+    public function getDataAposentadoria($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -399,7 +402,7 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function getDiasFaltantes($idServidor) {
+    public function getDiasFaltantes($idServidor = null) {
 
         if (!empty($idServidor)) {
             $this->fazAnalise($idServidor);
@@ -518,7 +521,7 @@ class AposentadoriaTransicaoPontos2 {
         }
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            
+
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -537,7 +540,7 @@ class AposentadoriaTransicaoPontos2 {
                 $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
                 return dataMenor($data1, $data2);
             }
-            
+
             $pontos += 2;
         }
     }
@@ -556,7 +559,7 @@ class AposentadoriaTransicaoPontos2 {
         $pontoAtual = $this->get_regraPontos($anoAtual);
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-            
+
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
 
@@ -572,7 +575,7 @@ class AposentadoriaTransicaoPontos2 {
             if ($diferenca == "OK") {
                 break;
             }
-            
+
             $pontos += 2;
         }
 
@@ -671,7 +674,7 @@ class AposentadoriaTransicaoPontos2 {
         $grid->abreColuna(12);
 
         tituloTable("Regra dos Pontos");
-        
+
         $grid->fechaColuna();
         $grid->abreColuna(6);
 
@@ -685,7 +688,8 @@ class AposentadoriaTransicaoPontos2 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
-        } else {;
+        } else {
+            ;
             $tabela = new Tabela();
             $tabela->set_titulo("Masculino");
         }
@@ -708,7 +712,8 @@ class AposentadoriaTransicaoPontos2 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
-        } else {;
+        } else {
+            ;
             $tabela = new Tabela();
             $tabela->set_titulo("Feminino");
         }

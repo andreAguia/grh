@@ -14,7 +14,7 @@ class AposentadoriaTransicaoPedagio1 {
     private $tipo = "Regra de Transição";
     private $descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio - Integralidade e Paridade";
     private $legislacao = "Inciso V do artigo 4º da EC nº 90/2021";
-    
+
     # Regras
     private $idadeHomem = 60;
     private $idadeMulher = 55;
@@ -43,41 +43,43 @@ class AposentadoriaTransicaoPedagio1 {
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
 
     # Dados do Servidor
-    public $servidorDataNascimento = null;
-    public $servidorIdade = null;
-    public $servidorSexo = null;
-    public $serviçoTempoTotal = null;
-    public $servidorDataIngresso = null;
-    public $servidorPontos = null;
-    public $servidorTempoAntes31_12_2021 = null;
-    public $servidorTempoSobra = null;
-    public $servidorPedagio = null;
+    private $servidorDataNascimento = null;
+    private $servidorIdade = null;
+    private $servidorSexo = null;
+    private $serviçoTempoTotal = null;
+    private $servidorDataIngresso = null;
+    private $servidorPontos = null;
+    private $servidorTempoAntes31_12_2021 = null;
+    private $servidorTempoSobra = null;
+    private $servidorPedagio = null;
 
     # Tempo do Servidor
-    public $servidorTempoAverbadoPublico = null;
-    public $servidorTempoAverbadoPrivado = null;
-    public $servidorTempoUenf = null;
-    public $servidorTempoTotal = null;
-    public $servidorTempoPublicoIninterrupto = null;
+    private $servidorTempoAverbadoPublico = null;
+    private $servidorTempoAverbadoPrivado = null;
+    private $servidorTempoUenf = null;
+    private $servidorTempoTotal = null;
+    private $servidorTempoPublicoIninterrupto = null;
 
     # Analises
-    public $analisaDtIngresso = null;
-    public $analiseIdade = null;
-    public $analiseContribuicao = null;
-    public $analisePublico = null;
-    public $analiseCargoEfetivo = null;
-    public $analiseDtRequesitosCumpridos = null;
-    public $analisePedagio = null;
+    private $analisaDtIngresso = null;
+    private $analiseIdade = null;
+    private $analiseContribuicao = null;
+    private $analisePublico = null;
+    private $analiseCargoEfetivo = null;
+    private $analiseDtRequesitosCumpridos = null;
+    private $analisePedagio = null;
 
     # Variaveis de Retorno    
-    public $dataCriterioIngresso = null;
-    public $dataCriterioIdade = null;
-    public $dataCriterioPedagio = null;
-    public $dataCriterioTempoContribuicao = null;
-    public $dataCriterioTempoServicoPublico = null;
-    public $dataCriterioTempoCargo = null;
-    public $dataDireitoAposentadoria = null;
-    public $temDireito = true;
+    private $dataCriterioIngresso = null;
+    private $dataCriterioIdade = null;
+    private $dataCriterioPedagio = null;
+    private $dataCriterioTempoContribuicao = null;
+    private $dataCriterioTempoServicoPublico = null;
+    private $dataCriterioTempoCargo = null;
+    private $dataDireitoAposentadoria = null;
+    private $temDireito = true;
+    private $textoRetorno = null;
+    private $corFundo = null;
 
     ###########################################################
 
@@ -91,13 +93,13 @@ class AposentadoriaTransicaoPedagio1 {
     ###########################################################    
 
     public function fazAnalise($idServidor) {
-        
+
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -155,7 +157,7 @@ class AposentadoriaTransicaoPedagio1 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Tempo de Contribuição
@@ -212,6 +214,21 @@ class AposentadoriaTransicaoPedagio1 {
             $this->dataCriterioTempoCargo,
             $this->dataCriterioPedagio
         ]);
+
+        # Define o texto de retorno 
+        if (jaPassou($this->dataDireitoAposentadoria)) {
+            $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
+            $this->corFundo = "success";
+        } else {
+            $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
+            $this->corFundo = "warning";
+        }
+
+        # Verifica a regra extra da data de ingresso
+        if ($this->analisaDtIngresso == "Não Tem Direito") {
+            $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+            $this->corFundo = "alert";
+        }
     }
 
     ###########################################################
@@ -259,7 +276,7 @@ class AposentadoriaTransicaoPedagio1 {
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -292,32 +309,13 @@ class AposentadoriaTransicaoPedagio1 {
 
     public function exibeAnaliseResumo($relatorio = false) {
 
-        # Verifica a data limite
-        if (jaPassou($this->dataDireitoAposentadoria)) {
-            $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
-            $cor = "success";
-        } else {
-            $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
-            $cor = "warning";
-        }
-
-        # Verifica a regra extra da data de ingresso
-        if ($this->analisaDtIngresso == "Não Tem Direito") {
-            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
-            $cor = "alert";
-        }
-
-        # retira a cor
+        # Exibe o resumo
         if ($relatorio) {
-            return $texto;
+            return $this->textoRetorno;
         } else {
-
-            # Exibe o resumo
-            $painel = new Callout($cor);
+            $painel = new Callout($this->corFundo);
             $painel->abre();
-
-            p($texto, "center");
-
+            p($this->textoRetorno, "center");
             $painel->fecha();
         }
     }
@@ -407,7 +405,7 @@ class AposentadoriaTransicaoPedagio1 {
             ["Paridade", $this->paridade]
         ];
 
-       # Exibe a tabela
+        # Exibe a tabela
         if ($relatorio) {
             tituloRelatorio("Remuneração");
             $tabela = new Relatorio();
@@ -440,7 +438,7 @@ class AposentadoriaTransicaoPedagio1 {
     }
 
     ###########################################################
-    
+
     public function exibeTempoAntes31_12_21($relatorio = false) {
 
         $aposentadoria = new Aposentadoria();
@@ -498,7 +496,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela = new Tabela();
             $tabela->set_titulo("Cálculo do Pedágio");
         }
-        
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Valor"]);
         $tabela->set_width([60, 40]);
@@ -507,7 +505,7 @@ class AposentadoriaTransicaoPedagio1 {
         $tabela->show();
     }
 
-     ###########################################################
+    ###########################################################
 
     public function get_descricao() {
 
@@ -526,6 +524,20 @@ class AposentadoriaTransicaoPedagio1 {
     public function get_legislacao() {
 
         return $this->legislacao;
+    }
+
+    ###########################################################
+
+    public function exibeAnaliseTabela($idServidor) {
+
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+
+        # Exibe o resumo
+        $painel = new Callout($this->corFundo);
+        $painel->abre();
+        p($this->textoRetorno, "center");
+        $painel->fecha();
     }
 
     ###########################################################

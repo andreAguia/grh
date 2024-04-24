@@ -59,65 +59,69 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Cria um menu
-    $menu = new MenuBar();
+    if ($fase <> "aguardeGeralPorLotacao" AND $fase <> "geralPorLotacao") {
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
-    $menu->show();
+        # Cria um menu
+        $menu = new MenuBar();
 
-    tituloTable("Área de Aposentadoria");
-    br();
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
+        $menu->show();
 
-    $grid->fechaColuna();
-    $grid->abreColuna(12, 3);
+        tituloTable("Área de Aposentadoria");
+        br();
 
-    $array = [
-        ["titulo", "Servidores Aposentados", null],
-        ["link", "Por Ano", "porAno"],
-        ["link", "Por Tipo", "porTipo"],
-        ["link", "Estatistica", "estatistica"],
-        ["titulo", "Previsão", null],
-        ["titulo1", "Regras Permanentes", null],
-        ["link", "Voluntária", "voluntaria"],
-        ["link", "Compulsória", "compulsoria"],
-        ["link", "Compulsória Por Ano", "compulsoriaPorAno"],
-        ["titulo1", "Regras de Transição", null],
-        ["link", "Regra dos Pontos - Integral", "transicao1"],
-        ["link", "Regra dos Pontos - Média", "transicao2"],
-        ["link", "Regra do Pedágio - Integral", "transicao3"],
-        ["link", "Regra do Pedágio - Média", "transicao4"],
+        $grid->fechaColuna();
+        $grid->abreColuna(12, 3);
+
+        $array = [
+            ["titulo", "Servidores Aposentados", null],
+            ["link", "Por Ano", "porAno"],
+            ["link", "Por Tipo", "porTipo"],
+            ["link", "Estatistica", "estatistica"],
+            ["titulo", "Previsão", null],
+            ["titulo1", "Geral", null],
+            ["linkWindow", "Por Lotação", "geralPorLotacao"],
+            ["titulo1", "Regras Permanentes", null],
+            ["link", "Voluntária", "voluntaria"],
+            ["link", "Compulsória", "compulsoria"],
+            ["link", "Compulsória Por Ano", "compulsoriaPorAno"],
+            ["titulo1", "Regras de Transição", null],
+            ["link", "Regra dos Pontos - Integral", "transicao1"],
+            ["link", "Regra dos Pontos - Média", "transicao2"],
+            ["link", "Regra do Pedágio - Integral", "transicao3"],
+            ["link", "Regra do Pedágio - Média", "transicao4"],
 //        ["link", "Regra do Pedágio c/Redutor - Integral", "transicao5"],
-        ["titulo1", "Direito Adquirido", null],
-        ["link", "C.F. Art. 40, §1º, III, alínea a", "direitoAdquirido1"],
-        ["link", "C.F. Art. 40, §1º, III, alínea b", "direitoAdquirido2"],
-//        ["link", "Art. 2º da EC Nº 41/2003", "direitoAdquirido3"],
-    ];
+            ["titulo1", "Direito Adquirido", null],
+            ["link", "C.F. Art. 40, §1º, III, alínea a", "direitoAdquirido1"],
+            ["link", "C.F. Art. 40, §1º, III, alínea b", "direitoAdquirido2"],
+//        ["link", "Art. 2º da EC Nº 41/2003", "direitoAdquirido3"],        
+        ];
 
-    # Menu de tipos de relatórios
-    $menu = new Menu("menuAposentadoria");
+        # Menu de tipos de relatórios
+        $menu = new Menu("menuAposentadoria");
 
-    $lista = null;
+        $lista = null;
 
-    foreach ($array as $item) {
-        # Define a fase de aguarde
-        $faseAguarde = is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2]);
-        
-        if ($fase == $item[2] OR $fase == $faseAguarde) {
-            $menu->add_item($item[0], "<b>{$item[1]}</b>", (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
-        } else {
-            $menu->add_item($item[0], $item[1], (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
+        foreach ($array as $item) {
+            # Define a fase de aguarde
+            $faseAguarde = is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2]);
+
+            if ($fase == $item[2] OR $fase == $faseAguarde) {
+                $menu->add_item($item[0], "<b>{$item[1]}</b>", (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
+            } else {
+                $menu->add_item($item[0], $item[1], (is_null($item[2]) ? null : "?fase=aguarde" . ucfirst($item[2])));
+            }
         }
-    }
-    
-    $menu->add_item("titulo", "Documentação");
 
-            # Pega os projetos cadastrados
-            $select = 'SELECT idMenuDocumentos,
+        $menu->add_item("titulo", "Documentação");
+
+        # Pega os projetos cadastrados
+        $select = 'SELECT idMenuDocumentos,
                           categoria,
                           texto,
                           title
@@ -125,39 +129,40 @@ if ($acesso) {
                      WHERE categoria = "Regras de Aposentadoria"
                   ORDER BY categoria, texto';
 
-            $dados = $pessoal->select($select);
-            $num = $pessoal->count($select);
+        $dados = $pessoal->select($select);
+        $num = $pessoal->count($select);
 
-            # Verifica se tem itens no menu
-            if ($num > 0) {
-                # Percorre o array 
-                foreach ($dados as $valor) {
+        # Verifica se tem itens no menu
+        if ($num > 0) {
+            # Percorre o array 
+            foreach ($dados as $valor) {
 
-                    if (empty($valor["title"])) {
-                        $title = $valor["texto"];
-                    } else {
-                        $title = $valor["title"];
-                    }
+                if (empty($valor["title"])) {
+                    $title = $valor["texto"];
+                } else {
+                    $title = $valor["title"];
+                }
 
-                    # Verifica qual documento
-                    $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
-                    if (file_exists($arquivoDocumento)) {
-                        # Caso seja PDF abre uma janela com o pdf
-                        $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                    } else {
-                        # Caso seja um .doc, somente faz o download
-                        $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
-                    }
+                # Verifica qual documento
+                $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
+                if (file_exists($arquivoDocumento)) {
+                    # Caso seja PDF abre uma janela com o pdf
+                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                } else {
+                    # Caso seja um .doc, somente faz o download
+                    $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
                 }
             }
+        }
 
-            $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
-            $menu->add_item("linkWindow", "Regras Vigentes até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
+        $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
+        $menu->add_item("linkWindow", "Regras Vigentes até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
 
-    $menu->show();
+        $menu->show();
 
-    $grid->fechaColuna();
-    $grid->abreColuna(12, 9);
+        $grid->fechaColuna();
+        $grid->abreColuna(12, 9);
+    }
 
     #######################################
 
@@ -525,7 +530,7 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
@@ -935,7 +940,7 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
@@ -1117,11 +1122,11 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
@@ -1299,11 +1304,11 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
@@ -1481,11 +1486,11 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
@@ -1663,11 +1668,11 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
@@ -1845,7 +1850,7 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
@@ -2027,11 +2032,11 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             if ($parametroTipo == "Todos") {
@@ -2209,7 +2214,7 @@ if ($acesso) {
                 # percorre o array do banco de dados
                 foreach ($result as $item) {
                     if ($aposentadoria1->getDiasFaltantes($item[0]) == "Não Tem Direito") {
-                        $lista[] = $item;                
+                        $lista[] = $item;
                     }
                 }
             }
@@ -2259,6 +2264,112 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'areaAposentadoria.php?fase=aguardeDireitoAdquirido3');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        #######################################
+
+        case "aguardeGeralPorLotacao":
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=geralPorLotacao');
+            break;
+
+        #######################################
+
+        case "geralPorLotacao" :
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=aguardeGeralPorLotacao');
+
+            # Lotação
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+            $form->show();
+
+            # Exibe a lista
+            $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor,           
+                              tbservidor.idServidor,           
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($result);
+            $tabela->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
+            $tabela->set_align(['left']);
+            #$tabela->set_width([20, 20, 20, 20, 20]);
+            $tabela->set_titulo("Previsão Geral de Aposentadoria");
+            $tabela->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
+            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela"]);
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editarGeralPorLotacao');
+            $tabela->show();
+            break;
+
+        #######################################    
+
+        case "editarGeralPorLotacao" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardeGeralPorLotacao');
 
             # Carrega a página específica
             loadPage('servidorMenu.php');

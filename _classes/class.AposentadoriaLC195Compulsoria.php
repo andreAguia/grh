@@ -52,19 +52,19 @@ class AposentadoriaLC195Compulsoria {
 
     ###########################################################    
     # Dados do servidor
-    public $analiseIdade = null;
-    public $analiseContribuicao = null;
-    public $analisePublico = null;
-    public $analiseCargoEfetivo = null;
-    public $analiseDtRequesitosCumpridos = null;
+    private $analiseIdade = null;
+    private $analiseContribuicao = null;
+    private $analisePublico = null;
+    private $analiseCargoEfetivo = null;
+    private $analiseDtRequesitosCumpridos = null;
 
     # Variaveis de Retorno
-    public $dataCriterioIdade = null;
-    public $dataCriterioTempoContribuicao = null;
-    public $dataCriterioTempoServicoPublico = null;
-    public $dataCriterioTempoCargo = null;
-    public $dataDireitoAposentadoria = null;
-    public $temDireito = true;
+    private $dataCriterioIdade = null;
+    private $dataCriterioTempoContribuicao = null;
+    private $dataCriterioTempoServicoPublico = null;
+    private $dataCriterioTempoCargo = null;
+    private $dataDireitoAposentadoria = null;
+    private $temDireito = true;
 
     ###########################################################
 
@@ -128,11 +128,25 @@ class AposentadoriaLC195Compulsoria {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Data do Direito a Aposentadoria
         $this->dataDireitoAposentadoria = $this->dataCriterioIdade;
+
+        # Define o texto de retorno    
+        if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
+            if (jaPassou($this->dataDireitoAposentadoria)) {
+                $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+                $this->corFundo = "success";
+            } else {
+                $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+                $this->corFundo = "warning";
+            }
+        } else {
+            $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+            $this->corFundo = "alert";
+        }
     }
 
     ###########################################################
@@ -213,31 +227,13 @@ class AposentadoriaLC195Compulsoria {
 
     public function exibeAnaliseResumo($relatorio = false) {
 
-        # Verifica a data limite        
-        if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
-            if (jaPassou($this->dataDireitoAposentadoria)) {
-                $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
-                $cor = "success";
-            } else {
-                $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
-                $cor = "warning";
-            }
-        } else {
-            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
-            $cor = "alert";
-        }        
-       
-        # retira a cor
+        # Exibe o resumo
         if ($relatorio) {
-            return $texto;
+            return $this->textoRetorno;
         } else {
-
-            # Exibe o resumo
-            $painel = new Callout($cor);
+            $painel = new Callout($this->corFundo);
             $painel->abre();
-
-            p($texto, "center");
-
+            p($this->textoRetorno, "center");
             $painel->fecha();
         }
     }
@@ -362,6 +358,20 @@ class AposentadoriaLC195Compulsoria {
 
         return $this->legislacao;
     }
-    
+
+    ###########################################################
+
+    public function exibeAnaliseTabela($idServidor) {
+
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+
+        # Exibe o resumo
+        $painel = new Callout($this->corFundo);
+        $painel->abre();
+        p($this->textoRetorno, "center");
+        $painel->fecha();
+    }
+
     ###########################################################
 }

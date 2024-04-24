@@ -40,19 +40,21 @@ class AposentadoriaDireitoAdquirido1 {
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
 
     # Dados do servidor
-    public $analiseIdade = null;
-    public $analiseContribuicao = null;
-    public $analisePublico = null;
-    public $analiseCargoEfetivo = null;
-    public $analiseDtRequesitosCumpridos = null;
+    private $analiseIdade = null;
+    private $analiseContribuicao = null;
+    private $analisePublico = null;
+    private $analiseCargoEfetivo = null;
+    private $analiseDtRequesitosCumpridos = null;
 
     # Variaveis de Retorno
-    public $dataCriterioIdade = null;
-    public $dataCriterioTempoContribuicao = null;
-    public $dataCriterioTempoServicoPublico = null;
-    public $dataCriterioTempoCargo = null;
-    public $dataDireitoAposentadoria = null;
-    public $temDireito = true;
+    private $dataCriterioIdade = null;
+    private $dataCriterioTempoContribuicao = null;
+    private $dataCriterioTempoServicoPublico = null;
+    private $dataCriterioTempoCargo = null;
+    private $dataDireitoAposentadoria = null;
+    private $temDireito = true;
+    private $textoRetorno = null;
+    private $corFundo = null;
 
     ###########################################################
 
@@ -157,6 +159,20 @@ class AposentadoriaDireitoAdquirido1 {
             $this->analiseDtRequesitosCumpridos = "Não Tem Direito";
             $this->temDireito = false;
         }
+        
+        # Define o texto de retorno   
+        if ($this->analiseDtRequesitosCumpridos == "OK") {
+            if (jaPassou($this->dataDireitoAposentadoria)) {
+                $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+                $this->corFundo = "success";
+            } else {
+                $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+                $this->corFundo = "secondary";
+            }
+        } else {
+            $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+            $this->corFundo = "alert";
+        }
     }
 
     ###########################################################
@@ -241,30 +257,13 @@ class AposentadoriaDireitoAdquirido1 {
 
     public function exibeAnaliseResumo($relatorio = false) {
 
-        # Verifica a data limite
-        if ($this->analiseDtRequesitosCumpridos == "OK") {
-            if (jaPassou($this->dataDireitoAposentadoria)) {
-                $texto = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
-                $cor = "success";
-            } else {
-                $texto = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
-                $cor = "secondary";
-            }
-        } else {
-            $texto = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
-            $cor = "alert";
-        }
-
         # Exibe o resumo
         if ($relatorio) {
-            return $texto;
+            return $this->textoRetorno;
         } else {
-            
-            $painel = new Callout($cor);
+            $painel = new Callout($this->corFundo);
             $painel->abre();
-
-            p($texto, "center");
-
+            p($this->textoRetorno, "center");
             $painel->fecha();
         }
     }
@@ -404,6 +403,20 @@ class AposentadoriaDireitoAdquirido1 {
     public function get_legislacao() {
 
         return $this->legislacao;
+    }
+
+    ###########################################################
+
+    public function exibeAnaliseTabela($idServidor) {
+
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+
+        # Exibe o resumo
+        $painel = new Callout($this->corFundo);
+        $painel->abre();
+        p($this->textoRetorno, "center");
+        $painel->fecha();
     }
 
     ###########################################################

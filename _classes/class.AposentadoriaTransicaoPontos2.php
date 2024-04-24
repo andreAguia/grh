@@ -10,8 +10,10 @@ class AposentadoriaTransicaoPontos2 {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Média - art. 3º da EC nº 90/2021";
+    # Descricao
+    private $tipo = "Regra de Transição";
+    private $descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra dos Pontos - Média";
+    private $legislacao = "Artigo 3º da EC nº 90/2021";
 
     # Regras
     private $dataDivisorIdade = "01/01/2025";
@@ -497,13 +499,6 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function get_descricao() {
-
-        return $this->descricao;
-    }
-
-    ###########################################################
-
     public function get_dataCriterioPontos() {
 
         # Define os anos
@@ -726,6 +721,27 @@ class AposentadoriaTransicaoPontos2 {
 
         $grid->fechaColuna();
         $grid->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function get_descricao() {
+
+        return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
     }
 
     ###########################################################

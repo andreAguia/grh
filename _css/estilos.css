@@ -636,6 +636,12 @@ div#divRegrasAposentadoria{
 div#divTempoServicoAposentadoria{
     display: none;
 }
+
+p#psubtituloRel{
+    font-size: 11px;
+    padding: 0px;
+    margin: 0px;
+}
 /*******************************************
  * Estatística
  *******************************************/

@@ -10,8 +10,10 @@ class AposentadoriaTransicaoPontos1 {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Regra dos Pontos<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - art. 3º da EC nº 90/2021";
+    # Descricao
+    private $tipo = "Regra de Transição";
+    private $descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra dos Pontos - Integralidade e Paridade";
+    private $legislacao = "Artigo 3º da EC nº 90/2021";
 
     # Regras
     private $idadeHomem = 65;
@@ -201,7 +203,7 @@ class AposentadoriaTransicaoPontos1 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Tempo de Contribuição
@@ -488,13 +490,6 @@ class AposentadoriaTransicaoPontos1 {
 
     ###########################################################
 
-    public function get_descricao() {
-
-        return $this->descricao;
-    }
-
-    ###########################################################
-
     public function get_dataCriterioPontos() {
 
         # Define os anos
@@ -713,6 +708,27 @@ class AposentadoriaTransicaoPontos1 {
 
         $grid->fechaColuna();
         $grid->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function get_descricao() {
+
+        return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
     }
 
     ###########################################################

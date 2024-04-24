@@ -9,9 +9,11 @@ class AposentadoriaTransicaoPedagio3 {
      */
     # Id Servidor
     private $idServidor = null;
-
-    # Descrição
-    private $descricao = "Regra do Pedágio com Redutor de Idade<br/>Por Idade e Tempo de Contribuição<br/>Integralidade e Paridade - art. 4º da EC nº 90/2021";
+    
+    # Descricao
+    private $tipo = "Regra de Transição";
+    private $descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio com Redutor de Idade - Integralidade e Paridade";
+    private $legislacao = "§5º do artigo 4º da EC nº 90/2021.";
 
     # Regras
     private $idadeHomem = 60;
@@ -396,14 +398,7 @@ class AposentadoriaTransicaoPedagio3 {
     }
 
     ###########################################################
-
-    public function get_descricao() {
-
-        return $this->descricao;
-    }
-
-    ###########################################################
-
+    
     public function exibeTempoAntes31_12_21() {
 
         $aposentadoria = new Aposentadoria();
@@ -448,6 +443,27 @@ class AposentadoriaTransicaoPedagio3 {
         $tabela->set_align(["left", "center"]);
         $tabela->set_totalRegistro(false);
         $tabela->show();
+    }
+
+    ###########################################################
+
+    public function get_descricao() {
+
+        return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
     }
 
     ###########################################################

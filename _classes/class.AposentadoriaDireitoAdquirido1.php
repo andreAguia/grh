@@ -11,8 +11,10 @@ class AposentadoriaDireitoAdquirido1 {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>C.F. Art. 40, §1º, III, alínea a";
+    # Descricao
+    private $tipo = "Direito Adquirido";
+    private $descricao = "Aposentadoria por Idade e Tempo de Contribuição";
+    private $legislacao = "C.F. Art. 40, §1º, III, alínea a.";
 
     # Regras
     private $dtIngresso = null;
@@ -375,13 +377,6 @@ class AposentadoriaDireitoAdquirido1 {
 
     ###########################################################
 
-    public function get_descricao() {
-
-        return $this->descricao;
-    }
-
-    ###########################################################
-
     public function exibeRegraSite() {
 
         $figura = new Imagem(PASTA_FIGURAS . "aposentadoriaDireitoAdquirido1.jpg", null, "100%", "100%");
@@ -390,5 +385,26 @@ class AposentadoriaDireitoAdquirido1 {
         $figura->show();
     }
     
+    ###########################################################
+
+    public function get_descricao() {
+
+        return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
+    }
+
     ###########################################################
 }

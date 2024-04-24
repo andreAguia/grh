@@ -11,8 +11,10 @@ class AposentadoriaDireitoAdquirido2 {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade<br/>C.F. Art. 40, §1º, III, alínea b";
+    # Descricao
+    private $tipo = "Direito Adquirido";
+    private $descricao = "Aposentadoria por Idade";
+    private $legislacao = "C.F. Art. 40, §1º, III, alínea b.";
 
     # Regras
     private $dtIngresso = null;
@@ -65,7 +67,7 @@ class AposentadoriaDireitoAdquirido2 {
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -103,7 +105,7 @@ class AposentadoriaDireitoAdquirido2 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Serviço Público Initerrupto
@@ -195,7 +197,7 @@ class AposentadoriaDireitoAdquirido2 {
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -237,7 +239,7 @@ class AposentadoriaDireitoAdquirido2 {
         if ($relatorio) {
             return $texto;
         } else {
-            
+
             $painel = new Callout($cor);
             $painel->abre();
 
@@ -288,7 +290,7 @@ class AposentadoriaDireitoAdquirido2 {
     ###########################################################
 
     public function exibeRegras($relatorio = false) {
-        
+
         $array = [
             ["<p id='pLinha1'>Idade</p><p id='pLinha4'>{$this->idadeDescricao}</p>", $this->idadeMulher . " anos", $this->idadeHomem . " anos"],
             ["<p id='pLinha1'>Serviço Público</p><p id='pLinha4'>{$this->tempoPublicoDescicao}</p>", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)", $this->servicoPublico . " anos<br/>(" . ($this->servicoPublico * 365) . " dias)"],
@@ -357,6 +359,20 @@ class AposentadoriaDireitoAdquirido2 {
     public function get_descricao() {
 
         return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
     }
 
     ###########################################################

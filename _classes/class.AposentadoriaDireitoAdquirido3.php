@@ -11,8 +11,10 @@ class AposentadoriaDireitoAdquirido3 {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>Art. 2º da EC Nº 41/2003";
+    # Descricao
+    private $tipo = "Direito Adquirido";
+    private $descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio - Média";
+    private $legislacao = "Art. 2º da EC Nº 41/2003";
 
     # Regras
     private $dtIngresso = "16/12/1998";
@@ -358,6 +360,20 @@ class AposentadoriaDireitoAdquirido3 {
     public function get_descricao() {
 
         return $this->descricao;
+    }
+
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
     }
 
     ###########################################################

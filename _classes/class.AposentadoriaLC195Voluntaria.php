@@ -11,8 +11,11 @@ class AposentadoriaLC195Voluntaria {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição<br/>Art. 2º, inciso III, da Lei Complementar nº 195/2021";
+    # Descricao
+    private $tipo = "Regra Permanente";
+    private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição";
+    private $legislacao = "Art. 2º, inciso III, da Lei Complementar nº 195/2021";
+    
 
     # Texto
     private $texto = "A regra permanente é aplicável a todos os servidores, independentemente da data do
@@ -398,11 +401,17 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
     ###########################################################
 
-    public function exibeDescricaoLink($link = null) {
+    public function get_tipo() {
 
-        $link = new Link($this->descricao, $link);
-        $link->show();
+        return $this->tipo;
     }
 
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
+    }
+    
     ###########################################################
 }

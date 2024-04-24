@@ -11,8 +11,10 @@ class AposentadoriaLC195Compulsoria {
     # Id Servidor
     private $idServidor = null;
 
-    # Descrição
-    private $descricao = "Aposentadoria Compulsória por Idade<br/>Art. 2º, inciso II, da Lei Complementar nº 195/2021";
+    # Descricao
+    private $tipo = "Regra Permanente";
+    private $descricao = "Aposentadoria Compulsória por Idade";
+    private $legislacao = "Art. 2º, inciso II, da Lei Complementar nº 195/2021";
 
     /*
      * Regras
@@ -347,5 +349,19 @@ class AposentadoriaLC195Compulsoria {
         return $this->descricao;
     }
 
+    ###########################################################
+
+    public function get_tipo() {
+
+        return $this->tipo;
+    }
+
+    ###########################################################
+
+    public function get_legislacao() {
+
+        return $this->legislacao;
+    }
+    
     ###########################################################
 }

@@ -541,6 +541,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -679,6 +680,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
@@ -949,6 +951,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -1130,6 +1133,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -1311,6 +1315,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -1492,6 +1497,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -1673,6 +1679,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -1854,6 +1861,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -2035,6 +2043,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');
@@ -2216,6 +2225,7 @@ if ($acesso) {
             $tabela->set_align(['center', 'left']);
             $tabela->set_width([15, 40, 15, 15, 15]);
             $tabela->set_titulo($aposentadoria1->get_descricao());
+            $tabela->set_subtitulo($aposentadoria1->get_legislacao());
             $tabela->set_classe(["Pessoal", "Pessoal", null, $classe, $classe]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "getDataAposentadoria", "getDiasFaltantes"]);
             $tabela->set_idCampo('idServidor');

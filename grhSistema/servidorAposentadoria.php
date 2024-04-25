@@ -49,6 +49,9 @@ if ($acesso) {
     $fase = get('fase', 'tabs');
     $aba = get('aba', 1);
 
+    # Verifica a origem 
+    $origem = get_session("origem");
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -76,6 +79,11 @@ if ($acesso) {
             $linkvoltar = '?fase=tabs&aba=3';
         } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
             $linkvoltar = '?fase=tabs&aba=3';
+        }
+
+        # Verifica a origem
+        if (!empty($origem)) {
+            $linkvoltar = $origem;
         }
 
         # Botão voltar    

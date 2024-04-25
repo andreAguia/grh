@@ -76,9 +76,11 @@ class AposentadoriaTransicaoPontos1 {
     private $dataCriterioTempoCargo = null;
     private $dataDireitoAposentadoria = null;
     private $temDireito = true;
+    
     private $textoRetorno = null;
+    private $textoReduzido = null;
     private $corFundo = null;
-
+    
     # Tabela de Pontos
     private $tabelaM = [
         [2023, 97],
@@ -265,15 +267,18 @@ class AposentadoriaTransicaoPontos1 {
         # Define o texto de retorno  
         if (jaPassou($this->dataDireitoAposentadoria)) {
             $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+            $this->textoReduzido = "Desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "success";
         } else {
             $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
+            $this->textoReduzido = "Somente em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "warning";
         }
 
         # Verifica a regra extra da data de ingresso
         if ($this->analisaDtIngresso == "Não Tem Direito") {
             $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+            $this->textoReduzido = "<b>Não Tem Direito</b>";
             $this->corFundo = "alert";
         }
     }
@@ -736,12 +741,19 @@ class AposentadoriaTransicaoPontos1 {
 
         # Faz a análise
         $this->fazAnalise($idServidor);
+        
+        # Define o link
+        $link = "?fase=carregarPagina&id={$idServidor}&link=pontosIntegral";
+        
+        echo "<a href='{$link}'>";
 
         # Exibe o resumo
         $painel = new Callout($this->corFundo);
         $painel->abre();
-        p($this->textoRetorno, "center");
+        p($this->textoReduzido, "center");
         $painel->fecha();
+        
+        echo "</a>";
     }
 
     ###########################################################

@@ -6749,4 +6749,27 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_nacionalidade
+     * informa a nacionalidade de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nacionalidade($idServidor) {
+        $select = "SELECT tbnacionalidade.nacionalidade
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbnacionalidade ON (tbnacionalidade.idNacionalidade = tbpessoa.nacionalidade)
+                    WHERE idServidor = {$idServidor}";
+
+        $result = parent::select($select, false);
+
+        if (empty($result[0])) {
+            return null;
+        } else {
+            return $result[0];
+        }
+    }
+
+    ###########################################################
 }

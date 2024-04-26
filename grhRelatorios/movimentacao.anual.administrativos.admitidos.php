@@ -39,14 +39,14 @@ if ($acesso) {
                                  JOIN tbperfil USING (idPerfil)
                 WHERE YEAR(tbservidor.dtAdmissao) = '{$relatorioAno}'
                   AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <>129)
-                  AND idPerfil = 1
+                  AND tbperfil.tipo <> 'Outros'
              ORDER BY MONTH(tbservidor.dtAdmissao), dtadmissao";
 
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();    
-    $relatorio->set_titulo("Relatório Anual de Servidores Estatutários Administrativos & Técnicos");
+    $relatorio->set_titulo("Relatório Anual de Administrativos & Técnicos");
     $relatorio->set_tituloLinha2("Admitidos em {$relatorioAno}");
     $relatorio->set_subtitulo('Ordenado pela Data de Admissão');
 

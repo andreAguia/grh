@@ -45,6 +45,7 @@ if ($acesso) {
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                 WHERE tbservidor.situacao = 1
+                AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <> 129)
                   AND tbperfil.tipo <> "Outros"
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
@@ -72,7 +73,7 @@ if ($acesso) {
     $relatorio->set_numGrupo(3);
     #$relatorio->set_width(array(10,40,50));
     $relatorio->set_conteudo($result);
-    $relatorio->set_bordaInterna(true);
+    
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
@@ -91,8 +92,7 @@ if ($acesso) {
             'padrao' => $lotacao,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
-
-    $relatorio->set_formFocus('lotacao');
+    
     $relatorio->set_formLink('?');
     $relatorio->show();
 

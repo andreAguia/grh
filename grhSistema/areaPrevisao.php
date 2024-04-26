@@ -31,7 +31,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de aposentadoria";
+        $atividade = "Visualizou a área de previsão de aposentadoria";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -40,15 +40,12 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
-
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
-    
+
     # Pega o Link (quando tem)
     $link = get("link");
 
@@ -57,18 +54,31 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu = new MenuBar();
+    if ($fase <> "relatorio") {
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
-    $menu->show();
+        # Cabeçalho da Página
+        AreaServidor::cabecalho();
 
-//    tituloTable("Área de Previsão de Aposentadoria");
-//    br();
+        # Cria um menu
+        $menu = new MenuBar();
+
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "grh.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
+
+        # Relatório   
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+        $botaoRel = new Button();
+        $botaoRel->set_imagem($imagem);
+        $botaoRel->set_title("Relatório da Previsão de Aposentadoria");
+        $botaoRel->set_url("?fase=relatorio");
+        $botaoRel->set_target("_blank");
+        $menu->add_link($botaoRel, "right");
+        $menu->show();
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
@@ -198,7 +208,62 @@ if ($acesso) {
             loadPage("servidorAposentadoria.php?fase={$link}");
             break;
 
-        #######################################              
+        #######################################    
+
+        case "relatorio" :
+            # Exibe a lista
+            $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor,           
+                              tbservidor.idServidor,           
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                    $subtitulo = $pessoal->get_nomeLotacao2($parametroLotacao);
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    $lotacaoClasse = new Lotacao();
+                    if ($parametroLotacao <> "Reitoria" AND $parametroLotacao <> "Prefeitura") {
+                        $subtitulo = $lotacaoClasse->get_nomeDiretoriaSigla($parametroLotacao) . " - {$parametroLotacao}<br/>";
+                    } else {
+                        $subtitulo = "{$parametroLotacao}<br/>";
+                    }
+                }
+            }
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+            $count = $pessoal->count($select);
+
+            $relatorio = new Relatorio();
+            $relatorio->set_conteudo($result);
+
+            $relatorio->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
+            $relatorio->set_align(['left']);
+            $relatorio->set_width([12, 6, 6, 6, 6, 6, 6, 6, 6]);
+            $relatorio->set_titulo("Previsão Geral de Aposentadoria");
+            $relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
+            $relatorio->set_metodo(["get_nomeECargoELotacaoEId", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido"]);
+            $relatorio->set_bordaInterna(true);
+            $relatorio->show();
+            break;
+
+        #######################################                            
     }
 
     $grid->fechaColuna();

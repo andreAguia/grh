@@ -100,6 +100,7 @@ if ($acesso) {
                 OR $fase == "pedagioMedia"
                 OR $fase == "direitoAdquirido1"
                 OR $fase == "direitoAdquirido2") {
+            
             # Relatório   
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

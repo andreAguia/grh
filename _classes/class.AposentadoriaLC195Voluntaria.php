@@ -436,4 +436,15 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
     }
 
     ###########################################################
+
+    public function get_textoReduzido($idServidor) {
+        
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+        
+        # Retorna
+        return $this->textoReduzido;
+    }
+
+    ###########################################################
 }

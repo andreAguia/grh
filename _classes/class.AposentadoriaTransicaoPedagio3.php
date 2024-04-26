@@ -466,5 +466,16 @@ class AposentadoriaTransicaoPedagio3 {
         return $this->legislacao;
     }
 
+   ###########################################################
+
+    public function get_textoReduzido($idServidor) {
+        
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+        
+        # Retorna
+        return $this->textoReduzido;
+    }
+
     ###########################################################
 }

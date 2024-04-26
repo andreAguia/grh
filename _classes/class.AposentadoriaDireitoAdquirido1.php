@@ -430,5 +430,16 @@ class AposentadoriaDireitoAdquirido1 {
         echo "</a>";
     }
 
+   ###########################################################
+
+    public function get_textoReduzido($idServidor) {
+        
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+        
+        # Retorna
+        return $this->textoReduzido;
+    }
+
     ###########################################################
 }

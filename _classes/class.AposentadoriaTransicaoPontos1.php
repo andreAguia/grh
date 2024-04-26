@@ -757,4 +757,15 @@ class AposentadoriaTransicaoPontos1 {
     }
 
     ###########################################################
+
+    public function get_textoReduzido($idServidor) {
+        
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+        
+        # Retorna
+        return $this->textoReduzido;
+    }
+
+    ###########################################################
 }

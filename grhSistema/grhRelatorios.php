@@ -502,6 +502,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos', '../grhRelatorios/movimentacao.anual.docentes.admitidos.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Admitidos com Nacionalidade', '../grhRelatorios/movimentacao.anual.docentes.admitidos.nacionalidade.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos, Aposentados, Exonerados, etc', '../grhRelatorios/movimentacao.anual.docentes.demitidos.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Docentes Demitidos, Aposentados, Exonerados, etc com Nacionalidade', '../grhRelatorios/movimentacao.anual.docentes.demitidos.nacionalidade.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Nomeados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.nomeados.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Docentes Exonerados (Cargo em Comissão)', '../grhRelatorios/movimentacao.anual.docentes.exonerados.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Docentes Demitidos e Exonerados (Sem Agrupamento a partir de uma Data)', '../grhRelatorios/movimentacao.data.docentes.demitidos.php');

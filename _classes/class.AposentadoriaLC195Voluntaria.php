@@ -245,6 +245,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Dados");
@@ -336,6 +337,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Regras Gerais");
@@ -370,6 +372,7 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Remuneração");

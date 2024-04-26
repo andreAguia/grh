@@ -251,6 +251,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Contatos & Endereços');
             $menu->add_item('titulo1', 'Email');
             $menu->add_item('linkWindow', 'Email Institucional dos Servidores Ativos', '../grhRelatorios/contatos.ativos.email.institucional.php');
+            $menu->add_item('linkWindow', 'Email Institucional dos Servidores Administrativos/Técnicos Ativos', '../grhRelatorios/contatos.ativos.admi.email.institucional.php');
             $menu->add_item('linkWindow', 'Email Pessoal dos Servidores Ativos', '../grhRelatorios/contatos.ativos.email.pessoal.php');
             $menu->add_item('linkWindow', 'Emails dos Servidores Ativos', '../grhRelatorios/contatos.ativos.emails.php');
             $menu->add_item('linkWindow', 'Emails dos Servidores Inativos', '../grhRelatorios/contatos.inativos.emails.php');

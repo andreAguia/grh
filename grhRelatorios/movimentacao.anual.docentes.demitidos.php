@@ -42,7 +42,7 @@ if ($acesso) {
                  WHERE YEAR(tbservidor.dtDemissao) = '{$relatorioAno}'
                   AND (tbservidor.idCargo = 128 OR tbservidor.idCargo = 129)
                   AND tbperfil.tipo <> 'Outros'  
-             ORDER BY MONTH(tbservidor.dtAdmissao), dtadmissao";
+             ORDER BY MONTH(tbservidor.dtDemissao), dtadmissao";
 
 
     $result = $servidor->select($select);

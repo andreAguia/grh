@@ -31,7 +31,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de aposentadoria";
+        $atividade = "Visualizou a área de aposentados";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -82,9 +82,6 @@ if ($acesso) {
     $botao1->set_class('button');
     $menu->add_link($botao1, "right");
     $menu->show();
-
-    tituloTable("Área de Aposentadoria");
-    br();
 
     $grid->fechaColuna();
     $grid->abreColuna(12);

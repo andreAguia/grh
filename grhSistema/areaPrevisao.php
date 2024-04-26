@@ -176,23 +176,7 @@ if ($acesso) {
             $tabela->show();
             break;
 
-        #######################################    
-
-        case "editarGeralPorLotacao" :
-            br(8);
-            aguarde();
-
-            # Informa o $id Servidor
-            set_session('idServidorPesquisado', $id);
-
-            # Informa a origem
-            set_session('origem', 'areaAposentadoria.php?fase=aguardeGeralPorLotacao');
-
-            # Carrega a página específica
-            loadPage('servidorMenu.php');
-            break;
-
-        #######################################    
+        ####################################### 
 
         case "carregarPagina" :
             br(8);

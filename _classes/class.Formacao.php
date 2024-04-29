@@ -25,7 +25,6 @@ class Formacao {
 
     ###########################################################
 
-
     function exibeCurso($id) {
 
         /**
@@ -33,9 +32,9 @@ class Formacao {
          */
         # Pega os dados
         $dados = $this->get_dados($id);
-        
+
         # Trata carga horária
-        if(!empty($dados['horas'])){
+        if (!empty($dados['horas'])) {
             $dados['horas'] .= " horas";
         }
 
@@ -106,7 +105,12 @@ class Formacao {
         }
 
         # Pega a escolaridade da tabela formação
-        $select = "SELECT idEscolaridade FROM tbformacao WHERE idEscolaridade <> 12 AND idPessoa = $idPessoa ORDER BY idEscolaridade desc LIMIT 1";
+        $select = "SELECT idEscolaridade
+                     FROM tbformacao 
+                    WHERE idEscolaridade <> 12 
+                      AND idPessoa = {$idPessoa} 
+                 ORDER BY idEscolaridade desc LIMIT 1";
+
         $dados = $pessoal->select($select, false);
 
         if ($dados) {
@@ -115,6 +119,8 @@ class Formacao {
 
             # Retorna a maior escolaridade registrada
             return $maior;
+        }else{
+            return $idEscolaridade;
         }
     }
 

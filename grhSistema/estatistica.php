@@ -1643,10 +1643,50 @@ if ($acesso) {
             $atividade = "Visualizou a área de estatística por escolaridade";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
 
-            titulotable("por Escolaridade");
+            $grid3 = new Grid();
+            $grid3->abreColuna(12);
+            titulotable("Servidores Estatutários Administrativos e Técnicos");
+            $grid3->fechaColuna();
+            $grid3->abreColuna(4);
             br();
 
-            $grid3 = new Grid();
+            # Geral - Por Cargo
+            $selectGrafico = 'SELECT tbtipocargo.tipo, count(tbservidor.idServidor) as jj
+                                FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                                LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                JOIN tbperfil USING (idPerfil)
+                               WHERE situacao = 1
+                                 AND tbperfil.tipo <> "Outros"  
+                                 AND tbservidor.idPerfil= 1
+                            GROUP BY tbtipocargo.tipo
+                            ORDER BY 2 DESC ';
+
+            $servidores = $pessoal->select($selectGrafico);
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(["Tipo do Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
+            $tabela->set_colunaSomatorio(1);
+            $tabela->set_totalRegistro(false);
+            $tabela->show();
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(2);
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+
+            #tituloTable("por Cargo");
+            $chart = new Chart("Pie", $servidores);
+            $chart->set_idDiv("cargo");
+            $chart->set_legend(false);
+            $chart->set_tamanho($largura = 300, $altura = 300);
+            $chart->show();
+
+            $grid3->fechaColuna();
             $grid3->abreColuna(12);
 
             # Adm/Tec
@@ -1814,7 +1854,7 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
-            $tabela->set_titulo("Servidores Estatutários Adm/Tec");
+            $tabela->set_titulo("Por Escolaridade");
             $tabela->set_label(["Escolaridade", "Feminino", "Masculino", "Total"]);
             $tabela->set_width([55, 15, 15, 15]);
             $tabela->set_align(["left", "center"]);
@@ -2159,7 +2199,7 @@ if ($acesso) {
             # Perfil
             $result = $pessoal->select($selectPerfil);
             array_unshift($result, array("*", 'Todos'));
-            
+
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Perfil');

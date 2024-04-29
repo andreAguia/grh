@@ -1645,7 +1645,7 @@ if ($acesso) {
 
             $grid3 = new Grid();
             $grid3->abreColuna(12);
-            titulotable("Servidores Estatutários Administrativos e Técnicos");
+            titulotable("Servidores Estatutários");
             $grid3->fechaColuna();
             $grid3->abreColuna(4);
             br();
@@ -1854,7 +1854,8 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayEscolaridade);
-            $tabela->set_titulo("Por Escolaridade");
+            $tabela->set_titulo("Servidores Administrativos e Técnicos");
+            $tabela->set_subtitulo("Por Escolaridade");
             $tabela->set_label(["Escolaridade", "Feminino", "Masculino", "Total"]);
             $tabela->set_width([55, 15, 15, 15]);
             $tabela->set_align(["left", "center"]);

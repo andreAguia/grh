@@ -941,7 +941,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
@@ -1012,7 +1012,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
@@ -1090,7 +1090,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPedagio1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
@@ -1180,7 +1180,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaTransicaoPedagio1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Regras de Transição<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
@@ -1257,7 +1257,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
@@ -1311,7 +1311,7 @@ if ($acesso) {
             $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
 
             # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria <br/>{$aposentadoria->get_descricao()}";
+            $atividade = "Visualizou o relatório de Aposentadoria - Direito Adquirido<br/>{$aposentadoria->get_descricao()}";
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor

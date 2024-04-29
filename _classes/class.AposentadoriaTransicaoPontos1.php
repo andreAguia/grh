@@ -76,10 +76,11 @@ class AposentadoriaTransicaoPontos1 {
     private $dataCriterioTempoCargo = null;
     private $dataDireitoAposentadoria = null;
     private $temDireito = true;
+    
     private $textoRetorno = null;
     private $textoReduzido = null;
     private $corFundo = null;
-
+    
     # Tabela de Pontos
     private $tabelaM = [
         [2023, 97],
@@ -154,9 +155,9 @@ class AposentadoriaTransicaoPontos1 {
 
         # Pega os dados do servidor
         $pessoal = new Pessoal();
+        $this->servidorDataNascimento = $pessoal->get_dataNascimento($this->idServidor);
 
         $this->servidorIdade = $pessoal->get_idade($this->idServidor);
-        $this->servidorDataNascimento = $pessoal->get_dataNascimento($this->idServidor);
         $this->servidorSexo = $pessoal->get_sexo($this->idServidor);
 
         $averbacao = new Averbacao();
@@ -238,6 +239,7 @@ class AposentadoriaTransicaoPontos1 {
 
         # Pontos
         $regraPontos = $this->get_regraPontos(date("Y"));
+        $supostoPontos = $this->servidorPontos;
         $this->dataCriterioPontos = $this->get_dataCriterioPontos();
 
         if ($this->servidorPontos >= $regraPontos) {
@@ -261,7 +263,7 @@ class AposentadoriaTransicaoPontos1 {
             $this->dataCriterioTempoCargo,
             $this->dataCriterioPontos
         ]);
-
+        
         # Define o texto de retorno  
         if (jaPassou($this->dataDireitoAposentadoria)) {
             $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
@@ -544,13 +546,10 @@ class AposentadoriaTransicaoPontos1 {
         $anoInicial = 2024;
         $anoFinal = 2051;
         $anoAtual = date("Y");
-        $anoNascimento = year($this->servidorDataNascimento);
-
-        $aposentadoria = new Aposentadoria();
-        $anoIngresso = year($aposentadoria->get_dtIngresso($this->idServidor));
 
         # Pega os pontos
-        $pontos = intval(($anoAtual - $anoNascimento) + ($anoAtual - $anoIngresso));
+        $pontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
+        $pontoAtual = $this->get_regraPontos($anoAtual);
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
             $pontosRegra = $this->get_regraPontos($i);
@@ -563,7 +562,7 @@ class AposentadoriaTransicaoPontos1 {
                 $diferenca = "OK";
             }
 
-            $array[] = [$i, $i - $anoNascimento . " + " . $i - $anoIngresso, $pontos, $pontosRegra, $diferenca];
+            $array[] = [$i, $pontos, $pontosRegra, $diferenca];
 
             if ($diferenca == "OK") {
                 break;
@@ -589,13 +588,13 @@ class AposentadoriaTransicaoPontos1 {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Ano", "Cálculo<br/>Idade + Tempo", "Pontos do Servidor", "Regra", "Diferença"]);
-        $tabela->set_width([18, 18, 18, 18, 28]);
+        $tabela->set_label(["Ano", "Pontos do Servidor", "Regra", "Diferença"]);
+        $tabela->set_width([20, 20, 20, 40]);
         $tabela->set_totalRegistro(false);
 
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 4,
+                array('coluna' => 3,
                     'operador' => '=',
                     'valor' => "OK",
                     'id' => 'vigente')));
@@ -705,7 +704,6 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
-            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Feminino");
@@ -748,10 +746,10 @@ class AposentadoriaTransicaoPontos1 {
 
         # Faz a análise
         $this->fazAnalise($idServidor);
-
+        
         # Define o link
         $link = "?fase=carregarPagina&id={$idServidor}&link=pontosIntegral";
-
+        
         echo "<a href='{$link}'>";
 
         # Exibe o resumo
@@ -759,17 +757,17 @@ class AposentadoriaTransicaoPontos1 {
         $painel->abre();
         p($this->textoReduzido, "center");
         $painel->fecha();
-
+        
         echo "</a>";
     }
 
     ###########################################################
 
     public function get_textoReduzido($idServidor) {
-
+        
         # Faz a análise
         $this->fazAnalise($idServidor);
-
+        
         # Retorna
         return $this->textoReduzido;
     }

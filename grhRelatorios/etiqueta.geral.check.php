@@ -32,7 +32,9 @@ if ($acesso) {
     $select = "SELECT '[', '', ']',
                       tbservidor.matricula,
                       tbpessoa.nome,
-                      tbservidor.idServidor                     
+                      tbservidor.idServidor,
+                      tbservidor.idServidor,
+                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                      JOIN tbperfil USING (idPerfil)     
                WHERE tbperfil.tipo <> 'Outros'";
@@ -40,9 +42,9 @@ if ($acesso) {
     if ($situacao <> "*") {
         $select .= " AND situacao = {$situacao}";
     }
-    
+
     $select .= " ORDER BY matricula";
-    
+
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
@@ -52,12 +54,14 @@ if ($acesso) {
         $relatorio->set_subtitulo($servidor->get_nomeSituacao($situacao));
     }
 
-    $relatorio->set_label(["", "", "", "Matrícula", "Nome", "Lotação"]);
-    $relatorio->set_width([5, 2, 5, 10, 38, 38]);
+    $relatorio->set_label(["", "", "", "Matrícula", "Nome", "Lotação", "Perfil", "Sitiação"]);
+    $relatorio->set_width([3, 2, 3, 10, 38, 38, 10]);
     $relatorio->set_align(["right", null, "left", "center", "left", "left"]);
 
-    $relatorio->set_classe([null, null, null, null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, null, null, null, "get_lotacao"]);
+    $relatorio->set_classe([null, null, null, null, null, "pessoal", "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, null, "get_cargoSimples", "get_perfil", "get_situacao"]);
+
+    $relatorio->set_funcao([null, null, null, "dv"]);
 
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);

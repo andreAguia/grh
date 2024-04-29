@@ -270,6 +270,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Dados");
@@ -384,6 +385,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Regras Gerais");
@@ -418,6 +420,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Remuneração");
@@ -462,6 +465,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo até 31/12/2021");
@@ -496,6 +500,7 @@ class AposentadoriaTransicaoPedagio1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Cálculo do Pedágio");

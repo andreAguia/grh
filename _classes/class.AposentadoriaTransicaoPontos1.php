@@ -321,6 +321,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Dados");
@@ -435,6 +436,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Regras Gerais");
@@ -469,6 +471,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Remuneração");
@@ -577,6 +580,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Histórico da Pontuação");
@@ -676,6 +680,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Masculino");
@@ -699,6 +704,7 @@ class AposentadoriaTransicaoPontos1 {
             $tabela->set_totalRegistro(false);
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Feminino");

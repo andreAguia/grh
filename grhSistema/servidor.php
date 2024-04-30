@@ -53,7 +53,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
+    $parametroNomeMat = ltrim (retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat'))));
     $parametroCpf = retiraAspas(post('parametroCpf', get_session('parametroCpf')));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
     $parametroCargoComissao = post('parametroCargoComissao', get_session('parametroCargoComissao', '*'));

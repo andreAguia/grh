@@ -181,7 +181,6 @@ class AposentadoriaTransicaoPontos2 {
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
         $this->servidorPontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
 
-        # Idade
         if ($this->servidorSexo == "Masculino") {
             $this->regraContribuicao = $this->contribuicaoHomem;
             $this->regraIdade = $this->idadeHomemAntes;
@@ -211,17 +210,19 @@ class AposentadoriaTransicaoPontos2 {
         $hoje = date("d/m/Y");
 
         /*
-         * Análise
+         * Data de Ingresso
          */
 
-        # Data de Ingresso        
         if (dataMaior($this->dtIngresso, $this->servidorDataIngresso) == $this->dtIngresso) {
             $this->analisaDtIngresso = "OK";
         } else {
             $this->analisaDtIngresso = "Não Tem Direito";
         }
 
-        # Idade
+        /*
+         *  Idade
+         */
+
         if ($this->servidorIdade >= $this->regraIdade) {
             $this->analiseIdade = "OK";
         } else {
@@ -229,7 +230,10 @@ class AposentadoriaTransicaoPontos2 {
             $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
-        # Tempo de Contribuição
+        /*
+         *  Tempo de Contribuição
+         */
+
         $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoTotal;
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoTotal >= ($this->regraContribuicao * 365)) {
@@ -238,7 +242,9 @@ class AposentadoriaTransicaoPontos2 {
             $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
 
-        # Serviço Público Initerrupto
+        /*
+         *  Serviço Público Initerrupto
+         */
         $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublicoIninterrupto;
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
@@ -247,7 +253,9 @@ class AposentadoriaTransicaoPontos2 {
             $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
 
-        # Cargo Efetivo
+        /*
+         *  Cargo Efetivo
+         */
         $resta3 = ($this->cargoEfetivo * 365) - $this->servidorTempoUenf;
         $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
@@ -256,25 +264,70 @@ class AposentadoriaTransicaoPontos2 {
             $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
         }
 
-        # Pontos
-        $regraPontos = $this->get_regraPontos(date("Y"));
-        $supostoPontos = $this->servidorPontos;
-        $this->dataCriterioPontos = $this->get_dataCriterioPontos();
+        /*
+         *  Pontos
+         */
 
-        if ($this->servidorPontos >= $regraPontos) {
+        # Define os anos
+        $anoFinal = 2051;
+        $anoAtual = date("Y");
+
+        # Calcula a data do critério de pontos
+        for ($i = $anoAtual; $i <= $anoFinal; $i++) {
+
+            # Pega os pontos da regra para o ano $i
+            $pontosRegra = $this->get_regraPontos($i);
+
+            # Pega os pontos possíveis nesse mesmo ano
+            $pontosPossíveis = $this->get_pontoPossivel($i);
+
+            # Pega os Pontos Atuais
+            $this->servidorPontos = $this->get_pontoAtual();
+
+            # Se alcançou com a data maior
+            if ($pontosPossíveis == $pontosRegra) {
+
+                # Data do aniversário
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+
+                # Data do tempo de contribuicao
+                $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
+                $diasqueResta = $diasContribuicao - $this->servidorTempoTotal;
+                $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
+                # Verifica o mais distante.
+                $this->dataCriterioPontos = dataMaior($data1, $data2);
+                break;
+            }
+
+            # Se alcançou com a data menor
+            if ($pontosPossíveis > $pontosRegra) {
+
+                # Data do aniversário
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+
+                # Data do tempo de contribuicao
+                $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
+                $diasqueResta = $diasContribuicao - $this->servidorTempoTotal;
+                $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
+
+                $this->dataCriterioPontos = dataMenor($data1, $data2);
+                break;
+            }
+        }
+
+        if ($this->servidorPontos >= $this->get_regraPontos(date("Y"))) {
             $this->analisePontos = "OK";
         } else {
             # Pega o resto
-            $resta4 = $regraPontos - $this->servidorPontos;
-
-            # Verifica se é par
-            if (epar($resta4)) {
-                $anoFalta = $resta4 / 2;
-            }
+            $resta4 = $this->get_regraPontos(date("Y")) - $this->servidorPontos;
             $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.";
         }
 
-        # Data do Direito a Aposentadoria
+        #####
+
+        /*
+         *  Data do Direito a Aposentadoria
+         */
         $this->dataDireitoAposentadoria = dataMaiorArray([
             $this->dataCriterioIdade,
             $this->dataCriterioTempoContribuicao,
@@ -323,12 +376,42 @@ class AposentadoriaTransicaoPontos2 {
         }
 
         $array = [
-            ["Data de Ingresso", $this->dtIngressoDescricao, $this->dtIngresso, $this->servidorDataIngresso, "---", $this->analisaDtIngresso],
-            ["Idade", $this->idadeDescricao, "{$this->regraIdade} anos", "{$this->servidorIdade} anos", $this->dataCriterioIdade, $this->analiseIdade],
-            ["Contribuição", $this->tempoContribuiçãoDescricao, "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)", intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias", $this->dataCriterioTempoContribuicao, $this->analiseContribuicao],
-            ["Pontuação", "Pontuação Atual (" . date("Y") . ")", "{$regraPontos} pontos", "{$this->servidorPontos} pontos", $this->dataCriterioPontos, $this->analisePontos],
-            ["Serviço Público", $this->tempoPublicoDescicao, "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)", "{$this->servidorTempoPublicoIninterrupto} dias", $this->dataCriterioTempoServicoPublico, $this->analisePublico],
-            ["Cargo Efetivo", $this->tempoCargoDescicao, "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", "{$this->servidorTempoUenf} dias", $this->dataCriterioTempoCargo, $this->analiseCargoEfetivo]
+            ["Data de Ingresso",
+                $this->dtIngressoDescricao,
+                $this->dtIngresso,
+                $this->servidorDataIngresso,
+                "---",
+                $this->analisaDtIngresso],
+            ["Idade",
+                $this->idadeDescricao,
+                "{$this->regraIdade} anos",
+                "{$this->servidorIdade} anos<br/>({$this->servidorDataNascimento})",
+                $this->dataCriterioIdade,
+                $this->analiseIdade],
+            ["Contribuição",
+                $this->tempoContribuiçãoDescricao,
+                "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)",
+                intval($this->servidorTempoTotal / 365) . " anos<br/>{$this->servidorTempoTotal} dias",
+                $this->dataCriterioTempoContribuicao,
+                $this->analiseContribuicao],
+            ["Pontuação",
+                "Pontuação Atual (" . date("Y") . ")",
+                "{$regraPontos} pontos",
+                "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoTotal / 365) . ")",
+                $this->dataCriterioPontos,
+                $this->analisePontos],
+            ["Serviço Público",
+                $this->tempoPublicoDescicao,
+                "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)",
+                "{$this->servidorTempoPublicoIninterrupto} dias",
+                $this->dataCriterioTempoServicoPublico,
+                $this->analisePublico],
+            ["Cargo Efetivo",
+                $this->tempoCargoDescicao,
+                "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)",
+                "{$this->servidorTempoUenf} dias",
+                $this->dataCriterioTempoCargo,
+                $this->analiseCargoEfetivo]
         ];
 
         # Exibe a tabela
@@ -414,11 +497,16 @@ class AposentadoriaTransicaoPontos2 {
             $this->fazAnalise($idServidor);
         }
 
-        # Verifica se ja passou
-        if (jaPassou($this->dataDireitoAposentadoria)) {
-            return "0";
+        # Verifica se tem direito
+        if ($this->temDireito) {
+            # Verifica se ja passou
+            if (jaPassou($this->dataDireitoAposentadoria)) {
+                return "0";
+            } else {
+                return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            }
         } else {
-            return dataDif(date("d/m/Y"), $this->dataDireitoAposentadoria);
+            return "Não Tem Direito";
         }
     }
 
@@ -505,64 +593,24 @@ class AposentadoriaTransicaoPontos2 {
 
     ###########################################################
 
-    public function get_dataCriterioPontos() {
-
-        # Define os anos
-        $anoInicial = 2022;
-        $anoFinal = 2051;
-        $anoAtual = date("Y");
-
-        # Pega os pontos
-        $pontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
-        $pontoAtual = $this->get_regraPontos($anoAtual);
-
-        # Verifica se ja possui a pontuação em 2022
-        if ($pontos > $this->get_regraPontos($anoInicial)) {
-            return null;
-        }
-
-        for ($i = $anoAtual; $i <= $anoFinal; $i++) {
-
-            $pontosRegra = $this->get_regraPontos($i);
-            $resta = $pontosRegra - $pontos;
-
-            # Se alcançou com a data maior
-            if ($pontos == $pontosRegra) {
-
-                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
-                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
-                return dataMaior($data1, $data2);
-            }
-
-            # Se alcançou com a data menor
-            if ($pontos > $pontosRegra) {
-
-                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
-                $data2 = day($this->servidorDataIngresso) . "/" . month($this->servidorDataIngresso) . "/" . $i;
-                return dataMenor($data1, $data2);
-            }
-
-            $pontos += 2;
-        }
-    }
-
-    ###########################################################
-
     public function exibeHistoricoPontuacao($relatorio = false) {
 
         # Define os anos
         $anoInicial = 2024;
         $anoFinal = 2051;
         $anoAtual = date("Y");
+        $anoNascimento = year($this->servidorDataNascimento);
 
-        # Pega os pontos
-        $pontos = intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
-        $pontoAtual = $this->get_regraPontos($anoAtual);
+        $aposentadoria = new Aposentadoria();
+        $anoIngresso = year($aposentadoria->get_dtIngresso($this->idServidor));
 
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
 
+            # Pega os dados
+            $pontos = $this->get_pontoPossivel($i);
             $pontosRegra = $this->get_regraPontos($i);
             $resta = $pontosRegra - $pontos;
+            $demostrativo = $this->get_demonstrativoCalculoPontoPossivel($i);
 
             # Calcula a diferença
             if ($pontosRegra > $pontos) {
@@ -571,13 +619,11 @@ class AposentadoriaTransicaoPontos2 {
                 $diferenca = "OK";
             }
 
-            $array[] = [$i, $pontos, $pontosRegra, $diferenca];
+            $array[] = [$i, $demostrativo, $pontos, $pontosRegra, $diferenca];
 
             if ($diferenca == "OK") {
                 break;
             }
-
-            $pontos += 2;
         }
 
         # Exibe a tabela
@@ -597,13 +643,13 @@ class AposentadoriaTransicaoPontos2 {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Ano", "Pontos do Servidor", "Regra", "Diferença"]);
-        $tabela->set_width([25, 25, 25, 25]);
+        $tabela->set_label(["Ano", "Cálculo<br/>Idade + Tempo", "Pontos do Servidor", "Regra", "Diferença"]);
+        $tabela->set_width([18, 18, 18, 18, 28]);
         $tabela->set_totalRegistro(false);
 
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 3,
+                array('coluna' => 4,
                     'operador' => '=',
                     'valor' => "OK",
                     'id' => 'vigente')));
@@ -682,7 +728,6 @@ class AposentadoriaTransicaoPontos2 {
 
         # Exibe a tabela Masculina
         if ($relatorio) {
-
             $tabela = new Relatorio();
             tituloRelatorio("Masculino");
             $tabela->set_cabecalhoRelatorio(false);
@@ -692,7 +737,6 @@ class AposentadoriaTransicaoPontos2 {
             $tabela->set_bordaInterna(true);
             $tabela->set_log(false);
         } else {
-            ;
             $tabela = new Tabela();
             $tabela->set_titulo("Masculino");
         }
@@ -717,7 +761,6 @@ class AposentadoriaTransicaoPontos2 {
             $tabela->set_bordaInterna(true);
             $tabela->set_log(false);
         } else {
-            ;
             $tabela = new Tabela();
             $tabela->set_titulo("Feminino");
         }
@@ -753,16 +796,16 @@ class AposentadoriaTransicaoPontos2 {
         return $this->legislacao;
     }
 
-   ###########################################################
+    ###########################################################
 
     public function exibeAnaliseTabela($idServidor) {
 
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Define o link
-        $link = "?fase=carregarPagina&id={$idServidor}&link=pontosMedia";
-        
+        $link = "?fase=carregarPagina&id={$idServidor}&link=pontosIntegral";
+
         echo "<a href='{$link}'>";
 
         # Exibe o resumo
@@ -770,19 +813,96 @@ class AposentadoriaTransicaoPontos2 {
         $painel->abre();
         p($this->textoReduzido, "center");
         $painel->fecha();
-        
+
         echo "</a>";
     }
 
     ###########################################################
 
     public function get_textoReduzido($idServidor) {
-        
+
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Retorna
         return $this->textoReduzido;
+    }
+
+    ###########################################################
+
+    public function get_pontoPossivel($ano) {
+        /*
+         * Informa o ponto possível no ano informado
+         */
+
+        # Pega o ano de Nascimento
+        $anoNascimento = year($this->servidorDataNascimento);
+
+        # Pega o tempo de contribuição hoje
+        $tempoContribuicaoHoje = $this->servidorTempoTotal;
+
+        # Soma com os dias possíveis do ano indicado
+        $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
+
+        # Passa para ano a soma dos tempos
+        $tempo = intval(($tempoContribuicaoHoje + $tempoPossivel) / 365);
+
+        return($ano - $anoNascimento) + $tempo;
+    }
+
+    ###########################################################
+
+    public function get_demonstrativoCalculoPontoPossivel($ano) {
+        /*
+         * Exibe o demostrativo fde cálculo do ponto possível no ano intormado
+         */
+
+        # Pega o ano de Nascimento
+        $anoNascimento = year($this->servidorDataNascimento);
+
+        # Pega o tempo de contribuição hoje
+        $tempoContribuicaoHoje = $this->servidorTempoTotal;
+
+        # Soma com os dias possíveis do ano indicado
+        $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
+
+        # Passa para ano a soma dos tempos
+        $tempo = intval(($tempoContribuicaoHoje + $tempoPossivel) / 365);
+
+        # Idade
+        $idade = $ano - $anoNascimento;
+
+        return "{$idade} + {$tempo}";
+    }
+
+    ###########################################################
+
+    public function get_contribuicaoPosivel($ano) {
+
+        /*
+         * Informa a contribuição Possível do ano informado
+         */
+
+        # Pega o ano de Nascimento
+        $anoNascimento = year($this->servidorDataNascimento);
+
+        # Pega o tempo de contribuição hoje
+        $tempoContribuicaoHoje = $this->servidorTempoTotal;
+
+        # Soma com os dias possíveis do ano indicado
+        $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
+
+        # Passa para ano a soma dos tempos
+        $tempo = intval(($tempoContribuicaoHoje + $tempoPossivel) / 365);
+
+        return $tempo;
+    }
+
+    ###########################################################
+
+    public function get_pontoAtual() {
+
+        return intval($this->servidorIdade + ($this->servidorTempoTotal / 365));
     }
 
     ###########################################################

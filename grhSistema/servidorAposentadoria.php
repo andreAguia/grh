@@ -660,7 +660,7 @@ if ($acesso) {
                 ["Regras de Transição", $transicao3->get_descricao() . "<p id='psubtituloRel'>{$transicao3->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao3->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao3->getDiasFaltantes())],
                 ["Regras de Transição", $transicao4->get_descricao() . "<p id='psubtituloRel'>{$transicao4->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao4->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao4->getDiasFaltantes())],
                 ["Direito Adquirido", $direito1->get_descricao() . "<p id='psubtituloRel'>{$direito1->get_legislacao()}</p>", str_replace("<br/>", " ", $direito1->exibeAnaliseResumo(true)), formataDiasFaltantes($direito1->getDiasFaltantes())],
-                ["Direito Adquirido", $direito2->get_descricao() . "<p id='psubtituloRel'>{$direito1->get_legislacao()}</p>", str_replace("<br/>", " ", $direito1->exibeAnaliseResumo(true)), formataDiasFaltantes($direito1->getDiasFaltantes())],
+                ["Direito Adquirido", $direito2->get_descricao() . "<p id='psubtituloRel'>{$direito2->get_legislacao()}</p>", str_replace("<br/>", " ", $direito2->exibeAnaliseResumo(true)), formataDiasFaltantes($direito2->getDiasFaltantes())],
             ];
 
             $relatorio = new Relatorio();

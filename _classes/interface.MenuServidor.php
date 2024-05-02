@@ -583,13 +583,18 @@ class MenuServidor {
         br();
 
         $menu = new Menu("menuServidor");
-        if ($this->perfil == 1) {
-            $menu->add_item('titulo', 'Admissão', '#');
+
+        # Somente estatutário e extra quadro
+        if ($this->perfil == 1 OR $this->perfil == 3) {
             if ($this->situacao == "Ativo") {
+                $menu->add_item('titulo', 'Admissão', '#');
                 $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
-                $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
             }
-            $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
+
+            if ($this->perfil == 1) {
+                $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
+                $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
+            }
         }
 
         if ($this->situacao == "Ativo") {
@@ -626,8 +631,8 @@ class MenuServidor {
         if ($licencaMaternidade->teveLicenca($this->idServidor)) {
             $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
         }
-        
-        $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php'); 
+
+        $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php');
 
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');
@@ -639,8 +644,8 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
         $menu->add_item("linkWindow", "Despacho para Reitoria", "../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow", "Despacho para Publicação de Ato do Reitor", "../grhRelatorios/despacho.Publicacao.php");
-        $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");        
-        
+        $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
+
         $menu->add_item('titulo', 'Cadastro de Responsável', '#');
         $menu->add_item('linkWindow', 'Relatório - SETCONT', '../grhRelatorios/setcont.responsavel.php');
         #$menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel.php');        

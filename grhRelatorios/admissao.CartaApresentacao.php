@@ -34,6 +34,7 @@ if ($acesso) {
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao($idLotacao);
     $dtAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
     $idChefe = $pessoal->get_chefiaImediata($idServidorPesquisado);
     $chefe = $pessoal->get_nome($idChefe);
@@ -56,7 +57,13 @@ if ($acesso) {
     $carta->set_assinatura(true);
 
     $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao},"
-            . " a contar de {$dtAdmissao}, data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
+            . " a contar de {$dtAdmissao},";
+            
+    if ($idPerfil == 1) {
+        $texto .= " data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
+    }else{
+        $texto .= " {$cargoServidor}.";
+    } 
 
     $carta->set_texto($texto);
 

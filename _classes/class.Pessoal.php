@@ -2698,7 +2698,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_nomeECargoSimplesELotacao
@@ -3249,11 +3249,11 @@ class Pessoal extends Bd {
         # Classes
         $cargoComissao = new CargoComissao();
         $tipoNomeacao = new TipoNomeacao();
-        
+
         # Pega os dados
         $item = explode("&", $texto);
         $idServidor = $item[0];
-        $ano = $item[1];        
+        $ano = $item[1];
 
         # Pega o id do cargo em comissão (se houver)		 
         $select = "SELECT idComissao, tipo, dtNom, dtExo
@@ -3301,7 +3301,7 @@ class Pessoal extends Bd {
                     $tipoCargo .= $tipo;
                     #$descricao .= $tipo;
                 }
-                
+
                 # Acesta as datas
                 $dataInicial = date_to_php($rr[2]);
                 $dataFinal = date_to_php($rr[3]);

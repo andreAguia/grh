@@ -74,22 +74,6 @@ if ($acesso) {
     switch ($fase) {
 
         case "" :
-            br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            loadPage('?fase=lista');
-            break;
-
-################################################################
-
         case "lista" :
 
             br(4);

@@ -870,11 +870,11 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Calendário de PGTO');
-        $botao->set_url('calendarioPgto.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'calpgto.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Calendário de Pagamento');
-        #$menu->add_item($botao);
+        $botao->set_label('Área do E-mail Institucional');
+        $botao->set_url('areaEmailInstitucional.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'e-mail.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Área dos Contatos dos Servidores');
+        $menu->add_item($botao);
 
         if (Verifica::acesso($this->idUsuario, 1)) {
             $botao = new BotaoGrafico();

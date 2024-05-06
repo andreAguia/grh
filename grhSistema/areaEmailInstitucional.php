@@ -180,11 +180,11 @@ if ($acesso) {
 
             # Tipo
             if ($parametroTipo == "Com E-mail Institucional") {
-                $select .= " AND emailUenf IS NOT NULL ";
+                $select .= " AND emailUenf IS NOT NULL AND emailUenf <> ''";
             }
 
             if ($parametroTipo == "Sem E-mail Institucional") {
-                $select .= " AND emailUenf IS NULL ";
+                $select .= " AND (emailUenf IS NULL OR emailUenf = '')";
             }
 
             $select .= " ORDER BY tbpessoa.nome asc";

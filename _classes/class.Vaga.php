@@ -565,15 +565,25 @@ class Vaga {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
+        $grid = new Grid();
+
+        # Número da Vaga
+        $grid->abreColuna(4);
+
         $conteudo = $this->get_dados($idVaga);
 
         $painel = new Callout("secondary");
-        $painel->abre();
+        $painel->abre();        
 
         p("Vaga nº:", "vagaIdLabel");
+        br();
         p($idVaga, "vagaId");
 
         $painel->fecha();
+        $grid->fechaColuna();
+
+        # Dados da Vaga
+        $grid->abreColuna(4);
 
         $painel = new Callout("primary");
         $painel->abre();
@@ -601,6 +611,10 @@ class Vaga {
         p($labOrigem, "vagaCargo", null, $title);
 
         $painel->fecha();
+        $grid->fechaColuna();
+
+        # Quem está na Vaga
+        $grid->abreColuna(4);
 
         $painel = new Callout();
         $painel->abre();
@@ -617,6 +631,8 @@ class Vaga {
         }
 
         $painel->fecha();
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }
 
     ###########################################################
@@ -828,7 +844,6 @@ class Vaga {
             # Incrementa a linha
             $linha++;
 
-
             # Faz a última lina com os totais das colunas
             $resultado[$linha][0] = "Total";
             $coluna = 1;
@@ -935,7 +950,6 @@ class Vaga {
         $label = array();
         $conteudo = array();
 
-
         # Percorre a tabela
         foreach ($dados as $dd) {
 
@@ -1008,7 +1022,6 @@ class Vaga {
 
         # Pega o idLotação
         $idLotacao = $this->get_laboratorioOrigem($idVaga);
-
 
         # Pega o nome dessa lotação
         if (vazio($idLotacao)) {
@@ -1382,7 +1395,7 @@ class Vaga {
 
         $painel->fecha();
     }
-    
+
     ###########################################################
 
     function get_idVaga($idServidor) {
@@ -1403,6 +1416,6 @@ class Vaga {
             return null;
         }
     }
-    
+
     ###########################################################
 }

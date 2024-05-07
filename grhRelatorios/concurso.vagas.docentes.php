@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
+    $concurso = new Concurso();
 
     # Começa uma nova página
     $page = new Page();
@@ -40,14 +41,14 @@ if ($acesso) {
                                       JOIN tblotacao USING (idLotacao)
                                       JOIN tbvaga USING (idVaga)
                                       JOIN tbcargo USING (idCargo)
-                WHERE idConcurso = $id 
+                WHERE idConcurso = {$id} 
              ORDER BY tblotacao.DIR, tblotacao.GER";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Vagas do Concurso de ');
-    $relatorio->set_subtitulo('Agrupados pelo Centro');
+    $relatorio->set_subtitulo("Concurso: " . $concurso->get_nomeConcurso($id) . "<br/>Agrupados pelo Centro");
     $relatorio->set_align(["center", "left", "left", "left", "left", "left"]);
     $relatorio->set_label(["Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"]);
 

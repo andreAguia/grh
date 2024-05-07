@@ -18,7 +18,6 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    $concurso = new Concurso();
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -90,6 +89,7 @@ if ($acesso) {
                       tblotacao.GER,
                       tbcargo.nome,
                       area,
+                      tbvagahistorico.idVaga,
                       idServidor,
                       tbvagahistorico.obs,
                       idVagaHistorico
@@ -106,12 +106,12 @@ if ($acesso) {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
-        $tabela->set_align(["center", "center", "center", "left", "left"]);
-        $tabela->set_label(["Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"]);
+        $tabela->set_align(["center", "center", "center", "left", "center", "left"]);
+        $tabela->set_label(["Centro", "Laboratório", "Cargo", "Área", "Vaga", "Servidor", "Obs"]);
         #$tabela->set_width([10, 10, 20, 20, 20, 20]);
         $tabela->set_titulo("Vagas de Professores");
-        $tabela->set_classe([null, null, null, null, "Vaga"]);
-        $tabela->set_metodo([null, null, null, null, "get_Nome"]);
+        $tabela->set_classe([null, null, null, null, null, "Vaga"]);
+        $tabela->set_metodo([null, null, null, null, null, "get_Nome"]);
         $tabela->set_numeroOrdem(true);
 
         $tabela->set_rowspan(0);

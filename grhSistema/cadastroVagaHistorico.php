@@ -35,7 +35,7 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     $idVaga = get_session('idVaga');
-    
+
     # Pega o status da vaga
     $statusVaga = $vaga->get_status($idVaga);
 
@@ -101,12 +101,13 @@ if ($acesso) {
     $objeto->set_numeroOrdemTipo('d');
 
     # Parametros da tabela
-    $objeto->set_label(array("Concurso", "Laboratório", "Área", "Servidor", "Obs"));
-    $objeto->set_funcao(array(null, null, null));
-    $objeto->set_align(array("left", "left", "left", "left", "left"));
+    $objeto->set_label(["Concurso", "Laboratório", "Área", "Servidor", "Obs"]);
+    $objeto->set_funcao([null, null, null]);
+    $objeto->set_align(["left", "left", "left", "left", "left"]);
+    #$objeto->set_width([15, 30, 15, 20, 15]);
 
-    $objeto->set_classe(array(null, null, null, "Vaga"));
-    $objeto->set_metodo(array(null, null, null, "get_Nome"));
+    $objeto->set_classe([null, null, null, "Vaga"]);
+    $objeto->set_metodo([null, null, null, "get_Nome"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -322,29 +323,11 @@ if ($acesso) {
 
             $menu1->show();
 
-            $grid->fechaColuna();
-
-            # Área Lateral
-
-            $grid->abreColuna(3);
-
             # Exibe dados da vaga
             $vaga->exibeDadosVaga($idVaga);
 
-            $grid->fechaColuna();
-
-            # Área Principal
-
-            $grid->abreColuna(9);
-            
-            # Informa sobre o botão incluir
-//            if ($statusVaga == "Ocupada") {
-//                callout("Observe que o botão de inclusão de novo concurso somente aparecerá para vagas que estiverem disponíveis. Como esta vaga está ocupada o botão não aparece.");
-//            }
-
             # Alerta de laboratório
             $msn = $vaga->verificaProblemaVaga($idVaga);
-
             callout($msn);
 
             $objeto->listar();

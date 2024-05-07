@@ -34,6 +34,7 @@ if ($acesso) {
                       tblotacao.GER,
                       tbcargo.nome,
                       area,
+                      tbvagahistorico.idVaga,
                       idServidor,
                       tbvagahistorico.obs,
                       idVagaHistorico
@@ -49,11 +50,11 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Vagas do Concurso de ');
     $relatorio->set_subtitulo("Concurso: " . $concurso->get_nomeConcurso($id) . "<br/>Agrupados pelo Centro");
-    $relatorio->set_align(["center", "left", "left", "left", "left", "left"]);
-    $relatorio->set_label(["Centro", "Laboratório", "Cargo", "Área", "Servidor", "Obs"]);
+    $relatorio->set_align(["center", "center", "center", "left", "center", "left"]);
+    $relatorio->set_label(["Centro", "Laboratório", "Cargo", "Área", "Vaga", "Servidor", "Obs"]);
 
-    $relatorio->set_classe([null, null, null, null, "Vaga"]);
-    $relatorio->set_metodo([null, null, null, null, "get_nomeRel"]);
+    $relatorio->set_classe([null, null, null, null, null, "Vaga"]);
+    $relatorio->set_metodo([null, null, null, null, null, "get_nomeRel"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(0);

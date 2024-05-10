@@ -29,7 +29,7 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
 
     # Calcula a data limite de termino
     $dataHistoricaFinal = "22/12/2021";     // Data da Publicação da Portaria 95/2021
-    $dataIdade = addMeses(addAnos($dtNasc, 6), 11);
+    $dataIdade = addMeses(addAnos($dtNasc, 6), 11, false);
     $dataLimite = dataMenor($dataIdade, $dataHistoricaFinal);
 
     # verifica se data é posterior a data limite

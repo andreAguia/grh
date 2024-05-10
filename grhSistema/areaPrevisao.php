@@ -139,6 +139,7 @@ if ($acesso) {
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
+                              tbservidor.idServidor,
                               tbservidor.idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
@@ -164,13 +165,13 @@ if ($acesso) {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
+            $tabela->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Regra de Transição<br/>Pedágio - Redutor", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
             $tabela->set_align(['left']);
-            $tabela->set_width([12, 6, 6, 6, 6, 6, 6, 6, 6]);
+            $tabela->set_width([19, 9, 9, 9, 9, 9, 9, 9, 9, 9]);
             $tabela->set_titulo("Previsão Geral de Aposentadoria");
             $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
-            $tabela->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
-            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela"]);
+            $tabela->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaTransicaoPedagio3", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
+            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela"]);
             #$tabela->set_idCampo('idServidor');
             #$tabela->set_editar('?fase=editarGeralPorLotacao');
             $tabela->show();
@@ -199,6 +200,7 @@ if ($acesso) {
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,           
                               tbservidor.idServidor,           
+                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -236,14 +238,15 @@ if ($acesso) {
             $relatorio = new Relatorio();
             $relatorio->set_conteudo($result);
 
-            $relatorio->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
+            $relatorio->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Regra de Transição<br/>Pedágio - Redutor", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
             $relatorio->set_align(['left']);
-            $relatorio->set_width([12, 6, 6, 6, 6, 6, 6, 6, 6]);
+            $relatorio->set_width([19, 9, 9, 9, 9, 9, 9, 9, 9, 9]);
             $relatorio->set_titulo("Previsão Geral de Aposentadoria");
             $relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
-            $relatorio->set_metodo(["get_nomeECargoELotacaoEId", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido"]);
+            $relatorio->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaTransicaoPedagio3", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
+            $relatorio->set_metodo(["get_nomeECargoELotacaoEId", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido"]);
             $relatorio->set_bordaInterna(true);
+            $relatorio->set_mensagemGeral("Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.");
             $relatorio->show();
             break;
 

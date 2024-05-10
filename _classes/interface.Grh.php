@@ -405,7 +405,7 @@ class Grh {
      * @param string $titulo     null O título do relatório 
      * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio2($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true) {
+    public static function listaDadosServidorRelatorio2($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true, $mensagem = null) {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -440,6 +440,10 @@ class Grh {
         $relatorio->set_brHr(0);
         $relatorio->set_linhaFinal(true);
         $relatorio->set_log(false);
+
+        if (!empty($mensagem)) {
+            $relatorio->set_mensagemGeral($mensagem);
+        }
 
         # Verifica se exibe ou não o início do cabeçalho
         # Utilizado para quando os dados doservidor é a primeira coisa a ser

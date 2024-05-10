@@ -643,6 +643,11 @@ p#psubtituloRel{
     margin: 0px;
 }
 
+hr#hrPrevisaoAposentAnalise{
+    padding: 0px;
+    margin: 3px;
+}
+
 /*******************************************
  * Estatística
  *******************************************/

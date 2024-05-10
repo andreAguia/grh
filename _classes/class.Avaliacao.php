@@ -76,7 +76,7 @@ class Avaliacao {
         if (empty($row['idAvaliacao'])) {
             $tipo = 1;  // tipo é estágio
             $dtPeriodo1 = $pessoal->get_dtAdmissao($idServidor);    // pega o início do período a data de admissão
-            $dtPeriodo2 = addMeses($dtPeriodo1, 8);                 // o fim do período é 8 meses
+            $dtPeriodo2 = addMeses($dtPeriodo1, 8, false);              // o fim do período é 8 meses
             $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
             $referencia = "AV1";
             return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
@@ -85,7 +85,7 @@ class Avaliacao {
             if ($row['referencia'] == "AV1") {
                 $tipo = 1;  // tipo é estágio
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
-                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
+                $dtPeriodo2 = addMeses($dtPeriodo1, 8, false);
                 $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
                 $referencia = "AV2";
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
@@ -95,7 +95,7 @@ class Avaliacao {
             if ($row['referencia'] == "AV2") {
                 $tipo = 1;  // tipo é estágio
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
-                $dtPeriodo2 = addMeses($dtPeriodo1, 8);
+                $dtPeriodo2 = addMeses($dtPeriodo1, 8, false);
                 $dtPeriodo2 = addDias($dtPeriodo2, -1, false);          // menos 1 dia
                 $referencia = "AV3";
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];
@@ -106,7 +106,7 @@ class Avaliacao {
             if ($row['referencia'] == "AV3") {
                 $tipo = 1;  // tipo é estágio
                 $dtPeriodo1 = addDias(date_to_php($row['dtPeriodo2']), 2);
-                $dtPeriodo2 = addMeses($dtPeriodo1, 12);            // 12 meses
+                $dtPeriodo2 = addMeses($dtPeriodo1, 12, false);         // 12 meses
                 $dtPeriodo2 = addDias($dtPeriodo2, -1, false);      // menos 1 dia
                 $referencia = "AV4";
                 return [$dtPeriodo1, $dtPeriodo2, $tipo, $referencia];

@@ -40,7 +40,7 @@ if ($origem == 2) {
             if ((is_null($dtInicio)) OR (is_null($periodo))) {
                 $campoValor[3] = 2;
             } else {
-                $dtTermino = addMeses($dtInicio, $periodo);
+                $dtTermino = addMeses($dtInicio, $periodo, false);
 
                 # Verifica se a data de término já passou
                 if (jaPassou($dtTermino)) {
@@ -66,7 +66,7 @@ if ($origem == 2) {
         $campoValor[3] = 1;
         $campoValor[4] = null;
     } else {
-        $dtTermino = addMeses($dtInicio, $periodo);
+        $dtTermino = addMeses($dtInicio, $periodo, false);
         $campoValor[4] = 1;
         # Verifica se a data de término já passou
         if (jaPassou($dtTermino)) {

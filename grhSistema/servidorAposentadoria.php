@@ -65,6 +65,9 @@ if ($acesso) {
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
+    
+    # Define a mensagem do relatorio
+    $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.";
 
     # Cria um menu
     if (substr($fase, 0, 9) <> "relatorio") {
@@ -495,12 +498,8 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao(), null, $aposentadoria->get_legislacao());
-            #$aposentadoria->exibeAnaliseResumo();
-            $painel = new Callout();
-            $painel->abre();
-            p("Rotina ainda não está pronta", "f16", "center");
-            $painel->fecha();
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioReducao", $aposentadoria->get_legislacao());
+            $aposentadoria->exibeAnaliseResumo();
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
@@ -674,7 +673,8 @@ if ($acesso) {
             $relatorio->set_rodape("");
             $relatorio->set_logServidor($idServidorPesquisado);
             $relatorio->set_logDetalhe("Visualizou relatório de previsão geral de aposentadoria");
-            $relatorio->show();
+            $relatorio->set_mensagemGeral();
+            $relatorio->show($mensagemRelatorio);
             break;
 
         ########################################################
@@ -743,7 +743,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -811,7 +817,11 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo()
+            );
             br();
 
             # Exibe a regra
@@ -940,7 +950,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1011,7 +1027,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1089,7 +1111,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1179,7 +1207,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1204,8 +1238,6 @@ if ($acesso) {
             break;
 
         case "pedagioReducao" :
-            
-            callout("Rotina em desenvolvimento !<br/>Os dados ainda estão errados.","alert");
 
             # Inicia a classe
             $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
@@ -1240,6 +1272,8 @@ if ($acesso) {
             $grid2->fechaColuna();
             $grid2->abreColuna(12);
 
+            $aposentadoria->exibeCalculoRedutorDetalhado();
+
             tituloTable("Cartilha");
 
             $grid2->fechaColuna();
@@ -1264,7 +1298,7 @@ if ($acesso) {
             break;
 
         case "relatorio_pedagioReducao" :
-            
+
             # Inicia a classe
             $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
 
@@ -1273,7 +1307,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1347,7 +1387,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra
@@ -1401,7 +1447,13 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, $aposentadoria->get_descricao(), $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo());
+            Grh::listaDadosServidorRelatorio2(
+                    $idServidorPesquisado, 
+                    $aposentadoria->get_descricao(), 
+                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
+                    true,
+                    $mensagemRelatorio
+            );
             br();
 
             # Exibe a regra

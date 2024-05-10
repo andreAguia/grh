@@ -20,6 +20,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Licença Prêmio");
     $page->iniciaPagina();
 
     # Limita o tamanho da tela

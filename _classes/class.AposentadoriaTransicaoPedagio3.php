@@ -62,7 +62,11 @@ class AposentadoriaTransicaoPedagio3 {
 
     # Redutor    
     private $tempoExcedente = null;
-    private $tempoIdadeQueFalta = null;
+    private $diasIdadeQueFalta = null;
+    private $mesesIdadeQueFalta = null;
+    private $mesesParaPagar = null;
+    private $mensagemRedutor = null;
+    private $mesesQueFalta = null;
 
     # Analises
     private $analisaDtIngresso = null;
@@ -72,6 +76,7 @@ class AposentadoriaTransicaoPedagio3 {
     private $analiseCargoEfetivo = null;
     private $analiseDtRequesitosCumpridos = null;
     private $analisePedagio = null;
+    private $analiseReducao = null;
 
     # Variaveis de Retorno    
     private $dataCriterioIngresso = null;
@@ -228,32 +233,47 @@ class AposentadoriaTransicaoPedagio3 {
         # Verifica se a data do critério idade é maior que o critério tempo (para ver se vale a pena a redução)
         if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
 
-            # Verifica quanto tempo excedente
-            $this->tempoExcedente = $this->servidorTempoTotal - ($this->regraContribuicao * 365);
+            # Verifica o tempo de contribuição excedente até hoje
+            $this->tempoExcedente = dataDif($this->dataCriterioTempoContribuicao, date("d/m/Y"));
 
-            # Verifica o tempo que falta da idade
-            $this->tempoIdadeQueFalta = ($this->regraIdade - $this->servidorIdade) * 365;
+            # Verifica o tempo que falta da idade na data em que alcança o tempo de contribuição
+            $this->diasIdadeQueFalta = dataDif($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade);
+            $this->mesesIdadeQueFalta = ceil($this->diasIdadeQueFalta / 30);
+            $this->mesesParaPagar = ceil($this->mesesIdadeQueFalta / 2);
 
             # Data em que paga todos os dias que faltam para a idade
-            $this->dataCriterioRedutor = addDias($this->dataCriterioTempoContribuicao, $this->tempoIdadeQueFalta);
-        }
+            $this->dataCriterioRedutor = addMeses($this->dataCriterioIdade, -$this->mesesParaPagar);
 
-//        echo "Tempo de Contribuição Excedente: ", $tempoExcedente;
-//        br();
-//        echo "Dias que Faltam para atingir a idade: ", $tempoIdadeQueFalta, " (", round($tempoIdadeQueFalta / 30), " meses)";
-//        br();
-//        echo "Data quando se paga o que falta da idade: ", $this->dataCriterioRedutor;
+            # Muda a análise do critério idade
+            $this->mensagemRedutor = "<br/><hr/ id='hrPrevisaoAposentAnalise'><p id='pLinha2'>Com Redutor</p>" . $this->dataCriterioRedutor;
+
+            if (jaPassou($this->dataCriterioRedutor)) {
+                $this->analiseIdade = "OK";
+            }
+        } else {
+            $this->analiseReducao = "Não cabe o uso do redutor pois o servidor cumpre o requisito de idade antes do de tempo de contribuição.";
+        }
 
         ################
         # Data do Direito a Aposentadoria
-        $this->dataDireitoAposentadoria = dataMaiorArray([
-            $this->dataCriterioIdade,
-            $this->dataCriterioTempoContribuicao,
-            $this->dataCriterioTempoServicoPublico,
-            $this->dataCriterioTempoCargo,
-            $this->dataCriterioRedutor,
-            $this->dataCriterioPedagio
-        ]);
+
+        if (!empty($this->dataCriterioRedutor) AND dataMaior($this->dataCriterioRedutor, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
+            $this->dataDireitoAposentadoria = dataMaiorArray([
+                $this->dataCriterioRedutor,
+                $this->dataCriterioTempoContribuicao,
+                $this->dataCriterioTempoServicoPublico,
+                $this->dataCriterioTempoCargo,
+                $this->dataCriterioPedagio
+            ]);
+        } else {
+            $this->dataDireitoAposentadoria = dataMaiorArray([
+                $this->dataCriterioIdade,
+                $this->dataCriterioTempoContribuicao,
+                $this->dataCriterioTempoServicoPublico,
+                $this->dataCriterioTempoCargo,
+                $this->dataCriterioPedagio
+            ]);
+        }
 
         # Define o texto de retorno 
         if (jaPassou($this->dataDireitoAposentadoria)) {
@@ -302,7 +322,7 @@ class AposentadoriaTransicaoPedagio3 {
                 $this->idadeDescricao,
                 "{$this->regraIdade} anos",
                 "{$this->servidorIdade} anos",
-                $this->dataCriterioIdade,
+                $this->dataCriterioIdade . $this->mensagemRedutor,
                 $this->analiseIdade],
             ["Contribuição",
                 $this->tempoContribuiçãoDescricao,
@@ -559,33 +579,47 @@ class AposentadoriaTransicaoPedagio3 {
         $aposentadoria = new Aposentadoria();
         $averbacao = new Averbacao();
 
-        $array = [
-            ["Tempo Excedente", $this->dataCriterioRedutor],
-            ["Idade Reduzida", "x Dias"]
-        ];
+        if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
+            $array = [
+                ["Tempo de Contribuição<br/>Excedente", $this->tempoExcedente . " dias<br/>(" . round($this->tempoExcedente / 30) . " meses)"],
+                ["Tempo que Faltava para o<br/>Critério da Idade (em $this->dataCriterioTempoContribuicao)", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
+                ["Tempo que leva para o tempo excedente pagar a idade", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
+                ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
+            ];
 
-        # Tabela Tempo até 31/12/2021
-        if ($relatorio) {
-            tituloRelatorio("Calculo do Redutor");
-            $tabela = new Relatorio();
-            $tabela->set_cabecalhoRelatorio(false);
-            $tabela->set_menuRelatorio(false);
+            # Tabela Tempo até 31/12/2021
+            if ($relatorio) {
+                tituloRelatorio("Calculo do Redutor");
+                $tabela = new Relatorio();
+                $tabela->set_cabecalhoRelatorio(false);
+                $tabela->set_menuRelatorio(false);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_dataImpressao(false);
+                $tabela->set_bordaInterna(true);
+                $tabela->set_log(false);
+            } else {
+                $tabela = new Tabela();
+                $tabela->set_titulo("Calculo do Redutor");
+            }
+
+            $tabela->set_conteudo($array);
+            $tabela->set_label(["Descrição", "Valor"]);
+            $tabela->set_width([60, 40]);
+            $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_dataImpressao(false);
-            $tabela->set_bordaInterna(true);
-            $tabela->set_log(false);
+            #$tabela->set_colunaSomatorio(1);
+            $tabela->show();
         } else {
-            $tabela = new Tabela();
-            $tabela->set_titulo("Calculo do Redutor");
+            if ($relatorio) {
+                tituloRelatorio("Calculo do Redutor");
+            } else {
+                tituloTable("Calculo do Redutor");
+            }
+            $painel = new Callout();
+            $painel->abre();
+            p($this->analiseReducao, "center");
+            $painel->fecha();
         }
-
-        $tabela->set_conteudo($array);
-        $tabela->set_label(["Descrição", "Dias"]);
-        $tabela->set_width([60, 40]);
-        $tabela->set_align(["left", "center"]);
-        $tabela->set_totalRegistro(false);
-        #$tabela->set_colunaSomatorio(1);
-        $tabela->show();
     }
 
     ###########################################################
@@ -624,6 +658,102 @@ class AposentadoriaTransicaoPedagio3 {
 
     ###########################################################
 
+    public function exibeCalculoRedutorDetalhado($relatorio = false) {
+
+        # Verifica se cabe o redutor
+        if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
+
+            # Define os anos
+            $anoInicial = year($this->dataCriterioTempoContribuicao);
+            $mesInicial = month($this->dataCriterioTempoContribuicao);
+            $anoFinal = year($this->dataCriterioRedutor) + 1;
+            $mesFinal = month($this->dataCriterioRedutor);
+
+            $mesesPagos = 0;
+            $mesesParaPagar = round($this->diasIdadeQueFalta / 30);
+            $dataIdade = $this->dataCriterioIdade;
+            $analiseRedutor = null;
+            $contador = 0;
+
+            # Caminha com os anos
+            for ($i = $anoInicial; $i <= $anoFinal; $i++) {
+
+                # ajeita quando é o primeiro ano
+                if ($i == $anoInicial) {
+                    $m1 = $mesInicial;
+                } else {
+                    $m1 = 1;
+                }
+
+                # Caminha com os meses
+                for ($m = $m1; $m <= 12; $m++) {
+
+                    if ($mesesPagos == 0) {
+                        $analiseRedutor = "Não há excedente no<br/>tempo de Contribuição.";
+                    } elseif ($analiseRedutor <> "OK") {
+                        $analiseRedutor = "---";
+                    }
+
+                    $dataIdade = addMeses($dataIdade, -1);
+
+                    # Verifica se chegou
+                    if ($mesesParaPagar <= $mesesPagos) {
+                        $analiseRedutor = "OK";
+                    }
+
+                    $array[] = [$contador, $i, $m, $mesesParaPagar, $mesesPagos, $mesesParaPagar - $mesesPagos, $dataIdade, $analiseRedutor];
+                    $mesesPagos++;
+                    $mesesPagos++;
+
+                    if ($analiseRedutor == "OK") {
+                        break;
+                    }
+
+                    $contador++;
+                }
+
+                if ($analiseRedutor == "OK") {
+                    break;
+                }
+            }
+
+            # Exibe a tabela
+            if ($relatorio) {
+                tituloRelatorio("Histórico da Redução");
+                $tabela = new Relatorio();
+                $tabela->set_cabecalhoRelatorio(false);
+                $tabela->set_menuRelatorio(false);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_dataImpressao(false);
+                $tabela->set_bordaInterna(true);
+                $tabela->set_log(false);
+            } else {
+                $tabela = new Tabela();
+                $tabela->set_titulo("Histórico da Redução");
+                $tabela->set_subtitulo("(A cada mês o servidor paga 2 meses da idade)");
+            }
+
+            $tabela->set_conteudo($array);
+            $tabela->set_label(["#", "Ano", "Mês", "Para Pagar<br/>(em meses)", "Pagos<br/>(em meses)", "Faltam<br/>(em meses)", "Data da Idade", "Análise"]);
+            $tabela->set_funcao([null, null, "get_nomeMes"]);
+            $tabela->set_width([4, 6, 14, 14, 14, 14, 14, 20]);
+            $tabela->set_rowspan(1);
+            $tabela->set_grupoCorColuna(1);
+            $tabela->set_totalRegistro(false);
+
+            if (!$relatorio) {
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 7,
+                        'operador' => '=',
+                        'valor' => "OK",
+                        'id' => 'vigente')));
+            }
+            $tabela->show();
+        }
+    }
+
+    ###########################################################
+
     public function get_descricao() {
 
         return $this->descricao;
@@ -651,7 +781,7 @@ class AposentadoriaTransicaoPedagio3 {
         $this->fazAnalise($idServidor);
 
         # Define o link
-        $link = "?fase=carregarPagina&id={$idServidor}&link=pedagioMedia";
+        $link = "?fase=carregarPagina&id={$idServidor}&link=pedagioReducao";
 
         echo "<a href='{$link}'>";
 

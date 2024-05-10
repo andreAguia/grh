@@ -28,7 +28,7 @@ if ($acesso) {
 
     ######
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de Licença Prêmio');
+    Grh::listaDadosServidorRelatorio2($idServidorPesquisado, 'Relatório de Licença Prêmio');
     $nome = $pessoal->get_licencaNome(6);
 
     # Pega o número de vínculos

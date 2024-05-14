@@ -25,10 +25,10 @@ class Declaracao {
     private $carimboCnpj = false;
     private $rodapeSoUntimaPag = false;
     private $assinatura = false;
+    private $linhaAssinatura = false;
     private $declaracaoNome = "DECLARAÇÃO";
     
     private $formCampos = null;    // array com campos para o formulario
-    private $formFocus = null;     // Campos a receber foco no form
     private $formLink = null;    // para onde vai o post
 
     ###########################################################
@@ -138,7 +138,6 @@ class Declaracao {
         $menuRelatorio = new menuRelatorio();
         $menuRelatorio->set_botaoVoltar(null);
         $menuRelatorio->set_formCampos($this->formCampos);
-        $menuRelatorio->set_formFocus($this->formFocus);
         $menuRelatorio->set_formLink($this->formLink);
         $menuRelatorio->set_aviso($this->aviso);
         $menuRelatorio->show();
@@ -207,6 +206,12 @@ class Declaracao {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+        }
+        
+        # linha da assinatura
+        if ($this->linhaAssinatura) {
+            br();
+            p("__________________________________________", 'pCiAssinatura');
         }
 
         $textoAssinatura = "{$this->origemNome}<br/>";

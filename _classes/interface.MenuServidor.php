@@ -584,6 +584,10 @@ class MenuServidor {
 
         $menu = new Menu("menuServidor");
 
+        /*
+         * Admissão
+         */
+
         # Somente estatutário e extra quadro
         if ($this->perfil == 1 OR $this->perfil == 3) {
             if ($this->situacao == "Ativo") {
@@ -597,6 +601,10 @@ class MenuServidor {
             }
         }
 
+        /*
+         * Afastamento Eleitoral
+         */
+
         if ($this->situacao == "Ativo") {
             $menu->add_item('titulo', 'Afastamento Eleitoral', '#');
             $menu->add_item('linkWindow', 'Declaração de Frequência', '../grhRelatorios/declaracao.Eleitoral.Frequencia.php');
@@ -604,6 +612,10 @@ class MenuServidor {
             $menu->add_item('linkWindow', 'Declaração de Responsabilização', '../grhRelatorios/declaracao.Eleitoral.Responsabilizacao.php');
         }
 
+        /*
+         * Declarações
+         */
+        
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         if ($this->perfil == 1) {
@@ -612,13 +624,11 @@ class MenuServidor {
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
-        }
-
-        if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
 
             if ($this->perfil == 1) {
                 $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
+                $menu->add_item('linkWindow', 'Declaração de NÃO Acumulação', '../grhRelatorios/declaracao.naoAcumulacao.php');
             }
         }
 
@@ -639,6 +649,10 @@ class MenuServidor {
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Total', '../grhRelatorios/declaracao.Cedido.Frequencia.Total.php');
 //        }
+        
+        /*
+         * Despachos
+         */
 
         $menu->add_item('titulo', 'Despachos', '#');
         $menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
@@ -646,10 +660,18 @@ class MenuServidor {
         $menu->add_item("linkWindow", "Despacho para Publicação de Ato do Reitor", "../grhRelatorios/despacho.Publicacao.php");
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
 
+        /*
+         * Cadastro de Responsáveis
+         */
+        
         $menu->add_item('titulo', 'Cadastro de Responsável', '#');
         $menu->add_item('linkWindow', 'Relatório - SETCONT', '../grhRelatorios/setcont.responsavel.php');
         #$menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel.php');        
 
+        /*
+         * Outros
+         */
+        
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
 

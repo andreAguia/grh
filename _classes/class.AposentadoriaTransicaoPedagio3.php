@@ -64,9 +64,9 @@ class AposentadoriaTransicaoPedagio3 {
     private $tempoExcedente = null;
     private $diasIdadeQueFalta = null;
     private $mesesIdadeQueFalta = null;
+    private $diasParaPagar = null;
     private $mesesParaPagar = null;
     private $mensagemRedutor = null;
-    private $mesesQueFalta = null;
 
     # Analises
     private $analisaDtIngresso = null;
@@ -88,6 +88,9 @@ class AposentadoriaTransicaoPedagio3 {
     private $dataCriterioRedutor = null;
     private $dataDireitoAposentadoria = null;
     private $temDireito = true;
+    private $textoRetorno = null;
+    private $textoReduzido = null;
+    private $corFundo = null;
 
     ###########################################################
 
@@ -236,10 +239,16 @@ class AposentadoriaTransicaoPedagio3 {
             # Verifica o tempo de contribuição excedente até hoje
             $this->tempoExcedente = dataDif($this->dataCriterioTempoContribuicao, date("d/m/Y"));
 
+            if ($this->tempoExcedente < 0) {
+                $this->analiseReducao = "Não tem tempo de contribuição excedente.";
+                $this->temDireito = false;
+            }
+
             # Verifica o tempo que falta da idade na data em que alcança o tempo de contribuição
             $this->diasIdadeQueFalta = dataDif($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade);
             $this->mesesIdadeQueFalta = ceil($this->diasIdadeQueFalta / 30);
-            $this->mesesParaPagar = ceil($this->mesesIdadeQueFalta / 2);
+            $this->diasParaPagar = ceil($this->diasIdadeQueFalta / 2);
+            $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
 
             # Data em que paga todos os dias que faltam para a idade
             $this->dataCriterioRedutor = addMeses($this->dataCriterioIdade, -$this->mesesParaPagar);
@@ -251,7 +260,7 @@ class AposentadoriaTransicaoPedagio3 {
                 $this->analiseIdade = "OK";
             }
         } else {
-            $this->analiseReducao = "Não cabe o uso do redutor pois o servidor cumpre o requisito de idade antes do de tempo de contribuição.";
+            $this->analiseReducao = "Não cabe o uso do redutor pois o servidor cumpriu o requisito de idade antes do de tempo de contribuição.";
         }
 
         ################
@@ -581,9 +590,9 @@ class AposentadoriaTransicaoPedagio3 {
 
         if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
             $array = [
-                ["Tempo de Contribuição<br/>Excedente", $this->tempoExcedente . " dias<br/>(" . round($this->tempoExcedente / 30) . " meses)"],
+                ["Tempo de Contribuição<br/>Excedente (em " . date("d/m/Y") . ")", $this->tempoExcedente . " dias<br/>(" . round($this->tempoExcedente / 30) . " meses)"],
                 ["Tempo que Faltava para o<br/>Critério da Idade (em $this->dataCriterioTempoContribuicao)", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
-                ["Tempo que leva para o tempo excedente pagar a idade", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
+                ["Tempo que leva para o tempo excedente pagar a idade", $this->diasParaPagar . " dias<br/>(" . $this->mesesParaPagar . " meses)"],
                 ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
             ];
 
@@ -673,7 +682,7 @@ class AposentadoriaTransicaoPedagio3 {
             $mesesParaPagar = round($this->diasIdadeQueFalta / 30);
             $dataIdade = $this->dataCriterioIdade;
             $analiseRedutor = null;
-            $contador = 0;
+            $contador = 1;
 
             # Caminha com os anos
             for ($i = $anoInicial; $i <= $anoFinal; $i++) {
@@ -697,7 +706,7 @@ class AposentadoriaTransicaoPedagio3 {
                     $dataIdade = addMeses($dataIdade, -1);
 
                     # Verifica se chegou
-                    if ($mesesParaPagar <= $mesesPagos) {
+                    if ($this->mesesParaPagar == $contador) {
                         $analiseRedutor = "OK";
                     }
 

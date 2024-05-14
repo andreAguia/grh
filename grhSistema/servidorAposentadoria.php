@@ -1255,6 +1255,11 @@ if ($acesso) {
 
             $grid1->fechaColuna();
             $grid1->abreColuna(12, 12, 8);
+            
+            $painel = new Callout("alert");
+            $painel->abre();
+            p("Atenção! Esta rotina não está pronta ainda!</br>Os valores ainda estão incorretos.", "center");
+            $painel->fecha();
 
             $aposentadoria->exibeAnalise();
 

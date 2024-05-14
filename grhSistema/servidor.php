@@ -53,7 +53,7 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroNomeMat = ltrim (retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat'))));
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
     $parametroCpf = retiraAspas(post('parametroCpf', get_session('parametroCpf')));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
     $parametroCargoComissao = post('parametroCargoComissao', get_session('parametroCargoComissao', '*'));
@@ -71,7 +71,7 @@ if ($acesso) {
     $subTitulo = get_session('sessionSubTitulo');
 
     # Joga os parâmetros par as sessions
-    set_session('parametroNomeMat', $parametroNomeMat);
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: ltrim($parametroNomeMat));
     set_session('parametroCpf', $parametroCpf);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroCargoComissao', $parametroCargoComissao);
@@ -293,10 +293,10 @@ if ($acesso) {
 
             if (!empty($parametroNomeMat)) {
                 if (Verifica::acesso($idUsuario, 1)) {
-                    $lista->set_idServidorIdPessoa($parametroNomeMat);
+                    $lista->set_idServidorIdPessoa(ltrim($parametroNomeMat));
                 }
 
-                $lista->set_matNomeId($parametroNomeMat);
+                $lista->set_matNomeId(ltrim($parametroNomeMat));
                 $lista->set_paginacao(false);
             }
 
@@ -323,7 +323,7 @@ if ($acesso) {
             if ($parametroPerfil <> "*") {
                 $lista->set_perfil($parametroPerfil);
                 $lista->set_paginacao(false);
-            }else{
+            } else {
                 # esconde o tipo outros
                 $lista->set_escondeTipoPerfil("Outros");
             }

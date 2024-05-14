@@ -35,7 +35,7 @@ switch ($resultado) {
             if ((is_null($dtInicio)) OR (is_null($periodo))) {
                 $campoValor[1] = 2;
             } else {
-                $dtTermino = addMeses($dtInicio, $periodo, false);
+                $dtTermino = addMeses($dtInicio, $periodo);
 
                 # Verifica se a data de término já passou
                 if (jaPassou($dtTermino)) {

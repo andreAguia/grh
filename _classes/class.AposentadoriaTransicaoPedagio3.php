@@ -239,11 +239,6 @@ class AposentadoriaTransicaoPedagio3 {
             # Verifica o tempo de contribuição excedente até hoje
             $this->tempoExcedente = dataDif($this->dataCriterioTempoContribuicao, date("d/m/Y"));
 
-            if ($this->tempoExcedente < 0) {
-                $this->analiseReducao = "Não tem tempo de contribuição excedente.";
-                $this->temDireito = false;
-            }
-
             # Verifica o tempo que falta da idade na data em que alcança o tempo de contribuição
             $this->diasIdadeQueFalta = dataDif($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade);
             $this->mesesIdadeQueFalta = ceil($this->diasIdadeQueFalta / 30);
@@ -251,7 +246,7 @@ class AposentadoriaTransicaoPedagio3 {
             $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
 
             # Data em que paga todos os dias que faltam para a idade
-            $this->dataCriterioRedutor = addMeses($this->dataCriterioIdade, -$this->mesesParaPagar);
+            $this->dataCriterioRedutor = addMeses($this->dataCriterioIdade, -$this->mesesParaPagar+1);
 
             # Muda a análise do critério idade
             $this->mensagemRedutor = "<br/><hr/ id='hrPrevisaoAposentAnalise'><p id='pLinha2'>Com Redutor</p>" . $this->dataCriterioRedutor;
@@ -590,10 +585,10 @@ class AposentadoriaTransicaoPedagio3 {
 
         if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
             $array = [
-                ["Tempo de Contribuição<br/>Excedente (em " . date("d/m/Y") . ")", $this->tempoExcedente . " dias<br/>(" . round($this->tempoExcedente / 30) . " meses)"],
-                ["Tempo que Faltava para o<br/>Critério da Idade (em $this->dataCriterioTempoContribuicao)", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
+                ["Data que completa<br/>o tempo de contribuição:", $this->dataCriterioTempoContribuicao],
+                ["Tempo que faltava para o<br/>critério da idade na data acima", $this->diasIdadeQueFalta . " dias<br/>(" . $this->mesesIdadeQueFalta . " meses)"],
                 ["Tempo que leva para o tempo excedente pagar a idade", $this->diasParaPagar . " dias<br/>(" . $this->mesesParaPagar . " meses)"],
-                ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
+                ["Nova data do critário idade<br/>com o redutor", $this->dataCriterioRedutor]
             ];
 
             # Tabela Tempo até 31/12/2021
@@ -703,8 +698,6 @@ class AposentadoriaTransicaoPedagio3 {
                         $analiseRedutor = "---";
                     }
 
-                    $dataIdade = addMeses($dataIdade, -1);
-
                     # Verifica se chegou
                     if ($this->mesesParaPagar == $contador) {
                         $analiseRedutor = "OK";
@@ -713,6 +706,7 @@ class AposentadoriaTransicaoPedagio3 {
                     $array[] = [$contador, $i, $m, $mesesParaPagar, $mesesPagos, $mesesParaPagar - $mesesPagos, $dataIdade, $analiseRedutor];
                     $mesesPagos++;
                     $mesesPagos++;
+                    $dataIdade = addMeses($dataIdade, -1);
 
                     if ($analiseRedutor == "OK") {
                         break;

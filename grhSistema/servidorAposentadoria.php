@@ -673,7 +673,7 @@ if ($acesso) {
             $relatorio->set_rodape("");
             $relatorio->set_logServidor($idServidorPesquisado);
             $relatorio->set_logDetalhe("Visualizou relatório de previsão geral de aposentadoria");
-            $relatorio->set_mensagemGeral();
+            $relatorio->set_mensagemGeral($mensagemRelatorio);
             $relatorio->show($mensagemRelatorio);
             break;
 

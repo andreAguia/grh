@@ -105,6 +105,8 @@ class AposentadoriaDireitoAdquirido1 {
             $regraIdade = $this->idadeMulher;
             $regraContribuicao = $this->contribuicaoMulher;
         }
+        
+        $hoje = date("d/m/Y");
 
         # Data da Aposentadoria Compulsoria
         $compulsoria = new AposentadoriaCompulsoria();

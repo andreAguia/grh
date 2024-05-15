@@ -68,6 +68,13 @@ if ($acesso) {
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar, "left");
+        
+        # Relatório 
+        $botaoCompulsoria = new Link("Compulsória por Ano", "grh.php");
+        $botaoCompulsoria->set_class('button');
+        $botaoCompulsoria->set_title("Previsão da Aposentadoria Compulsória por Ano");
+        $botaoCompulsoria->set_url("areaPrevisaoCompulsoria.php");
+        $menu->add_link($botaoCompulsoria, "right");
 
         # Relatório   
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

@@ -186,15 +186,31 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
                 $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->textoReduzido = "Desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->corFundo = "success";
+                $this->temDireito = true;
             } else {
                 $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->textoReduzido = "Somente em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->corFundo = "warning";
+                $this->temDireito = true;
             }
         } else {
             $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $this->textoReduzido = "<b>Não Tem Direito</b>";
             $this->corFundo = "alert";
+            $this->temDireito = false;
+        }
+
+        # Compara com a data da compulsória
+        $compulsoria = new AposentadoriaCompulsoria();
+        $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
+
+        if ($this->temDireito) {
+            if (dataMaior($this->dataDireitoAposentadoria, $dataCompulsoria) == $this->dataDireitoAposentadoria) {
+                $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.<br/>A data em que alcançaria o direito é posterior a data da Aposentadoria Compulsória";
+                $this->textoReduzido = "<b>Não Tem Direito</b>";
+                $this->corFundo = "alert";
+                $this->temDireito = false;
+            }
         }
     }
 
@@ -423,10 +439,10 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
 
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Define o link
         $link = "?fase=carregarPagina&id={$idServidor}&link=voluntaria";
-        
+
         echo "<a href='{$link}'>";
 
         # Exibe o resumo
@@ -434,17 +450,17 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
         $painel->abre();
         p($this->textoReduzido, "center");
         $painel->fecha();
-        
+
         echo "</a>";
     }
 
     ###########################################################
 
     public function get_textoReduzido($idServidor) {
-        
+
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Retorna
         return $this->textoReduzido;
     }

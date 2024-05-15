@@ -57,6 +57,9 @@ class AposentadoriaDireitoAdquirido1 {
     private $textoReduzido = null;
     private $corFundo = null;
 
+    # Aposentadoria Compulsoria
+    private $dataCompulsoria = null;
+
     ###########################################################
 
     public function __construct($idServidor = null) {
@@ -75,7 +78,7 @@ class AposentadoriaDireitoAdquirido1 {
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -103,7 +106,9 @@ class AposentadoriaDireitoAdquirido1 {
             $regraContribuicao = $this->contribuicaoMulher;
         }
 
-        $hoje = date("d/m/Y");
+        # Data da Aposentadoria Compulsoria
+        $compulsoria = new AposentadoriaCompulsoria();
+        $this->dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
 
         /*
          * Análise
@@ -115,7 +120,7 @@ class AposentadoriaDireitoAdquirido1 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Tempo de Contribuição
@@ -160,22 +165,35 @@ class AposentadoriaDireitoAdquirido1 {
             $this->analiseDtRequesitosCumpridos = "Não Tem Direito";
             $this->temDireito = false;
         }
-        
+
         # Define o texto de retorno   
         if ($this->analiseDtRequesitosCumpridos == "OK") {
             if (jaPassou($this->dataDireitoAposentadoria)) {
                 $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->textoReduzido = "Desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->corFundo = "success";
+                $this->temDireito = true;
             } else {
                 $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->textoReduzido = "Somente em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
                 $this->corFundo = "secondary";
+                $this->temDireito = true;
             }
         } else {
             $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $this->textoReduzido = "<b>Não Tem Direito</b>";
             $this->corFundo = "alert";
+            $this->temDireito = false;
+        }
+
+        # Compara com a data da compulsória
+        if ($this->temDireito) {
+            if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+                $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+                $this->textoReduzido = "<b>Não Tem Direito</b>";
+                $this->corFundo = "alert";
+                $this->temDireito = false;
+            }
         }
     }
 
@@ -238,7 +256,7 @@ class AposentadoriaDireitoAdquirido1 {
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -256,6 +274,11 @@ class AposentadoriaDireitoAdquirido1 {
             ));
         }
         $tabela->show();
+        
+        # Verifica a compulsória
+        if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+            callout("O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria, pois a data em que alcançaria o direito é posterior a {$this->dataCompulsoria}, data da aposentadoria compulsória.", "alert");
+        }
     }
 
     ###########################################################
@@ -390,7 +413,7 @@ class AposentadoriaDireitoAdquirido1 {
         $figura->set_class('imagem');
         $figura->show();
     }
-    
+
     ###########################################################
 
     public function get_descricao() {
@@ -418,10 +441,10 @@ class AposentadoriaDireitoAdquirido1 {
 
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Define o link
         $link = "?fase=carregarPagina&id={$idServidor}&link=direitoAdquirido1";
-        
+
         echo "<a href='{$link}'>";
 
         # Exibe o resumo
@@ -429,17 +452,17 @@ class AposentadoriaDireitoAdquirido1 {
         $painel->abre();
         p($this->textoReduzido, "center");
         $painel->fecha();
-        
+
         echo "</a>";
     }
 
-   ###########################################################
+    ###########################################################
 
     public function get_textoReduzido($idServidor) {
-        
+
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Retorna
         return $this->textoReduzido;
     }

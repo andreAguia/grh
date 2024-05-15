@@ -80,6 +80,9 @@ class AposentadoriaTransicaoPontos1 {
     private $textoReduzido = null;
     private $corFundo = null;
 
+    # Aposentadoria Compulsoria
+    private $dataCompulsoria = null;
+
     # Tabela de Pontos
     private $tabelaM = [
         [2023, 97],
@@ -189,6 +192,10 @@ class AposentadoriaTransicaoPontos1 {
         }
 
         $hoje = date("d/m/Y");
+
+        # Data da Aposentadoria Compulsoria
+        $compulsoria = new AposentadoriaCompulsoria();
+        $this->dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
 
         /*
          * Data de Ingresso
@@ -323,10 +330,12 @@ class AposentadoriaTransicaoPontos1 {
             $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->textoReduzido = "Desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "success";
+            $this->temDireito = true;
         } else {
             $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->textoReduzido = "Somente em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "warning";
+            $this->temDireito = true;
         }
 
         # Verifica a regra extra da data de ingresso
@@ -334,6 +343,17 @@ class AposentadoriaTransicaoPontos1 {
             $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $this->textoReduzido = "<b>Não Tem Direito</b>";
             $this->corFundo = "alert";
+            $this->temDireito = false;
+        }
+
+        # Compara com a data da compulsória
+        if ($this->temDireito) {
+            if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+                $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+                $this->textoReduzido = "<b>Não Tem Direito</b>";
+                $this->corFundo = "alert";
+                $this->temDireito = false;
+            }
         }
     }
 
@@ -442,6 +462,11 @@ class AposentadoriaTransicaoPontos1 {
             } else {
                 callout($mensagem);
             }
+        }
+
+        # Verifica a compulsória
+        if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+            callout("O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria, pois a data em que alcançaria o direito é posterior a {$this->dataCompulsoria}, data da aposentadoria compulsória.", "alert");
         }
     }
 

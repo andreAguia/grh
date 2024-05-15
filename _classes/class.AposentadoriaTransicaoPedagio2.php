@@ -82,6 +82,9 @@ class AposentadoriaTransicaoPedagio2 {
     private $textoReduzido = null;
     private $corFundo = null;
 
+    # Aposentadoria Compulsoria
+    private $dataCompulsoria = null;
+
     ###########################################################
 
     public function __construct($idServidor = null) {
@@ -94,13 +97,13 @@ class AposentadoriaTransicaoPedagio2 {
     ###########################################################    
 
     public function fazAnalise($idServidor) {
-        
+
         if (empty($idServidor)) {
             alert("O idServidor não foi Informado");
         } else {
             $this->idServidor = $idServidor;
         }
-        
+
         # Inicializa a flag
         $this->temDireito = true;
 
@@ -139,6 +142,10 @@ class AposentadoriaTransicaoPedagio2 {
         }
 
         $hoje = date("d/m/Y");
+        
+        # Data da Aposentadoria Compulsoria
+        $compulsoria = new AposentadoriaCompulsoria();
+        $this->dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
 
         /*
          * Análise
@@ -158,7 +165,7 @@ class AposentadoriaTransicaoPedagio2 {
             $this->analiseIdade = "OK";
         } else {
             # Calcula a data
-            $this->analiseIdade = "Ainda faltam<br/>".dataDif(date("d/m/Y"), $this->dataCriterioIdade)." dias.";
+            $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
 
         # Tempo de Contribuição
@@ -215,16 +222,18 @@ class AposentadoriaTransicaoPedagio2 {
             $this->dataCriterioTempoCargo,
             $this->dataCriterioPedagio
         ]);
-        
+
         # Define o texto de retorno 
         if (jaPassou($this->dataDireitoAposentadoria)) {
             $this->textoRetorno = "O Servidor tem direito a esta modalidade de aposentadoria desde:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
             $this->textoReduzido = "Desde:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "success";
+            $this->temDireito = true;
         } else {
             $this->textoRetorno = "O Servidor terá direito a esta modalidade de aposentadoria em:<br/><b>{$this->dataDireitoAposentadoria}</b>.";
             $this->textoReduzido = "Somente em:<br/><b>{$this->dataDireitoAposentadoria}</b>";
             $this->corFundo = "warning";
+            $this->temDireito = true;
         }
 
         # Verifica a regra extra da data de ingresso
@@ -232,6 +241,17 @@ class AposentadoriaTransicaoPedagio2 {
             $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
             $this->textoReduzido = "<b>Não Tem Direito</b>";
             $this->corFundo = "alert";
+            $this->temDireito = false;
+        }
+
+        # Compara com a data da compulsória
+        if ($this->temDireito) {
+            if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+                $this->textoRetorno = "O Servidor <b>Não Tem Direito</b><br/>a essa modalidade de aposentadoria.";
+                $this->textoReduzido = "<b>Não Tem Direito</b>";
+                $this->corFundo = "alert";
+                $this->temDireito = false;
+            }
         }
     }
 
@@ -281,7 +301,7 @@ class AposentadoriaTransicaoPedagio2 {
         $tabela->set_width([14, 30, 14, 14, 14, 14]);
         $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
-        
+
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 5,
@@ -307,6 +327,11 @@ class AposentadoriaTransicaoPedagio2 {
             } else {
                 callout($mensagem);
             }
+        }
+
+        # Verifica a compulsória
+        if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
+            callout("O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria, pois a data em que alcançaria o direito é posterior a {$this->dataCompulsoria}, data da aposentadoria compulsória.", "alert");
         }
     }
 
@@ -448,7 +473,7 @@ class AposentadoriaTransicaoPedagio2 {
     }
 
     ###########################################################
-    
+
     public function exibeTempoAntes31_12_21($relatorio = false) {
 
         $aposentadoria = new Aposentadoria();
@@ -508,7 +533,7 @@ class AposentadoriaTransicaoPedagio2 {
             $tabela = new Tabela();
             $tabela->set_titulo("Cálculo do Pedágio");
         }
-        
+
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Valor"]);
         $tabela->set_width([60, 40]);
@@ -517,7 +542,7 @@ class AposentadoriaTransicaoPedagio2 {
         $tabela->show();
     }
 
-   ###########################################################
+    ###########################################################
 
     public function get_descricao() {
 
@@ -544,10 +569,10 @@ class AposentadoriaTransicaoPedagio2 {
 
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Define o link
         $link = "?fase=carregarPagina&id={$idServidor}&link=pedagioMedia";
-        
+
         echo "<a href='{$link}'>";
 
         # Exibe o resumo
@@ -555,17 +580,17 @@ class AposentadoriaTransicaoPedagio2 {
         $painel->abre();
         p($this->textoReduzido, "center");
         $painel->fecha();
-        
+
         echo "</a>";
     }
 
     ###########################################################
 
     public function get_textoReduzido($idServidor) {
-        
+
         # Faz a análise
         $this->fazAnalise($idServidor);
-        
+
         # Retorna
         return $this->textoReduzido;
     }

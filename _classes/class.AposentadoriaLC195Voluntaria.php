@@ -86,6 +86,13 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
     private $textoReduzido = null;
     private $corFundo = null;
 
+    # Aposentadoria Compulsoria
+    private $dataCompulsoria = null;
+
+    # Data da Lei - Só pode aposentar apos essa data
+    private $dataLei = "01/01/2022";
+    private $ajustado = false;
+
     ###########################################################
 
     public function __construct($idServidor = null) {
@@ -179,6 +186,12 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $this->dataCriterioTempoServicoPublico,
             $this->dataCriterioTempoCargo
         ]);
+
+        # Ajusta a data quando for antes da data da Lei
+        if (dataMaior($this->dataDireitoAposentadoria, $this->dataLei) == $this->dataLei) {
+            $this->dataDireitoAposentadoria = $this->dataLei;
+            $this->ajustado = true;
+        }
 
         # Define o texto de retorno    
         if ($this->analiseDtRequesitosCumpridos == "OK" OR $this->dtRequesitosCumpridos == null) {
@@ -290,6 +303,16 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             ));
         }
         $tabela->show();
+
+        # Verifica se a data da aposentadoria 
+        if ($this->ajustado) {
+            $painel = new Callout("warning");
+            $painel->abre();
+            p("Atenção<br>A data da aposentadoria foi ajustada para {$this->dataLei},"
+                    . " pois,<br/>nessa modalidade de aposentadoria, a data não pode ser "
+                    . "anterior<br/>a data da Lei Complementar nº 195/2021", "center");
+            $painel->fecha();
+        }
     }
 
     ###########################################################

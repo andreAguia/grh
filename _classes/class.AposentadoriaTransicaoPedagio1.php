@@ -221,7 +221,7 @@ class AposentadoriaTransicaoPedagio1 {
             $this->dataCriterioTempoServicoPublico,
             $this->dataCriterioTempoCargo,
             $this->dataCriterioPedagio
-        ]);
+        ]);        
 
         # Define o texto de retorno 
         if (jaPassou($this->dataDireitoAposentadoria)) {

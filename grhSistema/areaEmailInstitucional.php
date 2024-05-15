@@ -48,6 +48,9 @@ if ($acesso) {
     set_session('parametroTipo', $parametroTipo);
     set_session('parametroLotacao', $parametroLotacao);
 
+    # Relatório
+    $selectRelatorio = get_session("selectRelatorio");
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -100,10 +103,10 @@ if ($acesso) {
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+            $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
+            $menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
@@ -118,7 +121,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -138,7 +141,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(5);
             $form->add_item($controle);
 
             $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
@@ -159,6 +162,7 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT idServidor,
+                              idServidor,
                               idServidor,
                               dtAdmissao,
                               emailUenf                              
@@ -190,19 +194,24 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY tbpessoa.nome asc";
+
+            # Guarde o select para o relatório
+            set_session('selectRelatorio', $select);
+
             $resumo = $pessoal->select($select);
 
             #echo $select;
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Área do E-mail Institucional");
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Admissão", "E-mail Institucional"]);
-            $tabela->set_align(["center", "left", "center", "left"]);
-            $tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_classe(["Pessoal", "Pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimplesELotacao"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional"]);
+            $tabela->set_align(["center", "left", "center", "center", "left"]);
+            $tabela->set_width([10, 30, 30, 10, 30]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao"]);
             $tabela->set_conteudo($resumo);
-            
+
             $tabela->set_editar('?fase=editaServidor&id=');
             $tabela->set_nomeColunaEditar("Acessar");
             $tabela->set_editarBotao("bullet_edit.png");
@@ -230,6 +239,51 @@ if ($acesso) {
             break;
 
         ################################################################
+        # Relatório
+        case "relatorio" :
+            $result = $pessoal->select($selectRelatorio);
+
+            # Inicia a variável do subtítulo
+            $subtitulo = null;
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+            }
+
+            # Tipo
+            if ($parametroTipo == "Com E-mail Institucional") {
+                $titulo = "Servidores COM E-mail Institucional Cadastrado";
+            } elseif ($parametroTipo == "Sem E-mail Institucional") {
+                $titulo = "Servidores SEM E-mail Institucional Cadastrado";
+            }
+
+            # Nome, Matricula e id
+            if (!is_null($parametroNome)) {
+                $subtitulo .= "Pesquisa: " . $parametroNome;
+            }
+
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo($titulo);
+
+            # Acrescenta o subtítulo de tiver filtro
+            if ($subtitulo <> null) {
+                $relatorio->set_subtitulo($subtitulo);
+            }
+                      
+            $relatorio->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional"]);
+            $relatorio->set_align(["center", "left", "center", "center", "left"]);
+            $relatorio->set_width([10, 30, 30, 10, 30]);
+            $relatorio->set_funcao([null, null, null, "date_to_php"]);
+            $relatorio->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao"]);            
+            $relatorio->set_bordaInterna(true);
+
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
+            break;
+
+        ############################################################################
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

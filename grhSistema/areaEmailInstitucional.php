@@ -248,7 +248,7 @@ if ($acesso) {
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
-                $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao) . "<br/>";
+                $subtitulo = $pessoal->get_nomeLotacao2($parametroLotacao) . "<br/>";
             }
 
             # Tipo
@@ -256,6 +256,8 @@ if ($acesso) {
                 $titulo = "Servidores COM E-mail Institucional Cadastrado";
             } elseif ($parametroTipo == "Sem E-mail Institucional") {
                 $titulo = "Servidores SEM E-mail Institucional Cadastrado";
+            }else{
+                $titulo = "Servidores Ativos";
             }
 
             # Nome, Matricula e id

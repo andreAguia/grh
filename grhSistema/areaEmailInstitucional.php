@@ -163,10 +163,12 @@ if ($acesso) {
                               dtAdmissao,
                               emailUenf                              
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbperfil USING (idPerfil)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
+                          AND tbperfil.tipo <> 'Outros'
                           AND tbpessoa.nome LIKE '%{$parametroNome}%'";
 
             # Lotação

@@ -24,7 +24,6 @@ class Despacho {
 
     # do menu do relatório
     private $formCampos = null;    // array com campos para o formulario
-    private $formFocus = null;     // Campos a receber foco no form
     private $formLink = null;    // para onde vai o post
 
     ###########################################################
@@ -113,8 +112,6 @@ class Despacho {
         
         # Abre uma classe de menu do relatório
         if (!empty($this->formCampos)) {
-            $menuRelatorio->set_formCampos($this->formCampos);
-            $menuRelatorio->set_formFocus($this->formFocus);
             $menuRelatorio->set_formLink($this->formLink);
         }
         

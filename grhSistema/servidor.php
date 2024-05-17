@@ -71,7 +71,7 @@ if ($acesso) {
     $subTitulo = get_session('sessionSubTitulo');
 
     # Joga os parâmetros par as sessions
-    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: ltrim($parametroNomeMat));
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: rtrim(ltrim($parametroNomeMat)));
     set_session('parametroCpf', $parametroCpf);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroCargoComissao', $parametroCargoComissao);

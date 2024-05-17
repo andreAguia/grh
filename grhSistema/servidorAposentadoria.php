@@ -65,7 +65,7 @@ if ($acesso) {
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
-    
+
     # Define a mensagem do relatorio
     $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.";
 
@@ -818,8 +818,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo()
             );
             br();
@@ -951,8 +951,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1028,8 +1028,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1112,8 +1112,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1208,8 +1208,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1255,7 +1255,7 @@ if ($acesso) {
 
             $grid1->fechaColuna();
             $grid1->abreColuna(12, 12, 8);
-            
+
             $painel = new Callout("alert");
             $painel->abre();
             p("Atenção! Esta rotina não está pronta ainda!</br>Os valores ainda estão incorretos.", "center");
@@ -1267,7 +1267,6 @@ if ($acesso) {
             $grid2->abreColuna(12, 6);
 
             $aposentadoria->exibeTempoAntes31_12_21();
-            $aposentadoria->exibeCalculoRedutor();
 
             $grid2->fechaColuna();
             $grid2->abreColuna(12, 6);
@@ -1275,9 +1274,26 @@ if ($acesso) {
             $aposentadoria->exibeCalculoPedagio();
 
             $grid2->fechaColuna();
-            $grid2->abreColuna(12);
+            $grid2->fechaGrid();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 12, 4);
+
+            $aposentadoria->exibeRemuneração();
+            $aposentadoria->exibeRegras();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 12, 5);
+
+            $aposentadoria->exibeCalculoRedutor();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12, 12, 7);
 
             $aposentadoria->exibeCalculoRedutorDetalhado();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
 
             tituloTable("Cartilha");
 
@@ -1292,14 +1308,6 @@ if ($acesso) {
             $aposentadoria->exibeResumoCartilha(2);
             $grid2->fechaColuna();
             $grid2->fechaGrid();
-            $grid1->fechaColuna();
-
-            $grid1->abreColuna(12, 12, 4);
-
-            $aposentadoria->exibeRemuneração();
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
             break;
 
         case "relatorio_pedagioReducao" :
@@ -1313,8 +1321,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1393,8 +1401,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio
@@ -1453,8 +1461,8 @@ if ($acesso) {
 
             # Dados do Servidor
             Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado, 
-                    $aposentadoria->get_descricao(), 
+                    $idServidorPesquisado,
+                    $aposentadoria->get_descricao(),
                     $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
                     true,
                     $mensagemRelatorio

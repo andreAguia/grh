@@ -68,9 +68,16 @@ if ($acesso) {
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar, "left");
-        
-        # Relatório 
-        $botaoCompulsoria = new Link("Compulsória por Ano", "grh.php");
+
+        # Servidores Aposentados
+        $botaoCompulsoria = new Link("Servidores Aposentados");
+        $botaoCompulsoria->set_class('button');
+        $botaoCompulsoria->set_title("Servidores Aposentados");
+        $botaoCompulsoria->set_url("areaAposentadoria.php");
+        $menu->add_link($botaoCompulsoria, "right");
+
+        # Aposentadoria Compulsória 
+        $botaoCompulsoria = new Link("Aposentadoria Compulsória");
         $botaoCompulsoria->set_class('button');
         $botaoCompulsoria->set_title("Previsão da Aposentadoria Compulsória por Ano");
         $botaoCompulsoria->set_url("areaPrevisaoCompulsoria.php");
@@ -86,9 +93,6 @@ if ($acesso) {
         $menu->add_link($botaoRel, "right");
         $menu->show();
     }
-
-    $grid->fechaColuna();
-    $grid->abreColuna(12);
 
     #######################################
 

@@ -31,7 +31,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de aposentados";
+        $atividade = "Visualizou a área de servidores aposentados";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -63,7 +63,7 @@ if ($acesso) {
     $menu = new MenuBar();
 
     # Voltar
-    $botaoVoltar = new Link("Voltar", "grh.php");
+    $botaoVoltar = new Link("Voltar", "areaPrevisao.php");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');

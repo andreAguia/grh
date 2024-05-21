@@ -360,7 +360,9 @@ class Aposentadoria {
             $dtFinal = $pessoal->get_dtSaida($idServidor);
         }
 
-        return getNumDias($dtInicial, $dtFinal);
+        $numdias = getNumDias($dtInicial, $dtFinal);
+        
+        return $numdias - $this->get_tempoInterrompido($idServidor);
     }
 
 ##############################################################################################################################################    
@@ -543,29 +545,37 @@ class Aposentadoria {
 ##############################################################################################################################################
 
     /**
-     * Método get_tempoOcorrencias
-     * informa o total de dias de tempo averbado em empresa privada
+     * Método get_tempoInterrompido
+     * informa o total de dias de tempo interrompido por afastamentos sem contribuição para previdência
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_tempoOcorrencias($idServidor) {
-
-        $reducao = "SELECT tbtipolicenca.nome as tipo,
-                           SUM(numDias) as dias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = $idServidor
-                       AND tbtipolicenca.tempoServico IS true
-                  GROUP BY tbtipolicenca.nome";
-
+    public function get_tempoInterrompido($idServidor) {
+        
         # Conecta o banco de dados
         $pessoal = new Pessoal();
+        
+        # Inicia a variável de retorno
+        $retorno = 0;
 
-        $dados = $pessoal->select($reducao);
-
-        # Somatório
-        $totalOcorrencias = array_sum(array_column($dados, 'dias'));
-
-        return $totalOcorrencias;
+        # Licença Geral
+        $select1 = "SELECT numDias
+                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                     WHERE idServidor = {$idServidor}
+                       AND tbtipolicenca.tempoServico IS true";
+        # Soma
+        $retorno = array_sum(array_column($pessoal->select($select1), 'numDias'));
+        
+        # Licença Sem Vencimentos
+        $select2 = "SELECT numDias                           
+                      FROM tblicencasemvencimentos
+                      WHERE idServidor = {$idServidor}";
+        
+        # Soma
+        $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
+        
+        # Retorna
+        return $retorno;
     }
 
 ##############################################################################################################################################

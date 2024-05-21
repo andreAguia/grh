@@ -77,11 +77,11 @@ if ($acesso) {
         if ($fase == "tabs") {
             $linkvoltar = 'servidorMenu.php';
         } elseif ($fase == "voluntaria" OR $fase == "compulsoria" OR $fase == "incapacidade1" OR $fase == "incapacidade2") {
-            $linkvoltar = '?fase=tabs&aba=3';
+            $linkvoltar = '?fase=tabs&aba=4';
         } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioReducao") {
-            $linkvoltar = '?fase=tabs&aba=3';
+            $linkvoltar = '?fase=tabs&aba=4';
         } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
-            $linkvoltar = '?fase=tabs&aba=3';
+            $linkvoltar = '?fase=tabs&aba=4';
         }
 
         # Verifica a origem
@@ -129,11 +129,9 @@ if ($acesso) {
             # Menu de Abas
             $tab = new Tab([
                 "Dados do Servidor",
+                "Tempo Averbado",
                 "Afastamentos",
                 "Previsão de Aposentadoria",
-//                "Regras Permanentes",
-//                "Regras de Transição",
-//                "Direito Adquirido",
                 "Documentação"
                     ], $aba);
 
@@ -208,12 +206,14 @@ if ($acesso) {
             $grid1->abreColuna(12, 6, 3);
 
             /*
-             *  Tempo Averbado
+             *  Tempo Uenf
              */
 
             $array = [
                 ["Uenf Celetista", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
                 ["Uenf Estatutária", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
+                ["Tempo Sem Contribuição", " - {$aposentadoria->get_tempoInterrompido($idServidorPesquisado)}"],
+                ["Total", ($aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado) + $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)) - $aposentadoria->get_tempoInterrompido($idServidorPesquisado)],
             ];
 
             # Tabela
@@ -224,7 +224,10 @@ if ($acesso) {
             $tabela->set_width([60, 40]);
             $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
             $tabela->show();
 
             /*
@@ -286,11 +289,19 @@ if ($acesso) {
             $tabela->show();
 
             $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            $tab->fechaConteudo();
+
+            ####################################################
 
             /*
              *  Tempo Averbado Detalhado
              */
 
+            $tab->abreConteudo();
+
+            $grid1 = new Grid();
             $grid1->abreColuna(12);
 
             # Variáveis
@@ -339,7 +350,7 @@ if ($acesso) {
             $tabela->set_titulo("Tempo Averbado - Detalhado");
             $tabela->set_conteudo($result);
             $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-            #$tabela->set_width(array(60, 40));
+            $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
             $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
@@ -364,7 +375,6 @@ if ($acesso) {
             /*
              *  Vinculos Anteriores do servidor
              */
-
 
             # Pega o idPessoa desse idServidor
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -412,8 +422,14 @@ if ($acesso) {
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            $afast = new ListaAfastamentosServidor($idServidorPesquisado);
-            $afast->exibeTabela();
+            # Exibe os afastamentos que interrompem o tempo            
+            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos Sem Contribuição");
+            $afast1->set_interrompe(true);
+            $afast1->exibeTabela();
+
+            # exibe todos os afastamentos
+            $afast2 = new ListaAfastamentosServidor($idServidorPesquisado, "Todos os Afastamentos");
+            $afast2->exibeTabela();
 
             $grid1->fechaColuna();
             $grid1->fechaGrid();
@@ -511,7 +527,7 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido1", $aposentadoria->get_legislacao());
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=direitoAdquirido1", $aposentadoria->get_legislacao());
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
 
@@ -519,22 +535,9 @@ if ($acesso) {
             $grid2->abreColuna(12, 12, 6);
 
             $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?aba=8&fase=direitoAdquirido2", $aposentadoria->get_legislacao());
+            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=direitoAdquirido2", $aposentadoria->get_legislacao());
             $aposentadoria->exibeAnaliseResumo();
             #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido3($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao(), null, $aposentadoria->get_legislacao());
-            #$aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $painel = new Callout();
-            $painel->abre();
-            p("Rotina ainda não está pronta", "f16", "center");
-            $painel->fecha();
 
             $grid2->fechaColuna();
             $grid2->fechaGrid();
@@ -628,6 +631,7 @@ if ($acesso) {
             $transicao2 = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
             $transicao3 = new AposentadoriaTransicaoPedagio1($idServidorPesquisado);
             $transicao4 = new AposentadoriaTransicaoPedagio2($idServidorPesquisado);
+            $transicao5 = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
             $direito1 = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
             $direito2 = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
 
@@ -653,6 +657,7 @@ if ($acesso) {
                 ["Regras de Transição", $transicao2->get_descricao() . "<p id='psubtituloRel'>{$transicao2->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao2->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao2->getDiasFaltantes())],
                 ["Regras de Transição", $transicao3->get_descricao() . "<p id='psubtituloRel'>{$transicao3->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao3->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao3->getDiasFaltantes())],
                 ["Regras de Transição", $transicao4->get_descricao() . "<p id='psubtituloRel'>{$transicao4->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao4->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao4->getDiasFaltantes())],
+                ["Regras de Transição", $transicao5->get_descricao() . "<p id='psubtituloRel'>{$transicao5->get_legislacao()}</p>", str_replace("<br/>", " ", $transicao5->exibeAnaliseResumo(true)), formataDiasFaltantes($transicao5->getDiasFaltantes())],
                 ["Direito Adquirido", $direito1->get_descricao() . "<p id='psubtituloRel'>{$direito1->get_legislacao()}</p>", str_replace("<br/>", " ", $direito1->exibeAnaliseResumo(true)), formataDiasFaltantes($direito1->getDiasFaltantes())],
                 ["Direito Adquirido", $direito2->get_descricao() . "<p id='psubtituloRel'>{$direito2->get_legislacao()}</p>", str_replace("<br/>", " ", $direito2->exibeAnaliseResumo(true)), formataDiasFaltantes($direito2->getDiasFaltantes())],
             ];
@@ -1256,10 +1261,10 @@ if ($acesso) {
             $grid1->fechaColuna();
             $grid1->abreColuna(12, 12, 8);
 
-            $painel = new Callout("alert");
-            $painel->abre();
-            p("Atenção! Esta rotina não está pronta ainda!</br>Os valores ainda estão incorretos.", "center");
-            $painel->fecha();
+//            $painel = new Callout("alert");
+//            $painel->abre();
+//            p("Atenção! Esta rotina não está pronta ainda!</br>Os valores ainda estão incorretos.", "center");
+//            $painel->fecha();
 
             $aposentadoria->exibeAnalise();
 

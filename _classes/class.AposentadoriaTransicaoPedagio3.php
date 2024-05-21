@@ -253,13 +253,16 @@ class AposentadoriaTransicaoPedagio3 {
             $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
 
             # Data em que paga todos os dias que faltam para a idade
-            $this->dataCriterioRedutor = addMeses($this->dataCriterioIdade, -$this->mesesParaPagar);
+            $this->dataCriterioRedutor = dataMaior(addMeses($this->dataCriterioTempoContribuicao, $this->mesesParaPagar), addMeses($this->dataCriterioIdade, -$this->mesesParaPagar));
 
             # Muda a análise do critério idade
             $this->mensagemRedutor = "<br/><hr/ id='hrPrevisaoAposentAnalise'><p id='pLinha2'>Com Redutor</p>" . $this->dataCriterioRedutor;
 
             if (jaPassou($this->dataCriterioRedutor)) {
                 $this->analiseIdade = "OK";
+            } else {
+                # Calcula a data
+                $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioRedutor) . " dias.<hr id='geral' />Somente em {$this->dataCriterioRedutor}.";
             }
         } else {
             $this->analiseReducao = "Não cabe o uso do redutor pois o servidor cumpriu o requisito de idade antes do de tempo de contribuição.";
@@ -510,7 +513,6 @@ class AposentadoriaTransicaoPedagio3 {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_conteudo($array);
         $tabela->set_label(["Requisito", "Mulher", "Homem"]);
         $tabela->set_width([50, 25, 25]);
         $tabela->set_align(["left"]);
@@ -545,8 +547,6 @@ class AposentadoriaTransicaoPedagio3 {
             $tabela->set_titulo("Remuneração");
         }
 
-        $tabela->set_conteudo($array);
-        $tabela->set_titulo("Remuneração");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Item", "Descrição"]);
         $tabela->set_width([20, 80]);
@@ -705,10 +705,16 @@ class AposentadoriaTransicaoPedagio3 {
             $contadorIdadeMeses = 0;
             $contadorGeral = 0;
             $dataIdade = $this->dataCriterioIdade;
+            $dataContribuicao = $this->dataCriterioTempoContribuicao;
 
             for ($a = $tempoInicial; $a < 50; $a++) {
                 for ($b = 0; $b < 12; $b++) {
-                    $array1[] = [$contadorGeral, "{$a} anos", "{$b} meses", "{$contadorIdade} anos", "{$contadorIdadeMeses} meses", $dataIdade];
+                    $array1[] = [
+                        $contadorGeral,
+                        $dataContribuicao,
+                        "{$a} anos e {$b} meses",
+                        "{$contadorIdade} anos e {$contadorIdadeMeses} meses",
+                        $dataIdade];
 
                     if ($contadorIdadeMeses == 0) {
                         $contadorIdadeMeses = 11;
@@ -724,6 +730,8 @@ class AposentadoriaTransicaoPedagio3 {
                     }
 
                     $dataIdade = addMeses($this->dataCriterioIdade, -$contadorGeral);
+                    #$dataContribuicao = addDias($dataContribuicao, 30, false);
+                    $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorGeral);
                 }
 
                 if ($contadorGeral > $this->mesesParaPagar) {
@@ -747,11 +755,8 @@ class AposentadoriaTransicaoPedagio3 {
             }
 
             $tabela->set_conteudo($array1);
-            $tabela->set_label(["Meses", "Tempo", "Contribuição", "Idade", "Servidor", "Data"]);
-            #$tabela->set_funcao([null, null, "get_nomeMes"]);
-            #$tabela->set_width([4, 6, 14, 14, 14, 14, 14, 20]);
-            #$tabela->set_rowspan(1);
-            #$tabela->set_grupoCorColuna(1);
+            $tabela->set_label(["Meses<br/>para Pagar", "Data do <br/>Tempo de Contribuição ", "Tempo de Contribuição", "Idade do Servidor", "Redução da<br/>Data Idade"]);
+            $tabela->set_width([10, 20, 25, 25, 20]);
             $tabela->set_totalRegistro(false);
 
             if (!$relatorio) {

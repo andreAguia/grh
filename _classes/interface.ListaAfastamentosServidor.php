@@ -9,15 +9,21 @@ class ListaAfastamentosServidor {
      */
     private $idServidor = null;
     private $exibeObs = true;
+    private $titulo = "Afastamentos";
+    private $interrompe = false;
 
     ###########################################################
 
     /**
      * Método Construtor
      */
-    public function __construct($idServidor) {
+    public function __construct($idServidor, $titulo = null) {
 
         $this->idServidor = $idServidor;
+        
+        if(!empty($titulo)){
+            $this->titulo = $titulo;
+        }
     }
 
     ###############################################################
@@ -29,10 +35,21 @@ class ListaAfastamentosServidor {
          *
          * @syntax $input->exibeObs([$exibe]);
          */
-        
         $this->exibeObs = $exibe;
     }
-    
+
+    ###############################################################
+
+    public function set_interrompe($interrompe) {
+
+        /**
+         * define se será exibido somente os afastamentos que interrompem o tempo de serviço
+         *
+         * @syntax $input->set_interrompeTs([$interrompe]);
+         */
+        $this->interrompe = $interrompe;
+    }
+
     ###############################################################
 
     public function exibeTabela() {
@@ -58,9 +75,14 @@ class ListaAfastamentosServidor {
                                      JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
 
+        if ($this->interrompe) {
+            $select .= " AND tbtipolicenca.tempoServico is true ";
+        }
+
         #######################    
         # Licença Prêmio
-        $select .= ") UNION (
+        if (!$this->interrompe) {
+            $select .= ") UNION (
                   SELECT YEAR(tblicencapremio.dtInicial),
                          tblicencapremio.dtInicial,
                          tblicencapremio.numDias,
@@ -70,10 +92,12 @@ class ListaAfastamentosServidor {
                     FROM tblicencapremio JOIN tbservidor USING (idServidor)
                                          JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
+        }
 
         #######################
         # Férias
-        $select .= ") UNION (
+        if (!$this->interrompe) {
+            $select .= ") UNION (
                    SELECT YEAR(tbferias.dtInicial),
                           tbferias.dtInicial,
                           tbferias.numDias,
@@ -83,10 +107,12 @@ class ListaAfastamentosServidor {
                      FROM tbferias JOIN tbservidor USING (idServidor)
                                    JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
+        }
 
         #######################
         # Faltas abonadas
-        $select .= ") UNION (
+        if (!$this->interrompe) {
+            $select .= ") UNION (
                    SELECT YEAR(tbatestado.dtInicio),
                           tbatestado.dtInicio,
                           tbatestado.numDias,
@@ -96,10 +122,12 @@ class ListaAfastamentosServidor {
                      FROM tbatestado JOIN tbservidor USING (idServidor)
                                      JOIN tbpessoa USING (idPessoa) 
                     WHERE tbservidor.idServidor = {$this->idServidor}";
+        }
 
         #######################
         # Trabalhando TRE
-        $select .= ") UNION (
+        if (!$this->interrompe) {
+            $select .= ") UNION (
                    SELECT YEAR(tbtrabalhotre.data),
                           tbtrabalhotre.data,
                           tbtrabalhotre.dias,
@@ -109,10 +137,12 @@ class ListaAfastamentosServidor {
                      FROM tbtrabalhotre JOIN tbservidor USING (idServidor)
                                         JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
+        }
 
         #######################
         # Folga TRE
-        $select .= ") UNION (
+        if (!$this->interrompe) {
+            $select .= ") UNION (
                    SELECT YEAR(tbfolga.data),
                           tbfolga.data,
                           tbfolga.dias,
@@ -122,6 +152,7 @@ class ListaAfastamentosServidor {
                      FROM tbfolga JOIN tbservidor USING (idServidor)
                                   JOIN tbpessoa USING (idPessoa)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
+        }
 
         #######################
         # Licença sem vencimentos
@@ -147,7 +178,11 @@ class ListaAfastamentosServidor {
         $cont = $pessoal->count($select);
 
         $tabela = new Tabela();
-        $tabela->set_titulo('Afastamentos');
+        $tabela->set_titulo($this->titulo);
+        
+        if ($this->interrompe) {
+            $tabela->set_colunaSomatorio(2);
+        }
 
         if ($this->exibeObs) {
             $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', "Obs"]);
@@ -163,5 +198,4 @@ class ListaAfastamentosServidor {
         $tabela->set_conteudo($result);
         $tabela->show();
     }
-
 }

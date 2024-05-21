@@ -349,7 +349,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo Averbado - Detalhado");
             $tabela->set_conteudo($result);
-            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
             $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
             $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);

@@ -20,8 +20,8 @@ class ListaAfastamentosServidor {
     public function __construct($idServidor, $titulo = null) {
 
         $this->idServidor = $idServidor;
-        
-        if(!empty($titulo)){
+
+        if (!empty($titulo)) {
             $this->titulo = $titulo;
         }
     }
@@ -154,6 +154,8 @@ class ListaAfastamentosServidor {
                     WHERE tbservidor.idServidor = {$this->idServidor}";
         }
 
+
+
         #######################
         # Licença sem vencimentos
         $select .= ") UNION (
@@ -161,12 +163,16 @@ class ListaAfastamentosServidor {
                            tblicencasemvencimentos.dtInicial,
                            tblicencasemvencimentos.numDias,
                            ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                           tbtipolicenca.nome,
+                           CONCAT(tbtipolicenca.nome, IF(optouContribuir=1,' - Optou Pagar Rio Previdência','')),
                            CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
                       FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                    JOIN tbpessoa USING (idPessoa)
                                                    JOIN tbtipolicenca USING (idTpLicenca)
                       WHERE tbservidor.idServidor = {$this->idServidor}";
+
+        if ($this->interrompe) {
+            $select .= " AND optouContribuir is not true ";
+        }
 
         #######################                      
         $select .= ") ORDER BY 1 desc, 2 desc";
@@ -179,7 +185,7 @@ class ListaAfastamentosServidor {
 
         $tabela = new Tabela();
         $tabela->set_titulo($this->titulo);
-        
+
         if ($this->interrompe) {
             $tabela->set_colunaSomatorio(2);
         }

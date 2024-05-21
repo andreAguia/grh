@@ -593,10 +593,10 @@ class MenuServidor {
             if ($this->situacao == "Ativo") {
                 $menu->add_item('titulo', 'Admissão', '#');
                 $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
+                $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
             }
 
-            if ($this->perfil == 1) {
-                $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
+            if ($this->perfil == 1) {                
                 $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
             }
         }

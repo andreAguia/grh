@@ -204,7 +204,7 @@ class Aposentadoria {
         $tabela->show();
     }
 
-    ############################################################################ 
+    ##################################################### 
 
     function exibeAposentadosPorPeriodo($dtInicial = null, $dtFinal = null) {
 
@@ -254,7 +254,7 @@ class Aposentadoria {
         $tabela->show();
     }
 
-    ############################################################################
+    #####################################################
 
     function exibeAposentadosPorTipo($parametroMotivo = null, $fase = null) {
 
@@ -308,7 +308,7 @@ class Aposentadoria {
         $tabela->show();
     }
 
-    ############################################################################
+    #####################################################
 
     /**
      * Método get_ultimoAnoAposentadoria
@@ -337,7 +337,7 @@ class Aposentadoria {
         }
     }
 
-    ##############################################################################################################################################    
+    #####################################################    
 
     /**
      * Método get_tempoServicoUenf
@@ -361,11 +361,11 @@ class Aposentadoria {
         }
 
         $numdias = getNumDias($dtInicial, $dtFinal);
-        
+
         return $numdias - $this->get_tempoInterrompido($idServidor);
     }
 
-##############################################################################################################################################    
+    #####################################################    
 
     /**
      * Método get_tempoServicoUenfCeletista
@@ -411,7 +411,7 @@ class Aposentadoria {
         return getNumDias($dtInicial, $dtFinal);
     }
 
-##############################################################################################################################################    
+    #####################################################    
 
     /**
      * Método get_tempoServicoUenfEstatutario
@@ -462,7 +462,7 @@ class Aposentadoria {
         return getNumDias($dtInicial, $dtFinal);
     }
 
-##############################################################################################################################################        
+    #####################################################        
 
     /**
      * Método get_tempoServicoUenfAntes31_12_21
@@ -500,7 +500,7 @@ class Aposentadoria {
         return getNumDias($dtInicial, $dtFinal);
     }
 
-##############################################################################################################################################
+    #####################################################
 
     /**
      * Método get_dtIngresso
@@ -542,43 +542,7 @@ class Aposentadoria {
         return $dtReferencia;
     }
 
-##############################################################################################################################################
-
-    /**
-     * Método get_tempoInterrompido
-     * informa o total de dias de tempo interrompido por afastamentos sem contribuição para previdência
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoInterrompido($idServidor) {
-        
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-        
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Licença Geral
-        $select1 = "SELECT numDias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico IS true";
-        # Soma
-        $retorno = array_sum(array_column($pessoal->select($select1), 'numDias'));
-        
-        # Licença Sem Vencimentos
-        $select2 = "SELECT numDias                           
-                      FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}";
-        
-        # Soma
-        $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
-        
-        # Retorna
-        return $retorno;
-    }
-
-##############################################################################################################################################
+        #####################################################
 
     /**
      * Método get_tempoPublicoIninterrupto
@@ -617,7 +581,7 @@ class Aposentadoria {
         return $totalDias;
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_tempoTotal
@@ -634,7 +598,7 @@ class Aposentadoria {
         return $tempoAverbado + $tempoUenf;
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_tempoTotal
@@ -651,7 +615,7 @@ class Aposentadoria {
         return $tempoUenf + $tempoAverbado;
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_data20anosPublicos
@@ -665,7 +629,7 @@ class Aposentadoria {
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 20);
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_data10anosPublicos
@@ -679,7 +643,7 @@ class Aposentadoria {
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 10);
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_data25anosPublicos
@@ -693,7 +657,7 @@ class Aposentadoria {
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 25);
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_data30anosPublicos
@@ -707,7 +671,7 @@ class Aposentadoria {
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 30);
     }
 
-#####################################################################################################################################
+    #####################################################
 
     /**
      * Método get_data35anosPublicos
@@ -721,5 +685,97 @@ class Aposentadoria {
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 35);
     }
 
-#####################################################################################################################################
+    #####################################################
+    /**
+     * Método get_tempoInterrompido
+     * informa o total de dias de tempo interrompido por afastamentos sem contribuição para previdência
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoInterrompido($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Inicia a variável de retorno
+        $retorno = 0;
+
+        # Licença Geral
+        $select1 = "SELECT numDias
+                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                     WHERE idServidor = {$idServidor}
+                       AND tbtipolicenca.tempoServico IS true";
+        # Soma
+        $retorno = array_sum(array_column($pessoal->select($select1), 'numDias'));
+
+        # Licença Sem Vencimentos
+        $select2 = "SELECT numDias                           
+                      FROM tblicencasemvencimentos
+                      WHERE idServidor = {$idServidor}
+                        AND optouContribuir is not true";
+
+        # Soma
+        $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
+
+        # Retorna
+        return $retorno;
+    }
+
+    #####################################################
+
+    function get_tempoUenfInterrompidoAntes31_12_21($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+        
+        # Licença Geral
+        $select = "(SELECT dtInicial,
+                           dtTermino,
+                           numDias
+                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                     WHERE idServidor = {$idServidor}
+                       AND tbtipolicenca.tempoServico IS true
+                   ) UNION (
+                    SELECT dtInicial,
+                           dtTermino,
+                           numDias                           
+                      FROM tblicencasemvencimentos
+                      WHERE idServidor = {$idServidor}
+                        AND optouContribuir is not true)
+                      ORDER BY 1";
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+
+        # Define a variavel de retorno
+        $tempo = 0;
+
+        # Define as datas
+        $dataAlvo = "31/12/2021";
+
+        # Percorre os registros
+        foreach ($row as $itens) {
+            # As datas
+            $dtInicial = date_to_php($itens["dtInicial"]);
+            $dtFinal = date_to_php($itens["dtTermino"]);
+
+            # Verifica se a data Alvo está após o período
+            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
+                $tempo += $itens["numDias"];
+            }
+
+            # Verifica se a data Alvo está dentro  do período
+            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
+                $tempo += getNumDias($dtInicial, $dataAlvo);
+            }
+        }
+
+        return $tempo;
+    }
+
+    #####################################################
+
 }

@@ -188,10 +188,14 @@ if ($acesso) {
 
             $array = [
                 ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenfAntes31_12_21($idServidorPesquisado)],
-                ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)]
+                ["Tempo Sem Contribuição", "- {$aposentadoria->get_tempoUenfInterrompidoAntes31_12_21($idServidorPesquisado)}"],
+                ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)],
+                ["Total" ,($aposentadoria->get_tempoServicoUenfAntes31_12_21($idServidorPesquisado) - $aposentadoria->get_tempoUenfInterrompidoAntes31_12_21($idServidorPesquisado)) + $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)]
             ];
 
-            # Tabela Tempo até 31/12/2021
+            /*
+             *  Tabela Tempo até 31/12/2021
+             */
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo até 31/12/2021");
             $tabela->set_conteudo($array);
@@ -199,7 +203,10 @@ if ($acesso) {
             $tabela->set_width([60, 40]);
             $tabela->set_align(["left", "center"]);
             $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
+            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
             $tabela->show();
 
             $grid1->fechaColuna();

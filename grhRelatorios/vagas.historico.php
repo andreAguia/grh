@@ -14,7 +14,7 @@ include ("../grhSistema/_config.php");
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 # Pega os parâmetros
-$idVaga = get_session('idVaga');
+$idVaga = get('idVaga',get_session('idVaga'));
 
 if ($acesso) {
 
@@ -39,7 +39,6 @@ if ($acesso) {
     $status = $vaga->get_status($idVaga);
 
     ######
-
     # Pega os dados
     $select = "SELECT concat(tbconcurso.anoBase,' - Edital: ',DATE_FORMAT(tbconcurso.dtPublicacaoEdital,'%d/%m/%Y')) as concurso,
                       concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao,
@@ -56,13 +55,11 @@ if ($acesso) {
     # Monta o Relatório
     $relatorio = new Relatorio();
     $relatorio->set_conteudo($resumo);
-    $relatorio->set_label(array("Concurso", "Laboratório", "Área", "Servidor", "Obs"));
-    $relatorio->set_align(array("left", "left", "left", "left", "left"));
-    #$relatorio->set_funcao(array(null,null,null,null,"date_to_php"));
-    #$relatorio->set_width(array(5,5,5,20,5,20,15,15,5));
-
-    $relatorio->set_classe(array(null, null, null, "Vaga"));
-    $relatorio->set_metodo(array(null, null, null, "get_Nome"));
+    $relatorio->set_label(["Concurso", "Laboratório", "Área", "Servidor", "Obs"]);
+    $relatorio->set_align(["left", "left", "left", "left", "left"]);
+    
+    $relatorio->set_classe([null, null, null, "Vaga"]);
+    $relatorio->set_metodo([null, null, null, "get_Nome"]);
 
     $relatorio->set_titulo("Histórico de Concursos<br/>Vaga {$idVaga}");
     $relatorio->set_subtitulo("{$centro} - {$cargo}<br/>Origem: {$labOrigem}<br/>Vaga {$status}");

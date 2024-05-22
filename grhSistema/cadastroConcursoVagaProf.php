@@ -90,6 +90,7 @@ if ($acesso) {
                       tbcargo.nome,
                       area,
                       tbvagahistorico.idVaga,
+                      tbvagahistorico.idVaga,
                       idServidor,
                       tbvagahistorico.obs,
                       idVagaHistorico
@@ -106,16 +107,29 @@ if ($acesso) {
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
-        $tabela->set_align(["center", "center", "center", "left", "center", "left"]);
-        $tabela->set_label(["Centro", "Laboratório", "Cargo", "Área", "Vaga", "Servidor", "Obs"]);
-        #$tabela->set_width([10, 10, 20, 20, 20, 20]);
+        $tabela->set_align(["center", "center", "center", "left"]);
+        $tabela->set_label(["Centro", "Laboratório", "Cargo", "Área", "Vaga", "", "Servidor", "Obs"]);
+        $tabela->set_colspanLabel([null, null, null, null, 2]);
+        $tabela->set_width([5, 10, 17, 17, 5, 5, 17, 24]);
         $tabela->set_titulo("Vagas de Professores");
-        $tabela->set_classe([null, null, null, null, null, "Vaga"]);
-        $tabela->set_metodo([null, null, null, null, null, "get_Nome"]);
+        $tabela->set_classe([null, null, null, null, null, null, "Vaga"]);
+        $tabela->set_metodo([null, null, null, null, null, null, "get_Nome"]);
         $tabela->set_numeroOrdem(true);
 
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
+
+        # Botão de Editar concursos
+        $botao1 = new BotaoGrafico();
+        $botao1->set_label('');
+        $botao1->set_title('Relatório da Vaga');
+        $botao1->set_target("_blank");
+        $botao1->set_url("../grhRelatorios/vagas.historico.php?idVaga=");
+        $botao1->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+
+        # Coloca o objeto link na tabela			
+        $tabela->set_link([null, null, null, null, null, $botao1]);
+        $tabela->set_idCampo('idVaga');
 
         $tabela->show();
     } else {

@@ -497,7 +497,10 @@ class Aposentadoria {
             }
         }
 
-        return getNumDias($dtInicial, $dtFinal);
+        # Pega o tempo sem contribuição
+        $tempoRetirar = $this->get_tempoUenfInterrompidoAntes31_12_21($idServidor);
+        
+        return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
     }
 
     #####################################################

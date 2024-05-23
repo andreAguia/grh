@@ -22,8 +22,8 @@ class Ferias {
             # Verifica se é estatutário
             if ($pessoal->get_idPerfil($idServidor) == 1) {
                 # Pega o ano da aposentadoria compulsória (se tiver)
-                $aposentCompulsorio = new AposentadoriaCompulsoria();
-                return year($aposentCompulsorio->getDataAposentadoriaCompulsoria($idServidor));
+                $aposentadoria = new Aposentadoria();
+                return year($aposentadoria->get_dataAposentadoriaCompulsoria($idServidor));
             } else {
                 return null;
             }

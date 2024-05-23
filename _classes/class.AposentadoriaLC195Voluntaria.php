@@ -213,9 +213,8 @@ partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
             $this->temDireito = false;
         }
 
-        # Compara com a data da compulsória
-        $compulsoria = new AposentadoriaCompulsoria();
-        $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
+        # Data da Aposentadoria Compulsoria
+        $dataCompulsoria = $aposentadoria->get_dataAposentadoriaCompulsoria($this->idServidor);
 
         if ($this->temDireito) {
             if (dataMaior($this->dataDireitoAposentadoria, $dataCompulsoria) == $this->dataDireitoAposentadoria) {

@@ -213,8 +213,7 @@ class AposentadoriaTransicaoPontos2 {
         $hoje = date("d/m/Y");
         
         # Data da Aposentadoria Compulsoria
-        $compulsoria = new AposentadoriaCompulsoria();
-        $this->dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($this->idServidor);
+        $this->dataCompulsoria = $aposentadoria->get_dataAposentadoriaCompulsoria($this->idServidor);
 
         /*
          * Data de Ingresso

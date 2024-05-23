@@ -56,10 +56,10 @@ if (!empty($dtInicial) AND!empty($numDias)) {
  */
 
 # Pega a data compulsória
-$compulsoria = new AposentadoriaCompulsoria();
+$aposentadoria = new Aposentadoria();
 
-if (!is_null($compulsoria->getDataAposentadoriaCompulsoria($idServidor))) {
-    $dataCompulsoria = $compulsoria->getDataAposentadoriaCompulsoria($idServidor);
+if (!is_null($aposentadoria->get_dataAposentadoriaCompulsoria($idServidor))) {
+    $dataCompulsoria = $aposentadoria->get_dataAposentadoriaCompulsoria($idServidor);
 
     # Verifica a data de termino
     if ($dtTermino >= date_to_bd($dataCompulsoria)) {

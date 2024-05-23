@@ -1086,10 +1086,10 @@ class Aposentadoria {
         /*
          *  Tempo Averbado Detalhado
          */
-        
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-        
+
         $grid1 = new Grid();
         $grid1->abreColuna(12);
 
@@ -1108,10 +1108,14 @@ class Aposentadoria {
 
         $select = "SELECT dtInicial,
                       dtFinal,
-                      dias,
-                      idAverbacao,
-                      idAverbacao,
-                      empresa,
+                      dias,";
+
+        if (!$relatorio) {
+            $select .= "  idAverbacao,
+                      idAverbacao,";
+        }
+
+        $select .= "  empresa,
                       CASE empresaTipo ";
 
         foreach ($empresaTipo as $tipo) {
@@ -1133,7 +1137,7 @@ class Aposentadoria {
              ORDER BY dtInicial desc";
 
         $result = $pessoal->select($select);
-        
+
         # Exibe a tabela
         if ($relatorio) {
             tituloRelatorio("Tempo Averbado - Detalhado");
@@ -1144,34 +1148,43 @@ class Aposentadoria {
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
             $tabela->set_log(false);
+            
+            $tabela->set_label(["Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+            $tabela->set_align(["center", "center", "center", "left"]);
+            $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
+            $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
+            
+            $tabela->set_totalRegistro(false);
+            $tabela->set_colunaSomatorio(2);
+            
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo Averbado - Detalhado");
+
+            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+            $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
+            $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
+            $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
+
+            $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
+            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 4,
+                    'valor' => 0,
+                    'operador' => '<>',
+                    'id' => 'diasAntes'),
+                array('coluna' => 4,
+                    'valor' => 0,
+                    'operador' => '=',
+                    'id' => 'normal')
+            ));
+
+            $tabela->set_totalRegistro(false);
+            $tabela->set_colunaSomatorio([2, 3]);
         }
-
-        # Tabela
+        
         $tabela->set_conteudo($result);
-        $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-        $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
-        $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
-        $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
-
-        $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-        $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
-
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 4,
-                'valor' => 0,
-                'operador' => '<>',
-                'id' => 'diasAntes'),
-            array('coluna' => 4,
-                'valor' => 0,
-                'operador' => '=',
-                'id' => 'normal')
-        ));
-
-        $tabela->set_totalRegistro(false);
-        $tabela->set_colunaSomatorio([2, 3]);
         $tabela->show();
 
         $grid1->fechaColuna();

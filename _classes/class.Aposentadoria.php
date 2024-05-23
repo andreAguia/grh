@@ -499,7 +499,7 @@ class Aposentadoria {
 
         # Pega o tempo sem contribuição
         $tempoRetirar = $this->get_tempoUenfInterrompidoAntes31_12_21($idServidor);
-        
+
         return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
     }
 
@@ -545,7 +545,7 @@ class Aposentadoria {
         return $dtReferencia;
     }
 
-        #####################################################
+    #####################################################
 
     /**
      * Método get_tempoPublicoIninterrupto
@@ -689,6 +689,7 @@ class Aposentadoria {
     }
 
     #####################################################
+
     /**
      * Método get_tempoInterrompido
      * informa o total de dias de tempo interrompido por afastamentos sem contribuição para previdência
@@ -732,7 +733,7 @@ class Aposentadoria {
         if (empty($idServidor)) {
             return null;
         }
-        
+
         # Licença Geral
         $select = "(SELECT dtInicial,
                            dtTermino,
@@ -799,14 +800,382 @@ class Aposentadoria {
                     WHERE idPerfil = 1
                       AND idServidor = {$idServidor}";
 
-        $result = $pessoal->select($select,false);
-        
+        $result = $pessoal->select($select, false);
+
         # retorno
-        if(empty($result[0])){
+        if (empty($result[0])) {
             return null;
-        }else{
+        } else {
             return date_to_php($result[0]);
         }
+    }
+
+    ###########################################################
+
+    public function exibeDadosServidor($idServidor = null, $relatorio = false) {
+
+        /*
+         * Exibe os dados de aposentadoria do servidor
+         */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Conecta as Classes
+        $averbacao = new Averbacao();
+
+        $regime = [
+            [1, "Celetista"],
+            [2, "Estatutário"],
+            [3, "Próprio"],
+            [4, "Militar"]
+        ];
+
+        $grid1 = new Grid();
+        if ($relatorio) {
+            $grid1->abreColuna(6);
+        } else {
+            $grid1->abreColuna(12, 6, 3);
+        }
+
+        $array = [
+            ["Idade", $pessoal->get_idade($idServidor)],
+            ["Data de Nascimento", $pessoal->get_dataNascimento($idServidor)],
+            ["Data de Admissão", $pessoal->get_dtadmissao($idServidor)],
+            ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $this->get_dtIngresso($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Dados do Servidor");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Dados do Servidor");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Valor"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        if ($relatorio) {
+            $grid1->abreColuna(6);
+        } else {
+            $grid1->abreColuna(12, 6, 3);
+        }
+
+        /*
+         *  Tempo Geral
+         */
+
+        $array = [
+            ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenf($idServidor)],
+            ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo Geral");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Geral");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        /*
+         *  Tabela Tempo até 31/12/2021
+         */
+
+        $array = [
+            ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenfAntes31_12_21($idServidor)],
+            ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo até 31/12/2021");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo até 31/12/2021");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        if ($relatorio) {
+            $grid1->abreColuna(6);
+        } else {
+            $grid1->abreColuna(12, 6, 3);
+        }
+
+        /*
+         *  Tempo Uenf
+         */
+
+        $array = [
+            ["Uenf Celetista", $this->get_tempoServicoUenfCeletista($idServidor)],
+            ["Uenf Estatutária", $this->get_tempoServicoUenfEstatutario($idServidor)],
+            ["Tempo Sem Contribuição", -$this->get_tempoInterrompido($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo Uenf");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Uenf");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        /*
+         *  Tempo Averbado
+         */
+        $array = [
+            ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidor)]];
+
+        foreach ($regime as $item) {
+            if ($averbacao->get_tempoAverbadoPublicoRegime($idServidor, $item[0]) > 0) {
+                array_unshift($array, array("Público<br/><p id='psubtitulo'>Regime {$item[1]}</p>", $averbacao->get_tempoAverbadoPublicoRegime($idServidor, $item[0])));
+            }
+        }
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo Averbado");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Averbado");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        if ($relatorio) {
+            $grid1->abreColuna(6);
+        } else {
+            $grid1->abreColuna(12, 6, 3);
+        }
+
+        /*
+         *  Tempo Público
+         */
+        $array = [
+            ["Uenf", $this->get_tempoServicoUenf($idServidor)],
+            ["Averbado Público", $averbacao->get_tempoAverbadoPublico($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo Público");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Público");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        $array = [
+            ["Tempo Ininterrupto", $this->get_tempoPublicoIninterrupto($idServidor)]
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+        }
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["", ""]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function exibeTempoAverbado($idServidor = null, $relatorio = false) {
+
+        /*
+         *  Tempo Averbado Detalhado
+         */
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        $grid1 = new Grid();
+        $grid1->abreColuna(12);
+
+        # Variáveis
+        $empresaTipo = [
+            [1, "Pública"],
+            [2, "Privada"]
+        ];
+
+        $regime = [
+            [1, "Celetista"],
+            [2, "Estatutário"],
+            [3, "Próprio"],
+            [4, "Militar"]
+        ];
+
+        $select = "SELECT dtInicial,
+                      dtFinal,
+                      dias,
+                      idAverbacao,
+                      idAverbacao,
+                      empresa,
+                      CASE empresaTipo ";
+
+        foreach ($empresaTipo as $tipo) {
+            $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+        }
+
+        $select .= "      END,
+                      CASE regime ";
+        foreach ($regime as $tipo2) {
+            $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+        }
+
+        $select .= "      END,
+                      cargo,
+                      dtPublicacao,
+                      processo
+                 FROM tbaverbacao
+                WHERE idServidor = {$idServidor}
+             ORDER BY dtInicial desc";
+
+        $result = $pessoal->select($select);
+        
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo Averbado - Detalhado");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo Averbado - Detalhado");
+        }
+
+        # Tabela
+        $tabela->set_conteudo($result);
+        $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
+        $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
+        $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
+        $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
+
+        $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
+        $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
+
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 4,
+                'valor' => 0,
+                'operador' => '<>',
+                'id' => 'diasAntes'),
+            array('coluna' => 4,
+                'valor' => 0,
+                'operador' => '=',
+                'id' => 'normal')
+        ));
+
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio([2, 3]);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
     }
 
     ###########################################################

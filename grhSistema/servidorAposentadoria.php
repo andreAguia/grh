@@ -130,6 +130,7 @@ if ($acesso) {
             $tab = new Tab([
                 "Dados do Servidor",
                 "Tempo Averbado",
+                "Vínculos Anteriores",
                 "Afastamentos",
                 "Previsão de Aposentadoria",
                 "Documentação"
@@ -143,159 +144,20 @@ if ($acesso) {
 
             $tab->abreConteudo();
 
-            $grid1 = new Grid();
-            $grid1->abreColuna(12, 6, 3);
+            # Relatório 
+            $menu = new MenuBar();
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Relatório dos Dados de Aposentadoria");
+            $botaoRel->set_url("?fase=relatorioDados");
+            $botaoRel->set_target("_blank");
+            $menu->add_link($botaoRel, "right");
 
-            $array = [
-                ["Idade", $pessoal->get_idade($idServidorPesquisado)],
-                ["Data de Nascimento", $pessoal->get_dataNascimento($idServidorPesquisado)],
-                ["Data de Admissão", $pessoal->get_dtadmissao($idServidorPesquisado)],
-                ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $aposentadoria->get_dtIngresso($idServidorPesquisado)]
-            ];
+            $menu->show();
 
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Dados do Servidor");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Valor"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6, 3);
-
-            /*
-             *  Tempo Geral
-             */
-
-            $array = [
-                ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
-                ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidorPesquisado)]
-            ];
-
-            # Tabela Tempo Geral
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Geral");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Dias"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
-            $tabela->show();
-
-            $array = [
-                ["Cargo Efetivo - Uenf", $aposentadoria->get_tempoServicoUenfAntes31_12_21($idServidorPesquisado)],
-                ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidorPesquisado)]
-            ];
-
-            /*
-             *  Tabela Tempo até 31/12/2021
-             */
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo até 31/12/2021");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Dias"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                    'valor' => "Total",
-                    'operador' => '=',
-                    'id' => 'estatisticaTotal')));
-            $tabela->show();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6, 3);
-
-            /*
-             *  Tempo Uenf
-             */
-
-            $array = [
-                ["Uenf Celetista", $aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado)],
-                ["Uenf Estatutária", $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)],
-                ["Tempo Sem Contribuição", " - {$aposentadoria->get_tempoInterrompido($idServidorPesquisado)}"],
-                ["Total", ($aposentadoria->get_tempoServicoUenfCeletista($idServidorPesquisado) + $aposentadoria->get_tempoServicoUenfEstatutario($idServidorPesquisado)) - $aposentadoria->get_tempoInterrompido($idServidorPesquisado)],
-            ];
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Uenf");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Dias"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
-                    'valor' => "Total",
-                    'operador' => '=',
-                    'id' => 'estatisticaTotal')));
-            $tabela->show();
-
-            /*
-             *  Tempo Averbado
-             */
-            $array = [
-                ["Privado", $averbacao->get_tempoAverbadoPrivado($idServidorPesquisado)]];
-
-            foreach ($regime as $item) {
-                if ($averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0]) > 0) {
-                    array_unshift($array, array("Público<br/><p id='psubtitulo'>Regime {$item[1]}</p>", $averbacao->get_tempoAverbadoPublicoRegime($idServidorPesquisado, $item[0])));
-                }
-            }
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Averbado");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Dias"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
-            $tabela->show();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6, 3);
-
-            /*
-             *  Tempo Público
-             */
-            $array = [
-                ["Uenf", $aposentadoria->get_tempoServicoUenf($idServidorPesquisado)],
-                ["Averbado Público", $averbacao->get_tempoAverbadoPublico($idServidorPesquisado)]
-            ];
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Público");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["Descrição", "Dias"]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio(1);
-            $tabela->show();
-
-            $array = [
-                ["Tempo Ininterrupto", $aposentadoria->get_tempoPublicoIninterrupto($idServidorPesquisado)]
-            ];
-
-            $tabela = new Tabela();
-            #$tabela->set_titulo("Tempo Público");
-            $tabela->set_conteudo($array);
-            $tabela->set_label(["", ""]);
-            $tabela->set_width([60, 40]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+            # Exibe os Dados
+            $aposentadoria->exibeDadosServidor($idServidorPesquisado);
 
             $tab->fechaConteudo();
 
@@ -306,81 +168,34 @@ if ($acesso) {
              */
 
             $tab->abreConteudo();
+            
+            # Relatório 
+            $menu = new MenuBar();
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_imagem($imagem);
+            $botaoRel->set_title("Relatório do Tempo Averbado");
+            $botaoRel->set_url("?fase=relatorioAverbado");
+            $botaoRel->set_target("_blank");
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+            
+            # Exibe os Dados
+            $aposentadoria->exibeTempoAverbado($idServidorPesquisado);
+            
+            $tab->fechaConteudo();
+
+            ####################################################
+
+            /*
+             *  Tempo Vinculos Anteriores
+             */
+
+            $tab->abreConteudo();
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
-
-            # Variáveis
-            $empresaTipo = [
-                [1, "Pública"],
-                [2, "Privada"]
-            ];
-
-            $regime = [
-                [1, "Celetista"],
-                [2, "Estatutário"],
-                [3, "Próprio"],
-                [4, "Militar"]
-            ];
-
-            $select = "SELECT dtInicial,
-                      dtFinal,
-                      dias,
-                      idAverbacao,
-                      idAverbacao,
-                      empresa,
-                      CASE empresaTipo ";
-
-            foreach ($empresaTipo as $tipo) {
-                $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
-            }
-
-            $select .= "      END,
-                      CASE regime ";
-            foreach ($regime as $tipo2) {
-                $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
-            }
-
-            $select .= "      END,
-                      cargo,
-                      dtPublicacao,
-                      processo
-                 FROM tbaverbacao
-                WHERE idServidor = {$idServidorPesquisado}
-             ORDER BY dtInicial desc";
-
-            $result = $pessoal->select($select);
-
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Tempo Averbado - Detalhado");
-            $tabela->set_conteudo($result);
-            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-            $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
-            $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
-            $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
-
-            $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
-
-            $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 4,
-                    'valor' => 0,
-                    'operador' => '<>',
-                    'id' => 'diasAntes'),
-                array('coluna' => 4,
-                    'valor' => 0,
-                    'operador' => '=',
-                    'id' => 'normal')
-            ));
-
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio([2, 3]);
-            $tabela->show();
-
-            /*
-             *  Vinculos Anteriores do servidor
-             */
 
             # Pega o idPessoa desse idServidor
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
@@ -1585,6 +1400,40 @@ if ($acesso) {
 
             $grid1->fechaColuna();
             break;
+
+        ########################################################
+
+        /*
+         * Relatório Dados do Servidor
+         */
+
+        case "relatorioDados" :
+
+            # Dados do Servidor
+            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Dados do Servidor", "Para Aposentadoria");
+            br();
+
+            $aposentadoria = new Aposentadoria();
+            $aposentadoria->exibeDadosServidor($idServidorPesquisado, true);
+            break;
+
+        ########################################################
+
+        /*
+         * Relatório Averbação
+         */
+
+        case "relatorioAverbado" :
+
+            # Dados do Servidor
+            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Dados do Servidor", "Para Aposentadoria");
+            br();
+
+            $aposentadoria = new Aposentadoria();
+            $aposentadoria->exibeTempoAverbado($idServidorPesquisado, true);
+            break;
+
+        ########################################################
     }
 
     $grid->fechaColuna();

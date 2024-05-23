@@ -1426,7 +1426,7 @@ if ($acesso) {
         case "relatorioAverbado" :
 
             # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Dados do Servidor", "Para Aposentadoria");
+            Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Tempo Averbado");
             br();
 
             $aposentadoria = new Aposentadoria();

@@ -77,11 +77,11 @@ if ($acesso) {
         if ($fase == "tabs") {
             $linkvoltar = 'servidorMenu.php';
         } elseif ($fase == "voluntaria" OR $fase == "compulsoria" OR $fase == "incapacidade1" OR $fase == "incapacidade2") {
-            $linkvoltar = '?fase=tabs&aba=4';
+            $linkvoltar = '?fase=tabs&aba=5';
         } elseif ($fase == "pontosIntegral" OR $fase == "pontosMedia" OR $fase == "pedagioIntegral" OR $fase == "pedagioMedia" OR $fase == "pedagioReducao") {
-            $linkvoltar = '?fase=tabs&aba=4';
+            $linkvoltar = '?fase=tabs&aba=5';
         } elseif ($fase == "direitoAdquirido1" OR $fase == "direitoAdquirido2" OR $fase == "direitoAdquirido3" OR $fase == "direitoAdquirido4") {
-            $linkvoltar = '?fase=tabs&aba=4';
+            $linkvoltar = '?fase=tabs&aba=5';
         }
 
         # Verifica a origem

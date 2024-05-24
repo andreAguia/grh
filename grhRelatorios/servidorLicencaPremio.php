@@ -36,10 +36,10 @@ if ($acesso) {
     $licenca = new LicencaPremio();
     $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
 
-    if ($numVinculos > 1) {
-        tituloRelatorio('Observação:');
-        p("Servidor tem mais de um vínculo com a Universidade e é possivel que tenha direito a outros períodos aquisitivos de licença prêmio.", "f12", "");
-    }
+//    if ($numVinculos > 1) {
+//        tituloRelatorio('Observação:');
+//        p("Servidor tem mais de um vínculo com a Universidade e é possivel que tenha direito a outros períodos aquisitivos de licença prêmio.", "f12", "");
+//    }
 
     ###### Licenças Prêmio Fruídas
     tituloRelatorio('Licenças Fruídas');

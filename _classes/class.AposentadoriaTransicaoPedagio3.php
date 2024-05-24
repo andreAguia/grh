@@ -95,6 +95,10 @@ class AposentadoriaTransicaoPedagio3 {
     # Aposentadoria Compulsoria
     private $dataCompulsoria = null;
 
+    # Data da Lei - Só pode aposentar apos essa data
+    private $dataLei = "01/01/2022";
+    private $ajustado = false;
+
     ###########################################################
 
     public function __construct($idServidor = null) {
@@ -287,6 +291,12 @@ class AposentadoriaTransicaoPedagio3 {
                 $this->dataCriterioPedagio
             ]);
         }
+        
+        # Ajusta a data quando for antes da data da Lei
+        if (dataMaior($this->dataDireitoAposentadoria, $this->dataLei) == $this->dataLei) {
+            $this->dataDireitoAposentadoria = $this->dataLei;
+            $this->ajustado = true;
+        }
 
         # Define o texto de retorno 
         if (jaPassou($this->dataDireitoAposentadoria)) {
@@ -426,11 +436,35 @@ class AposentadoriaTransicaoPedagio3 {
 
         # Verifica a compulsória
         if (dataMaior($this->dataDireitoAposentadoria, $this->dataCompulsoria) == $this->dataDireitoAposentadoria) {
-            callout("O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria, pois a data em que alcançaria o direito é posterior a {$this->dataCompulsoria}, data da aposentadoria compulsória.", "alert");
+            $msgCompulsoria = "O Servidor <b>Não Tem Direito</b> a essa modalidade de aposentadoria, pois a data em que alcançaria o direito é posterior a {$this->dataCompulsoria}, data da aposentadoria compulsória.";
+            if ($relatorio) {
+                p($msgCompulsoria, "left", "f12");
+            } else {
+                callout($msgCompulsoria, "alert");
+            }
+        }
+
+        # Verifica se a data da aposentadoria 
+        if ($this->ajustado) {
+            $msgAjustado = "A data da aposentadoria foi ajustada para {$this->dataLei}, pois, nessa modalidade de aposentadoria, a data não pode ser anterior a data da Lei Complementar nº 195/2021";
+            if ($relatorio) {
+                tituloRelatorio("Atenção");
+                $painel = new Callout("secondary");
+                $painel->abre();
+                p($msgAjustado, "left", "f12");
+                $painel->fecha();
+            } else {
+                tituloTable("Atenção");
+                $painel = new Callout("warning");
+                $painel->abre();
+                p($msgAjustado, "center");
+                $painel->fecha();
+            }
         }
     }
 
     ###########################################################
+
 
     public function exibeAnaliseResumo($relatorio = false) {
 

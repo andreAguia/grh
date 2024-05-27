@@ -90,6 +90,7 @@ if ($acesso) {
     $objeto->set_selectLista("SELECT tbprogressao.dtInicial,
                                      tbtipoprogressao.nome,
                                      idClasse,
+                                     numProcesso,
                                      dtPublicacao,
                                      tbprogressao.obs,
                                      tbprogressao.idProgressao,
@@ -127,12 +128,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data Inicial", "Tipo", "Valor", "DOERJ", "Obs", "Problemas?"]);
-    $objeto->set_width([10, 15, 20, 10, 25, 10]);
-    $objeto->set_align(["center", "left", "center", "center", "left"]);
-    $objeto->set_funcao(["date_to_php", null, null, "date_to_php"]);
-    $objeto->set_classe([null, null, "PlanoCargos", null, null, "Progressao"]);
-    $objeto->set_metodo([null, null, "evibeValor", null, null, "verificaProblemaPlano"]);
+    $objeto->set_label(["Data Inicial", "Tipo", "Valor", "Processo", "DOERJ", "Obs", "Problemas?"]);
+    $objeto->set_width([8, 15, 20, 14, 10, 20, 8]);
+    $objeto->set_align(["center", "left", "center", "center", "center", "left"]);
+    $objeto->set_funcao(["date_to_php", null, null, null, "date_to_php"]);
+    $objeto->set_classe([null, null, "PlanoCargos", null, null, null, "Progressao"]);
+    $objeto->set_metodo([null, null, "evibeValor", null, null, null, "verificaProblemaPlano"]);
 
     # Formatação condicional
     $objeto->set_formatacaoCondicional(array(array('coluna' => 1,

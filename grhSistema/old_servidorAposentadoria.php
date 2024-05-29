@@ -368,7 +368,7 @@ if ($acesso) {
     hr();
 
     $previsao3 = new AposentadoriaCompulsoria();
-    $previsao3->exibeAnalise($idServidorPesquisado);
+    $previsao3->exibe_tabelaDados($idServidorPesquisado);
 
     $grid1->fechaColuna();
     $grid1->fechaGrid();

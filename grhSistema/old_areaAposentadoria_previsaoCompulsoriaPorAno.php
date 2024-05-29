@@ -82,7 +82,7 @@ if ($acesso) {
 
         # Exibe regras
         $permanente = new AposentadoriaCompulsoria();
-        $permanente->exibeRegras();
+        $permanente->exibe_tabelaRegras();
 
         $grid->fechaColuna();
         $grid->abreColuna(12, 9);

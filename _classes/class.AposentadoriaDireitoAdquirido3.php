@@ -17,9 +17,9 @@ class AposentadoriaDireitoAdquirido3 {
     private $legislacao = "Art. 2º da EC Nº 41/2003";
 
     # Regras
-    private $dtIngresso = "16/12/1998";
     private $idadeHomem = 53;
     private $idadeMulher = 48;
+    private $dtIngresso = "16/12/1998";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 5;

@@ -16,23 +16,6 @@ class AposentadoriaLC195Voluntaria {
     private $descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição";
     private $legislacao = "Art. 2º, inciso III, da Lei Complementar nº 195/2021";
 
-    # Texto
-    private $texto = "A regra permanente é aplicável a todos os servidores, independentemente da data do
-ingresso no serviço público. Para se aposentar segundo os critérios das regras permanentes, os
-servidores deverão cumprir os requisitos de cada uma das espécies de aposentadoria, confor-
-me enumerado, havendo possibilidade de concessão de aposentadorias especiais, como por
-exemplo, os professores.
-ATENÇÃO PARA A MUDANÇA: A regra permanente, que antes era extraída do artigo
-40, § 1º, inciso III, alínea “a”, da Constituição Federal, com redação dada pela EC nº 20/1998,
-mudou com a publicação da nova LC Estadual nº 195, de 05 de outubro de 2021. A nova regra
-permanente, que será detalhada a seguir, é de aplicação obrigatória para todos os servidores
-que ingressarem no serviço público estadual após a entrada em vigor da LC Estadual
-nº 195, isto é, após 01/01/2022, ou a qualquer servidor que já estava no serviço público estadual antes de sua entrada em vigor e venha a optar por suas regras. Então, podemos resumir
-a obrigatoriedade da nova regra permanente contida na LC Estadual nº 195/2021 da seguinte
-maneira:
-• Aplicável obrigatoriamente aos servidores que ingressarem no Estado a
-partir de 01/01/2022, ou a qualquer servidor que opte por esta regra.";
-
     /*
      * Regras
      */

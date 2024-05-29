@@ -168,7 +168,7 @@ if ($acesso) {
              */
 
             $tab->abreConteudo();
-            
+
             # Relatório 
             $menu = new MenuBar();
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -180,10 +180,10 @@ if ($acesso) {
             $menu->add_link($botaoRel, "right");
 
             $menu->show();
-            
+
             # Exibe os Dados
             $aposentadoria->exibeTempoAverbado($idServidorPesquisado);
-            
+
             $tab->fechaConteudo();
 
             ####################################################
@@ -280,87 +280,50 @@ if ($acesso) {
 
             $menu->show();
 
-            tituloTable("Regras Permanentes", null, "clique no titulo da regra de aposentadoria para maiores detalhes");
-            br();
+            # Define o array
+            $arrayResumo = [
+                ["Regras Permanentes", "AposentadoriaLC195Voluntaria", "voluntaria"],
+                ["Regras Permanentes", "AposentadoriaLC195Compulsoria", "compulsoria"],
+                ["Regras de Transição", "AposentadoriaTransicaoPontos1", "pedagioIntegral"],
+                ["Regras de Transição", "AposentadoriaTransicaoPontos2", "pontosMedia"],
+                ["Regras de Transição", "AposentadoriaTransicaoPedagio1", "pedagioIntegral"],
+                ["Regras de Transição", "AposentadoriaTransicaoPedagio2", "pedagioMedia"],
+                ["Regras de Transição", "AposentadoriaTransicaoPedagio3", "pedagioReducao"],
+                ["Direito Adquirido", "AposentadoriaDireitoAdquirido1", "direitoAdquirido1"],
+                ["Direito Adquirido", "AposentadoriaDireitoAdquirido2", "direitoAdquirido2"],
+                ["Direito Adquirido", "AposentadoriaDireitoAdquirido3", "direitoAdquirido3"],
+            ];
 
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 12, 6);
+            # Define as variáveis
+            $subTitulo = "";
 
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=voluntaria", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
+            # Percorre o array
+            foreach ($arrayResumo as $item) {
 
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
+                # Verifica se mudou o subTitulo
+                if ($item[0] <> $subTitulo) {
+                    # Verifica se é primeiro
+                    if($subTitulo <> ""){
+                        $grid2->fechaGrid();
+                    }
+                    
+                    $subTitulo = $item[0];
 
-            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=compulsoria", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
+                    tituloTable($item[0], null, "clique no titulo da regra de aposentadoria para maiores detalhes");
+                    br();
 
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
+                    # Começa o grid
+                    $grid2 = new Grid();
+                }
+                
+                $grid2->abreColuna(12, 12, 6);
+                $aposentadoria = new $item[1]($idServidorPesquisado);
+                linkTituloTable($aposentadoria->get_descricao(), null, "?fase={$item[2]}", $aposentadoria->get_legislacao());
+                $aposentadoria->exibeAnaliseResumo();
+                $grid2->fechaColuna();
+            }
 
-            tituloTable("Regras de Transição", null, "clique no titulo da regra de aposentadoria para maiores detalhes");
-            br();
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaTransicaoPontos1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosIntegral", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaTransicaoPontos2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pontosMedia", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaTransicaoPedagio1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioIntegral", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaTransicaoPedagio2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioMedia", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaTransicaoPedagio3($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=pedagioReducao", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-
-            tituloTable("Direito Adquirido", null, "clique no titulo da regra de aposentadoria para maiores detalhes");
-            br();
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido1($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=direitoAdquirido1", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(12, 12, 6);
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido2($idServidorPesquisado);
-            linkTituloTable($aposentadoria->get_descricao(), null, "?fase=direitoAdquirido2", $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-            #$aposentadoria->exibeAnalise();
-
-            $grid2->fechaColuna();
+            $grid1->fechaGrid();
             $grid2->fechaGrid();
 
             $grid1->fechaColuna();
@@ -510,205 +473,26 @@ if ($acesso) {
          */
 
         case "voluntaria" :
-
-            # Inicia a classe
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-
-            # Grava no log a atividade
-            $atividade = "Cadastro do servidor - Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
-
-            # Exibe a regra
-            tituloTable($aposentadoria->get_descricao(), null, $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 12, 8);
-
-            $aposentadoria->exibeAnalise();
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12);
-
-            tituloTable("Cartilha");
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(6);
-
-            $aposentadoria->exibeResumoCartilha(1);
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(6);
-
-            $aposentadoria->exibeResumoCartilha(2);
-
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-            br();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 12, 4);
-
-            $aposentadoria->exibeRemuneração();
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+            $aposentadoria = new PrevisaoAposentadoria("permanente1");
+            $aposentadoria->exibe_telaServidor($idServidorPesquisado, $idUsuario);            
             break;
 
         case "relatorio_voluntaria" :
-
-            # Inicia a classe
-            $aposentadoria = new AposentadoriaLC195Voluntaria($idServidorPesquisado);
-
-            # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
-
-            # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado,
-                    $aposentadoria->get_descricao(),
-                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo(),
-                    true,
-                    $mensagemRelatorio
-            );
-            br();
-
-            # Exibe a regra
-            p($aposentadoria->exibeAnaliseResumo(true), "center");
-            $aposentadoria->exibeAnalise(true);
-            $aposentadoria->exibeRegras(true);
-            $aposentadoria->exibeRemuneração(true);
+            
+            $aposentadoria = new PrevisaoAposentadoria("permanente1");
+            $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);            
             break;
 
         case "compulsoria" :
 
-            # Inicia a classe
-            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-
-            # Grava no log a atividade
-            $atividade = "Cadastro do servidor - Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7, $idServidorPesquisado);
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
-
-            # Exibe a regra
-            tituloTable($aposentadoria->get_descricao(), null, $aposentadoria->get_legislacao());
-            $aposentadoria->exibeAnaliseResumo();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 12, 8);
-
-            $aposentadoria->exibeAnalise();
-
-            $grid2 = new Grid();
-            $grid2->abreColuna(12);
-
-            tituloTable("Cartilha");
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(6);
-
-            $aposentadoria->exibeResumoCartilha(1);
-
-            $grid2->fechaColuna();
-            $grid2->abreColuna(6);
-
-            $aposentadoria->exibeResumoCartilha(2);
-            $grid2->fechaColuna();
-            $grid2->fechaGrid();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 12, 4);
-
-            $aposentadoria->exibeRemuneração();
-            $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+            $aposentadoria = new PrevisaoAposentadoria("permanente2");
+            $aposentadoria->exibe_telaServidor($idServidorPesquisado, $idUsuario);            
             break;
 
         case "relatorio_compulsoria" :
 
-            # Inicia a classe
-            $aposentadoria = new AposentadoriaLC195Compulsoria($idServidorPesquisado);
-
-            # Grava no log a atividade
-            $atividade = "Visualizou o relatório de Aposentadoria - Regras Permanentes<br/>{$aposentadoria->get_descricao()}";
-            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 4, $idServidorPesquisado);
-
-            # Dados do Servidor
-            Grh::listaDadosServidorRelatorio2(
-                    $idServidorPesquisado,
-                    $aposentadoria->get_descricao(),
-                    $aposentadoria->get_legislacao() . "<br/>" . $aposentadoria->get_tipo()
-            );
-            br();
-
-            # Exibe a regra
-            p($aposentadoria->exibeAnaliseResumo(true), "center");
-            $aposentadoria->exibeAnalise(true);
-            $aposentadoria->exibeRegras(true);
-            $aposentadoria->exibeRemuneração(true);
-            break;
-
-        case "incapacidade1" :
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
-
-            tituloTable("Aposentadoria por Incapacidade Permanente<br/>Art. 2º, inciso I, combinado com o art. 7º, §4º da Lei Complementar nº 195/2021");
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-
-            $figura = new Imagem(PASTA_FIGURAS . "lc195incapacidadePermanente1.png", null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-
-            $figura = new Imagem(PASTA_FIGURAS . "lc195incapacidadePermanente2.png", null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            br();
-            break;
-
-        case "incapacidade2" :
-            $grid1 = new Grid();
-            $grid1->abreColuna(12);
-
-            tituloTable("Aposentadoria por Incapacidade Permanente<br/>Acidente de trabalho, doença profissional ou doença de trabalho<br/>Art. 2º, inciso I, combinado com o art. 7º, §5º da Lei Complementar nº 195/2021.");
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-
-            $figura = new Imagem(PASTA_FIGURAS . "lc195incapacidadePermanente3.png", null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(12, 6);
-
-            $figura = new Imagem(PASTA_FIGURAS . "lc195incapacidadePermanente4.png", null, "100%", "100%");
-            $figura->set_id('imgCasa');
-            $figura->set_class('imagem');
-            $figura->show();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-            br(2);
+            $aposentadoria = new PrevisaoAposentadoria("permanente2");
+            $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);            
             break;
 
         ########################################################
@@ -1315,7 +1099,7 @@ if ($acesso) {
             $grid1->abreColuna(12);
 
             # Exibe a regra
-            tituloTable($aposentadoria->get_descricao());
+            tituloTable($aposentadoria->get_descricao(), null, $aposentadoria->get_legislacao());
             $aposentadoria->exibeAnaliseResumo();
 
             $grid1->fechaColuna();
@@ -1332,71 +1116,6 @@ if ($acesso) {
             $grid1->abreColuna(12, 6, 8);
 
             $aposentadoria->exibeRegras();
-
-            $grid1->fechaColuna();
-            break;
-
-        case "direitoAdquirido4" :
-            # Artigo 3º da EC nº 47/2005
-
-            $grid1->abreColuna(9);
-            #titulo("Direito Adquirido");
-            #br();
-
-            $aposentadoria = new AposentadoriaDireitoAdquirido4($idServidorPesquisado);
-            tituloTable($aposentadoria->get_descricao());
-            emConstrucao("Em breve esta área estará disponível.");
-//            $aposentadoria->exibeAnaliseResumo();
-//            $aposentadoria->exibeAnalise();
-//
-//            $grid2 = new Grid();
-//            $grid2->abreColuna(6);
-//
-//            $aposentadoria->exibeRegras();
-//
-//            $grid2->fechaColuna();
-//            $grid2->abreColuna(6);
-//
-//            $aposentadoria->exibeRemuneração();
-//
-//            $grid2->fechaColuna();
-//            $grid2->fechaGrid();
-            $grid1->fechaColuna();
-            break;
-
-        case "direitoAdquirido5" :
-            # Outras Regras
-
-            $grid1->abreColuna(9);
-            #titulo("Direito Adquirido");
-            #br();
-
-            tituloTable("Outras Regras");
-            br();
-
-            $grid2 = new Grid();
-
-            for ($i = 1; $i <= 12; $i++) {
-
-                $grid2->abreColuna(6);
-
-                $figura = new Imagem(PASTA_FIGURAS . "aposentadoria direito adquirido{$i}.jpg", null, "100%", "100%");
-                $figura->set_id('imgCasa');
-                $figura->set_class('imagem');
-                $figura->show();
-
-                $grid2->fechaColuna();
-
-                if (epar($i)) {
-                    $grid2->abreColuna(12);
-                    br();
-                    hr("grosso");
-                    br();
-                    $grid2->fechaColuna();
-                }
-            }
-
-            $grid2->fechaGrid();
 
             $grid1->fechaColuna();
             break;

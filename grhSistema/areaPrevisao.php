@@ -36,6 +36,20 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
+    # Define o array de modalidades de aposentadoria
+    $arrayModalidades = [
+        ["Regras Permanentes", "voluntaria"],
+        ["Regras Permanentes", "compulsoria"],
+        ["Regras de Transição", "pontos1"],
+        ["Regras de Transição", "pontos2"],
+        ["Regras de Transição", "pedagio1"],
+        ["Regras de Transição", "pedagio2"],
+        ["Regras de Transição", "pedagio3"],
+        ["Direito Adquirido", "adquirido1"],
+        ["Direito Adquirido", "adquirido2"],
+        ["Direito Adquirido", "adquirido3"],
+    ];
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -122,18 +136,18 @@ if ($acesso) {
             $form = new Form('?fase=aguardeGeralPorLotacao');
 
             # Lotação
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+            $result1 = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
+            array_unshift($result1, array("Todos", 'Todas'));
 
             $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
+            $controle->set_array($result1);
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -143,12 +157,6 @@ if ($acesso) {
 
             # Exibe a lista
             $select = "SELECT tbservidor.idServidor,
-                              tbservidor.idServidor,           
-                              tbservidor.idServidor,           
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor
@@ -170,21 +178,20 @@ if ($acesso) {
 
             $select .= " ORDER BY tbpessoa.nome";
 
-            $result = $pessoal->select($select);
+            $result2 = $pessoal->select($select);
             $count = $pessoal->count($select);
 
             # Exibe a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($result);
-            $tabela->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Regra de Transição<br/>Pedágio - Redutor", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
+            $tabela->set_conteudo($result2);
+            $tabela->set_label(["Servidor", "Regras Permanentes", "Regras de Transição", "Direito Adquirido"]);
             $tabela->set_align(['left']);
-            $tabela->set_width([19, 9, 9, 9, 9, 9, 9, 9, 9, 9]);
+            $tabela->set_width([20, 20, 40, 20]);
             $tabela->set_titulo("Previsão Geral de Aposentadoria");
             $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
-            $tabela->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaTransicaoPedagio3", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
-            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela", "exibeAnaliseTabela"]);
-            #$tabela->set_idCampo('idServidor');
-            #$tabela->set_editar('?fase=editarGeralPorLotacao');
+            $tabela->set_classe(["Pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
+            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoPermanente", "exibe_previsãoTransicao", "exibe_previsãoAdquirido"]);
+            $tabela->set_bordaInterna(true);
             $tabela->show();
             break;
 
@@ -207,17 +214,9 @@ if ($acesso) {
         #######################################    
 
         case "relatorio" :
+
             # Exibe a lista
-            $select = "SELECT tbservidor.idServidor,
-                              tbservidor.idServidor,           
-                              tbservidor.idServidor,           
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor
+            $select = "SELECT tbservidor.idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -243,19 +242,50 @@ if ($acesso) {
 
             $select .= " ORDER BY tbpessoa.nome";
 
-            $result = $pessoal->select($select);
+            $result2 = $pessoal->select($select);
             $count = $pessoal->count($select);
 
-            $relatorio = new Relatorio();
-            $relatorio->set_conteudo($result);
+            # flag da primeira linha
+            $primeiraLinha = true;
 
-            $relatorio->set_label(['Servidor', 'Regra Permanente<br/>Voluntária', "Regra Permanente<br/>Compulsória", "Regra de Transição<br/>Pontos - Integral", "Regra de Transição<br/>Pontos - Média", "Regra de Transição<br/>Pedágio - Integral", "Regra de Transição<br/>Pedágio - Média", "Regra de Transição<br/>Pedágio - Redutor", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea a", "Direito Adquirido<br/>C.F. Art. 40, §1º, III, alínea b"]);
-            $relatorio->set_align(['left']);
-            $relatorio->set_width([19, 9, 9, 9, 9, 9, 9, 9, 9, 9]);
+            if ($count == 0) {
+                $arrayRelatorio = $result2;
+            } else {
+
+                # Trata o array encontrado
+                foreach ($result2 as $cadaServidor) {
+                    # Preenche o array do conteúdo do relatório
+                    $arrayLinha = null;
+                    $arrayLinha[] = $cadaServidor[0];
+
+                    if ($primeiraLinha) {
+                        $arrayLabel[] = "Servidor";
+                    }
+
+                    # Preenche as modalidades
+                    foreach ($arrayModalidades as $item) {
+                        $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $cadaServidor[0]);
+                        $arrayLinha[] = $previsaoAposentadoria->get_textoReduzido($cadaServidor[0]);
+
+                        if ($primeiraLinha) {
+                            $arrayLabel[] = "{$previsaoAposentadoria->get_tipo()}<br/>{$previsaoAposentadoria->get_descricao()}";
+                        }
+                    }
+                    $primeiraLinha = false;
+                    $arrayRelatorio[] = $arrayLinha;
+                }
+            }
+
+            $relatorio = new Relatorio();
             $relatorio->set_titulo("Previsão Geral de Aposentadoria");
             $relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_classe(["Pessoal", "AposentadoriaLC195Voluntaria", "AposentadoriaLC195Compulsoria", "AposentadoriaTransicaoPontos1", "AposentadoriaTransicaoPontos2", "AposentadoriaTransicaoPedagio1", "AposentadoriaTransicaoPedagio2", "AposentadoriaTransicaoPedagio3", "AposentadoriaDireitoAdquirido1", "AposentadoriaDireitoAdquirido2"]);
-            $relatorio->set_metodo(["get_nomeECargoELotacaoEId", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido", "get_textoReduzido"]);
+
+            $relatorio->set_conteudo($arrayRelatorio);
+            $relatorio->set_label($arrayLabel);
+            $relatorio->set_align(['left']);
+
+            $relatorio->set_classe(["Pessoal"]);
+            $relatorio->set_metodo(["get_nomeECargoELotacaoEId"]);
             $relatorio->set_bordaInterna(true);
             $relatorio->set_mensagemGeral("Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.");
             $relatorio->show();

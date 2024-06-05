@@ -106,6 +106,50 @@ class Averbacao {
 
     #####################################################
 
+    function getTempoAverbadoAntesDataAlvo($idServidor = null,$dataAlvo = null) {
+
+        # Verifica se foi informado os parâmetros
+        if (empty($idServidor) OR empty($dataAlvo)) {
+            return null;
+        }
+
+        # Pega os valores
+        $select = "SELECT dtInicial,
+                          dtFinal,
+                          dias
+                     FROM tbaverbacao
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtInicial";
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+
+        # Define a variavel de retorno
+        $tempo = 0;
+
+        # Percorre os registros
+        foreach ($row as $itens) {
+            # As datas
+            $dtInicial = date_to_php($itens["dtInicial"]);
+            $dtFinal = date_to_php($itens["dtFinal"]);            
+            
+            # Verifica se a data Alvo está após o período
+            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
+                $tempo += $itens["dias"];
+            }
+            
+            # Verifica se a data Alvo está dentro  do período
+            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
+                $tempo += getNumDias($dtInicial, $dataAlvo);
+            }
+        }
+
+        return $tempo;
+    }
+
+    #####################################################
+
     function tempoSobreposto($idServidor) {
 
         # Verifica se foi informado o id

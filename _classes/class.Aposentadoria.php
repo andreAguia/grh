@@ -503,6 +503,51 @@ class Aposentadoria {
         return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
     }
 
+    #####################################################        
+
+    /**
+     * Método get_tempoServicoUenfAntesDataAlvo
+     * informa o total de dias corridos de tempo de serviço 
+     * dentro da uenf antes de uma data alvo
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_tempoServicoUenfAntesDataAlvo($idServidor = null, $dataAlvo = null) {
+
+        # Verifica se foi informado os parâmetros
+        if (empty($idServidor) OR empty($dataAlvo)) {
+            return null;
+        }
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Data inicial
+        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
+
+        # Verifica se a admissão é posterior a data alvo
+        if (dataMenor($dataAlvo, $dtInicial) == $dataAlvo) {
+            return 0;
+        } else {
+            # Verifica se o servidor é inativo e pega a data de saída dele
+            if ($pessoal->get_idSituacao($idServidor) == 1) {
+                $dtFinal = $dataAlvo;
+            } else {
+                $dtFinal = $pessoal->get_dtSaida($idServidor);
+
+                # Verifica se saiu antes ou depois da data alvo
+                if (dataMenor($dataAlvo, $dtFinal) == $dataAlvo) {
+                    $dtFinal = $dataAlvo;
+                }
+            }
+        }
+
+        # Pega o tempo sem contribuição
+        $tempoRetirar = $this->get_tempoUenfInterrompidoAntes31_12_21($idServidor);
+
+        return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
+    }
+
     #####################################################
 
     /**
@@ -614,6 +659,28 @@ class Aposentadoria {
         $averbacao = new Averbacao();
         $tempoUenf = $this->get_tempoServicoUenfAntes31_12_21($idServidor);
         $tempoAverbado = $averbacao->getTempoAverbadoAntes31_12_21($idServidor);
+
+        return $tempoUenf + $tempoAverbado;
+    }
+
+    #####################################################
+
+    /**
+     * Método get_tempoTotal
+     * informa em dias o tempo total do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoTotalAntesDataAlvo($idServidor = null, $dataAlvo = null) {
+
+        # Verifica se foi informado os parâmetros
+        if (empty($idServidor) OR empty($dataAlvo)) {
+            return null;
+        }
+
+        $averbacao = new Averbacao();
+        $tempoUenf = $this->get_tempoServicoUenfAntesDataAlvo($idServidor, $dataAlvo);
+        $tempoAverbado = $averbacao->getTempoAverbadoAntesDataAlvo($idServidor, $dataAlvo);
 
         return $tempoUenf + $tempoAverbado;
     }
@@ -759,6 +826,58 @@ class Aposentadoria {
 
         # Define as datas
         $dataAlvo = "31/12/2021";
+
+        # Percorre os registros
+        foreach ($row as $itens) {
+            # As datas
+            $dtInicial = date_to_php($itens["dtInicial"]);
+            $dtFinal = date_to_php($itens["dtTermino"]);
+
+            # Verifica se a data Alvo está após o período
+            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
+                $tempo += $itens["numDias"];
+            }
+
+            # Verifica se a data Alvo está dentro  do período
+            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
+                $tempo += getNumDias($dtInicial, $dataAlvo);
+            }
+        }
+
+        return $tempo;
+    }
+
+    #####################################################
+
+    function get_tempoUenfInterrompidoAntesDataAlvo($idServidor = null, $dataAlvo = null) {
+
+        # Verifica se foi informado os parâmetros
+        if (empty($idServidor) OR empty($dataAlvo)) {
+            return null;
+        }
+
+        # Licença Geral
+        $select = "(SELECT dtInicial,
+                           dtTermino,
+                           numDias
+                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
+                     WHERE idServidor = {$idServidor}
+                       AND tbtipolicenca.tempoServico IS true
+                   ) UNION (
+                    SELECT dtInicial,
+                           dtTermino,
+                           numDias                           
+                      FROM tblicencasemvencimentos
+                      WHERE idServidor = {$idServidor}
+                        AND optouContribuir is not true)
+                      ORDER BY 1";
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+
+        # Define a variavel de retorno
+        $tempo = 0;
 
         # Percorre os registros
         foreach ($row as $itens) {
@@ -1148,15 +1267,14 @@ class Aposentadoria {
             $tabela->set_dataImpressao(false);
             $tabela->set_bordaInterna(true);
             $tabela->set_log(false);
-            
+
             $tabela->set_label(["Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
             $tabela->set_align(["center", "center", "center", "left"]);
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"]);
-            
+
             $tabela->set_totalRegistro(false);
             $tabela->set_colunaSomatorio(2);
-            
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo Averbado - Detalhado");
@@ -1183,12 +1301,123 @@ class Aposentadoria {
             $tabela->set_totalRegistro(false);
             $tabela->set_colunaSomatorio([2, 3]);
         }
-        
+
         $tabela->set_conteudo($result);
         $tabela->show();
 
         $grid1->fechaColuna();
         $grid1->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function exibe_previsãoPermanente($idServidor = null) {
+
+        # Define o array de modalidades de aposentadoria
+        $arrayModalidades = [
+            ["Regras Permanentes", "voluntaria"],
+            ["Regras Permanentes", "compulsoria"],
+            ["Regras de Transição", "pontos1"],
+            ["Regras de Transição", "pontos2"],
+            ["Regras de Transição", "pedagio1"],
+            ["Regras de Transição", "pedagio2"],
+            ["Regras de Transição", "pedagio3"],
+            ["Direito Adquirido", "adquirido1"],
+            ["Direito Adquirido", "adquirido2"],
+            ["Direito Adquirido", "adquirido3"],
+        ];
+
+        $grid1 = new Grid();
+        $grid1->abreColuna(12);
+
+        # Preenche as modalidades
+        foreach ($arrayModalidades as $item) {
+
+            if ($item[0] == "Regras Permanentes") {
+                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
+                tituloTable($previsaoAposentadoria->get_descricaoResumida());
+                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+            }
+        }
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function exibe_previsãoTransicao($idServidor = null) {
+
+        # Define o array de modalidades de aposentadoria
+        $arrayModalidades = [
+            ["Regras Permanentes", "voluntaria"],
+            ["Regras Permanentes", "compulsoria"],
+            ["Regras de Transição", "pontos1"],
+            ["Regras de Transição", "pontos2"],
+            ["Regras de Transição", "pedagio1"],
+            ["Regras de Transição", "pedagio2"],
+            ["Regras de Transição", "pedagio3"],
+            ["Direito Adquirido", "adquirido1"],
+            ["Direito Adquirido", "adquirido2"],
+            ["Direito Adquirido", "adquirido3"],
+        ];
+
+        $grid1 = new Grid();
+        $grid1->abreColuna(6);
+        #titulo("Pontos");
+        # Preenche as modalidades
+        foreach ($arrayModalidades as $item) {
+
+            if ($item[0] == "Regras de Transição") {
+
+                if ($item[1] == "pedagio1") {
+                    $grid1->fechaColuna();
+                    $grid1->abreColuna(6);
+                    #titulo("Pedágio");
+                }
+
+                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
+                tituloTable($previsaoAposentadoria->get_descricaoResumida());
+                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+            }
+        }
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
+    }
+
+    ###########################################################
+
+    public function exibe_previsãoAdquirido($idServidor = null) {
+
+        # Define o array de modalidades de aposentadoria
+        $arrayModalidades = [
+            ["Regras Permanentes", "voluntaria"],
+            ["Regras Permanentes", "compulsoria"],
+            ["Regras de Transição", "pontos1"],
+            ["Regras de Transição", "pontos2"],
+            ["Regras de Transição", "pedagio1"],
+            ["Regras de Transição", "pedagio2"],
+            ["Regras de Transição", "pedagio3"],
+            ["Direito Adquirido", "adquirido1"],
+            ["Direito Adquirido", "adquirido2"],
+            ["Direito Adquirido", "adquirido3"],
+        ];
+
+        $div = new div("previsaoAposentadoria");
+        $div->abre();
+
+        # Preenche as modalidades
+        foreach ($arrayModalidades as $item) {
+
+            if ($item[0] == "Direito Adquirido") {
+                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
+                tituloTable($previsaoAposentadoria->get_descricaoResumida());
+                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+            }
+        }
+
+        $div->fecha();
     }
 
     ###########################################################

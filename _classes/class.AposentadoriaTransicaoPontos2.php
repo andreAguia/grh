@@ -21,11 +21,13 @@ class AposentadoriaTransicaoPontos2 {
     private $idadeHomemDepois = 62;
     private $idadeMulherAntes = 56;
     private $idadeMulherDepois = 57;
+    
     private $dtIngresso = "31/12/2021";
     private $contribuicaoHomem = 35;
     private $contribuicaoMulher = 30;
     private $servicoPublico = 20;
     private $cargoEfetivo = 5;
+    
     private $pontosHomem = 90;
     private $pontosMulher = 86;
     private $regraIdade = null;

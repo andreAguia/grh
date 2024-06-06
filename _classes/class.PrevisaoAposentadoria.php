@@ -1399,7 +1399,7 @@ class PrevisaoAposentadoria {
         
         # Tempo carreira
         if (!is_null($this->cargoEfetivo)) {
-            array_push($array, ["<p id='pLinha1'>Carreira</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]);
+            array_push($array, ["<p id='pLinha1'>Carreira</p><p id='pLinha4'>{$this->carreiraDescricao}</p>", $this->carreira . " anos<br/>(" . ($this->carreira * 365) . " dias)", $this->carreira . " anos<br/>(" . ($this->carreira * 365) . " dias)"]);
         }
 
         # Exibe a tabela

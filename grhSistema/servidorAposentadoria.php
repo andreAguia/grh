@@ -324,8 +324,7 @@ if ($acesso) {
 
                 $grid2->abreColuna(12, 12, 6);
                 $aposentadoria = new PrevisaoAposentadoria($item[1], $idServidorPesquisado);
-                linkTituloTable("{$aposentadoria->get_tipo()}<br/>{$aposentadoria->get_descricao()}", null, "?fase={$item[1]}", $aposentadoria->get_legislacao());
-                $aposentadoria->exibe_analise();
+                $aposentadoria->exibe_analiseLink($idServidorPesquisado, $link = "?fase={$item[1]}", $resumido = false);                
                 $grid2->fechaColuna();
             }
 
@@ -434,7 +433,7 @@ if ($acesso) {
                 $arrayRelatorio[] = [
                     $item[0],
                     $previsaoAposentadoria->get_descricao() . "<p id='psubtituloRel'>{$previsaoAposentadoria->get_legislacao()}</p>",
-                    str_replace("<br/>", " ", $previsaoAposentadoria->exibe_analise(true)),
+                    str_replace("<br/>", " ", $previsaoAposentadoria->exibe_analiseRelatorio()),
                     formataDiasFaltantes($previsaoAposentadoria->get_diasFaltantes())];
             }
 

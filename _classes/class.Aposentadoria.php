@@ -1332,8 +1332,8 @@ class Aposentadoria {
 
             if ($item[0] == "Regras Permanentes") {
                 $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                tituloTable($previsaoAposentadoria->get_descricaoResumida());
-                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
+                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
             }
         }
     }
@@ -1371,8 +1371,8 @@ class Aposentadoria {
                 }
 
                 $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                tituloTable($previsaoAposentadoria->get_descricaoResumida());
-                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
+                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
             }
         }
 
@@ -1403,8 +1403,8 @@ class Aposentadoria {
 
             if ($item[0] == "Direito Adquirido") {
                 $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                tituloTable($previsaoAposentadoria->get_descricaoResumida());
-                $previsaoAposentadoria->exibe_analiseLink($idServidor);
+                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
+                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
             }
         }
     }

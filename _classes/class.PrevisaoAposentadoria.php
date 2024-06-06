@@ -1246,15 +1246,47 @@ class PrevisaoAposentadoria {
 
     public function exibe_analise($relatorio = false, $idServidor = null) {
 
-        # Exibe o resumo
-        if ($relatorio) {
-            return $this->textoRetorno;
+        $painel = new Callout($this->corFundo);
+        $painel->abre();
+        p($this->textoRetorno, "center");
+        $painel->fecha();
+    }
+
+    ###########################################################
+
+    public function exibe_analiseRelatorio() {
+
+        return $this->textoRetorno;
+    }
+
+    ###########################################################
+
+    public function exibe_analiseLink($idServidor = null, $link = null, $resumido = true) {
+
+        # Faz a análise
+        $this->fazAnalise($idServidor);
+
+        echo "<a href='{$link}'>";
+
+        if ($resumido) {
+            tituloTable($this->descricaoResumida);
         } else {
-            $painel = new Callout($this->corFundo);
-            $painel->abre();
-            p($this->textoRetorno, "center");
-            $painel->fecha();
+            tituloTable("{$this->tipo}<br/>{$this->descricao}", $this->legislacao);
         }
+
+        # Exibe o resumo
+        $painel = new Callout($this->corFundo);
+
+        if ($resumido) {
+            $painel->abre();
+            p($this->textoReduzido, "center");
+            $painel->fecha();
+        } else {
+            p($this->exibe_analise(), "center");
+        }
+
+
+        echo "</a>";
     }
 
     ###########################################################
@@ -1730,27 +1762,6 @@ class PrevisaoAposentadoria {
 
     ###########################################################
 
-    public function exibe_analiseLink($idServidor) {
-
-        # Faz a análise
-        $this->fazAnalise($idServidor);
-
-        # Define o link
-        $link = "?fase=carregarPagina&id={$idServidor}&link={$this->modalidade}";
-
-        echo "<a href='{$link}'>";
-
-        # Exibe o resumo
-        $painel = new Callout($this->corFundo);
-        $painel->abre();
-        p($this->textoReduzido, "center");
-        $painel->fecha();
-
-        echo "</a>";
-    }
-
-    ###########################################################
-
     public function get_textoReduzido($idServidor) {
 
         # Faz a análise
@@ -2061,7 +2072,7 @@ class PrevisaoAposentadoria {
         br();
 
         # Relatório
-        p($this->exibe_analise(true), "center");
+        p($this->exibe_analiseRelatorio(), "center");
 
         # Dados Gerais
         $this->exibe_tabelaDados(true);

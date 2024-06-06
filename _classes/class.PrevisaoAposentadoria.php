@@ -31,6 +31,7 @@ class PrevisaoAposentadoria {
     private $contribuicaoMulher = null;
     private $servicoPublico = null;
     private $cargoEfetivo = null;
+    private $carreira = null;
 
     /*
      *  Regras tratadas
@@ -106,6 +107,7 @@ class PrevisaoAposentadoria {
     private $pontuacaoInicialDescricao = "Pontuação Inicial.";
     private $pedagioDescricao = "Período adicional de contribuição calculado apartir do tempo de contribuição que faltava ao servidor em ";
     private $compulsoriaDescricao = "A data calculada deve ser anterior a data da aposentadoria compulsória";
+    private $carreiraDescricao = "Tempo dentro da Uenf. (No mesmo Órgão)";
 
     /*
      *  Relatório
@@ -147,6 +149,7 @@ class PrevisaoAposentadoria {
     private $analisePedagio = null;
     private $analiseCompulsoria = null;
     private $analiseReducao = null;
+    private $analiseCarreira = null;
 
     /*
      *  Variaveis de Retorno    
@@ -160,6 +163,7 @@ class PrevisaoAposentadoria {
     private $dataCriterioTempoCargo = null;
     private $dataDireitoAposentadoria = null;
     private $dataCriterioRedutor = null;
+    private $dataCriterioCarreira = null;
     private $temDireito = true;
     private $textoRetorno = null;
     private $textoReduzido = null;
@@ -610,29 +614,26 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição";
-                $this->descricaoResumida = "Art. 2 da EC nº 41/2003";
-                $this->legislacao = "Art. 2 da EC nº 41/2003";
+                $this->descricaoResumida = "Art. 6 da EC nº 41/2003";
+                $this->legislacao = "Art. 6 da EC nº 41/2003";
 
                 # Regras
-                $this->idadeHomem = 53;
-                $this->idadeMulher = 48;
+                $this->idadeHomem = 60;
+                $this->idadeMulher = 55;
                 $this->contribuicaoHomem = 35;
                 $this->contribuicaoMulher = 30;
+                $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
-
-                # Pedagio
-                $this->pedagio = 20;
-                $this->pedagioData = "16/12/1998";
+                $this->carreira = 10;
 
                 # Datas
-                $this->dtRequesitosCumpridos = "31/12/2021";
-                $this->dtIngresso = "16/12/1998";
+                #$this->dtRequesitosCumpridos = "31/12/2021";
+                $this->dtIngresso = "31/12/2003";
 
                 # Remuneração
-                $this->calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Proporcional ao tempo de contribuição - Lei Federal 10.887";
+                $this->calculoInicial = "Integralidade dos Proventos";
                 $this->teto = "Última remuneração no cargo efetivo do servidor";
-                $this->reajuste = "Segue as datas e índices adotados no regime geral da previdência social";
-                $this->paridade = "SEM PARIDADE";
+                $this->paridade = "COM PARIDADE";
 
                 # Cartilha
                 $this->cartilha1 = "direitoAdquirido3.jpg";
@@ -800,6 +801,17 @@ class PrevisaoAposentadoria {
         } else {
             $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
+        
+        /*
+         *  Tempo de Carreira
+         */
+        $resta1 = ($this->carreira * 365) - $this->servidorTempoUenf;
+        $this->dataCriterioCarreira = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
+        if ($this->servidorTempoUenf >= ($this->carreira * 365)) {
+            $this->analiseCarreira = "OK";
+        } else {
+            $this->analiseCarreira = "Ainda faltam<br/>{$resta1} dias.";
+        }
 
         /*
          *  Serviço Público Initerrupto
@@ -956,7 +968,8 @@ class PrevisaoAposentadoria {
             $this->dataCriterioTempoCargo,
             $this->dataCriterioPontos,
             $this->dataCriterioPedagio,
-            $this->dataCriterioRedutor
+            $this->dataCriterioRedutor,
+            $this->dataCriterioCarreira
         ];
 
         # Define a data do critério idade quando tem redução
@@ -1096,6 +1109,17 @@ class PrevisaoAposentadoria {
                         $this->analisaDtIngressoApartir]);
         }
 
+        # Tempo de carreira (se tiver)
+        if (!is_null($this->carreira)) {
+            array_push($array,
+                    ["Carreira",
+                        $this->carreiraDescricao,
+                        "{$this->carreira} anos<br/>(" . ($this->carreira * 365) . " dias)",
+                        intval($this->servidorTempoUenf / 365) . " anos<br/>({$this->servidorTempoUenf} dias)",
+                        $this->dataCriterioCarreira,
+                        $this->analiseCarreira]);
+        }
+        
         # Tempo de Contribuição (se tiver)
         if (!is_null($this->contribuicaoHomem)) {
             array_push($array,
@@ -1371,6 +1395,11 @@ class PrevisaoAposentadoria {
         # Tempo cargo efetivo
         if (!is_null($this->cargoEfetivo)) {
             array_push($array, ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]);
+        }
+        
+        # Tempo carreira
+        if (!is_null($this->cargoEfetivo)) {
+            array_push($array, ["<p id='pLinha1'>Carreira</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]);
         }
 
         # Exibe a tabela

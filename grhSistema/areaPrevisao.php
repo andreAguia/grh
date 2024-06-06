@@ -104,7 +104,7 @@ if ($acesso) {
         $botaoRel->set_title("Relatório da Previsão de Aposentadoria");
         $botaoRel->set_url("?fase=relatorio");
         $botaoRel->set_target("_blank");
-        $menu->add_link($botaoRel, "right");
+        #$menu->add_link($botaoRel, "right");
         $menu->show();
     }
 
@@ -186,6 +186,7 @@ if ($acesso) {
             $tabela->set_conteudo($result2);
             $tabela->set_label(["Servidor", "Regras Permanentes", "Regras de Transição", "Direito Adquirido"]);
             $tabela->set_align(['left']);
+            $tabela->set_valign(['center', 'top', 'top', 'top']);
             $tabela->set_width([20, 20, 40, 20]);
             $tabela->set_titulo("Previsão Geral de Aposentadoria");
             $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");

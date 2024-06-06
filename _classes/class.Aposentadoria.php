@@ -1327,9 +1327,6 @@ class Aposentadoria {
             ["Direito Adquirido", "adquirido3"],
         ];
 
-        $grid1 = new Grid();
-        $grid1->abreColuna(12);
-
         # Preenche as modalidades
         foreach ($arrayModalidades as $item) {
 
@@ -1339,9 +1336,6 @@ class Aposentadoria {
                 $previsaoAposentadoria->exibe_analiseLink($idServidor);
             }
         }
-
-        $grid1->fechaColuna();
-        $grid1->fechaGrid();
     }
 
     ###########################################################
@@ -1404,9 +1398,6 @@ class Aposentadoria {
             ["Direito Adquirido", "adquirido3"],
         ];
 
-        $div = new div("previsaoAposentadoria");
-        $div->abre();
-
         # Preenche as modalidades
         foreach ($arrayModalidades as $item) {
 
@@ -1416,8 +1407,6 @@ class Aposentadoria {
                 $previsaoAposentadoria->exibe_analiseLink($idServidor);
             }
         }
-
-        $div->fecha();
     }
 
     ###########################################################

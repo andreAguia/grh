@@ -627,7 +627,7 @@ class PrevisaoAposentadoria {
                 $this->carreira = 10;
 
                 # Datas
-                #$this->dtRequesitosCumpridos = "31/12/2021";
+                $this->dtRequesitosCumpridos = "31/12/2021";
                 $this->dtIngresso = "31/12/2003";
 
                 # Remuneração
@@ -659,7 +659,7 @@ class PrevisaoAposentadoria {
                 $this->carreira = 15;
 
                 # Datas
-                #$this->dtRequesitosCumpridos = "31/12/2021";
+                $this->dtRequesitosCumpridos = "31/12/2021";
                 $this->dtIngresso = "16/12/1998";
 
                 # Remuneração

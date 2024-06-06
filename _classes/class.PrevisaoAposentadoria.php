@@ -639,6 +639,38 @@ class PrevisaoAposentadoria {
                 $this->cartilha1 = "direitoAdquirido3.jpg";
                 break;
 
+            ######################################3
+
+            case "adquirido4" :
+
+                # Descrição
+                $this->tipo = "Direito Adquirido";
+                $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição";
+                $this->descricaoResumida = "Art. 3 da EC nº 47/2005";
+                $this->legislacao = "Art. 3 da EC nº 47/2005";
+
+                # Regras
+                $this->idadeHomem = 60;
+                $this->idadeMulher = 55;
+                $this->contribuicaoHomem = 35;
+                $this->contribuicaoMulher = 30;
+                $this->servicoPublico = 25;
+                $this->cargoEfetivo = 5;
+                $this->carreira = 15;
+
+                # Datas
+                #$this->dtRequesitosCumpridos = "31/12/2021";
+                $this->dtIngresso = "16/12/1998";
+
+                # Remuneração
+                $this->calculoInicial = "Integralidade dos Proventos";
+                $this->teto = "Última remuneração no cargo efetivo do servidor";
+                $this->paridade = "COM PARIDADE";
+
+                # Cartilha
+                $this->cartilha1 = "direitoAdquirido4.jpg";
+                break;
+
             #####################################
         }
 

@@ -47,6 +47,7 @@ if ($acesso) {
         ["Direito Adquirido", "adquirido1"],
         ["Direito Adquirido", "adquirido2"],
         ["Direito Adquirido", "adquirido3"],
+        ["Direito Adquirido", "adquirido4"],
     ];
 
     # Verifica se veio menu grh e registra o acesso no log
@@ -99,7 +100,8 @@ if ($acesso) {
                 OR $fase == "pedagio3"
                 OR $fase == "adquirido1"
                 OR $fase == "adquirido2"
-                OR $fase == "adquirido3") {
+                OR $fase == "adquirido3"
+                OR $fase == "adquirido4") {
             $linkvoltar = '?fase=tabs&aba=5';
         }
 
@@ -123,7 +125,8 @@ if ($acesso) {
                 OR $fase == "pedagio3"
                 OR $fase == "adquirido1"
                 OR $fase == "adquirido2"
-                OR $fase == "adquirido3") {
+                OR $fase == "adquirido3"
+                OR $fase == "adquirido4") {
 
             # Relatório   
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -575,7 +578,17 @@ if ($acesso) {
             $aposentadoria = new PrevisaoAposentadoria("adquirido3");
             $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);
             break;
+        
+        case "adquirido4" :
+            $aposentadoria = new PrevisaoAposentadoria("adquirido4");
+            $aposentadoria->exibe_telaServidor($idServidorPesquisado, $idUsuario);
+            break;
 
+        case "relatorio_adquirido4" :
+            $aposentadoria = new PrevisaoAposentadoria("adquirido4");
+            $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);
+            break;
+        
         ########################################################
 
         /*

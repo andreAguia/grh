@@ -324,7 +324,7 @@ if ($acesso) {
 
                 $grid2->abreColuna(12, 12, 6);
                 $aposentadoria = new PrevisaoAposentadoria($item[1], $idServidorPesquisado);
-                $aposentadoria->exibe_analiseLink($idServidorPesquisado, $link = "?fase={$item[1]}", $resumido = false);                
+                $aposentadoria->exibe_analiseLink($idServidorPesquisado, "?fase={$item[1]}", false);
                 $grid2->fechaColuna();
             }
 
@@ -413,6 +413,7 @@ if ($acesso) {
             br();
 
             # Define a função 
+
             function formataDiasFaltantes($texto) {
                 # Verifica se é numérico
                 if (is_numeric($texto)) {

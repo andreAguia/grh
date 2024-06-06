@@ -1271,7 +1271,7 @@ class PrevisaoAposentadoria {
         if ($resumido) {
             tituloTable($this->descricaoResumida);
         } else {
-            tituloTable("{$this->tipo}<br/>{$this->descricao}", $this->legislacao);
+            tituloTable("{$this->tipo}<br/>{$this->descricao}", null, $this->legislacao);
         }
 
         # Exibe o resumo

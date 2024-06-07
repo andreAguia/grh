@@ -144,7 +144,7 @@ class Sispatri {
         } else {
             $select .= ') ORDER BY 4, 2';
         }
-        
+
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
 
@@ -612,11 +612,13 @@ class Sispatri {
 
         $tabela = new Tabela();
         $tabela->set_titulo("Servidores Ativos");
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($array);
-        $tabela->set_label(array("Descrição", "Servidores"));
-        $tabela->set_align(array("left", "center"));
+        $tabela->set_label(["Descrição", "Servidores"]);
+        $tabela->set_align(["left", "center"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'estatisticaTotal')));
@@ -664,6 +666,7 @@ class Sispatri {
         # Exemplo de tabela simples
         $tabela = new Tabela();
         $tabela->set_titulo("Entregaram");
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
         $tabela->set_label(array("Tipo do Cargo", "Servidores"));
         $tabela->set_width(array(80, 20));

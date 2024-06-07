@@ -76,17 +76,7 @@ if ($acesso) {
         # Verifica a rotina e define o link
         if ($fase == "tabs") {
             $linkvoltar = 'servidorMenu.php';
-        } elseif ($fase == "voluntaria"
-                OR $fase == "compulsoria"
-                OR $fase == "pontos1"
-                OR $fase == "pontos2"
-                OR $fase == "pedagio1"
-                OR $fase == "pedagio2"
-                OR $fase == "pedagio3"
-                OR $fase == "adquirido1"
-                OR $fase == "adquirido2"
-                OR $fase == "adquirido3"
-                OR $fase == "adquirido4") {
+        } elseif (in_array($fase, $aposentadoria->get_modalidades())) {
             $linkvoltar = '?fase=tabs&aba=5';
         }
 
@@ -101,17 +91,7 @@ if ($acesso) {
         $linkBotaoVoltar->set_accessKey('V');
         $menu->add_link($linkBotaoVoltar, "left");
 
-        if ($fase == "voluntaria"
-                OR $fase == "compulsoria"
-                OR $fase == "pontos1"
-                OR $fase == "pontos2"
-                OR $fase == "pedagio1"
-                OR $fase == "pedagio2"
-                OR $fase == "pedagio3"
-                OR $fase == "adquirido1"
-                OR $fase == "adquirido2"
-                OR $fase == "adquirido3"
-                OR $fase == "adquirido4") {
+        if (in_array($fase, $aposentadoria->get_modalidades())) {
 
             # Relatório   
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -290,7 +270,7 @@ if ($acesso) {
 
             # Define as variáveis
             $subTitulo = "";
-            
+
             # Percorre o array
             foreach ($aposentadoria->get_modalidades() as $item) {
                 $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidorPesquisado);
@@ -401,6 +381,7 @@ if ($acesso) {
             br();
 
             # Define a função
+
             function formataDiasFaltantes($texto) {
                 # Verifica se é numérico
                 if (is_numeric($texto)) {
@@ -562,7 +543,7 @@ if ($acesso) {
             $aposentadoria = new PrevisaoAposentadoria("adquirido3");
             $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);
             break;
-        
+
         case "adquirido4" :
             $aposentadoria = new PrevisaoAposentadoria("adquirido4");
             $aposentadoria->exibe_telaServidor($idServidorPesquisado, $idUsuario);
@@ -572,7 +553,7 @@ if ($acesso) {
             $aposentadoria = new PrevisaoAposentadoria("adquirido4");
             $aposentadoria->exibe_relatorio($idServidorPesquisado, $idUsuario);
             break;
-        
+
         ########################################################
 
         /*

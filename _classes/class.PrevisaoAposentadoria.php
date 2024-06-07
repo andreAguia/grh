@@ -645,7 +645,7 @@ class PrevisaoAposentadoria {
 
                 # Descrição
                 $this->tipo = "Direito Adquirido";
-                $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição";
+                $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Com Redutor de Idade";
                 $this->descricaoResumida = "Art. 3 da EC nº 47/2005";
                 $this->legislacao = "Art. 3 da EC nº 47/2005";
 
@@ -657,6 +657,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 25;
                 $this->cargoEfetivo = 5;
                 $this->carreira = 15;
+
+                # Redutor
+                $this->temRedutor = true;
 
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
@@ -833,7 +836,7 @@ class PrevisaoAposentadoria {
         } else {
             $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
-        
+
         /*
          *  Tempo de Carreira
          */
@@ -1151,7 +1154,7 @@ class PrevisaoAposentadoria {
                         $this->dataCriterioCarreira,
                         $this->analiseCarreira]);
         }
-        
+
         # Tempo de Contribuição (se tiver)
         if (!is_null($this->contribuicaoHomem)) {
             array_push($array,
@@ -1428,7 +1431,7 @@ class PrevisaoAposentadoria {
         if (!is_null($this->cargoEfetivo)) {
             array_push($array, ["<p id='pLinha1'>Cargo Efetivo</p><p id='pLinha4'>{$this->tempoCargoDescicao}</p>", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)", $this->cargoEfetivo . " anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)"]);
         }
-        
+
         # Tempo carreira
         if (!is_null($this->cargoEfetivo)) {
             array_push($array, ["<p id='pLinha1'>Carreira</p><p id='pLinha4'>{$this->carreiraDescricao}</p>", $this->carreira . " anos<br/>(" . ($this->carreira * 365) . " dias)", $this->carreira . " anos<br/>(" . ($this->carreira * 365) . " dias)"]);
@@ -2125,8 +2128,8 @@ class PrevisaoAposentadoria {
         # Dados do Servidor
         Grh::listaDadosServidorRelatorio2(
                 $idServidor,
-                $this->get_descricao(),
-                $this->get_legislacao() . "<br/>" . $this->get_tipo(),
+                "{$this->get_tipo()}<br/>{$this->get_descricao()}",
+                $this->get_legislacao(),
                 true,
                 $this->mensagemRelatorio
         );

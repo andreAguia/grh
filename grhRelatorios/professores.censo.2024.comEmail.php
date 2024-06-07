@@ -37,6 +37,7 @@ if ($acesso) {
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE tbtipocargo.tipo = 'Professor'
                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                 AND situacao = 1
             ORDER BY tbpessoa.nome";
 
     $result = $servidor->select($select);

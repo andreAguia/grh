@@ -102,16 +102,16 @@ if ($acesso) {
     echo '<th><b>COD</b></th>';
     echo '</tr>';
 
+    # Verifica quantos dias tem o mês específico
+    $dias = date("j", mktime(0, 0, 0, $mesBase + 1, 0, $anoBase));
+
     $contador = 0;
-    while ($contador < 31) {
+    while ($contador < $dias) {
         $contador++;
         echo '<tr>';
 
         # Exibe o número do dia
         echo '<td align="center">' . $contador . '</td>';
-
-        # Verifica quantos dias tem o mês específico
-        $dias = date("j", mktime(0, 0, 0, $mesBase + 1, 0, $anoBase));
 
         if ($contador <= $dias) {
             # Cria variavel com a data no formato americano (ano/mes/dia)

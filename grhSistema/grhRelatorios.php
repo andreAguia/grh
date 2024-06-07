@@ -557,6 +557,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Censo 2021 - Relatório da Professores Inativos - Por Ano de Saída', '../grhRelatorios/professores.censo.2021.porAnoSaida.php');
             $menu->add_item('linkWindow', 'Censo 2024 - Relatório da Professores - Por Ano de Admissão', '../grhRelatorios/professores.censo.2024.porAnoAdmissao.php');
             $menu->add_item('linkWindow', 'Censo 2024 - Relatório da Professores Inativos - Por Ano de Saída', '../grhRelatorios/professores.censo.2024.porAnoSaida.php');
+            $menu->add_item('linkWindow', 'Censo 2024 - Relatório da Professores - Com E-mail', '../grhRelatorios/professores.censo.2024.comEmail.php');
 
             $menu->show();
             break;

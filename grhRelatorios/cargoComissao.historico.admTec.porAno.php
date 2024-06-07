@@ -57,13 +57,13 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Servidores Administrativos e Técnicos Ativos');
     $relatorio->set_tituloLinha2("Com Cargos em Comissão em  {$parametroAno}");
     $relatorio->set_subtitulo('Ordenados pelo Cargo em Comissão');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo','Comissão', 'Nomeação', 'Exoneração']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Comissão', 'Nomeação', 'Exoneração']);
     $relatorio->set_funcao([null, null, null, null, "date_to_php", "date_to_php"]);
     $relatorio->set_align(["center", "left", "left", "left"]);
     $relatorio->set_classe([null, null, "Pessoal"]);
     $relatorio->set_metodo([null, null, "get_cargoSimples"]);
     $relatorio->set_conteudo($result);
-    
+
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
@@ -82,9 +82,6 @@ if ($acesso) {
             'linha' => 1)
     ));
 
-    $relatorio->set_formFocus('parametroAno');
-    $relatorio->set_formLink('?');
     $relatorio->show();
-
     $page->terminaPagina();
 }

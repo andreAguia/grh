@@ -81,7 +81,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('parametroCargo');
-    $relatorio->set_formLink('?');
+    
 
     $relatorio->show();
 

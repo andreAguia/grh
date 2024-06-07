@@ -92,9 +92,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $relatorio->set_formFocus('lotacao');
-    $relatorio->set_formLink('?');
     $relatorio->show();
-
     $page->terminaPagina();
 }

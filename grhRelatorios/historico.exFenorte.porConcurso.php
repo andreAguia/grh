@@ -93,7 +93,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('ano');
-    $relatorio->set_formLink('?');
+    
     $relatorio->set_numGrupo(7);
     $relatorio->show();
 

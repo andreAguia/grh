@@ -1151,9 +1151,7 @@ class ListaAfastamentos {
                         'title' => 'Filtra por Lotação.',
                         'onChange' => 'formPadrao.submit();',
                         'linha' => 1)));
-            }
-
-            $relatorio->set_formLink('?');
+            }            
         }
 
         if ($cont > 0) {

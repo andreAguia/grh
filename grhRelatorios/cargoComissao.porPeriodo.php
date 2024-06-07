@@ -66,7 +66,7 @@ if ($acesso) {
     }
 
     $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
-    
+
     $result = $pessoal->select($select);
 
     # Monta o Relatório
@@ -140,10 +140,6 @@ if ($acesso) {
             'linha' => 1],
     ]);
 
-    $relatorio->set_formFocus('parametroCargo');
-    $relatorio->set_formLink('?');
     $relatorio->show();
-
     $page->terminaPagina();
 }
-echo "oi";

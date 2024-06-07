@@ -263,7 +263,7 @@ if ($acesso) {
     ));
 
     $relatorio->set_formFocus('contatos');
-    $relatorio->set_formLink('?');
+    
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a ficha cadastral");
     $relatorio->show();

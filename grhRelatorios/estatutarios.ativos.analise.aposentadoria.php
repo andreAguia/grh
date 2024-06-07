@@ -129,7 +129,7 @@ if ($acesso) {
     ));
 
     $relatorio->set_formFocus('lotacao');
-    $relatorio->set_formLink('?');
+    
     $relatorio->set_numGrupo(2);
     $relatorio->show();
 

@@ -101,7 +101,7 @@ if ($acesso) {
     ));
 
     $relatorio->set_formFocus('situacao');
-    $relatorio->set_formLink('?');
+    
     $relatorio->show();
 
     $page->terminaPagina();

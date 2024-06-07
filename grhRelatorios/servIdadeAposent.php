@@ -73,7 +73,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('sexo');
-    $relatorio->set_formLink('?');
+    
 
     $relatorio->show();
 

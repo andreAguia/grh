@@ -74,7 +74,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('parametroAno');
-    $relatorio->set_formLink('?');
+    
     $relatorio->show();
 
     $page->terminaPagina();

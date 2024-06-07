@@ -84,13 +84,8 @@ if ($acesso) {
                 'size' => 30,
                 'padrao' => $cargo,
                 'onChange' => 'formPadrao.submit();',
-                'linha' => 1)));
-
-        $relatorio->set_formFocus('cargo');
-        $relatorio->set_formLink('?');
+                'linha' => 1)));       
     }
-
     $relatorio->show();
-
     $page->terminaPagina();
 }

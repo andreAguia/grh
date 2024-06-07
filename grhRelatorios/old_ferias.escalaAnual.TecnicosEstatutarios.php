@@ -124,7 +124,7 @@ if ($acesso) {
     ));
 
     $relatorio->set_formFocus('mesBase');
-    $relatorio->set_formLink('?');
+    
     $relatorio->show();
 
     $page->terminaPagina();

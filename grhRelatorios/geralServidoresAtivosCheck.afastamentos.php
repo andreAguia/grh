@@ -77,7 +77,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('ano');
-    $relatorio->set_formLink('?');    
+        
 
     $relatorio->set_bordaInterna(true);
 

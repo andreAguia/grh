@@ -79,9 +79,7 @@ if ($acesso) {
             'col' => 3,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
-
-    $relatorio->set_formFocus('anoBase');
-    $relatorio->set_formLink('?');
+    
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a Folha de Presença de " . $trimestre . "° Trimestre / $anoBase");
     $relatorio->show();

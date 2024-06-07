@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sistema GRH
  * 
@@ -74,7 +75,7 @@ if ($acesso) {
     $relatorio->set_label(['Servidor', 'Lotação', 'Telefones', 'Emails']);
     $relatorio->set_classe(["pessoal", null, "pessoal", "pessoal"]);
     $relatorio->set_metodo(["get_nomeECargo", null, "get_telefones", "get_emails"]);
-    $relatorio->set_align(["left","left","left","left"]);
+    $relatorio->set_align(["left", "left", "left", "left"]);
     $relatorio->set_bordaInterna(true);
     $relatorio->set_conteudo($result);
 
@@ -97,9 +98,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $relatorio->set_formFocus('lotacao');
-    $relatorio->set_formLink('?');
     $relatorio->show();
-
     $page->terminaPagina();
 }

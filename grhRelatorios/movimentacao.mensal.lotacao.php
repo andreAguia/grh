@@ -81,7 +81,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('ano');
-    $relatorio->set_formLink('?');
+    
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

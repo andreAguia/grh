@@ -86,7 +86,7 @@ if ($acesso) {
         $totalColuna[$coluna] += $totalLinha;
         $linha++;
     }
-    
+
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Quantidade de Servidores Ativos por Diretoria / Cargo');
     $relatorio->set_label($label);
@@ -119,10 +119,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $relatorio->set_formFocus('perfil');
-    $relatorio->set_formLink('?');
-
     $relatorio->show();
-
     $page->terminaPagina();
 }

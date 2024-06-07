@@ -223,10 +223,7 @@ if ($acesso) {
             'title' => 'Atualiza a tabela',
             'linha' => 1),
     ));
-
-    $relatorio->set_formFocus('ano');
-    $relatorio->set_formLink('?');
+    
     $relatorio->show();
-
     $page->terminaPagina();
 }

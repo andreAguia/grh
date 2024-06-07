@@ -96,7 +96,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('relatorioLotacao');
-    $relatorio->set_formLink('?');
+    
 
     $relatorio->show();
 

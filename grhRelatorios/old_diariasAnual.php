@@ -71,7 +71,7 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->set_formFocus('anoBase');
-    $relatorio->set_formLink('?');
+    
 
     $relatorio->set_colunaSomatorio(6);
     $relatorio->set_funcaoSomatorio('formataMoeda');

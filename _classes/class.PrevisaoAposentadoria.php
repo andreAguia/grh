@@ -1099,7 +1099,7 @@ class PrevisaoAposentadoria {
          */
 
         # Exibe obs para quando o servidor tem tempo celetista
-        if (!empty($this->dtIngresso)) {
+        if (!empty($this->dtIngresso) OR !empty($this->dtIngressoApartir)) {
             if ($this->servidorDataIngresso == "09/09/2003") {
                 $this->servidorDataIngresso .= " *";
                 $mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
@@ -1131,7 +1131,7 @@ class PrevisaoAposentadoria {
         }
 
         # Data de Ingresso A partir (se tiver)      
-        if (!is_null($this->dtIngressoApartir)) {
+        if (!empty($this->dtIngressoApartir)) {
             array_unshift($array,
                     ["Data de Ingresso",
                         $this->dtIngressoApartirDescricao,

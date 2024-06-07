@@ -36,20 +36,6 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # Define o array de modalidades de aposentadoria
-    $arrayModalidades = [
-        ["Regras Permanentes", "voluntaria"],
-        ["Regras Permanentes", "compulsoria"],
-        ["Regras de Transição", "pontos1"],
-        ["Regras de Transição", "pontos2"],
-        ["Regras de Transição", "pedagio1"],
-        ["Regras de Transição", "pedagio2"],
-        ["Regras de Transição", "pedagio3"],
-        ["Direito Adquirido", "adquirido1"],
-        ["Direito Adquirido", "adquirido2"],
-        ["Direito Adquirido", "adquirido3"],
-    ];
-
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -187,7 +173,7 @@ if ($acesso) {
             $tabela->set_label(["Servidor", "Regras Permanentes", "Regras de Transição", "Direito Adquirido"]);
             $tabela->set_align(['left']);
             $tabela->set_valign(['center', 'top', 'top', 'top']);
-            $tabela->set_width([20, 20, 40, 20]);
+            $tabela->set_width([25, 25, 25, 25]);
             $tabela->set_titulo("Previsão Geral de Aposentadoria");
             $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
             $tabela->set_classe(["Pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
@@ -264,8 +250,8 @@ if ($acesso) {
                     }
 
                     # Preenche as modalidades
-                    foreach ($arrayModalidades as $item) {
-                        $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $cadaServidor[0]);
+                    foreach ($this->get_modalidades as $item) {
+                        $previsaoAposentadoria = new PrevisaoAposentadoria($item, $cadaServidor[0]);
                         $arrayLinha[] = $previsaoAposentadoria->get_textoReduzido($cadaServidor[0]);
 
                         if ($primeiraLinha) {

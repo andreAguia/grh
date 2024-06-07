@@ -35,21 +35,6 @@ if ($acesso) {
         [4, "Militar"]
     ];
 
-    # Define o array de modalidades de aposentadoria
-    $arrayResumo = [
-        ["Regras Permanentes", "voluntaria"],
-        ["Regras Permanentes", "compulsoria"],
-        ["Regras de Transição", "pontos1"],
-        ["Regras de Transição", "pontos2"],
-        ["Regras de Transição", "pedagio1"],
-        ["Regras de Transição", "pedagio2"],
-        ["Regras de Transição", "pedagio3"],
-        ["Direito Adquirido", "adquirido1"],
-        ["Direito Adquirido", "adquirido2"],
-        ["Direito Adquirido", "adquirido3"],
-        ["Direito Adquirido", "adquirido4"],
-    ];
-
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -305,20 +290,21 @@ if ($acesso) {
 
             # Define as variáveis
             $subTitulo = "";
-
+            
             # Percorre o array
-            foreach ($arrayResumo as $item) {
+            foreach ($aposentadoria->get_modalidades() as $item) {
+                $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidorPesquisado);
 
                 # Verifica se mudou o subTitulo
-                if ($item[0] <> $subTitulo) {
+                if ($previsaoAposentadoria->get_tipo() <> $subTitulo) {
                     # Verifica se é primeiro
                     if ($subTitulo <> "") {
                         $grid2->fechaGrid();
                     }
 
-                    $subTitulo = $item[0];
+                    $subTitulo = $previsaoAposentadoria->get_tipo();
 
-                    tituloTable($item[0], null, "clique no titulo da regra de aposentadoria para maiores detalhes");
+                    tituloTable($previsaoAposentadoria->get_tipo(), null, "clique no titulo da regra de aposentadoria para maiores detalhes");
                     br();
 
                     # Começa o grid
@@ -326,8 +312,7 @@ if ($acesso) {
                 }
 
                 $grid2->abreColuna(12, 12, 6);
-                $aposentadoria = new PrevisaoAposentadoria($item[1], $idServidorPesquisado);
-                $aposentadoria->exibe_analiseLink($idServidorPesquisado, "?fase={$item[1]}", false);
+                $previsaoAposentadoria->exibe_analiseLink($idServidorPesquisado, "?fase={$item}", false);
                 $grid2->fechaColuna();
             }
 
@@ -415,8 +400,7 @@ if ($acesso) {
             Grh::listaDadosServidorRelatorio2($idServidorPesquisado, "Previsão de Aposentadoria");
             br();
 
-            # Define a função 
-
+            # Define a função
             function formataDiasFaltantes($texto) {
                 # Verifica se é numérico
                 if (is_numeric($texto)) {
@@ -432,10 +416,10 @@ if ($acesso) {
             }
 
             # Define o array do relatório
-            foreach ($arrayResumo as $item) {
-                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidorPesquisado);
+            foreach ($aposentadoria->get_modalidades() as $item) {
+                $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidorPesquisado);
                 $arrayRelatorio[] = [
-                    $item[0],
+                    $previsaoAposentadoria->get_tipo(),
                     $previsaoAposentadoria->get_descricao() . "<p id='psubtituloRel'>{$previsaoAposentadoria->get_legislacao()}</p>",
                     str_replace("<br/>", " ", $previsaoAposentadoria->exibe_analiseRelatorio()),
                     formataDiasFaltantes($previsaoAposentadoria->get_diasFaltantes())];

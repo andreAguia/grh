@@ -1313,78 +1313,46 @@ class Aposentadoria {
 
     public function exibe_previsãoPermanente($idServidor = null) {
 
-        # Define o array de modalidades de aposentadoria
-        $arrayModalidades = [
-            ["Regras Permanentes", "voluntaria"],
-            ["Regras Permanentes", "compulsoria"],
-            ["Regras de Transição", "pontos1"],
-            ["Regras de Transição", "pontos2"],
-            ["Regras de Transição", "pedagio1"],
-            ["Regras de Transição", "pedagio2"],
-            ["Regras de Transição", "pedagio3"],
-            ["Direito Adquirido", "adquirido1"],
-            ["Direito Adquirido", "adquirido2"],
-            ["Direito Adquirido", "adquirido3"],
-        ];
-
-        # Preenche as modalidades
-        foreach ($arrayModalidades as $item) {
-
-            if ($item[0] == "Regras Permanentes") {
-                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
-                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
-            }
+        foreach ($this->get_modalidades("Regras Permanentes") as $item) {
+            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
+            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
+            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
         }
     }
 
-    ###########################################################
+    #####################################################
 
     public function exibe_previsãoTransicao($idServidor = null) {
-
-        # Define o array de modalidades de aposentadoria
-        $arrayModalidades = [
-            ["Regras Permanentes", "voluntaria"],
-            ["Regras Permanentes", "compulsoria"],
-            ["Regras de Transição", "pontos1"],
-            ["Regras de Transição", "pontos2"],
-            ["Regras de Transição", "pedagio1"],
-            ["Regras de Transição", "pedagio2"],
-            ["Regras de Transição", "pedagio3"],
-            ["Direito Adquirido", "adquirido1"],
-            ["Direito Adquirido", "adquirido2"],
-            ["Direito Adquirido", "adquirido3"],
-        ];
-
-        $grid1 = new Grid();
-        $grid1->abreColuna(6);
-        #titulo("Pontos");
+        
         # Preenche as modalidades
-        foreach ($arrayModalidades as $item) {
-
-            if ($item[0] == "Regras de Transição") {
-
-                if ($item[1] == "pedagio1") {
-                    $grid1->fechaColuna();
-                    $grid1->abreColuna(6);
-                    #titulo("Pedágio");
-                }
-
-                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
-                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
-            }
+        foreach ($this->get_modalidades("Regras de Transição") as $item) {
+            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
+            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
+            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
         }
-
-        $grid1->fechaColuna();
-        $grid1->fechaGrid();
     }
 
     ###########################################################
 
     public function exibe_previsãoAdquirido($idServidor = null) {
 
-        # Define o array de modalidades de aposentadoria
+        foreach ($this->get_modalidades("Direito Adquirido") as $item) {
+            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
+            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
+            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
+        }
+    }
+
+    #####################################################
+
+    /**
+     * Método get_modalidades
+     * retorna um array com as modalidades de aposentadoria
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_modalidades($tipo = null) {
+
         $arrayModalidades = [
             ["Regras Permanentes", "voluntaria"],
             ["Regras Permanentes", "compulsoria"],
@@ -1396,18 +1364,25 @@ class Aposentadoria {
             ["Direito Adquirido", "adquirido1"],
             ["Direito Adquirido", "adquirido2"],
             ["Direito Adquirido", "adquirido3"],
+            ["Direito Adquirido", "adquirido4"],
         ];
 
-        # Preenche as modalidades
-        foreach ($arrayModalidades as $item) {
-
-            if ($item[0] == "Direito Adquirido") {
-                $previsaoAposentadoria = new PrevisaoAposentadoria($item[1], $idServidor);
-                $link = "?fase=carregarPagina&id={$idServidor}&link={$item[1]}";
-                $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
+        if (is_null($tipo)) {
+            foreach ($arrayModalidades as $item) {
+                # Pega os dados e coloca no array de retorno
+                $retorno[] = $item[1];
+            }
+        } else {
+            foreach ($arrayModalidades as $item) {
+                # Pega os dados e coloca no array de retorno
+                if ($item[0] == $tipo) {
+                    $retorno[] = $item[1];
+                }
             }
         }
+
+        return $retorno;
     }
 
-    ###########################################################
+    #####################################################
 }

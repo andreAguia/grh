@@ -72,8 +72,8 @@ if ($acesso) {
                                       nome,
                                       idPerfil,
                                       CASE novoServidor
-                                        WHEN 1 THEN 'Sim'
-                                        WHEN 0 THEN 'Não'
+                                        WHEN 1 THEN '<span class=\"label success\">Sim</span>'
+                                        WHEN 0 THEN '<span class=\"label alert\">Não</span>'
                                         ELSE '--'
                                       END,
                                       idPerfil,
@@ -119,7 +119,7 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(["id", "Tipo", "Perfil", "Permissões", "Permite Novos Servidores?", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
     $objeto->set_colspanLabel([null, null, null, null, null, 2, null, 2]);
-    $objeto->set_width([5, 15, 15, 30, 10, 5, 5, 5, 5]);
+    $objeto->set_width([5, 15, 15, 25, 10, 5, 5, 5, 5]);
     $objeto->set_align(["center", "center", "left", "left"]);
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 

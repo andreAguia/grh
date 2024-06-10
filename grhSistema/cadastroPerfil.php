@@ -67,20 +67,26 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT idPerfil,
+    $objeto->set_selectLista("SELECT idPerfil,
                                       tipo,
                                       nome,
+                                      idPerfil,
+                                      CASE novoServidor
+                                        WHEN 1 THEN 'Sim'
+                                        WHEN 0 THEN 'Não'
+                                        ELSE '--'
+                                      END,
                                       idPerfil,
                                       idPerfil,
                                       idPerfil,
                                       idPerfil
                                  FROM tbperfil
-                                WHERE nome LIKE "%' . $parametro . '%"
-                                   OR idPerfil LIKE "%' . $parametro . '%" 
-                             ORDER BY tipo,nome');
+                                WHERE nome LIKE '%{$parametro}%'
+                                   OR idPerfil LIKE '%{$parametro}%'
+                             ORDER BY tipo,nome");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
+    $objeto->set_selectEdita("SELECT nome,
                                      tipo,
                                      progressao,
                                      trienio,
@@ -93,8 +99,8 @@ if ($acesso) {
                                      novoServidor,
                                     obs
                                FROM tbperfil
-                              WHERE idPerfil = ' . $id);
-    
+                              WHERE idPerfil = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -104,26 +110,26 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 1)) {
         $objeto->set_linkExcluir('?fase=excluir');  // Excluir somente para administradores
     }
-    
+
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Tipo", "Perfil", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
-    $objeto->set_colspanLabel([null, null, null, 2, null, 2]);
-    $objeto->set_width([5, 23, 30, 10, 5, 10, 5]);
-    $objeto->set_align(["center", "center", "left"]);
+    $objeto->set_label(["id", "Tipo", "Perfil", "Permissões", "Permite Novos Servidores?", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
+    $objeto->set_colspanLabel([null, null, null, null, null, 2, null, 2]);
+    $objeto->set_width([5, 15, 15, 30, 10, 5, 5, 5, 5]);
+    $objeto->set_align(["center", "center", "left", "left"]);
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe([null, null, null, "Pessoal", null, "Pessoal", null]);
-    $objeto->set_metodo([null, null, null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null]);
+    $objeto->set_classe([null, null, null, "Perfil", null, "Pessoal", null, "Pessoal", null]);
+    $objeto->set_metodo([null, null, null, "exibe_permissoes", null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([3, 5]);
+    $objeto->set_colunaSomatorio([5, 7]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -136,7 +142,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, $servAtivos, null, $servInativos));
+    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -146,9 +152,6 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idPerfil');
-
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -264,7 +267,7 @@ if ($acesso) {
     $botaoRel->set_url('../grhRelatorios/perfil.php');
 
     $objeto->set_botaoListarExtra([$botaoGra, $botaoRel]);
-    
+
     $objeto->set_rotinaExtraListar("callout");
     $objeto->set_rotinaExtraListarParametro("Os Perfis do tipo Outros NÃO APARECERÃO nas listagens e relatório de servidores.<br/>Estes perfis são para bolsistas e estagiários que só estão no cadastro para poderem acessar o sistema.");
 
@@ -403,7 +406,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-        
+
         ################################################################
 
         case "relatorio" :
@@ -423,7 +426,7 @@ if ($acesso) {
                 $lista->showRelatorio();
             }
             break;
-            
+
         ################################################################    
 
         case "grafico" :
@@ -469,7 +472,7 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-        
+
         ################################################################
 
         case "historico" :

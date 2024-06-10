@@ -151,7 +151,8 @@ if ($acesso) {
                 $tabela->set_titulo('Responsáveis pela Prestação de Contas');
                 $tabela->set_label(["Tipo", "IdFuncional", "Servidor", "Nomeação", "Publicação", "Detalhe", "Relatório"]);
                 $tabela->set_conteudo($result);
-                $tabela->set_align(array("left", "center", "left", "center", "center", "left"));
+                $tabela->set_align(["left", "center", "left", "center", "center", "left"]);
+                $tabela->set_width([15, 10, 20, 10, 10, 25, 5]);
 
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
                 $tabela->set_classe([null, null, null, null, null, null, "CadastroResponsavel"]);
@@ -228,6 +229,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php", "date_to_php", "date_to_php"]);
                 $tabela->set_classe([null, null, null, null, null, null, null, null, "CadastroResponsavel"]);
                 $tabela->set_metodo([null, null, null, null, null, null, null, null, "exibeAnexo"]);
+                $tabela->set_width([15, 7, 20, 7, 7, 7, 7, 25, 5]);
 
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');

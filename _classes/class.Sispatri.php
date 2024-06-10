@@ -686,7 +686,7 @@ class Sispatri {
         # Servidores ativos que Entregaram o sispatri
         $numSispatriAtivos = $this->get_numServidoresAtivos();
 
-        # Servidores no total
+        # Classe
         $pessoal = new Pessoal();
 
         # Geral - Por Cargo
@@ -739,6 +739,7 @@ class Sispatri {
         # Exemplo de tabela simples
         $tabela = new Tabela();
         $tabela->set_titulo("NÃO Entregaram");
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
         $tabela->set_label(array("Tipo do Cargo", "Servidores"));
         $tabela->set_width(array(80, 20));
@@ -755,11 +756,14 @@ class Sispatri {
 
     public function exibeServidoresEntregaramAtivos() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresEntregaramAtivos();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que ENTREGARAM a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
         $tabela->set_conteudo($result);
         $tabela->set_align(array("center", "left", "left", "left"));
@@ -778,11 +782,14 @@ class Sispatri {
 
         if ($this->get_numServidoresNaoAtivos() > 0) {
 
+            # Classe
+            $pessoal = new Pessoal();
+
             $result = $this->get_servidoresEntregaramNaoAtivos();
 
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Inativos que Entregaram a Declaração do Sispatri');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
             $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
             $tabela->set_conteudo($result);
             $tabela->set_align(array("center", "left", "left", "left"));
@@ -800,11 +807,14 @@ class Sispatri {
 
     public function exibeServidoresNaoEntregaramAtivos() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresNaoEntregaramAtivos();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
@@ -821,11 +831,14 @@ class Sispatri {
 
     public function exibeServidoresNaoEntregaramAtivosFerias() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresNaoEntregaramAtivosFerias();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
@@ -842,11 +855,14 @@ class Sispatri {
 
     public function exibeServidoresNaoEntregaramAtivosLicPremio() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresNaoEntregaramAtivosLicPremio();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
@@ -863,11 +879,14 @@ class Sispatri {
 
     public function exibeServidoresNaoEntregaramAtivosLicMedica() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresNaoEntregaramAtivosLicMedica();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
@@ -884,11 +903,14 @@ class Sispatri {
 
     public function exibeServidoresNaoEntregaramAtivosTrabalhando() {
 
+        # Classe
+        $pessoal = new Pessoal();
+
         $result = $this->get_servidoresNaoEntregaramAtivosTrabalhando();
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);

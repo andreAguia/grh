@@ -101,6 +101,36 @@ p#puser{
 }
 
 /*******************************************
+* Parabéns Uenf
+********************************************/
+p#pParabens{
+    font-size: 24px;
+    padding: 0px;
+    margin: 0px;
+    text-align: center;
+    color: #02548b;
+}
+
+p#pIdade{
+    font-size: 180px;
+    padding: 0px;
+    margin: -70px;
+    text-align: center;
+    color: #02548b;
+}
+
+p#pAniversarioMensagem{
+    font-size: 14px;
+    padding: 0px;
+    margin: 0px;
+    text-align: justify;
+    color: #02548b;
+    text-indent: 50px;
+    line-height: 18px;
+}
+
+
+/*******************************************
 * Auxilio Transporte
 ********************************************/
 

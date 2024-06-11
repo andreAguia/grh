@@ -42,9 +42,14 @@ class MenuPrincipal {
         # Área Central 
         $grid->abreColuna(12, 8, 5);
 
-        # dia do Profissional de RH
-        if (date("m-d") == "06-03") {
+        # Dia do Profissional de RH
+        if (date("d-m") == "03-06") {
             $this->moduloDiaRh();
+        }
+
+        # Aniversário de Uenf
+        if (date("d-m") == "16-08") {
+            $this->moduloNiverUenf();
         }
 
         # Sispatri        
@@ -269,6 +274,64 @@ class MenuPrincipal {
         br();
 
         p("Parabéns Servidor pelo Dia do<br/>Profissional de Recursos Humanos", "f16", "center");
+
+        $painel->fecha();
+    }
+
+    ######################################################################################################################
+
+    /**
+     * Método moduloSispatri
+     */
+    private function moduloNiverUenf() {
+
+        # Pega a idade da Uenf
+        $dataNascimento = "16/08/1993";
+        list($dia, $mes, $ano) = explode('/', $dataNascimento);
+        $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
+        $nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
+        $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+
+        $painel = new Callout();
+        $painel->abre();
+
+        titulo("Aniversário da Uenf");
+        br();
+
+        $div = new Div('center');
+        $div->abre();
+
+        $figura = new Imagem(PASTA_FIGURAS . 'uenfAniversario.jpg', 'Feliz Aniversário UENF', '70%', '70%');
+        $figura->set_class('center');
+        $figura->show();
+
+        $div->fecha();
+
+        p($idade, "pIdade");
+        p("Anos !!", "pParabens");
+        br();
+
+        $mensagem = "No dia 16 de agosto de 1993, a Universidade Estadual do"
+                . " Norte Fluminense, em Campos dos Goytacazes, promoveu uma"
+                . " aula magna que marcaria sua inauguração oficial.";
+
+        p($mensagem, "pAniversarioMensagem");
+        br();
+
+        $mensagem = "Nomes de expressão como do ex-governador Leonel Brizola,"
+                . " ex-senador Darcy Ribeiro e do arquiteto Oscar Niemeyer"
+                . " fizeram parte da concretização desse sonho iniciado por"
+                . " um grupo de campistas em 1989.";
+
+        p($mensagem, "pAniversarioMensagem");
+        br();
+
+        $mensagem = "Hoje {$idade} anos depois a Uenf é uma realidade.";
+
+        p($mensagem, "pAniversarioMensagem");
+        br();
+        
+        p("Parabéns Uenf !!", "pParabens");
 
         $painel->fecha();
     }

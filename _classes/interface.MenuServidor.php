@@ -746,12 +746,14 @@ class MenuServidor {
         $botao->set_title('Cadastro da Documentação do Servidor');
         $menu->add_item($botao);
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Formação');
-        $botao->set_url('servidorFormacao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro de Formação Escolar do Servidor');
-        $menu->add_item($botao);
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
+            $botao = new BotaoGrafico();
+            $botao->set_label('Formação');
+            $botao->set_url('servidorFormacao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro de Formação Escolar do Servidor');
+            $menu->add_item($botao);
+        }
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
             $botao = new BotaoGrafico();

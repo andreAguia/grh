@@ -12,7 +12,8 @@ class PrevisaoAposentadoria {
      */
     private $tipo = null;           // O Tipo da regra de aposentadoria
     private $descricao = null;      // A descrição da da regra de aposentadoria
-    private $descricaoResumida = null;
+    private $descricaoResumida1 = null;
+    private $descricaoResumida2 = null;
     private $legislacao = null;     // A lei 
 
     /*
@@ -193,7 +194,7 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra Permanente";
                 $this->descricao = "Aposentadoria Voluntária por Idade e Tempo de Contribuição";
-                $this->descricaoResumida = "Aposentadoria Voluntária";
+                $this->descricaoResumida1 = "Aposentadoria Voluntária";
                 $this->legislacao = "Art. 2º, inciso III, da Lei Complementar nº 195/2021";
 
                 # Regras
@@ -226,7 +227,7 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra Permanente";
                 $this->descricao = "Aposentadoria Compulsória por Idade";
-                $this->descricaoResumida = "Aposentadoria Compulsória";
+                $this->descricaoResumida1 = "Aposentadoria Compulsória";
                 $this->legislacao = "Art. 2º, inciso II, da Lei Complementar nº 195/2021";
 
                 # Regras
@@ -258,7 +259,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra de Transição";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra dos Pontos - Integralidade e Paridade";
-                $this->descricaoResumida = "Pontos Integralidade e Paridade";
+                $this->descricaoResumida1 = "Pontos";
+                $this->descricaoResumida2 = "Integralidade e Paridade";
                 $this->legislacao = "Artigo 3º da EC nº 90/2021";
 
                 # Regras
@@ -345,7 +347,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra de Transição";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra dos Pontos - Média";
-                $this->descricaoResumida = "Pontos Média";
+                $this->descricaoResumida1 = "Pontos";
+                $this->descricaoResumida2 = "Média";
                 $this->legislacao = "Artigo 3º da EC nº 90/2021";
 
                 # Regras
@@ -438,7 +441,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra de Transição";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio - Integralidade e Paridade";
-                $this->descricaoResumida = "Pedágio Integralidade e Paridade";
+                $this->descricaoResumida1 = "Pedágio";
+                $this->descricaoResumida2 = "Integralidade e Paridade";
                 $this->legislacao = "Inciso V do artigo 4º da EC nº 90/2021";
 
                 # Regras
@@ -475,7 +479,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra de Transição";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio - Média";
-                $this->descricaoResumida = "Pedágio Média";
+                $this->descricaoResumida1 = "Pedágio";
+                $this->descricaoResumida2 = "Média";
                 $this->legislacao = "Artigo 4º da EC nº 90/2021.";
 
                 # Regras
@@ -512,7 +517,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Regra de Transição";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio com Redutor de Idade - Integralidade e Paridade";
-                $this->descricaoResumida = "Pedágio Redutor de Idade";
+                $this->descricaoResumida1 = "Pedágio";
+                $this->descricaoResumida2 = "Redutor de Idade";
                 $this->legislacao = "§5º do artigo 4º da EC nº 90/2021.";
 
                 # Regras
@@ -552,7 +558,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição";
-                $this->descricaoResumida = "C.F. Art. 40, §1º, III, alínea a.";
+                $this->descricaoResumida1 = "C.F. Art. 40";
+                $this->descricaoResumida2 = "§1º, III, alínea a.";
                 $this->legislacao = "C.F. Art. 40, §1º, III, alínea a.";
 
                 # Regras
@@ -584,7 +591,8 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade";
-                $this->descricaoResumida = "C.F. Art. 40, §1º, III, alínea b.";
+                $this->descricaoResumida1 = "C.F. Art. 40";
+                $this->descricaoResumida2 = "§1º, III, alínea b.";
                 $this->legislacao = "C.F. Art. 40, §1º, III, alínea b.";
 
                 # Regras
@@ -614,7 +622,7 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição";
-                $this->descricaoResumida = "Art. 6 da EC nº 41/2003";
+                $this->descricaoResumida1 = "Art. 6 da EC nº 41/2003";
                 $this->legislacao = "Art. 6 da EC nº 41/2003";
 
                 # Regras
@@ -646,7 +654,7 @@ class PrevisaoAposentadoria {
                 # Descrição
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Com Redutor de Idade";
-                $this->descricaoResumida = "Art. 3 da EC nº 47/2005";
+                $this->descricaoResumida1 = "Art. 3 da EC nº 47/2005";
                 $this->legislacao = "Art. 3 da EC nº 47/2005";
 
                 # Regras
@@ -1328,7 +1336,7 @@ class PrevisaoAposentadoria {
         echo "<a href='{$link}'>";
 
         if ($resumido) {
-            tituloTable($this->descricaoResumida);
+            tituloTable($this->descricaoResumida1, null, $this->descricaoResumida2);
         } else {
             tituloTable("{$this->tipo}<br/>{$this->descricao}", null, $this->legislacao);
         }
@@ -1805,9 +1813,16 @@ class PrevisaoAposentadoria {
 
     ###########################################################
 
-    public function get_descricaoResumida() {
+    public function get_descricaoResumida1() {
 
-        return $this->descricaoResumida;
+        return $this->descricaoResumida1;
+    }
+
+###########################################################
+
+    public function get_descricaoResumida2() {
+
+        return $this->descricaoResumida2;
     }
 
     ###########################################################

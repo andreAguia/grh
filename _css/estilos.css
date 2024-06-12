@@ -678,6 +678,11 @@ hr#hrPrevisaoAposentAnalise{
     margin: 3px;
 }
 
+div#jujuba{
+    display: inline-block
+}
+
+
 /*******************************************
  * Estatística
  *******************************************/

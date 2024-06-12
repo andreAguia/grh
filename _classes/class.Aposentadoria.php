@@ -1314,33 +1314,90 @@ class Aposentadoria {
     public function exibe_previsãoPermanente($idServidor = null) {
 
         foreach ($this->get_modalidades("Regras Permanentes") as $item) {
-            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
-            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
-            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
-        }
-    }
-
-    #####################################################
-
-    public function exibe_previsãoTransicao($idServidor = null) {
-        
-        # Preenche as modalidades
-        foreach ($this->get_modalidades("Regras de Transição") as $item) {
-            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
-            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
-            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
+            $this->exibe_previsão($idServidor, $item);
         }
     }
 
     ###########################################################
 
+    public function exibe_previsãoPermanente2($idServidor = null) {
+
+        $modalidades = $this->get_modalidades("Regras Permanentes");
+
+        $grid1 = new Grid();
+
+        foreach ($modalidades as $item) {
+            $grid1->abreColuna(12 / count($modalidades));
+
+            $this->exibe_previsão($idServidor, $item);
+            $grid1->fechaColuna();
+        }
+        
+        $grid1->fechaGrid();
+    }
+
+    #####################################################  
+
+    public function exibe_previsãoTransicao($idServidor = null) {
+
+        # Preenche as modalidades
+        foreach ($this->get_modalidades("Regras de Transição") as $item) {
+            $this->exibe_previsão($idServidor, $item);
+        }
+    }
+
+    ###########################################################
+
+    public function exibe_previsãoTransicao2($idServidor = null) {
+
+        $modalidades = $this->get_modalidades("Regras de Transição");
+
+        $grid1 = new Grid();
+
+        foreach ($modalidades as $item) {
+            $grid1->abreColuna(12 / count($modalidades));
+
+            $this->exibe_previsão($idServidor, $item);
+            $grid1->fechaColuna();
+        }
+        
+        $grid1->fechaGrid();
+    }
+
+    #####################################################  
+
     public function exibe_previsãoAdquirido($idServidor = null) {
 
         foreach ($this->get_modalidades("Direito Adquirido") as $item) {
-            $previsaoAposentadoria = new PrevisaoAposentadoria($item, $idServidor);
-            $link = "?fase=carregarPagina&id={$idServidor}&link={$item}";
-            $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
+            $this->exibe_previsão($idServidor, $item);
         }
+    }
+
+    #####################################################  
+
+    public function exibe_previsãoAdquirido2($idServidor = null) {
+
+         $modalidades = $this->get_modalidades("Direito Adquirido");
+
+        $grid1 = new Grid();
+
+        foreach ($modalidades as $item) {
+            $grid1->abreColuna(12 / count($modalidades));
+
+            $this->exibe_previsão($idServidor, $item);
+            $grid1->fechaColuna();
+        }
+        
+        $grid1->fechaGrid();
+    }
+
+    #####################################################  
+
+    public function exibe_previsão($idServidor = null, $tipo = null) {
+
+        $previsaoAposentadoria = new PrevisaoAposentadoria($tipo, $idServidor);
+        $link = "?fase=carregarPagina&id={$idServidor}&link={$tipo}";
+        $previsaoAposentadoria->exibe_analiseLink($idServidor, $link);
     }
 
     #####################################################

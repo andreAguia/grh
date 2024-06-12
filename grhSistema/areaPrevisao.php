@@ -42,9 +42,11 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Permanente"));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroTipo', $parametroTipo);
 
     # Pega o Link (quando tem)
     $link = get("link");
@@ -139,10 +141,27 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(8);
             $form->add_item($controle);
+
+            # tipo
+            $arrayTipo = ["Todos", "Permanentes", "Transição", "Direito Adquirido"];
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($arrayTipo);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
             $form->show();
 
-            # Exibe a lista
-            $select = "SELECT tbservidor.idServidor,
+            switch ($parametroTipo) {
+                case "Todos" :
+                    
+                    # Exibe a lista
+                    $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor
@@ -153,33 +172,154 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND idPerfil = 1";
 
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
+                    # Verifica se tem filtro por lotação
+                    if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                        if (is_numeric($parametroLotacao)) {
+                            $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                        } else { # senão é uma diretoria genérica
+                            $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    $select .= " ORDER BY tbpessoa.nome";
+
+                    $result2 = $pessoal->select($select);
+                    $count = $pessoal->count($select);
+
+                    # Exibe a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($result2);
+                    $tabela->set_label(["Servidor", "Regras Permanentes", "Regras de Transição", "Direito Adquirido"]);
+                    $tabela->set_align(['left']);
+                    $tabela->set_valign(['center', 'top', 'top', 'top']);
+                    $tabela->set_width([25, 25, 25, 25]);
+                    $tabela->set_titulo("Previsão Geral de Aposentadoria");
+                    $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
+                    $tabela->set_classe(["Pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
+                    $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoPermanente", "exibe_previsãoTransicao", "exibe_previsãoAdquirido"]);
+                    $tabela->set_bordaInterna(true);
+                    $tabela->show();
+                    break;
+
+                case "Permanentes":
+
+                    # Exibe a lista
+                    $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+                    # Verifica se tem filtro por lotação
+                    if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                        if (is_numeric($parametroLotacao)) {
+                            $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                        } else { # senão é uma diretoria genérica
+                            $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    $select .= " ORDER BY tbpessoa.nome";
+
+                    $result2 = $pessoal->select($select);
+                    $count = $pessoal->count($select);
+
+                    # Exibe a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($result2);
+                    $tabela->set_label(["Servidor", "Regras Permanentes"]);
+                    $tabela->set_align(['left']);
+                    $tabela->set_width([25, 75]);
+                    $tabela->set_titulo("Previsão Geral de Aposentadoria");
+                    $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
+                    $tabela->set_classe(["Pessoal", "Aposentadoria"]);
+                    $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoPermanente2"]);
+                    $tabela->set_bordaInterna(true);
+                    $tabela->show();
+                    break;
+                case "Transição":
+                    # Exibe a lista
+                    $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+                    # Verifica se tem filtro por lotação
+                    if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                        if (is_numeric($parametroLotacao)) {
+                            $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                        } else { # senão é uma diretoria genérica
+                            $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    $select .= " ORDER BY tbpessoa.nome";
+
+                    $result2 = $pessoal->select($select);
+                    $count = $pessoal->count($select);
+
+                    # Exibe a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($result2);
+                    $tabela->set_label(["Servidor", "Regras Permanentes"]);
+                    $tabela->set_align(['left']);
+                    $tabela->set_valign(['center', 'top', 'top', 'top']);
+                    $tabela->set_width([25, 75]);
+                    $tabela->set_titulo("Previsão Geral de Aposentadoria");
+                    $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
+                    $tabela->set_classe(["Pessoal", "Aposentadoria"]);
+                    $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoTransicao2"]);
+                    $tabela->set_bordaInterna(true);
+                    $tabela->show();
+                    break;
+
+                case "Direito Adquirido":
+                    # Exibe a lista
+                    $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND idPerfil = 1";
+
+                    # Verifica se tem filtro por lotação
+                    if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                        if (is_numeric($parametroLotacao)) {
+                            $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                        } else { # senão é uma diretoria genérica
+                            $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    $select .= " ORDER BY tbpessoa.nome";
+
+                    $result2 = $pessoal->select($select);
+                    $count = $pessoal->count($select);
+
+                    # Exibe a tabela
+                    $tabela = new Tabela();
+                    $tabela->set_conteudo($result2);
+                    $tabela->set_label(["Servidor", "Regras Permanentes"]);
+                    $tabela->set_align(['left']);
+                    $tabela->set_valign(['center', 'top', 'top', 'top']);
+                    $tabela->set_width([25, 75]);
+                    $tabela->set_titulo("Previsão Geral de Aposentadoria");
+                    $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
+                    $tabela->set_classe(["Pessoal", "Aposentadoria"]);
+                    $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoAdquirido2"]);
+                    $tabela->set_bordaInterna(true);
+                    $tabela->show();
+                    break;
             }
-
-            $select .= " ORDER BY tbpessoa.nome";
-
-            $result2 = $pessoal->select($select);
-            $count = $pessoal->count($select);
-
-            # Exibe a tabela
-            $tabela = new Tabela();
-            $tabela->set_conteudo($result2);
-            $tabela->set_label(["Servidor", "Regras Permanentes", "Regras de Transição", "Direito Adquirido"]);
-            $tabela->set_align(['left']);
-            $tabela->set_valign(['center', 'top', 'top', 'top']);
-            $tabela->set_width([25, 25, 25, 25]);
-            $tabela->set_titulo("Previsão Geral de Aposentadoria");
-            $tabela->set_subtitulo("(clique no retângulo da previsão para maiores detalhes)");
-            $tabela->set_classe(["Pessoal", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
-            $tabela->set_metodo(["get_nomeECargoELotacaoEId", "exibe_previsãoPermanente", "exibe_previsãoTransicao", "exibe_previsãoAdquirido"]);
-            $tabela->set_bordaInterna(true);
-            $tabela->show();
             break;
 
         ####################################### 

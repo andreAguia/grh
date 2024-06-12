@@ -53,12 +53,14 @@ class MenuServidor {
 //            $grid->fechaColuna();
 //        }
 
+        # Órgão de um servidor cedido
         if (!is_null($this->orgaoCedido)) {
             $grid->abreColuna(12);
             $this->moduloOrgaoCedido();
             $grid->fechaColuna();
         }
 
+        # Ocorrências
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             if ($situacao == "Ativo") {
                 $grid->abreColuna(12, 6, 4);
@@ -69,6 +71,7 @@ class MenuServidor {
             $grid->fechaColuna();
         }
 
+        # Vínculos Anteriores
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             if ($situacao == "Ativo") {
                 $grid->abreColuna(12, 6, 4);
@@ -79,12 +82,16 @@ class MenuServidor {
             $grid->fechaColuna();
         }
 
-        if ($situacao == "Ativo") {
-            $grid->abreColuna(12, 6, 4);
-            $this->moduloRamais();
-            $grid->fechaColuna();
+        # Ramais
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            if ($situacao == "Ativo") {
+                $grid->abreColuna(12, 6, 4);
+                $this->moduloRamais();
+                $grid->fechaColuna();
+            }
         }
-
+          
+        # funcionais
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
         } else {
@@ -92,8 +99,16 @@ class MenuServidor {
         }
 
         $this->moduloFuncionais();
+        
+        # Mostra os ramais se for bolsista
+        if ($this->perfilTipo == "Outros") { // Ser for estagiário ou bolsista
+            if ($situacao == "Ativo") {
+                $this->moduloRamais();
+            }
+        }
         $grid->fechaColuna();
 
+        # Pessoais e Benefícios
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(8, 6, 4);
         } else {
@@ -101,6 +116,7 @@ class MenuServidor {
         }
 
         $this->moduloPessoais();
+        
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $this->moduloBeneficios();
         } else {
@@ -108,22 +124,26 @@ class MenuServidor {
         }
         $grid->fechaColuna();
 
+        # Foto
         $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
 
+        # Financeiro
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloFinanceiro();
             $grid->fechaColuna();
         }
 
+        # Afastamentos
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloAfastamentos();
             $grid->fechaColuna();
         }
 
+        # Relatórios
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
             $this->moduloRelatorios();
@@ -596,7 +616,7 @@ class MenuServidor {
                 $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
             }
 
-            if ($this->perfil == 1) {                
+            if ($this->perfil == 1) {
                 $menu->add_item("linkWindow", "Ato de Investidura", "servidorAto.php?grh=1&id={$this->idServidor}");
             }
         }
@@ -615,7 +635,7 @@ class MenuServidor {
         /*
          * Declarações
          */
-        
+
         $menu->add_item('titulo', 'Declarações', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         if ($this->perfil == 1) {
@@ -649,7 +669,7 @@ class MenuServidor {
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Total', '../grhRelatorios/declaracao.Cedido.Frequencia.Total.php');
 //        }
-        
+
         /*
          * Despachos
          */
@@ -663,7 +683,7 @@ class MenuServidor {
         /*
          * Cadastro de Responsáveis
          */
-        
+
         $menu->add_item('titulo', 'Cadastro de Responsável', '#');
         $menu->add_item('linkWindow', 'Relatório - SETCONT', '../grhRelatorios/setcont.responsavel.php');
         #$menu->add_item('linkWindow', 'Relatório - Item XIX Art2º IN 44/2018', '../grhRelatorios/cadastroResponsavel.php');        
@@ -671,7 +691,7 @@ class MenuServidor {
         /*
          * Outros
          */
-        
+
         $menu->add_item('titulo', 'Outros Documentos', '#');
         $menu->add_item("linkWindow", "Ficha Cadastral", "../grhRelatorios/fichaCadastral.php");
 

@@ -52,7 +52,6 @@ class MenuServidor {
 //            $this->moduloCargoComissao();
 //            $grid->fechaColuna();
 //        }
-
         # Órgão de um servidor cedido
         if (!is_null($this->orgaoCedido)) {
             $grid->abreColuna(12);
@@ -90,7 +89,7 @@ class MenuServidor {
                 $grid->fechaColuna();
             }
         }
-          
+
         # funcionais
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
@@ -99,7 +98,7 @@ class MenuServidor {
         }
 
         $this->moduloFuncionais();
-        
+
         # Mostra os ramais se for bolsista
         if ($this->perfilTipo == "Outros") { // Ser for estagiário ou bolsista
             if ($situacao == "Ativo") {
@@ -116,7 +115,7 @@ class MenuServidor {
         }
 
         $this->moduloPessoais();
-        
+
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $this->moduloBeneficios();
         } else {
@@ -280,13 +279,15 @@ class MenuServidor {
         }
 
         # Pasta Funcional
-        $botao = new BotaoGrafico();
-        $botao->set_label('Pasta Funcional');
-        $botao->set_url('servidorPasta.php?grh=1');
-        #$botao->set_url('servidorPasta2.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Pasta funcional do servidor');
-        $menu->add_item($botao);
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $botao = new BotaoGrafico();
+            $botao->set_label('Pasta Funcional');
+            $botao->set_url('servidorPasta.php?grh=1');
+            #$botao->set_url('servidorPasta2.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Pasta funcional do servidor');
+            $menu->add_item($botao);
+        }
 
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
@@ -374,14 +375,6 @@ class MenuServidor {
         $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
 
-//        # Ato de investidura
-//        $botao = new BotaoGrafico();
-//        $botao->set_label('Atos de Investidura');
-//        $botao->set_url("servidorAto.php?grh=1&id={$this->idServidor}");
-//        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $this->tamanhoImagem, $this->tamanhoImagem);
-//        $botao->set_title('Cadastro de atos de investidura');
-//        $botao->set_target("_blank");
-//        $menu->add_item($botao);
         # Advertências
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
@@ -392,13 +385,16 @@ class MenuServidor {
             $menu->add_item($botao);
         }
 
-        $botao = new BotaoGrafico();
-        $botao->set_label('Suspensão');
-        $botao->set_url('servidorSuspensao.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'suspensao.png', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro dos dias suspensos');
-        #$botao->set_accessKey('i');
-        $menu->add_item($botao);
+        # Suspensão
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $botao = new BotaoGrafico();
+            $botao->set_label('Suspensão');
+            $botao->set_url('servidorSuspensao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'suspensao.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro dos dias suspensos');
+            #$botao->set_accessKey('i');
+            $menu->add_item($botao);
+        }
 
         $menu->show();
         br();

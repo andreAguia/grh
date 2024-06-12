@@ -42,8 +42,8 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
-    $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Permanente"));
-
+    $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Permanentes"));
+    
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroTipo', $parametroTipo);

@@ -9,7 +9,7 @@ class ExibeFoto {
      */
     private $fotoLargura = 70;
     private $fotoAltura = 90;
-    private $url = '#';
+    private $url = null;
 
 ######################################################################################################################    
 

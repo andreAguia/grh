@@ -99,12 +99,8 @@ if ($acesso) {
             'size' => 30,
             'padrao' => $lotacao,
             'onChange' => 'formPadrao.submit();',
-            'linha' => 1)));
-
-    $relatorio->set_formFocus('lotacao');
-    
+            'linha' => 1)));   
 
     $relatorio->show();
-
     $page->terminaPagina();
 }

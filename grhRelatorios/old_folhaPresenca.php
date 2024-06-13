@@ -80,8 +80,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $relatorio->set_formFocus('anoBase');
-    
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a Folha de Presença");
     $relatorio->show();

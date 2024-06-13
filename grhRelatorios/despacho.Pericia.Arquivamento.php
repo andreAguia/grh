@@ -77,7 +77,6 @@ $despacho->set_saltoRodape(3);
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $despacho->set_formFocus('assina');
     $despacho->set_formLink('?id=' . $id);
     $despacho->show();
 

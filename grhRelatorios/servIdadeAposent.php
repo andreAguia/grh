@@ -72,10 +72,6 @@ if ($acesso) {
             'col' => 4,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('sexo');
-    
-
     $relatorio->show();
-
     $page->terminaPagina();
 }

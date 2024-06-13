@@ -68,9 +68,6 @@ if ($acesso) {
             'padrao' => $relatorioAno,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('ano');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

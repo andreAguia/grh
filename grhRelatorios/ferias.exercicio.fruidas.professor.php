@@ -83,9 +83,6 @@ if ($acesso) {
             'linha' => 1)
     ));
 
-    $relatorio->set_formFocus('parametroAno');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

@@ -78,9 +78,6 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('mesBase');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

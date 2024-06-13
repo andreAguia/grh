@@ -76,9 +76,6 @@ if ($acesso) {
             'tipo' => 'submit')
         ));
 
-    $relatorio->set_formFocus('ano');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

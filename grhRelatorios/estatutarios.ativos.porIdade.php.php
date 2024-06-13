@@ -93,10 +93,8 @@ if ($acesso) {
 //            'linha' => 1)
 //    ));
 //
-//    $relatorio->set_formFocus('lotacao');
 //    
 
     $relatorio->show();
-
     $page->terminaPagina();
 }

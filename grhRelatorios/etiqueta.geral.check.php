@@ -84,10 +84,7 @@ if ($acesso) {
             'linha' => 1),
     ));
 
-    $relatorio->set_formFocus('situacao');
     $relatorio->set_formLink("?");
-
     $relatorio->show();
-
     $page->terminaPagina();
 }

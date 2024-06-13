@@ -77,8 +77,6 @@ if ($acesso) {
                 'onChange' => 'formPadrao.submit();',
                 'linha' => 1)));
 
-        $relatorio->set_formFocus('lotacao');
-        
     }
 
     $relatorio->show();

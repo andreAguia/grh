@@ -113,7 +113,9 @@ class PrevisaoAposentadoria {
     /*
      *  Relatório
      */
-    private $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.";
+    private $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria"
+            . " e as informações aqui contidas podem variar com o tempo.<br/>"
+            . "As regras de aposentadoria estão diponíveis no site da GRH. https://uenf.br/dga/grh/";
 
     /*
      *  Dados do servidor

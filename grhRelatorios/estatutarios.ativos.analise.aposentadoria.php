@@ -128,7 +128,6 @@ if ($acesso) {
             'linha' => 1),
     ));
 
-    $relatorio->set_formFocus('lotacao');
     
     $relatorio->set_numGrupo(2);
     $relatorio->show();

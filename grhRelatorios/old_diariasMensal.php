@@ -82,9 +82,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $relatorio->set_formFocus('ano');
-    
-
     $relatorio->set_colunaSomatorio(6);
     $relatorio->set_funcaoSomatorio('formataMoeda');
     $relatorio->set_textoSomatorio('Total das Diárias:');

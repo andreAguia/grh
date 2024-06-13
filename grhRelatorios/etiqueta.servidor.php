@@ -56,9 +56,7 @@ if ($acesso) {
             'linha' => 1),
     ));
 
-    $menuRelatorio->set_formFocus('numEtiquetas');
     $menuRelatorio->set_formLink("?");
-
     $menuRelatorio->show();
 
     # Limita a página

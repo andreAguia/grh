@@ -141,9 +141,6 @@ if ($acesso) {
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
-    # Foco do form
-    $objeto->set_formFocus('anobase');
-
     # Pega os dados da combo de Plano e Cargos
     $result = $pessoal->select('SELECT idPlano, 
                                       CONCAT("(",DATE_FORMAT(dtVigencia, "%d/%m/%Y"),") ",numDecreto)	

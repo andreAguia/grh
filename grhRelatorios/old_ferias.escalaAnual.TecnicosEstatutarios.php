@@ -123,9 +123,6 @@ if ($acesso) {
             'linha' => 1),
     ));
 
-    $relatorio->set_formFocus('mesBase');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

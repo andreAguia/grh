@@ -68,8 +68,7 @@ if ($acesso) {
     #                 'title' => 'Data do Documento',
     #                 'onChange' => 'formPadrao.submit();',
     #                 'col' => 4,
-    #                 'linha' => 1)));
-    #$ato->set_formFocus('dataEmissao');		
+    #                 'linha' => 1)));		
     #$ato->set_formLink('?id='.$idComissao);
     #$ato->set_logServidor($idFicha);
     #$ato->set_logDetalhe("Visualizou a Ficha Cadastral");

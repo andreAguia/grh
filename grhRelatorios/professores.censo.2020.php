@@ -72,10 +72,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1)));
-
-    $relatorio->set_formFocus('parametroAno');
     
     $relatorio->show();
-
     $page->terminaPagina();
 }

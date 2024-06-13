@@ -129,7 +129,6 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)));
 
-    $dec->set_formFocus('parametroAno');
     $dec->set_formLink('?');
     
     # Altera parte do texto de acordo com o sexo (gênero) do servidor

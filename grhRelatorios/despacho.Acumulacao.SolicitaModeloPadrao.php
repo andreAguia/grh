@@ -81,7 +81,6 @@ if ($acesso) {
             'linha' => 1)
     ));
 
-    $despacho->set_formFocus('assina');
     $despacho->set_formLink("?");
     $despacho->show();
 

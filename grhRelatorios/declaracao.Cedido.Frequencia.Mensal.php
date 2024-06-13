@@ -101,8 +101,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1)));
-
-    $dec->set_formFocus('ano');
+    
     $dec->set_formLink('?');
 
     if (!empty($ultimaFalta)) {

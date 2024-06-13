@@ -90,7 +90,6 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
 
-    $despacho->set_formFocus('assina');
     $despacho->set_formLink("?id={$id}");
     $despacho->show();
 

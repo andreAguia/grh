@@ -77,7 +77,6 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)
     ));
-    $menuRelatorio->set_formFocus("postIdServidor");
     $menuRelatorio->set_formLink("?");
     $menuRelatorio->show();
 

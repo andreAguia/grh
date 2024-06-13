@@ -261,8 +261,6 @@ if ($acesso) {
             'col' => 4,
             'linha' => 4)
     ));
-
-    $relatorio->set_formFocus('contatos');
     
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a ficha cadastral");

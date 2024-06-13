@@ -142,10 +142,7 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('mesBase');
     $relatorio->set_formLink('?parametroAno=' . $parametroAno . '&parametroLotacao=' . $parametroLotacao);
-
-    $relatorio->show();
-
+    $relatorio->show();    
     $page->terminaPagina();
 }

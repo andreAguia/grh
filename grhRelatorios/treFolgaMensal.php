@@ -84,9 +84,6 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('ano');
-    
     $relatorio->show();
-
     $page->terminaPagina();
 }

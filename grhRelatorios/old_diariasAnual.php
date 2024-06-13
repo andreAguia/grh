@@ -70,9 +70,6 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1)));
 
-    $relatorio->set_formFocus('anoBase');
-    
-
     $relatorio->set_colunaSomatorio(6);
     $relatorio->set_funcaoSomatorio('formataMoeda');
     $relatorio->set_textoSomatorio('Total das Diárias:');

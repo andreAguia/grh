@@ -91,8 +91,6 @@ if ($acesso) {
             'title' => 'Filtra por Concurso.',
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
-
-    $relatorio->set_formFocus('ano');
     
     $relatorio->set_numGrupo(7);
     $relatorio->show();

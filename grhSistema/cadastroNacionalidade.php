@@ -119,9 +119,6 @@ if ($acesso) {
     # Tipo de label do formulário
     $objeto->set_formlabelTipo(1);
 
-    # Foco do form
-    $objeto->set_formFocus('estciv');
-
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,

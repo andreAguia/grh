@@ -69,10 +69,7 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1)));
-
-    $relatorio->set_formFocus('anoBase');
     
     $relatorio->show();
-
     $page->terminaPagina();
 }

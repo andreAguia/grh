@@ -43,7 +43,7 @@ if ($acesso) {
 
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
-    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+    $idFuncionalServidor = $pessoal->get_idFuncional($idServidorPesquisado);
     $cargoServidor = $pessoal->get_cargoCompleto($idServidorPesquisado);
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
     $lotacao = $pessoal->get_nomeLotacao($idLotacao);
@@ -78,7 +78,7 @@ if ($acesso) {
 
     $despacho->set_destino("À Reitoria");
     $despacho->set_texto('Trata o presente processo de solicitação de ' . strtoupper($nomeLicenca) . ', do(a) servidor(a) <b>' . strtoupper($nomeServidor) . '</b>, '
-            . $cargoServidor . ', ID ' . $idFuncional . ', lotado na ' . $lotacao . ', para o qual solicitamos o "NADA A OPOR" dessa Reitoria');
+            . $cargoServidor . ', ID ' . $idFuncionalServidor . ', lotado na ' . $lotacao . ', para o qual solicitamos o "NADA A OPOR" dessa Reitoria');
     $despacho->set_saltoRodape(3);
 
     $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,

@@ -215,12 +215,7 @@ class Aposentadoria {
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-
-        # Trata o parametro do ano
-        if (is_null($parametroAno)) {
-            $parametroAno = date('Y');
-        }
-
+        
         # Monta o select
         $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
@@ -1323,7 +1318,6 @@ class Aposentadoria {
     public function exibe_previsãoPermanente2($idServidor = null) {
 
         $modalidades = $this->get_modalidades("Regras Permanentes");
-
         $grid1 = new Grid();
 
         foreach ($modalidades as $item) {
@@ -1351,7 +1345,6 @@ class Aposentadoria {
     public function exibe_previsãoTransicao2($idServidor = null) {
 
         $modalidades = $this->get_modalidades("Regras de Transição");
-
         $grid1 = new Grid();
 
         foreach ($modalidades as $item) {
@@ -1377,8 +1370,7 @@ class Aposentadoria {
 
     public function exibe_previsãoAdquirido2($idServidor = null) {
 
-         $modalidades = $this->get_modalidades("Direito Adquirido");
-
+        $modalidades = $this->get_modalidades("Direito Adquirido");
         $grid1 = new Grid();
 
         foreach ($modalidades as $item) {

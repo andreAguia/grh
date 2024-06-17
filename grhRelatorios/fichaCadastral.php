@@ -35,6 +35,7 @@ $postDiaria = post('diaria');
 $postAbono = post('abono');
 $postDireito = post('direito');
 $postPenalidade = post('penalidade');
+$postSuspensao = post('suspensao');
 $postElogio = post('elogio');
 $postAcumulacao = post('acumulacao');
 $postDadosUsuario = post('dadosUsuario');
@@ -222,6 +223,15 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 3),
+        array('nome' => 'suspensao',
+            'label' => 'Suspensão',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe se o servidor teve alguma suspensão',
+            'valor' => $postSuspensao,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 3),
         array('nome' => 'elogio',
             'label' => 'Elogios',
             'tipo' => 'simnao',
@@ -230,7 +240,7 @@ if ($acesso) {
             'valor' => $postElogio,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 4),
         array('nome' => 'acumulacao',
             'label' => 'Acumulação',
             'tipo' => 'simnao',
@@ -261,7 +271,7 @@ if ($acesso) {
             'col' => 4,
             'linha' => 4)
     ));
-    
+
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a ficha cadastral");
     $relatorio->show();
@@ -1403,10 +1413,47 @@ if ($acesso) {
         $result = $pessoal->select($select);
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
-        $relatorio->set_label(array("Data", "Tipo", "Processo", "Publicação", "Pag", "Descrição"));
-        $relatorio->set_width(array(10, 10, 15, 15, 5, 35));
-        $relatorio->set_align(array("center", "center", "center", "center", "center", "left"));
-        $relatorio->set_funcao(array("date_to_php", null, null, "date_to_php"));
+        $relatorio->set_label(["Data", "Tipo", "Processo", "Publicação", "Pag", "Descrição"]);
+        $relatorio->set_width([10, 10, 15, 15, 5, 35]);
+        $relatorio->set_align(["center", "center", "center", "center", "center", "left"]);
+        $relatorio->set_funcao(["date_to_php", null, null, "date_to_php"]);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
+        $relatorio->show();
+    }
+
+    /*
+     * suspensão
+     */
+
+    if ($postSuspensao) {
+        tituloRelatorio('Suspensão');
+
+        $select = "SELECT dtInicial,
+                          numdias,
+                          ADDDATE(dtInicial,numDias-1),
+                          processo,
+                          dtPublicacao,
+                          pgPublicacao,
+                          obs
+                     FROM tblicenca
+                    WHERE idServidor = {$idServidorPesquisado}
+                      AND idTpLicenca = 26 
+                 ORDER BY dtInicial desc";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Inicio", "Dias", "Término", "Processo", "Publicação", "pág", "Observação"]);
+        $relatorio->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $relatorio->set_width([10, 5, 10, 20, 10, 5, 40]);
+        $relatorio->set_align(["center", "center", "center", "center", "center", "center", "left"]);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(true);

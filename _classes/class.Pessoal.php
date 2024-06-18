@@ -864,7 +864,7 @@ class Pessoal extends Bd {
         } else {
             # Verifica se é cedido
             if ($row["idPerfil"] == 2 OR $row["idPerfil"] == 3) {
-                $retorno = "exercendo função equivalente ao ";
+                $retorno = "exercendo função equivalente ao<br/>";
             }
 
             # Define o cargo

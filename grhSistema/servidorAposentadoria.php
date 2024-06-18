@@ -67,7 +67,9 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Define a mensagem do relatorio
-    $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria e as informações aqui contidas podem variar com o tempo.";
+    $mensagemRelatorio = "Atenção, esta é uma previsão da posentadoria"
+            . " e as informações aqui contidas podem variar com o tempo.<br/>"
+            . "As regras de aposentadoria estão diponíveis no site da GRH. https://uenf.br/dga/grh/";
 
     # Cria um menu
     if (substr($fase, 0, 9) <> "relatorio") {

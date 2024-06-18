@@ -164,7 +164,7 @@ if ($acesso) {
     $grid->abreColuna(6);
     
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Câncer", 'pFormSaude');
-    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Nâo há doenças", 'pFormSaude');
+    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Não há doenças", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Outro: ___________________________", 'pFormSaude');
 
     $grid->fechaColuna();

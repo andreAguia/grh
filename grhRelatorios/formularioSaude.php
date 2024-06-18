@@ -112,12 +112,12 @@ if ($acesso) {
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Nutricionista", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Oftalmologista", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Cardiologista", 'pFormSaude');
-    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Aícademia para Atividade Física", 'pFormSaude');
+    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Academia para Atividade Física", 'pFormSaude');
 
     $grid->fechaColuna();
     $grid->abreColuna(6);
 
-    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Clínico Geralí", 'pFormSaude');
+    p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Clínico Geral", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Endocrinologista", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Educador Físico", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Outro: ___________________________", 'pFormSaude');
@@ -184,6 +184,8 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->fechaGrid();
+    
+    echo "<p style='page-break-before:always'></p>";
 
     $page->terminaPagina();
 }

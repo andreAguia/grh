@@ -148,17 +148,20 @@ if ($acesso) {
             $select .= ' ORDER BY lotacao, tbpessoa.nome';
             $result = $pessoal->select($select);
 
-            $folha = new FolhaFrequencia();
+            $folha = new FolhaFrequencia($parametroAno, $parametroTrimestre, $idUsuario);
             $contador = 0;
 
             # Imprime cada servidor retornado
             foreach ($result as $item) {
+                
                 if ($contador == 0) {
-                    $folha->exibeFolha($item[0], $parametroAno, $parametroTrimestre, $idUsuario, true);
+                    $folha->set_menuRelatorio(true);
                 } else {
-                    $folha->exibeFolha($item[0], $parametroAno, $parametroTrimestre, $idUsuario, false);
+                    $folha->set_menuRelatorio(false);
                 }
+                $folha->exibeFolha($item[0]);
                 $contador++;
+                
             }
             break;
     }

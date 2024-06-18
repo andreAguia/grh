@@ -72,6 +72,7 @@ if ($acesso) {
         ['Licença Prêmio', 'licencaPremio'],
         ['Lotação', 'lotacao'],
         ['Movimentação de Pessoal', 'movimentacao'],
+        ['Outros', 'outrosá'],
         ['Parentes', 'parentes'],
         ['Professores (Docentes)', 'professores'],
         ['Processo Eleitoral', 'eleitoral'],
@@ -383,8 +384,18 @@ if ($acesso) {
 
         case "frequencia";
             $menu = new Menu();
-            $menu->add_item('titulo', 'FoLha de Frequência dos Servidores');
+            $menu->add_item('titulo', 'Folha de Frequência dos Servidores');
             $menu->add_item('linkWindow', 'Folha de Frequencia de uma Lotação', '../grhRelatorios/folhaFrequencia.porLotacao.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "outros";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Outros');
+            $menu->add_item('linkWindow', 'Formulário de saúde de uma lotação', '../grhRelatorios/formularioSaude.porLotacao.php');
 
             $menu->show();
             break;

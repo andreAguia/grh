@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("../grhSistema/_config.php");
 
@@ -179,7 +180,7 @@ if ($acesso) {
     p("_______________________________________________________________________________________________", 'pFormSaudeLinha');
     #p("___________________________________________________________________________________________________", 'pFormSaudeLinha');
   
-    p("Parabéns, Adorei conhecer você e te ajudar a refletir sobre a sua vida.", 'pFormSaudeMensagem');
+    p("Parabéns, adorei conhecer você e te ajudar a refletir sobre a sua vida.", 'pFormSaudeMensagem');
 
     $grid->fechaColuna();
     $grid->fechaGrid();

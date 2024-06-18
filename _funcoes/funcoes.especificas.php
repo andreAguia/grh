@@ -161,6 +161,16 @@ function tituloRelatorio($texto) {
     $div->fecha();
 }
 
+##################################################################
+/**
+ * Função que exibe um subtitulo na ficha cadastral
+ * 
+ */
+
+function tituloRelatorio2($texto) {
+    p($texto, "pFormSaudeTitulo");
+}
+
 ##########################################################
 /**
  * Função que exibe um texto no final da escala de férias
@@ -1429,7 +1439,7 @@ function exibeDocumentosDeclaracaoAcumulacao($idServidor) {
     $menu->add_item("linkWindow", "Despacho: Solicitação de Modelo Padrão", "../grhRelatorios/despacho.Acumulacao.SolicitaModeloPadrao.php");
     $menu->add_item("linkWindow", "Despacho: Solicitação de Correção", "?fase=despachoCorrecao");
     $menu->add_item("linkWindow", "Despacho: Informação sobre Processo de Análise", "../grhRelatorios/despacho.Acumulacao.DeclaracaoAnalise.php");
-    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada","../grhRelatorios/despacho.Acumulacao.DeclaracaoConfianca.php");
+    $menu->add_item("linkWindow", "Despacho para Servidor com Cargo de Confiança/Função Gratificada", "../grhRelatorios/despacho.Acumulacao.DeclaracaoConfianca.php");
     $menu->add_item("linkWindow", "Despacho de Conclusão Temporária", "../grhRelatorios/despacho.Acumulacao.ConclusaoTemporaria.php");
 
     $menu->show();

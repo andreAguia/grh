@@ -701,12 +701,12 @@ class MenuServidor {
         }
 
         $menu->add_item('linkWindow', 'Etiqueta para a Pasta Funcional', "../grhRelatorios/etiqueta.servidor.php");
-        #$menu->add_item("linkWindow","FAF","../grhRelatorios/fichaAvaliacaoFuncional.php");
+        $menu->add_item("linkWindow", "Formulário de Saúde", "../grhRelatorios/formularioSaude.php");
         #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
         $menu->show();
     }
 
-######################################################################################################################
+    ######################################################################################################################
 
     /**
      * Método moduloPessoais

@@ -93,9 +93,6 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idFeriasProcesso');
-
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
     
     # Lista de períodos
     $listaPeriodo = $pessoal->select('SELECT DISTINCT periodo

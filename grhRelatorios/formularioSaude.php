@@ -51,7 +51,7 @@ if ($acesso) {
 
     p("Pressão Arterial: _____________________", 'pFormSaude');
     p("Glicose: __________________________________", 'pFormSaude');
-    p("Oxigenação Sanguineía: _____________________", 'pFormSaude');
+    p("Oxigenação Sanguínea: _____________________", 'pFormSaude');
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
@@ -104,7 +104,7 @@ if ($acesso) {
      * Profissionais
      */
     
-    tituloRelatorio2('Quais desse profissionais você costuma acessar para cuidar de sua saúde?');
+    tituloRelatorio2('Quais desses profissionais você costuma acessar para cuidar de sua saúde?');
 
     $grid->fechaColuna();
     $grid->abreColuna(6);

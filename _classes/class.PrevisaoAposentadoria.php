@@ -934,6 +934,7 @@ class PrevisaoAposentadoria {
 
             if ($this->servidorPontos >= $this->get_regraPontos(date("Y"))) {
                 $this->analisePontos = "OK";
+                $this->dataCriterioPontos = null;
             } else {
                 # Pega o resto
                 $resta4 = $this->get_regraPontos(date("Y")) - $this->servidorPontos;

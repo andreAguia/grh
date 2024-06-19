@@ -1183,7 +1183,7 @@ class PrevisaoAposentadoria {
                 "Pontuação Atual (" . date("Y") . ")",
                 "{$regraPontos} pontos",
                 "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoTotal / 365) . ")",
-                $this->dataCriterioPontos,
+                trataNulo($this->dataCriterioPontos),
                 $this->analisePontos]);
         }
 

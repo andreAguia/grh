@@ -21,7 +21,7 @@ if ($acesso) {
     $intra = new Intra();
 
     # Grava no log a atividade
-    $atividade = "Visualizou o formulário de saúde e bem estar de {$pessoal->get_nome($idServidorPesquisado)}";
+    $atividade = "Visualizou o formulário de saúde e bem estar";
     $data = date("Y-m-d H:i:s");
     $intra->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 

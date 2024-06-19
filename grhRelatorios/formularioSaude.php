@@ -18,6 +18,12 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    $intra = new Intra();
+
+    # Grava no log a atividade
+    $atividade = "Visualizou o formulário de saúde e bem estar de {$pessoal->get_nome($idServidorPesquisado)}";
+    $data = date("Y-m-d H:i:s");
+    $intra->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
 
     # Começa uma nova página
     $page = new Page();
@@ -32,11 +38,11 @@ if ($acesso) {
     # Dados do Servidor
     Grh::listaDadosServidorRelatorio2($idServidorPesquisado, 'Dados de Saúde e Bem Estar');
     br();
-    
+
     /*
      * Dados Gerais
      */
-    
+
     #tituloRelatorio2('Dados Gerais');
 
     $grid->fechaColuna();
@@ -55,7 +61,7 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Exercicio
      */
@@ -76,11 +82,11 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Exames
      */
-    
+
     tituloRelatorio2('Com que frequência faz exames de rotina?');
 
     $grid->fechaColuna();
@@ -99,11 +105,11 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Profissionais
      */
-    
+
     tituloRelatorio2('Quais desses profissionais você costuma acessar para cuidar de sua saúde?');
 
     $grid->fechaColuna();
@@ -124,11 +130,11 @@ if ($acesso) {
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Rotina Alimentar
      */
-    
+
     tituloRelatorio2('Pense sobre sua rotina alimentar, na maioria da semana ela é composta de:');
 
     $grid->fechaColuna();
@@ -137,20 +143,20 @@ if ($acesso) {
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Fast Food", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Refeições caseiras regulares", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Refeições orientadas por nutricionistas regulares", 'pFormSaude');
-    
+
     $grid->fechaColuna();
     $grid->abreColuna(6);
-    
+
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Refeições caseiras ou fora de casa irregulares", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Outro: ___________________________", 'pFormSaude');
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Genética
      */
-    
+
     tituloRelatorio2('Na sua genética ou família, quais doenças crônicas existem?');
 
     $grid->fechaColuna();
@@ -159,32 +165,32 @@ if ($acesso) {
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Diabetes", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Hipertensão", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Cardiopatia", 'pFormSaude');
-    
+
     $grid->fechaColuna();
     $grid->abreColuna(6);
-    
+
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Câncer", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Não há doenças", 'pFormSaude');
     p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Outro: ___________________________", 'pFormSaude');
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
-    
+
     /*
      * Genética
      */
-    
+
     tituloRelatorio2('Fique à vontade para falar de outros hábitos de prevenção que você faça:');
-    
+
     p("_______________________________________________________________________________________________", 'pFormSaudeLinha');
     p("_______________________________________________________________________________________________", 'pFormSaudeLinha');
     #p("___________________________________________________________________________________________________", 'pFormSaudeLinha');
-  
+
     p("Parabéns, adorei conhecer você e te ajudar a refletir sobre a sua vida.", 'pFormSaudeMensagem');
 
     $grid->fechaColuna();
     $grid->fechaGrid();
-    
+
     echo "<p style='page-break-before:always'></p>";
 
     $page->terminaPagina();

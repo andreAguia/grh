@@ -63,6 +63,7 @@ if ($acesso) {
     $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
+    $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     
     # Começa o texto
     $texto = "Declaro para fins de afastamento eleitoral, que ";
@@ -95,7 +96,7 @@ if ($acesso) {
     }
     
     # Continua o texto
-    $texto .= " {$cargoEfetivo}, teve sua frequência INTEGRAL no período de {$dataInicial} até a presente data.";
+    $texto .= " {$cargoEfetivo}, lotado(a) no(a) {$lotacao}, teve sua frequência INTEGRAL no período de {$dataInicial} até a presente data.";
 
     # Monta a Declaração
     $dec = new Declaracao("DECLARAÇÃO DE FREQUÊNCIA");

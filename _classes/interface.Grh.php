@@ -347,7 +347,11 @@ class Grh {
      * @param string $titulo     null O título do relatório 
      * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true) {
+    public static function listaDadosServidorRelatorio(
+            $idServidor,
+            $titulo = null,
+            $subTitulo = null,
+            $cabecalho = true) {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -585,5 +589,66 @@ class Grh {
         $botaoMapa->show();
     }
 
-    ###########################################################
+    ######################################################################################################################
+
+    /**
+     * método listaDadosServidorRelatório
+     * Exibe os dados principais do servidor para relatório
+     * 
+     * @param string $idServidor null idServidor do servidor
+     * @param string $titulo     null O título do relatório 
+     * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
+     */
+    public static function listaDadosServidorRelatorio3($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true, $mensagem = null) {
+
+        # Conecta com o banco de dados
+        $pessoal = new Pessoal();
+
+        # Dados do Servidor
+        $select = 'SELECT tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                    FROM tbservidor LEFT JOIN tbpessoa ON tbservidor.idPessoa = tbpessoa.idPessoa
+                                       LEFT JOIN tbsituacao ON tbservidor.situacao = tbsituacao.idsituacao
+                                       LEFT JOIN tbperfil ON tbservidor.idPerfil = tbperfil.idPerfil
+                   WHERE idServidor = ' . $idServidor;
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio();
+        $relatorio->set_titulo($titulo);
+        $relatorio->set_subtitulo($subTitulo);
+        $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Perfil", "Situação"]);
+        $relatorio->set_funcao([null, null, null, "date_to_php"]);
+        $relatorio->set_classe(["pessoal", "pessoal", "pessoal", null, "pessoal", "pessoal"]);
+        $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao", null, "get_Perfil", "get_Situacao"]);
+        $relatorio->set_align(['center']);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_brHr(0);
+        $relatorio->set_linhaFinal(true);
+        $relatorio->set_log(false);
+
+        if (!empty($mensagem)) {
+            $relatorio->set_mensagemGeral($mensagem);
+        }
+
+        # Verifica se exibe ou não o início do cabeçalho
+        # Utilizado para quando os dados doservidor é a primeira coisa a ser
+        # exibida no relatório. Se não for esconde o cabeçalho, menu etc
+        if (!$cabecalho) {
+
+            $relatorio->set_menuRelatorio(false);
+        }
+
+        $relatorio->show();
+    }
+
+######################################################################################################################
 }

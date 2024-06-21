@@ -24,11 +24,10 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
-    # Pega o parâmetro do relatório
+    # Pega os parâmetros
     $cargo = post('cargo', "Adm/Tec");
-
-    # Pega o parâmetro do ano
     $parametroAno = post('parametroAno', date('Y'));
+    $lotacao = get('lotacao', post('lotacao'));
 
     ######
 
@@ -36,6 +35,7 @@ if ($acesso) {
                      tbpessoa.nome,
                      tbservidor.idServidor,
                      tbservidor.idServidor,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      dtAdmissao,
                      dtDemissao
                 FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -69,6 +69,14 @@ if ($acesso) {
     $anoInicial = 1993;
     $anoAtual = date('Y');
     $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
+    
+    $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+    array_unshift($listaLotacao, array('*', '-- Selecione a Lotação --'));
 
     $relatorio->set_formCampos(array(
         array('nome' => 'cargo',
@@ -89,8 +97,17 @@ if ($acesso) {
             'title' => 'Ano',
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
+            'linha' => 1),
+        array('nome' => 'lotacao',
+            'label' => 'Lotação:',
+            'tipo' => 'combo',
+            'array' => $listaLotacao,
+            'size' => 30,
+            'col' => 6,
+            'padrao' => $lotacao,
+            'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
-
+    
     $relatorio->show();
     $page->terminaPagina();
 }

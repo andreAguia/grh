@@ -72,7 +72,7 @@ if ($acesso) {
         ['Licença Prêmio', 'licencaPremio'],
         ['Lotação', 'lotacao'],
         ['Movimentação de Pessoal', 'movimentacao'],
-        ['Outros', 'outrosá'],
+        ['Outros', 'outros'],
         ['Parentes', 'parentes'],
         ['Professores (Docentes)', 'professores'],
         ['Processo Eleitoral', 'eleitoral'],

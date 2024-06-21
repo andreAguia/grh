@@ -2101,7 +2101,7 @@ class PrevisaoAposentadoria {
 
             for ($a = $tempoInicial; $a < 50; $a++) {
                 for ($b = 0; $b < 12; $b++) {
-                    $array1[] = 
+                    $array1[] = [
                         $contadorGeral,
                         "Contribuição: {$dataContribuicao}",
                         $mesesFaltam

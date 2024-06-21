@@ -64,6 +64,7 @@ class PrevisaoAposentadoria {
     private $diasParaPagar = null;
     private $mesesParaPagar = null;
     private $mensagemRedutor = null;
+    private $dataReal = null;
 
     /*
      *  Regras específica para restrição de idade    
@@ -985,6 +986,9 @@ class PrevisaoAposentadoria {
                 $this->mesesIdadeQueFalta = ceil($this->diasIdadeQueFalta / 30);
                 $this->diasParaPagar = ceil($this->diasIdadeQueFalta / 2);
                 $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
+
+                # Para tirar dúvidas (por dias e não por mes)
+                $this->dataReal = addDias($this->dataCriterioTempoContribuicao, $this->diasParaPagar);                
 
                 # Data em que paga todos os dias que faltam para a idade
                 $this->dataCriterioRedutor = dataMaior(addMeses($this->dataCriterioTempoContribuicao, $this->mesesParaPagar), addMeses($this->dataCriterioIdade, -$this->mesesParaPagar));
@@ -1942,8 +1946,8 @@ class PrevisaoAposentadoria {
                 ["Data que completa o tempo de contribuição:", $this->dataCriterioTempoContribuicao],
                 ["Tempo que faltava para o critério da idade na data acima", "{$this->diasIdadeQueFalta} dias<br/>({$this->mesesIdadeQueFalta} meses)"],
                 ["Tempo que leva para o tempo excedente pagar a idade<br/>({$this->diasIdadeQueFalta} dias / 2)", "{$this->diasParaPagar} dias<br/>({$this->mesesParaPagar} meses)"],
-                ["Data que completa a idade:<br/>({$this->mesesParaPagar} meses)", $this->dataCriterioIdade],
-                ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
+                ["Data que completaria a idade:", $this->dataCriterioIdade],
+                ["Nova data do critário idade com o redutor<br/>{$this->dataReal}", $this->dataCriterioRedutor]
             ];
 
             # Tabela Tempo até 31/12/2021
@@ -2002,12 +2006,15 @@ class PrevisaoAposentadoria {
             $dataIdade = $this->dataCriterioIdade;
             $dataContribuicao = $this->dataCriterioTempoContribuicao;
 
+            $contadorMesesFaltam = $this->mesesParaPagar;
+
             for ($a = $tempoInicial; $a < 50; $a++) {
                 for ($b = 0; $b < 12; $b++) {
                     $array1[] = [
                         $contadorGeral,
                         $dataContribuicao,
                         "{$a} anos e {$b} meses",
+                        $contadorMesesFaltam,
                         "{$contadorIdade} anos e {$contadorIdadeMeses} meses",
                         $dataIdade];
 
@@ -2027,6 +2034,8 @@ class PrevisaoAposentadoria {
                     $dataIdade = addMeses($this->dataCriterioIdade, -$contadorGeral);
                     #$dataContribuicao = addDias($dataContribuicao, 30, false);
                     $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorGeral);
+
+                    $contadorMesesFaltam--;
                 }
 
                 if ($contadorGeral > $this->mesesParaPagar) {
@@ -2050,8 +2059,91 @@ class PrevisaoAposentadoria {
             }
 
             $tabela->set_conteudo($array1);
-            $tabela->set_label(["Meses<br/>para Pagar", "Data do <br/>Tempo de Contribuição ", "Tempo de Contribuição", "Idade do Servidor", "Redução da<br/>Data Idade"]);
-            $tabela->set_width([10, 20, 25, 25, 20]);
+            $tabela->set_label(["Meses<br/>para Pagar", "Data do <br/>Tempo de Contribuição ", "Tempo de Contribuição", "Meses<br/>que Faltam", "Idade do Servidor", "Redução da<br/>Data Idade"]);
+            $tabela->set_width([10, 20, 25, 10, 25, 20]);
+            $tabela->set_totalRegistro(false);
+
+            if (!$relatorio) {
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 0,
+                        'operador' => '=',
+                        'valor' => $this->mesesParaPagar,
+                        'id' => 'vigente')));
+            }
+            $tabela->show();
+        }
+    }
+
+    ###########################################################
+
+    public function exibe_tabelaCalculoRedutorDetalhado2($relatorio = false) {
+
+        # Verifica se cabe o redutor
+        if (dataMaior($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade) == $this->dataCriterioIdade) {
+
+            # Tabela de Simone
+            $tempoInicial = $this->regraContribuicao;
+            $contadorIdade = $this->regraIdade;
+            $contadorIdadeMeses = 0;
+            $contadorGeral = 0;
+            $dataIdade = $this->dataCriterioIdade;
+            $dataContribuicao = $this->dataCriterioTempoContribuicao;
+
+            $contadorMesesFaltam = $this->mesesParaPagar;
+
+            for ($a = $tempoInicial; $a < 50; $a++) {
+                for ($b = 0; $b < 12; $b++) {
+                    $array1[] = [
+                        $contadorGeral,
+                        $dataContribuicao,
+                        "{$a} anos e {$b} meses",
+                        $contadorMesesFaltam,
+                        "{$contadorIdade} anos e {$contadorIdadeMeses} meses",
+                        $dataIdade];
+
+                    if ($contadorIdadeMeses == 0) {
+                        $contadorIdadeMeses = 11;
+                        $contadorIdade--;
+                    } else {
+                        $contadorIdadeMeses--;
+                    }
+
+                    if ($contadorGeral > $this->mesesParaPagar) {
+                        break;
+                    } else {
+                        $contadorGeral++;
+                    }
+
+                    $dataIdade = addMeses($this->dataCriterioIdade, -$contadorGeral);
+                    #$dataContribuicao = addDias($dataContribuicao, 30, false);
+                    $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorGeral);
+
+                    $contadorMesesFaltam--;
+                }
+
+                if ($contadorGeral > $this->mesesParaPagar) {
+                    break;
+                }
+            }
+
+            # Exibe a tabela
+            if ($relatorio) {
+                tituloRelatorio("Tabela de Redução Idade");
+                $tabela = new Relatorio();
+                $tabela->set_cabecalhoRelatorio(false);
+                $tabela->set_menuRelatorio(false);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_dataImpressao(false);
+                $tabela->set_bordaInterna(true);
+                $tabela->set_log(false);
+            } else {
+                $tabela = new Tabela();
+                $tabela->set_titulo("Tabela de Redução Idade");
+            }
+
+            $tabela->set_conteudo($array1);
+            $tabela->set_label(["Meses<br/>para Pagar", "Data do <br/>Tempo de Contribuição ", "Tempo de Contribuição", "Meses<br/>que Faltam", "Idade do Servidor", "Redução da<br/>Data Idade"]);
+            $tabela->set_width([10, 20, 25, 10, 25, 20]);
             $tabela->set_totalRegistro(false);
 
             if (!$relatorio) {

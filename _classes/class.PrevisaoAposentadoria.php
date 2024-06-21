@@ -988,7 +988,7 @@ class PrevisaoAposentadoria {
                 $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
 
                 # Para tirar dúvidas (por dias e não por mes)
-                $this->dataReal = addDias($this->dataCriterioTempoContribuicao, $this->diasParaPagar);                
+                $this->dataReal = addDias($this->dataCriterioTempoContribuicao, $this->diasParaPagar);
 
                 # Data em que paga todos os dias que faltam para a idade
                 $this->dataCriterioRedutor = dataMaior(addMeses($this->dataCriterioTempoContribuicao, $this->mesesParaPagar), addMeses($this->dataCriterioIdade, -$this->mesesParaPagar));
@@ -2087,38 +2087,41 @@ class PrevisaoAposentadoria {
             $contadorIdadeMeses = 0;
             $contadorGeral = 0;
             $dataIdade = $this->dataCriterioIdade;
-            $dataContribuicao = $this->dataCriterioTempoContribuicao;
 
-            $contadorMesesFaltam = $this->mesesParaPagar;
+            $mesesFaltam = $this->mesesParaPagar;
+
+            # Define as datas
+            $dataContribuicao = $this->dataCriterioTempoContribuicao;
+            $dataIdade = day($this->dataCriterioIdade) . "/" . month($dataContribuicao) . "/" . year($dataContribuicao);
+
+            # Calcula a data da idade imediatamente apos a data da contruibuição
+            if (day($dataContribuicao) > day($dataIdade)) {
+                $dataIdade = addMesses($dataIdade, 1);
+            }
 
             for ($a = $tempoInicial; $a < 50; $a++) {
                 for ($b = 0; $b < 12; $b++) {
+                    $array1[] = 
+                        $contadorGeral,
+                        "Contribuição: {$dataContribuicao}",
+                        $mesesFaltam
+                    ];
+
+                    $mesesFaltam--;
+                    $contadorGeral++;
+
                     $array1[] = [
                         $contadorGeral,
-                        $dataContribuicao,
-                        "{$a} anos e {$b} meses",
-                        $contadorMesesFaltam,
-                        "{$contadorIdade} anos e {$contadorIdadeMeses} meses",
-                        $dataIdade];
+                        "Idade: {$dataIdade}",
+                        $mesesFaltam
+                    ];
 
-                    if ($contadorIdadeMeses == 0) {
-                        $contadorIdadeMeses = 11;
-                        $contadorIdade--;
-                    } else {
-                        $contadorIdadeMeses--;
-                    }
-
-                    if ($contadorGeral > $this->mesesParaPagar) {
-                        break;
-                    } else {
-                        $contadorGeral++;
-                    }
-
-                    $dataIdade = addMeses($this->dataCriterioIdade, -$contadorGeral);
-                    #$dataContribuicao = addDias($dataContribuicao, 30, false);
+                    # Incrementa as datas
+                    $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorGeral);
                     $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorGeral);
 
-                    $contadorMesesFaltam--;
+                    $mesesFaltam--;
+                    $contadorGeral++;
                 }
 
                 if ($contadorGeral > $this->mesesParaPagar) {
@@ -2142,8 +2145,9 @@ class PrevisaoAposentadoria {
             }
 
             $tabela->set_conteudo($array1);
-            $tabela->set_label(["Meses<br/>para Pagar", "Data do <br/>Tempo de Contribuição ", "Tempo de Contribuição", "Meses<br/>que Faltam", "Idade do Servidor", "Redução da<br/>Data Idade"]);
-            $tabela->set_width([10, 20, 25, 10, 25, 20]);
+            $tabela->set_label(["Meses<br/>Pagos", "Data", "Meses<br/>para Pagar"]);
+            #$tabela->set_width([10, 20, 25, 10, 25, 20]);
+            $tabela->set_align(["center", "left"]);
             $tabela->set_totalRegistro(false);
 
             if (!$relatorio) {
@@ -2205,7 +2209,7 @@ class PrevisaoAposentadoria {
         # Redutor
         if ($this->temRedutor) {
             $this->exibe_tabelaCalculoRedutor();
-            $this->exibe_tabelaCalculoRedutorDetalhado();
+            $this->exibe_tabelaCalculoRedutorDetalhado2();
         }
 
         # Cartilha

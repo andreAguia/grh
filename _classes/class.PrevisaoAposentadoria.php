@@ -658,6 +658,7 @@ class PrevisaoAposentadoria {
                 $this->tipo = "Direito Adquirido";
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Com Redutor de Idade";
                 $this->descricaoResumida1 = "Art. 3 da EC nº 47/2005";
+                $this->descricaoResumida2 = "Com Redutor de Idade";
                 $this->legislacao = "Art. 3 da EC nº 47/2005";
 
                 # Regras
@@ -981,38 +982,35 @@ class PrevisaoAposentadoria {
                 # Verifica o tempo de contribuição excedente até hoje
                 $this->tempoExcedente = dataDif($this->dataCriterioTempoContribuicao, date("d/m/Y"));
 
-                # Verifica o tempo que falta da idade na data em que alcança o tempo de contribuição
+                # Tempo que falta
+                # intval -> arredonda pra baixo
+                # ceil   -> arredonda pra cima
                 $this->diasIdadeQueFalta = dataDif($this->dataCriterioTempoContribuicao, $this->dataCriterioIdade);
                 $this->mesesIdadeQueFalta = ceil($this->diasIdadeQueFalta / 30);
+
+                # Tempo pra pagar
                 $this->diasParaPagar = intval($this->diasIdadeQueFalta / 2);
-                $this->mesesParaPagar = intval($this->diasParaPagar / 30);
+                $this->mesesParaPagar = ceil($this->diasParaPagar / 30);
 
-                # Data da idade imediatamente apos a data da contribuicao
-                if (day($this->dataCriterioIdade) == 31) {
-                    if (month($this->dataCriterioTempoContribuicao) == 4
-                            OR month($this->dataCriterioTempoContribuicao) == 6
-                            OR month($this->dataCriterioTempoContribuicao) == 9
-                            OR month($this->dataCriterioTempoContribuicao) == 11) {
-                        $this->dataIdadeAposContribuicao = "30/" . month($this->dataCriterioTempoContribuicao) . "/" . year($this->dataCriterioTempoContribuicao);
-                    }
-                } else {
-                    $this->dataIdadeAposContribuicao = day($this->dataCriterioIdade) . "/" . month($this->dataCriterioTempoContribuicao) . "/" . year($this->dataCriterioTempoContribuicao);
-                }
+                # Calcula a data de idade imediatamente posterior a da contribuicao
+                $this->dataIdadeAposContribuicao = $this->dataCriterioIdade;
+                $contadorX = 1;
 
-                # Faz o cálculo da data com o redutor
-                # Com relacao ao meses da idade que faltam:
-                # se for par -> termina em uma data de contribuiçao
-                # se for impar -> termina em uma data de idade e conta um mes antes pois começa do um)
+                do {
+                    $this->dataIdadeAposContribuicao = addMeses($this->dataCriterioIdade, $contadorX);
+                    $contadorX--;
+                } while (dataMaior($this->dataIdadeAposContribuicao, $this->dataCriterioTempoContribuicao) == $this->dataIdadeAposContribuicao);
+
+                # sobe um mes
+                $this->dataIdadeAposContribuicao = addMeses($this->dataIdadeAposContribuicao, 1);
+
+                # Faz o cálculo da data com o redutor com relacao ao meses da idade que faltam:
                 if (epar($this->mesesIdadeQueFalta)) {
+                    # se for par -> termina em uma data de contribuiçao
                     $this->dataCriterioRedutor = addMeses($this->dataCriterioTempoContribuicao, $this->mesesParaPagar);
                 } else {
-
-                    # Calcula a data da idade imediatamente apos a data da contruibuição
-                    if (day($this->dataCriterioTempoContribuicao) > day($this->dataCriterioIdade)) {
-                        $this->dataCriterioRedutor = addMeses($this->dataIdadeAposContribuicao, $this->mesesParaPagar + 1);
-                    } else {
-                        $this->dataCriterioRedutor = addMeses($this->dataIdadeAposContribuicao, $this->mesesParaPagar);
-                    }
+                    # se for impar -> termina em uma data de idade e conta um mes antes pois começa do um)
+                    $this->dataCriterioRedutor = addMeses($this->dataIdadeAposContribuicao, $this->mesesParaPagar);
                 }
 
                 # Muda a análise do critério idade
@@ -1967,7 +1965,8 @@ class PrevisaoAposentadoria {
             $array = [
                 ["Data que completa o tempo de contribuição:", $this->dataCriterioTempoContribuicao],
                 ["Data que completaria a idade:", $this->dataCriterioIdade],
-                ["Tempo que faltava para o critério da idade na data acima", "{$this->diasIdadeQueFalta} dias<br/>({$this->mesesIdadeQueFalta} meses)"],
+                ["Tempo que faltava para<br/>o critério da idade. Em Dias", "{$this->diasIdadeQueFalta} dias"],
+                ["Tempo que faltava para<br/>o critério da idade. Em Meses: ({$this->diasIdadeQueFalta} / 30)","Real -> " . ($this->diasIdadeQueFalta / 30) . " meses<br/>Arredondado -> {$this->mesesIdadeQueFalta} meses"],
                 ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
             ];
 
@@ -2106,6 +2105,10 @@ class PrevisaoAposentadoria {
             $contadorGeral = 0;
             $mesesFaltam = $this->mesesIdadeQueFalta;
 
+            # Contadores
+            $contadorContribuicao = 0;
+            $contadorIdade = 0;
+
             # Datas
             $dataContribuicao = $this->dataCriterioTempoContribuicao;
             $dataIdade = $this->dataIdadeAposContribuicao;
@@ -2121,6 +2124,7 @@ class PrevisaoAposentadoria {
 
                 $mesesFaltam--;
                 $contadorGeral++;
+                $contadorContribuicao++;
 
                 $array1[] = [
                     month($dataIdade) . " / " . year($dataIdade),
@@ -2130,12 +2134,13 @@ class PrevisaoAposentadoria {
                     $mesesFaltam
                 ];
 
-                # Incrementa as datas
-                $dataContribuicao = addMeses($dataContribuicao, 1);
-                $dataIdade = addMeses($dataIdade, 1);
-
                 $mesesFaltam--;
                 $contadorGeral++;
+                $contadorIdade++;
+
+                # Incrementa as datas
+                $dataContribuicao = addMeses($this->dataCriterioTempoContribuicao, $contadorContribuicao);
+                $dataIdade = addMeses($this->dataIdadeAposContribuicao, $contadorIdade);
             }
 
             # Exibe a tabela
@@ -2158,7 +2163,7 @@ class PrevisaoAposentadoria {
             $tabela->set_conteudo($array1);
             $tabela->set_label(["Mes", "Meses<br/>Pagos", "Tipo", "Data", "Meses<br/>para Pagar"]);
             $tabela->set_width([10, 10, 20, 20, 10, 10]);
-            $tabela->set_align(["center", "center", "right"]);
+            #$tabela->set_align(["center", "center", "right"]);
             $tabela->set_totalRegistro(false);
 
             if (!$relatorio) {

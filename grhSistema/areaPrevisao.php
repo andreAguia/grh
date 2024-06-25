@@ -43,10 +43,12 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Permanentes"));
-    
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
+
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroTipo', $parametroTipo);
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat : rtrim(ltrim($parametroNomeMat)));
 
     # Pega o Link (quando tem)
     $link = get("link");
@@ -102,13 +104,20 @@ if ($acesso) {
         case "":
         case "aguardeGeralPorLotacao":
 
-            br(4);
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(8);
+
+            br(6);
+            $painel = new Callout("warning");
+            $painel->abre();
+            p("Atenção!!<br/>Dependendo dos critérios escolhidos, essa rotina poderá demorar um pouco", "center");
+            $painel->fecha();
+
+            br(2);
             aguarde();
             br();
 
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
             p("Aguarde...", "center");
             $grid1->fechaColuna();
             $grid1->fechaGrid();
@@ -122,6 +131,17 @@ if ($acesso) {
 
             # Formulário de Pesquisa
             $form = new Form('?fase=aguardeGeralPorLotacao');
+
+            # Nome ou Matrícula
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Mat ou Id:', 1);
+            $controle->set_size(55);
+            $controle->set_title('Nome, matrícula ou ID:');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
 
             # Lotação
             $result1 = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -139,7 +159,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             # tipo
@@ -152,14 +172,14 @@ if ($acesso) {
             $controle->set_valor($parametroTipo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
 
             switch ($parametroTipo) {
                 case "Todos" :
-                    
+
                     # Exibe a lista
                     $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -178,6 +198,23 @@ if ($acesso) {
                             $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                         } else { # senão é uma diretoria genérica
                             $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    # Verifica o filtro nome
+                    if (!is_null($parametroNomeMat)) {
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " AND ((";
+                        } else {
+                            $select .= " AND (";
+                        }
+
+                        $select .= "tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                             OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%')";
+                            $select .= ")";
                         }
                     }
 
@@ -222,6 +259,23 @@ if ($acesso) {
                         }
                     }
 
+                    # Verifica o filtro nome
+                    if (!is_null($parametroNomeMat)) {
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " AND ((";
+                        } else {
+                            $select .= " AND (";
+                        }
+
+                        $select .= "tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                             OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%')";
+                            $select .= ")";
+                        }
+                    }
+
                     $select .= " ORDER BY tbpessoa.nome";
 
                     $result2 = $pessoal->select($select);
@@ -257,6 +311,23 @@ if ($acesso) {
                             $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                         } else { # senão é uma diretoria genérica
                             $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        }
+                    }
+
+                    # Verifica o filtro nome
+                    if (!is_null($parametroNomeMat)) {
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " AND ((";
+                        } else {
+                            $select .= " AND (";
+                        }
+
+                        $select .= "tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+
+                        if (is_numeric($parametroNomeMat)) {
+                            $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                             OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%')";
+                            $select .= ")";
                         }
                     }
 

@@ -117,9 +117,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idConcursoPublicacao');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados para combo concurso 
     $concurso = $pessoal->select('SELECT idconcurso,
                                          concat(anoBase," - Edital: ",DATE_FORMAT(dtPublicacaoEdital,"%d/%m/%Y")) as concurso

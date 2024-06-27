@@ -101,9 +101,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idHistLot');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
                              concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) as lotacao,

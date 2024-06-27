@@ -130,9 +130,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idMcf');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
                              concat(IFnull(UADM,"")," - ",IFnull(DIR,"")," - ",IFnull(GER,"")," - ",IFnull(nome,"")) as lotacao

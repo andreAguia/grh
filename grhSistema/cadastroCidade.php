@@ -121,9 +121,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idCidade');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de Estado
     $result3 = $pessoal->select('SELECT idEstado,
                                         nome

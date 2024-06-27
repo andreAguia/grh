@@ -69,9 +69,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idServidor');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Campos para o formulario
     $campos = array(array('linha' => 1,
             'nome' => 'justificativaVacina',

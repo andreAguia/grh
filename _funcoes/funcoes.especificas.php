@@ -1518,3 +1518,34 @@ function ressaltaSimNao($texto) {
 }
 
 ###########################################################
+
+function trataProcesso($processo = null) {
+    # Verfica null
+    if (empty($processo)) {
+        return null;
+    }
+
+    # Retira o ponto
+    $processo = str_replace(".", "", $processo);
+
+    # Ano com 4 digitos
+    $posicao = strripos($processo, "/");
+    $ano = substr($processo, $posicao + 1);
+    $resto = substr($processo, 0, $posicao);
+
+    # Verifica o tamanho do ano
+    if (strlen($ano) < 4) {
+        if ($ano > 50) {
+            $ano = "19" . $ano;
+        } else {
+            $ano = "20" . $ano;
+        }
+
+        # Monta o processo novamente
+        $processo = "{$resto}/{$ano}";
+    }
+
+    return $processo;
+}
+
+###########################################################

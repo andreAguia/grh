@@ -129,9 +129,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAvaliacao');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Cria um array com os anos possíveis
     $anoInicial = $pessoal->get_anoAdmissao($idServidorPesquisado);
     $anoAtual = date('Y');

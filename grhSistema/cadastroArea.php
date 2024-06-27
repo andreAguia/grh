@@ -133,9 +133,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idarea');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de Tipos de Cargos
     $result2 = $pessoal->select('SELECT idTipoCargo, 
                                       cargo

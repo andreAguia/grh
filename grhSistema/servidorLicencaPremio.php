@@ -200,9 +200,6 @@ if ($acesso) {
         # Nome do campo id
         $objeto->set_idCampo('idLicencaPremio');
 
-        # Tipo de label do formulário
-        $objeto->set_formLabelTipo(1);
-
         # Pega os Dados para exibir as publicações de todos os vinculos
         $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
         $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);

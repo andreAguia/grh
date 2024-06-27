@@ -113,9 +113,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idPrestador');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de cidade
     $cidade = $pessoal->select('SELECT idCidade,
                                        CONCAT(tbcidade.nome," (",tbestado.uf,")")

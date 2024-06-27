@@ -150,9 +150,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idProgressao');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo prograssao
     $lista = new Pessoal();
     $result1 = $lista->select('SELECT idTpProgressao, 

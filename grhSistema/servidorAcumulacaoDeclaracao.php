@@ -131,9 +131,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAcumulacaoDeclaracao');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # servidor
     $servidor = $pessoal->select('SELECT idServidor, tbpessoa.nome
                                    FROM tbservidor JOIN tbpessoa USING(idPessoa)

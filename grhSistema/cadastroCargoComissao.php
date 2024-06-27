@@ -152,9 +152,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idTipoComissao');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de Plano e Cargos
     $tabela = new Pessoal();
     $result = $tabela->select('SELECT idPlano, 

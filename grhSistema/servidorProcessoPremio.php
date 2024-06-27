@@ -46,7 +46,7 @@ if ($acesso) {
     $selectEdita = 'SELECT processoPremio
                       FROM tbservidor
                      WHERE idServidor = ' . $idServidorPesquisado;
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -74,11 +74,9 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idServidor');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Campos para o formulario
-    $campos = array(array('linha' => 1,
+    $campos = array(
+        array('linha' => 1,
             'nome' => 'processoPremio',
             'label' => 'Processo:',
             'tipo' => 'texto',
@@ -101,8 +99,10 @@ if ($acesso) {
             break;
 
         case "gravar" :
-            $objeto->gravar($idServidorPesquisado);
+            $objeto->gravar($idServidorPesquisado, "servidorProcessoPremioExtra.php");
             break;
+
+        ###################################################################
     }
     $page->terminaPagina();
 } else {

@@ -105,9 +105,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idClasse');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de cargo
     $cargo = $pessoal->select('SELECT idTipoCArgo, 
                                       cargo

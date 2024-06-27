@@ -123,9 +123,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idTrienio');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Monta o array para o campo percentual
     $percentuaisPossiveis = array("10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60");
 

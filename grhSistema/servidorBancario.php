@@ -85,9 +85,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idPessoa');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo dos bancos
     $banco = $pessoal->select('SELECT idBanco,
                                        CONCAT(codigo," (", banco,")")

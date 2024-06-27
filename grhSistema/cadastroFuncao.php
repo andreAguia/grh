@@ -149,9 +149,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idCargo');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo de Plano e Cargos
     $result1 = $pessoal->select('SELECT idPlano, 
                                       numDecreto

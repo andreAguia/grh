@@ -123,9 +123,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('iddiaria');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo assundo de CI
     $result = $intra->select('SELECT codigo, 
                                      concat(Upper(substr(descricao, 1,1)), lower(substr(descricao, 2,length(descricao))))   

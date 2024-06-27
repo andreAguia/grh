@@ -196,6 +196,7 @@ if ($acesso) {
             $select = "SELECT tbservidor.idServidor, 
                               tbservidor.idServidor,
                               tbservidor.idServidor,
+                              tbservidor.idServidor,
                               tbservidor.dtAdmissao,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -259,12 +260,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
+            $tabela->set_label(["Id / Matrícula", "Servidor", "Lotação", "Processo de<br/>Contagem", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $tabela->set_align(["center", "left"]);
             #$tabela->set_width([5, 25, 8, 13, 18, 18, 8]);
-            $tabela->set_funcao([null, null, null, "date_to_php", "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
-            $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php", "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
+            $tabela->set_classe(["pessoal", "pessoal", "pessoal", "LicencaPremio"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_numProcessoContagem"]);
             $tabela->set_titulo("Licença Prêmio");
 
             if (!is_null($parametroNomeMat)) {

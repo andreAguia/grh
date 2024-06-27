@@ -126,9 +126,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAtribuicao');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Cria combo de servidores da GRH
     $select = "SELECT tbpessoa.nome 
                  FROM tbpessoa JOIN tbservidor USING (idPessoa) 

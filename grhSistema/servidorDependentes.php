@@ -177,10 +177,7 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idDependente');
-
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
+    
     # Pega os dados da combo parentesco
     $parentesco = new Pessoal();
     $result = $parentesco->select('SELECT idParentesco, 

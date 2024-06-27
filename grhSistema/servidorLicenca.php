@@ -503,9 +503,6 @@ if ($acesso) {
         # Nome do campo id
         $objeto->set_idCampo('idLicenca');
 
-        # Tipo de label do formulário
-        $objeto->set_formLabelTipo(1);
-
         # Pega os dados da combo licenca do formulário
         $result = $pessoal->select('SELECT idTpLicenca, tbtipolicenca.nome
                                       FROM tbtipolicenca

@@ -172,9 +172,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idLotacao');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo do Campus
     $result1 = $pessoal->select('SELECT idCampus,
                                         campus

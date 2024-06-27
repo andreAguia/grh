@@ -166,9 +166,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idComissao');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo tipo de Comissão
     $tipoComissao = $pessoal->select('SELECT idTipoComissao,
                                              CONCAT(tbtipocomissao.simbolo," - (",tbtipocomissao.descricao,")") as comissao

@@ -125,9 +125,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idFerias');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega o valor para o anoexercicio
     $exercícioDisponivel = $pessoal->get_feriasExercicioDisponivel($idServidorPesquisado);
 

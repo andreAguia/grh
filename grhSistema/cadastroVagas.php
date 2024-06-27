@@ -83,9 +83,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idVaga');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Pega os dados da combo cargo
     $cargo = $pessoal->select('SELECT idcargo,nome
                                  FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)

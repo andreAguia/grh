@@ -156,9 +156,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAtestado');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo parentesco
     $lista = new Pessoal();
     $result = $lista->select('SELECT idParentesco, 

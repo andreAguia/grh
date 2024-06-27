@@ -89,9 +89,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idCedido');
 
-    # Tipo de label do formulário
-    $objeto->set_formlabelTipo(1);
-
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,

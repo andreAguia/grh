@@ -102,9 +102,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idTrabalhoTre');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Campos para o formulario
     $objeto->set_campos(array(array('nome' => 'data',
             'label' => 'Data Inicial do Trabalho no TRE:',

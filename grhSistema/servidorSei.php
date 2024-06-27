@@ -112,9 +112,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idSei');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da datalist curso
     $assuntos = $pessoal->select('SELECT distinct assunto
                                     FROM tbsei

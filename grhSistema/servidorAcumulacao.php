@@ -150,9 +150,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAcumulacao');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo motivo de Saída do servidor
     $motivo = $pessoal->select('SELECT idmotivo,
                                        motivo

@@ -223,9 +223,9 @@ class LicencaPremio {
         $pessoal = new Pessoal();
 
         # Pega os dias publicados
-        $select = 'SELECT numDias
+        $select = "SELECT numDias
                      FROM tbpublicacaopremio 
-                    WHERE idPublicacaoPremio = ' . $idPublicacaoPremio;
+                    WHERE idPublicacaoPremio = {$idPublicacaoPremio}";
 
         $retorno = $pessoal->select($select, false);
 
@@ -246,9 +246,9 @@ class LicencaPremio {
         if (is_numeric($idServidor)) {
 
             # Pega os dias publicados
-            $select = 'SELECT processoPremio
+            $select = "SELECT processoPremio
                          FROM tbservidor
-                        WHERE idServidor = ' . $idServidor;
+                        WHERE idServidor = {$idServidor}";
 
             $retorno = $pessoal->select($select, false);
 

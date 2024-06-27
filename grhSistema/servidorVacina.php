@@ -110,9 +110,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idVacina');
 
-    # Tipo de label do formulário
-    $objeto->set_formLabelTipo(1);
-
     # Pega os dados da combo cargo
     $tipoVacina = $pessoal->select('SELECT idTipoVacina,
                                            nome

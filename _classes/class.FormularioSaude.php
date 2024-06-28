@@ -185,7 +185,7 @@ class FormularioSaude {
         $grid->fechaColuna();
         $grid->abreColuna(6);
 
-        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Gripo (anual)", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Gripe (anual)", 'pFormSaude');
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Hepatite", 'pFormSaude');
 
         $grid->fechaColuna();

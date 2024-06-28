@@ -34,7 +34,7 @@ class FormularioSaude {
 
         ######
         # Dados do Servidor
-        Grh::listaDadosServidorRelatorio3($idServidor, 'Dados de Saúde e Bem Estar', null, $menuRelatorio);
+        Grh::listaDadosServidorRelatorio3($idServidor, 'Dados de Saúde e Bem Estar', null, $menuRelatorio, null, "geral");
         br();
 
         /*
@@ -152,10 +152,10 @@ class FormularioSaude {
         $grid->abreColuna(12);
 
         /*
-         * Genética
+         * Doenças
          */
 
-        tituloRelatorio2('Na sua genética ou família, quais doenças crônicas existem?');
+        tituloRelatorio2('Você tem ou teve algumas destas doenças?');
 
         $grid->fechaColuna();
         $grid->abreColuna(6);
@@ -163,13 +163,36 @@ class FormularioSaude {
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Diabetes", 'pFormSaude');
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Hipertensão", 'pFormSaude');
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Cardiopatia", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Câncer", 'pFormSaude');
 
         $grid->fechaColuna();
         $grid->abreColuna(6);
 
-        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Câncer", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Depressão", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Ansiedadeã", 'pFormSaude');
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Não há doenças", 'pFormSaude');
         p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Outro: ___________________________", 'pFormSaude');
+
+        $grid->fechaColuna();
+        $grid->abreColuna(12);
+
+        /*
+         * Vacinas
+         */
+
+        tituloRelatorio2('Indique as vacinas que você está com as doses atualizadas?');
+
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Gripo (anual)", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Hepatite", 'pFormSaude');
+
+        $grid->fechaColuna();
+        $grid->abreColuna(6);
+
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Tétano e Difteria", 'pFormSaude');
+        p("[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]&nbsp; Covid-19", 'pFormSaude');
 
         $grid->fechaColuna();
         $grid->abreColuna(12);

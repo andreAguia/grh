@@ -6,7 +6,7 @@ class Grh {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com
      */
-######################################################################################################################    
+    ###########################################################    
 
     /**
      * Método cabecalho
@@ -39,7 +39,7 @@ class Grh {
         echo '</header>';
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método quadroLicencaPremio
@@ -74,7 +74,7 @@ class Grh {
         $div->fecha();
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método quadroVagasCargoComissao
@@ -129,7 +129,7 @@ class Grh {
         }
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método listaDadosServidor
@@ -292,7 +292,7 @@ class Grh {
         $grid->fechaGrid();
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método listaFolgasTre
@@ -337,7 +337,7 @@ class Grh {
         $div->fecha();
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método listaDadosServidorRelatório
@@ -399,7 +399,7 @@ class Grh {
         $relatorio->show();
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método listaDadosServidorRelatório
@@ -460,7 +460,7 @@ class Grh {
         $relatorio->show();
     }
 
-######################################################################################################################
+    ###########################################################
 
     /**
      * método rodape
@@ -589,7 +589,7 @@ class Grh {
         $botaoMapa->show();
     }
 
-    ######################################################################################################################
+    ###########################################################
 
     /**
      * método listaDadosServidorRelatório
@@ -599,7 +599,7 @@ class Grh {
      * @param string $titulo     null O título do relatório 
      * @param string $cabecalho  true Se exibirá o início do relatório (menu, cabecalho, etc) 
      */
-    public static function listaDadosServidorRelatorio3($idServidor, $titulo = null, $subTitulo = null, $cabecalho = true, $mensagem = null) {
+    public static function listaDadosServidorRelatorio3($idServidor, $titulo = null, $subTitulo = null, $menuRelatorio = true, $mensagem = null, $cabecalho = "grh") {
 
         # Conecta com o banco de dados
         $pessoal = new Pessoal();
@@ -642,13 +642,22 @@ class Grh {
         # Verifica se exibe ou não o início do cabeçalho
         # Utilizado para quando os dados doservidor é a primeira coisa a ser
         # exibida no relatório. Se não for esconde o cabeçalho, menu etc
-        if (!$cabecalho) {
-
+        if (!$menuRelatorio) {
             $relatorio->set_menuRelatorio(false);
+        }
+
+        if ($cabecalho == "grh") {
+            $relatorio->set_cabecalhoRelatorio(true);
+            $relatorio->set_cabecalhoRelatorioGeral(false);
+        }
+        
+        if ($cabecalho == "geral") {
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_cabecalhoRelatorioGeral(true);
         }
 
         $relatorio->show();
     }
 
-######################################################################################################################
+    ###########################################################
 }

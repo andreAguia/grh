@@ -1549,3 +1549,17 @@ function trataProcesso($processo = null) {
 }
 
 ###########################################################
+
+function exibeAfastamentoAtual($idServidor = null) {
+    # Verfica null
+    if (empty($idServidor)) {
+        return null;
+    }
+    
+    $verifica = new VerificaAfastamentos($idServidor);
+    $verifica->verifica();
+    
+    return $verifica->getDetalhe()."<br/>".$verifica->getPeriodo();
+}
+
+###########################################################

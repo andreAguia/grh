@@ -8,7 +8,7 @@ class VerificaAfastamentos {
     private $idServidor;
 
     /*
-     * do período
+     * do período a ser procurado
      */
     private $dtInicial;
     private $dtFinal;

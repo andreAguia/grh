@@ -10,6 +10,7 @@ class Sispatri {
     private $lotacao = null;
     private $situacao = null;
     private $ordenacao = "nome";
+    private $afastamento = true;
 
 ###########################################################
 
@@ -94,9 +95,13 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
-                         tbservidor.idServidor,
-                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+                          tbservidor.idServidor,
+                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+
+        # Exibe o afastamento ou não
+        if ($this->afastamento) {
+            $select .= ' tbservidor.idServidor,';
+        }
 
         # Exibe o e-mail ou não
         if ($exibeEmail) {
@@ -142,7 +147,7 @@ class Sispatri {
         if ($this->ordenacao == "nome") {
             $select .= ') ORDER BY tbpessoa.nome';
         } else {
-            $select .= ') ORDER BY 4, 2';
+            $select .= ') ORDER BY 3, tbpessoa.nome';
         }
 
         $pessoal = new Pessoal();
@@ -157,9 +162,13 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+
+        # Exibe o afastamento ou não
+        if ($this->afastamento) {
+            $select .= ' tbservidor.idServidor,';
+        }
 
         # Exibe o e-mail ou não
         if ($exibeEmail) {
@@ -206,7 +215,7 @@ class Sispatri {
         if ($this->ordenacao == "nome") {
             $select .= ') ORDER BY tbpessoa.nome';
         } else {
-            $select .= ') ORDER BY 4, 2';
+            $select .= ') ORDER BY 3, tbpessoa.nome';
         }
 
         $pessoal = new Pessoal();
@@ -221,9 +230,13 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+
+        # Exibe o afastamento ou não
+        if ($this->afastamento) {
+            $select .= ' tbservidor.idServidor,';
+        }
 
         # Exibe o e-mail ou não
         if ($exibeEmail) {
@@ -270,7 +283,7 @@ class Sispatri {
         if ($this->ordenacao == "nome") {
             $select .= ') ORDER BY tbpessoa.nome';
         } else {
-            $select .= ') ORDER BY 4, 2';
+            $select .= ') ORDER BY 3, tbpessoa.nome';
         }
 
         $pessoal = new Pessoal();
@@ -285,9 +298,13 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+
+        # Exibe o afastamento ou não
+        if ($this->afastamento) {
+            $select .= ' tbservidor.idServidor,';
+        }
 
         # Exibe o e-mail ou não
         if ($exibeEmail) {
@@ -336,7 +353,7 @@ class Sispatri {
         if ($this->ordenacao == "nome") {
             $select .= ') ORDER BY tbpessoa.nome';
         } else {
-            $select .= ') ORDER BY 4, 2';
+            $select .= ') ORDER BY 3, tbpessoa.nome';
         }
 
         $pessoal = new Pessoal();
@@ -351,9 +368,13 @@ class Sispatri {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
-                         tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+
+        # Exibe o afastamento ou não
+        if ($this->afastamento) {
+            $select .= ' tbservidor.idServidor,';
+        }
 
         # Exibe o e-mail ou não
         if ($exibeEmail) {
@@ -400,7 +421,7 @@ class Sispatri {
         if ($this->ordenacao == "nome") {
             $select .= ') ORDER BY tbpessoa.nome';
         } else {
-            $select .= ') ORDER BY 4, 2';
+            $select .= ') ORDER BY 3, tbpessoa.nome';
         }
 
         $pessoal = new Pessoal();
@@ -668,10 +689,11 @@ class Sispatri {
         $tabela->set_titulo("Entregaram");
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
-        $tabela->set_label(array("Tipo do Cargo", "Servidores"));
-        $tabela->set_width(array(80, 20));
-        $tabela->set_align(array("left", "center"));
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_label(["Tipo do Cargo", "Servidores"]);
+        $tabela->set_width([80, 20]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'estatisticaTotal')));
@@ -741,10 +763,11 @@ class Sispatri {
         $tabela->set_titulo("NÃO Entregaram");
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
-        $tabela->set_label(array("Tipo do Cargo", "Servidores"));
-        $tabela->set_width(array(80, 20));
-        $tabela->set_align(array("left", "center"));
-        $tabela->set_formatacaoCondicional(array(array('coluna' => 0,
+        $tabela->set_label(["Tipo do Cargo", "Servidores"]);
+        $tabela->set_width([80, 20]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
                 'valor' => "Total",
                 'operador' => '=',
                 'id' => 'estatisticaTotal')));
@@ -764,12 +787,12 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que ENTREGARAM a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(array("center", "left", "left", "left"));
-        $tabela->set_classe(array(null, null, "pessoal"));
-        $tabela->set_metodo(array(null, null, "get_Cargo"));
-        $tabela->set_funcao(array(null, null, null, null, "get_situacao"));
+        $tabela->set_align(["center", "left", "left", "left"]);
+        $tabela->set_classe([null, null, "pessoal"]);
+        $tabela->set_metodo([null, null, "get_Cargo"]);
+        $tabela->set_funcao([null, null, null, null, "get_situacao"]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -790,11 +813,11 @@ class Sispatri {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Inativos que Entregaram a Declaração do Sispatri');
             $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-            $tabela->set_label(array("IdFuncional", "Nome", "Cargo", "Lotação", "Situação"));
+            $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Situação"]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_classe(array(null, null, "pessoal", null, "pessoal"));
-            $tabela->set_metodo(array(null, null, "get_Cargo", null, "get_situacao"));
+            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_classe([null, null, "pessoal", null, "pessoal"]);
+            $tabela->set_metodo([null, null, "get_Cargo", null, "get_situacao"]);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
@@ -815,12 +838,13 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
+        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_Cargo"]);
-        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
+        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -839,12 +863,13 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
+        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_Cargo"]);
-        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
+        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -863,12 +888,13 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
+        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_Cargo"]);
-        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
+        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -887,12 +913,13 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
+        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_Cargo"]);
-        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
+        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
@@ -911,12 +938,13 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "E-mail", "Situação"]);
+        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
         $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, null, "pessoal"]);
-        $tabela->set_metodo([null, null, "get_Cargo"]);
-        $tabela->set_funcao([null, null, null, null, null, "get_situacao"]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
+        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');

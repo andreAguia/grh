@@ -10,7 +10,8 @@ class Sispatri {
     private $lotacao = null;
     private $situacao = null;
     private $ordenacao = "nome";
-    private $afastamento = true;
+    private $exibeAfastamento = true;
+    private $exibeEmail = true;
 
 ###########################################################
 
@@ -47,6 +48,28 @@ class Sispatri {
      */
     public function set_ordenacao($ordenacao) {
         $this->ordenacao = $ordenacao;
+    }
+
+###########################################################
+
+    /**
+     * Método exibeAfastamento
+     * 
+     * @param $exibeAfastamento 
+     */
+    public function exibeAfastamento($exibeAfastamento) {
+        $this->exibeAfastamento = $exibeAfastamento;
+    }
+
+###########################################################
+
+    /**
+     * Método exibeEmail
+     * 
+     * @param $exibeEmail 
+     */
+    public function exibeEmail($exibeEmail) {
+        $this->exibeEmail = $exibeEmail;
     }
 
 ###########################################################
@@ -91,7 +114,7 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivos($exibeEmail = true) {
+    public function get_servidoresNaoEntregaramAtivos() {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
@@ -99,12 +122,12 @@ class Sispatri {
                           concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
 
         # Exibe o afastamento ou não
-        if ($this->afastamento) {
+        if ($this->exibeAfastamento) {
             $select .= ' tbservidor.idServidor,';
         }
 
         # Exibe o e-mail ou não
-        if ($exibeEmail) {
+        if ($this->exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
 
@@ -158,7 +181,7 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosFerias($exibeEmail = true) {
+    public function get_servidoresNaoEntregaramAtivosFerias() {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
@@ -166,12 +189,12 @@ class Sispatri {
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
 
         # Exibe o afastamento ou não
-        if ($this->afastamento) {
+        if ($this->exibeAfastamento) {
             $select .= ' tbservidor.idServidor,';
         }
 
         # Exibe o e-mail ou não
-        if ($exibeEmail) {
+        if ($this->exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
 
@@ -226,7 +249,7 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_servidoresNaoEntregaramAtivosLicPremio($exibeEmail = true) {
+    public function get_servidoresNaoEntregaramAtivosLicPremio() {
 
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
@@ -234,12 +257,12 @@ class Sispatri {
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
 
         # Exibe o afastamento ou não
-        if ($this->afastamento) {
+        if ($this->exibeAfastamento) {
             $select .= ' tbservidor.idServidor,';
         }
 
         # Exibe o e-mail ou não
-        if ($exibeEmail) {
+        if ($this->exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
 
@@ -302,12 +325,12 @@ class Sispatri {
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
 
         # Exibe o afastamento ou não
-        if ($this->afastamento) {
+        if ($this->exibeAfastamento) {
             $select .= ' tbservidor.idServidor,';
         }
 
         # Exibe o e-mail ou não
-        if ($exibeEmail) {
+        if ($this->exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
 
@@ -372,12 +395,12 @@ class Sispatri {
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
 
         # Exibe o afastamento ou não
-        if ($this->afastamento) {
+        if ($this->exibeAfastamento) {
             $select .= ' tbservidor.idServidor,';
         }
 
         # Exibe o e-mail ou não
-        if ($exibeEmail) {
+        if ($this->exibeEmail) {
             $select .= ' tbpessoa.emailUenf,';
         }
 

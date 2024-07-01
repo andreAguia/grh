@@ -39,10 +39,20 @@ if ($acesso) {
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
     $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
+    $exibeAfastamento = post('exibeAfastamento', get_session('exibeAfastamento', false));
+    $exibeEmail = post('exibeEmail', get_session('exibeEmail', false));
+
+    echo "email -> ", $exibeEmail;
+    br();
+    echo "afastamento -> ", $exibeAfastamento;
+
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroAfastamento', $parametroAfastamento);
+
+    set_session('exibeAfastamento', $exibeAfastamento);
+    set_session('exibeEmail', $exibeEmail);
 
     # Começa uma nova página
     $page = new Page();
@@ -143,7 +153,8 @@ if ($acesso) {
     # Inicia a Classe
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
-
+    $sispatri->exibeEmail($exibeEmail);
+    $sispatri->exibeAfastamento($exibeAfastamento);
 ################################################################
 
     switch ($fase) {
@@ -200,11 +211,7 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_autofocus(true);
-            if ($parametroSituacao == "Entregaram") {
-                $controle->set_col(9);
-            } else {
-                $controle->set_col(6);
-            }
+            $controle->set_col(9);
 
             $form->add_item($controle);
 
@@ -221,18 +228,39 @@ if ($acesso) {
             $controle->set_col(3);
             $form->add_item($controle);
 
-            # Afastamentos
-            $array = ["Todos", "Férias", "Licença Prêmio", "Licença Médica"];
-
-            $controle = new Input('parametroAfastamento', 'combo', 'Afastamento:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Afastamento');
-            $controle->set_array($array);
-            $controle->set_valor($parametroAfastamento);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
             if ($parametroSituacao <> "Entregaram") {
+
+                # Afastamentos
+                $array = ["Todos", "Férias", "Licença Prêmio", "Licença Médica"];
+
+                $controle = new Input('parametroAfastamento', 'combo', 'Afastamento:', 1);
+                $controle->set_size(30);
+                $controle->set_title('Filtra por Afastamento');
+                $controle->set_array($array);
+                $controle->set_valor($parametroAfastamento);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(2);
+                $controle->set_col(6);
+                $form->add_item($controle);
+
+                # E-mail
+                $controle = new Input('exibeEmail', 'simnao2', 'E-mail:', 1);
+                $controle->set_size(5);
+                $controle->set_title('Exibe ou não o e-mail');
+                $controle->set_valor($exibeEmail);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(2);
+                $controle->set_col(3);
+                $form->add_item($controle);
+
+                # Afastamento
+                $controle = new Input('exibeAfastamento', 'simnao2', 'Afastamento:', 1);
+                $controle->set_size(5);
+                $controle->set_title('Exibe ou não o afastamento');
+                $controle->set_valor($exibeAfastamento);
+                $controle->set_onChange('formPadrao.submit();');
+                $controle->set_linha(2);
+                $controle->set_col(3);
                 $form->add_item($controle);
             }
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Área de Licença Prêmio
+ * Área de Comorbidades
  *  
  * By Alat
  */

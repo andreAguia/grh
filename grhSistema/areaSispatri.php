@@ -41,11 +41,7 @@ if ($acesso) {
 
     $exibeAfastamento = post('exibeAfastamento', get_session('exibeAfastamento', 1));
     $exibeEmail = post('exibeEmail', get_session('exibeEmail', 1));
-
-    echo "email -> ", $exibeEmail;
-    br();
-    echo "afastamento -> ", $exibeAfastamento;
-
+    
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);

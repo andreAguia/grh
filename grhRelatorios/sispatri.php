@@ -26,10 +26,16 @@ if ($acesso) {
 
     $parametroLotacao = get_session('parametroLotacao', 'Todos');
     $parametroSituacao = get_session('parametroSituacao', 'Entregaram');
-    $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
+    $parametroAfastamento = get_session('parametroAfastamento', 'Todos');
 
+    $exibeAfastamento = get_session('exibeAfastamento', 1);
+    $exibeEmail = get_session('exibeEmail', 1);
+
+    # Inicia a Classe
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
+    $sispatri->exibeEmail($exibeEmail);
+    $sispatri->exibeAfastamento($exibeAfastamento);
     $sispatri->set_ordenacao("lotacao");
 
     ######
@@ -45,24 +51,24 @@ if ($acesso) {
 
         # Exibe os servidores ativos que Não entregaram o sispatri
         if ($parametroAfastamento == "Todos") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivos(false);
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivos();
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
         }
 
         if ($parametroAfastamento == "Férias") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosFerias(false);
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosFerias();
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Férias");
         }
 
         if ($parametroAfastamento == "Licença Prêmio") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio(false);
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicPremio();
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Licença Prêmio");
         }
 
         if ($parametroAfastamento == "Licença Médica") {
-            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica(false);
+            $lista = $sispatri->get_servidoresNaoEntregaramAtivosLicMedica();
             $relatorio->set_titulo('Relatório de Declarações Não Entregues do Sispatri');
             $relatorio->set_tituloLinha3("Em Licença Médica");
         }
@@ -78,8 +84,9 @@ if ($acesso) {
 
         $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situação']);
         $relatorio->set_align(["center", "left", "left", "left"]);
-        $relatorio->set_classe([null, null, "pessoal", null, "pessoal"]);
-        $relatorio->set_metodo([null, null, "get_CargoSimples", null, "get_situacaoRel"]);
+        $relatorio->set_classe([null, null, "pessoal"]);
+        $relatorio->set_metodo([null, null, "get_CargoSimples"]);
+        $relatorio->set_funcao([null, null, null, null, "get_situacaoRel"]);
         $relatorio->set_conteudo($lista);
         $relatorio->set_numGrupo(3);
     } else {
@@ -87,26 +94,6 @@ if ($acesso) {
         $relatorio->set_conteudo($lista);
         $relatorio->set_classe([null, "pessoal"]);
         $relatorio->set_metodo([null, "get_nomeECargo"]);
-        
-        $relatorio->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "Situação"]);
-        $relatorio->set_align(["center", "left", "left", "left"]);
-        $relatorio->set_funcao([null, null, null, "exibeAfastamentoAtual", "get_situacaoRel"]);
-        
-        
-        
-        
-        
-        $relatorio->set_numGrupo(2);
-        $relatorio->set_bordaInterna(true);
-        
-        $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_classe([null, "pessoal"]);
-        $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editaServidor');
-        $tabela->set_conteudo($result);
 
         $label = ["IdFuncional", "Servidor", "Lotação"];
         $align = ["center", "left", "left"];
@@ -114,7 +101,7 @@ if ($acesso) {
         $width = [10, 30, 20];
 
         # Exibe o afastamento ou não
-        if ($this->exibeAfastamento) {
+        if ($exibeAfastamento) {
             array_push($label, "Afastamentos");
             array_push($align, "left");
             array_push($funcao, "exibeAfastamentoAtual");
@@ -122,7 +109,7 @@ if ($acesso) {
         }
 
         # Exibe o e-mail ou não
-        if ($this->exibeEmail) {
+        if ($exibeEmail) {
             array_push($label, "E-mail");
             array_push($align, null);
             array_push($funcao, null);
@@ -130,21 +117,15 @@ if ($acesso) {
         }
 
         array_push($label, "Situação");
-        array_push($funcao, "get_situacao");
+        array_push($funcao, "get_situacaoRel");
         array_push($width, 10);
 
-        $tabela->set_label($label);
-        $tabela->set_align($align);
-        $tabela->set_funcao($funcao);
-        $tabela->set_width($width);
-
-        $tabela->show();
-        
-        
-        
+        $relatorio->set_label($label);
+        $relatorio->set_align($align);
+        $relatorio->set_funcao($funcao);
+        $relatorio->set_width($width);
     }
 
     $relatorio->show();
-
     $page->terminaPagina();
 }

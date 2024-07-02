@@ -74,7 +74,7 @@ if ($acesso) {
     set_session('idServidorPesquisado');
     set_session('parametroParentesco');
     set_session('parametroDias');
-    
+
     set_session('concursoTipo');
 
     set_session('parametroMotivo');
@@ -104,6 +104,10 @@ if ($acesso) {
 
     # Procedimentos
     set_session('abertos');
+
+    # area do sispatri
+    set_session('exibeAfastamento');
+    set_session('exibeEmail');
 
     # Pega os parâmetros dos aniversariantes
     $parametroMes = post('parametroMes', date("m"));
@@ -138,7 +142,7 @@ if ($acesso) {
 
             # Exibe a Versão e o usuário logado
             p(SISTEMA, 'grhTitulo');
-            
+
             # Div
             $div = new Div("menuAdmin");
             $div->abre();
@@ -184,7 +188,6 @@ if ($acesso) {
 //            $linkArea->set_target('_blank');
 //            $linkArea->set_title('Exibe o histórico de atualizações do sistema');
 //            $menu->add_link($linkArea, "right");
-
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

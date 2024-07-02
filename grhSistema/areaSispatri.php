@@ -39,8 +39,8 @@ if ($acesso) {
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
     $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
-    $exibeAfastamento = post('exibeAfastamento', get_session('exibeAfastamento', false));
-    $exibeEmail = post('exibeEmail', get_session('exibeEmail', false));
+    $exibeAfastamento = post('exibeAfastamento', get_session('exibeAfastamento', 1));
+    $exibeEmail = post('exibeEmail', get_session('exibeEmail', 1));
 
     echo "email -> ", $exibeEmail;
     br();
@@ -403,6 +403,10 @@ if ($acesso) {
         ################################################################
 
         case "email" :
+            # Exibe a lista de email para ser compiada e colada
+            # quando se deseja enviar e-mails para todos os
+            # servidores da listagem
+            
             if ($parametroAfastamento == "Todos") {
                 $sispatri->exibeEmails();
             }

@@ -84,14 +84,64 @@ if ($acesso) {
         $relatorio->set_numGrupo(3);
     } else {
 
-        $relatorio->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "Situação"]);
         $relatorio->set_conteudo($lista);
-        $relatorio->set_align(["center", "left", "left", "left"]);
         $relatorio->set_classe([null, "pessoal"]);
         $relatorio->set_metodo([null, "get_nomeECargo"]);
+        
+        $relatorio->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "Situação"]);
+        $relatorio->set_align(["center", "left", "left", "left"]);
         $relatorio->set_funcao([null, null, null, "exibeAfastamentoAtual", "get_situacaoRel"]);
+        
+        
+        
+        
+        
         $relatorio->set_numGrupo(2);
         $relatorio->set_bordaInterna(true);
+        
+        $tabela = new Tabela();
+        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
+        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_idCampo('idServidor');
+        $tabela->set_editar('?fase=editaServidor');
+        $tabela->set_conteudo($result);
+
+        $label = ["IdFuncional", "Servidor", "Lotação"];
+        $align = ["center", "left", "left"];
+        $funcao = [null, null, null];
+        $width = [10, 30, 20];
+
+        # Exibe o afastamento ou não
+        if ($this->exibeAfastamento) {
+            array_push($label, "Afastamentos");
+            array_push($align, "left");
+            array_push($funcao, "exibeAfastamentoAtual");
+            array_push($width, 20);
+        }
+
+        # Exibe o e-mail ou não
+        if ($this->exibeEmail) {
+            array_push($label, "E-mail");
+            array_push($align, null);
+            array_push($funcao, null);
+            array_push($width, 10);
+        }
+
+        array_push($label, "Situação");
+        array_push($funcao, "get_situacao");
+        array_push($width, 10);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_funcao($funcao);
+        $tabela->set_width($width);
+
+        $tabela->show();
+        
+        
+        
     }
 
     $relatorio->show();

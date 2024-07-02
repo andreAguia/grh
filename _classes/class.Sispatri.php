@@ -55,6 +55,8 @@ class Sispatri {
     /**
      * Método exibeAfastamento
      * 
+     * Informa se exibe ou não o campo de afastamento na listagem
+     * 
      * @param $exibeAfastamento 
      */
     public function exibeAfastamento($exibeAfastamento) {
@@ -65,6 +67,8 @@ class Sispatri {
 
     /**
      * Método exibeEmail
+     * 
+     * Informa se exibe ou não o campo e-mail na listagem
      * 
      * @param $exibeEmail 
      */
@@ -861,16 +865,42 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
-        $tabela->set_conteudo($result);
-        $tabela->set_align(["center", "left", "left", "left"]);
         $tabela->set_classe([null, "pessoal"]);
         $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
-        $tabela->set_width([10, 30, 20, 20, 10, 10]);
-
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
+        $tabela->set_conteudo($result);
+
+        $label = ["IdFuncional", "Servidor", "Lotação"];
+        $align = ["center", "left", "left"];
+        $funcao = [null, null, null];
+        $width = [10, 30, 20];
+
+        # Exibe o afastamento ou não
+        if ($this->exibeAfastamento) {
+            array_push($label, "Afastamentos");
+            array_push($align, "left");
+            array_push($funcao, "exibeAfastamentoAtual");
+            array_push($width, 20);
+        }
+
+        # Exibe o e-mail ou não
+        if ($this->exibeEmail) {
+            array_push($label, "E-mail");
+            array_push($align, null);
+            array_push($funcao, null);
+            array_push($width, 10);
+        }
+
+        array_push($label, "Situação");
+        array_push($funcao, "get_situacao");
+        array_push($width, 10);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_funcao($funcao);
+        $tabela->set_width($width);
+
         $tabela->show();
     }
 
@@ -886,16 +916,42 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
-        $tabela->set_conteudo($result);
-        $tabela->set_align(["center", "left", "left", "left"]);
         $tabela->set_classe([null, "pessoal"]);
         $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
-        $tabela->set_width([10, 30, 20, 20, 10, 10]);
-
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
+        $tabela->set_conteudo($result);
+
+        $label = ["IdFuncional", "Servidor", "Lotação"];
+        $align = ["center", "left", "left"];
+        $funcao = [null, null, null];
+        $width = [10, 30, 20];
+
+        # Exibe o afastamento ou não
+        if ($this->exibeAfastamento) {
+            array_push($label, "Afastamentos");
+            array_push($align, "left");
+            array_push($funcao, "exibeAfastamentoAtual");
+            array_push($width, 20);
+        }
+
+        # Exibe o e-mail ou não
+        if ($this->exibeEmail) {
+            array_push($label, "E-mail");
+            array_push($align, null);
+            array_push($funcao, null);
+            array_push($width, 10);
+        }
+
+        array_push($label, "Situação");
+        array_push($funcao, "get_situacao");
+        array_push($width, 10);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_funcao($funcao);
+        $tabela->set_width($width);
+
         $tabela->show();
     }
 
@@ -911,16 +967,42 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
-        $tabela->set_conteudo($result);
-        $tabela->set_align(["center", "left", "left", "left"]);
         $tabela->set_classe([null, "pessoal"]);
         $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
-        $tabela->set_width([10, 30, 20, 20, 10, 10]);
-
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
+        $tabela->set_conteudo($result);
+
+        $label = ["IdFuncional", "Servidor", "Lotação"];
+        $align = ["center", "left", "left"];
+        $funcao = [null, null, null];
+        $width = [10, 30, 20];
+
+        # Exibe o afastamento ou não
+        if ($this->exibeAfastamento) {
+            array_push($label, "Afastamentos");
+            array_push($align, "left");
+            array_push($funcao, "exibeAfastamentoAtual");
+            array_push($width, 20);
+        }
+
+        # Exibe o e-mail ou não
+        if ($this->exibeEmail) {
+            array_push($label, "E-mail");
+            array_push($align, null);
+            array_push($funcao, null);
+            array_push($width, 10);
+        }
+
+        array_push($label, "Situação");
+        array_push($funcao, "get_situacao");
+        array_push($width, 10);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_funcao($funcao);
+        $tabela->set_width($width);
+
         $tabela->show();
     }
 
@@ -936,41 +1018,42 @@ class Sispatri {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
-        $tabela->set_conteudo($result);
-        $tabela->set_align(["center", "left", "left", "left"]);
         $tabela->set_classe([null, "pessoal"]);
         $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
-        $tabela->set_width([10, 30, 20, 20, 10, 10]);
-
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
-        $tabela->show();
-    }
-
-###########################################################
-
-    public function exibeServidoresNaoEntregaramAtivosTrabalhando() {
-
-        # Classe
-        $pessoal = new Pessoal();
-
-        $result = $this->get_servidoresNaoEntregaramAtivosTrabalhando();
-
-        $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
-        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-        $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Afastamentos", "E-mail", "Situação"]);
         $tabela->set_conteudo($result);
-        $tabela->set_align(["center", "left", "left", "left"]);
-        $tabela->set_classe([null, "pessoal"]);
-        $tabela->set_metodo([null, "get_nomeECargo"]);
-        $tabela->set_funcao([null, null, null, "exibeAfastamentoAtual", null, "get_situacao"]);
-        $tabela->set_width([10, 30, 20, 20, 10, 10]);
 
-        $tabela->set_idCampo('idServidor');
-        $tabela->set_editar('?fase=editaServidor');
+        $label = ["IdFuncional", "Servidor", "Lotação"];
+        $align = ["center", "left", "left"];
+        $funcao = [null, null, null];
+        $width = [10, 30, 20];
+
+        # Exibe o afastamento ou não
+        if ($this->exibeAfastamento) {
+            array_push($label, "Afastamentos");
+            array_push($align, "left");
+            array_push($funcao, "exibeAfastamentoAtual");
+            array_push($width, 20);
+        }
+
+        # Exibe o e-mail ou não
+        if ($this->exibeEmail) {
+            array_push($label, "E-mail");
+            array_push($align, null);
+            array_push($funcao, null);
+            array_push($width, 10);
+        }
+
+        array_push($label, "Situação");
+        array_push($funcao, "get_situacao");
+        array_push($width, 10);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+        $tabela->set_funcao($funcao);
+        $tabela->set_width($width);
+
         $tabela->show();
     }
 
@@ -1037,9 +1120,9 @@ class Sispatri {
     ###########################################################
 
     /**
-     * Método exibeDataUltimaImportacao
+     * Método exibeEmails
      * 
-     * Método exibe a data da última importação
+     * Método exibe uma relação de e-mail para serem copiados e colados 
      */
     public function exibeEmails() {
         # Pega os dados
@@ -1091,9 +1174,9 @@ class Sispatri {
     ###########################################################
 
     /**
-     * Método exibeDataUltimaImportacao
+     * Método exibeEmailsFerias
      * 
-     * Método exibe a data da última importação
+     * Método exibe uma relação de e-mail para serem copiados e colados 
      */
     public function exibeEmailsFerias() {
         # Pega os dados
@@ -1147,9 +1230,9 @@ class Sispatri {
     ###########################################################
 
     /**
-     * Método exibeDataUltimaImportacao
+     * Método exibeEmailsLicMedica
      * 
-     * Método exibe a data da última importação
+     * Método exibe uma relação de e-mail para serem copiados e colados 
      */
     public function exibeEmailsLicMedica() {
         # Pega os dados
@@ -1205,9 +1288,9 @@ class Sispatri {
     ###########################################################
 
     /**
-     * Método exibeDataUltimaImportacao
+     * Método exibeEmailsLicPremio
      * 
-     * Método exibe a data da última importação
+     * Método exibe uma relação de e-mail para serem copiados e colados 
      */
     public function exibeEmailsLicPremio() {
         # Pega os dados

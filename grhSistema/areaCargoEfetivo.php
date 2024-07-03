@@ -181,7 +181,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Cargo Efetivo');
             $tabela->set_label(["Cargo", "Área", "Função", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Mapa"]);
-            $tabela->set_colspanLabel(array(null, null, null, 2, null, 2));
+            $tabela->set_colspanLabel([null, null, null, 2, null, 2]);
             $tabela->set_align(["left", "left", "left"]);
             $tabela->set_conteudo($result);
             $tabela->set_classe([null, null, null, "Pessoal", null, "pessoal", null, "Grh"]);
@@ -201,9 +201,9 @@ if ($acesso) {
             $servInativos->set_title("Exibe os servidores inativos");
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link(array(null, null, null, null, $servAtivos, null, $servInativos));
+            $tabela->set_link([null, null, null, null, $servAtivos, null, $servInativos]);
+                                    
             $tabela->set_idCampo('idCargo');
-
             $tabela->show();
 
             $grid->fechaColuna();

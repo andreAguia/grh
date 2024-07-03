@@ -118,7 +118,7 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(["id", "Cargo", "Área", "Função", "Obs", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
     $objeto->set_width([5, 15, 15, 20, 15, 5, 5, 5, 5]);
-    $objeto->set_align(["center", "left", "left", "left"]);
+    $objeto->set_align(["center", "left", "left", "left", "left"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);

@@ -46,6 +46,27 @@ class Faltas {
         return $pessoal->count($select);
     }
 
+    ###########################################################
+
+    function getNumDiasFaltasServidor($idServidor) {
+
+        # Verifica se foi informado
+        if (empty($idServidor)) {
+            alert("É necessário informar o id do Servidor.");
+            return;
+        }
+
+        $select = "SELECT SUM(numDias)
+                     FROM tblicenca
+                    WHERE idServidor = {$idServidor}
+                      AND idTpLicenca = 25 
+                 ORDER BY dtInicial";
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select, false);
+        return $retorno[0];
+    }
+
     ##############################################################
 
     public function exibeDoc($id = null) {
@@ -81,4 +102,33 @@ class Faltas {
     }
 
 ###########################################################
+
+    function exibeTabela($idServidor) {
+
+        # Verifica se foi informado
+        if (empty($idServidor)) {
+            return;
+        }
+
+        $select = "SELECT dtInicial,
+                          numdias,
+                          obs
+                     FROM tblicenca
+                    WHERE idServidor = {$idServidor}
+                      AND idTpLicenca = 25 
+                 ORDER BY dtInicial";
+
+        $pessoal = new Pessoal();
+        $array = $pessoal->select($select);
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Faltas");
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Data Inicial", "Dias", "obs"]);
+        $tabela->set_align(["center", "center", "left"]);
+        $tabela->set_funcao(["date_to_php"]);
+        $tabela->show();
+    }
+
+    ##############################################################
 }

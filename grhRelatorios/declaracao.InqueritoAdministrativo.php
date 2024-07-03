@@ -25,7 +25,7 @@ if ($acesso) {
     $page = new Page();
     $page->set_title("Declaração Inquérito");
     $page->iniciaPagina();
-    
+
     # Verifica se tem PAD
     $penalidades = new Penalidade();
 
@@ -37,10 +37,10 @@ if ($acesso) {
         # Limita o tamanho da tela
         $grid = new Grid("center");
         $grid->abreColuna(8);
-        
+
         $mensagem = "Este servidor tem PADs (Processo Administrativo Disciplinar) (penalidades) referentes a faltas cadastradas no sistema.";
         $mensagem .= "<br/><br/>Portanto, não é possível emitir esta Declaração.";
-        calloutAlert($mensagem," Atenção !");
+        calloutAlert($mensagem, " Atenção !");
 
         $grid->fechaColuna();
         $grid->fechaGrid();
@@ -49,10 +49,11 @@ if ($acesso) {
         # Pega o número de faltas
         $faltas = new Faltas();
         $numfaltas = $faltas->getNumFaltasServidor($idServidorPesquisado);
+        $numduasfaltas = $faltas->getNumDiasFaltasServidor($idServidorPesquisado);
 
         # Exibe alereta de faltas
         if ($numfaltas > 0) {
-            alert("ATENÇÃO !! Este Servidor TEM {$numfaltas} FALTA(S) cadastrada(s) no sistema!");
+            alert("ATENÇÃO !! Este Servidor TEM {$numduasfaltas} dias de FALTA(S) cadastrada(s) no sistema!");
         }
 
         # Servidor
@@ -109,7 +110,7 @@ if ($acesso) {
 
         # Exibe aviso de que tem faltas
         if ($numfaltas > 0) {
-            $dec->set_aviso("ATENÇÃO !! Este Servidor TEM {$numfaltas} FALTA(S) cadastrada(s) no sistema!");
+            $dec->set_aviso("ATENÇÃO !! Este servidor tem <b>{$numduasfaltas} dias</b> de FALTA(S) cadastrada(s) em {$numfaltas} lançamentos no sistema!");
         }
 
         $dec->show();

@@ -33,7 +33,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
         $parametro = retiraAspas(get_session('sessionParametro'));# passa o parametro da session para a variavel parametro retirando as aspas
@@ -73,7 +73,8 @@ if ($acesso) {
     $objeto->set_selectLista('SELECT idCargo,
                                       tbtipocargo.cargo,
                                       tbarea.area,
-                                      nome,                              
+                                      nome,
+                                      tbcargo.obs,
                                       idCargo,
                                       idCargo,
                                       idCargo,
@@ -89,18 +90,18 @@ if ($acesso) {
                                    OR tbarea.area LIKE "%' . $parametro . '%" 
                                    OR nome LIKE "%' . $parametro . '%"     
                                    OR tbtipocargo.cargo LIKE "%' . $parametro . '%"
-                             ORDER BY 2 asc, 3 asc, 4 asc, 5 asc, 6 asc');
+                             ORDER BY 2 asc, 3 asc, 4 asc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idtipocargo,
+    $objeto->set_selectEdita("SELECT idtipocargo,
                                      idarea,
                                      nome,
                                      idPlano,
                                      atribuicoes,
                                      obs
                                 FROM tbcargo
-                               WHERE idCargo = ' . $id);
-    
+                               WHERE idCargo = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -115,17 +116,17 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Cargo", "Área", "Função", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
-    #$objeto->set_width(array(5,20,25,25,10,5,5));
+    $objeto->set_label(["id", "Cargo", "Área", "Função", "Obs", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
+    $objeto->set_width([5, 15, 15, 20, 15, 5, 5, 5, 5]);
     $objeto->set_align(["center", "left", "left", "left"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio(4);
+    $objeto->set_colunaSomatorio(5);
 
-    $objeto->set_classe([null, null, null, null, "Pessoal", null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo"]);
+    $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo"]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -138,7 +139,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, $servAtivos, null, $servInativos]);
+    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -28,6 +28,7 @@ if ($acesso) {
     # Servidor
     $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+    $matricula = $pessoal->get_matricula($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
@@ -45,6 +46,11 @@ if ($acesso) {
     # O id(se tiver)
     if (!empty($idFuncional)) {
         $texto .= " ID funcional nº {$idFuncional},";
+    }
+    
+    # a matricula(se tiver)
+    if (!empty($matricula)) {
+        $texto .= " matrícula nº {$matricula},";
     }
     
     # Altera parte do texto de acordo com o sexo (gênero) do servidor

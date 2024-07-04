@@ -60,10 +60,10 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Funções');
+    $objeto->set_nome('Cadastro de Cargo / Área / Função');
 
     # bot?o de voltar da lista
-    $objeto->set_voltarLista('areaCargoEfetivo.php');
+    $objeto->set_voltarLista('grh.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
@@ -75,6 +75,7 @@ if ($acesso) {
                                       tbarea.area,
                                       nome,
                                       tbcargo.obs,
+                                      idCargo,
                                       idCargo,
                                       idCargo,
                                       idCargo,
@@ -117,8 +118,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Cargo", "Área", "Função", "Obs", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
-    $objeto->set_width([5, 15, 15, 20, 15, 5, 5, 5, 5]);
+    $objeto->set_label(["id", "Cargo", "Área", "Função", "Obs", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver", "Mapa"]);
+    $objeto->set_width([5, 15, 15, 20, 15, 5, 5, 5, 5, 5]);
     $objeto->set_align(["center", "left", "left", "left", "left"]);
 
     $objeto->set_rowspan(1);
@@ -126,8 +127,8 @@ if ($acesso) {
 
     $objeto->set_colunaSomatorio(5);
 
-    $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo"]);
+    $objeto->set_classe([null, null, null, null, null, "Pessoal", null, "Pessoal", null, "Grh"]);
+    $objeto->set_metodo([null, null, null, null, null, "get_numServidoresAtivosCargo", null, "get_numServidoresInativosCargo", null, "exibeMapaFuncao"]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -225,6 +226,18 @@ if ($acesso) {
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
+
+    # Cadastro de Cargos
+    $botaoCargo = new Button("Cadastro de Cargos");
+    $botaoCargo->set_title("Acessa o Cadastro de Cargos");
+    $botaoCargo->set_url('cadastroCargo.php');
+
+    # Cadastro de Áreas
+    $botaoArea = new Button("Cadastro de Áreas");
+    $botaoArea->set_title("Acessa o Cadastro de Áreas");
+    $botaoArea->set_url('cadastroArea.php');
+
+    $objeto->set_botaoListarExtra([$botaoCargo, $botaoArea]);
 
     ################################################################
 

@@ -53,7 +53,7 @@ if ($acesso) {
     $objeto->set_nome('Área');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista('areaCargoEfetivo.php');
+    $objeto->set_voltarLista('cadastroFuncao.php');
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

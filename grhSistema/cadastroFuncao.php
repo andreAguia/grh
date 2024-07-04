@@ -97,6 +97,7 @@ if ($acesso) {
                                      idarea,
                                      nome,
                                      idPlano,
+                                     formacao,
                                      atribuicoes,
                                      obs
                                 FROM tbcargo
@@ -203,6 +204,12 @@ if ($acesso) {
             'required' => true,
             'array' => $result1,
             'size' => 30),
+        array('linha' => 3,
+            'col' => 12,
+            'nome' => 'formacao',
+            'label' => 'Formação Específica:',
+            'tipo' => 'texto',
+            'size' => 250),
         array('linha' => 4,
             'col' => 8,
             'nome' => 'atribuicoes',

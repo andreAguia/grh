@@ -111,12 +111,10 @@ if ($acesso) {
         $relatorio = new Relatorio();
         $relatorio->set_tituloTabela("Função: {$cargoNome}");
         #$relatorio->set_titulo($servidor->get_nomeArea($area));
-        $relatorio->set_label(array('Atribuições da Função'));
-        $relatorio->set_width(array(100));
-        $relatorio->set_align(array("left"));
-        $relatorio->set_funcao(array('formataAtribuicao'));
-        #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
-        #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
+        $relatorio->set_label(['Atribuições da Função']);
+        $relatorio->set_width([100]);
+        $relatorio->set_align(["left"]);
+        $relatorio->set_funcao(['formataAtribuicao']);
         $relatorio->set_conteudo($result);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(true);

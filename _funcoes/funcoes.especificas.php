@@ -116,11 +116,8 @@ function get_DadosFrequencia($idHistCessao) {
  * 
  */
 
-function formataAtribuicao($texto) {
-    $pulo = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-    $novoTexto = $pulo . "&nbsp;" . str_replace(";", ";<br/>{$pulo}", $texto);
-
-    return $novoTexto;
+function formataAtribuicao($texto) {    
+    p(str_replace(";", ";<br/>", $texto));
 }
 
 ###########################################################
@@ -1555,11 +1552,11 @@ function exibeAfastamentoAtual($idServidor = null) {
     if (empty($idServidor)) {
         return null;
     }
-    
+
     $verifica = new VerificaAfastamentos($idServidor);
     $verifica->verifica();
-    
-    return $verifica->getDetalhe()."<br/>".$verifica->getPeriodo();
+
+    return $verifica->getDetalhe() . "<br/>" . $verifica->getPeriodo();
 }
 
 ###########################################################

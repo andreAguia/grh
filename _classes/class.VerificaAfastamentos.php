@@ -30,6 +30,7 @@ class VerificaAfastamentos {
     private $afastamento = false;
     private $detalhe = null;
     private $periodo = null;
+    private $tipo = null;
 
     ###########################################################
 
@@ -108,6 +109,10 @@ class VerificaAfastamentos {
         return $this->periodo;
     }
 
+    function getTipo() {
+        return $this->tipo;
+    }
+
     ###########################################################
 
     public function verifica() {
@@ -157,6 +162,7 @@ class VerificaAfastamentos {
             $this->afastamento = "Férias";
             $this->detalhe = "Exercício {$afast['anoExercicio']}";
             $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
+            $this->tipo = "Férias";
             return true;
         }
 
@@ -169,7 +175,8 @@ class VerificaAfastamentos {
                           tbtipolicenca.nome,
                           dtInicial,
                           numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
+                          ADDDATE(dtInicial,numDias-1) as dtFinal,
+                          tblicenca.idTpLicenca as tipo
                  FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
                 WHERE idServidor = {$this->idServidor}
                   AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
@@ -200,6 +207,8 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             }
+
+            $this->tipo = $afast['tipo'];
             return true;
         }
 
@@ -215,7 +224,8 @@ class VerificaAfastamentos {
                           alta, 
                           dtInicial,
                           numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
+                          ADDDATE(dtInicial,numDias-1) as dtFinal,
+                          tblicenca.idTpLicenca as tipo
                       FROM tblicenca
                      WHERE idServidor = {$this->idServidor}
                        AND (idTpLicenca = 1 OR idTpLicenca = 2 OR idTpLicenca = 30)
@@ -249,6 +259,7 @@ class VerificaAfastamentos {
                             } else {
                                 $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
                             }
+                            $this->tipo = $afast['tipo'];
                             return true;
                         }
                     }
@@ -305,6 +316,8 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             }
+            
+            $this->tipo = 'prêmio';
             return true;
         }
 
@@ -343,6 +356,7 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['dtInicial']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             }
+            $this->tipo = 'semVencimentos';
             return true;
         }
 
@@ -379,6 +393,7 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['dtInicio']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['numDias'] . " dias";
             }
+            $this->tipo = 'atestado';
             return true;
         }
 
@@ -415,6 +430,7 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['data']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['dias'] . " dias";
             }
+            $this->tipo = 'tre';
             return true;
         }
 
@@ -451,6 +467,7 @@ class VerificaAfastamentos {
             } else {
                 $this->periodo = date_to_php($afast['data']) . " a " . date_to_php($afast['dtFinal']) . " - " . $afast['dias'] . " dias";
             }
+            $this->tipo = 'tre';
             return true;
         }
 

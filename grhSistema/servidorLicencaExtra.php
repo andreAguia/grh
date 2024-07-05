@@ -52,7 +52,9 @@ if ($idTpLicenca == "Inicial") {
         # Afastamento eleitoral pode com outros afastamentos
         if ($idTpLicenca == 17 AND $verifica->getAfastamento() <> "Férias") {
             alert("Servidor ja está com afastamento, mas um parecer da assessoria jurídica permitiu acumular licença eleitoral com outro afastamento.");
-        } else {
+        } elseif ($verifica->getTipo() == 17) {
+            alert("Servidor ja está com afastamento, mas um parecer da assessoria jurídica permitiu acumular licença eleitoral com outro afastamento.");
+        }else{
             $erro = 1;
             $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n(' . $id . ')';
         }

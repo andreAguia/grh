@@ -896,6 +896,13 @@ a#aServidorTipoCargo{
     margin: 0px;
 }
 
+p#patribuicao{
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
 /*******************************************
  * Cadastro de Plano de Cargos
  *******************************************/

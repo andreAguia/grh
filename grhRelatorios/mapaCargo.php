@@ -23,6 +23,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Mapa do Cargo");
     $page->iniciaPagina();
 
     # Limita o tamanho da tela

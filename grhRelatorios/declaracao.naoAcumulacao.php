@@ -32,6 +32,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Declaração de Não Acumulação");
     $page->iniciaPagina();
 
     $texto1 = "Eu, <b>" . strtoupper($nomeServidor) . "</b>,"

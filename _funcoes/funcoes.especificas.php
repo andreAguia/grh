@@ -116,8 +116,16 @@ function get_DadosFrequencia($idHistCessao) {
  * 
  */
 
-function formataAtribuicao($texto) {    
-    p(str_replace(";", ";<br/>", $texto));
+function formataAtribuicao($texto) {
+
+    $linhas = explode("- ", $texto);
+
+    foreach ($linhas as $linha) {
+        if (!empty($linha)) {
+            echo "- {$linha}";
+            br();
+        }
+    }
 }
 
 ###########################################################

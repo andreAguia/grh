@@ -50,6 +50,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
+    $page->set_title("Ficha Cadastral");
     $page->iniciaPagina();
 
     # Limita a página

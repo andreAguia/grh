@@ -107,7 +107,7 @@ if ($acesso) {
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
 
-        if (empty($result5[0])) {
+        if (empty($result5[0]["formacao"])) {
             $relatorio->set_dataImpressao(true);
         } else {
             $relatorio->set_dataImpressao(false);
@@ -117,7 +117,7 @@ if ($acesso) {
 
         ######
 
-        if (!empty($result5[0])) {
+        if (!empty($result5[0]["formacao"])) {
 
             $relatorio = new Relatorio();
             $relatorio->set_label(['Formação Específica para a Função']);

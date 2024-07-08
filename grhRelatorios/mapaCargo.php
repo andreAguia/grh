@@ -54,45 +54,31 @@ if ($acesso) {
 
         ######
 
-        $select = 'SELECT descricao'
-                . ' FROM tbarea'
-                . ' WHERE idarea = ' . $area;
-
+        $select = "SELECT descricao FROM tbarea WHERE idarea = {$area}";
         $result = $servidor->select($select);
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo("Mapa do Cargo");
         $relatorio->set_subtitulo($titulo);
         $relatorio->set_tituloTabela("Área: {$servidor->get_nomeArea($area)}");
-        $relatorio->set_label(array('Descrição Sintética da Área'));
-        $relatorio->set_width(array(100));
-        $relatorio->set_align(array("left"));
-        #$relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
-        #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
-        #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
+        $relatorio->set_label(['Descrição Sintética da Área']);
+        $relatorio->set_width([100]);
+        $relatorio->set_align(["left"]);
         $relatorio->set_conteudo($result);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_subTotal(false);
-        #$relatorio->set_cabecalhoRelatorio(false);
-        #$relatorio->set_menuRelatorio(false);
         $relatorio->show();
 
         ######
 
-        $select = 'SELECT requisitos'
-                . ' FROM tbarea'
-                . ' WHERE idarea = ' . $area;
-
+        $select = "SELECT requisitos FROM tbarea WHERE idarea = {$area}";
         $result = $servidor->select($select);
 
         $relatorio = new Relatorio();
-        $relatorio->set_label(array('Requisitos para o Provimento da Área'));
-        $relatorio->set_width(array(100));
-        $relatorio->set_align(array("left"));
-        #$relatorio->set_funcao(array(null,null,null,null,null,"date_to_php"));
-        #$relatorio->set_classe(array(null,null,null,null,null,null,"Pessoal"));
-        #$relatorio->set_metodo(array(null,null,null,null,null,null,"get_Situacao"));    
+        $relatorio->set_label(['Requisitos para o Provimento da Área']);
+        $relatorio->set_width([100]);
+        $relatorio->set_align(["left"]);
         $relatorio->set_conteudo($result);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
@@ -103,15 +89,11 @@ if ($acesso) {
 
         ######
 
-        $select = 'SELECT atribuicoes'
-                . ' FROM tbcargo'
-                . ' WHERE idcargo = ' . $cargo;
-
+        $select = "SELECT atribuicoes FROM tbcargo WHERE idcargo = {$cargo}";
         $result = $servidor->select($select);
 
         $relatorio = new Relatorio();
         $relatorio->set_tituloTabela("Função: {$cargoNome}");
-        #$relatorio->set_titulo($servidor->get_nomeArea($area));
         $relatorio->set_label(['Atribuições da Função']);
         $relatorio->set_width([100]);
         $relatorio->set_align(["left"]);

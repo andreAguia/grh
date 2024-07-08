@@ -44,18 +44,18 @@ if ($acesso) {
                 . '              LEFT JOIN tbarea USING (idarea)'
                 . ' WHERE idcargo = ' . $cargo;
 
-        $result = $servidor->select($select);
+        $result1 = $servidor->select($select);
 
-        $cargoNome = $result[0][2];
-        $tipoCargo = $result[0][3];
-        $area = $result[0][4];
+        $cargoNome = $result1[0][2];
+        $tipoCargo = $result1[0][3];
+        $area = $result1[0][4];
 
         $titulo = "Cargo: {$servidor->get_nomeTipoCargo($tipoCargo)}<br/>Área: {$servidor->get_nomeArea($area)}<br/>Função: {$cargoNome}";
 
         ######
 
         $select = "SELECT descricao FROM tbarea WHERE idarea = {$area}";
-        $result = $servidor->select($select);
+        $result2 = $servidor->select($select);
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo("Mapa do Cargo");
@@ -64,7 +64,7 @@ if ($acesso) {
         $relatorio->set_label(['Descrição Sintética da Área']);
         $relatorio->set_width([100]);
         $relatorio->set_align(["left"]);
-        $relatorio->set_conteudo($result);
+        $relatorio->set_conteudo($result2);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_subTotal(false);
@@ -73,13 +73,13 @@ if ($acesso) {
         ######
 
         $select = "SELECT requisitos FROM tbarea WHERE idarea = {$area}";
-        $result = $servidor->select($select);
+        $result3 = $servidor->select($select);
 
         $relatorio = new Relatorio();
         $relatorio->set_label(['Requisitos para o Provimento da Área']);
         $relatorio->set_width([100]);
         $relatorio->set_align(["left"]);
-        $relatorio->set_conteudo($result);
+        $relatorio->set_conteudo($result3);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_subTotal(false);
@@ -90,7 +90,10 @@ if ($acesso) {
         ######
 
         $select = "SELECT atribuicoes FROM tbcargo WHERE idcargo = {$cargo}";
-        $result = $servidor->select($select);
+        $result4 = $servidor->select($select);
+
+        $select = "SELECT formacao FROM tbcargo WHERE idcargo = {$cargo}";
+        $result5 = $servidor->select($select);
 
         $relatorio = new Relatorio();
         $relatorio->set_tituloTabela("Função: {$cargoNome}");
@@ -98,13 +101,36 @@ if ($acesso) {
         $relatorio->set_width([100]);
         $relatorio->set_align(["left"]);
         $relatorio->set_funcao(['formataAtribuicao']);
-        $relatorio->set_conteudo($result);
+        $relatorio->set_conteudo($result4);
         $relatorio->set_totalRegistro(false);
-        $relatorio->set_dataImpressao(true);
         $relatorio->set_subTotal(false);
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
+
+        if (empty($result5[0])) {
+            $relatorio->set_dataImpressao(true);
+        } else {
+            $relatorio->set_dataImpressao(false);
+        }
+
         $relatorio->show();
+
+        ######
+
+        if (!empty($result5[0])) {
+
+            $relatorio = new Relatorio();
+            $relatorio->set_label(['Formação Específica para a Função']);
+            $relatorio->set_width([100]);
+            $relatorio->set_align(["left"]);
+            $relatorio->set_conteudo($result5);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(true);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->show();
+        }
     } else {
         br(4);
         p("O Mapa do Cargo é somente para Servidores Concursados", "f14", "center");

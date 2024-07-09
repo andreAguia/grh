@@ -6431,12 +6431,12 @@ class Pessoal extends Bd {
      * @param	string $idCargo  o id do cargo
      */
     public function get_cargoAtribuicoes($idCargo) {
-        $select = 'SELECT atribuicoes
+        
+        $select = "SELECT atribuicoes
                      FROM tbcargo
-                    WHERE idcargo = ' . $idCargo;
+                    WHERE idcargo = {$idCargo}";
 
         $row = parent::select($select, false);
-
         return $row[0];
     }
 

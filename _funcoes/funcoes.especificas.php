@@ -117,16 +117,19 @@ function get_DadosFrequencia($idHistCessao) {
  */
 
 function formataAtribuicao($texto) {
+    
+    $retorno = null;
 
     if(!empty($texto)) {
         $linhas = explode("- ", $texto);
         foreach ($linhas as $linha) {
             if (!empty($linha)) {
-                echo "- {$linha}";
-                br();
+                $retorno .= "- {$linha}<br/>";
             }
         }
     }
+    
+    return $retorno;
 }
 
 ###########################################################

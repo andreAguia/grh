@@ -85,6 +85,7 @@ if ($acesso) {
         $relatorio->set_subTotal(false);
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
         $relatorio->show();
 
         ######
@@ -106,6 +107,7 @@ if ($acesso) {
         $relatorio->set_subTotal(false);
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
 
         if (empty($result5[0]["formacao"])) {
             $relatorio->set_dataImpressao(true);
@@ -129,6 +131,7 @@ if ($acesso) {
             $relatorio->set_subTotal(false);
             $relatorio->set_cabecalhoRelatorio(false);
             $relatorio->set_menuRelatorio(false);
+            $relatorio->set_log(false);
             $relatorio->show();
         }
     } else {

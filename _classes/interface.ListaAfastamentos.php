@@ -968,7 +968,7 @@ class ListaAfastamentos {
                 $tabela->set_classe([null, null, "pessoal"]);
                 $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
                 $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
-                $tabela->set_width([10, 25, 10, 8, 5, 8, 25, 5]);
+                $tabela->set_width([10, 25, 10, 8, 5, 8, 15, 10, 10, 5]);
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe([null, "pessoal", "pessoal"]);
@@ -1002,7 +1002,7 @@ class ListaAfastamentos {
             $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $tabela->set_align(['center', 'center', 'center', 'left']);
             $tabela->set_funcao(["date_to_php", null, "date_to_php", null, "date_to_php"]);
-            $tabela->set_width([15, 5, 15, 55]);
+            $tabela->set_width([15, 5, 15, 25, 10, 10]);
         }
 
         if (!empty($this->linkEditar)) {
@@ -1031,6 +1031,7 @@ class ListaAfastamentos {
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo('Servidores com Afastamentos');
+        $relatorio->set_bordaInterna(true);
 
         if (is_numeric($this->lotacao)) {
             $relatorio->set_tituloLinha3($pessoal->get_nomeLotacao($this->lotacao));
@@ -1059,6 +1060,7 @@ class ListaAfastamentos {
             $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
+            $relatorio->set_width([10, 15, 10, 10, 5, 10, 20, 10, 10]);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe([null, "pessoal", "pessoal"]);
@@ -1071,6 +1073,7 @@ class ListaAfastamentos {
             $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
+            $relatorio->set_width([20, 10, 10, 5, 10, 25, 10, 10]);
             #$relatorio->set_rowspan(0);
 
             if ($this->nomeSimples) {

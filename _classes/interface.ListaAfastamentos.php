@@ -908,22 +908,27 @@ class ListaAfastamentos {
         }
 
         ####################### 
+        $order0 = 4;
         $order1 = 9;
         $order2 = 1;
 
         if ($this->idFuncional) {
+            $order0++;
             $order1++;
             $order2++;
         }
 
         if (empty($this->idServidor)) {
+            $order0++;
             $order1++;
             $order2++;
+
+            $order0++;
             $order1++;
             $order2++;
         }
 
-        $select .= ') ORDER BY ' . $order1 . ', ' . $order2;
+        $select .= ') ORDER BY ' . $order0 . ', ' . $order1 . ', ' . $order2;
         return $select;
     }
 
@@ -1061,6 +1066,7 @@ class ListaAfastamentos {
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
             $relatorio->set_width([10, 15, 10, 10, 5, 10, 20, 10, 10]);
+            $relatorio->set_numGrupo(6);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe([null, "pessoal", "pessoal"]);
@@ -1074,7 +1080,7 @@ class ListaAfastamentos {
             $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
             $relatorio->set_width([20, 10, 10, 5, 10, 25, 10, 10]);
-            #$relatorio->set_rowspan(0);
+            $relatorio->set_numGrupo(5);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe(["pessoal", "pessoal"]);

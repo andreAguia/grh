@@ -908,7 +908,7 @@ class ListaAfastamentos {
         }
 
         ####################### 
-        $order1 = 7;
+        $order1 = 9;
         $order2 = 1;
 
         if ($this->idFuncional) {
@@ -978,8 +978,8 @@ class ListaAfastamentos {
                     $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
-                #$tabela->set_rowspan(1);
-                #$tabela->set_grupoCorColuna(1);
+                $tabela->set_rowspan(1);
+                $tabela->set_grupoCorColuna(1);
             } else {
 
                 $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
@@ -994,8 +994,8 @@ class ListaAfastamentos {
                     $tabela->set_metodo(["get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
-                #$tabela->set_rowspan(0);
-                #$tabela->set_grupoCorColuna(0);
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
             }
         } else {
 

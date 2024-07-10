@@ -184,6 +184,44 @@ class Licenca {
         }
     }
 
+##########################################################################################
+
+    public function get_processo($idLicenca = null) {
+
+        # Verifica se o id foi informado
+        if (empty($idLicenca)) {
+            return null;
+        } else {
+            # Pega os dados
+            $servidor = new Pessoal();
+            $select = "SELECT processo
+                         FROM tblicenca
+                        WHERE idLicenca = {$idLicenca}";
+
+            $row = $servidor->select($select, false);
+            return $row[0];
+        }
+    }
+
+##########################################################################################
+
+    public function get_dtPublicacao($idLicenca = null) {
+
+        # Verifica se o id foi informado
+        if (empty($idLicenca)) {
+            return null;
+        } else {
+            # Pega os dados
+            $servidor = new Pessoal();
+            $select = "SELECT dtPublicacao
+                         FROM tblicenca
+                        WHERE idLicenca = {$idLicenca}";
+
+            $row = $servidor->select($select, false);
+            return $row[0];
+        }
+    }
+
 ##############################################################
 
     public function exibeDoc($id = null) {

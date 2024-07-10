@@ -235,6 +235,8 @@ class ListaAfastamentos {
                          tblicenca.numDias,
                          ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                          CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,""),IF(alta=1," - Com Alta","")),
+                         tblicenca.dtPublicacao,
+                         tblicenca.processo,
                          CONCAT("tblicenca","&",idLicenca),
                          tbservidor.idServidor,
                          tbpessoa.nome
@@ -322,6 +324,8 @@ class ListaAfastamentos {
                          tblicencapremio.numDias,
                          ADDDATE(tblicencapremio.dtInicial,tblicencapremio.numDias-1),
                          (SELECT CONCAT(tbtipolicenca.nome,"<br/>",IFnull(tbtipolicenca.lei,"")) FROM tbtipolicenca WHERE idTpLicenca = 6),
+                         "---",
+                         tblicencapremio.processo,
                          CONCAT("tblicencapremio","&",idLicencaPremio),
                          tbservidor.idServidor,
                           tbpessoa.nome
@@ -406,6 +410,8 @@ class ListaAfastamentos {
                           tbferias.numDias,
                           ADDDATE(tbferias.dtInicial,tbferias.numDias-1),
                           CONCAT("Férias ",tbferias.anoExercicio),
+                          "---",
+                          "---",
                           CONCAT("tbferias","&",idFerias),
                           tbservidor.idServidor,
                           tbpessoa.nome
@@ -489,6 +495,8 @@ class ListaAfastamentos {
                           tbatestado.numDias,
                           ADDDATE(tbatestado.dtInicio,tbatestado.numDias-1),
                           "Falta Abonada",
+                          "---",
+                          "---",
                           CONCAT("tbatestado","&",idAtestado),
                           tbservidor.idServidor,
                           tbpessoa.nome
@@ -573,6 +581,8 @@ class ListaAfastamentos {
                           ADDDATE(tbtrabalhotre.data,tbtrabalhotre.dias-1),
                           "Trabalhando no TRE",
                           "",
+                          "",
+                          "",
                           tbservidor.idServidor,
                           tbpessoa.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -655,6 +665,8 @@ class ListaAfastamentos {
                           tbfolga.dias,
                           ADDDATE(tbfolga.data,tbfolga.dias-1),
                           "Folga TRE",
+                          "",
+                          "",
                           CONCAT("tbfolga","&",idFolga),
                           tbservidor.idServidor,
                           tbpessoa.nome
@@ -738,6 +750,8 @@ class ListaAfastamentos {
                          tblicencasemvencimentos.numDias,
                          ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
                          tbtipolicenca.nome,
+                         tblicencasemvencimentos.dtPublicacao,
+                         tblicencasemvencimentos.processo,
                          CONCAT("tblicencasemvencimentos","&",idLicencaSemVencimentos),
                          tbservidor.idServidor,
                           tbpessoa.nome
@@ -825,6 +839,8 @@ class ListaAfastamentos {
                            tblicenca.numDias,
                            ADDDATE(tblicenca.dtInicial,tblicenca.numDias-1),
                            CONCAT(tbtipolicenca.nome," - (Em Aberto)<br/>",IFnull(tbtipolicenca.lei,"")),
+                           "",
+                           "",
                            CONCAT("tblicenca","&",idLicenca),
                           T2.idServidor,
                           tbpessoa.nome
@@ -946,12 +962,12 @@ class ListaAfastamentos {
 
             if ($this->idFuncional) {
 
-                $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo', 'Obs']);
                 $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
 
                 $tabela->set_classe([null, null, "pessoal"]);
                 $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
-                $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
                 $tabela->set_width([10, 25, 10, 8, 5, 8, 25, 5]);
 
                 if ($this->nomeSimples) {
@@ -962,13 +978,13 @@ class ListaAfastamentos {
                     $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
-                $tabela->set_rowspan(1);
-                $tabela->set_grupoCorColuna(1);
+                #$tabela->set_rowspan(1);
+                #$tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
                 $tabela->set_align(['left', 'left', 'center', 'center', 'center', 'left', 'left']);
-                $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
+                $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe(["pessoal", "pessoal"]);
@@ -978,14 +994,14 @@ class ListaAfastamentos {
                     $tabela->set_metodo(["get_nomeECargoEPerfil", "get_lotacaoSimples"]);
                 }
 
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
+                #$tabela->set_rowspan(0);
+                #$tabela->set_grupoCorColuna(0);
             }
         } else {
 
-            $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $tabela->set_label(['Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $tabela->set_align(['center', 'center', 'center', 'left']);
-            $tabela->set_funcao(["date_to_php", null, "date_to_php"]);
+            $tabela->set_funcao(["date_to_php", null, "date_to_php", null, "date_to_php"]);
             $tabela->set_width([15, 5, 15, 55]);
         }
 
@@ -1020,7 +1036,7 @@ class ListaAfastamentos {
             $relatorio->set_tituloLinha3($pessoal->get_nomeLotacao($this->lotacao));
         } else {
             $relatorio->set_tituloLinha3($this->lotacao);
-        }       
+        }
 
         $nomeMes = get_nomeMes($this->mes);
 
@@ -1040,9 +1056,9 @@ class ListaAfastamentos {
         }
 
         if ($this->idFuncional) {
-            $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
-            $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php"]);
+            $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe([null, "pessoal", "pessoal"]);
@@ -1052,9 +1068,9 @@ class ListaAfastamentos {
                 $relatorio->set_metodo([null, "get_nomeECargo", "get_lotacaoSimples"]);
             }
         } else {
-            $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+            $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
-            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
+            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
             #$relatorio->set_rowspan(0);
 
             if ($this->nomeSimples) {
@@ -1151,7 +1167,7 @@ class ListaAfastamentos {
                         'title' => 'Filtra por Lotação.',
                         'onChange' => 'formPadrao.submit();',
                         'linha' => 1)));
-            }            
+            }
         }
 
         if ($cont > 0) {

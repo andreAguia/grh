@@ -648,6 +648,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Histórico');
             $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos - Agrupador por Cargo', '../grhRelatorios/historico.exFenorte.porCargo.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Inativos - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.inativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Geral - por Concurso - Agrupados por Situação', '../grhRelatorios/historico.exFenorte.porConcurso.php');

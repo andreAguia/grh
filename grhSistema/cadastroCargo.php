@@ -70,24 +70,26 @@ if ($acesso) {
                                       cargo,
                                       sigla,
                                       nivel,
+                                      numDecreto,
                                       idTipoCargo,
                                       idTipoCargo,
                                       idTipoCargo,
                                       idTipoCargo
-                                 FROM tbtipocargo
+                                 FROM tbtipocargo LEFT JOIN tbplano USING (idPlano)
                                 WHERE cargo LIKE "%' . $parametro . '%"
                              ORDER BY 2 asc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT cargo,
-                                     tipo,
+    $objeto->set_selectEdita('SELECT tipo,
+                                     cargo,                                     
                                      sigla,
+                                     idPlano,
                                      nivel,
                                      vagas,
                                      obs
                                 FROM tbtipocargo
                                WHERE idTipoCargo = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -102,16 +104,16 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Tipo", "Cargo", "Sigla", "Nível", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
+    $objeto->set_label(["Id", "Tipo", "Cargo", "Sigla", "Nível", "Plano", "Servidores<br/>Ativos", "Ver", "Servidores<br/>Inativos", "Ver"]);
     $objeto->set_align(["center", "center", "left"]);
 
-    $objeto->set_classe([null, null, null, null, null, 'Pessoal', null, 'Pessoal']);
-    $objeto->set_metodo([null, null, null, null, null, 'get_numServidoresAtivosTipoCargo', null, 'get_numServidoresInativosTipoCargo']);
+    $objeto->set_classe([null, null, null, null, null, null, 'Pessoal', null, 'Pessoal']);
+    $objeto->set_metodo([null, null, null, null, null, null, 'get_numServidoresAtivosTipoCargo', null, 'get_numServidoresInativosTipoCargo']);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([5, 7]);
+    $objeto->set_colunaSomatorio([6, 8]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -124,7 +126,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link(array(null, null, null, null, null, null, $servAtivos, null, $servInativos));
+    $objeto->set_link(array(null, null, null, null, null, null, null, $servAtivos, null, $servInativos));
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -135,23 +137,31 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idTipoCargo');
 
+    # Pega os dados da combo de Plano e Cargos
+    $result1 = $pessoal->select('SELECT idPlano, 
+                                      numDecreto
+                                  FROM tbplano
+                              ORDER BY numDecreto');
+
+    array_push($result1, array(null, null));
+
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('linha' => 1,
-            'nome' => 'cargo',
-            'label' => 'Cargo:',
-            'tipo' => 'texto',
-            'required' => true,
-            'autofocus' => true,
-            'col' => 3,
-            'size' => 50),
         array('linha' => 1,
             'nome' => 'tipo',
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'required' => true,
+            'autofocus' => true,
             'array' => array(null, "Adm/Tec", "Professor"),
             'col' => 2,
+            'size' => 50),
+        array('linha' => 1,
+            'nome' => 'cargo',
+            'label' => 'Cargo:',
+            'tipo' => 'texto',
+            'required' => true,
+            'col' => 4,
             'size' => 50),
         array('linha' => 1,
             'nome' => 'sigla',
@@ -159,15 +169,23 @@ if ($acesso) {
             'tipo' => 'texto',
             'col' => 2,
             'size' => 50),
-        array('linha' => 1,
+        array('linha' => 2,
             'nome' => 'nivel',
             'label' => 'Nível do Cargo:',
             'tipo' => 'combo',
             'required' => true,
             'array' => array(null, "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"),
-            'col' => 3,
+            'col' => 2,
             'size' => 30),
-        array('linha' => 1,
+        array('linha' => 2,
+            'col' => 4,
+            'nome' => 'idPlano',
+            'label' => 'Plano de Cargos:',
+            'tipo' => 'combo',
+            'required' => true,
+            'array' => $result1,
+            'size' => 30),
+        array('linha' => 2,
             'col' => 2,
             'nome' => 'vagas',
             'label' => 'Vagas Publicadas:',
@@ -192,14 +210,13 @@ if ($acesso) {
     $botaoGra->set_imagem($imagem);
 
     $objeto->set_botaoListarExtra([$botaoGra]);
-    
+
     # Rotina extra editar
     $objeto->set_rotinaExtraEditar("callout");
     $objeto->set_rotinaExtraEditarParametro("O campo vagas publicadas se refere as vagas "
             . "que foram publicadas no plano de cargos, entretanto este campo nada significa"
             . " na prática, pois o número de vagas que é considerado como válido para este cargo é o que foi"
             . " publicado nos editais dos concursos. Essa informação está no cadastro de concurso. ");
-
 
     ################################################################
 

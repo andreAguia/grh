@@ -83,8 +83,7 @@ if ($acesso) {
                                       idCargo,
                                       idCargo,
                                       idCargo
-                                 FROM tbcargo LEFT JOIN tbplano USING (idPlano)
-                                              LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                 FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
                                               LEFT JOIN tbarea USING (idarea)
                                 WHERE nome LIKE "%' . $parametro . '%"
                                    OR idCargo LIKE "%' . $parametro . '%" 
@@ -97,7 +96,6 @@ if ($acesso) {
     $objeto->set_selectEdita("SELECT idtipocargo,
                                      idarea,
                                      nome,
-                                     idPlano,
                                      formacao,
                                      atribuicoes,
                                      obs
@@ -152,12 +150,6 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idCargo');
 
-    # Pega os dados da combo de Plano e Cargos
-    $result1 = $pessoal->select('SELECT idPlano, 
-                                      numDecreto
-                                  FROM tbplano
-                              ORDER BY numDecreto');
-
     # Pega os dados da combo de Tipos de Cargos
     $result2 = $pessoal->select('SELECT idTipoCargo, 
                                         cargo
@@ -191,20 +183,12 @@ if ($acesso) {
             'array' => $result3,
             'size' => 50),
         array('linha' => 2,
-            'col' => 8,
+            'col' => 12,
             'nome' => 'nome',
             'label' => 'Função:',
             'tipo' => 'texto',
             'required' => true,
             'size' => 50),
-        array('linha' => 2,
-            'col' => 4,
-            'nome' => 'idPlano',
-            'label' => 'Plano de Cargos:',
-            'tipo' => 'combo',
-            'required' => true,
-            'array' => $result1,
-            'size' => 30),
         array('linha' => 3,
             'col' => 12,
             'nome' => 'formacao',

@@ -1052,15 +1052,6 @@ class ListaAfastamentos {
             $relatorio->set_tituloLinha2($this->ano);
         }
 
-        # Exibe o tipo de afastamento (quando tiver)
-        if (!empty($this->tipo)) {
-            if (is_numeric($this->tipo)) {
-                $relatorio->set_subtitulo($licenca->getNome($this->tipo));
-            } else {
-                $relatorio->set_subtitulo(plm($this->tipo));
-            }
-        }
-
         if ($this->idFuncional) {
             $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);

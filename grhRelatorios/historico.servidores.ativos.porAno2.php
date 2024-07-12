@@ -25,8 +25,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros
-    $cargo = post('cargo', "Adm/Tec");
-    $parametroAno = post('parametroAno', date('Y'));
+    $cargo = "Adm/Tec";
+    $parametroAno = get('parametroAno', date('Y'));
 
     ######
 
@@ -43,7 +43,8 @@ if ($acesso) {
                                 JOIN tbtipocargo USING (idTipoCargo)
                WHERE year(dtAdmissao) <= "' . $parametroAno . '"
                  AND (dtDemissao IS null OR year(dtDemissao) >= "' . $parametroAno . '")
-                 AND tbtipocargo.tipo = "' . $cargo . '"  
+                 AND tbtipocargo.tipo = "' . $cargo . '"
+                 AND (idPerfil = 1 OR idPerfil = 4)    
             ORDER BY tbtipocargo.nivel, tbcargo.nome, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -63,33 +64,7 @@ if ($acesso) {
 
     # Seleciona o tipo de cargo
     $listaCargo = $servidor->select('SELECT distinct tipo,tipo from tbtipocargo');
-
-    # Cria um array com os anos possíveis
-    $anoInicial = 1993;
-    $anoAtual = date('Y');
-    $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
-
-    $relatorio->set_formCampos(array(
-        array('nome' => 'cargo',
-            'label' => 'Tipo de Cargo:',
-            'tipo' => 'combo',
-            'array' => $listaCargo,
-            'size' => 20,
-            'col' => 3,
-            'padrao' => $cargo,
-            'onChange' => 'formPadrao.submit();',
-            'linha' => 1),
-        array('nome' => 'parametroAno',
-            'label' => 'Ano:',
-            'tipo' => 'combo',
-            'size' => 10,
-            'padrao' => $parametroAno,
-            'array' => $anoExercicio,
-            'title' => 'Ano',
-            'onChange' => 'formPadrao.submit();',
-            'col' => 3,
-            'linha' => 1)));
-
+    
     $relatorio->set_numGrupo(2);
     $relatorio->show();
     $page->terminaPagina();

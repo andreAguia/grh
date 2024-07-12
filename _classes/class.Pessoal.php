@@ -3587,13 +3587,38 @@ class Pessoal extends Bd {
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
-    public function get_numServidoresAtivosTipoCargo($id) {
+    public function get_numServidoresAtivosTipoCargo($idTipoCargo = null) {
+
         $select = "SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
                                      JOIN tbperfil USING (idPerfil)  
                     WHERE situacao = 1 
                       AND tbperfil.tipo <> 'Outros' 
-                      AND tbcargo.idTipoCargo = {$id}";
+                      AND tbcargo.idTipoCargo = {$idTipoCargo}";
+
+        $numero = parent::count($select);
+        return $numero;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_servidoresAtivosTipoCargo
+     * 
+     * Exibe o número de servidores ativos em um determinado tipo de cargo
+     */
+    public function get_numServidoresAtivosNaEpocaTipoCargo($idTipoCargo = null, $parametroAno = null) {
+
+        $select = "SELECT idServidor                             
+                     FROM tbservidor JOIN tbcargo USING (idCargo)
+                                     JOIN tbperfil USING (idPerfil)  
+                    WHERE tbperfil.tipo <> 'Outros' 
+                      AND tbcargo.idTipoCargo = {$idTipoCargo}";
+
+        if (!empty($parametroAno)) {
+            $select .= " AND year(dtAdmissao) <= '{$parametroAno}'
+                         AND (dtDemissao IS null OR year(dtDemissao) >= '{$parametroAno}')";
+        }
 
         $numero = parent::count($select);
         return $numero;
@@ -6431,7 +6456,7 @@ class Pessoal extends Bd {
      * @param	string $idCargo  o id do cargo
      */
     public function get_cargoAtribuicoes($idCargo) {
-        
+
         $select = "SELECT atribuicoes
                      FROM tbcargo
                     WHERE idcargo = {$idCargo}";

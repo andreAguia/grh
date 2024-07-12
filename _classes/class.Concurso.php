@@ -935,7 +935,6 @@ class Concurso {
 
 ###########################################################
 
-
     public function servidorInativoVagaPreenchida($idServidor) {
 
         /**
@@ -961,7 +960,6 @@ class Concurso {
                 span($pessoal->get_nome($retorno[1]));
                 hr("grosso");
                 $this->get_concurso($retorno[1]);
-                
             }
         }
     }
@@ -999,6 +997,24 @@ class Concurso {
                     $pessoal->get_cargo($idServidor)
             );
         }
+    }
+
+    ###########################################################
+
+    /**
+     * Método rel_ServidoresPorAno
+     * exibe o relatório por ano
+     * 
+     * 
+     */
+    public function rel_ServidoresPorAno($ano) {
+
+        # Ver servidores ativos
+        $servAtivos = new Link(null, "../grhRelatorios/historico.servidores.ativos.porAno2.php?parametroAno={$ano}");
+        $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servAtivos->set_title("Exibe os servidores ativos");
+        $servAtivos->set_target("_blank");
+        $servAtivos->show();
     }
 
     ###########################################################

@@ -143,6 +143,19 @@ p#pInativo{
 }
 
 /*******************************************
+* Acumulacao
+********************************************/
+
+p#pvinculo{
+    font-size: 14px;
+    padding: 0px;
+    padding-bottom: 3px;
+    padding-top: 3px;
+    margin: 0px;
+    text-align: center;
+}
+
+/*******************************************
 * Auxilio Educação
 ********************************************/
 p#pDependenteSDireito{

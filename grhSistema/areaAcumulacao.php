@@ -93,7 +93,7 @@ if ($acesso) {
                 $botaoInserir->set_title("Incluir um Servidor");
                 $menu1->add_link($botaoInserir, "right");
             }
-            
+
             # Procedimentos
             $linkBotao3 = new Link("Procedimentos", "servidorAcumulacao.php?fase=procedimentos");
             $linkBotao3->set_class('button');
@@ -150,8 +150,7 @@ if ($acesso) {
                               idAcumulacao,
                               tbservidor.idServidor,
                               idAcumulacao,
-                              tbservidor.idServidor,
-                              idAcumulacao,                         
+                              idAcumulacao,     
                               tbservidor.idServidor
                          FROM tbacumulacao JOIN tbservidor USING (idServidor)
                                            JOIN tbpessoa USING (idPessoa)
@@ -170,11 +169,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Dados do Vínculo da Uenf", "Dados do Segundo Vínculo"]);
-            $tabela->set_align(["center", "center", "center", "left", "center", "left", "left"]);
-            $tabela->set_width([8, 8, 8, 17, 15, 20, 20]);
-            $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao", "Acumulacao"]);
-            $tabela->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"]);
+            $tabela->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculos"]);
+            $tabela->set_align(["center", "center", "center", "left", "center", "left"]);
+            $tabela->set_width([10, 10, 10, 25, 20, 20]);
+            $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao"]);
+            $tabela->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeVinculos"]);
 
             $tabela->set_titulo("Área de Acumulação");
 

@@ -9,7 +9,7 @@ class Acumulacao {
      * 
      * @var private $idAcumulacao integer null O id da acumulação
      */
-##############################################################
+    ##############################################################
 
     public function get_dados($idAcumulacao) {
 
@@ -41,7 +41,7 @@ class Acumulacao {
         return $row;
     }
 
-##############################################################
+    ##############################################################
 
     public function get_resultado($idAcumulacao) {
 
@@ -113,7 +113,7 @@ class Acumulacao {
         }
     }
 
-##############################################################
+    ##############################################################
 
     public function exibePublicacao($idAcumulacao) {
 
@@ -169,7 +169,7 @@ class Acumulacao {
         }
     }
 
-##############################################################
+    ##############################################################
 
     public function exibeProcesso($idAcumulacao) {
 
@@ -223,7 +223,7 @@ class Acumulacao {
         }
     }
 
-##############################################################
+    ##############################################################
 
     public function exibeDadosOutroVinculo($idAcumulacao) {
 
@@ -252,7 +252,8 @@ class Acumulacao {
 
         # Retorno
         if (empty($row["instituicao"])) {
-            return null;
+            br();
+            p("Não Cadastrado","center");
         } else {
             # Variáveis
             $linha4 = null;
@@ -277,7 +278,7 @@ class Acumulacao {
         }
     }
 
-##############################################################
+    ##############################################################
 
     public function exibeDadosUenf($idServidor) {
 
@@ -310,7 +311,29 @@ class Acumulacao {
         }
     }
 
-##############################################################
+    ##############################################################
+
+    public function exibeVinculos($idAcumulacao) {
+        
+        # Pega os Dados
+        $dados = $this->get_dados($idAcumulacao);
+        
+        # Exibe vinculo Uenf
+        hr("grosso");
+        p("Vínculo Uenf","pvinculo");
+        hr("grosso");
+        $this->exibeDadosUenf($dados["idServidor"]);
+        br();
+        
+        # Exibe o outro vinculo
+        hr("grosso");
+        p("Outro Vínculo ", "pvinculo");
+        hr("grosso");
+        $this->exibeDadosOutroVinculo($idAcumulacao);
+        hr("grosso");
+    }
+
+    ##############################################################
 
     public function get_resultadoRelatorio($idAcumulacao) {
 
@@ -382,7 +405,7 @@ class Acumulacao {
         }
     }
 
-###########################################################
+    ###########################################################
 
     function exibeBotaoDocumentos($idAcumulacao) {
 

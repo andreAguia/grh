@@ -87,7 +87,7 @@ if ($acesso) {
     $botaoProcesso->set_class('button');
     $botaoProcesso->set_title('Acessa o controle dos processos de férias');
     $menu1->add_link($botaoProcesso, "right");
-    
+
     # Calendário
     $botaoCalendario = new Link("Calendário", "calendario.php");
     $botaoCalendario->set_class('button');
@@ -225,8 +225,10 @@ if ($acesso) {
 
             # Área Lateral
             $grid2 = new Grid();
-            $grid2->abreColuna(3);
+            $grid2->abreColuna(12, 12, 3);
 
+            $grid3 = new Grid();
+            $grid3->abreColuna(12, 6, 12);
             ########################################
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
@@ -248,6 +250,9 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
 
             $menu->show();
+            
+            $grid3->fechaColuna();
+            $grid3->abreColuna(12, 6, 12);
 
             #######################################
             # Resumo Geral
@@ -255,11 +260,14 @@ if ($acesso) {
 
             # por dias
             $lista1->showResumoPorDia();
+            
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 
             #######################################
             # Área Principal
             $grid2->fechaColuna();
-            $grid2->abreColuna(9);
+            $grid2->abreColuna(12, 12, 9);
 
             $lista1->showPorDia();
 

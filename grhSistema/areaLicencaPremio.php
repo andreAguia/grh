@@ -197,7 +197,7 @@ if ($acesso) {
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
-                              tbservidor.dtAdmissao,
+                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbsituacao.situacao,
@@ -263,9 +263,9 @@ if ($acesso) {
             $tabela->set_label(["Id / Matrícula", "Servidor", "Lotação", "Processo de<br/>Contagem", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $tabela->set_align(["center", "left"]);
             #$tabela->set_width([5, 25, 8, 13, 18, 18, 8]);
-            $tabela->set_funcao([null, null, null, null, "date_to_php", "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
-            $tabela->set_classe(["pessoal", "pessoal", "pessoal", "LicencaPremio"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_numProcessoContagem"]);
+            $tabela->set_funcao([null, null, null, null, null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
+            $tabela->set_classe(["pessoal", "pessoal", "pessoal", "LicencaPremio", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_numProcessoContagem", "get_dtAdmissao"]);
             $tabela->set_titulo("Licença Prêmio");
 
             if (!is_null($parametroNomeMat)) {
@@ -339,9 +339,9 @@ if ($acesso) {
 
             $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $relatorio->set_align(["center", "left"]);
-            $relatorio->set_funcao([null, null, null, "date_to_php", "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
-            $relatorio->set_classe(["pessoal", "pessoal", "pessoal"]);
-            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao"]);
+            $relatorio->set_funcao([null, null, null, null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
+            $relatorio->set_classe(["pessoal", "pessoal", "pessoal", "pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_dtAdmissao"]);
             $relatorio->set_bordaInterna(true);
 
             $relatorio->set_conteudo($result);
@@ -392,9 +392,9 @@ if ($acesso) {
 
             $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Publicações<br/>Reais / Possíveis / Faltantes", "Situação"]);
             $relatorio->set_align(["center", "left"]);
-            $relatorio->set_funcao([null, null, null, "date_to_php", "exibeNumPublicacoesLicencaPremio"]);
-            $relatorio->set_classe(["pessoal", "pessoal", "pessoal", null, null, "pessoal"]);
-            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", null, null, "get_situacao"]);
+            $relatorio->set_funcao([null, null, null, null, "exibeNumPublicacoesLicencaPremio"]);
+            $relatorio->set_classe(["pessoal", "pessoal", "pessoal", "pessoal", null, "pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_dtAdmissao", null, "get_situacao"]);
             $relatorio->set_bordaInterna(true);
 
             $relatorio->set_conteudo($result);
@@ -430,7 +430,7 @@ if ($acesso) {
                 $subtitulo .= "Servidores " . $pessoal->get_nomeSituacao($parametroSituacao) . "s<br/>";
             }
 
-            # Nome, MAtricula e id
+            # Nome, Matricula e id
             if (!is_null($parametroNomeMat)) {
                 $subtitulo .= "Pesquisa: " . $parametroNomeMat;
             }
@@ -445,9 +445,9 @@ if ($acesso) {
 
             $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp.", "Situação"]);
             $relatorio->set_align(["center", "left"]);
-            $relatorio->set_funcao([null, null, null, "date_to_php", "exibeDiasLicencaPremio"]);
-            $relatorio->set_classe(["pessoal", "pessoal", "pessoal", null, null, "pessoal"]);
-            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", null, null, "get_situacao"]);
+            $relatorio->set_funcao([null, null, null, null, "exibeDiasLicencaPremio"]);
+            $relatorio->set_classe(["pessoal", "pessoal", "pessoal", "pessoal", null, "pessoal"]);
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao", "get_dtAdmissao", null, "get_situacao"]);
             $relatorio->set_bordaInterna(true);
 
             $relatorio->set_conteudo($result);

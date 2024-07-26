@@ -70,7 +70,7 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-    
+
     # Calendário
     $botaoCalendario = new Link("Calendário", "calendario.php");
     $botaoCalendario->set_class('button');
@@ -184,8 +184,10 @@ if ($acesso) {
 
             # Área Lateral
             $grid2 = new Grid();
-            $grid2->abreColuna(3);
+            $grid2->abreColuna(12, 12, 3);
 
+            $grid3 = new Grid();
+            $grid3->abreColuna(12, 6, 12);
             ########################################
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
@@ -207,6 +209,9 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Mensal Geral', '../grhRelatorios/ferias.fruicao.mensal.geral.php');
             $menu->add_item('linkWindow', 'Mensal Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.mensal.porLotacao.php');
             $menu->show();
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(12, 6, 12);
 
             #######################################
             # Resumo por Ano Exercício
@@ -367,10 +372,13 @@ if ($acesso) {
             $tabela->set_titulo("Status");
             $tabela->show();
 
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
+
             #######################################
             # Área Principal            
             $grid2->fechaColuna();
-            $grid2->abreColuna(9);
+            $grid2->abreColuna(12, 12, 9);
 
             # Conecta com o banco de dados
             $servidor = new Pessoal();
@@ -442,7 +450,7 @@ if ($acesso) {
                     $contador++;
                 }
             }
-            
+
             # Retira o elementos do array que são diferentes de Não
             if ($parametroProblemas == "Não") {
                 $ferias = new Ferias();
@@ -455,7 +463,7 @@ if ($acesso) {
                     $contador++;
                 }
             }
-            
+
             $tabela->set_conteudo($result);
             $tabela->show();
 

@@ -50,15 +50,14 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório de Servidores Estatutários Ativos');
     $relatorio->set_subtitulo('Agrupados por Cargo - Ordenados pelo Nome');
-    $relatorio->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação'));
-    $relatorio->set_width(array(10, 30, 0, 30, 10, 10, 10));
-    $relatorio->set_align(array("center", "left", "left", "left"));
-    $relatorio->set_funcao(array(null, null, null, null, null, "date_to_php"));
-    $relatorio->set_classe(array(null, null, null, null, null, null, "Pessoal"));
-    $relatorio->set_metodo(array(null, null, null, null, null, null, "get_Situacao"));
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação']);
+    $relatorio->set_width([10, 30, 0, 30, 10, 10, 10]);
+    $relatorio->set_align(["center", "left", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
+    $relatorio->set_classe([null, null, null, null, null, null, "Pessoal"]);
+    $relatorio->set_metodo([null, null, null, null, null, null, "get_Situacao"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
-    #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');
     $relatorio->show();
 
     $page->terminaPagina();

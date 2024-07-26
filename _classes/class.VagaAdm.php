@@ -325,6 +325,7 @@ class VagaAdm {
     }
 
     ###########################################################
+    
     /**
      * Método get_numVagas
      * 
@@ -354,8 +355,7 @@ class VagaAdm {
                      FROM tbservidor JOIN tbcargo USING(idCargo)
                     WHERE situacao = 1 
                       AND idPerfil = 1
-                      AND tbcargo.idTipoCargo = {$idTipoCargo}
-                    ";
+                      AND tbcargo.idTipoCargo = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $numero = $pessoal->count($select);

@@ -3603,21 +3603,22 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_servidoresAtivosTipoCargo
+     * Método get_numConcursadosAtivosNaEpocaTipoCargo
      * 
      * Exibe o número de servidores ativos em um determinado tipo de cargo
      */
-    public function get_numServidoresAtivosNaEpocaTipoCargo($idTipoCargo = null, $parametroAno = null) {
+    public function get_numConcursadosAtivosNaEpocaTipoCargo($idTipoCargo = null, $parametroAno = null) {
 
         $select = "SELECT idServidor                             
                      FROM tbservidor JOIN tbcargo USING (idCargo)
-                                     JOIN tbperfil USING (idPerfil)  
-                    WHERE tbperfil.tipo <> 'Outros' 
+                    WHERE (idPerfil = 1 OR idPerfil = 4) 
                       AND tbcargo.idTipoCargo = {$idTipoCargo}";
 
         if (!empty($parametroAno)) {
             $select .= " AND year(dtAdmissao) <= '{$parametroAno}'
                          AND (dtDemissao IS null OR year(dtDemissao) >= '{$parametroAno}')";
+        } else {
+            $select .= " AND situacao = 1";
         }
 
         $numero = parent::count($select);
@@ -5108,7 +5109,7 @@ class Pessoal extends Bd {
      */
     public function get_tipoCargoVagasDisponiveis($id) {
         $vagas = $this->get_TipoCargoVagas($id);
-        $ocupadas = $this->get_numServidoresAtivosTipoCargo($id);
+        $ocupadas = $this->get_numConcursadosAtivosNaEpocaTipoCargo($id);
         $disponiveis = $vagas - $ocupadas;
 
         return $disponiveis;

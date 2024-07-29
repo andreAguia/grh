@@ -45,7 +45,7 @@ if ($acesso) {
                  AND (dtDemissao IS null OR year(dtDemissao) >= "' . $parametroAno . '")
                  AND tbtipocargo.tipo = "' . $cargo . '"
                  AND (idPerfil = 1 OR idPerfil = 4)    
-            ORDER BY tbtipocargo.nivel, tbcargo.nome, tbpessoa.nome';
+            ORDER BY tbtipocargo.nivel, tbpessoa.nome';
 
     $result = $servidor->select($select);
 

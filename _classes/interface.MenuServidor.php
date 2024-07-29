@@ -418,7 +418,7 @@ class MenuServidor {
         ##### Verifica Afastamentos
         $afastClass = new VerificaAfastamentos($this->idServidor);
         $afastClass->verifica();
-        if (!vazio($afastClass->getAfastamento())) {
+        if (!empty($afastClass->getAfastamento())) {
             $mensagem[] = "Servidor em {$afastClass->getAfastamento()} ({$afastClass->getDetalhe()})";
         }
 

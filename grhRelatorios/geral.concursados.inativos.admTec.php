@@ -16,6 +16,9 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
+# Pega a sigla
+$sigla = get("sigla");
+
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
@@ -26,37 +29,39 @@ if ($acesso) {
 
     ######
 
-    $select = 'SELECT tbservidor.idFuncional,
+    $select = "SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      tbservidor.idServidor,
+                     tbtipocargo.cargo,
                      tbservidor.idServidor,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
-                     tbservidor.dtDemissao,
                      tbservidor.idServidor
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                    
                                 LEFT JOIN tbcargo USING (idCargo)
                                      JOIN tbtipocargo USING (idTipoCargo)
-                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE tbservidor.situacao <> 1
-                 AND tbperfil.tipo <> "Outros"
-                 AND idConcurso IS NOT NULL
-                 AND tbtipocargo.tipo = "Adm/Tec"
-            ORDER BY tbservidor.dtDemissao';
+                                     JOIN tbperfil USING (idPerfil)
+               WHERE (idPerfil = 1 OR idPerfil = 4)                       
+                 AND situacao <> 1
+                 AND tbtipocargo.tipo = 'Adm/Tec'
+                 AND tbtipocargo.sigla = '{$sigla}'                 
+            ORDER BY tbtipocargo.cargo, tbpessoa.nome";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Concursados Inativos - Administrativos e Técnicos');
-    $relatorio->set_subtitulo('Ordenados pela Data de Saída');
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Situação']);
-    $relatorio->set_align(["center", "left", "left", "left"]);
-    $relatorio->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_titulo('Relatório de Servidores Concursados Inativos<br/>Administrativos e Técnicos');
+    $relatorio->set_subtitulo('Ordenados pelo Nome');
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Tipo', 'Lotação', 'Perfil', 'Admissão', 'Situação']);
+    $relatorio->set_align(["center", "left", "left", "left", "left"]);
+    $relatorio->set_funcao([null, null, null, null, null, null, "date_to_php"]);
 
-    $relatorio->set_classe([null, null, "pessoal", "pessoal", null, null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_Cargo", "get_Lotacao", null, null, null, "get_Situacao"]);
+    $relatorio->set_classe([null, null, "pessoal", null, "pessoal", null, null, "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_Cargo", null, "get_Lotacao", null, null, "get_Situacao"]);
 
     $relatorio->set_conteudo($result);
+    $relatorio->set_numGrupo(3);
+    $relatorio->set_totalRegistro(false);
     $relatorio->show();
 
     $page->terminaPagina();

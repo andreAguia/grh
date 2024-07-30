@@ -543,22 +543,55 @@ class Concurso {
         $pessoal = new Pessoal();
         $conteudo = $pessoal->select($select, false);
 
-        if (is_null($conteudo[0])) {
+        $idOcupanteA = $conteudo[0];
+
+        if (is_null($idOcupanteA)) {
             return null;
         }
 
-        if ($conteudo[0] == 0) {
+        if ($idOcupanteA == 0) {
             return "primeiro servidor a ocupar a vaga";
         }
 
-        if (is_numeric($conteudo[0])) {
-            plista($pessoal->get_nome($conteudo[0]));
+        if (is_numeric($idOcupanteA)) {
+            $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupanteA);
             hr("grosso");
-            $this->get_concurso($conteudo[0]);
+            $this->get_concurso($idOcupanteA);
         }
     }
 
     ###########################################################
+
+    public function exibeOcupantePosterior($idServidor) {
+
+        /**
+         * Informa (Sim / Não) se a vaga deste concursado inativo foi preenchida por outro servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT idServidorOcupanteAnterior,
+                          idServidor
+                     FROM tbservidor
+                    WHERE idServidorOcupanteAnterior = {$idServidor}";
+
+        $conteudo = $pessoal->select($select, false);        
+
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            echo "---";
+        } else {
+            if (empty($conteudo[0])) {
+                span("Não", "vermelho");
+            } else {
+                $pessoal->get_nomeELotacaoESituacaoEAdmissao($conteudo["idServidor"]);
+                hr("grosso");
+                $this->get_concurso($conteudo["idServidor"]);
+            }
+        }
+    }
+
+###########################################################
 
     /**
      * Método get_tipo
@@ -930,37 +963,6 @@ class Concurso {
             echo "---";
         } else {
             return $retorno[0];
-        }
-    }
-
-###########################################################
-
-    public function servidorInativoVagaPreenchida($idServidor) {
-
-        /**
-         * Informa (Sim / Não) se a vaga deste concursado inativo foi preenchida por outro servidor
-         */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        # Pega array com os dias publicados
-        $select = "SELECT idServidorOcupanteAnterior,
-                          idServidor
-                     FROM tbservidor
-                    WHERE idServidorOcupanteAnterior = {$idServidor}";
-
-        $retorno = $pessoal->select($select, false);
-
-        if ($pessoal->get_idSituacao($idServidor) == 1) {
-            echo "---";
-        } else {
-            if (empty($retorno[0])) {
-                span("Não", "vermelho");
-            } else {
-                span($pessoal->get_nome($retorno[1]));
-                hr("grosso");
-                $this->get_concurso($retorno[1]);
-            }
         }
     }
 

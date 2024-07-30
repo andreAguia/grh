@@ -272,7 +272,7 @@ if ($acesso) {
                 }
             }
 
-            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao desc";
+            $select .= " ORDER BY tbtipocargo.idTipoCargo, tbcargo.nome, instituicaoConcurso, cotasConcurso, classificacaoConcurso, dtAdmissao";
 
             # Pega os dados
             $row = $pessoal->select($select);
@@ -286,7 +286,7 @@ if ($acesso) {
             $tabela->set_align(["left", "center", "center", "left", "left"]);
 
             $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
-            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObs"]);
+            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "exibeOcupantePosterior", "exibeObs"]);
             $tabela->set_funcao([null, null, "trataNulo"]);
 
             # Botão de exibição dos servidores com permissão a essa regra
@@ -915,7 +915,7 @@ if ($acesso) {
             $relatorio->set_align(["left", "center", "center", "left", "left"]);
 
             $relatorio->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
-            $relatorio->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "servidorInativoVagaPreenchida", "exibeObsRel"]);
+            $relatorio->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "exibeOcupantePosterior", "exibeObsRel"]);
             $relatorio->set_funcao([null, null, "trataNulo"]);
             
             $relatorio->set_bordaInterna(true);

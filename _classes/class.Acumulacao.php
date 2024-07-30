@@ -318,19 +318,12 @@ class Acumulacao {
         # Pega os Dados
         $dados = $this->get_dados($idAcumulacao);
         
-        # Exibe vinculo Uenf
-        hr("grosso");
-        p("Vínculo Uenf","pvinculo");
-        hr("grosso");
+        # Exibe vinculo Uenf        
         $this->exibeDadosUenf($dados["idServidor"]);
-        br();
         
-        # Exibe o outro vinculo
-        hr("grosso");
-        p("Outro Vínculo ", "pvinculo");
+        # Exibe o outro vinculo        
         hr("grosso");
         $this->exibeDadosOutroVinculo($idAcumulacao);
-        hr("grosso");
     }
 
     ##############################################################

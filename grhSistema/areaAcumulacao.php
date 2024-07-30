@@ -169,9 +169,9 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculos"]);
+            $tabela->set_label(["Conclusão", "Resultado", "Publicação", "Servidor", "Processo", "Vínculos Uenf / Outro"]);
             $tabela->set_align(["center", "center", "center", "left", "center", "left"]);
-            $tabela->set_width([10, 10, 10, 25, 20, 20]);
+            $tabela->set_width([10, 10, 10, 25, 15, 25]);
             $tabela->set_classe([null, "Acumulacao", "Acumulacao", "Pessoal", "Acumulacao", "Acumulacao"]);
             $tabela->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeVinculos"]);
 

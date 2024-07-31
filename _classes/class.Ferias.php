@@ -236,6 +236,11 @@ class Ferias {
         if (empty($lotacao)) {
             return null;
         }
+        
+        # Trata o ano
+        if(empty($ano)){
+            $ano = date("Y");
+        }
 
         # Exibe o processo
         if (is_numeric($lotacao)) {
@@ -282,6 +287,11 @@ class Ferias {
         # verifica se foi informado a lotação
         if (empty($lotacao)) {
             return null;
+        }
+        
+        # Trata o ano
+        if(empty($ano)){
+            $ano = date("Y");
         }
 
         # Exibe o processo

@@ -659,6 +659,7 @@ class MenuServidor {
         }
 
         $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php');
+        $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
 
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');

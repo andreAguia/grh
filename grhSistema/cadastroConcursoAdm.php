@@ -282,7 +282,7 @@ if ($acesso) {
             $tabela->set_titulo("Classificação - {$titulo}");
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs", "Editar"]);
-            $tabela->set_width(array(15, 5, 5, 20, 20, 15, 15));
+            $tabela->set_width([15, 5, 5, 20, 15, 18, 18]);
             $tabela->set_align(["left", "center", "center", "left", "left"]);
 
             $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
@@ -847,8 +847,8 @@ if ($acesso) {
 
         case "relatorioClassificacao" :
             # Pega os dados
-            $dados = $concurso->get_dados($idConcurso);            
-                
+            $dados = $concurso->get_dados($idConcurso);
+
             # Monta o select
             $select = "SELECT CONCAT(sigla,' - ',tbcargo.nome),
                               idServidor, 
@@ -907,7 +907,7 @@ if ($acesso) {
 
             # tabela
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Concurso {$dados["anobase"]}");            
+            $relatorio->set_titulo("Concurso {$dados["anobase"]}");
             $relatorio->set_subtitulo($titulo);
             $relatorio->set_conteudo($row);
             $relatorio->set_label(["Cargo", "Class.", "Cota", "Servidor", "Publicações", "Vaga Anterior<br/>Ocupada por:", "Vaga já foi Preenchida?", "Obs"]);
@@ -917,7 +917,7 @@ if ($acesso) {
             $relatorio->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
             $relatorio->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "exibeOcupantePosterior", "exibeObsRel"]);
             $relatorio->set_funcao([null, null, "trataNulo"]);
-            
+
             $relatorio->set_bordaInterna(true);
 
             $relatorio->set_numGrupo(0);

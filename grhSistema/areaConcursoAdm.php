@@ -186,6 +186,7 @@ if ($acesso) {
         # Chama o menu do Servidor que se quer editar
         case "acessaConcurso" :
             set_session('idConcurso', $idConcurso);
+//            loadPage('cadastroConcursoAdm.php');
             loadPage('cadastroConcursoAdm.php');
             break;
 

@@ -115,17 +115,17 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Ativos", "Inativos", "Total"));
-    $objeto->set_width(array(5, 12, 12, 12, 12, 22, 5, 5, 5));
-    $objeto->set_align(array("center"));
+    $objeto->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Ativos", "Inativos", "Total"]);
+    $objeto->set_width([5, 12, 12, 12, 12, 22, 5, 5, 5]);
+    $objeto->set_align(["center"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_funcao(array(null, null, 'date_to_php'));
+    $objeto->set_funcao([null, null, 'date_to_php']);
 
-    $objeto->set_classe(array(null, null, null, null, null, null, "Concurso", "Concurso", "Concurso"));
-    $objeto->set_metodo(array(null, null, null, null, null, null, "get_numServidoresAtivosConcurso", "get_numServidoresInativosConcurso", "get_numServidoresConcurso"));
+    $objeto->set_classe([null, null, null, null, null, null, "Concurso", "Concurso", "Concurso"]);
+    $objeto->set_metodo([null, null, null, null, null, null, "get_numServidoresAtivosConcurso", "get_numServidoresInativosConcurso", "get_numServidoresConcurso"]);
 
     $objeto->set_excluirCondicional('?fase=excluir', 0, 8, "==");
 
@@ -186,7 +186,8 @@ if ($acesso) {
             'tipo' => 'combo',
             'padrao' => $tipo,
             'required' => true,
-            'array' => array(array(null, null),
+            'array' => array(
+                array(null, null),
                 array(1, "Adm & Tec"),
                 array(2, "Professor")),
             'col' => 3,

@@ -31,17 +31,27 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega quem assina
-    $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
+    $numEtiquetasInicial = get('numEtiquetasInicial', post('numEtiquetasInicial', 1));
+    $numEtiquetasFinal = get('numEtiquetasFinal', post('numEtiquetasFinal', 1));
     $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
-        array('nome' => 'numEtiquetas',
-            'label' => 'Número de Etiquetas:',
+        array('nome' => 'numEtiquetasInicial',
+            'label' => 'Número Inicial:',
             'tipo' => 'combo',
             'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             'size' => 3,
-            'padrao' => $numEtiquetas,
+            'padrao' => $numEtiquetasInicial,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'numEtiquetasFinal',
+            'label' => 'Número Final:',
+            'tipo' => 'combo',
+            'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            'size' => 3,
+            'padrao' => $numEtiquetasFinal,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
@@ -92,7 +102,7 @@ if ($acesso) {
     br();
     echo "<table width='100%' id='etiqueta' border='2px'>";
 
-    for ($i = 1; $i <= $numEtiquetas; $i++) {
+    for ($i = $numEtiquetasInicial; $i <= $numEtiquetasFinal; $i++) {
 
         if ($conteudo == "Matrícula e Nome") {
 

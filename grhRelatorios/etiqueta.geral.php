@@ -25,7 +25,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros
-    $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
+    $numEtiquetasInicial = get('numEtiquetasInicial', post('numEtiquetasInicial', 1));
+    $numEtiquetasFinal = get('numEtiquetasFinal', post('numEtiquetasFinal', 1));
     $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
     $situacao = post('situacao', "*");
 
@@ -37,12 +38,21 @@ if ($acesso) {
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
-        array('nome' => 'numEtiquetas',
-            'label' => 'Número de Etiquetas:',
+        array('nome' => 'numEtiquetasInicial',
+            'label' => 'Número Inicial:',
             'tipo' => 'combo',
             'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             'size' => 3,
-            'padrao' => $numEtiquetas,
+            'padrao' => $numEtiquetasInicial,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'numEtiquetasFinal',
+            'label' => 'Número Final:',
+            'tipo' => 'combo',
+            'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            'size' => 3,
+            'padrao' => $numEtiquetasFinal,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
@@ -54,7 +64,7 @@ if ($acesso) {
             'padrao' => $conteudo,
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'situacao',
             'label' => 'Situação:',
             'tipo' => 'combo',
@@ -63,7 +73,7 @@ if ($acesso) {
             'padrao' => $situacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
-            'linha' => 1),
+            'linha' => 2),
     ));
 
     $menuRelatorio->set_formLink("?");
@@ -134,7 +144,7 @@ if ($acesso) {
         $matricula = dv($item["matricula"]);
         $nome = $pessoal->get_nome($item["idServidor"]);
 
-        for ($i = 1; $i <= $numEtiquetas; $i++) {
+        for ($i = $numEtiquetasInicial; $i <= $numEtiquetasFinal; $i++) {
             if ($conteudo == "Matrícula e Nome") {
 
                 # Define a fonte a partir do número de letras no nome do servidor

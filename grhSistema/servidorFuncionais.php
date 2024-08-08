@@ -85,7 +85,8 @@ if ($acesso) {
         $selectEdita .= 'opcaoFenorteUenf,';
     }
 
-    $selectEdita .= 'nomenclaturaOriginal,';
+    $selectEdita .= 'nomenclaturaOriginal, 
+                     fundamentacaoInvestidura,';
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         $selectEdita .= 'dtEstagio,';
@@ -268,6 +269,16 @@ if ($acesso) {
                 'col' => $colunaCargo,
                 'size' => 200,
                 'title' => 'Cargo de origem, que consta no ato de investidura.'));
+    
+    array_push($campos,
+            array('linha' => 3,
+                'nome' => 'fundamentacaoInvestidura',
+                'label' => 'Fundamentação da Investidura:',
+                'tipo' => 'texto',
+                'helptext' => 'Solicitado pelo RioPrevidência - encontra-se, normalmente, nos últimos paragrafos do Ato de Investidura.',
+                'col' => 12,
+                'size' => 250,
+                'title' => 'Fundamentação da Investidura.'));
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
         array_push($campos,

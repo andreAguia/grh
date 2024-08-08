@@ -295,6 +295,7 @@ if ($acesso) {
         $dtEstagio = $pessoal->get_dtEstagio($idServidorPesquisado);
         $nomenclaturaOgiginal = $pessoal->get_nomenclaturaOriginal($idServidorPesquisado);
         $dadosConcurso = $pessoal->get_idConcurso($idServidorPesquisado);
+        $fundamentacaoInvestidura = $pessoal->get_fundamentacaoInvestidura($idServidorPesquisado);
 
         # Informa se o servidor entrou como CLT
         if ($regime == "CLT") {
@@ -353,6 +354,13 @@ if ($acesso) {
             $mensagem .= "- Mudança de Nomenclatura do Cargo efetivo conforme"
                     . " Decreto 28950 de 15/08/2001, Lei 4798/2006 de 30/06/2006 e "
                     . "Lei 4800/2006 de 30/06/2006. Nomenclatura Original do Cargo: <b>{$nomenclaturaOgiginal}<b/>";
+        }
+
+        # Fundamentação Investidura
+        if (!empty($fundamentacaoInvestidura)) {
+            if (!empty($mensagem)) {
+                $mensagem .= "<br/>- {$fundamentacaoInvestidura}";
+            }
         }
 
         if (!empty($mensagem)) {

@@ -6798,4 +6798,21 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_fundamentacaoInvestidura
+     *
+     * @param integer $idServidor O idServidor do servidor em questão
+     */
+    public function get_fundamentacaoInvestidura($idServidor = null) {
+
+        $select = "SELECT fundamentacaoInvestidura
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $result = parent::select($select, false);
+        return $result["fundamentacaoInvestidura"];
+    }
+
+    ###########################################################
 }

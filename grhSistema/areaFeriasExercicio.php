@@ -106,7 +106,7 @@ if ($acesso) {
     # Título
     titulo("Área de Férias - Por Ano de Exercício");
 
-################################################################
+    ################################################################
     # Formulário de Pesquisa
     $form = new Form('?');
 
@@ -201,7 +201,7 @@ if ($acesso) {
 
     $form->show();
 
-################################################################
+    ################################################################
 
     switch ($fase) {
         case "":
@@ -219,7 +219,7 @@ if ($acesso) {
             loadPage('?fase=exibeLista');
             break;
 
-################################################################
+        ################################################################
 
         case "exibeLista":
 
@@ -250,7 +250,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
 
             $menu->show();
-            
+
             $grid3->fechaColuna();
             $grid3->abreColuna(12, 6, 12);
 
@@ -260,7 +260,7 @@ if ($acesso) {
 
             # por dias
             $lista1->showResumoPorDia();
-            
+
             $grid3->fechaColuna();
             $grid3->fechaGrid();
 
@@ -275,7 +275,7 @@ if ($acesso) {
             $grid2->fechaGrid();
             break;
 
-################################################################
+        ################################################################
         # Chama o menu do Servidor que se quer editar
         case "editaServidorFerias":
             set_session('idServidorPesquisado', $id);
@@ -283,7 +283,7 @@ if ($acesso) {
             loadPage('servidorFerias.php');
             break;
 
-################################################################
+        ################################################################
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

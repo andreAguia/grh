@@ -100,10 +100,10 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Vagas
-            $botaoVoltar = new Link("Vagas", "areaVagasAdm.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Exibe as vagas dos concursos');
-            $menu1->add_link($botaoVoltar, "right");
+            $botaoVagas1 = new Link("Vagas", "areaVagasAdm.php");
+            $botaoVagas1->set_class('button');
+            $botaoVagas1->set_title('Exibe as vagas dos concursos');
+            $menu1->add_link($botaoVagas1, "right");
 
             # Planilha
             $botaoPlanilha = new Link("Planilha", "?fase=aguardaPlanilha");

@@ -573,7 +573,22 @@ class Concurso {
 
     ###########################################################
 
-    public function exibeOcupantePosterior($idServidor) {
+    public function exibeServidorEConcurso($idServidor) {
+
+        # trata o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+            $pessoal->get_nomeELotacaoESituacaoEAdmissao($idServidor);
+            hr("grosso");
+            $this->get_concurso($idServidor);
+        }
+    }
+
+    ###########################################################
+
+    public function get_idOcupantePosterior($idServidor) {
 
         /**
          * Informa (Sim / Não) se a vaga deste concursado inativo foi preenchida por outro servidor
@@ -581,28 +596,99 @@ class Concurso {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
+        if (empty($idServidor)) {
+            return null;
+        }
+
         # Pega array com os dias publicados
         $select = "SELECT idServidorOcupanteAnterior,
                           idServidor
                      FROM tbservidor
                     WHERE idServidorOcupanteAnterior = {$idServidor}";
 
-        $conteudo = $pessoal->select($select, false);        
+        $conteudo = $pessoal->select($select, false);
+        if (empty($conteudo)) {
+            return null;
+        } else {
+            return $conteudo["idServidor"];
+        }
+    }
+
+    ###########################################################
+
+    public function exibeOcupantePosterior($idServidor = null) {
+
+        /**
+         * Informa o ocupante posterior
+         */
+        
+        
+        if (empty($idServidor)) {
+            return null;
+        }
+        
+        # Pega o id
+        $idOcupante = $this->get_idOcupantePosterior($idServidor);
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
 
         if ($pessoal->get_idSituacao($idServidor) == 1) {
             echo "---";
         } else {
-            if (empty($conteudo[0])) {
+            if (empty($idOcupante)) {
                 span("Não", "vermelho");
             } else {
-                $pessoal->get_nomeELotacaoESituacaoEAdmissao($conteudo["idServidor"]);
+                $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante);
                 hr("grosso");
-                $this->get_concurso($conteudo["idServidor"]);
+                $this->get_concurso($idOcupante);
             }
         }
     }
 
-###########################################################
+    ###########################################################
+
+    public function exibeOcupantePosteriorPosterior($idServidor = null) {
+        
+        /**
+         * Informa o ocupante posterior
+         */
+        if (empty($idServidor)) {
+            return null;
+        }
+        
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega o id
+        $idOcupante = $this->get_idOcupantePosterior($idServidor);
+        
+        if (empty($idOcupante)) {
+            return null;
+        }
+        
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            echo "---";
+        } elseif ($pessoal->get_idSituacao($idOcupante) == 1) {
+            echo "---";
+        } else {
+            if (empty($idOcupante)) {
+                span("Não", "vermelho");
+            } else {
+                $idOcupante2 = $this->get_idOcupantePosterior($idOcupante);
+
+                if (empty($idOcupante2)) {
+                    span("Não", "vermelho");
+                } else {
+                    $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante2);
+                    hr("grosso");
+                    $this->get_concurso($idOcupante2);
+                }
+            }
+        }
+    }
+
+    ##########################################################
 
     /**
      * Método get_tipo

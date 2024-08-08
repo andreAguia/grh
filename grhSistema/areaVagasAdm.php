@@ -56,7 +56,7 @@ if ($acesso) {
     }
 
     function botaoServidoresAtivosVagas3($sigla = null) {
-       # Ver servidores inativos
+        # Ver servidores inativos
         $servAtivos = new Link(null, "../grhRelatorios/geral.concursados.inativos.admTec.php?sigla={$sigla}");
         $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $servAtivos->set_target("_blank");
@@ -81,20 +81,27 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
+    $menu = new MenuBar();
+
+    # Voltar
+    $botao = new Link("Voltar", "areaConcursoAdm.php");
+    $botao->set_class('button');
+    $botao->set_title('Voltar a página anterior');
+    $botao->set_accessKey('V');
+    $menu->add_link($botao, "left");
+
+    # Vagas2
+    $botaoVagas2 = new Link("Vagas Discriminadas", "areaVagasDiscriminadas.php");
+    $botaoVagas2->set_class('button');
+    $botaoVagas2->set_title('Exibe as vagas dos concursos');
+    $menu->add_link($botaoVagas2, "right");
+    $menu->show();
+
     ################################################################
 
     switch ($fase) {
         case "":
 
-            $menu = new MenuBar();
-
-            # Voltar
-            $botao = new Link("Voltar", "areaConcursoAdm.php");
-            $botao->set_class('button');
-            $botao->set_title('Voltar a página anterior');
-            $botao->set_accessKey('V');
-            $menu->add_link($botao, "left");
-            $menu->show();
 
             tituloTable("Vacância para Cargos Administrativos e Técnicos");
             br();
@@ -102,7 +109,7 @@ if ($acesso) {
             # Menu de Abas
             $tab = new Tab([
                 "Considerando as Vagas Ocupadas",
-                "Considerando as Vagas Autorizadas para Concurso",
+                "Considerando as Vagas Autorizadas para Concurso"
             ]);
 
             $tab->abreConteudo();
@@ -238,7 +245,7 @@ if ($acesso) {
             $tabela->set_subtitulo("{$anoInicial} a {$anoFinal}");
             $tabela->set_label(["Cargo", "Max", "Atual", "Ver", "Diferença", "Ver"]);
 
-            $tabela->set_funcao([null, null, null, "botaoServidoresAtivosVagas", null,"botaoServidoresAtivosVagas3"]);
+            $tabela->set_funcao([null, null, null, "botaoServidoresAtivosVagas", null, "botaoServidoresAtivosVagas3"]);
 
             $tabela->set_colspanLabel([null, null, 2]);
             $tabela->set_width([16, 16, 16, 16, 16, 16]);
@@ -266,15 +273,15 @@ if ($acesso) {
             #################################################
 
             $tab->abreConteudo();
-            
+
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
             tituloTable("Considerando as Vagas Autorizadas nos Concursos");
 
             $texto = "Observações Importantes:<br/>"
-                    . " - Para essa análise serão consideradas somente as vagas novas (vagas reais) e descartadas as vagas de reposição.<br/>"
-                    . " - Antes de aceitar estes dados como corretos, deve-se verificar no menu de vagas de cada concurso se não há problemas detectados.";
+                    . " - Para essa análise são consideradas as vagas informadas no cadastro de concurso, definidas no edital de cada concurso.<br/>"
+                    . " - Sersomente as vagas novas (vagas reais) e descartadas as vagas de reposição.";
             callout($texto);
 
             $grid1->fechaColuna();
@@ -284,6 +291,7 @@ if ($acesso) {
             $select = "SELECT CONCAT(tbconcurso.anobase,'<br/>',tbconcurso.regime),
                               tbtipocargo.sigla,
                               vagasNovas,
+                              vagasReposicao,
                               idConcursoVaga,
                               idConcursoVaga,
                               idConcursoVaga
@@ -300,21 +308,21 @@ if ($acesso) {
             $tabela->set_conteudo($conteudo);
             $tabela->set_titulo("Quantidade de Vagas Novas por Concurso");
             $tabela->set_subtitulo("Desde o Concurso de 1997");
-            $tabela->set_label(["Concurso", "Cargo", "Vagas Novas", "Servidores Ativos", "Ver", "Vagas Disponíveis"]);
-            $tabela->set_width([20, 20, 20, 10, 10, 20]);
-            $tabela->set_colspanLabel([null, null, null, 2]);
+            $tabela->set_label(["Concurso", "Cargo", "Vagas Novas", "Vagas de Reposição", "Servidores Ativos", "Ver", "Vagas Disponíveis"]);
+            $tabela->set_width([15, 10, 15, 15, 10, 10, 15]);
+            $tabela->set_colspanLabel([null, null, null, null, 2]);
 
-            $tabela->set_funcao([null, null, null, null, "botaoServidoresAtivosVagas2"]);
+            $tabela->set_funcao([null, null, null, null, null, "botaoServidoresAtivosVagas2"]);
 
-            $tabela->set_colunaSomatorio([2, 3, 5]);
+            $tabela->set_colunaSomatorio([2, 3, 4, 6]);
             $tabela->set_textoSomatorio("Total:");
             $tabela->set_totalRegistro(false);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
-            $tabela->set_classe([null, null, null, "VagaAdm", null, "VagaAdm"]);
-            $tabela->set_metodo([null, null, null, "get_numServidoresAtivosVaga", null, "get_vagasDisponiveis"]);
+            $tabela->set_classe([null, null, null, null, "VagaAdm", null, "VagaAdm"]);
+            $tabela->set_metodo([null, null, null, null, "get_numServidoresAtivosVaga", null, "get_vagasDisponiveis"]);
             $tabela->show();
 
             $grid1->fechaColuna();
@@ -370,7 +378,7 @@ if ($acesso) {
             $grid1->fechaGrid();
 
             $tab->fechaConteudo();
-            $tab->show();            
+            $tab->show();
             break;
 
         ################################################################

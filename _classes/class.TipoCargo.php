@@ -1,6 +1,6 @@
 <?php
 
-class TipoComissao {
+class TipoCargo {
     /**
      * Abriga as várias rotina do Cadastro de tipos de cargo em Comissao
      * 
@@ -17,15 +17,15 @@ class TipoComissao {
 
     ###########################################################
 
-    function get_dados($idTipoComissao) {
+    function get_dados($id) {
 
         /**
          * fornece a próxima tarefa a ser realizada
          */
         # Pega os dados
         $select = "SELECT *
-                   FROM tbtipocomissao
-                  WHERE idTipoComissao = $idTipoComissao";
+                   FROM tbtipocargo
+                  WHERE idTipoCargo = {$id}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -35,18 +35,18 @@ class TipoComissao {
 
     ###########################################################
     
-    function get_descricao($id){
+    function get_cargo($id){
         /**
          * fornece a descrição simples do cargo em comissao
          */
         # Pega os dados
-        $select = "SELECT descricao
-                   FROM tbtipocomissao
-                  WHERE idTipoComissao = {$id}";
+        $select = "SELECT cargo
+                   FROM tbtipocargo
+                  WHERE idTipoCargo = {$id}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
 
-        return $dados['descricao'];
+        return $dados['cargo'];
     }
 }

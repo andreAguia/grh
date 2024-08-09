@@ -727,6 +727,13 @@ class MenuServidor {
         }
 
         $botao = new BotaoGrafico();
+        $botao->set_label('Altera o Nome');
+        $botao->set_url('servidorNome.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'nome.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Alteração do Nome do Servidor');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
         $botao->set_label('Pessoais');
         $botao->set_url('servidorPessoais.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'pessoais.jpg', $this->tamanhoImagem, $this->tamanhoImagem);

@@ -6815,4 +6815,26 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_ultimoNome
+     * 
+     * @param	string $idPessoa $idPessoa do servidor
+     */
+    function get_ultimoNome($idPessoa) {
+
+        # Valida o id
+        if (empty($idPessoa)) {
+            return null;
+        }
+
+        $select = "SELECT nome
+                     FROM tbhistoriconome
+                    WHERE idPessoa = {$idPessoa}
+                    ORDER BY data desc";
+
+        return parent::select($select, false);
+    }
+
+    ##########################################################################################
 }

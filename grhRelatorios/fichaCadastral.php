@@ -20,6 +20,7 @@ if (empty($idServidorPesquisado)) {
 }
 
 # Pega os parâmetros do relatório
+$postHistoricoNome = post('historicoNome');
 $postContatos = post('contatos');
 $postDependentes = post('dependentes');
 $postFormacao = post('formacao');
@@ -89,6 +90,15 @@ if ($acesso) {
     $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_brHr(0);
     $relatorio->set_formCampos(array(
+        array('nome' => 'historicoNome',
+            'label' => 'Alteração de Nomes',
+            'tipo' => 'simnao',
+            'valor' => $postHistoricoNome,
+            'size' => 5,
+            'title' => 'Exibe o histórico de alteração de nome',
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
         array('nome' => 'contatos',
             'label' => 'Contatos',
             'tipo' => 'simnao',
@@ -133,7 +143,7 @@ if ($acesso) {
             'valor' => $postCargo,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 1),
         array('nome' => 'trienio',
             'label' => 'Triênio',
             'tipo' => 'simnao',
@@ -142,7 +152,7 @@ if ($acesso) {
             'valor' => $postTrienio,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 1),
         array('nome' => 'ferias',
             'label' => 'Férias',
             'tipo' => 'simnao',
@@ -151,7 +161,7 @@ if ($acesso) {
             'valor' => $postFerias,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 1),
         array('nome' => 'licenca',
             'label' => 'Licenças',
             'tipo' => 'simnao',
@@ -160,7 +170,7 @@ if ($acesso) {
             'valor' => $postLicenca,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 1),
         array('nome' => 'progressao',
             'label' => 'Progressões',
             'tipo' => 'simnao',
@@ -169,7 +179,7 @@ if ($acesso) {
             'valor' => $postProgressao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'gratificacao',
             'label' => 'Gratificações',
             'tipo' => 'simnao',
@@ -178,7 +188,7 @@ if ($acesso) {
             'valor' => $postGratificacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'diaria',
             'label' => 'Diária',
             'tipo' => 'simnao',
@@ -187,7 +197,7 @@ if ($acesso) {
             'valor' => $postDiaria,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'averbacao',
             'label' => 'Tempo de Serviço',
             'tipo' => 'simnao',
@@ -196,7 +206,7 @@ if ($acesso) {
             'valor' => $postAverbacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'abono',
             'label' => 'Abono Permanência',
             'tipo' => 'simnao',
@@ -205,7 +215,7 @@ if ($acesso) {
             'valor' => $postAbono,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'direito',
             'label' => 'Direito Pessoal',
             'tipo' => 'simnao',
@@ -214,7 +224,7 @@ if ($acesso) {
             'valor' => $postDireito,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'penalidade',
             'label' => 'Penalidades',
             'tipo' => 'simnao',
@@ -223,7 +233,7 @@ if ($acesso) {
             'valor' => $postPenalidade,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'suspensao',
             'label' => 'Suspensão',
             'tipo' => 'simnao',
@@ -232,7 +242,7 @@ if ($acesso) {
             'valor' => $postSuspensao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 3),
+            'linha' => 1),
         array('nome' => 'elogio',
             'label' => 'Elogios',
             'tipo' => 'simnao',
@@ -241,7 +251,7 @@ if ($acesso) {
             'valor' => $postElogio,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 4),
+            'linha' => 1),
         array('nome' => 'acumulacao',
             'label' => 'Acumulação',
             'tipo' => 'simnao',
@@ -250,7 +260,7 @@ if ($acesso) {
             'valor' => $postAcumulacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 4),
+            'linha' => 1),
         array('nome' => 'dadosUsuario',
             'label' => 'Dados Usuário',
             'tipo' => 'simnao',
@@ -259,7 +269,7 @@ if ($acesso) {
             'valor' => $postDadosUsuario,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 4),
+            'linha' => 1),
         array('nome' => 'cargoComissao',
             'label' => 'Cargo do Servidor',
             'tipo' => 'combo',
@@ -270,7 +280,7 @@ if ($acesso) {
             'valor' => $postCargoComissao,
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
-            'linha' => 4)
+            'linha' => 1)
     ));
 
     $relatorio->set_logServidor($idServidorPesquisado);
@@ -284,6 +294,9 @@ if ($acesso) {
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
     $mensagem = null;
+    
+    # Pega o idPessoa
+    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
 
@@ -368,6 +381,38 @@ if ($acesso) {
             p($mensagem, "pFichaCadastralMensagem");
             hr("rpa");
         }
+    }
+
+    /*
+     * Histórico de Alteração de Nome
+     */
+
+    if ($postHistoricoNome) {
+        tituloRelatorio('Histórico de Alteração de Nome');
+
+        $select = 'SELECT data,
+                          nome,
+                          motivo
+                     FROM tbhistoriconome
+                    WHERE idPessoa = ' . $idPessoa . '
+                 ORDER BY data desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(['Data', 'Nome', 'Motivo']);
+        #$relatorio->set_width(array(20,40,40));
+        $relatorio->set_funcao(["date_to_php"]);
+        $relatorio->set_align(['center', 'left', 'left']);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
     }
 
 
@@ -500,9 +545,6 @@ if ($acesso) {
     /*
      * Dados Pessoais
      */
-
-    # Pega o idPessoa
-    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     tituloRelatorio('Dados Pessoais');
 

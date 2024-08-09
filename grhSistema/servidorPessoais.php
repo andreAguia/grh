@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -57,8 +58,7 @@ if ($acesso) {
     $objeto->set_nome('Dados Pessoais');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
-                                     dtNasc,
+    $objeto->set_selectEdita("SELECT dtNasc,
                                      dtFalecimento,
                                      sexo,
                                      estCiv,
@@ -70,7 +70,7 @@ if ($acesso) {
                                      nomePai,
                                      nomeMae
                                 FROM tbpessoa
-                               WHERE idPessoa = ' . $idPessoa);
+                               WHERE idPessoa = {$idPessoa}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -118,16 +118,6 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
-            'nome' => 'nome',
-            'label' => 'Nome:',
-            'tipo' => 'texto',
-            'required' => true,
-            'autofocus' => true,
-            'plm' => true,
-            'title' => 'Nome do servidor',
-            'col' => 6,
-            'size' => 50),
-        array('linha' => 1,
             'nome' => 'dtNasc',
             'label' => 'Data de Nascimento:',
             'tipo' => 'data',
@@ -141,7 +131,7 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'title' => 'Data de Falecimento.'),
-        array('linha' => 2,
+        array('linha' => 1,
             'nome' => 'sexo',
             'label' => 'Sexo:',
             'tipo' => 'combo',
@@ -150,7 +140,7 @@ if ($acesso) {
             'required' => true,
             'col' => 3,
             'size' => 15),
-        array('linha' => 2,
+        array('linha' => 1,
             'nome' => 'estCiv',
             'label' => 'Estado Civil:',
             'tipo' => 'combo',
@@ -166,14 +156,14 @@ if ($acesso) {
             'plm' => true,
             'col' => 6,
             'size' => 50),
-        array('linha' => 3,
+        array('linha' => 2,
             'nome' => 'naturalidade',
             'label' => 'Naturalidade: (Cidade)',
             'tipo' => 'texto',
             'col' => 3,
             'title' => 'Servidor natural da cidade de',
             'size' => 30),
-        array('linha' => 3,
+        array('linha' => 2,
             'nome' => 'nacionalidade',
             'label' => 'Nacionalidade: (País)',
             'tipo' => 'combo',

@@ -401,7 +401,7 @@ if ($acesso) {
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(['Data', 'Nome', 'Motivo']);
-        $relatorio->set_width([15, 40, 45]);
+        $relatorio->set_width([15, 30, 55]);
         $relatorio->set_funcao(["date_to_php"]);
         $relatorio->set_align(['center', 'left', 'left']);
         $relatorio->set_conteudo($result);

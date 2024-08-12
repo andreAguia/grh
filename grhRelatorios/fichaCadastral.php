@@ -294,7 +294,7 @@ if ($acesso) {
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
     $mensagem = null;
-    
+
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -401,7 +401,7 @@ if ($acesso) {
 
         $relatorio = new Relatorio('relatorioFichaCadastral');
         $relatorio->set_label(['Data', 'Nome', 'Motivo']);
-        #$relatorio->set_width(array(20,40,40));
+        $relatorio->set_width([15, 40, 45]);
         $relatorio->set_funcao(["date_to_php"]);
         $relatorio->set_align(['center', 'left', 'left']);
         $relatorio->set_conteudo($result);

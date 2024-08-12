@@ -96,10 +96,7 @@ if ($acesso) {
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-    
-    # retira o botã
-    $objeto->set_botaoEditar(false);
-
+        
     # Parametros da tabela
     $objeto->set_label(["Data", "Nome", "Motivo"]);
     $objeto->set_width([10, 30, 55]);
@@ -107,7 +104,7 @@ if ($acesso) {
     $objeto->set_funcao(["date_to_php"]);
 
     # excluir condicional
-    $objeto->set_excluirCondicional('?fase=excluir', "Nome Inicial", 2, "<>");
+    $objeto->set_excluirCondicional('?fase=excluir', $pessoal->get_dtAdmissao($idServidorPesquisado), 0, "<>");
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

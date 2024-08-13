@@ -60,6 +60,7 @@ define("PASTA_PROCEDIMENTOS", "../../_arquivos/procedimentos/");            # ar
 define("PASTA_COMP_AUX_EDUCA", "../../_arquivos/compAuxEduca/");            # documentos para o aux Educação
 define("PASTA_SUSPENSAO", "../../_arquivos/suspensao/");                    # publicação da suspensão de servidor
 define("PASTA_PENALIDADES", "../../_arquivos/penalidades/");                # publicação das penalidades do servidor
+define("PASTA_PROVAS", "../../_arquivos/provas/");                          # provas de concurso
 /*
  *  Tags aceitas em campos com htmlTag = true
  */

@@ -621,12 +621,10 @@ class Concurso {
         /**
          * Informa o ocupante posterior
          */
-        
-        
         if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega o id
         $idOcupante = $this->get_idOcupantePosterior($idServidor);
 
@@ -649,24 +647,24 @@ class Concurso {
     ###########################################################
 
     public function exibeOcupantePosteriorPosterior($idServidor = null) {
-        
+
         /**
          * Informa o ocupante posterior
          */
         if (empty($idServidor)) {
             return null;
         }
-        
+
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
         # Pega o id
         $idOcupante = $this->get_idOcupantePosterior($idServidor);
-        
+
         if (empty($idOcupante)) {
             return null;
         }
-        
+
         if ($pessoal->get_idSituacao($idServidor) == 1) {
             echo "---";
         } elseif ($pessoal->get_idSituacao($idOcupante) == 1) {
@@ -728,6 +726,7 @@ class Concurso {
 
         # Classes
         $concurso = new Concurso($idConcurso);
+        $concursoProva = new ConcursoProva();
         $pessoal = new Pessoal();
 
         # Variáveis
@@ -736,6 +735,7 @@ class Concurso {
         $vagas = $concurso->get_numVagasConcurso($idConcurso);
         $publicacao = $concurso->get_numPublicacaoConcurso($idConcurso);
         $tipo = $concurso->get_tipo($idConcurso);
+        $provas = $concursoProva->get_numeroProvas($idConcurso);
 
         # Monta o array
         if ($tipo == 1) {   // Administrativo
@@ -743,6 +743,7 @@ class Concurso {
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao"],
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
                 ["Vagas", "cadastroConcursoVagaAdm.php", $vagas],
+                ["Provas", "cadastroConcursoProvas.php", $provas],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],

@@ -98,7 +98,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Cargo", "Área / Função", "Obs", "Ver"]);
-    $objeto->set_width([40, 40, 5, 5]);
+    $objeto->set_width([30, 50, 5, 5]);
     $objeto->set_align(["left", "left"]);
     
     $objeto->set_rowspan(0);

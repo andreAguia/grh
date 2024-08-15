@@ -141,9 +141,22 @@ if ($acesso) {
             $tabela->set_numeroOrdem(true);
 
             $tabela->set_classe(["Concurso", "Concurso", "Concurso", "Concurso"]);
-            $tabela->set_metodo(["exibeServidorEConcurso", "exibeOcupantePosterior", "exibeOcupantePosteriorPosterior"]);
+            $tabela->set_metodo(["exibeServidorEConcurso", "exibeOcupantePosteriorComBotao", "exibeOcupantePosteriorPosteriorComBotao"]);
             $tabela->show();
             break;
+        
+        ################################################################
+
+        case "editaServidor" :
+            br(8);
+            aguarde();
+
+            set_session('idServidorPesquisado', $id);
+            set_session('origem', "areaVagasDiscriminadas.php");
+            loadPage('servidorConcurso.php');
+            break;
+        
+        ################################################################
     }
 
     $grid->fechaColuna();

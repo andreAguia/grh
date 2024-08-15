@@ -579,10 +579,33 @@ class Concurso {
         if (empty($idServidor)) {
             return null;
         } else {
+            # Limita a página
+            $grid = new Grid();
+            $grid->abreColuna(8);
+
             $pessoal = new Pessoal();
             $pessoal->get_nomeELotacaoESituacaoEAdmissao($idServidor);
+
+            $grid->fechaColuna();
+            $grid->abreColuna(4);
+
+            # Cria um menu
+            $menu = new MenuBar("small button-group");
+
+            $link = new Button("Editar", "?fase=editaServidor&id={$idServidor}", "Editar servidor");
+            $link->set_class('primary button');
+            $menu->add_link($link, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12);
+
             hr("grosso");
             $this->get_concurso($idServidor);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
         }
     }
 
@@ -646,7 +669,61 @@ class Concurso {
 
     ###########################################################
 
-    public function exibeOcupantePosteriorPosterior($idServidor = null) {
+    public function exibeOcupantePosteriorComBotao($idServidor = null) {
+
+        /**
+         * Informa o ocupante posterior
+         */
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega o id
+        $idOcupante = $this->get_idOcupantePosterior($idServidor);
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            span("Vaga Ocupada", "verde");
+        } else {
+            if (empty($idOcupante)) {
+                span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+            } else {
+
+                # Limita a página
+                $grid = new Grid();
+                $grid->abreColuna(8);
+
+                $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante);
+
+                $grid->fechaColuna();
+                $grid->abreColuna(4);
+
+                # Cria um menu
+                $menu = new MenuBar("small button-group");
+
+                $link = new Button("Editar", "?fase=editaServidor&id={$idOcupante}", "Editar servidor");
+                $link->set_class('primary button');
+                $menu->add_link($link, "right");
+
+                $menu->show();
+
+                $grid->fechaColuna();
+                $grid->abreColuna(12);
+
+                hr("grosso");
+                $this->get_concurso($idOcupante);
+
+                $grid->fechaColuna();
+                $grid->fechaGrid();
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function exibeOcupantePosteriorPosteriorComBotao($idServidor = null) {
 
         /**
          * Informa o ocupante posterior
@@ -666,21 +743,45 @@ class Concurso {
         }
 
         if ($pessoal->get_idSituacao($idServidor) == 1) {
-            echo "---";
+            span("Vaga Ocupada", "verde");
         } elseif ($pessoal->get_idSituacao($idOcupante) == 1) {
-            echo "---";
+            span("Vaga Ocupada", "verde");
         } else {
             if (empty($idOcupante)) {
-                span("Não", "vermelho");
+                span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
             } else {
                 $idOcupante2 = $this->get_idOcupantePosterior($idOcupante);
 
                 if (empty($idOcupante2)) {
-                    span("Não", "vermelho");
+                    span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
                 } else {
+
+                    # Limita a página
+                    $grid = new Grid();
+                    $grid->abreColuna(8);
+
                     $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante2);
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(4);
+
+                    # Cria um menu
+                    $menu = new MenuBar("small button-group");
+
+                    $link = new Button("Editar", "?fase=editaServidor&id={$idOcupante2}", "Editar servidor");
+                    $link->set_class('primary button');
+                    $menu->add_link($link, "right");
+
+                    $menu->show();
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(12);
+
                     hr("grosso");
                     $this->get_concurso($idOcupante2);
+
+                    $grid->fechaColuna();
+                    $grid->fechaGrid();
                 }
             }
         }

@@ -60,6 +60,9 @@ if ($acesso) {
     $botao->set_accessKey('V');
     $menu->add_link($botao, "left");
     $menu->show();
+    
+    $grid->fechaColuna();
+    $grid->abreColuna(6);
 
     $texto = "Observações Importantes:<br/>"
             . " - Aqui temos todos os servidores concursados que ocuparam ou acupam as vagas.<br/>"
@@ -85,9 +88,18 @@ if ($acesso) {
     $controle->set_valor($parametroCargo);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(6);
+    $controle->set_col(12);
     $form->add_item($controle);
     $form->show();
+    
+    $grid->fechaColuna();
+    $grid->abreColuna(6);
+    
+    $concurso = new Concurso();
+    $concurso->exibeQuadroResumoVagasDisponiveis($parametroCargo);
+    
+    $grid->fechaColuna();
+    $grid->abreColuna(12);
 
     ################################################################
 

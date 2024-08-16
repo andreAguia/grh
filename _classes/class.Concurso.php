@@ -1219,4 +1219,163 @@ class Concurso {
     }
 
     ###########################################################
+
+    public function exibeQuadroResumoVagasDisponiveis() {
+        /**
+         * Exibe um quadro com os docentes sem concurso
+         * 
+         * @syntax $plano->exibeQuadroDocentesSemConcurso();
+         */
+        # Monta o select
+        $select = "SELECT tbtipocargo.idTipoCargo, idServidor
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                     WHERE (idPerfil = 1 OR idPerfil = 4)                       
+                       AND (idServidorOcupanteAnterior is null OR idServidorOcupanteAnterior = 0)
+                       AND tbtipocargo.tipo = 'Adm/Tec'
+                  ORDER BY dtAdmissao";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select);
+
+        # Inicia a variáveis
+        $ocupado3 = 0;
+        $disponivel3 = 0;
+        $ocupado4 = 0;
+        $disponivel4 = 0;
+        $ocupado5 = 0;
+        $disponivel5 = 0;
+        $ocupado6 = 0;
+        $disponivel6 = 0;
+
+        foreach ($row as $item) {
+
+            # Se é ativo
+            $analise = $this->VerificaVaga($item[1]);
+
+            # Vaga ocupapa
+            if ($analise == "Ocupada") {
+                switch ($item[0]) {
+
+                    case 3:
+                        # Nível Superior
+                        $ocupado3++;
+                        break;
+
+                    case 4:
+                        # Nível Médio
+                        $ocupado4++;
+                        break;
+
+                    case 5:
+                        # Nível Fundamental
+                        $ocupado5++;
+                        break;
+
+                    case 6:
+                        # Nível elementar
+                        $ocupado6++;
+                        break;
+                }
+            }
+
+            # Vaga Disponível
+            if ($analise == "Disponível") {
+                switch ($item[0]) {
+
+                    case 3:
+                        # Nível Superior
+                        $disponivel3++;
+                        break;
+
+                    case 4:
+                        # Nível Médio
+                        $disponivel4++;
+                        break;
+
+                    case 5:
+                        # Nível Fundamental
+                        $disponivel5++;
+                        break;
+
+                    case 6:
+                        # Nível elementar
+                        $disponivel6++;
+                        break;
+                }
+            }
+        }
+
+        $conteudo[] = ["PNE", $ocupado6, $disponivel6, $ocupado6 + $disponivel6];
+        $conteudo[] = ["PNF", $ocupado5, $disponivel5, $ocupado5 + $disponivel5];
+        $conteudo[] = ["PNM", $ocupado4, $disponivel4, $ocupado4 + $disponivel4];
+        $conteudo[] = ["PNS", $ocupado3, $disponivel3, $ocupado3 + $disponivel3];
+
+        # Monta a tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo($conteudo);
+        $tabela->set_titulo("Quadro de Vagas");
+        $tabela->set_label(["Cargo", "Ocupados", "Disponíveis", "Total"]);
+        $tabela->set_width([40, 20, 20, 20]);
+        $tabela->set_align(["left"]);
+
+        $tabela->set_colunaSomatorio([1, 2, 3]);
+        $tabela->set_textoSomatorio("Total:");
+        $tabela->set_totalRegistro(false);
+
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    public function VerificaVaga($idServidor = null) {
+        # Verifica se tem id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $pessoal = new Pessoal();
+
+        # Verifica se está ativo
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            return "Ocupada";
+        } else {
+            $idPosterior = $this->get_idOcupantePosterior($idServidor);
+
+            # Se não tem posterior
+            if (empty($idPosterior)) {
+                return "Disponível";
+            } else {
+
+                # Verifica agora o servidor posterior
+                if ($pessoal->get_idSituacao($idPosterior) == 1) {
+                    return "Ocupada";
+                } else {
+                    $idPosterior2 = $this->get_idOcupantePosterior($idPosterior);
+
+                    # Se não tem posterior
+                    if (empty($idPosterior2)) {
+                        return "Disponível";
+                    } else {
+                        # Verifica agora o servidor posterior
+                        if ($pessoal->get_idSituacao($idPosterior2) == 1) {
+                            return "Ocupada";
+                        } else {
+
+                            $idPosterior3 = $this->get_idOcupantePosterior($idPosterior2);
+
+                            # Se não tem posterior
+                            if (empty($idPosterior3)) {
+                                return "Disponível";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    ###########################################################
 }
+    

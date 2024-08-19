@@ -642,7 +642,10 @@ if ($acesso) {
 
     ##
 
-    $select = 'SELECT motorista,
+    $select = 'SELECT CASE
+                        WHEN ufMotorista IS NULL THEN motorista
+                        ELSE CONCAT(motorista, " - ", ufMotorista)
+                      END,
                       dtVencMotorista,
                       conselhoClasse,
                       registroClasse,

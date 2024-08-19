@@ -573,7 +573,10 @@ class Checkup {
 
             $select = 'SELECT tbservidor.idFuncional, 
                           tbpessoa.nome,
-                          motorista,
+                          CASE
+                            WHEN ufMotorista IS NULL THEN motorista
+                            ELSE CONCAT(motorista, " - ", ufMotorista)
+                          END,
                           tbdocumentacao.dtVencMotorista,
                           tbservidor.idServidor,
                           tbservidor.idServidor
@@ -654,7 +657,10 @@ class Checkup {
 
             $select = 'SELECT tbservidor.idFuncional, 
                           tbpessoa.nome,
-                          motorista,
+                          CASE
+                            WHEN ufMotorista IS NULL THEN motorista
+                            ELSE CONCAT(motorista, " - ", ufMotorista)
+                          END,
                           tbdocumentacao.dtVencMotorista,
                           tbservidor.idServidor,
                           tbservidor.idServidor

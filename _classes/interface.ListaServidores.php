@@ -29,18 +29,16 @@ class ListaServidores {
     private $lotacao = null;
     private $cpf = null;
     private $idServidorIdPessoa = null;
-    
+
     /*
      * Do botão Editar
      */
     private $permiteEditar = true;
     private $caminho = 'servidor.php?fase=editar&id=';
-    
 
     /*
      * da listagem
      */
-    
     private $ordenacao = "tbpessoa.nome asc";   # ordenação da listagem. Padrão 3 por nome
     private $ordenacaoCombo = array();          # Array da combo de ordenação
     private $comissaoPrimeiro = false;          # Define se os cargos comissionados aparecerão (ou não) primeiro
@@ -220,12 +218,26 @@ class ListaServidores {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
-                $select .= ' AND (';
-            }
 
-            $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
 
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                    
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }            
+
+            # Faz pesquisa na matricula e outros
             if (is_numeric($this->matNomeId)) {
                 $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
 		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
@@ -266,16 +278,17 @@ class ListaServidores {
             $select .= ' AND (tbperfil.idperfil = "' . $this->perfil . '")';
             $this->subTitulo .= "Perfil: " . $servidor->get_nomePerfil($this->perfil) . "<br/>";
         }
-        
+
         # tipoPerfil
         if (!is_null($this->tipoPerfil)) {
             $select .= ' AND (tbperfil.tipo = "' . $this->tipoPerfil . '")';
             $this->subTitulo .= "Tipo Perfil: " . $this->tipoPerfil . "<br/>";
         }
-        
+
         # escondeTipoPerfil
         if (!is_null($this->escondeTipoPerfil)) {
-            $select .= ' AND (tbperfil.tipo <> "' . $this->escondeTipoPerfil . '")';        }
+            $select .= ' AND (tbperfil.tipo <> "' . $this->escondeTipoPerfil . '")';
+        }
 
         # tipoCargo
         if (!is_null($this->tipoCargo)) {
@@ -628,5 +641,4 @@ class ListaServidores {
         $relatorio->set_conteudo($conteudo);
         $relatorio->show();
     }
-
 }

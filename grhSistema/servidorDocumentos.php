@@ -69,8 +69,10 @@ if ($acesso) {
                          secao,
                          tituloUf,
                          motorista,
-                         ufMotorista,
+                         catMotorista,
                          dtVencMotorista,
+                         ufMotorista,
+                         dtExpMotorista,
                          conselhoClasse,
                         registroClasse,
                         passaporte,
@@ -82,7 +84,7 @@ if ($acesso) {
                         ufCp
                    FROM tbdocumentacao
                   WHERE idPessoa = ' . $idPessoa;
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -90,7 +92,6 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita($selectEdita);
-
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
@@ -112,12 +113,20 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idPessoa');
 
-    # Pega os dados da combo de cidade
+    # combo de cidade
     $estado = $pessoal->select('SELECT uf,
                                        uf
                                   FROM tbestado
                               ORDER BY 2');
-    array_unshift($estado, array(null, null)); # Adiciona o valor de nulo
+    array_unshift($estado, array(null, null));
+    
+    # combo de categoria da carteira de habilitação
+    $categoria = $pessoal->select('SELECT categoria,
+                                       categoria
+                                  FROM tbhabilitacaocategoria
+                              ORDER BY idHabilitacaoCategoria');
+    array_unshift($categoria, array(null, null));
+    
     # Campos para o formulario
     $campos = array(
         array('linha' => 1,
@@ -211,14 +220,14 @@ if ($acesso) {
             'fieldset' => 'Carteira de Habilitação',
             'size' => 50),
         array('linha' => 4,
-            'nome' => 'ufMotorista',
             'col' => 2,
-            'label' => 'UF:',
+            'nome' => 'catMotorista',
+            'label' => 'Categoria:',
             'tipo' => 'combo',
-            'array' => $estado,
-            'title' => 'Unidade da Federaçao',
-            'size' => 10),
-        array('linha' => 4,
+            'array' => $categoria,
+            'title' => 'Categoria da carteira de habilitação',
+            'size' => 5),
+        array('linha' => 5,
             'col' => 3,
             'nome' => 'dtVencMotorista',
             'label' => 'Data de Vencimento:',
@@ -226,6 +235,21 @@ if ($acesso) {
             'size' => 15,
             'title' => 'Data de Vencimento da Carteira de Habilitação.'),
         array('linha' => 5,
+            'nome' => 'ufMotorista',
+            'col' => 2,
+            'label' => 'UF:',
+            'tipo' => 'combo',
+            'array' => $estado,
+            'title' => 'Unidade da Federaçao',
+            'size' => 10),
+        array('linha' => 5,
+            'col' => 3,
+            'nome' => 'dtExpMotorista',
+            'label' => 'Data de Expedição:',
+            'tipo' => 'data',
+            'size' => 15,
+            'title' => 'Data de Vencimento da Carteira de Habilitação.'),
+        array('linha' => 6,
             'col' => 4,
             'nome' => 'conselhoClasse',
             'label' => 'Conselho de Classe:',
@@ -233,14 +257,14 @@ if ($acesso) {
             'title' => 'Nome do Conselho de Classe',
             'fieldset' => 'Conselho de Classe',
             'size' => 50),
-        array('linha' => 5,
+        array('linha' => 6,
             'nome' => 'registroClasse',
             'col' => 3,
             'label' => 'Número:',
             'tipo' => 'texto',
             'title' => 'Número do registro',
             'size' => 20),
-        array('linha' => 6,
+        array('linha' => 7,
             'col' => 3,
             'nome' => 'passaporte',
             'label' => 'Nº do Passaporte:',
@@ -248,28 +272,28 @@ if ($acesso) {
             'title' => 'Número do Passaporte',
             'fieldset' => 'Passaporte',
             'size' => 50),
-        array('linha' => 6,
+        array('linha' => 7,
             'col' => 3,
             'nome' => 'passaporteExpedicao',
             'label' => 'Data de Expedição:',
             'tipo' => 'data',
             'size' => 15,
             'title' => 'Data em que o passaporte foi expedido.'),
-        array('linha' => 6,
+        array('linha' => 7,
             'col' => 3,
             'nome' => 'passaporteValidade',
             'label' => 'Data de Validade:',
             'tipo' => 'data',
             'size' => 15,
             'title' => 'Data de validade do passaporte.'),
-        array('linha' => 6,
+        array('linha' => 7,
             'col' => 3,
             'nome' => 'passaporteAutoridade',
             'label' => 'Autoridade:',
             'tipo' => 'texto',
             'title' => 'Autoridade emissora do passaporte',
-            'size' => 50),        
-        array('linha' => 7,
+            'size' => 50),
+        array('linha' => 8,
             'col' => 3,
             'nome' => 'cp',
             'label' => 'Numero:',
@@ -277,14 +301,14 @@ if ($acesso) {
             'title' => 'Numero da Carteira Profissional CLT',
             'fieldset' => 'Carteira Profissional CLT',
             'size' => 20),
-        array('linha' => 7,
+        array('linha' => 8,
             'nome' => 'serieCp',
             'col' => 2,
             'label' => 'Serie:',
             'tipo' => 'texto',
             'title' => 'Serie',
             'size' => 10),
-        array('linha' => 7,
+        array('linha' => 8,
             'nome' => 'ufCp',
             'col' => 2,
             'label' => 'UF:',

@@ -626,9 +626,9 @@ if ($acesso) {
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('CPF', 'Identidade - Órgão - Emissão', 'PisPasep', 'Título de Eleitor - Zona - Seção'));
-    $relatorio->set_width(array(20, 30, 20, 30));
-    $relatorio->set_align(array('center'));
+    $relatorio->set_label(['CPF', 'Identidade - Órgão - Emissão', 'PisPasep', 'Título de Eleitor - Zona - Seção']);
+    $relatorio->set_width([20, 30, 20, 30]);
+    $relatorio->set_align(['center']);
     #$relatorio->set_funcao($funcao);
     $relatorio->set_conteudo($result);
     $relatorio->set_subTotal(false);
@@ -642,16 +642,13 @@ if ($acesso) {
 
     ##
 
-    $select = 'SELECT CASE
-                        WHEN ufMotorista IS NULL THEN motorista
-                        ELSE CONCAT(motorista, " - ", ufMotorista)
-                      END,
+    $select = "SELECT motorista,
+                      catMotorista,
                       dtVencMotorista,
-                      conselhoClasse,
-                      registroClasse,
-                      reservista 
+                      ufMotorista,
+                      dtExpMotorista
                  FROM tbdocumentacao
-                WHERE idPessoa = ' . $idPessoa;
+                WHERE idPessoa = {$idPessoa}";
 
     $result = $pessoal->select($select);
 
@@ -660,17 +657,17 @@ if ($acesso) {
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Carteira Motorista', 'Vencimento', 'Conselho de Classe', 'Registro', 'Reservista'));
-        $relatorio->set_width(array(20, 20, 20, 20, 20));
-        $relatorio->set_align(array('center'));
-        $relatorio->set_funcao(array("trataNulo", "date_to_php", "trataNulo", "trataNulo", "trataNulo"));
+        $relatorio->set_label(['Carteira Motorista', 'Categoria', 'Vencimento', 'UF', 'Expedição']);
+        $relatorio->set_width([20, 10, 15, 10, 15]);
+        $relatorio->set_align(['center']);
+        $relatorio->set_funcao(["trataNulo", "trataNulo", "date_to_php", "trataNulo", "date_to_php"]);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_cabecalhoRelatorio(false);
         $relatorio->set_menuRelatorio(false);
-        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_exibeLinhaFinal(false);
         $relatorio->set_log(false);
         $relatorio->show();
     }
@@ -679,22 +676,24 @@ if ($acesso) {
 
     $select = 'SELECT cp,
                       serieCp,
-                      ufCp
+                      ufCp,
+                      conselhoClasse,
+                      registroClasse,
+                      reservista 
                  FROM tbdocumentacao
                 WHERE idPessoa = ' . $idPessoa;
 
     $result = $pessoal->select($select);
 
     if (!empty($result[0][0]) OR !empty($result[0][1]) OR !empty($result[0][2])) {
-
-        br();
+       
         $relatorio = new Relatorio('relatorioFichaCadastral');
         #$relatorio->set_titulo(null);
         #$relatorio->set_subtitulo($subtitulo);
-        $relatorio->set_label(array('Carteira Profissional', 'Serie', 'UF'));
-        $relatorio->set_width(array(30, 30, 30));
-        $relatorio->set_align(array('center'));
-        $relatorio->set_funcao(array("trataNulo", "trataNulo", "trataNulo"));
+        $relatorio->set_label(['Carteira Profissional', 'Serie', 'UF', 'Conselho de Classe', 'Registro', 'Reservista']);
+        $relatorio->set_width([15, 10, 10, 15, 10, 10]);
+        $relatorio->set_align(['center']);
+        $relatorio->set_funcao(["trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"]);
         $relatorio->set_conteudo($result);
         $relatorio->set_subTotal(false);
         $relatorio->set_totalRegistro(false);

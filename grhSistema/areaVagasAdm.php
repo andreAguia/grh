@@ -89,12 +89,6 @@ if ($acesso) {
     $botao->set_title('Voltar a página anterior');
     $botao->set_accessKey('V');
     $menu->add_link($botao, "left");
-
-    # Vagas2
-    $botaoVagas2 = new Link("Vagas Discriminadas", "areaVagasDiscriminadas.php");
-    $botaoVagas2->set_class('button');
-    $botaoVagas2->set_title('Exibe as vagas dos concursos');
-    $menu->add_link($botaoVagas2, "right");
     $menu->show();
 
     ################################################################
@@ -102,15 +96,105 @@ if ($acesso) {
     switch ($fase) {
         case "":
 
-
             tituloTable("Vacância para Cargos Administrativos e Técnicos");
             br();
 
             # Menu de Abas
             $tab = new Tab([
-                "Considerando as Vagas Ocupadas",
-                "Considerando as Vagas Autorizadas para Concurso"
+                "Considerando os Servidores que Ocupara a Vaga Anteriormente",
+                "Considerando o Máximo de Vagas Ocupadas",
+                "Considerando as Vagas Autorizadas no Edital"
             ]);
+
+            #################################################
+
+            $tab->abreConteudo();
+
+            # Pega os parâmetros
+            $parametroCargo = post('parametroCargo', get_session('parametroCargo', 6));
+
+            # Joga os parâmetros par as sessions
+            set_session('parametroCargo', $parametroCargo);
+
+            $grid1 = new Grid();
+            $grid1->abreColuna(12);
+
+            tituloTable("Considerando os Servidores que Ocupara a Vaga Anteriormente");
+            $texto = "Observações Importantes:<br/>"
+                    . " - Aqui temos todos os servidores concursados que ocuparam ou acupam as vagas.<br/>"
+                    . " - Segundo a informação inserida no campo de servidor que ocupava a vaga anteriormente.";
+            callout($texto);
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(8);
+
+            # Formulário de Pesquisa
+            $form = new Form('?');
+
+            # Cargo
+            $result = $pessoal->select('SELECT idTipoCargo,
+                                       CONCAT(sigla," - ",cargo)
+                                  FROM tbtipocargo
+                                 WHERE tipo = "Adm/Tec" 
+                              ORDER BY cargo');
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cargol');
+            $controle->set_array($result);
+            $controle->set_optgroup(true);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+            $form->show();
+
+            # Monta o select
+            $select = "SELECT idServidor,
+                              idServidor,
+                              idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                         LEFT JOIN tbcargo USING (idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                        WHERE (idPerfil = 1 OR idPerfil = 4)                       
+                          AND (idServidorOcupanteAnterior is null OR idServidorOcupanteAnterior = 0)
+                          AND tbtipocargo.tipo = 'Adm/Tec'
+                          AND tbtipocargo.idTipoCargo = {$parametroCargo}
+                     ORDER BY dtAdmissao, tbpessoa.nome";
+
+            # Pega os dados
+            $row = $pessoal->select($select);
+
+            $tipocargo = new TipoCargo();
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas Discriminadas");
+            $tabela->set_subtitulo($tipocargo->get_cargo($parametroCargo));
+            $tabela->set_conteudo($row);
+            $tabela->set_label(["Primeiro na Vaga", "Vaga Posterior", "Vaga Posterior"]);
+            $tabela->set_width([33, 33, 33]);
+            $tabela->set_align(["left", "left", "left"]);
+            $tabela->set_numeroOrdem(true);
+
+            $tabela->set_classe(["Concurso", "Concurso", "Concurso", "Concurso"]);
+            $tabela->set_metodo(["exibeServidorEConcurso", "exibeOcupantePosteriorComBotao", "exibeOcupantePosteriorPosteriorComBotao"]);
+            $tabela->show();
+
+            $grid1->fechaColuna();
+            $grid1->abreColuna(4);
+
+            $concurso = new Concurso();
+            $concurso->exibeQuadroResumoVagasDisponiveis();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            $tab->fechaConteudo();
+
+            #################################################
 
             $tab->abreConteudo();
 
@@ -190,7 +274,7 @@ if ($acesso) {
                 $dados[] = [$i, $vpne, $vpnf, $vpnm, $vpns, $total, $i];
             }
 
-            tituloTable("Considerando as Vagas Ocupadas");
+            tituloTable("Considerando o Máximo de Vagas Ocupadas");
             $texto = "Observações Importantes:<br/>"
                     . " - Para essa análise é considerado o número máximo de servidores concursados ativos por ano / cargo desde {$anoInicial}.";
             callout($texto);
@@ -277,7 +361,7 @@ if ($acesso) {
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
-            tituloTable("Considerando as Vagas Autorizadas nos Concursos");
+            tituloTable("Considerando as Vagas Autorizadas no Edital");
 
             $texto = "Observações Importantes:<br/>"
                     . " - Para essa análise são consideradas as vagas informadas no cadastro de concurso, definidas no edital de cada concurso.<br/>"
@@ -397,7 +481,18 @@ if ($acesso) {
             $lista->showRelatorio();
             break;
 
-        ################################################################ 
+        ################################################################
+
+        case "editaServidor" :
+            br(8);
+            aguarde();
+
+            set_session('idServidorPesquisado', $id);
+            set_session('origem', "areaVagasAdm.php");
+            loadPage('servidorConcurso.php');
+            break;
+        
+        ################################################################
     }
 
     $grid->fechaColuna();

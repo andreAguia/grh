@@ -1312,6 +1312,17 @@ class Concurso {
         $conteudo[] = ["PNM", $ocupado4, $disponivel4, $ocupado4 + $disponivel4];
         $conteudo[] = ["PNS", $ocupado3, $disponivel3, $ocupado3 + $disponivel3];
 
+        $painel = new Callout("primary");
+        $painel->abre();
+
+        $vagasTotais = $disponivel6 + $disponivel5 + $disponivel4 + $disponivel3;
+
+        p("Vagas Totais:", "vagaCargo");
+        p($vagasTotais, "vagaCentro");
+        p("PNE: {$disponivel6} | PNF: {$disponivel5} | PNM: {$disponivel4} | PNS: {$disponivel3}", "vagaCargo");
+
+        $painel->fecha();
+
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
@@ -1375,7 +1386,6 @@ class Concurso {
             }
         }
     }
-    
+
     ###########################################################
 }
-    

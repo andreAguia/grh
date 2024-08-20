@@ -42,10 +42,6 @@ if ($acesso) {
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -67,13 +63,6 @@ if ($acesso) {
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if (is_null($orderCampo))
-        $orderCampo = "1";
-
-    if (is_null($orderTipo))
-        $orderTipo = 'asc';
-
     # select da lista
     $objeto->set_selectLista("SELECT idHabilitacaoCategoria,
                                      categoria,
@@ -82,7 +71,7 @@ if ($acesso) {
                                  FROM tbhabilitacaocategoria
                                  ORDER BY idHabilitacaoCategoria");
     # select do edita
-    $objeto->set_selectEdita("SELECT categoria
+    $objeto->set_selectEdita("SELECT categoria,
                                      tipo,
                                      exemplo
                                  FROM tbhabilitacaocategoria
@@ -92,11 +81,6 @@ if ($acesso) {
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
-
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');

@@ -103,7 +103,7 @@ class PrevisaoAposentadoria {
     private $dtIngressoApartirDescricao = "Servidor tem que ingressar no serviço público a partir desta data.";
     private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $idadeDescricao = "Idade do servidor.";
-    private $tempoPublicoDescicao = "Tempo de todos os periodo públicos ininterruptos.";
+    private $tempoPublicoDescicao = "Tempo de todos os periodo públicos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
     private $pontuacaoInicialDescricao = "Pontuação Inicial.";
@@ -140,6 +140,7 @@ class PrevisaoAposentadoria {
     private $servidorTempoUenf = null;
     private $servidorTempoTotal = null;
     private $servidorTempoPublicoIninterrupto = null;
+    private $servidorTempoPublico = null;
 
     # Analises
     private $analisaDtIngresso = null;
@@ -760,6 +761,9 @@ class PrevisaoAposentadoria {
 
         # Tempo Initerrupto
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
+        
+        # Tempo Publico
+        $this->servidorTempoPublico = $this->servidorTempoAverbadoPublico + $this->servidorTempoUenf;
 
         # Especifica a regra de idade e de tempo de contribuição
         if ($this->servidorSexo == "Masculino") {
@@ -861,11 +865,11 @@ class PrevisaoAposentadoria {
         }
 
         /*
-         *  Serviço Público Initerrupto
+         *  Serviço Público
          */
-        $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublicoIninterrupto;
+        $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublico;
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
-        if ($this->servidorTempoPublicoIninterrupto >= ($this->servicoPublico * 365)) {
+        if ($this->servidorTempoPublico >= ($this->servicoPublico * 365)) {
             $this->analisePublico = "OK";
         } else {
             $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
@@ -1233,7 +1237,7 @@ class PrevisaoAposentadoria {
             array_push($array, ["Serviço Público",
                 $this->tempoPublicoDescicao,
                 "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)",
-                "{$this->servidorTempoPublicoIninterrupto} dias",
+                "{$this->servidorTempoPublico} dias",
                 $this->dataCriterioTempoServicoPublico,
                 $this->analisePublico]);
         }

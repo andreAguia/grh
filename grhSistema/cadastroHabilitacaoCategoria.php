@@ -106,7 +106,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Id", "Categoria", "Tipo de Veículo", "Exemplo"]);
-    $objeto->set_width([10, 10, 35, 35]);
+    $objeto->set_width([5, 10, 38, 38]);
     $objeto->set_align(["center", "center", "left", "left"]);
 
     # Classe do banco de dados

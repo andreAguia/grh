@@ -550,6 +550,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos', '../grhRelatorios/geral.servidores.ativos.professores.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Cargo', '../grhRelatorios/professores.ativos.porCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Nacionalidade', '../grhRelatorios/professores.ativos.porNacionalidade.php');
+            $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Estrangeiros com E-mail', '../grhRelatorios/professores.ativos.estrangeiros.email.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com Data de Nascimento, Idade e Sexo', '../grhRelatorios/professores.ativos.idade.sexo.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Agrupados por Lotaçao', '../grhRelatorios/professores.ativos.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Professores Ativos - Com Email A Partir do Ano de Admissão', '../grhRelatorios/professores.ativos.email.porAnoAdmissao.php');

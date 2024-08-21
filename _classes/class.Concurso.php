@@ -1307,10 +1307,10 @@ class Concurso {
             }
         }
 
-        $conteudo[] = ["PNE", $ocupado6, $disponivel6, $ocupado6 + $disponivel6];
-        $conteudo[] = ["PNF", $ocupado5, $disponivel5, $ocupado5 + $disponivel5];
-        $conteudo[] = ["PNM", $ocupado4, $disponivel4, $ocupado4 + $disponivel4];
-        $conteudo[] = ["PNS", $ocupado3, $disponivel3, $ocupado3 + $disponivel3];
+        $conteudo[] = ["PNE", $ocupado6, "PNE", $disponivel6, "PNE", $ocupado6 + $disponivel6];
+        $conteudo[] = ["PNF", $ocupado5, "PNE", $disponivel5, "PNE", $ocupado5 + $disponivel5];
+        $conteudo[] = ["PNM", $ocupado4, "PNE", $disponivel4, "PNE", $ocupado4 + $disponivel4];
+        $conteudo[] = ["PNS", $ocupado3, "PNE", $disponivel3, "PNE", $ocupado3 + $disponivel3];
 
         $painel = new Callout("primary");
         $painel->abre();
@@ -1327,11 +1327,11 @@ class Concurso {
         $tabela = new Tabela();
         $tabela->set_conteudo($conteudo);
         $tabela->set_titulo("Quadro de Vagas");
-        $tabela->set_label(["Cargo", "Ocupados", "Disponíveis", "Total"]);
-        $tabela->set_width([40, 20, 20, 20]);
+        $tabela->set_label(["Cargo", "Ocupados", "Ver", "Disponíveis", "Ver", "Total"]);
+        $tabela->set_width([16, 16, 16, 16, 16, 16]);
         $tabela->set_align(["left"]);
 
-        $tabela->set_colunaSomatorio([1, 2, 3]);
+        $tabela->set_colunaSomatorio([1, 3, 5]);
         $tabela->set_textoSomatorio("Total:");
         $tabela->set_totalRegistro(false);
 

@@ -29,6 +29,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                       tbpessoa.nome,
                       tbservidor.idServidor,
+                      tbservidor.idServidor,
                       tbpais.pais,
                       tbnacionalidade.nacionalidade
                   FROM tbservidor JOIN tbpessoa USING (idPessoa)
@@ -40,22 +41,23 @@ if ($acesso) {
                WHERE tbservidor.situacao = 1
                  AND tbperfil.tipo <> "Outros"
                  AND tbtipocargo.tipo = "Professor"
+                 AND tbnacionalidade.nacionalidade <> "Brasileira"
             ORDER BY tbnacionalidade.nacionalidade, tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Professores Ativos');
-    $relatorio->set_tituloLinha2('Agrupado pela Nacionalidade');
+    $relatorio->set_titulo('Relatório de Professores Estrangeiros Ativos');
+    // $relatorio->set_tituloLinha2('Agrupado pela Nacionalidade');
     $relatorio->set_subtitulo("Ordenados pelo Nome");
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'País de Origem', 'Nacionalidade']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Email', 'País de Origem', 'Nacionalidade']);
     $relatorio->set_align(["center", "left", "left"]);
 
-    $relatorio->set_classe([null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_CargoSimples"]);
+    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_CargoSimples", "get_emailUenf"]);
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_numGrupo(5);
     $relatorio->show();
 
     $page->terminaPagina();

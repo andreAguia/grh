@@ -161,7 +161,7 @@ if ($acesso) {
         $dtAdmPesquisado = date_to_bd($pessoal->get_dtAdmissao($idServidorPesquisado));
 
         $select = "SELECT tbservidor.idServidor,
-                          CONCAT(date_format(dtAdmissao,'%d/%m/%Y'),' - ',date_format(dtDemissao,'%d/%m/%Y'),' - ',UADM,' - ',tbpessoa.nome),
+                          CONCAT(date_format(dtAdmissao,'%d/%m/%Y'),' - ',date_format(dtDemissao,'%d/%m/%Y'),' - ',UADM,' - ',DIR,' - ',GER,' - ',tbpessoa.nome),
                           tbcargo.nome
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbcargo USING (idCargo)
@@ -214,7 +214,7 @@ if ($acesso) {
             'array' => $concurso,
             'title' => 'Concurso',
             'padrao' => $idConcurso,
-            'col' => 5,
+            'col' => 4,
             'size' => 15));
 
     if ($tipoCargo == "Adm/Tec") {
@@ -227,7 +227,7 @@ if ($acesso) {
                     'title' => 'Servidor que ocupava anteriormente esta vaga (quando houver)',
                     'optgroup' => true,
                     'padrao' => null,
-                    'col' => 7,
+                    'col' => 8,
                     'size' => 15));
     }
 
@@ -473,7 +473,7 @@ if ($acesso) {
                         $ocupante = $vaga->get_servidorOcupante($idVaga);
 
                         if ($vaga->get_laboratorioOrigem($idVaga) <> $servidor->get_idLotacao($idServidor)) {
-                            p("Atenção !!<br/>Lotação atual diferente da<br/>Lotação de Origem do Concurso!","pconcursadoLotacaoDiferente");
+                            p("Atenção !!<br/>Lotação atual diferente da<br/>Lotação de Origem do Concurso!", "pconcursadoLotacaoDiferente");
                         }
                     }
 

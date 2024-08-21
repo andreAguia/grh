@@ -95,6 +95,23 @@ if ($acesso) {
 
     switch ($fase) {
         case "":
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista');
+            break;
+
+        ################################################################
+
+        case "exibeLista":
 
             tituloTable("Vacância para Cargos Administrativos e Técnicos");
             br();
@@ -491,7 +508,7 @@ if ($acesso) {
             set_session('origem', "areaVagasAdm.php");
             loadPage('servidorConcurso.php');
             break;
-        
+
         ################################################################
     }
 

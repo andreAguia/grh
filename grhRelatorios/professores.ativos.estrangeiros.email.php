@@ -31,6 +31,7 @@ if ($acesso) {
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbpais.pais,
+                      tbservidor.idServidor,
                       tbnacionalidade.nacionalidade
                   FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                   JOIN tbperfil USING (idPerfil)  
@@ -50,14 +51,14 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Professores Estrangeiros Ativos');
     // $relatorio->set_tituloLinha2('Agrupado pela Nacionalidade');
     $relatorio->set_subtitulo("Ordenados pelo Nome");
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Email', 'País de Origem', 'Nacionalidade']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Email', 'País de Origem', 'Perfil', 'Nacionalidade']);
     $relatorio->set_align(["center", "left", "left"]);
 
-    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_CargoSimples", "get_emailUenf"]);
+    $relatorio->set_classe([null, null, "pessoal", "pessoal", null, "pessoal"]);
+    $relatorio->set_metodo([null, null, "get_CargoSimples", "get_emailUenf", null, "get_perfil"]);
 
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(5);
+    $relatorio->set_numGrupo(6);
     $relatorio->show();
 
     $page->terminaPagina();

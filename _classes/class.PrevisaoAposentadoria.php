@@ -771,11 +771,12 @@ class PrevisaoAposentadoria {
 
             # Verifica se tem divisor de idade
             if (empty($this->dataDivisorIdade)) {
-                $this->regraIdade = $this->idadeHomem;
+                $this->regraIdade = $this->idadeHomem;                
             } else {
                 # Calcula a data
                 $dataTemporaria = addAnos($this->servidorDataNascimento, $this->idadeHomemAntes);
-                if (year($this->dataDivisorIdade) < year($dataTemporaria)) {
+                
+                if (year($this->dataDivisorIdade) <= year($dataTemporaria)) {
                     $this->regraIdade = $this->idadeHomemDepois;
                 } else {
                     $this->regraIdade = $this->idadeHomemAntes;
@@ -790,7 +791,7 @@ class PrevisaoAposentadoria {
             } else {
                 # Calcula a data
                 $dataTemporaria = addAnos($this->servidorDataNascimento, $this->idadeMulherAntes);
-                if (year($this->dataDivisorIdade) < year($dataTemporaria)) {
+                if (year($this->dataDivisorIdade) <= year($dataTemporaria)) {
                     $this->regraIdade = $this->idadeMulherDepois;
                 } else {
                     $this->regraIdade = $this->idadeMulherAntes;

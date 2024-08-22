@@ -1307,10 +1307,10 @@ class Concurso {
             }
         }
 
-        $conteudo[] = ["PNE", $ocupado6, "PNE", $disponivel6, "PNE", $ocupado6 + $disponivel6];
-        $conteudo[] = ["PNF", $ocupado5, "PNF", $disponivel5, "PNF", $ocupado5 + $disponivel5];
-        $conteudo[] = ["PNM", $ocupado4, "PNM", $disponivel4, "PNM", $ocupado4 + $disponivel4];
-        $conteudo[] = ["PNS", $ocupado3, "PNS", $disponivel3, "PNS", $ocupado3 + $disponivel3];
+        $conteudo[] = ["PNE", $ocupado6, "PNE", $disponivel6, "--", $ocupado6 + $disponivel6];
+        $conteudo[] = ["PNF", $ocupado5, "PNF", $disponivel5, "--", $ocupado5 + $disponivel5];
+        $conteudo[] = ["PNM", $ocupado4, "PNM", $disponivel4, "--", $ocupado4 + $disponivel4];
+        $conteudo[] = ["PNS", $ocupado3, "PNS", $disponivel3, "--", $ocupado3 + $disponivel3];
 
         $painel = new Callout("primary");
         $painel->abre();
@@ -1331,6 +1331,7 @@ class Concurso {
         $tabela->set_width([16, 16, 16, 16, 16, 16]);
         $tabela->set_align(["left"]);
         $tabela->set_funcao([null, null, "botaoServidoresAtivosVagas"]);
+        $tabela->set_colspanLabel([null, 2, null, 2]);
 
         $tabela->set_colunaSomatorio([1, 3, 5]);
         $tabela->set_textoSomatorio("Total:");

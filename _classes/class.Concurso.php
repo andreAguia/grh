@@ -611,6 +611,23 @@ class Concurso {
 
     ###########################################################
 
+    public function exibeServidorEConcursoRel($idServidor) {
+
+        # trata o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            $pessoal = new Pessoal();
+            $pessoal->get_nomeELotacaoESituacaoEAdmissao($idServidor);
+
+            hr("grosso");
+            $this->get_concurso($idServidor);
+        }
+    }
+
+    ###########################################################
+
     public function get_idOcupantePosterior($idServidor) {
 
         /**
@@ -635,6 +652,28 @@ class Concurso {
         } else {
             return $conteudo["idServidor"];
         }
+    }
+
+    ###########################################################
+
+    public function get_idOcupantePosteriorPosterior($idServidor) {
+
+        /**
+         * Informa o id do ocupante posterior ao posterior
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # trata o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega o posterior
+        $idPosterior = $this->get_idOcupantePosterior($idServidor);
+
+        # Pega o posterior do Posterior
+        return $this->get_idOcupantePosterior($idPosterior);
     }
 
     ###########################################################
@@ -721,6 +760,37 @@ class Concurso {
         }
     }
 
+###########################################################
+
+    public function exibeOcupantePosteriorRel($idServidor = null) {
+
+        /**
+         * Informa o ocupante posterior
+         */
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega o id
+        $idOcupante = $this->get_idOcupantePosterior($idServidor);
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            span("Vaga Ocupada", "verde");
+        } else {
+            if (empty($idOcupante)) {
+                span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+            } else {
+
+                $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante);
+                hr("grosso");
+                $this->get_concurso($idOcupante);
+            }
+        }
+    }
+
     ###########################################################
 
     public function exibeOcupantePosteriorPosteriorComBotao($idServidor = null) {
@@ -782,6 +852,49 @@ class Concurso {
 
                     $grid->fechaColuna();
                     $grid->fechaGrid();
+                }
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function exibeOcupantePosteriorPosteriorRel($idServidor = null) {
+
+        /**
+         * Informa o ocupante posterior
+         */
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega o id
+        $idOcupante = $this->get_idOcupantePosterior($idServidor);
+
+        if (empty($idOcupante)) {
+            return null;
+        }
+
+        if ($pessoal->get_idSituacao($idServidor) == 1) {
+            span("Vaga Ocupada", "verde");
+        } elseif ($pessoal->get_idSituacao($idOcupante) == 1) {
+            span("Vaga Ocupada", "verde");
+        } else {
+            if (empty($idOcupante)) {
+                span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+            } else {
+                $idOcupante2 = $this->get_idOcupantePosterior($idOcupante);
+
+                if (empty($idOcupante2)) {
+                    span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+                } else {
+                    $pessoal->get_nomeELotacaoESituacaoEAdmissao($idOcupante2);
+
+                    hr("grosso");
+                    $this->get_concurso($idOcupante2);
                 }
             }
         }
@@ -1307,10 +1420,10 @@ class Concurso {
             }
         }
 
-        $conteudo[] = ["PNE", $ocupado6, "PNE", $disponivel6, "--", $ocupado6 + $disponivel6];
-        $conteudo[] = ["PNF", $ocupado5, "PNF", $disponivel5, "--", $ocupado5 + $disponivel5];
-        $conteudo[] = ["PNM", $ocupado4, "PNM", $disponivel4, "--", $ocupado4 + $disponivel4];
-        $conteudo[] = ["PNS", $ocupado3, "PNS", $disponivel3, "--", $ocupado3 + $disponivel3];
+        $conteudo[] = ["PNE", $ocupado6, 6, $disponivel6, 6, $ocupado6 + $disponivel6];
+        $conteudo[] = ["PNF", $ocupado5, 5, $disponivel5, 5, $ocupado5 + $disponivel5];
+        $conteudo[] = ["PNM", $ocupado4, 4, $disponivel4, 4, $ocupado4 + $disponivel4];
+        $conteudo[] = ["PNS", $ocupado3, 3, $disponivel3, 3, $ocupado3 + $disponivel3];
 
         $painel = new Callout("primary");
         $painel->abre();
@@ -1330,7 +1443,7 @@ class Concurso {
         $tabela->set_label(["Cargo", "Ocupados", "Ver", "Disponíveis", "Ver", "Total"]);
         $tabela->set_width([16, 16, 16, 16, 16, 16]);
         $tabela->set_align(["left"]);
-        $tabela->set_funcao([null, null, "botaoServidoresAtivosVagas"]);
+        $tabela->set_funcao([null, null, "botaoVagasOcupadas", null, "botaoVagasDisponiveis"]);
         $tabela->set_colspanLabel([null, 2, null, 2]);
 
         $tabela->set_colunaSomatorio([1, 3, 5]);

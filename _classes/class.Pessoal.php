@@ -2395,12 +2395,18 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_idSituacao($idServidor) {
-        $select = 'SELECT idsituacao
-                         FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
-                        WHERE idServidor = ' . $idServidor;
+        
+        # Trata o id
+        if(empty($idServidor)){
+            return null;
+        }
+        
+        # Monta o select
+        $select = "SELECT idsituacao
+                     FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
+                    WHERE idServidor = {$idServidor}";
 
         $situacao = parent::select($select, false);
-
         return $situacao[0];
     }
 

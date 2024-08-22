@@ -19,6 +19,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $concurso = new Concurso();
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -34,6 +35,14 @@ if ($acesso) {
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
+
+    # Pega os parâmetros
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo', 6));
+    $parametroVagas = post('parametroVagas', get_session('parametroVagas', "Todas"));
+
+    # Joga os parâmetros par as sessions
+    set_session('parametroCargo', $parametroCargo);
+    set_session('parametroVagas', $parametroVagas);
 
     # Define a função usada em dois momentos nesse codigo
 
@@ -61,6 +70,24 @@ if ($acesso) {
         $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $servAtivos->set_target("_blank");
         $servAtivos->set_title("Exibe os servidores inativos");
+        $servAtivos->show();
+    }
+
+    function botaoVagasDisponiveis($sigla = null) {
+        # Ver servidores ativos
+        $servAtivos = new Link(null, "../grhRelatorios/vagas.admTec.disponiveis.php?parametroCargo={$sigla}&parametroVagas=Disponíveis");
+        $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servAtivos->set_target("_blank");
+        $servAtivos->set_title("Exibe a relação de vagas disponíveis");
+        $servAtivos->show();
+    }
+    
+    function botaoVagasOcupadas($sigla = null) {
+        # Ver servidores ativos
+        $servAtivos = new Link(null, "../grhRelatorios/vagas.admTec.disponiveis.php?parametroCargo={$sigla}&parametroVagas=Ocupadas");
+        $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servAtivos->set_target("_blank");
+        $servAtivos->set_title("Exibe a relação de vagas ocupadas");
         $servAtivos->show();
     }
 
@@ -127,12 +154,6 @@ if ($acesso) {
 
             $tab->abreConteudo();
 
-            # Pega os parâmetros
-            $parametroCargo = post('parametroCargo', get_session('parametroCargo', 6));
-
-            # Joga os parâmetros par as sessions
-            set_session('parametroCargo', $parametroCargo);
-
             $grid1 = new Grid();
             $grid1->abreColuna(12);
 
@@ -157,13 +178,25 @@ if ($acesso) {
 
             $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
             $controle->set_size(30);
-            $controle->set_title('Filtra por Cargol');
+            $controle->set_title('Filtra por Cargo');
             $controle->set_array($result);
-            $controle->set_optgroup(true);
+            #$controle->set_optgroup(true);
             $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            # Vagas
+            $controle = new Input('parametroVagas', 'combo', 'Vagas:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo de Vaga');
+            $controle->set_array(["Todas", "Ocupadas", "Disponíveis"]);
+            #$controle->set_optgroup(true);
+            $controle->set_valor($parametroVagas);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
             $form->show();
 
@@ -185,12 +218,63 @@ if ($acesso) {
             $row = $pessoal->select($select);
 
             $tipocargo = new TipoCargo();
+            $titulo = $tipocargo->get_cargo($parametroCargo);
+
+            if ($parametroVagas <> "Todas") {
+                $titulo .= "<br/>Vagas {$parametroVagas}";
+
+                # altera a tabela para quando for Vagas Ocupadas
+                if ($parametroVagas == "Ocupadas") {
+
+                    # Percorre o array
+                    foreach ($row as $item) {
+
+                        # Verifica se é ativo 
+                        if ($pessoal->get_idSituacao($item[0]) == 1) {
+                            $arrayOcupadas[] = $item;
+                        } elseif ($pessoal->get_idSituacao($concurso->get_idOcupantePosterior($item[0])) == 1) {
+                            $arrayOcupadas[] = $item;
+                        } elseif ($pessoal->get_idSituacao($concurso->get_idOcupantePosteriorPosterior($item[0])) == 1) {
+                            $arrayOcupadas[] = $item;
+                        }
+                    }
+                }
+
+                # altera a tabela para quando for Vagas Ocupadas
+                if ($parametroVagas == "Disponíveis") {
+
+                    # Percorre o array
+                    foreach ($row as $item) {
+
+                        # Verifica se tem alguem ativo 
+                        if ($pessoal->get_idSituacao($item[0]) == 1) {
+                            continue;
+                        } elseif ($pessoal->get_idSituacao($concurso->get_idOcupantePosterior($item[0])) == 1) {
+                            continue;
+                        } elseif ($pessoal->get_idSituacao($concurso->get_idOcupantePosteriorPosterior($item[0])) == 1) {
+                            continue;
+                        }else{
+                            $arrayDisponiveis[] = $item;
+                        }
+                    }
+                }
+            }
 
             # tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Vagas Discriminadas");
-            $tabela->set_subtitulo($tipocargo->get_cargo($parametroCargo));
-            $tabela->set_conteudo($row);
+            $tabela->set_subtitulo($titulo);
+            if ($parametroVagas == "Ocupadas") {
+                $tabela->set_conteudo($arrayOcupadas);
+            }
+            if ($parametroVagas == "Disponíveis") {
+                $tabela->set_conteudo($arrayDisponiveis);
+            }
+            if ($parametroVagas == "Todas") {
+                $tabela->set_conteudo($row);
+            }
+
+
             $tabela->set_label(["Primeiro na Vaga", "Vaga Posterior", "Vaga Posterior"]);
             $tabela->set_width([33, 33, 33]);
             $tabela->set_align(["left", "left", "left"]);

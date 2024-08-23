@@ -24,9 +24,6 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase');
 
-    # pega o id (se tiver)
-    $id = soNumeros(get('id'));
-
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -39,13 +36,16 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', 6));
     $parametroVagas = post('parametroVagas', get_session('parametroVagas', "Todas"));
+    $idServidor = get('idServidor', get_session('idServidor'));
+    $idServidorPesquisado = get('idServidorPesquisado', get_session('idServidorPesquisado'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroVagas', $parametroVagas);
-
+    set_session('idServidor', $idServidor);
+    set_session('idServidorPesquisado', $idServidorPesquisado);
+    
     # Define a função usada em dois momentos nesse codigo
-
     function botaoServidoresAtivosVagas($sigla = null) {
         # Ver servidores ativos
         $servAtivos = new Link(null, "../grhRelatorios/geral.concursados.ativos.admTec.php?sigla={$sigla}");
@@ -81,13 +81,21 @@ if ($acesso) {
         $servAtivos->set_title("Exibe a relação de vagas disponíveis");
         $servAtivos->show();
     }
-    
+
     function botaoVagasOcupadas($sigla = null) {
         # Ver servidores ativos
         $servAtivos = new Link(null, "../grhRelatorios/vagas.admTec.disponiveis.php?parametroCargo={$sigla}&parametroVagas=Ocupadas");
         $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
         $servAtivos->set_target("_blank");
         $servAtivos->set_title("Exibe a relação de vagas ocupadas");
+        $servAtivos->show();
+    }
+
+    function botaoEditaServidorPossivel($id = null) {
+        # Ver servidores ativos
+        $servAtivos = new Link(null, "?fase=editaServidor2&idServidorPesquisado={$id}");
+        $servAtivos->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+        $servAtivos->set_title("Editar servidor");
         $servAtivos->show();
     }
 
@@ -110,12 +118,23 @@ if ($acesso) {
 
     $menu = new MenuBar();
 
-    # Voltar
-    $botao = new Link("Voltar", "areaConcursoAdm.php");
-    $botao->set_class('button');
-    $botao->set_title('Voltar a página anterior');
-    $botao->set_accessKey('V');
-    $menu->add_link($botao, "left");
+    if ($fase <> "listaPossiveisServidores") {
+
+        # Voltar
+        $botao = new Link("Voltar", "areaConcursoAdm.php");
+        $botao->set_class('button');
+        $botao->set_title('Voltar a página anterior');
+        $botao->set_accessKey('V');
+        $menu->add_link($botao, "left");
+    } else {
+        # Voltar
+        $botao = new Link("Voltar", "?");
+        $botao->set_class('button');
+        $botao->set_title('Voltar a página anterior');
+        $botao->set_accessKey('V');
+        $menu->add_link($botao, "left");
+    }
+
     $menu->show();
 
     ################################################################
@@ -253,7 +272,7 @@ if ($acesso) {
                             continue;
                         } elseif ($pessoal->get_idSituacao($concurso->get_idOcupantePosteriorPosterior($item[0])) == 1) {
                             continue;
-                        }else{
+                        } else {
                             $arrayDisponiveis[] = $item;
                         }
                     }
@@ -279,6 +298,7 @@ if ($acesso) {
             $tabela->set_width([33, 33, 33]);
             $tabela->set_align(["left", "left", "left"]);
             $tabela->set_numeroOrdem(true);
+            $tabela->set_bordaInterna(true);
 
             $tabela->set_classe(["Concurso", "Concurso", "Concurso", "Concurso"]);
             $tabela->set_metodo(["exibeServidorEConcurso", "exibeOcupantePosteriorComBotao", "exibeOcupantePosteriorPosteriorComBotao"]);
@@ -570,9 +590,8 @@ if ($acesso) {
 
         case "relatorioAtivos" :
 
-            $id = get("id");
             $vaga = new VagaAdm();
-            $dados = $vaga->get_dados($id);
+            $dados = $vaga->get_dados($idServidor);
 
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos');
@@ -588,8 +607,71 @@ if ($acesso) {
             br(8);
             aguarde();
 
-            set_session('idServidorPesquisado', $id);
+            set_session('idServidorPesquisado', $idServidor);
             set_session('origem', "areaVagasAdm.php");
+            loadPage('servidorConcurso.php');
+            break;
+
+        ################################################################
+
+        case "listaPossiveisServidores" :
+
+            # Exibe os dados do servidor
+            get_DadosServidor($idServidor);
+
+            $dtSaida = date_to_bd($pessoal->get_dtSaida($idServidor));
+            $idTipoCargo = $pessoal->get_idTipoCargoServidor($idServidor);
+
+            $select = "SELECT DIR,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              dtAdmissao,
+                              dtDemissao,
+                              tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                           
+               WHERE situacao <> 1
+                 AND idTipoCargo = {$idTipoCargo}
+                 AND dtAdmissao >= '{$dtSaida}'
+                 AND idServidorOcupanteAnterior IS null
+                 AND (idPerfil = 1 OR idPerfil = 4)
+                 AND idConcurso IS NOT NULL
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+            ORDER BY DIR, tbcargo.nome, dtDemissao";
+
+            $conteudo = $pessoal->select($select);
+            $numConteudo = $pessoal->count($select);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_titulo("Possíveis Servidores Para Esta Vaga");
+            $tabela->set_label(["diretoria / Centro", "Servidor", "Concurso", "Lotação", "Perfil", "Situação", "Admissão", "Saída", "Editar"]);
+            $tabela->set_width([10, 30, 20, 20, 10, 10, 10, 10]);
+            $tabela->set_align(["Center", "left"]);
+            
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_classe([null, "pessoal", "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacao", "get_concurso", "get_lotacao", "get_perfil", "get_situacao"]);
+            $tabela->set_funcao([null, null, null, null, null, null, "date_to_php", "date_to_php", "botaoEditaServidorPossivel"]);
+            $tabela->show();
+            break;
+
+        ################################################################
+
+        case "editaServidor2" :
+            br(8);
+            aguarde();
+
+            set_session('idServidorPesquisado', $idServidorPesquisado);
+            set_session('origem', "areaVagasAdm.php?fase=listaPossiveisServidores&idServidor={$idServidor}");
             loadPage('servidorConcurso.php');
             break;
 

@@ -727,7 +727,40 @@ class Concurso {
             span("Vaga Ocupada", "verde");
         } else {
             if (empty($idOcupante)) {
+
                 span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+                br(2);
+
+                # Pega possíveis ocupantes do cargo
+                $numServ = $this->get_numPossiveisServidores($idServidor);
+
+                hr("grosso");
+                br();
+
+                if ($numServ > 0) {
+
+                    # Limita a página
+                    $grid = new Grid();
+                    $grid->abreColuna(8);
+
+                    echo "Existem {$numServ} servidores que poderiam ocupar esta vaga.";
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(4);
+
+                    $botao = new BotaoGrafico();
+                    $botao->set_label('Ver');
+                    $botao->set_url("?fase=listaPossiveisServidores&idServidor={$idServidor}");
+                    $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+                    $botao->set_title('Edita o servidor');
+                    $botao->show();
+
+                    $grid->fechaColuna();
+                    $grid->fechaGrid();
+                } else {
+
+                    echo "Não existem servidores que poderiam ocupar esta vaga.";
+                }
             } else {
 
                 # Limita a página
@@ -742,7 +775,7 @@ class Concurso {
                 # Cria um menu
                 $menu = new MenuBar("small button-group");
 
-                $link = new Button("Editar", "?fase=editaServidor&id={$idOcupante}", "Editar servidor");
+                $link = new Button("Editar", "?fase=editaServidor&idServidor={$idOcupante}", "Editar servidor");
                 $link->set_class('primary button');
                 $menu->add_link($link, "right");
 
@@ -823,7 +856,40 @@ class Concurso {
                 $idOcupante2 = $this->get_idOcupantePosterior($idOcupante);
 
                 if (empty($idOcupante2)) {
+
                     span("Vaga Não Ocupada<br/>Vaga Disponível", "vermelho");
+                    br(2);
+
+                    # Pega possíveis ocupantes do cargo
+                    $numServ = $this->get_numPossiveisServidores($idOcupante);
+
+                    hr("grosso");
+                    br();
+
+                    if ($numServ > 0) {
+
+                        # Limita a página
+                        $grid = new Grid();
+                        $grid->abreColuna(8);
+
+                        echo "Existem {$numServ} servidores que poderiam ocupar esta vaga.";
+
+                        $grid->fechaColuna();
+                        $grid->abreColuna(4);
+
+                        $botao = new BotaoGrafico();
+                        $botao->set_label('Ver');
+                        $botao->set_url("?fase=listaPossiveisServidores&idServidor={$idOcupante}");
+                        $botao->set_imagem(PASTA_FIGURAS_GERAIS . 'olho.png', 20, 20);
+                        $botao->set_title('Edita o servidor');
+                        $botao->show();
+
+                        $grid->fechaColuna();
+                        $grid->fechaGrid();
+                    } else {
+
+                        echo "Não existem servidores que poderiam ocupar esta vaga.";
+                    }
                 } else {
 
                     # Limita a página
@@ -1503,4 +1569,37 @@ class Concurso {
     }
 
     ###########################################################
+
+    public function get_numPossiveisServidores($idServidor = null) {
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+
+        $dtSaida = date_to_bd($pessoal->get_dtSaida($idServidor));
+        $idTipoCargo = $pessoal->get_idTipoCargoServidor($idServidor);
+
+        $select = "SELECT DIR,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              dtAdmissao,
+                              dtDemissao,
+                              tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                           
+               WHERE situacao <> 1
+                 AND idTipoCargo = {$idTipoCargo}
+                 AND dtAdmissao >= '{$dtSaida}'
+                 AND idServidorOcupanteAnterior IS null
+                 AND (idPerfil = 1 OR idPerfil = 4)
+                 AND idConcurso IS NOT NULL
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+            ORDER BY DIR, tbcargo.nome, dtDemissao";
+
+        return $pessoal->count($select);
+    }
 }

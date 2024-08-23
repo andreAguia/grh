@@ -169,7 +169,7 @@ if ($acesso) {
                                      LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                           
                WHERE situacao <> 1
                  AND idTipoCargo = {$idCargoPesquisado}
-                 AND dtDemissao < '{$dtAdmPesquisado}'
+                 AND dtDemissao <= '{$dtAdmPesquisado}'
                  AND tbservidor.idServidor NOT IN (SELECT idServidorOcupanteAnterior FROM tbservidor WHERE idServidorOcupanteAnterior IS NOT null AND idServidor <> {$idServidorPesquisado})
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND idConcurso IS NOT NULL

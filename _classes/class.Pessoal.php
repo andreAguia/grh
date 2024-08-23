@@ -460,13 +460,13 @@ class Pessoal extends Bd {
      * @param	string $idServidor  idServidor do servidor
      */
     public function get_lotacao($idServidor) {
-        $select = 'SELECT UADM,
+        $select = "SELECT UADM,
                           DIR,
                           GER,
                           idLotacao 
                      FROM tbhistlot LEFT JOIN tblotacao on tbhistlot.lotacao = tblotacao.idlotacao
-                    WHERE tbhistlot.idServidor = ' . $idServidor . '
-                 ORDER BY data DESC';
+                    WHERE tbhistlot.idServidor = {$idServidor}
+                 ORDER BY data DESC";
 
         $row = parent::select($select, false);
         $count = parent::count($select);

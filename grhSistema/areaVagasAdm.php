@@ -44,8 +44,9 @@ if ($acesso) {
     set_session('parametroVagas', $parametroVagas);
     set_session('idServidor', $idServidor);
     set_session('idServidorPesquisado', $idServidorPesquisado);
-    
+
     # Define a função usada em dois momentos nesse codigo
+
     function botaoServidoresAtivosVagas($sigla = null) {
         # Ver servidores ativos
         $servAtivos = new Link(null, "../grhRelatorios/geral.concursados.ativos.admTec.php?sigla={$sigla}");
@@ -627,7 +628,6 @@ if ($acesso) {
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
-                              tbservidor.idServidor,
                               dtAdmissao,
                               dtDemissao,
                               tbservidor.idServidor
@@ -641,7 +641,7 @@ if ($acesso) {
                  AND (idPerfil = 1 OR idPerfil = 4)
                  AND idConcurso IS NOT NULL
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-            ORDER BY DIR, tbcargo.nome, dtDemissao";
+            ORDER BY DIR, tbcargo.nome";
 
             $conteudo = $pessoal->select($select);
             $numConteudo = $pessoal->count($select);
@@ -650,16 +650,16 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($conteudo);
             $tabela->set_titulo("Possíveis Servidores Para Esta Vaga");
-            $tabela->set_label(["diretoria / Centro", "Servidor", "Concurso", "Lotação", "Perfil", "Situação", "Admissão", "Saída", "Editar"]);
-            $tabela->set_width([10, 30, 20, 20, 10, 10, 10, 10]);
-            $tabela->set_align(["Center", "left"]);
-            
+            $tabela->set_label(["Diretoria", "Lotação", "Servidor", "Concurso", "Situação", "Admissão", "Saída", "Editar"]);
+            $tabela->set_width([10, 20, 20, 20, 10, 10, 10]);
+            $tabela->set_align(["Center", "left", "left"]);
+
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
-            $tabela->set_classe([null, "pessoal", "pessoal", "pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", "get_concurso", "get_lotacao", "get_perfil", "get_situacao"]);
-            $tabela->set_funcao([null, null, null, null, null, null, "date_to_php", "date_to_php", "botaoEditaServidorPossivel"]);
+            $tabela->set_classe([null, "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo([null, "get_lotacaoSimples", "get_nomeECargoSimplesEPerfil", "get_concurso", "get_situacao"]);
+            $tabela->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php", "botaoEditaServidorPossivel"]);
             $tabela->show();
             break;
 

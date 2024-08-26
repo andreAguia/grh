@@ -275,8 +275,63 @@ if ($acesso) {
                 $tabela->show();
             }
 
+
+
+
+
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
+
+            $grid3 = new Grid();
+            $grid3->abreColuna(6);
+
+            # Exibe o Processo de férias
+            $ferias->exibeProcesso($pessoal->get_idLotacao($idServidorPesquisado), date("Y"));
+
+            $grid3->fechaColuna();
+            $grid3->abreColuna(6);
+
+            # Ramais
+            $lotacao = new Lotacao();
+            $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
+            $ramais = $lotacao->getRamais($idLotacao);
+
+            #tituloTable('Ramais');
+            $painel = new Callout("success");
+            $painel->abre();
+
+            if ($idLotacao <> 113) {
+
+                p($pessoal->get_lotacao($idServidorPesquisado), "pramalLotacao");
+                p("Tel / Ramais", "pramalDetalhe");
+
+                if (empty($ramais)) {
+                    p("---", "center");
+                } else {
+                    p(nl2br2($ramais), "f12");
+                }
+            } else {
+
+                # Pega os dados da cessao
+                $cessao = new Cessao();
+                $dados = $cessao->getDados($cessao->getidCessaoVigente($idServidorPesquisado));
+
+                p($dados["orgao"], "pramalLotacao");
+                p("Tel / Ramais / E-mails", "pramalDetalhe");
+
+                if (!empty($dados["orgaoTel"])) {
+                    p("Tel: " . $dados["orgaoTel"], "f12", "center");
+                }
+
+                if (!empty($dados["orgaoEmail"])) {
+                    p("Email: " . $dados["orgaoEmail"], "f12");
+                }
+            }
+
+            $painel->fecha();
+
+            $grid3->fechaColuna();
+            $grid3->fechaGrid();
 
             # Exibe as férias pendentes            
             $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);

@@ -635,8 +635,7 @@ if ($acesso) {
                                      LEFT JOIN tbcargo USING (idCargo)
                                      LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                           
-               WHERE situacao <> 1
-                 AND idTipoCargo = {$idTipoCargo}
+               WHERE idTipoCargo = {$idTipoCargo}
                  AND dtAdmissao >= '{$dtSaida}'
                  AND idServidorOcupanteAnterior IS null
                  AND (idPerfil = 1 OR idPerfil = 4)

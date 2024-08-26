@@ -651,7 +651,7 @@ if ($acesso) {
             $tabela->set_conteudo($conteudo);
             $tabela->set_titulo("Possíveis Servidores Para Esta Vaga");
             $tabela->set_label(["Diretoria", "Lotação", "Servidor", "Concurso", "Situação", "Admissão", "Saída", "Editar"]);
-            $tabela->set_width([10, 20, 20, 20, 10, 10, 10]);
+            $tabela->set_width([10, 15, 25, 20, 10, 10, 10]);
             $tabela->set_align(["Center", "left", "left"]);
 
             $tabela->set_rowspan(0);

@@ -33,9 +33,25 @@ if ($acesso) {
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Botão voltar
-    botaoVoltar('grh.php');
+    # Cria um menu
+    $menu1 = new MenuBar();
+
+    # Voltar
+    $botaoVoltar = new Link("Voltar", "grh.php");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Voltar a página anterior');
+    $botaoVoltar->set_accessKey('V');
+    $menu1->add_link($botaoVoltar, "left");
     
+    # Gerador de Relat
+    $botaoVoltar = new Link("Gerador de Relatórios", "geradorRelatorios.php");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Gera relatórios');
+    $botaoVoltar->set_accessKey('G');
+    $menu1->add_link($botaoVoltar, "right");
+
+    $menu1->show();
+
     # Verifica se veio da fase de ferias e se tem que mudar a data de entrega
     $dataDev = post("dtEntrega");
 
@@ -153,7 +169,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Sem Tempo Averbado', '../grhRelatorios/estatutarios.ativos.semTempoAverbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutário - Com o Tempo Averbado e de Uenf', '../grhRelatorios/estatutarios.ativos.tempoUenf.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Estatutários - Análise de Aposentadoria', '../grhRelatorios/estatutarios.ativos.analise.aposentadoria.php');
-                       
+
             $menu->add_item('titulo1', 'Servidores Aposentados');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Geral', '../grhRelatorios/aposentados.geral.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Cargo - Professores', '../grhRelatorios/aposentados.professor.porCargo.php');
@@ -335,7 +351,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Etiquetas');
             $menu->add_item('titulo1', 'Etiquetas');
             $menu->add_item('linkWindow', 'Etiquetas Geral', '../grhRelatorios/etiqueta.geral.php');
-            
+
             $menu->add_item('titulo1', 'Listagem de Apoio');
             $menu->add_item('linkWindow', 'Listagem Geral para Checagem', '../grhRelatorios/etiqueta.geral.check.php');
 

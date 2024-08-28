@@ -44,7 +44,7 @@ if ($acesso) {
     $menu1->add_link($botaoVoltar, "left");
 
     # Gerador de Relat
-    $botaoVoltar = new Link("Gerador de Relatórios", "geradorRelatorios.php");
+    $botaoVoltar = new Link("Gerador de Relatórios", "geradorRelatorios.php?grh=true");
     $botaoVoltar->set_class('button');
     $botaoVoltar->set_title('Gera relatórios');
     $botaoVoltar->set_accessKey('G');

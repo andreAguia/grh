@@ -2,7 +2,7 @@
 
 /**
  * Rotina do menu de relatório
- *  
+ *
  * By Alat
  */
 # Reservado para o servidor logado
@@ -14,16 +14,28 @@ include ("_config.php");
 # Colunas
 $postIdfuncional = post('postIdFuncional');
 $postMatricula = post('postMatricula');
+$postIdMatricula = post('postIdMatricula');
 $postNome = post('postNome');
 $postCargo = post('postCargo');
+$postComissao = post('postComissao');
 $postLotacao = post('postLotacao');
 $postPerfil = post('postPerfil');
 $postSituacao = post('postSituacao');
+$postConcurso = post('postConcurso');
 $postDtAdmissao = post('postDtAdmissao');
 $postDtSaida = post('postDtSaida');
+$postEmailUenf = post('postEmailUenf');
+$postEndereco = post('postEndereco');
+$postCpf = post('postCpf');
+
+$postPai = post('postPai');
+$postMae = post('postMae');
+$postNacionalidade = post('postNacionalidade');
+$postNaturalidade = post('postNaturalidade');
 
 # Filtros
 $parametroCargo = post('parametroCargo');
+$parametroCargoComissao = post('parametroCargoComissao');
 $parametroLotacao = post('parametroLotacao');
 $parametroSituacao = post('parametroSituacao', 1);
 $parametroPerfil = post('parametroPerfil', 1);
@@ -39,6 +51,15 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+
+    # Log
+    $grh = get('grh', false);
+    if ($grh) {
+        # Grava no log a atividade
+        $atividade = "Visualizou o gerador personalizado de relatório";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+    }
 
     # Começa uma nova página
     $page = new Page();
@@ -78,8 +99,10 @@ if ($acesso) {
     $grid->fechaColuna();
     $grid->abreColuna(4);
 
-    tituloTable("Atenção");
-    callout("Esta rotina ainda está sendo desenvolvida.<br/>Peço que aguarde alguns dias para utilizá-la.");
+    tituloTable("Defina os Perâmetros");
+
+    # Define o tamanho das colunas
+    $tamColunas = 3;
 
     # Monta o formulário
     $form = new Form('?');
@@ -94,7 +117,7 @@ if ($acesso) {
     $controle->set_title('Idfuncional');
     $controle->set_valor($postIdfuncional);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
     $controle->set_fieldset("Informe as Colunas:");
     $form->add_item($controle);
 
@@ -104,7 +127,16 @@ if ($acesso) {
     $controle->set_title('Matrícula do servidor');
     $controle->set_valor($postMatricula);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
+    # Idfuncional & Matricula
+    $controle = new Input('postIdMatricula', 'simnao', 'Id & Mat.:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Idfuncional e Matrícula do servidor na mesma coluna');
+    $controle->set_valor($postIdMatricula);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Nome
@@ -113,7 +145,7 @@ if ($acesso) {
     $controle->set_title('Nome do Servidor');
     $controle->set_valor($postNome);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Cargo
@@ -122,7 +154,16 @@ if ($acesso) {
     $controle->set_title('Cargo do Servidor');
     $controle->set_valor($postCargo);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
+    # Cargo em Comissao
+    $controle = new Input('postComissao', 'simnao', 'Comissão:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Cargo em Comissão do Servidor');
+    $controle->set_valor($postComissao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Lotação
@@ -131,7 +172,7 @@ if ($acesso) {
     $controle->set_title('Lotação do Servidor');
     $controle->set_valor($postLotacao);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Perfil
@@ -140,7 +181,43 @@ if ($acesso) {
     $controle->set_title('Perfil do Servidor');
     $controle->set_valor($postPerfil);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
+    # Concurso
+    $controle = new Input('postConcurso', 'simnao', 'Concurso:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Concurso do Servidor');
+    $controle->set_valor($postConcurso);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # E-mail Uenf
+    $controle = new Input('postEmailUenf', 'simnao', 'E-mail:', 1);
+    $controle->set_size(5);
+    $controle->set_title('E-mail do Servidor');
+    $controle->set_valor($postEmailUenf);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Endereço
+    $controle = new Input('postEndereco', 'simnao', 'Endereço:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Endereço do Servidor');
+    $controle->set_valor($postEndereco);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Cpf
+    $controle = new Input('postCpf', 'simnao', 'Cpf:', 1);
+    $controle->set_size(5);
+    $controle->set_title('cpf do Servidor');
+    $controle->set_valor($postCpf);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Situação
@@ -149,25 +226,61 @@ if ($acesso) {
     $controle->set_title('Situação do Servidor');
     $controle->set_valor($postSituacao);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Data de Admissão
     $controle = new Input('postDtAdmissao', 'simnao', 'Admissão:', 1);
     $controle->set_size(5);
-    $controle->set_title('Admissão do Servidor');
+    $controle->set_title('Data de admissão do Servidor');
     $controle->set_valor($postDtAdmissao);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
-    # Data de Admissão
+    # Data de Saída
     $controle = new Input('postDtSaida', 'simnao', 'Saída:', 1);
     $controle->set_size(5);
-    $controle->set_title('data de saída do Servidor');
+    $controle->set_title('Data de saída do Servidor');
     $controle->set_valor($postDtSaida);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_col(4);
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Nome do Pai
+    $controle = new Input('postPai', 'simnao', 'Pai:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Nome do pai do Servidor');
+    $controle->set_valor($postPai);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Nome da Mãe
+    $controle = new Input('postMae', 'simnao', 'Mãe:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Nome da mãe do Servidor');
+    $controle->set_valor($postMae);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Nacionalidade
+    $controle = new Input('postNacionalidade', 'simnao', 'Nacionalidade:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Nacionalidade');
+    $controle->set_valor($postNacionalidade);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Naturalidade
+    $controle = new Input('postNaturalidade', 'simnao', 'Naturalidade:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Naturalidade');
+    $controle->set_valor($postNaturalidade);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     #################################### Filtro #######################################
@@ -177,10 +290,10 @@ if ($acesso) {
      */
 
     # Pega os dados
-    $result1 = $pessoal->select('SELECT tbcargo.idCargo, 
+    $result1 = $pessoal->select('SELECT tbcargo.idCargo,
                                                 concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
                                            FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
-                                                        LEFT JOIN tbarea USING (idArea)    
+                                                        LEFT JOIN tbarea USING (idArea)
                                        ORDER BY 2');
 
     # cargos por nivel
@@ -202,6 +315,26 @@ if ($acesso) {
     $controle->set_valor($parametroCargo);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_fieldset("Informe o Filtro:");
+    $controle->set_linha(1);
+    $controle->set_col(12);
+    $form->add_item($controle);
+
+    /*
+     *  Cargos em Comissão
+     */
+
+    $result = $pessoal->select('SELECT tbtipocomissao.idTipoComissao,concat(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao)
+                                          FROM tbtipocomissao
+                                         WHERE ativo
+                                      ORDER BY tbtipocomissao.simbolo');
+    array_unshift($result, array(null, 'Todos'));
+
+    $controle = new Input('parametroCargoComissao', 'combo', 'Cargo em Comissão:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Cargo em Comissão');
+    $controle->set_array($result);
+    $controle->set_valor($parametroCargoComissao);
+    $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
     $controle->set_col(12);
     $form->add_item($controle);
@@ -328,6 +461,16 @@ if ($acesso) {
         $function[] = "dv";
     }
 
+    # IdMatrícula
+    if ($postIdMatricula) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "IdFuncional / Matrícula";
+        $align[] = "center";
+        $class[] = "pessoal";
+        $method[] = "get_idFuncionalEMatricula";
+        $function[] = "";
+    }
+
     # Nome
     if ($postNome) {
         $field[] = "tbpessoa.nome";
@@ -348,6 +491,16 @@ if ($acesso) {
         $function[] = "";
     }
 
+    # Cargo em Comissão
+    if ($postComissao) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Comissão";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_cargoComissao2";
+        $function[] = "";
+    }
+
     # Lotação
     if ($postLotacao) {
         $field[] = "tbservidor.idServidor";
@@ -365,6 +518,46 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "Pessoal";
         $method[] = "get_perfil";
+        $function[] = "";
+    }
+
+    # Concurso
+    if ($postConcurso) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Concurso";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_concurso";
+        $function[] = "";
+    }
+    
+    # E-mail Uenf
+    if ($postEmailUenf) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "E-mail Uenf";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_emailUenf";
+        $function[] = "";
+    }
+    
+    # Endereço
+    if ($postEndereco) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Endereço";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_endereco";
+        $function[] = "";
+    }
+    
+    # Cpf
+    if ($postCpf) {
+        $field[] = "tbpessoa.idPessoa";
+        $label[] = "Cpf";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_cpf";
         $function[] = "";
     }
 
@@ -397,6 +590,46 @@ if ($acesso) {
         $method[] = "get_situacao";
         $function[] = "";
     }
+    
+    # Nome do Pai
+    if ($postPai) {
+        $field[] = "tbpessoa.nomePai";
+        $label[] = "Nome do Pai";
+        $align[] = "left";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
+    
+    # Nome da Mãe
+    if ($postMae) {
+        $field[] = "tbpessoa.nomeMae";
+        $label[] = "Nome da Mãe";
+        $align[] = "left";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
+    
+    # Nacionalidade
+    if ($postNacionalidade) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Nacionalidade";
+        $align[] = "left";
+        $class[] = "pessoal";
+        $method[] = "get_nacionalidade";
+        $function[] = "";
+    }
+    
+    # Naturalidade
+    if ($postNaturalidade) {
+        $field[] = "tbpessoa.naturalidade";
+        $label[] = "Naturalidade";
+        $align[] = "left";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
 
     #################################### Monta a tabela #######################################
 
@@ -425,6 +658,12 @@ if ($acesso) {
                                         LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                         LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)";
+
+        # Cargo em comissão
+        if (!empty($parametroCargoComissao)) {
+            $select .= ' LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                         LEFT JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)';
+        }
 
         # Adiciona filtro
         $select .= " WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
@@ -462,11 +701,14 @@ if ($acesso) {
             }
         }
 
+        # cargo em comissão
+        if (!empty($parametroCargoComissao)) {
+            $select .= " AND tbcomissao.dtExo is null AND tbcomissao.tipo != 3 AND tbtipocomissao.idTipoComissao = '{$parametroCargoComissao}'";
+        }
+
 
         # Estabelece a ordenação
         $select .= " ORDER BY {$parametroOrdena} {$parametroOrdenaTipo}";
-
-        #echo $select;
 
         $row = $pessoal->select($select);
 
@@ -492,11 +734,11 @@ if ($acesso) {
         tituloTable("Relatório");
         $painel = new Callout();
         $painel->abre();
-        
+
         br(8);
         p("Nenhum registro encontrado", "center", "f16");
-        br(8);
-        
+        br(15);
+
         $painel->fecha();
     }
 

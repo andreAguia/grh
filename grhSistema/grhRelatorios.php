@@ -42,7 +42,7 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-    
+
     # Gerador de Relat
     $botaoVoltar = new Link("Gerador de Relatórios", "geradorRelatorios.php");
     $botaoVoltar->set_class('button');

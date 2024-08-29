@@ -343,7 +343,7 @@ if ($acesso) {
 
             $select = '  
             SELECT CASE 
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "10 a 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 18 AND 19 THEN "18 e 19"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"
@@ -459,7 +459,7 @@ if ($acesso) {
 
             $select = '  
             SELECT CASE 
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "10 a 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 18 AND 19 THEN "18 e 19"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"
@@ -566,7 +566,7 @@ if ($acesso) {
 
             $select = '  
             SELECT CASE 
-                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 10 AND 19 THEN "10 a 19"
+                   WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 18 AND 19 THEN "18 e 19"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 20 AND 29 THEN "20 a 29"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 30 AND 39 THEN "30 a 39"
                    WHEN (TIMESTAMPDIFF(YEAR, dtNasc, NOW())) BETWEEN 40 AND 49 THEN "40 a 49"

@@ -633,7 +633,7 @@ if ($acesso) {
     }
 
     # Nome, Cargo, Lotação, Perfil e Situação
-    if ($postNomeCargoLotacaoPerfil) {
+    if ($postNomeCargoLotacaoPerfilSituacao) {
         $field[] = "tbservidor.idServidor";
         $label[] = "Servidor";
         $align[] = "left";

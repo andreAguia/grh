@@ -25,6 +25,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros
+    $numMatriculaInicial = get('numMatriculaInicial', post('numMatriculaInicial'));
+    $numMatriculaFinal = get('numMatriculaFinal', post('numMatriculaFinal'));
     $numEtiquetasInicial = get('numEtiquetasInicial', post('numEtiquetasInicial', 1));
     $numEtiquetasFinal = get('numEtiquetasFinal', post('numEtiquetasFinal', 1));
     $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
@@ -38,6 +40,22 @@ if ($acesso) {
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
+        array('nome' => 'numMatriculaInicial',
+            'label' => 'Matrícula Inicial:',
+            'tipo' => 'texto',
+            'size' => 5,
+            'padrao' => $numMatriculaInicial,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'numMatriculaFinal',
+            'label' => 'Número Final:',
+            'tipo' => 'texto',
+            'size' => 5,
+            'padrao' => $numMatriculaFinal,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
         array('nome' => 'numEtiquetasInicial',
             'label' => 'Número Inicial:',
             'tipo' => 'combo',
@@ -46,7 +64,7 @@ if ($acesso) {
             'padrao' => $numEtiquetasInicial,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'numEtiquetasFinal',
             'label' => 'Número Final:',
             'tipo' => 'combo',
@@ -55,7 +73,7 @@ if ($acesso) {
             'padrao' => $numEtiquetasFinal,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'conteudo',
             'label' => 'Conteúdo:',
             'tipo' => 'combo',
@@ -96,6 +114,16 @@ if ($acesso) {
     if ($situacao <> "*") {
         $select .= " AND situacao = {$situacao}";
     }
+    
+    if (!empty($numMatriculaInicial)) {
+        $select .= " AND matricula >= {$numMatriculaInicial}";
+    }
+    
+    if (!empty($numMatriculaFinal)) {
+        $select .= " AND matricula <= {$numMatriculaFinal}";
+    }
+    
+    
 
     $select .= " ORDER BY matricula";
 

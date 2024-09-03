@@ -212,8 +212,7 @@ if ($acesso) {
             # Matrícula, nome ou id
             if (!is_null($parametroNomeMat)) {
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= " AND ((";
-                    $select .= "tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                 } else {
 
                     # Verifica se tem espaços

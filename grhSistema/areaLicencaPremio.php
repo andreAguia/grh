@@ -212,42 +212,53 @@ if ($acesso) {
             # Matrícula, nome ou id
             if (!is_null($parametroNomeMat)) {
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' AND ((';
+                    $select .= " AND ((";
+                    $select .= "tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                 } else {
-                    $select .= ' AND (';
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNomeMat, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNomeMat);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    }
                 }
-
-                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
+                
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                 }
             }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
 
             # Processo
             switch ($parametroProcesso) {
                 case "Cadastrado":
-                    $select .= ' AND tbservidor.processoPremio IS NOT null';
+                    $select .= " AND tbservidor.processoPremio IS NOT null";
                     break;
 
                 case "Em Branco":
-                    $select .= ' AND tbservidor.processoPremio IS null';
+                    $select .= " AND tbservidor.processoPremio IS null";
                     break;
             }
 
             # situação
             if (($parametroSituacao <> "*") AND ($parametroSituacao <> "")) {
-                $select .= ' AND (tbservidor.situacao = "' . $parametroSituacao . '")';
+                $select .= " AND (tbservidor.situacao = '{$parametroSituacao}')";
             }
 
             $select .= "  ORDER BY tbpessoa.nome";

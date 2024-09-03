@@ -148,7 +148,7 @@ if ($acesso) {
 
             ##############
             # Pega os dados
-            $select = 'SELECT tbservidor.idServidor,
+            $select = "SELECT tbservidor.idServidor,
                               idDependente,
                               tbparentesco.Parentesco,
                               tbdependente.dtNasc,
@@ -163,7 +163,7 @@ if ($acesso) {
                                            JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
                          AND situacao = 1
-                         AND (';
+                         AND (";
 
             # Pega os parentesco com direito ao auxílio Educação
             $aux = new AuxilioEducacao();
@@ -171,31 +171,69 @@ if ($acesso) {
             $numItem = count($array);
 
             foreach ($array as $item) {
-                $select .= 'tbdependente.idParentesco = ' . $item;
+                $select .= "tbdependente.idParentesco = {$item}";
 
                 if ($numItem > 1) {
                     $numItem--;
-                    $select .= ' OR ';
+                    $select .= " OR ";
                 }
             }
 
-            $select .= ') ';
+            $select .= ") ";
 
+            # nome do parente e do servidor
             if (!empty($parametroNome)) {
-                $select .= ' AND (tbdependente.nome LIKE "%' . $parametroNome . '%"';
-                $select .= ' OR tbpessoa.nome LIKE "%' . $parametroNome . '%") ';
+
+                # Verifica se tem espaços
+                if (strpos($parametroNome, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNome);
+
+                    $contator = 1;
+                    $select .= " AND ((";    
+
+                    # Percorre as palavras para o servidor
+                    foreach ($palavras as $item) {
+
+                        if ($contator == 1) {
+                            $select .= "tbpessoa.nome LIKE '%{$item}%' ";
+                            $contator = 0;
+                        } else {
+                            $select .= "AND tbpessoa.nome LIKE '%{$item}%' ";
+                        }
+                    }
+                    
+                    $contator = 1;
+                    
+                    $select .= ") OR (";                    
+
+                    # Percorre as palavras para o parente
+                    foreach ($palavras as $item) {
+                        if ($contator == 1) {
+                            $select .= "tbdependente.nome LIKE '%{$item}%' ";
+                            $contator = 0;
+                        } else {
+                            $select .= "AND tbdependente.nome LIKE '%{$item}%' ";
+                        }
+                    }
+                    
+                    $select .= ")) ";  
+                } else {
+                    $select .= " AND (tbdependente.nome LIKE '%{$parametroNome}%'";
+                    $select .= " OR tbpessoa.nome LIKE '%{$parametroNome}%') ";
+                }
             }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
 
-            $select .= ' ORDER BY tbpessoa.nome, tbdependente.dtNasc';
+            $select .= " ORDER BY tbpessoa.nome, tbdependente.dtNasc";
 
             #echo $select;
 
@@ -234,7 +272,7 @@ if ($acesso) {
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->set_nomeColunaEditar('Editar Servidor');
-            
+
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
@@ -322,13 +360,13 @@ if ($acesso) {
 
         ################################################################    
         case "comprovante" :
-            
+
             br(8);
             aguarde();
 
             # Informa o $id Servidor
             $dep = new Dependente();
-            
+
             set_session('idServidorPesquisado', $dep->get_idServidor($id));
             set_session('idDependente', $id);
 

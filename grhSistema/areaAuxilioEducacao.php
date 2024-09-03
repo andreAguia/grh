@@ -104,9 +104,9 @@ if ($acesso) {
             $form = new Form('?');
 
             # Nome do Parente
-            $controle = new Input('parametroNome', 'texto', 'Nome do Parente', 1);
+            $controle = new Input('parametroNome', 'texto', 'Nome do Servidor ou Parente', 1);
             $controle->set_size(55);
-            $controle->set_title('Nome, matrícula ou ID:');
+            $controle->set_title('Nome do parente ou do servidor:');
             $controle->set_valor($parametroNome);
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
@@ -182,7 +182,8 @@ if ($acesso) {
             $select .= ') ';
 
             if (!empty($parametroNome)) {
-                $select .= ' AND tbdependente.nome LIKE "%' . $parametroNome . '%"';
+                $select .= ' AND (tbdependente.nome LIKE "%' . $parametroNome . '%"';
+                $select .= ' OR tbpessoa.nome LIKE "%' . $parametroNome . '%") ';
             }
 
             # Lotação

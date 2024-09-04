@@ -131,13 +131,9 @@ if ($acesso) {
             ################################################################
             # Exibe a tabela de Servidores
             $lsv = new LicencaSemVencimentos();
+            
             $lsv->set_linkEditar('?fase=editaServidor');
-
-            if (empty($parametroNome)) {
-                $lsv->exibeLista();
-            } else {
-                $lsv->exibeLista($parametroNome);
-            }
+            $lsv->exibeLista($parametroNome);           
 
             $grid->fechaColuna();
             $grid->fechaGrid();

@@ -382,9 +382,21 @@ class LicencaSemVencimentos {
                                                  JOIN tbpessoa USING (idPessoa)
                     WHERE TRUE";
 
-        # Matrícula, nome ou id ou cpf
+        # Nome
         if (!empty($nome)) {
-            $select .= " AND tbpessoa.nome LIKE '%{$nome}%'";
+
+            # Verifica se tem espaços
+            if (strpos($nome, ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $nome);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (tbpessoa.nome LIKE '%{$nome}%')";
+            }
         }
 
         $select .= " ORDER BY dtSolicitacao desc, dtInicial desc";
@@ -460,9 +472,21 @@ class LicencaSemVencimentos {
                                                  JOIN tbpessoa USING (idPessoa)
                     WHERE TRUE';
 
-        # Matrícula, nome ou id ou cpf
+        # Nome
         if (!empty($nome)) {
-            $select .= ' AND tbpessoa.nome LIKE "%' . $nome . '%"';
+
+            # Verifica se tem espaços
+            if (strpos($nome, ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $nome);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (tbpessoa.nome LIKE '%{$nome}%')";
+            }
             $relatorio->set_subtitulo("Pesquisa: {$nome}");
         }
 

@@ -34,7 +34,7 @@ if ($acesso) {
     $titulo = "Servidores com Solicitação de Redução de Carga Horária";
 
     # Pega os dados
-    $select = "SELECT CASE tipo
+    $select = "SELECT CASE tbreducao.tipo
                     WHEN 1 THEN 'Inicial'
                     WHEN 2 THEN 'Renovação'
                     ELSE '--'
@@ -58,10 +58,23 @@ if ($acesso) {
         $subTitulo .= "Status: " . $statusPossiveis[$parametroStatus][1];
     }
 
-    # nome ou matrícula
+    # nome
     if (!is_null($parametroNomeMat)) {
-        $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
-        $subTitulo .= "Nome: " . $parametroNomeMat;
+
+        # Verifica se tem espaços
+        if (strpos($parametroNomeMat, ' ') !== false) {
+            # Separa as palavras
+            $palavras = explode(' ', $parametroNomeMat);
+
+            # Percorre as palavras
+            foreach ($palavras as $item) {
+                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+            }
+        } else {
+            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+        }
+
+        $subTitulo .= "Nome: " . $parametroNomeMat . " ";
     }
 
     $select .= " ORDER BY status, 

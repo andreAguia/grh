@@ -208,7 +208,7 @@ if ($acesso) {
                 $select .= " AND origem = " . $parametroOrigem;
             }
 
-            # Matrícula, nome ou id
+            # Nome
             if (!is_null($parametroNomeMat)) {
 
                 # Verifica se tem espaços

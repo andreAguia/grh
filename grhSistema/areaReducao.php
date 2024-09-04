@@ -178,11 +178,22 @@ if ($acesso) {
                 $select .= " AND status = " . $parametroStatus;
             }
 
-            # status
+            # Nome
             if (!is_null($parametroNomeMat)) {
-                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
-            }
 
+                # Verifica se tem espaços
+                if (strpos($parametroNomeMat, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNomeMat);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                }
+            }
 
             $select .= " ORDER BY status, 
                     CASE WHEN status = 3 THEN dtTermino END DESC,

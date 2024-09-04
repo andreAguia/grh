@@ -40,7 +40,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
-    $parametroFoto = post('parametroFoto', retiraAspas(get_session('parametroFoto',"Todos")));
+    $parametroFoto = post('parametroFoto', retiraAspas(get_session('parametroFoto', "Todos")));
     $parametroOrdenacao = post('parametroOrdenacao', retiraAspas(get_session('parametroOrdenacao', "tbpessoa.nome asc")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
@@ -186,7 +186,7 @@ if ($acesso) {
             $time_start = microtime(true);
 
             # Pega os dados
-            $select = "SELECT idFuncional,
+            $select = "SELECT idServidor,
                               idServidor,
                               dtAdmissao,
                               idPessoa
@@ -194,8 +194,24 @@ if ($acesso) {
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND situacao = 1
-                          AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                          AND situacao = 1";
+
+            # Nome
+            if (!is_null($parametroNome)) {
+
+                # Verifica se tem espaços
+                if (strpos($parametroNome, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNome);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                }
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -207,54 +223,60 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY {$parametroOrdenacao}";
+
             $resumo = $pessoal->select($select);
-            $resumo2[] = null;
 
-            #echo $select;
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Área de Fotografias dos Servidores");
-            $tabela->set_label(["IdFuncional", "Servidor", "Admissão", "Foto"]);
-            $tabela->set_align(["center", "left"]);
-            $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
-            $tabela->set_classe([null, "Pessoal"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacaoEPerfil"]);
+            if ($pessoal->count($select) > 0) {
+                $resumo2[] = null;
 
+                # Monta a tabela
+                $tabela = new Tabela();
+                $tabela->set_titulo("Área de Fotografias dos Servidores");
+                $tabela->set_label(["IdFuncional", "Servidor", "Admissão", "Foto"]);
+                $tabela->set_align(["center", "left"]);
+                $tabela->set_funcao([null, null, "date_to_php", "exibeFoto"]);
+                $tabela->set_classe(["Pessoal", "Pessoal"]);
+                $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoEPerfil"]);
 
-            if ($parametroFoto == "Com Foto" AND count($resumo) > 0) {
-                foreach ($resumo as $item) {
-                    # Verifica se tem pasta desse servidor
-                    if (file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
-                        $resumo2[] = $item;
+                if ($parametroFoto == "Com Foto" AND count($resumo) > 0) {
+                    foreach ($resumo as $item) {
+                        # Verifica se tem pasta desse servidor
+                        if (file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
+                            $resumo2[] = $item;
+                        }
                     }
+
+                    $tabela->set_conteudo(array_filter($resumo2));
                 }
 
-                $tabela->set_conteudo(array_filter($resumo2));
-            }
+                if ($parametroFoto == "Sem Foto" AND count($resumo) > 0) {
+                    foreach ($resumo as $item) {
 
-            if ($parametroFoto == "Sem Foto" AND count($resumo) > 0) {
-                foreach ($resumo as $item) {
-
-                    # Verifica se tem pasta desse servidor
-                    if (!file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
-                        $resumo2[] = $item;
+                        # Verifica se tem pasta desse servidor
+                        if (!file_exists(PASTA_FOTOS . $item["idPessoa"] . ".jpg")) {
+                            $resumo2[] = $item;
+                        }
                     }
+
+                    $tabela->set_conteudo(array_filter($resumo2));
                 }
 
-               $tabela->set_conteudo(array_filter($resumo2));
+                if ($parametroFoto == "Todos" AND count($resumo) > 0) {
+                    $tabela->set_conteudo($resumo);
+                }
+
+                # Exibe a tabela
+                $tabela->show();
+
+                # Pega o time final
+                $time_end = microtime(true);
+                $time = $time_end - $time_start;
+                p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
+            } else {
+                tituloTable("Área de Fotografias dos Servidores");
+                callout("Nenhum Resgistro encontrado", "secondary");
             }
 
-            if ($parametroFoto == "Todos" AND count($resumo) > 0) {
-                $tabela->set_conteudo($resumo);
-            }
-
-            # Exibe a tabela
-            $tabela->show();
-
-            # Pega o time final
-            $time_end = microtime(true);
-            $time = $time_end - $time_start;
-            p(number_format($time, 4, '.', ',') . " segundos", "right", "f10");
             break;
 
         ##################################################################

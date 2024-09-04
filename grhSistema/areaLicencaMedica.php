@@ -257,16 +257,26 @@ if ($acesso) {
             # Matrícula, nome ou id
             if (!is_null($parametroNomeMat)) {
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' AND ((';
+                    $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                 } else {
-                    $select .= ' AND (';
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNomeMat, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNomeMat);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    }
                 }
 
-                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                 }
             }
 

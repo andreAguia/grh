@@ -73,7 +73,7 @@ if ($acesso) {
 ################################################################
 
         case "exibeLista" :
-            $grid = new Grid();            
+            $grid = new Grid();
             $grid->abreColuna(12);
             br();
 
@@ -86,7 +86,7 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-            
+
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -95,9 +95,9 @@ if ($acesso) {
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
-            
+
             $menu1->show();
-            
+
             ###
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -140,20 +140,20 @@ if ($acesso) {
             # Exibe o Processo de férias            
             $classeFerias = new Ferias();
             $classeFerias->exibeProcesso($parametroLotacao);
-            
+
             ########################################
             # Menu
             tituloTable("Menu");
 
             $menu = new Menu("menuProcedimentos");
 
-            $menu->add_item('titulo', 'Relatórios da Pesquisa');                                  
-            $menu->add_item('linkWindow', "Resumido","../grhRelatorios/treGeral.php");
-            $menu->add_item('linkWindow', "Detalhado","../grhRelatorios/treDetalhado.php");
-            
-            $menu->add_item('titulo', 'Relatório Geral Anual');            
-            $menu->add_item('linkWindow', "Anual de Dias Trabalhados","../grhRelatorios/treAfastamentoAnual.php");
-            $menu->add_item('linkWindow', "Anual de Folgas Fruídas","../grhRelatorios/treFolgaAnual.php");
+            $menu->add_item('titulo', 'Relatórios da Pesquisa');
+            $menu->add_item('linkWindow', "Resumido", "../grhRelatorios/treGeral.php");
+            $menu->add_item('linkWindow', "Detalhado", "../grhRelatorios/treDetalhado.php");
+
+            $menu->add_item('titulo', 'Relatório Geral Anual');
+            $menu->add_item('linkWindow', "Anual de Dias Trabalhados", "../grhRelatorios/treAfastamentoAnual.php");
+            $menu->add_item('linkWindow', "Anual de Folgas Fruídas", "../grhRelatorios/treFolgaAnual.php");
 
             $menu->show();
 
@@ -161,7 +161,7 @@ if ($acesso) {
             # Área Principal
             $grid->fechaColuna();
             $grid->abreColuna(9);
-            
+
             # Pega o time inicial
             $time_start = microtime(true);
 
@@ -186,16 +186,26 @@ if ($acesso) {
             # Matrícula, nome ou id
             if (!is_null($parametroNomeMat)) {
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' AND ((';
+                    $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                 } else {
-                    $select .= ' AND (';
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNomeMat, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNomeMat);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    }
                 }
 
-                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                 }
             }
 

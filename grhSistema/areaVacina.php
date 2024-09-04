@@ -114,7 +114,7 @@ if ($acesso) {
 
             # Formulário de Pesquisa
             $form = new Form('?');
-            
+
             $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
             $controle->set_size(100);
             $controle->set_title('Nome do servidor');
@@ -202,18 +202,28 @@ if ($acesso) {
                           ";
 
                 # Matrícula, nome ou id
-                if (!is_null($parametroNomeMat)) {
+                if (!empty($parametroNomeMat)) {
                     if (is_numeric($parametroNomeMat)) {
-                        $select .= ' AND ((';
+                        $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                     } else {
-                        $select .= ' AND (';
+
+                        # Verifica se tem espaços
+                        if (strpos($parametroNomeMat, ' ') !== false) {
+                            # Separa as palavras
+                            $palavras = explode(' ', $parametroNomeMat);
+
+                            # Percorre as palavras
+                            foreach ($palavras as $item) {
+                                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                            }
+                        } else {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                        }
                     }
 
-                    $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
                     if (is_numeric($parametroNomeMat)) {
-                        $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                        $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                     }
                 }
 
@@ -241,7 +251,7 @@ if ($acesso) {
                 } else {
                     $tabela->set_titulo('Servidores Aptos a Acessar os Campi da Uenf');
                 }
-                
+
                 $tabela->set_label(["Servidor", "Vacinas"]);
                 $tabela->set_width([50, 45]);
                 $tabela->set_conteudo($result);
@@ -292,20 +302,30 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 }
-                
+
                 # Matrícula, nome ou id
-                if (!is_null($parametroNomeMat)) {
+                if (!empty($parametroNomeMat)) {
                     if (is_numeric($parametroNomeMat)) {
-                        $select .= ' AND ((';
+                        $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                     } else {
-                        $select .= ' AND (';
+
+                        # Verifica se tem espaços
+                        if (strpos($parametroNomeMat, ' ') !== false) {
+                            # Separa as palavras
+                            $palavras = explode(' ', $parametroNomeMat);
+
+                            # Percorre as palavras
+                            foreach ($palavras as $item) {
+                                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                            }
+                        } else {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                        }
                     }
 
-                    $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
                     if (is_numeric($parametroNomeMat)) {
-                        $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                        $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                     }
                 }
 
@@ -417,6 +437,32 @@ if ($acesso) {
                     }
                 }
 
+                # Matrícula, nome ou id
+                if (!empty($parametroNomeMat)) {
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    } else {
+
+                        # Verifica se tem espaços
+                        if (strpos($parametroNomeMat, ' ') !== false) {
+                            # Separa as palavras
+                            $palavras = explode(' ', $parametroNomeMat);
+
+                            # Percorre as palavras
+                            foreach ($palavras as $item) {
+                                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                            }
+                        } else {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                        }
+                    }
+
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
+                    }
+                }
+
                 $select .= " ORDER BY lotacao, tbpessoa.nome";
 
                 $result = $pessoal->select($select);
@@ -479,6 +525,32 @@ if ($acesso) {
                         $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                     } else { # senão é uma diretoria genérica
                         $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    }
+                }
+
+                # Matrícula, nome ou id
+                if (!empty($parametroNomeMat)) {
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    } else {
+
+                        # Verifica se tem espaços
+                        if (strpos($parametroNomeMat, ' ') !== false) {
+                            # Separa as palavras
+                            $palavras = explode(' ', $parametroNomeMat);
+
+                            # Percorre as palavras
+                            foreach ($palavras as $item) {
+                                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                            }
+                        } else {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                        }
+                    }
+
+                    if (is_numeric($parametroNomeMat)) {
+                        $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                     }
                 }
 

@@ -39,15 +39,15 @@ if ($acesso) {
     $select = "SELECT idServidor,
                       tbpessoa.nome,
                       CASE origem
-                                WHEN 1 THEN 'Ex-Ofício'
-                                WHEN 2 THEN 'Solicitada'
-                                ELSE '--'
-                              END,
-                              CASE tipo
-                                WHEN 1 THEN 'Inicial'
-                                WHEN 2 THEN 'Renovação'
-                                ELSE '--'
-                              END,
+                           WHEN 1 THEN 'Ex-Ofício'
+                           WHEN 2 THEN 'Solicitada'
+                           ELSE '--'
+                      END,
+                      CASE tbreadaptacao.tipo
+                           WHEN 1 THEN 'Inicial'
+                           WHEN 2 THEN 'Renovação'
+                           ELSE '--'
+                      END,
                       idReadaptacao,
                       processo,
                       idReadaptacao,
@@ -55,11 +55,12 @@ if ($acesso) {
                       idReadaptacao,
                       idReadaptacao,
                       idReadaptacao,                                   
-                      idReadaptacao
+                      idReadaptacao,
+                      ADDDATE(dtInicio,INTERVAL periodo MONTH) as dtTermino
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                  JOIN tbreadaptacao USING (idServidor)
                                  JOIN tbperfil USING (idPerfil)
-                WHERE tbperfil.tipo <> 'Outros' ";
+                 WHERE tbperfil.tipo <> 'Outros' ";
 
     # status
     if ($parametroStatus <> 0) {
@@ -73,14 +74,29 @@ if ($acesso) {
         $subTitulo .= "Origem: " . $origemsPossiveis[$parametroOrigem][1] . " ";
     }
 
-    # nome ou matrícula
+    # nome
     if (!is_null($parametroNomeMat)) {
-        $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+
+        # Verifica se tem espaços
+        if (strpos($parametroNomeMat, ' ') !== false) {
+            # Separa as palavras
+            $palavras = explode(' ', $parametroNomeMat);
+
+            # Percorre as palavras
+            foreach ($palavras as $item) {
+                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+            }
+        } else {
+            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+        }
+
         $subTitulo .= "Nome: " . $parametroNomeMat . " ";
     }
 
-
-    $select .= " ORDER BY status, dtInicio";
+    $select .= " ORDER BY status, 
+                    CASE WHEN status = 3 THEN dtTermino END DESC,
+                    CASE WHEN status <> 3 THEN dtTermino END ASC,
+                    dtInicio";
 
     $resumo = $pessoal->select($select);
 

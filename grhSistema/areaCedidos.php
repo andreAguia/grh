@@ -162,9 +162,21 @@ if ($acesso) {
                       AND situacao = 1
                       AND tbhistlot.lotacao = 113";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 $select .= " ORDER BY tbpessoa.nome";
@@ -205,9 +217,21 @@ if ($acesso) {
                           AND idPerfil = 1
                           AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 $select .= " GROUP BY tbservidor.idFuncional HAVING COUNT(idFuncional) > 1";
@@ -250,9 +274,21 @@ if ($acesso) {
                           AND idPerfil = 1
                           AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim))";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 $select .= " ORDER BY dtInicio desc";
@@ -295,9 +331,21 @@ if ($acesso) {
                         WHERE tbservidor.situacao = 1
                           AND idPerfil = 1";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 $select .= " ORDER BY dtInicio desc";

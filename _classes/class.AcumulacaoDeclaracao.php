@@ -9,7 +9,7 @@ class AcumulacaoDeclaracao {
      */
 ##############################################################
 
-    public function getNumDecEntregues($ano = null, $idLotacao = null, $parametroNome = null) {
+    public function getNumDecEntregues($ano = null, $idLotacao = null, $parametroNomeMat = null) {
 
         /**
          * Informa o número de declarações entregues em um determinado ano de referência
@@ -27,9 +27,21 @@ class AcumulacaoDeclaracao {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbacumulacaodeclaracao.idServidor)
                       AND anoReferencia = '{$ano}'";
 
-        # nome
-        if (!empty($parametroNome)) {
-            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        #  Nome
+        if (!is_null($parametroNomeMat)) {
+
+            # Verifica se tem espaços
+            if (strpos($parametroNomeMat, ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $parametroNomeMat);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+            }
         }
 
         # lotacao
@@ -48,7 +60,7 @@ class AcumulacaoDeclaracao {
 
 ##############################################################
 
-    public function getNumAcumula($ano = null, $idLotacao = null, $parametroNome = null) {
+    public function getNumAcumula($ano = null, $idLotacao = null, $parametroNomeMat = null) {
 
         /**
          * Informa o número de declarações que acumulam eum um determinado ano de referência
@@ -67,9 +79,21 @@ class AcumulacaoDeclaracao {
                       AND acumula
                       AND anoReferencia = '{$ano}'";
 
-        # nome
-        if (!empty($parametroNome)) {
-            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        #  Nome
+        if (!is_null($parametroNomeMat)) {
+
+            # Verifica se tem espaços
+            if (strpos($parametroNomeMat, ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $parametroNomeMat);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+            }
         }
 
         # lotacao
@@ -189,7 +213,7 @@ class AcumulacaoDeclaracao {
 
     ###########################################################
 
-    function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNome = null) {
+    function getnumServidoresAtivos($parametroAno = null, $idLotacao = null, $parametroNomeMat = null) {
 
         /**
          * informa o número de Servidores Estatutários Ativos no ano específico
@@ -206,9 +230,21 @@ class AcumulacaoDeclaracao {
                       AND idPerfil = 1
                       AND year(tbservidor.dtadmissao) <= {$parametroAno}
                       AND (year(tbservidor.dtdemissao) is NULL OR year(tbservidor.dtdemissao) >={$parametroAno})";
-        # nome
-        if (!empty($parametroNome)) {
-            $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+        #  Nome
+        if (!is_null($parametroNomeMat)) {
+
+            # Verifica se tem espaços
+            if (strpos($parametroNomeMat, ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $parametroNomeMat);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+            }
         }
 
         # Lotação

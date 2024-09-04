@@ -39,12 +39,12 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', $acumul->getUltimoAnoDeclaracao()));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
-    $parametroNome = retiraAspas(post('parametroNome', get_session('parametroNome')));
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroLotacao', $parametroLotacao);
-    set_session('parametroNome', $parametroNome);
+    set_session('parametroNomeMat', $parametroNomeMat);
 
     # Começa uma nova página
     $page = new Page();
@@ -136,10 +136,10 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Nome    
-            $controle = new Input('parametroNome', 'texto', 'Servidor:', 1);
+            $controle = new Input('parametroNomeMat', 'texto', 'Servidor:', 1);
             $controle->set_size(100);
             $controle->set_title('Filtra por Nome');
-            $controle->set_valor($parametroNome);
+            $controle->set_valor($parametroNomeMat);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(4);
@@ -172,8 +172,8 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(3);
 
-            $acumul->showResumoGeral($parametroAno, $parametroLotacao, $parametroNome);
-            $acumul->showResumoAcumula($parametroAno, $parametroLotacao, $parametroNome);
+            $acumul->showResumoGeral($parametroAno, $parametroLotacao, $parametroNomeMat);
+            $acumul->showResumoAcumula($parametroAno, $parametroLotacao, $parametroNomeMat);
 
             ######################################################
             # Só exibe se não tiver pesquisa por nome
@@ -227,9 +227,21 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND anoReferencia = '{$parametroAno}'";
 
-            # nome
-            if (!empty($parametroNome)) {
-                $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+            # Nome
+            if (!is_null($parametroNomeMat)) {
+
+                # Verifica se tem espaços
+                if (strpos($parametroNomeMat, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNomeMat);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                }
             }
 
             # lotacao
@@ -319,9 +331,21 @@ if ($acesso) {
                 }
             }
 
-            # nome
-            if (!empty($parametroNome)) {
-                $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+            # Nome
+            if (!is_null($parametroNomeMat)) {
+
+                # Verifica se tem espaços
+                if (strpos($parametroNomeMat, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNomeMat);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                }
             }
 
             $select .= " ORDER BY tbpessoa.nome";

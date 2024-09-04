@@ -19,13 +19,13 @@ $parametroNomeMat = get_session('parametroNomeMat');
 if ($acesso) {
 
     # Conecta ao Banco de Dados
-    $pessoal = new Pessoal();   
+    $pessoal = new Pessoal();
 
     ######   
     # Título & Subtitulo
     $subTitulo = null;
     $titulo = "Servidores com Acumulação de Cargo Público";
-    
+
     # Começa uma nova página
     $page = new Page();
     $page->set_title($titulo);
@@ -48,9 +48,23 @@ if ($acesso) {
                                            JOIN tbpessoa USING (idPessoa)
                         WHERE true";
 
-    # nome
+    # Nome
     if (!is_null($parametroNomeMat)) {
-        $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+
+        # Verifica se tem espaços
+        if (strpos($parametroNomeMat, ' ') !== false) {
+            # Separa as palavras
+            $palavras = explode(' ', $parametroNomeMat);
+
+            # Percorre as palavras
+            foreach ($palavras as $item) {
+                $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+            }
+        } else {
+            $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+        }
+        
+        $subTitulo .= "Nome: " . $parametroNomeMat . " ";
     }
 
     $select .= " ORDER BY conclusao, tbpessoa.nome";
@@ -67,7 +81,7 @@ if ($acesso) {
     $relatorio->set_metodo([null, "get_resultado", "exibePublicacao", "get_nomeEidFuncional", "exibeProcesso", "exibeDadosUenf", "exibeDadosOutroVinculo"]);
     $relatorio->set_titulo($titulo);
     $relatorio->set_subtitulo($subTitulo);
-    $relatorio->set_bordaInterna(true);    
+    $relatorio->set_bordaInterna(true);
     $relatorio->show();
 
     $page->terminaPagina();

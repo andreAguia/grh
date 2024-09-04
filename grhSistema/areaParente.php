@@ -168,8 +168,47 @@ if ($acesso) {
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                  
                          AND situacao = 1";
 
+            # nome do parente e do servidor
             if (!empty($parametroNome)) {
-                $select .= " AND tbdependente.nome LIKE '%{$parametroNome}%'";
+
+                # Verifica se tem espaços
+                if (strpos($parametroNome, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNome);
+
+                    $contator = 1;
+                    $select .= " AND ((";    
+
+                    # Percorre as palavras para o servidor
+                    foreach ($palavras as $item) {
+
+                        if ($contator == 1) {
+                            $select .= "tbpessoa.nome LIKE '%{$item}%' ";
+                            $contator = 0;
+                        } else {
+                            $select .= "AND tbpessoa.nome LIKE '%{$item}%' ";
+                        }
+                    }
+                    
+                    $contator = 1;
+                    
+                    $select .= ") OR (";                    
+
+                    # Percorre as palavras para o parente
+                    foreach ($palavras as $item) {
+                        if ($contator == 1) {
+                            $select .= "tbdependente.nome LIKE '%{$item}%' ";
+                            $contator = 0;
+                        } else {
+                            $select .= "AND tbdependente.nome LIKE '%{$item}%' ";
+                        }
+                    }
+                    
+                    $select .= ")) ";  
+                } else {
+                    $select .= " AND (tbdependente.nome LIKE '%{$parametroNome}%'";
+                    $select .= " OR tbpessoa.nome LIKE '%{$parametroNome}%') ";
+                }
             }
             
             if (($parametroParentesco <> "*") AND ($parametroParentesco <> "")) {

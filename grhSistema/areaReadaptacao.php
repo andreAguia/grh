@@ -133,7 +133,7 @@ if ($acesso) {
             $form = new Form('?fase=listaReadaptacao');
 
             # Nome    
-            $controle = new Input('parametroNomeMat', 'texto', 'Servidor:', 1);
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome do Servidor:', 1);
             $controle->set_size(100);
             $controle->set_title('Filtra por Nome');
             $controle->set_valor($parametroNomeMat);
@@ -208,9 +208,21 @@ if ($acesso) {
                 $select .= " AND origem = " . $parametroOrigem;
             }
 
-            # nome
+            # Matrícula, nome ou id
             if (!is_null($parametroNomeMat)) {
-                $select .= " AND tbpessoa.nome LIKE '%$parametroNomeMat%'";
+
+                # Verifica se tem espaços
+                if (strpos($parametroNomeMat, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNomeMat);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                }
             }
 
             $select .= " ORDER BY status, 

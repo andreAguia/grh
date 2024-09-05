@@ -140,8 +140,24 @@ if ($acesso) {
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
-                          AND idPerfil = 1
-                          AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                          AND idPerfil = 1";
+
+            # Nome
+            if (!is_null($parametroNome)) {
+
+                # Verifica se tem espaços
+                if (strpos($parametroNome, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNome);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                }
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {

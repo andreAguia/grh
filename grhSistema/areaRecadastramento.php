@@ -155,18 +155,28 @@ if ($acesso) {
                         AND tbservidor.situacao = 1';
 
             # Matrícula, nome ou id
-            if (!is_null($parametroNomeMat)) {
+            if (!empty($parametroNomeMat)) {
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' AND ((';
+                    $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                 } else {
-                    $select .= ' AND (';
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNomeMat, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNomeMat);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
+                    }
                 }
 
-                $select .= 'tbpessoa.nome LIKE "%' . $parametroNomeMat . '%")';
-
                 if (is_numeric($parametroNomeMat)) {
-                    $select .= ' OR (tbservidor.matricula LIKE "%' . $parametroNomeMat . '%")
-                                 OR (tbservidor.idfuncional LIKE "%' . $parametroNomeMat . '%"))';
+                    $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
+                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
                 }
             }
 
@@ -304,7 +314,7 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores');
-            $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Atualizado em:', 'Usuario','Editar'));
+            $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Atualizado em:', 'Usuario', 'Editar'));
             #$relatorio->set_width(array(10,30,30,0,10,10,10));
             $tabela->set_align(array("center", "left", "left", "left"));
             $tabela->set_funcao(array(null, null, null, null, "date_to_php"));
@@ -332,7 +342,7 @@ if ($acesso) {
 
             # Coloca o objeto link na tabela			
             $tabela->set_idCampo('idServidor');
-            $tabela->set_link(array("","","","","","",$botao1,$botao2));
+            $tabela->set_link(array("", "", "", "", "", "", $botao1, $botao2));
 
             $tabela->set_conteudo($result);
             $tabela->show();
@@ -712,7 +722,6 @@ if ($acesso) {
 
                 # Grava no log a atividade                
                 $tipoLog = 2;
-
 
                 # Grava o log tbpessoa
                 $intra->registraLog($idUsuario, $data, $atividade, "tbpessoa", $idPessoa, $tipoLog, $idServidor);

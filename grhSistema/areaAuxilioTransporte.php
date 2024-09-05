@@ -279,9 +279,21 @@ if ($acesso) {
                           AND ano = '{$parametroAno}'
                           AND mes = '{$parametroMes}'";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 # lotacao
@@ -319,9 +331,21 @@ if ($acesso) {
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 # lotacao
@@ -360,9 +384,21 @@ if ($acesso) {
                               AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                               AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
 
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                # Nome
+                if (!is_null($parametroNome)) {
+
+                    # Verifica se tem espaços
+                    if (strpos($parametroNome, ' ') !== false) {
+                        # Separa as palavras
+                        $palavras = explode(' ', $parametroNome);
+
+                        # Percorre as palavras
+                        foreach ($palavras as $item) {
+                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                        }
+                    } else {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                    }
                 }
 
                 # lotacao

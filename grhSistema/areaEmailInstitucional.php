@@ -172,8 +172,24 @@ if ($acesso) {
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
-                          AND tbperfil.tipo <> 'Outros'
-                          AND tbpessoa.nome LIKE '%{$parametroNome}%'";
+                          AND tbperfil.tipo <> 'Outros'";
+
+            # Nome
+            if (!is_null($parametroNome)) {
+
+                # Verifica se tem espaços
+                if (strpos($parametroNome, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $parametroNome);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                    }
+                } else {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
+                }
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -200,7 +216,6 @@ if ($acesso) {
 
             $resumo = $pessoal->select($select);
 
-            #echo $select;
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Área do E-mail Institucional");
@@ -256,7 +271,7 @@ if ($acesso) {
                 $titulo = "Servidores COM E-mail Institucional Cadastrado";
             } elseif ($parametroTipo == "Sem E-mail Institucional") {
                 $titulo = "Servidores SEM E-mail Institucional Cadastrado";
-            }else{
+            } else {
                 $titulo = "Servidores Ativos";
             }
 
@@ -272,13 +287,13 @@ if ($acesso) {
             if ($subtitulo <> null) {
                 $relatorio->set_subtitulo($subtitulo);
             }
-                      
+
             $relatorio->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional"]);
             $relatorio->set_align(["center", "left", "center", "center", "left"]);
             $relatorio->set_width([10, 30, 30, 10, 30]);
             $relatorio->set_funcao([null, null, null, "date_to_php"]);
             $relatorio->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
-            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao"]);            
+            $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao"]);
             $relatorio->set_bordaInterna(true);
 
             $relatorio->set_conteudo($result);

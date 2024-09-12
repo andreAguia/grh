@@ -79,8 +79,6 @@ if ($acesso) {
                             LEFT JOIN tbferias USING (idServidor)
                 WHERE situacao = 1
                   AND (idCargo = 128 OR idCargo = 129)
-                  AND month(tbferias.dtInicial) <> 1
-                  AND month(tbferias.dtInicial) <> 2
                   AND numDias > 15
                   AND ((tbferias.dtInicial <= '{$relatorioDtInicial}' AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1) >= '{$relatorioDtInicial}')
                    OR (tbferias.dtInicial BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}')  

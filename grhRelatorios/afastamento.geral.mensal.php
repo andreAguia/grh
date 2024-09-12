@@ -109,8 +109,6 @@ if ($acesso) {
                             LEFT JOIN tbferias USING (idServidor)
                 WHERE situacao = 1
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                  AND month(tbferias.dtInicial) <> 1
-                  AND month(tbferias.dtInicial) <> 2
                   AND ((tbferias.dtInicial <= '{$relatorioDtInicial}' AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1) >= '{$relatorioDtInicial}')
                    OR (tbferias.dtInicial BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtFinal}')  
                    OR (ADDDATE(tbferias.dtInicial,tbferias.numDias-1) BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtFinal}'))";

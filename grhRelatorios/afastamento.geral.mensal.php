@@ -26,8 +26,8 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega o ano exercicio
-    $parametroAno = post("parametroAno", date('Y') + 1);
-    $parametroLotacao = post("parametroLotacao");
+    $parametroAno = post("parametroAno", date('Y'));
+    $parametroLotacao = post("parametroLotacao", "DGA");
 
     $relatorioDtInicial = "{$parametroAno}/01/01";
     $relatorioDtFinal = "{$parametroAno}/12/31";

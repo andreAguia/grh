@@ -19,18 +19,18 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
-
-    # Começa uma nova página
-    $page = new Page();
-    $page->set_title("Servidores com Afastamento");
-    $page->iniciaPagina();
-
+    
     # Pega o ano exercicio
     $parametroAno = post("parametroAno", date('Y'));
     $parametroLotacao = post("parametroLotacao", "DGA");
 
     $relatorioDtInicial = "{$parametroAno}/01/01";
     $relatorioDtFinal = "{$parametroAno}/12/31";
+
+    # Começa uma nova página
+    $page = new Page();
+    $page->set_title("Servidores com Afastamento - {$parametroLotacao}");
+    $page->iniciaPagina();    
 
     ######
     # Licença Geral

@@ -89,6 +89,7 @@ if ($acesso) {
                                       IF(ativo = 1,DIR,CONCAT(DIR,"<br/>","(",UADM,")")),
                                       campus,
                                       GER,
+                                      codigo,
                                       idLotacao,
                                       idLotacao,
                                       idLotacao,
@@ -132,18 +133,18 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Histórico de<br/>Servidores", "Lotação<br/>Ativa?"]);
-    $objeto->set_colspanLabel([null, null, null, null, null, 2, null, 2]);
+    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Código", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Histórico de<br/>Servidores", "Lotação<br/>Ativa?"]);
+    $objeto->set_colspanLabel([null, null, null, null, null, null, 2, null, 2]);
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
-    $objeto->set_align(["center", "center", "center", "center", "left"]);
+    $objeto->set_align(["center", "center", "center", "center", "center", "left"]);
 
-    $objeto->set_classe([null, null, null, null, "Lotacao", "Pessoal", null, "Pessoal"]);
-    $objeto->set_metodo([null, null, null, null, "exibeNomeEmail", "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
+    $objeto->set_classe([null, null, null, null, null, "Lotacao", "Pessoal", null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, null, null, "exibeNomeEmail", "get_numServidoresAtivosLotacao", null, "get_numServidoresInativosLotacao"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([5, 7]);
+    $objeto->set_colunaSomatorio([6, 8]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -161,7 +162,7 @@ if ($acesso) {
     $historicoServidores->set_title("Exibe o histórico dos servidores nesta lotação");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, null, $servAtivos, null, $servInativos, $historicoServidores]);
+    $objeto->set_link([null, null, null, null, null, null, null, $servAtivos, null, $servInativos, $historicoServidores]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

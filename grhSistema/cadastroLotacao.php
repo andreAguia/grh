@@ -87,9 +87,9 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista('SELECT idLotacao,
                                       IF(ativo = 1,DIR,CONCAT(DIR,"<br/>","(",UADM,")")),
+                                      codigo,
                                       campus,
                                       GER,
-                                      codigo,
                                       idLotacao,
                                       idLotacao,
                                       idLotacao,
@@ -133,7 +133,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Diretoria<br/>Centro", "Campus<br/>Universitário", "Sigla", "Código", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Histórico de<br/>Servidores", "Lotação<br/>Ativa?"]);
+    $objeto->set_label(["id", "Diretoria<br/>Centro", "Código", "Campus<br/>Universitário", "Sigla", "Nome", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Histórico de<br/>Servidores", "Lotação<br/>Ativa?"]);
     $objeto->set_colspanLabel([null, null, null, null, null, null, 2, null, 2]);
     #$objeto->set_width(array(5,8,8,8,8,43,5,5,5));
     $objeto->set_align(["center", "center", "center", "center", "center", "left"]);

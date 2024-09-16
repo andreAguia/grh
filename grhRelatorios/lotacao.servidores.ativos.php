@@ -75,10 +75,10 @@ if ($acesso) {
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Situação']);
     $relatorio->set_align(["center", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
-    $relatorio->set_bordaInterna(true);
+    #$relatorio->set_bordaInterna(true);
 
     $relatorio->set_classe([null, null, "pessoal", null, null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_CargoSimples", null, null, null, "get_Situacao"]);
+    $relatorio->set_metodo([null, null, "get_cargoCompleto3", null, null, null, "get_Situacao"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(3);

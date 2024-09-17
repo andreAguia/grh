@@ -155,7 +155,8 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Geral');
             $menu->add_item('linkWindow', 'Relatório de Professores - com Afastamento Maior que 15 Dias', '../grhRelatorios/afastamento.docente.maiorque15.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores - com Afastamento Maior que 30 Dias', '../grhRelatorios/afastamento.geral.maiorque30.php');
-            $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Afastamento', '../grhRelatorios/afastamento.geral.mensal.php');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Afastamento - Com os Cedidos', '../grhRelatorios/afastamento.geral.mensal.ccedidos.php');
+            $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Afastamento - Sem os Cedidos', '../grhRelatorios/afastamento.geral.mensal.scedidos.php');
             
             #$menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
 

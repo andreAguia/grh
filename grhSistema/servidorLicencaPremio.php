@@ -255,7 +255,7 @@ if ($acesso) {
                 'title' => 'Data de término da licença.',
                 'linha' => 1),
             array('nome' => 'processo',
-                'label' => 'Processo:',
+                'label' => 'Processo de Fruição:',
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,

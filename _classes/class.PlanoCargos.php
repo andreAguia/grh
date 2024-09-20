@@ -208,7 +208,7 @@ class PlanoCargos {
                               idClasse,
                               tbtipocargo.cargo
                          FROM tbclasse LEFT JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
+                        WHERE tbclasse.idPlano = {$idPlano} AND tbclasse.nivel = '{$nn}' ORDER BY SUBSTRING(faixa, 1, 1), valor";
 
             $row = $pessoal->select($select);
 

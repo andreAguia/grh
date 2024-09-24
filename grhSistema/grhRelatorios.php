@@ -500,6 +500,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Estatutários Inativos - Por Lotação', '../grhRelatorios/estatutarios.inativos.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários Ativos - Por Lotação', '../grhRelatorios/estatutarios.ativos.porLotacao.php');
 
+            $menu->add_item('titulo1', 'Horário');
+            $menu->add_item('linkWindow', 'Relatório de Horário dos Servidores Ativos - Por Lotação - Com Cargo', '../grhRelatorios/lotacao.horario.servidores.ativos.php');
+            $menu->add_item('linkWindow', 'Relatório de Horário dos Servidores Ativos - Por Lotação', '../grhRelatorios/lotacao.horario.servidores.ativos2.php');
+            
             $menu->add_item('titulo1', 'Movimentação de Lotação');
             $menu->add_item('linkWindow', 'Relatório Mensal de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.mensal.lotacao.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.anual.lotacao.php');

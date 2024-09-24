@@ -395,6 +395,14 @@ class MenuServidor {
             #$botao->set_accessKey('i');
             $menu->add_item($botao);
         }
+        
+        # Horário
+        $botao = new BotaoGrafico();
+        $botao->set_label('Horário');
+        $botao->set_url('servidorHorario.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'horario.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Horário do Servidor');
+        $menu->add_item($botao);
 
         $menu->show();
         br();

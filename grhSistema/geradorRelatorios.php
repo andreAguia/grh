@@ -837,7 +837,7 @@ if ($acesso) {
     
     # Assinatura
     if ($postAssinatura) {
-        $field[] = "'<br/>__________________________________________'";
+        $field[] = "'<br/>_______________________________'";
         
         
         $label[] = "Assinatura";

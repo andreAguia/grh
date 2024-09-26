@@ -44,7 +44,7 @@ if ($acesso) {
     $relatorio->set_classe($class);
     $relatorio->set_metodo($method);
     $relatorio->set_funcao($function);
-    $relatorio->set_bordaInterna(true);
+    #$relatorio->set_bordaInterna(true);
     $relatorio->set_titulo($parametroTitulo);
     $relatorio->set_subtitulo($parametroSubtitulo);
     $relatorio->set_formCampos(array(

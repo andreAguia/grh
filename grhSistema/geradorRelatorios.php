@@ -110,7 +110,7 @@ if ($acesso) {
     $grid->fechaColuna();
     $grid->abreColuna(4);
 
-    tituloTable("Defina os Perâmetros");
+    tituloTable("Defina os Parâmetros");
 
     # Define o tamanho das colunas
     $tamColunas = 3;

@@ -389,7 +389,7 @@ if ($acesso) {
     # Endereço
     $controle = new Input('postAssinatura', 'simnao', 'Assinatura:', 1);
     $controle->set_size(5);
-    $controle->set_linha(1);
+    $controle->set_linha(3);
     $controle->set_fieldset('Outros');
     $controle->set_title('Assinatura do Servidor');
     $controle->set_valor($postAssinatura);

@@ -42,6 +42,8 @@ $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
 
+$postAssinatura = post('postAssinatura');
+
 # Filtros
 $parametroCargo = post('parametroCargo');
 $parametroCargoComissao = post('parametroCargoComissao');
@@ -380,6 +382,17 @@ if ($acesso) {
     $controle->set_size(5);
     $controle->set_title('Idade do servidor');
     $controle->set_valor($postIdade);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Endereço
+    $controle = new Input('postAssinatura', 'simnao', 'Assinatura:', 1);
+    $controle->set_size(5);
+    $controle->set_linha(1);
+    $controle->set_fieldset('Outros');
+    $controle->set_title('Assinatura do Servidor');
+    $controle->set_valor($postAssinatura);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
@@ -821,6 +834,18 @@ if ($acesso) {
         $method[] = "get_idade";
         $function[] = "";
     }
+    
+    # Assinatura
+    if ($postAssinatura) {
+        $field[] = "'<br/>__________________________________________'";
+        
+        
+        $label[] = "Assinatura";
+        $align[] = "center";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
 
     #################################### Monta a tabela #######################################
 
@@ -896,7 +921,6 @@ if ($acesso) {
         if (!empty($parametroCargoComissao)) {
             $select .= " AND tbcomissao.dtExo is null AND tbcomissao.tipo != 3 AND tbtipocomissao.idTipoComissao = '{$parametroCargoComissao}'";
         }
-
 
         # Estabelece a ordenação
         $select .= " ORDER BY {$parametroOrdena} {$parametroOrdenaTipo}";

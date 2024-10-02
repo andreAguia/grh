@@ -55,6 +55,9 @@ $parametroPerfil = post('parametroPerfil', 1);
 $parametroOrdenaTipo = post('parametroOrdenaTipo', 'asc');
 $parametroOrdena = post('parametroOrdena', "tbpessoa.nome");
 
+# Subtitulo
+$subTitulo = null;
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 9, 10]);
 
@@ -322,7 +325,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # Nome do Pai
     $controle = new Input('postPai', 'simnao', 'Pai:', 1);
     $controle->set_size(5);
@@ -376,7 +379,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # idade
     $controle = new Input('postIdade', 'simnao', 'Idade:', 1);
     $controle->set_size(5);
@@ -385,7 +388,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # Endereço
     $controle = new Input('postAssinatura', 'simnao', 'Assinatura:', 1);
     $controle->set_size(5);
@@ -824,7 +827,7 @@ if ($acesso) {
         $method[] = "get_sexo";
         $function[] = "";
     }
-    
+
     # Idade
     if ($postIdade) {
         $field[] = "tbservidor.idServidor";
@@ -834,12 +837,11 @@ if ($acesso) {
         $method[] = "get_idade";
         $function[] = "";
     }
-    
+
     # Assinatura
     if ($postAssinatura) {
         $field[] = "'<br/>_______________________________'";
-        
-        
+
         $label[] = "Assinatura";
         $align[] = "center";
         $class[] = "";
@@ -899,8 +901,10 @@ if ($acesso) {
             # Verifica se o que veio é numérico
             if (is_numeric($parametroLotacao)) {
                 $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                $subTitulo = $pessoal->get_nomeLotacao($parametroLotacao) . " - " . $pessoal->get_nomeCompletoLotacao($parametroLotacao);
             } else { # senão é uma diretoria genérica
                 $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                $subTitulo = $parametroLotacao;
             }
         }
 
@@ -934,6 +938,7 @@ if ($acesso) {
         set_session("sessionClass", $class);
         set_session("sessionMethod", $method);
         set_session("sessionFunction", $function);
+        set_session("sessionLotacao", $subTitulo);
 
         $tabela = new Tabela();
         $tabela->set_titulo("Relatório");

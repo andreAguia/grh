@@ -61,6 +61,13 @@ if ($acesso) {
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "tbpessoa.nome asc"));
+    
+    # Zera alguns parâmetros da lic prêmio
+    set_session('parametroMeses');
+    set_session('parametroDtInicial');
+    set_session('parametroDtFinal');
+    set_session('parametroPreenchido');
+    set_session('parametroAcordo');
 
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento', 0);

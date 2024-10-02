@@ -214,11 +214,11 @@ class Pessoal extends Bd {
      */
     public function get_salarioBase($idServidor) {
 
-        $select = 'SELECT tbclasse.valor
+        $select = "SELECT tbclasse.valor
                      FROM tbprogressao, tbclasse
-                     WHERE idServidor = ' . $idServidor . '
+                     WHERE idServidor = {$idServidor}
                        AND tbprogressao.idClasse = tbclasse.idClasse
-              ORDER BY valor desc';
+              ORDER BY valor desc";
 
         $row = parent::select($select, false);
 
@@ -3916,6 +3916,25 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
 
         return $row[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nivelCargo
+     * Informa o n�vel de escolaridade do cargo de uma matrícula
+     * 
+     * @param   string $idServidor do servidor
+     */
+    public function get_nivelSalarialCargo($idServidor) {
+        $select = "SELECT tbclasse.faixa
+                     FROM tbservidor JOIN tbcargo USING (idCargo)
+                                     JOIN tbplano USING (idPlano)
+                                     JOIN tbclasse USING (idPlano)
+                    WHERE idServidor = {$idServidor}";
+
+        $row = parent::select($select, false);
+        return substr($row[0],0,1);        
     }
 
     ##########################################################################################

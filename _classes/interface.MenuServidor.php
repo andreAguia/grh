@@ -809,15 +809,21 @@ class MenuServidor {
         titulo('Afastamentos');
         br();
 
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(1);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Afastamento Geral');
+        $botao->set_label('Todos os Afastamentos');
         $botao->set_url('servidorAfastamentos.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'afastamento.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Todos os afastamentos do servidor');
         #$botao->set_accessKey('i');
         $menu->add_item($botao);
+        
+        $menu->show();
+        
+        hr();
+        
+        $menu = new MenuGrafico(3);
 
         if ($pessoal->get_perfilFerias($this->perfil) == "Sim") {
             $botao = new BotaoGrafico();

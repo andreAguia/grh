@@ -505,6 +505,43 @@ class LicencaPremio {
             $painel->fecha();
         }
 
+        # Servidores
+        titulotable('Certidões');
+
+        # Menu de Certidão
+        $painel = new Callout();
+        $painel->abre();
+
+        $tamanhoImage = 40;
+        $menu = new MenuGrafico(3);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Concessão');
+        $botao->set_target('blank');
+        $botao->set_url('../grhRelatorios/certidao.LicencaPremio.Concessao.php');
+        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Afastamentos dos Servidores da GRH');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Recontagem');
+        #$botao->set_target('blank');
+        $botao->set_url('?');
+        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Afastamentos dos Servidores da GRH');
+        $menu->add_item($botao);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Indeferimento');
+        #$botao->set_target('blank');
+        $botao->set_url('?');
+        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Afastamentos dos Servidores da GRH');
+        $menu->add_item($botao);
+
+        $menu->show();
+        $painel->fecha();
+
         tituloTable("Atenção");
         callout("Antes de informar ao servidor sobre a licença prêmio, verifique se o mesmo possui algum afastamento específico que poderia alterar as datas da licença.<br/>O sistema, ainda, não verifica essa informação", "alert", "calloutMensagemPremio");
 
@@ -575,6 +612,27 @@ class LicencaPremio {
         # Exibe as notificações
         $this->exibeOcorrencias($idServidor);
 
+        # Exibe as publicações
+        $this->exibePublicacoes($idServidor);
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
+    }
+
+###########################################################
+
+    public function exibePublicacoes($idServidor = null, $reduzido = false) {
+
+        /**
+         * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
+         */
+        # Pega o número de vínculos
+        $numVinculos = $this->get_numVinculosPremio($idServidor);
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # exibe a tabela
         if ($numVinculos > 1) {
 
             # Exibe as Publicações
@@ -610,13 +668,21 @@ class LicencaPremio {
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
             $tabela->set_titulo('Publicações');
-            $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DOERJ", "Obs"]);
-            $tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
             $tabela->set_align(["left"]);
-            $tabela->set_funcao([null, 'date_to_php']);
-            $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-            $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
 
+            if ($reduzido) {
+                $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+                #$tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
+                $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            } else {
+                $tabela->set_label(["Vínculos", "Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DOERJ", "Obs"]);
+                $tabela->set_width([23, 12, 23, 10, 10, 10, 12]);
+                $tabela->set_classe(["Pessoal", null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo(["get_cargoSimples", null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
+            }
+
+            $tabela->set_funcao([null, 'date_to_php']);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
@@ -652,12 +718,20 @@ class LicencaPremio {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($result);
-            $tabela->set_titulo('Publicações');
-            $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DO", "Obs"]);
-            $tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
             $tabela->set_funcao(['date_to_php']);
-            $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-            $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
+            $tabela->set_titulo('Publicações');
+
+            if ($reduzido) {
+                $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis"]);
+                #$tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
+                $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
+            } else {
+                $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DO", "Obs"]);
+                $tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
+                $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
+            }
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
@@ -667,9 +741,6 @@ class LicencaPremio {
             $tabela->set_totalRegistro(false);
             $tabela->show();
         }
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
     }
 
 ###########################################################

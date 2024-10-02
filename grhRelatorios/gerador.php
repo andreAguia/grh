@@ -25,8 +25,8 @@ if ($acesso) {
 
 # Pega o título
     $parametroTitulo = post('parametroTitulo', 'Relatório de Servidores');
-    $parametroSubtitulo = post('parametroSubtitulo');
-
+    $parametroSubtitulo = post('parametroSubtitulo', get_session("sessionLotacao"));
+    
 # Pega as variáveis
     $select = get_session("sessionSelect");
     $label = get_session("sessionLabel");
@@ -42,7 +42,7 @@ if ($acesso) {
 
         $resumo = $pessoal->select($select);
 
-# Monta o Relatório
+        # Monta o Relatório
         $relatorio = new Relatorio();
         $relatorio->set_conteudo($resumo);
         $relatorio->set_label($label);
@@ -50,7 +50,7 @@ if ($acesso) {
         $relatorio->set_classe($class);
         $relatorio->set_metodo($method);
         $relatorio->set_funcao($function);
-#$relatorio->set_bordaInterna(true);
+        #$relatorio->set_bordaInterna(true);
         $relatorio->set_titulo($parametroTitulo);
         $relatorio->set_subtitulo($parametroSubtitulo);
         $relatorio->set_formCampos(array(

@@ -905,7 +905,11 @@ if ($acesso) {
             } else { # senão é uma diretoria genérica
                 $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 $classeLotacao = new Lotacao();
-                $subTitulo = $parametroLotacao . " - " . $classeLotacao->get_nomeDiretoriaSigla($parametroLotacao);
+                if ($parametroLotacao <> "Reitoria") {
+                    $subTitulo = $parametroLotacao . " - " . $classeLotacao->get_nomeDiretoriaSigla($parametroLotacao);
+                } else {
+                    $subTitulo = $parametroLotacao;
+                }
             }
         }
 

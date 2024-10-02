@@ -904,7 +904,8 @@ if ($acesso) {
                 $subTitulo = $pessoal->get_nomeLotacao($parametroLotacao) . " - " . $pessoal->get_nomeCompletoLotacao($parametroLotacao);
             } else { # senão é uma diretoria genérica
                 $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                $subTitulo = $parametroLotacao;
+                $classeLotacao = new Lotacao();
+                $subTitulo = $parametroLotacao . " - " . $classeLotacao->get_nomeDiretoriaSigla($parametroLotacao);
             }
         }
 

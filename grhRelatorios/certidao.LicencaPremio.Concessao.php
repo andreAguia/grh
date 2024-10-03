@@ -23,13 +23,22 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
 
+    # Calcula as datas padrão
+    $dtInicial = $licencaPremio->get_dataProximoPeriodo($idServidorPesquisado);
+
+    if (empty($dtInicial)) {
+        $dtFinal = null;
+    } else {
+        $dtFinal = addDias($dtInicial, 1825, false);
+    }
+
     # Pega os parâmetros
     $parametroMeses = post('parametroMeses', get_session('parametroMeses', 1));
-    $parametroDtInicial = post('parametroDtInicial', get_session('parametroDtInicial'));
-    $parametroDtFinal = post('parametroDtFinal', get_session('parametroDtFinal'));
+    $parametroDtInicial = post('parametroDtInicial', get_session('parametroDtInicial', date_to_bd($dtInicial)));
+    $parametroDtFinal = post('parametroDtFinal', get_session('parametroDtFinal', date_to_bd($dtFinal)));
     $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido'));
     $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo'));
-
+    
     # Verifica a fase do programa
     $fase = get('fase');
 
@@ -78,7 +87,7 @@ if ($acesso) {
             $controle->set_size(8);
             $controle->set_title('Meses que Tem Direito');
             $controle->set_valor($parametroMeses);
-            $controle->set_array([1, 2, 3]);
+            $controle->set_array([3, 6, 9]);
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_autofocus(true);
@@ -166,15 +175,9 @@ if ($acesso) {
             $data1 = date_to_php($parametroDtInicial);
             $data2 = date_to_php($parametroDtFinal);
 
-            # Meses
-            if ($parametroMeses == 1) {
-                $textoMes = "<b>{$parametroMeses} ($extenso) mês</b> de Licença Prêmio";
-            } else {
-                $textoMes = "{$parametroMeses} ($extenso) meses de Licença Prêmio";
-            }
-
             # Monta o texto
-            $texto = "O servidor faz jus à concessão de {$textoMes} relativo ao período de "
+            $texto = "O servidor faz jus à concessão de <b>{$parametroMeses} ($extenso) meses</b>"
+                    . " de Licença Prêmio relativo ao período de "
                     . "<b>{$data1} - {$data2}</b>";
 
             # Monta a Declaração
@@ -186,7 +189,7 @@ if ($acesso) {
             $dec->set_texto("Cargo: <b>{$pessoal->get_cargoSimples($idServidorPesquisado)}</b>");
             $dec->set_texto("Nível: <b>{$pessoal->get_nivelSalarialCargo($idServidorPesquisado)}</b>");
             $dec->set_texto("Assunto: <b>Licença Prêmio</b>");
-            $dec->set_texto("( x ) Concessão&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");            
+            $dec->set_texto("( x ) Concessão&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");
             $dec->set_texto("<hr/>");
             $dec->set_texto("Fundamento: Art. 129 do decreto2479/79, combinado coma Lei 1054/86");
             $dec->set_texto("<hr/>");
@@ -196,7 +199,7 @@ if ($acesso) {
             $dec->set_texto("Preenchido por: <b>{$parametroPreenchido}</b>");
             $dec->set_texto("De Acordo: <b>{$parametroAcordo}</b>");
             $dec->set_saltoAssinatura(2);
-            
+
             $dec->set_exibeData(false);
             $dec->set_exibeAssinatura(false);
             $dec->show();

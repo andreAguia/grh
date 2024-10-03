@@ -165,9 +165,9 @@ class LicencaPremio {
         $pessoal = new Pessoal();
 
         # Pega array com os dias publicados
-        $select = 'SELECT idPublicacaoPremio
+        $select = "SELECT idPublicacaoPremio
                      FROM tblicencapremio
-                    WHERE idLicencaPremio = ' . $idLicencaPremio;
+                    WHERE idLicencaPremio = {$idLicencaPremio}";
 
         $retorno = $pessoal->select($select, false);
 
@@ -1265,6 +1265,36 @@ class LicencaPremio {
             $row = $pessoal->select($select, false);
 
             return addDias(date_to_php($row[0]), $valor, false);
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    function get_dataProximoPeriodo($idServidor) {
+        /*
+         * Informa a data da próxima publicação
+         *
+         */
+
+        if (is_numeric($idServidor)) {
+
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            $select = "SELECT dtFimPeriodo
+                         FROM tbpublicacaopremio 
+                        WHERE idServidor = {$idServidor} 
+                     ORDER BY dtFimPeriodo DESC";
+
+            $row = $pessoal->select($select, false);
+
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return addDias(date_to_php($row[0]), 1, false);
+            }
         } else {
             return null;
         }

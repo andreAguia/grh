@@ -27,9 +27,10 @@ class Declaracao {
     private $assinatura = false;
     private $linhaAssinatura = false;
     private $declaracaoNome = "DECLARAÇÃO";
-    
     private $formCampos = null;    // array com campos para o formulario
     private $formLink = null;    // para onde vai o post
+    private $exibeData = true;
+    private $exibeAssinatura = true;
 
     ###########################################################
 
@@ -51,8 +52,8 @@ class Declaracao {
         $this->origemSetor = "UENF/DGA/GRH";
         $this->origemIdFuncional = $idFuncionalGerente;
         $this->origemDescricao = $descricao;
-        
-        if(!empty($declaracaoNome)){
+
+        if (!empty($declaracaoNome)) {
             $this->declaracaoNome = $declaracaoNome;
         }
     }
@@ -170,11 +171,13 @@ class Declaracao {
             $grid->abreColuna(8);
 
             # Data
-            br(2);
-            if (empty($this->data)) {
-                p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
-            } else {
-                p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            if ($this->exibeData) {
+                br(2);
+                if (empty($this->data)) {
+                    p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
+                } else {
+                    p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+                }
             }
 
             $grid->fechaColuna();
@@ -187,11 +190,13 @@ class Declaracao {
             $grid->fechaGrid();
         } else {
             # Data
-            br(2);
-            if (empty($this->data)) {
-                p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
-            } else {
-                p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+            if ($this->exibeData) {
+                br(2);
+                if (empty($this->data)) {
+                    p('Campos dos Goytacazes, ______ de ____________________ de _______', 'pDeclaracaoData');
+                } else {
+                    p('Campos dos Goytacazes, ' . dataExtenso($this->data), 'pDeclaracaoData');
+                }
             }
         }
         br($this->saltoAssinatura);
@@ -207,7 +212,7 @@ class Declaracao {
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
-        
+
         # linha da assinatura
         if ($this->linhaAssinatura) {
             br();
@@ -224,7 +229,9 @@ class Declaracao {
             $textoAssinatura .= "Id Funcional n° {$this->origemIdFuncional}<br/>";
         }
 
-        p($textoAssinatura, 'pCiAssinatura');
+        if ($this->exibeAssinatura) {
+            p($textoAssinatura, 'pCiAssinatura');
+        }
 
         $grid->fechaColuna();
         $grid->fechaGrid();

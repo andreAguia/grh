@@ -16,28 +16,12 @@ include ("../grhSistema/_config.php");
 
 # Conecta ao Banco de Dados
 $pessoal = new Pessoal();
+$licencaPremio = new LicencaPremio();
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
 if ($acesso) {
-
-    # Servidor
-    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
-    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
-    $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado);
-    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
-    $nivel = $pessoal->get_nivelSalarialCargo($idServidorPesquisado);
-
-    if ($idPerfil == 1) {
-        $dtAdmin = "{$dtAdmin}, através de Concurso Público";
-        $cargoEfetivo = "para o cargo de {$cargoEfetivo},";
-    }
-
-    # Verifica a fase do programa
-    $fase = get('fase');
 
     # Pega os parâmetros
     $parametroMeses = post('parametroMeses', get_session('parametroMeses', 1));
@@ -45,6 +29,9 @@ if ($acesso) {
     $parametroDtFinal = post('parametroDtFinal', get_session('parametroDtFinal'));
     $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido'));
     $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo'));
+
+    # Verifica a fase do programa
+    $fase = get('fase');
 
     # Joga os parâmetros par as sessions
     set_session('parametroMeses', $parametroMeses);
@@ -66,7 +53,7 @@ if ($acesso) {
     switch ($fase) {
         case "":
             # Título
-            titulo("Certidão de Concessão de Licença Prêmio");
+            titulo("Certidão de Concessão para Licença Prêmio");
             br();
 
             callout("Rotina em Desenvolvimento!!<br/>Ainda não está pronta", "alert");
@@ -181,27 +168,37 @@ if ($acesso) {
 
             # Meses
             if ($parametroMeses == 1) {
-                $textoMes = "{$parametroMeses} ($extenso) mês de Licença Prêmio";
+                $textoMes = "<b>{$parametroMeses} ($extenso) mês</b> de Licença Prêmio";
             } else {
                 $textoMes = "{$parametroMeses} ($extenso) meses de Licença Prêmio";
             }
 
             # Monta o texto
-            $texto = "O servidor <b>" . strtoupper($nomeServidor) . "</b>,"
-                    . " ID funcional nº {$idFuncional}, "
-                    . " admitido(a) em {$dtAdmin},"
-                    . " {$cargoEfetivo} "
-                    . "lotado(a) no(a) {$lotacao}, nível {$nivel}, "
-                    . "<b>faz jus à concessão de {$textoMes}</b> relativo ao período de "
-                    . "<b>{$data1} - {$data2}</b><br/><br/>Preenchido por: <b>{$parametroPreenchido}</b><br/>De Acrodo: <b>{$parametroAcordo}</b>";
+            $texto = "O servidor faz jus à concessão de {$textoMes} relativo ao período de "
+                    . "<b>{$data1} - {$data2}</b>";
 
             # Monta a Declaração
             $dec = new Declaracao();
-            $dec->set_declaracaoNome("CERTIDÃO");
-            $dec->set_data(date("d/m/Y"));
+            $dec->set_declaracaoNome("CERTIDÃO DE CONCESSÃO PARA LICENÇA PRÊMIO");
+            $dec->set_texto("ID funcional nº: <b>{$pessoal->get_idFuncional($idServidorPesquisado)}</b>");
+            $dec->set_texto("Nome: <b>" . strtoupper($pessoal->get_nome($idServidorPesquisado)) . "</b>");
+            $dec->set_texto("Processo de Contagem: <b>{$licencaPremio->get_numProcessoContagem($idServidorPesquisado)}</b>");
+            $dec->set_texto("Cargo: <b>{$pessoal->get_cargoSimples($idServidorPesquisado)}</b>");
+            $dec->set_texto("Nível: <b>{$pessoal->get_nivelSalarialCargo($idServidorPesquisado)}</b>");
+            $dec->set_texto("Assunto: <b>Licença Prêmio</b>");
+            $dec->set_texto("( x ) Concessão&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");            
+            $dec->set_texto("<hr/>");
+            $dec->set_texto("Fundamento: Art. 129 do decreto2479/79, combinado coma Lei 1054/86");
+            $dec->set_texto("<hr/>");
             $dec->set_texto("Sr. Gerente de Recursos Humanos,");
             $dec->set_texto($texto);
+            $dec->set_texto("");
+            $dec->set_texto("Preenchido por: <b>{$parametroPreenchido}</b>");
+            $dec->set_texto("De Acordo: <b>{$parametroAcordo}</b>");
             $dec->set_saltoAssinatura(2);
+            
+            $dec->set_exibeData(false);
+            $dec->set_exibeAssinatura(false);
             $dec->show();
 
             # Grava o log da visualização do relatório

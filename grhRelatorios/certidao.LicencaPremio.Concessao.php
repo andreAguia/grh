@@ -75,7 +75,6 @@ if ($acesso) {
     $page = new Page();
     if ($fase == "") {
         $page->set_jscript($script);
-        echo "oi";
     }
     $page->iniciaPagina();
 
@@ -90,8 +89,6 @@ if ($acesso) {
             # Título
             titulo("Certidão de Concessão para Licença Prêmio");
             br();
-
-            callout("Rotina em Desenvolvimento!!<br/>Ainda não está pronta", "alert");
 
             # Pega os dados da combo preenchido e de acordo
             $select = 'SELECT tbpessoa.nome, tbpessoa.nome

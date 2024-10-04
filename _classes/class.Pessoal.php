@@ -3927,11 +3927,11 @@ class Pessoal extends Bd {
      * @param   string $idServidor do servidor
      */
     public function get_nivelSalarialCargo($idServidor) {
-        $select = "SELECT tbclasse.faixa
-                     FROM tbservidor JOIN tbcargo USING (idCargo)
-                                     JOIN tbplano USING (idPlano)
-                                     JOIN tbclasse USING (idPlano)
-                    WHERE idServidor = {$idServidor}";
+        $select =  "SELECT tbclasse.faixa
+                      FROM tbprogressao JOIN tbtipoprogressao USING (idTpProgressao)
+                                        JOIN tbclasse USING (idClasse)
+                     WHERE idServidor = {$idServidor}
+                     ORDER BY tbprogressao.dtInicial desc";    
 
         $row = parent::select($select, false);
         return substr($row[0],0,1);        

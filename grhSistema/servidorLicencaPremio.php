@@ -45,7 +45,7 @@ if ($acesso) {
         
             $(document).ready(function(){
                 
-                // Faz o cáuculo quando entra na tela
+                // Faz o cálculo quando entra na tela
                 var dt1 = $("#dtInicial").val();
                 var numDias = $("#numDias").val();
                     

@@ -48,9 +48,35 @@ if ($acesso) {
     set_session('parametroDtFinal', $parametroDtFinal);
     set_session('parametroPreenchido', $parametroPreenchido);
     set_session('parametroAcordo', $parametroAcordo);
+    
+    # Rotina em Jscript
+    $script = '<script type="text/javascript" language="javascript">
+        
+            $(document).ready(function(){                
+                  
+                // Quando muda a data Inicial
+                $("#parametroDtInicial").change(function(){
+                   
+                    var dt1 = $("#parametroDtInicial").val();
+                    var numDias = 1825;
+                    
+                    data1 = new Date(dt1);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
+                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
+            
+                    $("#parametroDtFinal").val(formatado);
+                                   
+                });
+            });
+        </script>';
 
     # Começa uma nova página
     $page = new Page();
+    if ($fase == "") {
+        $page->set_jscript($script);
+        echo "oi";
+    }
     $page->iniciaPagina();
 
     # Limita a página
@@ -87,7 +113,8 @@ if ($acesso) {
             $controle->set_size(8);
             $controle->set_title('Meses que Tem Direito');
             $controle->set_valor($parametroMeses);
-            $controle->set_array([3, 6, 9]);
+            #$controle->set_array([3, 6, 9]);
+            $controle->set_array([3]);
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_autofocus(true);

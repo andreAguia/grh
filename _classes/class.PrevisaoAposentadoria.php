@@ -103,7 +103,7 @@ class PrevisaoAposentadoria {
     private $dtIngressoApartirDescricao = "Servidor tem que ingressar no serviço público a partir desta data.";
     private $tempoContribuiçãoDescricao = "Tempo Total averbado<br/>(público e privado).";
     private $idadeDescricao = "Idade do servidor.";
-    private $tempoPublicoDescicao = "Tempo de todos os periodo públicos.";
+    private $tempoPublicoDescicao = "Tempo trabalhado de todos os periodo públicos.";
     private $tempoCargoDescicao = "Tempo no mesmo órgão e mesmo cargo.";
     private $dtRequesitosCumpridosDescicao = "Data limite para o cumprimento dos requesito.";
     private $pontuacaoInicialDescricao = "Pontuação Inicial.";
@@ -760,19 +760,19 @@ class PrevisaoAposentadoria {
             # Retorna a data da transformação em estatutários
             # Daqueles que entraram com celetistas na Uenf
             $this->servidorDataIngresso = "09/09/2003";
-        }
-
-        # Tempo de contribuição
-        $this->servidorTempoContribuicao = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $aposentadoria->get_tempoContribuicaoUenf($idServidor);
+        }        
         
         # Tempo Total
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
+        
+        # Tempo de contribuição
+        $this->servidorTempoContribuicao = $this->servidorTempoTotal;
 
         # Tempo Initerrupto
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
         
         # Tempo Publico
-        $this->servidorTempoPublico = $this->servidorTempoAverbadoPublico + $this->servidorTempoUenf;
+        $this->servidorTempoPublico = $this->servidorTempoAverbadoPublico + $this->servidorTempoUenf - $aposentadoria->get_tempoAfastadoComContribuicao($idServidor);
 
         # Especifica a regra de idade e de tempo de contribuição
         if ($this->servidorSexo == "Masculino") {

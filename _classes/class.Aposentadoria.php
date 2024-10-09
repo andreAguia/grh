@@ -235,12 +235,12 @@ class Aposentadoria {
         $tabela->set_titulo("Servidores Aposentados no Período de " . date_to_php($dtInicial) . " a " . date_to_php($dtFinal));
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(array('IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo'));
-        $tabela->set_align(array('center', 'left', 'center', 'center', 'left'));
-        $tabela->set_funcao(array(null, null, "date_to_php", "date_to_php"));
+        $tabela->set_label(['IdFuncional', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
+        $tabela->set_align(['center', 'left', 'center', 'center', 'left']);
+        $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
 
-        $tabela->set_classe(array(null, "pessoal"));
-        $tabela->set_metodo(array(null, "get_nomeECargo"));
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_nomeECargo"]);
 
         $tabela->set_conteudo($result);
 
@@ -361,6 +361,19 @@ class Aposentadoria {
     }
 
     #####################################################    
+
+    /**
+     * Método get_tempoContribuicaoUenf
+     * informa o tempo de contribuicao da uenf em dias corridos
+     * 
+     * @param string $idServidor idServidor do servidor
+     */
+    public function get_tempoContribuicaoUenf($idServidor) {
+
+        return $this->get_tempoServicoUenf($idServidor) + $this->get_tempoAfastadoComContribuicao($idServidor);
+    }
+
+    #####################################################        
 
     /**
      * Método get_tempoServicoUenfCeletista
@@ -777,14 +790,36 @@ class Aposentadoria {
         # Licença Sem Vencimentos
         $select2 = "SELECT numDias                           
                       FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}
-                        AND optouContribuir is not true";
+                      WHERE idServidor = {$idServidor}";
 
         # Soma
         $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
 
         # Retorna
         return $retorno;
+    }
+
+    #####################################################
+
+    /**
+     * Método get_tempoAfastadoComContribuicao
+     * informa o total de dias de tempo afastado mas com contribuição
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_tempoAfastadoComContribuicao($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Licença Sem Vencimentos
+        $select2 = "SELECT numDias                           
+                      FROM tblicencasemvencimentos
+                      WHERE idServidor = {$idServidor}
+                        AND optouContribuir = 1";
+
+        # Soma
+        return array_sum(array_column($pessoal->select($select2), 'numDias'));
     }
 
     #####################################################
@@ -808,8 +843,7 @@ class Aposentadoria {
                            dtTermino,
                            numDias                           
                       FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}
-                        AND optouContribuir is not true)
+                      WHERE idServidor = {$idServidor})
                       ORDER BY 1";
 
         # Conecta o banco de dados
@@ -864,7 +898,6 @@ class Aposentadoria {
                            numDias                           
                       FROM tblicencasemvencimentos
                       WHERE idServidor = {$idServidor}
-                        AND optouContribuir is not true)
                       ORDER BY 1";
 
         # Conecta o banco de dados
@@ -1067,7 +1100,7 @@ class Aposentadoria {
         $array = [
             ["Uenf Celetista", $this->get_tempoServicoUenfCeletista($idServidor)],
             ["Uenf Estatutária", $this->get_tempoServicoUenfEstatutario($idServidor)],
-            ["Tempo Sem Contribuição", -$this->get_tempoInterrompido($idServidor)]
+            ["Tempo Afastado (-)", -$this->get_tempoInterrompido($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1092,7 +1125,48 @@ class Aposentadoria {
         $tabela->set_totalRegistro(false);
         $tabela->set_colunaSomatorio(1);
         $tabela->show();
+        
+        /*
+         *  Tempo de Contribuição
+         */
 
+        $array = [
+            ["Tempo Total", $this->get_tempoTotal($idServidor)],
+            ["Afastamento com Contribuição", $this->get_tempoAfastadoComContribuicao($idServidor)],
+        ];
+
+        # Exibe a tabela
+        if ($relatorio) {
+            tituloRelatorio("Tempo de Contribuição");
+            $tabela = new Relatorio();
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_dataImpressao(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_log(false);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo("Tempo de Contribuição");
+        }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_label(["Descrição", "Dias"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["left", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio(1);
+        $tabela->show();
+
+        
+
+        $grid1->fechaColuna();
+        if ($relatorio) {
+            $grid1->abreColuna(6);
+        } else {
+            $grid1->abreColuna(12, 6, 3);
+        }
+        
         /*
          *  Tempo Averbado
          */
@@ -1127,13 +1201,6 @@ class Aposentadoria {
         $tabela->set_totalRegistro(false);
         $tabela->set_colunaSomatorio(1);
         $tabela->show();
-
-        $grid1->fechaColuna();
-        if ($relatorio) {
-            $grid1->abreColuna(6);
-        } else {
-            $grid1->abreColuna(12, 6, 3);
-        }
 
         /*
          *  Tempo Público

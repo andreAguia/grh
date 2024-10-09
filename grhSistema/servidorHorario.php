@@ -50,8 +50,16 @@ if ($acesso) {
 
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    $textoCallout = "O horário para o servidor da Uenf segue o estipulado na portaria UENF 003 de 25 de setembro de 2002:<br/><br/>"
+            . "Art 1º - O horáno normal de trabalho será de 8 (oito) horas "
+            . "às 18 (dezoito) horas, com intervalo de 02 (duas) horas para refeição, "
+            . "admitindo-se, em casos de necessidade da instituição, a cnténo do Diretor ou "
+            . "quivalente, com prévia aprovação da Rertona, e respeitando-se o regime de "
+            . "trabalho de 8 (oito) horas diárias e 40 (quarenta) horas semanais, desde que "
+            . "não haja prejuízo para os serviços prestados, jornada flexível, entre 7 (sete) "
+            . "horas e 22 (vinte e duas) horas.";
+    $objeto->set_rotinaExtra(["get_DadosServidor","callout"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado,$textoCallout]);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Horário');

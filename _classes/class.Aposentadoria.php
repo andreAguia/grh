@@ -609,7 +609,7 @@ class Aposentadoria {
                  ORDER BY dtInicial DESC";
 
         $result = $pessoal->select($select);
-        $totalDias = $this->get_tempoServicoUenf($idServidor);
+        $totalDias = $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor);
 
         # Percorre o arquivo de averbação para pegar os dias digitados (e não calculados)
         foreach ($result as $periodo) {

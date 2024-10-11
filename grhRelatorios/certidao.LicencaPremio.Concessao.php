@@ -667,10 +667,8 @@ if ($acesso) {
                     OR empty($parametroPreenchido)
                     OR empty($parametroAcordo)) {
 
-                echo $parametroMeses, " - ", $parametroDtInicial, " - ", $parametroDtFinal, " - ", $parametroPreenchido, " - ", $parametroAcordo;
-
                 alert("Todos os campos devem ser preenchidos !!");
-//                back(1);
+                back(1);
             } else {
                 br(4);
                 aguarde();

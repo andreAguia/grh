@@ -66,6 +66,12 @@ if ($acesso) {
     set_session('parametroMeses');
     set_session('parametroDtInicial');
     set_session('parametroDtFinal');
+    set_session('parametroDtInicial2');
+    set_session('parametroDtFinal2');
+    set_session('parametroDtInicial3');
+    set_session('parametroDtFinal3');
+    set_session('parametroDtInicial4');
+    set_session('parametroDtFinal4');
     set_session('parametroPreenchido');
     set_session('parametroAcordo');
 

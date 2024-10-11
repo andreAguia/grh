@@ -28,46 +28,489 @@ if ($acesso) {
 
     if (empty($dtInicial)) {
         $dtFinal = null;
+        $dtFinal2 = null;
+        $dtFinal3 = null;
+        $dtFinal4 = null;
     } else {
         $dtFinal = addDias($dtInicial, 1825, false);
+
+        $dtInicial2 = addDias($dtFinal, 1, false);
+        $dtFinal2 = addDias($dtInicial2, 1825, false);
+
+        $dtInicial3 = addDias($dtFinal2, 1, false);
+        $dtFinal3 = addDias($dtInicial3, 1825, false);
+
+        $dtInicial4 = addDias($dtFinal3, 1, false);
+        $dtFinal4 = addDias($dtInicial4, 1825, false);
     }
 
     # Pega os parâmetros
-    $parametroMeses = post('parametroMeses', get_session('parametroMeses', 1));
+    $parametroMeses = post('parametroMeses', get_session('parametroMeses', 3));
+
     $parametroDtInicial = post('parametroDtInicial', get_session('parametroDtInicial', date_to_bd($dtInicial)));
     $parametroDtFinal = post('parametroDtFinal', get_session('parametroDtFinal', date_to_bd($dtFinal)));
+
+    $parametroDtInicial2 = post('parametroDtInicial2', get_session('parametroDtInicial2', date_to_bd($dtInicial2)));
+    $parametroDtFinal2 = post('parametroDtFinal2', get_session('parametroDtFinal2', date_to_bd($dtFinal2)));
+
+    $parametroDtInicial3 = post('parametroDtInicial3', get_session('parametroDtInicial3', date_to_bd($dtInicial3)));
+    $parametroDtFinal3 = post('parametroDtFinal3', get_session('parametroDtFinal3', date_to_bd($dtFinal3)));
+
+    $parametroDtInicial4 = post('parametroDtInicial4', get_session('parametroDtInicial4', date_to_bd($dtInicial4)));
+    $parametroDtFinal4 = post('parametroDtFinal4', get_session('parametroDtFinal4', date_to_bd($dtFinal4)));
+
     $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido'));
     $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo'));
-    
+
     # Verifica a fase do programa
     $fase = get('fase');
 
     # Joga os parâmetros par as sessions
     set_session('parametroMeses', $parametroMeses);
+
     set_session('parametroDtInicial', $parametroDtInicial);
     set_session('parametroDtFinal', $parametroDtFinal);
+
+    set_session('parametroDtInicial2', $parametroDtInicial2);
+    set_session('parametroDtFinal2', $parametroDtFinal2);
+
+    set_session('parametroDtInicial3', $parametroDtInicial3);
+    set_session('parametroDtFinal3', $parametroDtFinal3);
+
+    set_session('parametroDtInicial4', $parametroDtInicial4);
+    set_session('parametroDtFinal4', $parametroDtFinal4);
+
     set_session('parametroPreenchido', $parametroPreenchido);
     set_session('parametroAcordo', $parametroAcordo);
-    
+
     # Rotina em Jscript
     $script = '<script type="text/javascript" language="javascript">
         
-            $(document).ready(function(){                
+            $(document).ready(function(){
+            
+                var m = $("#parametroMeses option:selected").val();
+
+                    if(m == 3) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").hide();
+                        $("#labelparametroDtInicial2").hide();
+                        $("#parametroDtFinal2").hide();
+                        $("#labelparametroDtFinal2").hide();
+                        
+                        $("#parametroDtInicial3").hide();
+                        $("#labelparametroDtInicial3").hide();
+                        $("#parametroDtFinal3").hide();
+                        $("#labelparametroDtFinal3").hide();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 6) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").hide();
+                        $("#labelparametroDtInicial3").hide();
+                        $("#parametroDtFinal3").hide();
+                        $("#labelparametroDtFinal3").hide();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 9) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").show();
+                        $("#labelparametroDtInicial3").show();
+                        $("#parametroDtFinal3").show();
+                        $("#labelparametroDtFinal3").show();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 12) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").show();
+                        $("#labelparametroDtInicial3").show();
+                        $("#parametroDtFinal3").show();
+                        $("#labelparametroDtFinal3").show();
+                        
+                        $("#parametroDtInicial4").show();
+                        $("#labelparametroDtInicial4").show();
+                        $("#parametroDtFinal4").show();
+                        $("#labelparametroDtFinal4").show();
+                    }
+            
+                // Quando muda os meses
+                $("#parametroMeses").change(function(){
+                
+                    var m = $("#parametroMeses option:selected").val();
+                    if(m == 3) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").hide();
+                        $("#labelparametroDtInicial2").hide();
+                        $("#parametroDtFinal2").hide();
+                        $("#labelparametroDtFinal2").hide();
+                        
+                        $("#parametroDtInicial3").hide();
+                        $("#labelparametroDtInicial3").hide();
+                        $("#parametroDtFinal3").hide();
+                        $("#labelparametroDtFinal3").hide();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 6) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").hide();
+                        $("#labelparametroDtInicial3").hide();
+                        $("#parametroDtFinal3").hide();
+                        $("#labelparametroDtFinal3").hide();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 9) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").show();
+                        $("#labelparametroDtInicial3").show();
+                        $("#parametroDtFinal3").show();
+                        $("#labelparametroDtFinal3").show();
+                        
+                        $("#parametroDtInicial4").hide();
+                        $("#labelparametroDtInicial4").hide();
+                        $("#parametroDtFinal4").hide();
+                        $("#labelparametroDtFinal4").hide();
+                    }
+                    
+                    if(m == 12) {
+                        $("#parametroDtInicial").show();
+                        $("#labelparametroDtInicial").show();
+                        $("#parametroDtFinal").show();
+                        $("#labelparametroDtFinal").show();
+                        
+                        $("#parametroDtInicial2").show();
+                        $("#labelparametroDtInicial2").show();
+                        $("#parametroDtFinal2").show();
+                        $("#labelparametroDtFinal2").show();
+                        
+                        $("#parametroDtInicial3").show();
+                        $("#labelparametroDtInicial3").show();
+                        $("#parametroDtFinal3").show();
+                        $("#labelparametroDtFinal3").show();
+                        
+                        $("#parametroDtInicial4").show();
+                        $("#labelparametroDtInicial4").show();
+                        $("#parametroDtFinal4").show();
+                        $("#labelparametroDtFinal4").show();
+                    }
+                    
+                 });
+                
                   
                 // Quando muda a data Inicial
                 $("#parametroDtInicial").change(function(){
-                   
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtFinal
                     var dt1 = $("#parametroDtInicial").val();
-                    var numDias = 1825;
-                    
                     data1 = new Date(dt1);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
-                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
-            
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal").val(formatado);
-                                   
+                    
+                    // dtInicial2
+                    var dt2 = $("#parametroDtFinal").val();
+                    data1 = new Date(dt2);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial2").val(formatado); 
+                    
+                    // dtFinal2
+                    var dt3 = $("#parametroDtInicial2").val();
+                    data1 = new Date(dt3);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal2").val(formatado);
+                    
+                    // dtInicial3
+                    var dt4 = $("#parametroDtFinal2").val();
+                    data1 = new Date(dt4);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial3").val(formatado); 
+                    
+                    // dtFinal3
+                    var dt5 = $("#parametroDtInicial3").val();
+                    data1 = new Date(dt5);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal3").val(formatado);
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
                 });
+                
+                // Quando muda a data Final
+                $("#parametroDtFinal").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtInicial2
+                    var dt2 = $("#parametroDtFinal").val();
+                    data1 = new Date(dt2);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial2").val(formatado); 
+                    
+                    // dtFinal2
+                    var dt3 = $("#parametroDtInicial2").val();
+                    data1 = new Date(dt3);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal2").val(formatado);
+                    
+                    // dtInicial3
+                    var dt4 = $("#parametroDtFinal2").val();
+                    data1 = new Date(dt4);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial3").val(formatado); 
+                    
+                    // dtFinal3
+                    var dt5 = $("#parametroDtInicial3").val();
+                    data1 = new Date(dt5);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal3").val(formatado);
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
+                // Quando muda a data inicial2
+                $("#parametroDtInicial2").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtFinal2
+                    var dt3 = $("#parametroDtInicial2").val();
+                    data1 = new Date(dt3);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal2").val(formatado);
+                    
+                    // dtInicial3
+                    var dt4 = $("#parametroDtFinal2").val();
+                    data1 = new Date(dt4);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial3").val(formatado); 
+                    
+                    // dtFinal3
+                    var dt5 = $("#parametroDtInicial3").val();
+                    data1 = new Date(dt5);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal3").val(formatado);
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
+                // Quando muda a data final2
+                $("#parametroDtFinal2").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtInicial3
+                    var dt4 = $("#parametroDtFinal2").val();
+                    data1 = new Date(dt4);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial3").val(formatado); 
+                    
+                    // dtFinal3
+                    var dt5 = $("#parametroDtInicial3").val();
+                    data1 = new Date(dt5);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal3").val(formatado);
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
+                // Quando muda a data inicial3
+                $("#parametroDtInicial3").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtFinal3
+                    var dt5 = $("#parametroDtInicial3").val();
+                    data1 = new Date(dt5);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal3").val(formatado);
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
+                // Quando muda a data final3
+                $("#parametroDtFinal3").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtInicial4
+                    var dt6 = $("#parametroDtFinal3").val();
+                    data1 = new Date(dt6);
+                    data2 = new Date(data1.getTime() + (2 * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtInicial4").val(formatado); 
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
+                // Quando muda a data inicial4
+                $("#parametroDtInicial4").change(function(){
+                                       
+                    var numDias = 1825 + 1;
+                    
+                    // dtFinal4
+                    var dt7 = $("#parametroDtInicial4").val();
+                    data1 = new Date(dt7);
+                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    $("#parametroDtFinal4").val(formatado);
+                });
+                
             });
         </script>';
 
@@ -104,18 +547,19 @@ if ($acesso) {
             array_unshift($relacao, [null, null]);
 
             # Formulário de Pesquisa
-            $form = new Form('?fase=aguarde');
+            $form = new Form("?fase=aguarde");
 
             $controle = new Input('parametroMeses', 'combo', 'Mes(es):', 1);
             $controle->set_size(8);
             $controle->set_title('Meses que Tem Direito');
             $controle->set_valor($parametroMeses);
-            #$controle->set_array([3, 6, 9]);
-            $controle->set_array([3]);
+            $controle->set_array([3, 6, 9, 12]);
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_autofocus(true);
             $form->add_item($controle);
+
+            ###
 
             $controle = new Input('parametroDtInicial', 'data', 'Data Inicial do Período:', 1);
             $controle->set_size(200);
@@ -129,6 +573,60 @@ if ($acesso) {
             $controle->set_size(200);
             $controle->set_title('Informe a data final do período');
             $controle->set_valor($parametroDtFinal);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            ###
+
+            $controle = new Input('parametroDtInicial2', 'data', 'Data Inicial do Período 2:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data inicial do período 2');
+            $controle->set_valor($parametroDtInicial2);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroDtFinal2', 'data', 'Data Final do Período 2:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data final do período 2');
+            $controle->set_valor($parametroDtFinal2);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            ###
+
+            $controle = new Input('parametroDtInicial3', 'data', 'Data Inicial do Período 3:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data inicial do período 3');
+            $controle->set_valor($parametroDtInicial3);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroDtFinal3', 'data', 'Data Final do Período 3:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data final do período 3');
+            $controle->set_valor($parametroDtFinal3);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            ###
+
+            $controle = new Input('parametroDtInicial4', 'data', 'Data Inicial do Período 4:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data inicial do período 4');
+            $controle->set_valor($parametroDtInicial4);
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $controle = new Input('parametroDtFinal4', 'data', 'Data Final do Período 4:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Informe a data final do período 4');
+            $controle->set_valor($parametroDtFinal4);
             $controle->set_linha(2);
             $controle->set_col(6);
             $form->add_item($controle);
@@ -169,8 +667,10 @@ if ($acesso) {
                     OR empty($parametroPreenchido)
                     OR empty($parametroAcordo)) {
 
+                echo $parametroMeses, " - ", $parametroDtInicial, " - ", $parametroDtFinal, " - ", $parametroPreenchido, " - ", $parametroAcordo;
+
                 alert("Todos os campos devem ser preenchidos !!");
-                back(1);
+//                back(1);
             } else {
                 br(4);
                 aguarde();
@@ -199,10 +699,35 @@ if ($acesso) {
             $data1 = date_to_php($parametroDtInicial);
             $data2 = date_to_php($parametroDtFinal);
 
+            $data3 = date_to_php($parametroDtInicial2);
+            $data4 = date_to_php($parametroDtFinal2);
+
+            $data5 = date_to_php($parametroDtInicial3);
+            $data6 = date_to_php($parametroDtFinal3);
+
+            $data7 = date_to_php($parametroDtInicial4);
+            $data8 = date_to_php($parametroDtFinal4);
+
             # Monta o texto
-            $texto = "O servidor faz jus à concessão de <b>{$parametroMeses} ($extenso) meses</b>"
-                    . " de Licença Prêmio relativo ao período de "
-                    . "<b>{$data1} - {$data2}</b>";
+            $texto = "O servidor faz jus à concessão de <b>{$parametroMeses} ($extenso) meses</b> de Licença Prêmio relativos";
+
+            if ($parametroMeses == 3) {
+                $texto .= " ao período de <b>{$data1} - {$data2}</b>";
+            }
+
+            if ($parametroMeses == 6) {
+                $texto .= " aos períodos de <b>{$data1} - {$data2} e {$data3} - {$data4}</b>";
+            }
+
+            if ($parametroMeses == 9) {
+                $texto .= " aos períodos de <b>{$data1} - {$data2}, {$data3} - {$data4} e {$data5} - {$data6}</b>";
+            }
+
+            if ($parametroMeses == 12) {
+                $texto .= " aos períodos de <b>{$data1} - {$data2}, {$data3} - {$data4}, {$data5} - {$data6} e {$data7} - {$data8}</b>";
+            }
+
+
 
             # Monta a Declaração
             $dec = new Declaracao();

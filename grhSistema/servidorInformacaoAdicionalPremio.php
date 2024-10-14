@@ -38,13 +38,14 @@ if ($acesso) {
 
     # Exibe aviso 
     $objeto->set_rotinaExtraEditar("callout");
-    $objeto->set_rotinaExtraEditarParametro("Importante ressaltar que o que for escrito nas Observações irá aparecer na ficha cadastral.");
+    $objeto->set_rotinaExtraEditarParametro("Importante ressaltar que o que for escrito nas Observações"
+            . " irá aparecer na ficha cadastral, junto as informações de licença prêmio.");
 
     # Pega o perfil do Servidor    
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Observações");
+    $objeto->set_nome("Observações da Licença Prêmio");
 
     # select do edita
     $selectEdita = 'SELECT obsPremio

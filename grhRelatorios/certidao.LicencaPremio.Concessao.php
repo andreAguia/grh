@@ -16,6 +16,7 @@ include ("../grhSistema/_config.php");
 
 # Conecta ao Banco de Dados
 $pessoal = new Pessoal();
+$intra = new Intra();
 $licencaPremio = new LicencaPremio();
 
 # Permissão de Acesso
@@ -46,6 +47,10 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroMeses = post('parametroMeses', get_session('parametroMeses', 3));
+    $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Concessão"));
+
+    $parametroPublicacaoData = post('parametroPublicacaoData', get_session('parametroPublicacaoData'));
+    $parametroPublicacaoPag = post('parametroPublicacaoPag', get_session('parametroPublicacaoPag'));
 
     $parametroDtInicial = post('parametroDtInicial', get_session('parametroDtInicial', date_to_bd($dtInicial)));
     $parametroDtFinal = post('parametroDtFinal', get_session('parametroDtFinal', date_to_bd($dtFinal)));
@@ -59,14 +64,18 @@ if ($acesso) {
     $parametroDtInicial4 = post('parametroDtInicial4', get_session('parametroDtInicial4', date_to_bd($dtInicial4)));
     $parametroDtFinal4 = post('parametroDtFinal4', get_session('parametroDtFinal4', date_to_bd($dtFinal4)));
 
-    $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido'));
-    $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo'));
+    $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido',$intra->get_nomeUsuario($idUsuario)));
+    $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo',$pessoal->get_nome($pessoal->get_gerente(66))));
 
     # Verifica a fase do programa
     $fase = get('fase');
 
     # Joga os parâmetros par as sessions
     set_session('parametroMeses', $parametroMeses);
+    set_session('parametroTipo', $parametroTipo);
+    
+    set_session('parametroPublicacaoData', $parametroPublicacaoData);
+    set_session('parametroPublicacaoPag', $parametroPublicacaoPag);
 
     set_session('parametroDtInicial', $parametroDtInicial);
     set_session('parametroDtFinal', $parametroDtFinal);
@@ -87,6 +96,40 @@ if ($acesso) {
     $script = '<script type="text/javascript" language="javascript">
         
             $(document).ready(function(){
+            
+                var r = $("#parametroTipo option:selected").val();
+                if(r == "Concessão") {
+                        $("#parametroPublicacaoData").hide();
+                        $("#labelparametroPublicacaoData").hide();
+                        $("#parametroPublicacaoPag").hide();
+                        $("#labelparametroPublicacaoPag").hide();
+                    }
+                    
+                if(r == "Recontagem") {
+                        $("#parametroPublicacaoData").show();
+                        $("#labelparametroPublicacaoData").show();
+                        $("#parametroPublicacaoPag").show();
+                        $("#labelparametroPublicacaoPag").show();
+                    } 
+                    
+                // Quando muda os meses
+                $("#parametroTipo").change(function(){
+                
+                var r = $("#parametroTipo option:selected").val();
+                if(r == "Concessão") {
+                        $("#parametroPublicacaoData").hide();
+                        $("#labelparametroPublicacaoData").hide();
+                        $("#parametroPublicacaoPag").hide();
+                        $("#labelparametroPublicacaoPag").hide();
+                    }
+                    
+                if(r == "Recontagem") {
+                        $("#parametroPublicacaoData").show();
+                        $("#labelparametroPublicacaoData").show();
+                        $("#parametroPublicacaoPag").show();
+                        $("#labelparametroPublicacaoPag").show();
+                    } 
+                });               
             
                 var m = $("#parametroMeses option:selected").val();
 
@@ -530,7 +573,7 @@ if ($acesso) {
     switch ($fase) {
         case "":
             # Título
-            titulo("Certidão de Concessão para Licença Prêmio");
+            titulo("Certidão para Licença Prêmio");
             br();
 
             # Pega os dados da combo preenchido e de acordo
@@ -549,12 +592,22 @@ if ($acesso) {
             # Formulário de Pesquisa
             $form = new Form("?fase=aguarde");
 
+            $controle = new Input('parametroTipo', 'combo', 'Tipo da Certidão:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Tipo da Certidão');
+            $controle->set_valor($parametroTipo);
+            $controle->set_array(["Concessão", "Recontagem"]);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
+
             $controle = new Input('parametroMeses', 'combo', 'Mes(es):', 1);
             $controle->set_size(8);
             $controle->set_title('Meses que Tem Direito');
             $controle->set_valor($parametroMeses);
             $controle->set_array([3, 6, 9, 12]);
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(4);
             $controle->set_autofocus(true);
             $form->add_item($controle);
@@ -562,97 +615,115 @@ if ($acesso) {
             ###
 
             $controle = new Input('parametroDtInicial', 'data', 'Data Inicial do Período:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data inicial do período');
             $controle->set_valor($parametroDtInicial);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             $controle = new Input('parametroDtFinal', 'data', 'Data Final do Período:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data final do período');
             $controle->set_valor($parametroDtFinal);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             ###
 
             $controle = new Input('parametroDtInicial2', 'data', 'Data Inicial do Período 2:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data inicial do período 2');
             $controle->set_valor($parametroDtInicial2);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             $controle = new Input('parametroDtFinal2', 'data', 'Data Final do Período 2:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data final do período 2');
             $controle->set_valor($parametroDtFinal2);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             ###
 
             $controle = new Input('parametroDtInicial3', 'data', 'Data Inicial do Período 3:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data inicial do período 3');
             $controle->set_valor($parametroDtInicial3);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             $controle = new Input('parametroDtFinal3', 'data', 'Data Final do Período 3:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data final do período 3');
             $controle->set_valor($parametroDtFinal3);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             ###
 
             $controle = new Input('parametroDtInicial4', 'data', 'Data Inicial do Período 4:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data inicial do período 4');
             $controle->set_valor($parametroDtInicial4);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
 
             $controle = new Input('parametroDtFinal4', 'data', 'Data Final do Período 4:', 1);
-            $controle->set_size(200);
+            $controle->set_size(20);
             $controle->set_title('Informe a data final do período 4');
             $controle->set_valor($parametroDtFinal4);
-            $controle->set_linha(2);
+            $controle->set_linha(3);
+            $controle->set_col(6);
+            $form->add_item($controle);
+            
+            ###
+
+            $controle = new Input('parametroPublicacaoData', 'data', 'Publicação Sem Efeito:', 1);
+            $controle->set_size(20);
+            $controle->set_title('Informe a data da publicação a ficar sem efeito');
+            $controle->set_valor($parametroPublicacaoData);
+            $controle->set_linha(4);
             $controle->set_col(6);
             $form->add_item($controle);
 
+            $controle = new Input('parametroPublicacaoPag', 'texto', 'Página:', 1);
+            $controle->set_size(6);
+            $controle->set_title('Página da publicação');
+            $controle->set_valor($parametroPublicacaoPag);
+            $controle->set_linha(4);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
             $controle = new Input('parametroPreenchido', 'combo', 'Preenchido por:', 1);
-            $controle->set_size(200);
+            $controle->set_size(100);
             $controle->set_title('quem Preencheu');
             $controle->set_valor($parametroPreenchido);
             $controle->set_array($relacao);
-            $controle->set_linha(3);
+            $controle->set_linha(5);
             $controle->set_col(6);
             $form->add_item($controle);
 
             $controle = new Input('parametroAcordo', 'combo', 'De Acordo:', 1);
-            $controle->set_size(200);
+            $controle->set_size(100);
             $controle->set_title('de Acordo');
             $controle->set_valor($parametroAcordo);
             $controle->set_array($relacao);
-            $controle->set_linha(3);
+            $controle->set_linha(5);
             $controle->set_col(6);
             $form->add_item($controle);
 
             # submit
             $controle = new Input('submit', 'submit');
             $controle->set_valor('Imprimir');
-            $controle->set_linha(3);
+            $controle->set_linha(4);
             $form->add_item($controle);
 
             $form->show();
@@ -725,23 +796,32 @@ if ($acesso) {
                 $texto .= " aos períodos de <b>{$data1} - {$data2}, {$data3} - {$data4}, {$data5} - {$data6} e {$data7} - {$data8}</b>";
             }
 
-
-
             # Monta a Declaração
             $dec = new Declaracao();
-            $dec->set_declaracaoNome("CERTIDÃO DE CONCESSÃO PARA LICENÇA PRÊMIO");
+            $dec->set_declaracaoNome("CERTIDÃO DE " . mb_strtoupper($parametroTipo) . " PARA LICENÇA PRÊMIO");
             $dec->set_texto("ID funcional nº: <b>{$pessoal->get_idFuncional($idServidorPesquisado)}</b>");
             $dec->set_texto("Nome: <b>" . strtoupper($pessoal->get_nome($idServidorPesquisado)) . "</b>");
             $dec->set_texto("Processo de Contagem: <b>{$licencaPremio->get_numProcessoContagem($idServidorPesquisado)}</b>");
             $dec->set_texto("Cargo: <b>{$pessoal->get_cargoSimples($idServidorPesquisado)}</b>");
             $dec->set_texto("Nível: <b>{$pessoal->get_nivelSalarialCargo($idServidorPesquisado)}</b>");
             $dec->set_texto("Assunto: <b>Licença Prêmio</b>");
-            $dec->set_texto("( x ) Concessão&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");
+            if ($parametroTipo == "Concessão") {
+                $dec->set_texto("( x ) Concessão&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");
+            } else {
+                $dec->set_texto("(&nbsp;&nbsp;&nbsp;) Concessão&nbsp;&nbsp;&nbsp;( x ) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");
+            }
             $dec->set_texto("<hr/>");
             $dec->set_texto("Fundamento: Art. 129 do decreto2479/79, combinado coma Lei 1054/86");
             $dec->set_texto("<hr/>");
-            $dec->set_texto("Sr. Gerente de Recursos Humanos,");
-            $dec->set_texto($texto);
+            $dec->set_texto("Sr. Gerente de Recursos Humanos,");            
+            
+            if ($parametroTipo == "Concessão") {
+                $dec->set_texto("{$texto}.");
+            } else {
+                $data9 = date_to_php($parametroPublicacaoData);
+                $dec->set_texto("{$texto}, tornando sem efeito a publicação de {$data9} página {$parametroPublicacaoPag}.");
+            }
+            
             $dec->set_texto("");
             $dec->set_texto("Preenchido por: <b>{$parametroPreenchido}</b>");
             $dec->set_texto("De Acordo: <b>{$parametroAcordo}</b>");

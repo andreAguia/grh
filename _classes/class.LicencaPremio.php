@@ -456,170 +456,153 @@ class LicencaPremio {
 
     ###########################################################
 
-    public function exibePublicacoesPremio($idServidor) {
+    public function exibeProcessoContagem($idServidor = null) {
 
-        /**
-         * Exibe uma tabela com as publicações de Licença Prêmio de um servidor
-         */
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        # Pega o número de vínculos
-        $numVinculos = $this->get_numVinculosPremio($idServidor);
-
-        /*
-         * Exibe o número do processo
-         */
-
-        # Limita o tamanho da tela
-        $grid = new Grid();
-        $grid->abreColuna(4);
-
-        if ($numVinculos > 1) {
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $this->get_vinculosPremio($idServidor, false);
-
-            # Percorre os vinculos
-            foreach ($vinculos as $tt) {
-                # Insere no array o vinculo e o processo
-                $conteudo1[] = [
-                    $pessoal->get_cargoSigla($tt[0]),
-                    $this->get_numProcessoContagem($tt[0])
-                ];
-            }
-
-            $tabela = new Tabela();
-            $tabela->set_conteudo($conteudo1);
-            $tabela->set_align(["left"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_titulo("Processo de Contagem");
-            $tabela->set_width([50, 50]);
-            $tabela->set_label(["Vínculo", "Processos"]);
-            $tabela->set_grupoCorColuna(0);
-            $tabela->show();
+        # Valida $id
+        if (empty($idServidor)) {
+            return null;
         } else {
-            titulotable("Processo de Contagem");
-            $painel = new Callout();
-            $painel->abre();
-            p($this->get_numProcessoContagem($idServidor), "f20", "center");
-            $painel->fecha();
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            # Pega o número de vínculos
+            $numVinculos = $this->get_numVinculosPremio($idServidor);
+
+            if ($numVinculos > 1) {
+                # Carrega um array com os idServidor de cada vinculo
+                $vinculos = $this->get_vinculosPremio($idServidor, false);
+
+                # Percorre os vinculos
+                foreach ($vinculos as $tt) {
+                    # Insere no array o vinculo e o processo
+                    $conteudo1[] = [
+                        $pessoal->get_cargoSigla($tt[0]),
+                        $this->get_numProcessoContagem($tt[0])
+                    ];
+                }
+
+                $tabela = new Tabela();
+                $tabela->set_conteudo($conteudo1);
+                $tabela->set_align(["left"]);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_titulo("Processo de Contagem");
+                $tabela->set_width([50, 50]);
+                $tabela->set_label(["Vínculo", "Processos"]);
+                $tabela->set_grupoCorColuna(0);
+                $tabela->show();
+            } else {
+                titulotable("Processo de Contagem");
+                $painel = new Callout();
+                $painel->abre();
+                p($this->get_numProcessoContagem($idServidor), "f20", "center");
+                $painel->fecha();
+            }
         }
+    }
 
+    ###########################################################
+
+    public function exibeMenuDocumentos() {
         # Servidores
-        titulotable('Certidões');
+        titulotable('Documentos');
 
-        # Menu de Certidão
+        # Menu de Documentos
         $painel = new Callout();
         $painel->abre();
 
         $tamanhoImage = 40;
-        $menu = new MenuGrafico(3);
+        $menu = new MenuGrafico(2);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Concessão');
+        $botao->set_label('Certidão');
         $botao->set_target('blank');
         $botao->set_url('../grhRelatorios/certidao.LicencaPremio.Concessao.php');
         $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Afastamentos dos Servidores da GRH');
+        $botao->set_title('Emite certidão');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Recontagem');
+        $botao->set_label('MTS');
         #$botao->set_target('blank');
         $botao->set_url('?');
         $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Afastamentos dos Servidores da GRH');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Indeferimento');
-        #$botao->set_target('blank');
-        $botao->set_url('?');
-        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Afastamentos dos Servidores da GRH');
+        $botao->set_title('Emite o MTS');
         $menu->add_item($botao);
 
         $menu->show();
         $painel->fecha();
-
-        tituloTable("Atenção");
-        callout("Antes de informar ao servidor sobre a licença prêmio, verifique se o mesmo possui algum afastamento específico que poderia alterar as datas da licença.<br/>O sistema, ainda, não verifica essa informação", "alert", "calloutMensagemPremio");
-
-        /*
-         * Exibe o número de publicação
-         */
-
-        # Verifica qual rotina vai executar
-        if ($numVinculos > 1) {
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidor, false);
-
-            # Percorre os vinculos
-            foreach ($vinculos as $tt) {
-                # Insere no array o vinculo e o processo
-                $conteudo2[] = [
-                    $pessoal->get_cargoSigla($tt[0]),
-                    $this->get_numPublicacoesPossiveis($tt[0]),
-                    $this->get_numPublicacoes($tt[0]),
-                    $this->get_numPublicacoesFaltantes($tt[0])
-                ];
-            }
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("N° de Publicações");
-            $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
-            $tabela->set_align(["left"]);
-            $tabela->set_conteudo($conteudo2);
-            $tabela->set_grupoCorColuna(0);
-            $tabela->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_colunaSomatorio([1, 2, 3]);
-            $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 3,
-                    'valor' => 0,
-                    'operador' => '<',
-                    'id' => 'alerta')));
-            $tabela->show();
-        } else {
-
-            $conteudo[] = [
-                $this->get_numPublicacoesPossiveis($idServidor),
-                $this->get_numPublicacoes($idServidor),
-                $this->get_numPublicacoesFaltantes($idServidor)
-            ];
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("N° de Publicações");
-            $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
-            $tabela->set_conteudo($conteudo);
-            $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 2,
-                    'valor' => 0,
-                    'operador' => '<>',
-                    'id' => 'alerta')));
-            $tabela->show();
-        }
-
-        /*
-         * Exibe a lista de publicações
-         */
-
-        $grid->fechaColuna();
-        $grid->abreColuna(8);
-
-        # Exibe as notificações
-        $this->exibeOcorrencias($idServidor);
-
-        # Exibe as publicações
-        $this->exibePublicacoes($idServidor);
-
-        $grid->fechaColuna();
-        $grid->fechaGrid();
     }
 
-###########################################################
+    ###########################################################
+
+    public function exibeNumeroPublicacoes($idServidor) {
+
+        # Valida $id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            # Pega o número de vínculos
+            $numVinculos = $this->get_numVinculosPremio($idServidor);
+
+            # Verifica qual rotina vai executar
+            if ($numVinculos > 1) {
+                # Carrega um array com os idServidor de cada vinculo
+                $vinculos = $pessoal->get_vinculos($idServidor, false);
+
+                # Percorre os vinculos
+                foreach ($vinculos as $tt) {
+                    # Insere no array o vinculo e o processo
+                    $conteudo2[] = [
+                        $pessoal->get_cargoSigla($tt[0]),
+                        $this->get_numPublicacoesPossiveis($tt[0]),
+                        $this->get_numPublicacoes($tt[0]),
+                        $this->get_numPublicacoesFaltantes($tt[0])
+                    ];
+                }
+
+                $tabela = new Tabela();
+                $tabela->set_titulo("N° de Publicações");
+                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
+                $tabela->set_align(["left"]);
+                $tabela->set_conteudo($conteudo2);
+                $tabela->set_grupoCorColuna(0);
+                $tabela->set_label(["Vínculo", "Possíveis", "Publicadas", "Pendentes"]);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_colunaSomatorio([1, 2, 3]);
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 3,
+                        'valor' => 0,
+                        'operador' => '<',
+                        'id' => 'alerta')));
+                $tabela->show();
+            } else {
+
+                $conteudo[] = [
+                    $this->get_numPublicacoesPossiveis($idServidor),
+                    $this->get_numPublicacoes($idServidor),
+                    $this->get_numPublicacoesFaltantes($idServidor)
+                ];
+
+                $tabela = new Tabela();
+                $tabela->set_titulo("N° de Publicações");
+                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
+                $tabela->set_totalRegistro(false);
+                $tabela->set_formatacaoCondicional(array(
+                    array('coluna' => 2,
+                        'valor' => 0,
+                        'operador' => '<>',
+                        'id' => 'alerta')));
+                $tabela->show();
+            }
+        }
+    }
+
+    ###########################################################
 
     public function exibePublicacoes($idServidor = null, $reduzido = false) {
 
@@ -634,6 +617,9 @@ class LicencaPremio {
 
         # exibe a tabela
         if ($numVinculos > 1) {
+
+            # Carrega um array com os idServidor de cada vinculo
+            $vinculos = $pessoal->get_vinculos($idServidor, false);
 
             # Exibe as Publicações
             $select = 'SELECT idServidor, 
@@ -1234,7 +1220,7 @@ class LicencaPremio {
             $painel = new Callout("warning");
             $painel->abre();
 
-            p("Observação Geral:", "labelOcorrencias");
+            p("Observação da Licença Prêmio:", "labelOcorrencias");
             p(nl2br($mensagem), "left", "f14");
 
             $painel->fecha();

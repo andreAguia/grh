@@ -316,7 +316,7 @@ if ($acesso) {
 
         # Edita Obs
         if (Verifica::acesso($idUsuario, [1, 2])) {
-            $botaoObs = new Button("Obs Geral", "servidorInformacaoAdicionalPremio.php");
+            $botaoObs = new Button("Obs Licença Prêmio", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
             $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoCalendario]);
         }
@@ -414,6 +414,50 @@ if ($acesso) {
                     $linkBotao1->set_class('button');
                     $linkBotao1->set_title("Edita o número do processo de contagem de licença prêmio");
                     $menu->add_link($linkBotao1, "left");
+                    $menu->show();
+                }
+
+                $grid->fechaColuna();
+                $grid->abreColuna(4);
+
+                # Exibe o processo de contagem
+                $licenca->exibeProcessoContagem($idServidorPesquisado);
+
+                $grid->fechaColuna();
+                $grid->abreColuna(4);
+
+                # Exibe o Menu de Documentos
+                $licenca->exibeMenuDocumentos();
+
+                $grid->fechaColuna();
+                $grid->abreColuna(4);
+
+                # Exibe o Número de Publicações
+                $licenca->exibeNumeroPublicacoes($idServidorPesquisado);
+
+                $grid->fechaColuna();
+                $grid->abreColuna(12);
+
+                # Exibe alerta
+                tituloTable("Atenção");
+                callout("Antes de informar ao servidor sobre a licença prêmio,"
+                        . " verifique se o mesmo possui algum afastamento"
+                        . " específico que poderia alterar as datas da"
+                        . " licença.<br/>O sistema, ainda, não verifica"
+                        . " essa informação", "alert", "calloutMensagemPremio");
+
+                # Cria um menu
+                if (Verifica::acesso($idUsuario, [1, 2])) {
+                    $grid->fechaColuna();
+                    $grid->abreColuna(9);
+
+                    # Exibe as notificações
+                    $licenca->exibeOcorrencias($idServidorPesquisado);
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(3);
+
+                    $menu = new MenuBar();
 
                     # Cadastro de Publicações
                     $linkBotao3 = new Link("Publicações", "servidorPublicacaoPremio.php");
@@ -421,10 +465,16 @@ if ($acesso) {
                     $linkBotao3->set_title("Acessa o Cadastro de Publicações");
                     $menu->add_link($linkBotao3, "right");
                     $menu->show();
+
+                    $grid->fechaColuna();
+                    $grid->abreColuna(12);
+                } else {
+                    # Exibe as notificações
+                    $licenca->exibeOcorrencias($idServidorPesquisado);
                 }
 
                 # Exibe as publicações de Licença Prêmio
-                $licenca->exibePublicacoesPremio($idServidorPesquisado);
+                $licenca->exibePublicacoes($idServidorPesquisado);
 
                 # Exibe o idServidor e idPessoa
                 p("S {$idServidorPesquisado} / P {$pessoal->get_idPessoa($idServidorPesquisado)}", 'idServidor');

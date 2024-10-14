@@ -485,10 +485,6 @@ if ($acesso) {
 
             case "editar" :
                 $objeto->$fase($id);
-                br();
-
-                # Exibe as publicações de Licença Prêmio
-                $licenca->exibePublicacoesPremio($idServidorPesquisado);
                 break;
 
             case "excluir" :

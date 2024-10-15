@@ -418,19 +418,19 @@ if ($acesso) {
                 }
 
                 $grid->fechaColuna();
-                $grid->abreColuna(4);
+                $grid->abreColuna(12, 6, 4);
 
                 # Exibe o processo de contagem
                 $licenca->exibeProcessoContagem($idServidorPesquisado);
 
                 $grid->fechaColuna();
-                $grid->abreColuna(4);
+                $grid->abreColuna(12, 6, 4);
 
                 # Exibe o Menu de Documentos
                 $licenca->exibeMenuDocumentos();
 
                 $grid->fechaColuna();
-                $grid->abreColuna(4);
+                $grid->abreColuna(12, 12, 4);
 
                 # Exibe o Número de Publicações
                 $licenca->exibeNumeroPublicacoes($idServidorPesquisado);

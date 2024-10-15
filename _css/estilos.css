@@ -727,7 +727,8 @@ tr#estatisticaTotal{
  *******************************************/
 
 tr#alerta{
-    background-color:#ffdcc3;
+    color:red;
+    font-weight: bold;
 }
 
 div#divEdita1{

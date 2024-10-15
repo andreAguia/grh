@@ -524,7 +524,8 @@ class LicencaPremio {
         $botao = new BotaoGrafico();
         $botao->set_label('MTS');
         #$botao->set_target('blank');
-        $botao->set_url('?');
+        #$botao->set_url('?');
+        $botao->set_onClick("alert('Rotina em Desenvolvimento!');");
         $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Emite o MTS');
         $menu->add_item($botao);
@@ -677,9 +678,10 @@ class LicencaPremio {
 
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 4,
-                    'valor' => 90,
+                    'valor' => '90',
                     'operador' => '>',
-                    'id' => 'alerta')));
+                    'id' => 'alerta')
+            ));
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
@@ -723,7 +725,14 @@ class LicencaPremio {
             $tabela->set_numeroOrdemTipo("d");
 
             $tabela->set_colunaSomatorio([2, 3, 4]);
-            #$tabela->set_colunaSomatorio(2);
+
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 3,
+                    'valor' => '90',
+                    'operador' => '>',
+                    'id' => 'alerta')
+            ));
+
             $tabela->set_totalRegistro(false);
             $tabela->show();
         }
@@ -1198,14 +1207,24 @@ class LicencaPremio {
             $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
         }
 
+        # Servidor com mais de 90 dias fruídos em uma única publicação
+        # Exibe as Publicações
+        $select = "SELECT idPublicacaoPremio
+                         FROM tbpublicacaopremio
+                        WHERE idServidor = {$idServidor}";
+
+        $row = $pessoal->select($select);
+
+        foreach ($row as $item) {
+            if ($this->get_numDiasFruidosPorPublicacao($item['idPublicacaoPremio']) > 90) {
+                $mensagem .= "Existem publicações com mais de 90 dias fruiídos.<br/>";
+            }
+        }
+
         if (!is_null($mensagem)) {
-            $painel = new Callout("warning");
-            $painel->abre();
 
-            p("Ocorrências:", "labelOcorrencias");
-            p($mensagem, "left", "f14");
-
-            $painel->fecha();
+            titulotable("Ocorrências");
+            callout($mensagem);
         }
     }
 

@@ -460,7 +460,7 @@ if ($acesso) {
                     $menu = new MenuBar();
 
                     # Cadastro de Publicações
-                    $linkBotao3 = new Link("Publicações", "servidorPublicacaoPremio.php");
+                    $linkBotao3 = new Link("Cadastro de Publicações", "servidorPublicacaoPremio.php");
                     $linkBotao3->set_class('button');
                     $linkBotao3->set_title("Acessa o Cadastro de Publicações");
                     $menu->add_link($linkBotao3, "right");

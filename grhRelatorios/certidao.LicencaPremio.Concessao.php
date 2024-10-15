@@ -30,8 +30,11 @@ if ($acesso) {
     if (empty($dtInicial)) {
         $dtFinal = null;
         $dtFinal2 = null;
+        $dtInicial2 = null;
         $dtFinal3 = null;
+        $dtInicial3 = null;
         $dtFinal4 = null;
+        $dtInicial4 = null;
     } else {
         $dtFinal = addDias($dtInicial, 1825, false);
 

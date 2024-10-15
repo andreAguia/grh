@@ -436,7 +436,7 @@ if ($acesso) {
                 $licenca->exibeNumeroPublicacoes($idServidorPesquisado);
 
                 $grid->fechaColuna();
-                $grid->abreColuna(12);
+                $grid->abreColuna(12, 12, 6);
 
                 # Exibe alerta
                 tituloTable("Atenção");
@@ -446,16 +446,17 @@ if ($acesso) {
                         . " licença.<br/>O sistema, ainda, não verifica"
                         . " essa informação", "alert", "calloutMensagemPremio");
 
+                $grid->fechaColuna();
+                $grid->abreColuna(12, 12, 6);
+
+                # Exibe as notificações
+                $licenca->exibeOcorrencias($idServidorPesquisado);
+
+                $grid->fechaColuna();
+                $grid->abreColuna(12);
+
                 # Cria um menu
                 if (Verifica::acesso($idUsuario, [1, 2])) {
-                    $grid->fechaColuna();
-                    $grid->abreColuna(9);
-
-                    # Exibe as notificações
-                    $licenca->exibeOcorrencias($idServidorPesquisado);
-
-                    $grid->fechaColuna();
-                    $grid->abreColuna(3);
 
                     $menu = new MenuBar();
 
@@ -465,12 +466,6 @@ if ($acesso) {
                     $linkBotao3->set_title("Acessa o Cadastro de Publicações");
                     $menu->add_link($linkBotao3, "right");
                     $menu->show();
-
-                    $grid->fechaColuna();
-                    $grid->abreColuna(12);
-                } else {
-                    # Exibe as notificações
-                    $licenca->exibeOcorrencias($idServidorPesquisado);
                 }
 
                 # Exibe as publicações de Licença Prêmio

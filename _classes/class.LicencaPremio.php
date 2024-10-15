@@ -494,7 +494,7 @@ class LicencaPremio {
                 titulotable("Processo de Contagem");
                 $painel = new Callout();
                 $painel->abre();
-                p($this->get_numProcessoContagem($idServidor), "f20", "center");
+                p(trataNulo($this->get_numProcessoContagem($idServidor)), "f20", "center");
                 $painel->fecha();
             }
         }
@@ -1189,22 +1189,22 @@ class LicencaPremio {
 
         # Exibe alerta se $diasDisponíveis for negativo no geral
         if ($diasDisponiveis < 0) {
-            $mensagem .= "Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
+            $mensagem .= "- Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
         }
 
         # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
         if ($diasDisponiveis < 1) {
-            $mensagem .= "Servidor sem dias disponíveis. É necessário cadastrar uma publicação para incluir uma licença prêmio.<br/>";
+            $mensagem .= "- Servidor sem dias disponíveis. É necessário cadastrar uma publicação para incluir uma licença prêmio.<br/>";
         }
 
         # Servidor sem processo cadastrado
         if (is_null($numProcesso)) {
-            $mensagem .= "Servidor sem número de processo de $nome cadastrado.<br/>";
+            $mensagem .= "- Servidor sem número de processo de $nome cadastrado.<br/>";
         }
 
         # Servidor com publicação pendente
         if ($this->get_numPublicacoesFaltantes($idServidor) > 0) {
-            $mensagem .= "Existem publicações pendentes para este servidor.<br/>";
+            $mensagem .= "- Existem publicações pendentes para este servidor.<br/>";
         }
 
         # Servidor com mais de 90 dias fruídos em uma única publicação
@@ -1217,15 +1217,12 @@ class LicencaPremio {
 
         foreach ($row as $item) {
             if ($this->get_numDiasFruidosPorPublicacao($item['idPublicacaoPremio']) > 90) {
-                $mensagem .= "Existem publicações com mais de 90 dias fruiídos.<br/>";
+                $mensagem .= "- Existem publicações com mais de 90 dias fruidos.<br/>";
             }
         }
 
-        if (!is_null($mensagem)) {
-
-            titulotable("Ocorrências");
-            callout($mensagem);
-        }
+        titulotable("Ocorrências");
+        callout(trataNulo($mensagem,"<br/><br/><br/>"));
     }
 
     ###########################################################
@@ -1269,7 +1266,11 @@ class LicencaPremio {
 
             $row = $pessoal->select($select, false);
 
-            return addDias(date_to_php($row[0]), $valor, false);
+            if (empty($row[0])) {
+                return null;
+            } else {
+                return addDias(date_to_php($row[0]), $valor, false);
+            }
         } else {
             return null;
         }

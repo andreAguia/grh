@@ -54,6 +54,9 @@ class MenuPrincipal {
 
         # Sispatri        
         #$this->moduloSispatri();
+        # Eventos        
+        $this->moduloEventos();
+
         # sistemas
         $this->moduloSistemas();
 
@@ -252,6 +255,18 @@ class MenuPrincipal {
     ######################################################################################################################
 
     /**
+     * Método moduloEventos
+     */
+    private static function moduloEventos() {
+        
+        $figura = new Imagem(PASTA_FIGURAS . 'semanaServidor.png', null, '100%', '100%');
+        $figura->set_title('Semana do Servidor');
+        $figura->show();
+    }
+
+    ######################################################################################################################
+
+    /**
      * Método moduloSispatri
      */
     private function moduloDiaRh() {
@@ -330,7 +345,7 @@ class MenuPrincipal {
 
         p($mensagem, "pAniversarioMensagem");
         br();
-        
+
         p("Parabéns Uenf !!", "pParabens");
 
         $painel->fecha();

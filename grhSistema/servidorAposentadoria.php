@@ -54,12 +54,14 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->iniciaPagina();
 
     # Cabeçalho da Página
     if (substr($fase, 0, 9) <> "relatorio") {
         AreaServidor::cabecalho();
+    } else {
+        $page->set_title("Previsão de Posentadoria - " . substr($fase, 10));
     }
+    $page->iniciaPagina();
 
     ########################################################
     # Limita o tamanho da tela

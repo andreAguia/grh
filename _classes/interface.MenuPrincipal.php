@@ -259,9 +259,13 @@ class MenuPrincipal {
      */
     private static function moduloEventos() {
         
-        $figura = new Imagem(PASTA_FIGURAS . 'semanaServidor.png', null, '100%', '100%');
-        $figura->set_title('Semana do Servidor');
-        $figura->show();
+        $botao = new BotaoGrafico();
+        $botao->set_label();
+        $botao->set_url("../../_arquivos/documentos/42.pdf");
+        $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor.png', '100%', '100%');
+        $botao->set_title('Semana do Servidor');
+        $botao->set_target("_blank");
+        $botao->show();
         br(2);
     }
 

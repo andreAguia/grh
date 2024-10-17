@@ -36,16 +36,20 @@ if ($acesso) {
         $dtFinal4 = null;
         $dtInicial4 = null;
     } else {
-        $dtFinal = addDias($dtInicial, 1825, false);
+        # O Calculo antigo era acrescentando 1825 dias (365 x 5)
+        # Mas o sistema considerava o ano bissexto
+        # Sandra mandou alterar para desconbsiderar o ano bissexto
+        # Dessa forma pega-se a data 5 anos apos desconsiderando o ano bissexto
+        $dtFinal = addDias(addAnos($dtInicial, 5), -1, false);
 
         $dtInicial2 = addDias($dtFinal, 1, false);
-        $dtFinal2 = addDias($dtInicial2, 1825, false);
+        $dtFinal2 = addDias(addAnos($dtInicial2, 5), -1, false);
 
         $dtInicial3 = addDias($dtFinal2, 1, false);
-        $dtFinal3 = addDias($dtInicial3, 1825, false);
+        $dtFinal3 = addDias(addAnos($dtInicial3, 5), -1, false);
 
         $dtInicial4 = addDias($dtFinal3, 1, false);
-        $dtFinal4 = addDias($dtInicial4, 1825, false);
+        $dtFinal4 = addDias(addAnos($dtInicial4, 5), -1, false);
     }
 
     # Pega os parâmetros
@@ -67,8 +71,8 @@ if ($acesso) {
     $parametroDtInicial4 = post('parametroDtInicial4', get_session('parametroDtInicial4', date_to_bd($dtInicial4)));
     $parametroDtFinal4 = post('parametroDtFinal4', get_session('parametroDtFinal4', date_to_bd($dtFinal4)));
 
-    $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido',$intra->get_nomeUsuario($idUsuario)));
-    $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo',$pessoal->get_nome($pessoal->get_gerente(66))));
+    $parametroPreenchido = post('parametroPreenchido', get_session('parametroPreenchido', $intra->get_nomeUsuario($idUsuario)));
+    $parametroAcordo = post('parametroAcordo', get_session('parametroAcordo', $pessoal->get_nome($pessoal->get_gerente(66))));
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -76,7 +80,7 @@ if ($acesso) {
     # Joga os parâmetros par as sessions
     set_session('parametroMeses', $parametroMeses);
     set_session('parametroTipo', $parametroTipo);
-    
+
     set_session('parametroPublicacaoData', $parametroPublicacaoData);
     set_session('parametroPublicacaoPag', $parametroPublicacaoPag);
 
@@ -327,8 +331,8 @@ if ($acesso) {
                     // dtFinal
                     var dt1 = $("#parametroDtInicial").val();
                     data1 = new Date(dt1);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal").val(formatado);
                     
                     // dtInicial2
@@ -341,8 +345,8 @@ if ($acesso) {
                     // dtFinal2
                     var dt3 = $("#parametroDtInicial2").val();
                     data1 = new Date(dt3);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal2").val(formatado);
                     
                     // dtInicial3
@@ -355,8 +359,8 @@ if ($acesso) {
                     // dtFinal3
                     var dt5 = $("#parametroDtInicial3").val();
                     data1 = new Date(dt5);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal3").val(formatado);
                     
                     // dtInicial4
@@ -369,8 +373,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -389,8 +393,8 @@ if ($acesso) {
                     // dtFinal2
                     var dt3 = $("#parametroDtInicial2").val();
                     data1 = new Date(dt3);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal2").val(formatado);
                     
                     // dtInicial3
@@ -403,8 +407,8 @@ if ($acesso) {
                     // dtFinal3
                     var dt5 = $("#parametroDtInicial3").val();
                     data1 = new Date(dt5);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal3").val(formatado);
                     
                     // dtInicial4
@@ -417,8 +421,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -430,8 +434,8 @@ if ($acesso) {
                     // dtFinal2
                     var dt3 = $("#parametroDtInicial2").val();
                     data1 = new Date(dt3);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal2").val(formatado);
                     
                     // dtInicial3
@@ -444,8 +448,8 @@ if ($acesso) {
                     // dtFinal3
                     var dt5 = $("#parametroDtInicial3").val();
                     data1 = new Date(dt5);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal3").val(formatado);
                     
                     // dtInicial4
@@ -458,8 +462,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -478,8 +482,8 @@ if ($acesso) {
                     // dtFinal3
                     var dt5 = $("#parametroDtInicial3").val();
                     data1 = new Date(dt5);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal3").val(formatado);
                     
                     // dtInicial4
@@ -492,8 +496,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -505,8 +509,8 @@ if ($acesso) {
                     // dtFinal3
                     var dt5 = $("#parametroDtInicial3").val();
                     data1 = new Date(dt5);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal3").val(formatado);
                     
                     // dtInicial4
@@ -519,8 +523,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -539,8 +543,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -552,8 +556,8 @@ if ($acesso) {
                     // dtFinal4
                     var dt7 = $("#parametroDtInicial4").val();
                     data1 = new Date(dt7);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                    ano = data1.getFullYear() + 5;                
+                    formatado = ano + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");            
                     $("#parametroDtFinal4").val(formatado);
                 });
                 
@@ -686,7 +690,7 @@ if ($acesso) {
             $controle->set_linha(3);
             $controle->set_col(6);
             $form->add_item($controle);
-            
+
             ###
 
             $controle = new Input('parametroPublicacaoData', 'data', 'Publicação Sem Efeito:', 1);
@@ -816,15 +820,15 @@ if ($acesso) {
             $dec->set_texto("<hr/>");
             $dec->set_texto("Fundamento: Art. 129 do decreto2479/79, combinado coma Lei 1054/86");
             $dec->set_texto("<hr/>");
-            $dec->set_texto("Sr. Gerente de Recursos Humanos,");            
-            
+            $dec->set_texto("Sr. Gerente de Recursos Humanos,");
+
             if ($parametroTipo == "Concessão") {
                 $dec->set_texto("{$texto}.");
             } else {
                 $data9 = date_to_php($parametroPublicacaoData);
                 $dec->set_texto("{$texto}, tornando sem efeito a publicação de {$data9} página {$parametroPublicacaoPag}.");
             }
-            
+
             $dec->set_texto("");
             $dec->set_texto("Preenchido por: <b>{$parametroPreenchido}</b>");
             $dec->set_texto("De Acordo: <b>{$parametroAcordo}</b>");

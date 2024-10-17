@@ -1267,9 +1267,21 @@ class LicencaPremio {
             $row = $pessoal->select($select, false);
 
             if (empty($row[0])) {
-                return addDias($pessoal->get_dtAdmissao($idServidor), $valor, false);
+                # Anteriormente se calculava usando o número 1825 (365 x 5)
+                # Sandra me pediu para não considerar os anos bissextos 
+                $dataAntiga = addDias($pessoal->get_dtAdmissao($idServidor), $valor, false);
+
+                # Novo cálculo
+                $dataNova = addAnos($pessoal->get_dtAdmissao($idServidor), 5);
+                return $dataNova;
             } else {
-                return addDias(date_to_php($row[0]), $valor + 1, false);
+                # Anteriormente se calculava usando o número 1825 (365 x 5)
+                # Sandra me pediu para não considerar os anos bissextos 
+                $dataAntiga = addDias(date_to_php($row[0]), $valor + 1, false);
+
+                # Novo cálculo
+                $dataNova = addAnos(date_to_php($row[0]), 5);
+                return $dataNova;
             }
         } else {
             return null;

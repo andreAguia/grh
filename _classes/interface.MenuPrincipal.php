@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 class MenuPrincipal {
 
@@ -262,6 +262,7 @@ class MenuPrincipal {
         $figura = new Imagem(PASTA_FIGURAS . 'semanaServidor.png', null, '100%', '100%');
         $figura->set_title('Semana do Servidor');
         $figura->show();
+        br(2);
     }
 
     ######################################################################################################################

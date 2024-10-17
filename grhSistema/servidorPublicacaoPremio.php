@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -129,6 +130,7 @@ if ($acesso) {
             'col' => 3,
             'size' => 20,
             'required' => true,
+            'padrao' => date_to_bd($licenca->get_dataInicialProximoPeriodo($idServidorPesquisado)),
             'title' => 'Data de início do período aquisitivo',
             'linha' => 1),
         array('nome' => 'dtFimPeriodo',
@@ -137,6 +139,7 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'required' => true,
+            'padrao' => date_to_bd($licenca->get_dataFinalProximaPeriodo($idServidorPesquisado)),
             'title' => 'Data de término do período aquisitivo',
             'linha' => 1),
         array('nome' => 'numDias',
@@ -190,6 +193,7 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+            
             # Exibe quadro de licença prêmio
             #Grh::quadroLicencaPremio($idServidorPesquisado);
             # Pega os dados para o alerta

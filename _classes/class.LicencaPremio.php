@@ -566,7 +566,7 @@ class LicencaPremio {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("N° de Publicações");
-                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
+                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_align(["left"]);
                 $tabela->set_conteudo($conteudo2);
                 $tabela->set_grupoCorColuna(0);
@@ -589,7 +589,7 @@ class LicencaPremio {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("N° de Publicações");
-                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataProximaPublicacao($idServidor)}</b>");
+                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_conteudo($conteudo);
                 $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
                 $tabela->set_totalRegistro(false);
@@ -1222,7 +1222,7 @@ class LicencaPremio {
         }
 
         titulotable("Ocorrências");
-        callout(trataNulo($mensagem,"<br/><br/><br/>"));
+        callout(trataNulo($mensagem, "<br/><br/><br/>"));
     }
 
     ###########################################################
@@ -1245,7 +1245,7 @@ class LicencaPremio {
 
     ###########################################################
 
-    function get_dataProximaPublicacao($idServidor) {
+    function get_dataFinalProximaPeriodo($idServidor) {
         /*
          * Informa a data da próxima publicação
          *
@@ -1267,9 +1267,9 @@ class LicencaPremio {
             $row = $pessoal->select($select, false);
 
             if (empty($row[0])) {
-                return null;
+                return addDias($pessoal->get_dtAdmissao($idServidor), $valor, false);
             } else {
-                return addDias(date_to_php($row[0]), $valor, false);
+                return addDias(date_to_php($row[0]), $valor + 1, false);
             }
         } else {
             return null;
@@ -1278,7 +1278,7 @@ class LicencaPremio {
 
     ###########################################################
 
-    function get_dataProximoPeriodo($idServidor) {
+    function get_dataInicialProximoPeriodo($idServidor) {
         /*
          * Informa a data da próxima publicação
          *
@@ -1297,7 +1297,8 @@ class LicencaPremio {
             $row = $pessoal->select($select, false);
 
             if (empty($row[0])) {
-                return null;
+                # quando não tiver é a data de admissão (primeiro período)
+                return $pessoal->get_dtAdmissao($idServidor);
             } else {
                 return addDias(date_to_php($row[0]), 1, false);
             }

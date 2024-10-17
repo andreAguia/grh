@@ -25,7 +25,7 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
 
     # Calcula as datas padrão
-    $dtInicial = $licencaPremio->get_dataProximoPeriodo($idServidorPesquisado);
+    $dtInicial = $licencaPremio->get_dataInicialProximoPeriodo($idServidorPesquisado);
 
     if (empty($dtInicial)) {
         $dtFinal = null;

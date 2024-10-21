@@ -1418,33 +1418,17 @@ class Pessoal extends Bd {
         # Pega o perfil do servidor
         $idPerfil = $this->get_idPerfil($idServidor);
 
-        if ($idPerfil == 2) {
-
-            # Pega o cargo do servidor
-            $select = 'SELECT matExterna
-                     FROM tbcedido
-                    WHERE idServidor = ' . $idServidor;
-
-            $row = parent::select($select, false);
-            if (empty($row[0])) {
-                return null;
-            } else {
-                return $row[0];
-            }
-        } else {
-
-            # Pega o cargo do servidor
-            $select = 'SELECT matricula
+        # Pega o cargo do servidor
+        $select = 'SELECT matricula
                      FROM tbservidor
                     WHERE idServidor = ' . $idServidor;
 
-            $row = parent::select($select, false);
+        $row = parent::select($select, false);
 
-            if (empty($row[0])) {
-                return null;
-            } else {
-                return dv($row[0]);
-            }
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return dv($row[0]);
         }
     }
 
@@ -2395,12 +2379,12 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_idSituacao($idServidor) {
-        
+
         # Trata o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
         }
-        
+
         # Monta o select
         $select = "SELECT idsituacao
                      FROM tbservidor LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idsituacao)
@@ -3927,14 +3911,14 @@ class Pessoal extends Bd {
      * @param   string $idServidor do servidor
      */
     public function get_nivelSalarialCargo($idServidor) {
-        $select =  "SELECT tbclasse.faixa
+        $select = "SELECT tbclasse.faixa
                       FROM tbprogressao JOIN tbtipoprogressao USING (idTpProgressao)
                                         JOIN tbclasse USING (idClasse)
                      WHERE idServidor = {$idServidor}
-                     ORDER BY tbprogressao.dtInicial desc";    
+                     ORDER BY tbprogressao.dtInicial desc";
 
         $row = parent::select($select, false);
-        return substr($row[0],0,1);        
+        return substr($row[0], 0, 1);
     }
 
     ##########################################################################################
@@ -5836,23 +5820,26 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    public function get_idCedido($idServidor)
+    public function get_idCedido($idServidor) {
 
-    /**
-     * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
-     */ {
+        /**
+         * Função que informa o idCedido existe um registro para esse servidor no cadastro de cedidos
+         */
         # Valida parametro
         if (is_null($idServidor))
             return false;
 
         # Monta o select		
-        $select = 'SELECT idCedido
-                         FROM tbcedido
-                        WHERE idServidor = ' . $idServidor;
+        $select = "SELECT idCedido
+                     FROM tbcedido
+                    WHERE idServidor = {$idServidor}";
 
         $row = parent::select($select, false);
-
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
     ###########################################################

@@ -621,7 +621,7 @@ class ListaServidores {
 
         $align = ["center", "left", "left", "left"];
         $classe = ["pessoal", "pessoal", "pessoal", "pessoal", "pessoal"];
-        $metodo = ["get_idFuncional", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
+        $metodo = ["get_idFuncionalEMatricula", "get_nome", "get_cargoCompleto3", "get_lotacao", "get_perfil"];
 
         # Relatório
         $relatorio = new Relatorio();

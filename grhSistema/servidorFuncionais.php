@@ -194,32 +194,16 @@ if ($acesso) {
             'col' => 2,
             'title' => 'Situação',
             'size' => 15));
-
-    # Esconde quando for cedido, pois a matrícula que
-    #  conta é a do orgão de origem
-    if ($perfilServidor == 2) {
-        array_push($campos,
-                array('linha' => 1,
-                    'nome' => 'matricula',
-                    'label' => 'Matricula Uenf:',
-                    'tipo' => 'hidden',
-                    'size' => 10,
-                    'unique' => true,
-                    'col' => 2,
-                    'title' => 'Matrícula do servidor.'));
-    } else {
-        array_push($campos,
-                array('linha' => 1,
+    
+    array_push($campos,
+            array('linha' => 1,
                     'nome' => 'matricula',
                     'label' => 'Matricula Uenf:',
                     'tipo' => 'texto',
                     'size' => 10,
                     'unique' => true,
                     'col' => 2,
-                    'title' => 'Matrícula do servidor.'));
-    }
-
-    array_push($campos,
+                    'title' => 'Matrícula do servidor.'),
             array('linha' => 2,
                 'nome' => 'idCargo',
                 'label' => 'Cargo / Área / Função:',

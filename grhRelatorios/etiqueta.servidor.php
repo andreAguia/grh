@@ -87,7 +87,7 @@ if ($acesso) {
 
     $matricula = dv($result["matricula"]);
     $nome = $pessoal->get_nome($idServidorPesquisado);
-    $perfil = $pessoal->get_perfilSimples($item["idServidor"]);
+    $perfil = $pessoal->get_perfilSimples($idServidorPesquisado);
 
     # Grava no log a atividade
     $atividade = "Visualizou a etiqueta da pasta funcional de {$nome}";

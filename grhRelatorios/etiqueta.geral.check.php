@@ -26,6 +26,7 @@ if ($acesso) {
 
     # Pega a Situação
     $situacao = post('situacao', "*");
+    $ordenacao = post('ordenacao', "por Nome");
 
     ######
 
@@ -43,7 +44,11 @@ if ($acesso) {
         $select .= " AND situacao = {$situacao}";
     }
 
-    $select .= " ORDER BY matricula";
+    if ($ordenacao == "por Matrícula") {
+        $select .= " ORDER BY matricula";
+    } else {
+        $select .= " ORDER BY tbpessoa.nome";
+    }
 
     $result = $servidor->select($select);
 
@@ -59,7 +64,7 @@ if ($acesso) {
     $relatorio->set_align(["right", null, "left", "center", "left", "left"]);
 
     $relatorio->set_classe([null, null, null, null, null, "pessoal", "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, null, null, null, null, "get_cargoSimples", "get_perfil", "get_situacao"]);
+    $relatorio->set_metodo([null, null, null, null, null, "get_cargoSimples", "get_perfilSimples", "get_situacao"]);
 
     $relatorio->set_funcao([null, null, null, "dv"]);
 
@@ -79,6 +84,15 @@ if ($acesso) {
             'array' => $situacaoCombo,
             'size' => 3,
             'padrao' => $situacao,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 4,
+            'linha' => 1),
+        array('nome' => 'ordenacao',
+            'label' => 'Ordenação:',
+            'tipo' => 'combo',
+            'array' => ["por Matrícula", "por Nome"],
+            'size' => 3,
+            'padrao' => $ordenacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
             'linha' => 1),

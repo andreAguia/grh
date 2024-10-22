@@ -77,7 +77,7 @@ if ($acesso) {
         array('nome' => 'conteudo',
             'label' => 'Conteúdo:',
             'tipo' => 'combo',
-            'array' => ["Matrícula e Nome", "Só Matrícula"],
+            'array' => ["Matrícula e Nome", "Só Matrícula", "Só Nome"],
             'size' => 3,
             'padrao' => $conteudo,
             'onChange' => 'formPadrao.submit();',
@@ -109,23 +109,27 @@ if ($acesso) {
                       matricula,
                       idServidor
                  FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                 JOIN tbpessoa USING (idPessoa)
                 WHERE tbperfil.tipo <> 'Outros'";
 
     if ($situacao <> "*") {
         $select .= " AND situacao = {$situacao}";
     }
-    
+
     if (!empty($numMatriculaInicial)) {
         $select .= " AND matricula >= {$numMatriculaInicial}";
     }
-    
+
     if (!empty($numMatriculaFinal)) {
         $select .= " AND matricula <= {$numMatriculaFinal}";
     }
-    
-    
 
-    $select .= " ORDER BY matricula";
+
+    if ($conteudo == "Só Nome") {
+        $select .= " ORDER BY tbpessoa.nome";
+    } else {
+        $select .= " ORDER BY matricula";
+    }
 
     $result = $pessoal->select($select);
 
@@ -171,6 +175,7 @@ if ($acesso) {
         # Pega os dados
         $matricula = dv($item["matricula"]);
         $nome = $pessoal->get_nome($item["idServidor"]);
+        $perfil = $pessoal->get_perfilSimples($item["idServidor"]);
 
         for ($i = $numEtiquetasInicial; $i <= $numEtiquetasFinal; $i++) {
             if ($conteudo == "Matrícula e Nome") {
@@ -195,7 +200,9 @@ if ($acesso) {
                 p($nome, $nomecss);
                 echo "</td>";
                 echo "</tr>";
-            } else {
+            }
+
+            if ($conteudo == "Só Matrícula") {
                 echo "<tr>";
                 echo "<td style = 'width: 50%' align='center'>";
                 p($matricula . " / " . $i, "pmatriculaEtiqueta1");
@@ -203,6 +210,30 @@ if ($acesso) {
                 echo"<td style = 'width: 0%'></td>";
                 echo "<td style = 'width: 50%' align='center'>";
                 p($matricula . " / " . $i, "pmatriculaEtiqueta1");
+                echo "</td>";
+                echo "</tr>";
+            }
+
+            if ($conteudo == "Só Nome") {
+                echo "<tr>";
+                echo "<td style = 'width: 50%' align='center'>";
+                if (strlen($nome) > 20) {
+                    p($nome, "pnomeEtiqueta4");
+                    p("({$perfil})", "pperfilEtiqueta1");
+                } else {
+                    p($nome, "pnomeEtiqueta3");                    
+                    p("({$perfil})", "pperfilEtiqueta1");
+                }
+                echo "</td>";
+                echo"<td style = 'width: 0%'></td>";
+                echo "<td style = 'width: 50%' align='center'>";
+                if (strlen($nome) > 20) {
+                    p($nome, "pnomeEtiqueta4");
+                    p("({$perfil})", "pperfilEtiqueta1");
+                } else {
+                    p($nome, "pnomeEtiqueta3");
+                    p("({$perfil})", "pperfilEtiqueta1");
+                }
                 echo "</td>";
                 echo "</tr>";
             }

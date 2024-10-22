@@ -58,7 +58,7 @@ if ($acesso) {
         array('nome' => 'conteudo',
             'label' => 'Conteúdo:',
             'tipo' => 'combo',
-            'array' => ["Matrícula e Nome", "Só Matrícula"],
+            'array' => ["Matrícula e Nome", "Só Matrícula", "Só Nome"],
             'size' => 3,
             'padrao' => $conteudo,
             'onChange' => 'formPadrao.submit();',
@@ -87,18 +87,19 @@ if ($acesso) {
 
     $matricula = dv($result["matricula"]);
     $nome = $pessoal->get_nome($idServidorPesquisado);
-    
+    $perfil = $pessoal->get_perfilSimples($item["idServidor"]);
+
     # Grava no log a atividade
     $atividade = "Visualizou a etiqueta da pasta funcional de {$nome}";
     if ($conteudo == "Matrícula e Nome") {
         $atividade .= " - (Matrícula e Nome)";
-    }else{
+    } else {
         $atividade .= " - (Matrícula)";
     }
     $Objetolog = new Intra();
     $data = date("Y-m-d H:i:s");
     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
-    
+
     br();
     echo "<table width='100%' id='etiqueta' border='2px'>";
 
@@ -115,31 +116,57 @@ if ($acesso) {
                 $nomecss = "pnomeEtiqueta1";
             }
 
-            
+
             echo "<tr>";
             echo "<td style = 'width: 50%' align='center'>";
-            p($matricula ." / ".$i,$matriculacss);
+            p($matricula . " / " . $i, $matriculacss);
             p($nome, $nomecss);
             echo "</td>";
             echo"<td style = 'width: 0%'></td>";
             echo "<td style = 'width: 50%' align='center'>";
-            p($matricula ." / ".$i, $matriculacss);
+            p($matricula . " / " . $i, $matriculacss);
             p($nome, $nomecss);
-            echo "</td>";
-            echo "</tr>";
-        } else {
-            echo "<tr>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula ." / ".$i, "pmatriculaEtiqueta1");
-            echo "</td>";
-            echo"<td style = 'width: 0%'></td>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula ." / ".$i, "pmatriculaEtiqueta1");
             echo "</td>";
             echo "</tr>";
         }
+
+        if ($conteudo == "Só Matrícula") {
+            echo "<tr>";
+            echo "<td style = 'width: 50%' align='center'>";
+            p($matricula . " / " . $i, "pmatriculaEtiqueta1");
+            echo "</td>";
+            echo"<td style = 'width: 0%'></td>";
+            echo "<td style = 'width: 50%' align='center'>";
+            p($matricula . " / " . $i, "pmatriculaEtiqueta1");
+            echo "</td>";
+            echo "</tr>";
+        }
+        
+        if ($conteudo == "Só Nome") {
+                echo "<tr>";
+                echo "<td style = 'width: 50%' align='center'>";
+                if (strlen($nome) > 20) {
+                    p($nome, "pnomeEtiqueta4");
+                    p("({$perfil})", "pperfilEtiqueta1");
+                } else {
+                    p($nome, "pnomeEtiqueta3");                    
+                    p("({$perfil})", "pperfilEtiqueta1");
+                }
+                echo "</td>";
+                echo"<td style = 'width: 0%'></td>";
+                echo "<td style = 'width: 50%' align='center'>";
+                if (strlen($nome) > 20) {
+                    p($nome, "pnomeEtiqueta4");
+                    p("({$perfil})", "pperfilEtiqueta1");
+                } else {
+                    p($nome, "pnomeEtiqueta3");                    
+                    p("({$perfil})", "pperfilEtiqueta1");
+                }
+                echo "</td>";
+                echo "</tr>";
+            }
     }
-    
+
     echo "</table>";
 
     $grid->fechaColuna();

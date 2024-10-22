@@ -176,6 +176,8 @@ if ($acesso) {
         $matricula = dv($item["matricula"]);
         $nome = $pessoal->get_nome($item["idServidor"]);
         $perfil = $pessoal->get_perfilSimples($item["idServidor"]);
+        $cargo = $pessoal->get_cargoSigla($item["idServidor"]);
+        $idPerfil = $pessoal->get_idPerfil($item["idServidor"]);
 
         for ($i = $numEtiquetasInicial; $i <= $numEtiquetasFinal; $i++) {
             if ($conteudo == "Matrícula e Nome") {
@@ -217,23 +219,25 @@ if ($acesso) {
             if ($conteudo == "Só Nome") {
                 echo "<tr>";
                 echo "<td style = 'width: 50%' align='center'>";
+                # Escolhe pelo tamanho do nome
                 if (strlen($nome) > 20) {
                     p($nome, "pnomeEtiqueta4");
-                    p("({$perfil})", "pperfilEtiqueta1");
                 } else {
-                    p($nome, "pnomeEtiqueta3");                    
-                    p("({$perfil})", "pperfilEtiqueta1");
+                    p($nome, "pnomeEtiqueta3");
                 }
+
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
                 echo "</td>";
                 echo"<td style = 'width: 0%'></td>";
                 echo "<td style = 'width: 50%' align='center'>";
+                # Escolhe pelo tamanho do nome
                 if (strlen($nome) > 20) {
                     p($nome, "pnomeEtiqueta4");
-                    p("({$perfil})", "pperfilEtiqueta1");
                 } else {
                     p($nome, "pnomeEtiqueta3");
-                    p("({$perfil})", "pperfilEtiqueta1");
                 }
+
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
                 echo "</td>";
                 echo "</tr>";
             }

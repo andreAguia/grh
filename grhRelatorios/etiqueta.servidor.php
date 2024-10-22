@@ -88,6 +88,8 @@ if ($acesso) {
     $matricula = dv($result["matricula"]);
     $nome = $pessoal->get_nome($idServidorPesquisado);
     $perfil = $pessoal->get_perfilSimples($idServidorPesquisado);
+    $cargo = $pessoal->get_cargoSigla($idServidorPesquisado);
+    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Grava no log a atividade
     $atividade = "Visualizou a etiqueta da pasta funcional de {$nome}";
@@ -145,23 +147,25 @@ if ($acesso) {
         if ($conteudo == "Só Nome") {
                 echo "<tr>";
                 echo "<td style = 'width: 50%' align='center'>";
+                # Escolhe pelo tamanho do nome
                 if (strlen($nome) > 20) {
                     p($nome, "pnomeEtiqueta4");
-                    p("({$perfil})", "pperfilEtiqueta1");
                 } else {
-                    p($nome, "pnomeEtiqueta3");                    
-                    p("({$perfil})", "pperfilEtiqueta1");
+                    p($nome, "pnomeEtiqueta3");
                 }
+
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
                 echo "</td>";
                 echo"<td style = 'width: 0%'></td>";
                 echo "<td style = 'width: 50%' align='center'>";
+                # Escolhe pelo tamanho do nome
                 if (strlen($nome) > 20) {
                     p($nome, "pnomeEtiqueta4");
-                    p("({$perfil})", "pperfilEtiqueta1");
                 } else {
-                    p($nome, "pnomeEtiqueta3");                    
-                    p("({$perfil})", "pperfilEtiqueta1");
+                    p($nome, "pnomeEtiqueta3");
                 }
+
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
                 echo "</td>";
                 echo "</tr>";
             }

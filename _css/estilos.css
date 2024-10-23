@@ -1377,8 +1377,9 @@ p#pnomeEtiqueta3{
     font-size: 16px;
     color: #000;
     padding: 0px;
-    margin: 0px;
-    line-height: 16px;
+    margin: 0px;    
+    margin-top: -6px;
+    line-height: 15px;
 }
 
 p#pnomeEtiqueta4{
@@ -1387,7 +1388,8 @@ p#pnomeEtiqueta4{
     color: #000;
     padding: 0px;
     margin: 0px;
-    line-height: 16px;
+    margin-top: -6px;
+    line-height: 15px;
 }
 
 p#pperfilEtiqueta1{

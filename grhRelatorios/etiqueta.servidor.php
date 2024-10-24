@@ -31,39 +31,19 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega quem assina
-    $numEtiquetasInicial = get('numEtiquetasInicial', post('numEtiquetasInicial', 1));
-    $numEtiquetasFinal = get('numEtiquetasFinal', post('numEtiquetasFinal', 1));
-    $conteudo = get('conteudo', post('conteudo', "Matrícula e Nome"));
+    $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
-        array('nome' => 'numEtiquetasInicial',
-            'label' => 'Número Inicial:',
+        array('nome' => 'numEtiquetas',
+            'label' => 'Número de Etiquetas:',
             'tipo' => 'combo',
             'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             'size' => 3,
-            'padrao' => $numEtiquetasInicial,
+            'padrao' => $numEtiquetas,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 1),
-        array('nome' => 'numEtiquetasFinal',
-            'label' => 'Número Final:',
-            'tipo' => 'combo',
-            'array' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            'size' => 3,
-            'padrao' => $numEtiquetasFinal,
-            'onChange' => 'formPadrao.submit();',
-            'col' => 3,
-            'linha' => 1),
-        array('nome' => 'conteudo',
-            'label' => 'Conteúdo:',
-            'tipo' => 'combo',
-            'array' => ["Matrícula e Nome", "Só Matrícula", "Só Nome"],
-            'size' => 3,
-            'padrao' => $conteudo,
-            'onChange' => 'formPadrao.submit();',
-            'col' => 4,
-            'linha' => 1),
+            'linha' => 2),
     ));
 
     $menuRelatorio->set_formLink("?");
@@ -71,7 +51,7 @@ if ($acesso) {
 
     # Limita a página
     $grid = new Grid();
-    $grid->abreColuna(6);
+    $grid->abreColuna(8);
 
     /*
      * Dados Principais
@@ -93,11 +73,6 @@ if ($acesso) {
 
     # Grava no log a atividade
     $atividade = "Visualizou a etiqueta da pasta funcional de {$nome}";
-    if ($conteudo == "Matrícula e Nome") {
-        $atividade .= " - (Matrícula e Nome)";
-    } else {
-        $atividade .= " - (Matrícula)";
-    }
     $Objetolog = new Intra();
     $data = date("Y-m-d H:i:s");
     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4, $idServidorPesquisado);
@@ -105,70 +80,32 @@ if ($acesso) {
     br();
     echo "<table width='100%' id='etiqueta' border='2px'>";
 
-    for ($i = $numEtiquetasInicial; $i <= $numEtiquetasFinal; $i++) {
-
-        if ($conteudo == "Matrícula e Nome") {
-
-            # Define a fonte a partir do número de letras no nome do servidor
-            if (strlen($nome) > 25) {
-                $matriculacss = "pmatriculaEtiqueta2";
-                $nomecss = "pnomeEtiqueta2";
-            } else {
-                $matriculacss = "pmatriculaEtiqueta1";
-                $nomecss = "pnomeEtiqueta1";
-            }
+    for ($i = 1; $i <= $numEtiquetas; $i++) {
 
 
-            echo "<tr>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula . " / " . $i, $matriculacss);
-            p($nome, $nomecss);
-            echo "</td>";
-            echo"<td style = 'width: 0%'></td>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula . " / " . $i, $matriculacss);
-            p($nome, $nomecss);
-            echo "</td>";
-            echo "</tr>";
+        echo "<tr>";
+        echo "<td style = 'width: 50%' align='center'>";
+        # Escolhe pelo tamanho do nome
+        if (strlen($nome) > 20) {
+            p($nome, "pnomeEtiqueta4");
+        } else {
+            p($nome, "pnomeEtiqueta3");
         }
 
-        if ($conteudo == "Só Matrícula") {
-            echo "<tr>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula . " / " . $i, "pmatriculaEtiqueta1");
-            echo "</td>";
-            echo"<td style = 'width: 0%'></td>";
-            echo "<td style = 'width: 50%' align='center'>";
-            p($matricula . " / " . $i, "pmatriculaEtiqueta1");
-            echo "</td>";
-            echo "</tr>";
+        p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        echo "</td>";
+        echo"<td style = 'width: 0%'></td>";
+        echo "<td style = 'width: 50%' align='center'>";
+        # Escolhe pelo tamanho do nome
+        if (strlen($nome) > 20) {
+            p($nome, "pnomeEtiqueta4");
+        } else {
+            p($nome, "pnomeEtiqueta3");
         }
-        
-        if ($conteudo == "Só Nome") {
-                echo "<tr>";
-                echo "<td style = 'width: 50%' align='center'>";
-                # Escolhe pelo tamanho do nome
-                if (strlen($nome) > 20) {
-                    p($nome, "pnomeEtiqueta4");
-                } else {
-                    p($nome, "pnomeEtiqueta3");
-                }
 
-                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
-                echo "</td>";
-                echo"<td style = 'width: 0%'></td>";
-                echo "<td style = 'width: 50%' align='center'>";
-                # Escolhe pelo tamanho do nome
-                if (strlen($nome) > 20) {
-                    p($nome, "pnomeEtiqueta4");
-                } else {
-                    p($nome, "pnomeEtiqueta3");
-                }
-
-                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
-                echo "</td>";
-                echo "</tr>";
-            }
+        p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        echo "</td>";
+        echo "</tr>";
     }
 
     echo "</table>";

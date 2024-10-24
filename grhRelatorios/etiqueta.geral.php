@@ -92,7 +92,7 @@ if ($acesso) {
 
     # Coluna
     $grid->fechaColuna();
-    $grid->abreColuna(8);
+    $grid->abreColuna(7);
 
     echo "<table width='100%' id='etiqueta' border='2px'>";
 

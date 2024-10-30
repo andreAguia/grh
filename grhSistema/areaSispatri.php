@@ -109,10 +109,10 @@ if ($acesso) {
                 }
 
                 # e-mail
-                $botaoci = new Link("E-mail", "?fase=email");
+                $botaoci = new Link("Enviar e-mails", "?fase=email");
                 $botaoci->set_target("_blank");
                 $botaoci->set_class('button');
-                $botaoci->set_title('relação de e-mails dos servidores desta listagem');
+                $botaoci->set_title('Relação de e-mails dos servidores desta listagem');
                 $menu1->add_link($botaoci, "right");
             }
 

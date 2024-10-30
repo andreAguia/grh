@@ -99,6 +99,15 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
+            # e-mail
+            if ($parametroTipo <> "Sem E-mail Institucional") {
+                $botaoci = new Link("Enviar e-mails", "?fase=email");
+                $botaoci->set_target("_blank");
+                $botaoci->set_class('button');
+                $botaoci->set_title('Relação de e-mails dos servidores desta listagem');
+                $menu1->add_link($botaoci, "right");
+            }
+
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -300,7 +309,44 @@ if ($acesso) {
             $relatorio->show();
             break;
 
-        ############################################################################
+        ################################################################
+
+        case "email" :
+            # Exibe a lista de email para ser compiada e colada
+            # quando se deseja enviar e-mails para todos os
+            # servidores da listagem
+            # Pega os dados
+            
+            $select = "SELECT tbpessoa.emailUenf
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                           AND tbservidor.situacao = 1";
+            # Lotacao
+            if (!vazio($parametroLotacao)) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $pessoal = new Pessoal();
+            $retorno = $pessoal->select($select);
+
+            foreach ($retorno as $item) {
+                if (!empty($item[0])) {
+                    echo $item[0] . ", ";
+                }
+            }
+
+            break;
+
+        ################################################################
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

@@ -63,7 +63,6 @@ if (!empty($idConcurso)) {
     }
 }
 
-
 # Verifica se a exoneração é posterior a admissão
 if (!is_null($dtSaida)) {
     if (strtotime($dtSaida) < strtotime($dtAdmissao)) {
@@ -93,6 +92,17 @@ if ($situacao <> 1) {
         if (is_null($dtSaida)) {
             $msgErro .= 'Se o motivo detalhado de saida está preenchido, a data de saída também deverá ser informada !\n';
         }
+    }
+}
+
+# Verifica se existe algum afastamento marcado para durante e depois da data de saída quando preenchida
+if (!is_null($dtSaida)) {
+    $verifica = new VerificaAfastamentos($idServidorPesquisado);
+    $verifica->setPeriodo(date_to_php($dtSaida), addDias(date_to_php($dtSaida), 365));
+
+    if ($verifica->verifica()) {
+        $erro = 1;
+        $msgErro .= 'Esse servidor está com um afastamento ('.$verifica->getDetalhe().') marcado para depois/durante a sua data de saída!\n';
     }
 }
 

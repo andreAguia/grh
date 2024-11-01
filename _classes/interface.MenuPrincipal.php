@@ -55,7 +55,7 @@ class MenuPrincipal {
         # Sispatri        
         #$this->moduloSispatri();
         # Eventos        
-        $this->moduloEventos();
+        #$this->moduloEventos();
 
         # sistemas
         $this->moduloSistemas();

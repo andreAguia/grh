@@ -40,11 +40,13 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
+    $parametroEmail = post('parametroEmail', retiraAspas(get_session('parametroEmail')));
     $parametroTipo = post('parametroTipo', retiraAspas(get_session('parametroTipo', "Todos")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
+    set_session('parametroEmail', $parametroEmail);
     set_session('parametroTipo', $parametroTipo);
     set_session('parametroLotacao', $parametroLotacao);
 
@@ -133,6 +135,17 @@ if ($acesso) {
             $controle->set_col(3);
             $controle->set_autofocus(true);
             $form->add_item($controle);
+            
+            # Email    
+            $controle = new Input('parametroEmail', 'texto', 'Email:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Pesquisa');
+            $controle->set_valor($parametroEmail);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
 
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
@@ -150,7 +163,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(5);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
@@ -160,7 +173,7 @@ if ($acesso) {
             $controle->set_valor($parametroTipo);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(4);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             $form->show();
@@ -198,6 +211,12 @@ if ($acesso) {
                 } else {
                     $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
                 }
+            }
+            
+            # E-mail
+            if (!is_null($parametroEmail)) {
+
+                $select .= " AND (emailUenf LIKE '%{$parametroEmail}%')";
             }
 
             # Lotação

@@ -104,14 +104,20 @@ if ($acesso) {
             $botaoCalendario->set_target("_calenmdario");
             $menu1->add_link($botaoCalendario, "right");
 
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
+            # Relatório Detalhado           
+            $botaoRel = new Link("Relatório Detalhado", "?fase=relatorio");
+            $botaoRel->set_class('button');
             $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
             $menu1->add_link($botaoRel, "right");
+            
+            # Relatório Simples           
+            $botaoRel2 = new Link("Relatório Simples", "?fase=relatorio2");
+            $botaoRel2->set_class('button');
+            $botaoRel2->set_title("Relatório simples dessa pesquisa");
+            $botaoRel2->set_target("_blank");
+            $menu1->add_link($botaoRel2, "right");
+
 
             $menu1->show();
 
@@ -257,6 +263,24 @@ if ($acesso) {
         case "relatorio" :
 
             $afast = new ListaAfastamentos();
+            $afast->set_ano($parametroAno);
+            if ($parametroMes <> "*") {
+                $afast->set_mes($parametroMes);
+            }
+            $afast->set_lotacao($parametroLotacao);
+            if ($parametroCargo <> "*") {
+                $afast->set_cargo($parametroCargo);
+            }
+            $afast->set_tipo($parametroTipo);
+            $afast->set_linkEditar('?fase=editaServidor');
+            $afast->exibeRelatorio();
+            break;
+
+        ################################################################
+        # Relatório
+        case "relatorio2" :
+
+            $afast = new ListaAfastamentosSimples();
             $afast->set_ano($parametroAno);
             if ($parametroMes <> "*") {
                 $afast->set_mes($parametroMes);

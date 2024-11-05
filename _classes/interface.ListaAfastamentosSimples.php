@@ -1027,7 +1027,6 @@ class ListaAfastamentosSimples {
 
                         $tabela->set_classe([null, "pessoal", "pessoal"]);
                         $tabela->set_metodo([null, "get_nomeSimples", "get_lotacaoSimples"]);
-                        echo "oi";
                     }
                 } else {
                     if ($this->exibeCargo) {

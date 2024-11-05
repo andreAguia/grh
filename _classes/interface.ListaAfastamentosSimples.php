@@ -18,6 +18,9 @@ class ListaAfastamentosSimples {
     private $tipo = false;          // Tipo do afastamento
     private $formulario = false;
 
+    # exibição 
+    private $exibeCargo = true;
+
     ###########################################################
 
     /**
@@ -195,6 +198,19 @@ class ListaAfastamentosSimples {
 
     ###########################################################
 
+    public function set_exibeCargo($exibeCargo) {
+        /**
+         * Informa o tipo do afastamento
+         *
+         * @param $tipo string null o tipo
+         *
+         * @syntax $afastamento->set_tipo($tipo);
+         */
+        $this->exibeCargo = $exibeCargo;
+    }
+
+    ###########################################################
+
     public function montaSelect() {
 
         /**
@@ -226,8 +242,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         #######################
@@ -316,8 +335,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '     tblicencapremio.dtInicial,
@@ -401,8 +423,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '      tbferias.dtInicial,
@@ -485,8 +510,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '     tbatestado.dtInicio,
@@ -569,8 +597,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '     tbtrabalhotre.data,
@@ -653,8 +684,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '      tbfolga.data,
@@ -737,8 +771,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' tbservidor.idServidor,
-                         tbservidor.idServidor,
                          tbservidor.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' tbservidor.idServidor,';
+            }
         }
 
         $select .= '     tblicencasemvencimentos.dtInicial,
@@ -825,8 +862,11 @@ class ListaAfastamentosSimples {
 
         if (empty($this->idServidor)) {
             $select .= ' T2.idServidor,
-                         T2.idServidor,
                          T2.idServidor,';
+
+            if ($this->exibeCargo) {
+                $select .= ' T2.idServidor,';
+            }
         }
 
         $select .= '       tblicenca.dtInicial,
@@ -904,6 +944,11 @@ class ListaAfastamentosSimples {
         $order1 = 8;
         $order2 = 1;
 
+        if (!$this->exibeCargo) {
+            $order0--;
+            $order1--;
+        }
+
         if ($this->idFuncional) {
             $order0++;
             $order1++;
@@ -959,36 +1004,93 @@ class ListaAfastamentosSimples {
 
             if ($this->idFuncional) {
 
-                $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
-                $tabela->set_align(['center', 'left', 'left', 'left', 'center', 'center', 'center', 'left']);
-
-                $tabela->set_classe([null, null, "pessoal", "pessoal"]);
-                $tabela->set_metodo([null, null, "get_cargo", "get_lotacaoSimples"]);
-                $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
-                $tabela->set_width([10, 25, 10, 8, 5, 8, 15, 5]);
-
                 if ($this->nomeSimples) {
-                    $tabela->set_classe([null, "pessoal", "pessoal", "pessoal"]);
-                    $tabela->set_metodo([null, "get_nomeSimples", "get_cargo", "get_lotacaoSimples"]);
+                    if ($this->exibeCargo) {
+                        $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                        $tabela->set_align(['center', 'left', 'left', 'left', 'center', 'center', 'center', 'left']);
+
+                        $tabela->set_classe([null, null, "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, null, "get_cargo", "get_lotacaoSimples"]);
+                        $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                        #$tabela->set_width([10, 25, 10, 8, 5, 8, 15, 5]);
+
+                        $tabela->set_classe([null, "pessoal", "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, "get_nomeSimples", "get_cargo", "get_lotacaoSimples"]);
+                    } else {
+                        $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                        $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
+
+                        $tabela->set_classe([null, null, "pessoal"]);
+                        $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
+                        $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                        #$tabela->set_width([10, 25, 10, 8, 5, 8, 15, 5]);
+
+                        $tabela->set_classe([null, "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, "get_nomeSimples", "get_lotacaoSimples"]);
+                        echo "oi";
+                    }
                 } else {
-                    $tabela->set_classe([null, "pessoal", "pessoal", "pessoal"]);
-                    $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_cargo", "get_lotacaoSimples"]);
+                    if ($this->exibeCargo) {
+                        $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                        $tabela->set_align(['center', 'left', 'left', 'left', 'center', 'center', 'center', 'left']);
+
+                        $tabela->set_classe([null, null, "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, null, "get_cargo", "get_lotacaoSimples"]);
+                        $tabela->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                        #$tabela->set_width([10, 25, 10, 8, 5, 8, 15, 5]);
+
+                        $tabela->set_classe([null, "pessoal", "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_cargo", "get_lotacaoSimples"]);
+                    } else {
+                        $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Obs']);
+                        $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
+
+                        $tabela->set_classe([null, null, "pessoal"]);
+                        $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
+                        $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                        #$tabela->set_width([10, 25, 10, 8, 5, 8, 15, 5]);
+
+                        $tabela->set_classe([null, "pessoal", "pessoal"]);
+                        $tabela->set_metodo([null, "get_nomeECargoEPerfil", "get_lotacaoSimples"]);
+                    }
                 }
 
                 $tabela->set_rowspan(1);
                 $tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(['Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
-                $tabela->set_align(['left', 'left', 'left', 'center', 'center', 'center', 'left', 'left']);
-                $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php"]);
-
                 if ($this->nomeSimples) {
-                    $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
-                    $tabela->set_metodo(["get_nomeSimples", "get_cargo", "get_lotacaoSimples"]);
+                    if ($this->exibeCargo) {
+                        $tabela->set_label(['Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                        $tabela->set_align(['left', 'left', 'left', 'center', 'center', 'center', 'left', 'left']);
+                        $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php"]);
+
+                        $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
+                        $tabela->set_metodo(["get_nomeSimples", "get_cargo", "get_lotacaoSimples"]);
+                    } else {
+                        $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                        $tabela->set_align(['left', 'left', 'center', 'center', 'center', 'left', 'left']);
+                        $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
+
+                        $tabela->set_classe(["pessoal", "pessoal"]);
+                        $tabela->set_metodo(["get_nomeSimples", "get_lotacaoSimples"]);
+                    }
                 } else {
-                    $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
-                    $tabela->set_metodo(["get_nomeECargoEPerfil", "get_cargo", "get_lotacaoSimples"]);
+                    if ($this->exibeCargo) {
+                        $tabela->set_label(['Nome', 'Cargo', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                        $tabela->set_align(['left', 'left', 'left', 'center', 'center', 'center', 'left', 'left']);
+                        $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php"]);
+
+                        $tabela->set_classe(["pessoal", "pessoal", "pessoal"]);
+                        $tabela->set_metodo(["get_nomeECargoEPerfil", "get_cargo", "get_lotacaoSimples"]);
+                    } else {
+                        $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                        $tabela->set_align(['left', 'left', 'center', 'center', 'center', 'left', 'left']);
+                        $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php"]);
+
+                        $tabela->set_classe(["pessoal", "pessoal"]);
+                        $tabela->set_metodo(["get_nomeECargoEPerfil", "get_lotacaoSimples"]);
+                    }
                 }
 
                 $tabela->set_rowspan(0);
@@ -1053,7 +1155,7 @@ class ListaAfastamentosSimples {
 
             if ($this->nomeSimples) {
                 $relatorio->set_classe([null, "pessoal", "pessoal", "pessoal"]);
-                $relatorio->set_metodo([null, "get_nome", "get_cargoSimples", "get_lotacaoSimples"]);
+                $relatorio->set_metodo([null, "get_nomeSimples", "get_cargoSimples", "get_lotacaoSimples"]);
             } else {
                 $relatorio->set_classe([null, "pessoal", "pessoal", "pessoal"]);
                 $relatorio->set_metodo([null, "get_nome", "get_cargoSimples", "get_lotacaoSimples"]);

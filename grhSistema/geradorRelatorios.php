@@ -23,6 +23,7 @@ $postNomeCargoLotacaoId = post('postNomeCargoLotacaoId');
 $postNomeCargoLotacaoPerfil = post('postNomeCargoLotacaoPerfil');
 $postNomeCargoLotacaoPerfilSituacao = post('postNomeCargoLotacaoPerfilSituacao');
 $postCargo = post('postCargo');
+$postCargoSimples = post('postCargoSimples');
 $postComissao = post('postComissao');
 $postLotacao = post('postLotacao');
 $postPerfil = post('postPerfil');
@@ -167,6 +168,15 @@ if ($acesso) {
     $controle->set_size(5);
     $controle->set_title('Cargo do Servidor');
     $controle->set_valor($postCargo);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Cargo
+    $controle = new Input('postCargoSimples', 'simnao', 'Cargo Simp.', 1);
+    $controle->set_size(5);
+    $controle->set_title('Cargo do Servidor sem Comissão');
+    $controle->set_valor($postCargoSimples);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
@@ -665,6 +675,16 @@ if ($acesso) {
         $align[] = "left";
         $class[] = "Pessoal";
         $method[] = "get_cargo";
+        $function[] = "";
+    }
+    
+    # Cargo Simples
+    if ($postCargoSimples) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Cargo";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_cargoSimples";
         $function[] = "";
     }
 

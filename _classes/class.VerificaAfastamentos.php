@@ -262,7 +262,7 @@ class VerificaAfastamentos {
                                 } else {
                                     $this->periodo = date_to_php($row2['dtInicial']) . " a " . date_to_php($row2['dtFinal']) . " - " . $row2['numDias'] . " dias";
                                 }
-                                $this->tipo = $afast['tipo'];
+                                $this->tipo = $row2['tipo'];
                                 return true;
                             }
                         }

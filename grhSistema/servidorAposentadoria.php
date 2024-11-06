@@ -233,12 +233,23 @@ if ($acesso) {
             $tab->abreConteudo();
 
             $grid1 = new Grid();
-            $grid1->abreColuna(12);
+            $grid1->abreColuna(6);
 
-            # Exibe os afastamentos que interrompem o tempo            
-            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos Sem Contribuição");
+            # Exibe os afastamentos que interrompem o tempo de contribuição
+            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Interrompe o Tempo de Contribuição");
             $afast1->set_interrompe(true);
             $afast1->exibeTabela();
+            
+            $grid1->fechaColuna();
+            $grid1->abreColuna(6);
+            
+            # Exibe os afastamentos que interrompem o tempo de serviço     
+            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Interrompe o Tempo de Serviço");
+            $afast1->set_tempoServico(true);
+            $afast1->exibeTabela();
+            
+            $grid1->fechaColuna();
+            $grid1->abreColuna(12);
 
             # exibe todos os afastamentos
             $afast2 = new ListaAfastamentosServidor($idServidorPesquisado, "Todos os Afastamentos");
@@ -252,7 +263,7 @@ if ($acesso) {
             ####################################################
 
             /*
-             * Resumo das Regras
+             * Previsão de Aposentadoria (resumo)
              */
 
             $tab->abreConteudo();

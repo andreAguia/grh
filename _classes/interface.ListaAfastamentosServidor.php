@@ -11,6 +11,7 @@ class ListaAfastamentosServidor {
     private $exibeObs = true;
     private $titulo = "Afastamentos";
     private $interrompe = false;
+    private $tempoServico = false;
 
     ###########################################################
 
@@ -52,6 +53,18 @@ class ListaAfastamentosServidor {
 
     ###############################################################
 
+    public function set_tempoServico($tempoServico) {
+
+        /**
+         * define se será exibido somente os afastamentos que interrompem o tempo de serviço
+         *
+         * @syntax $input->set_interrompeTs([$interrompe]);
+         */
+        $this->tempoServico = $tempoServico;
+    }
+
+    ###############################################################
+
     public function exibeTabela() {
 
         /**
@@ -75,13 +88,13 @@ class ListaAfastamentosServidor {
                                      JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
 
-        if ($this->interrompe) {
+        if ($this->interrompe OR $this->tempoServico) {
             $select .= " AND tbtipolicenca.tempoServico is true ";
         }
 
         #######################    
         # Licença Prêmio
-        if (!$this->interrompe) {
+        if (!$this->interrompe AND !$this->tempoServico) {
             $select .= ") UNION (
                   SELECT YEAR(tblicencapremio.dtInicial),
                          tblicencapremio.dtInicial,
@@ -96,7 +109,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Férias
-        if (!$this->interrompe) {
+        if (!$this->interrompe AND !$this->tempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbferias.dtInicial),
                           tbferias.dtInicial,
@@ -111,7 +124,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Faltas abonadas
-        if (!$this->interrompe) {
+        if (!$this->interrompe AND !$this->tempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbatestado.dtInicio),
                           tbatestado.dtInicio,
@@ -126,7 +139,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Trabalhando TRE
-        if (!$this->interrompe) {
+        if (!$this->interrompe AND !$this->tempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbtrabalhotre.data),
                           tbtrabalhotre.data,
@@ -141,7 +154,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Folga TRE
-        if (!$this->interrompe) {
+        if (!$this->interrompe AND !$this->tempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbfolga.data),
                           tbfolga.data,
@@ -171,7 +184,7 @@ class ListaAfastamentosServidor {
                       WHERE tbservidor.idServidor = {$this->idServidor}";
 
         if ($this->interrompe) {
-            $select .= " AND optouContribuir is not true ";
+            $select .= " AND (optouContribuir = 2 OR optouContribuir is NULL)";
         }
 
         #######################                      
@@ -186,8 +199,9 @@ class ListaAfastamentosServidor {
         $tabela = new Tabela();
         $tabela->set_titulo($this->titulo);
 
-        if ($this->interrompe) {
+        if ($this->interrompe OR $this->tempoServico) {
             $tabela->set_colunaSomatorio(2);
+            $tabela->set_totalRegistro(false);
         }
 
         if ($this->exibeObs) {
@@ -201,7 +215,7 @@ class ListaAfastamentosServidor {
         $tabela->set_width([10, 10, 5, 10, 50, 15]);
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
-        $tabela->set_conteudo($result);
+        $tabela->set_conteudo($result);        
         $tabela->show();
     }
 }

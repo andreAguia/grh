@@ -44,11 +44,6 @@ if ($acesso) {
     # Pega os dados da readaptacao anterior quando for renovação
     if ($tipo == 2) {
         $idAnterior = $readaptacao->get_dadosAnterior($id);
-
-        if (Verifica::acesso($idUsuario, 1)) {
-            var_dump($idAnterior);
-        }
-
         $dtTermino = date_to_php($idAnterior["dtTermino"]);
         $dtPublicacao = date_to_php($idAnterior["dtPublicacao"]);
     }

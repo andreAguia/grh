@@ -356,7 +356,7 @@ class Readaptacao {
         # Verifica se foi informado
         if (empty($idReadaptacao)) {
             alert("É necessário informar o id da readaptacao.");
-            return;
+            return null;
         }
 
         # Pega o idServidor
@@ -367,7 +367,8 @@ class Readaptacao {
         $select = "SELECT idReadaptacao
                      FROM tbreadaptacao
                     WHERE idServidor = {$idServidor}
-                    ORDER BY dtSolicitacao";
+                      AND dtInicio is not NULL  
+                    ORDER BY idReadaptacao";
 
         $row = $pessoal->select($select);
 

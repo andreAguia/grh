@@ -45,7 +45,7 @@ if ($acesso) {
     if ($tipo == 2) {
         $idAnterior = $readaptacao->get_dadosAnterior($id);
 
-        if (Verifica::acesso($this->idUsuario, 1)) {
+        if (Verifica::acesso($idUsuario, 1)) {
             var_dump($idAnterior);
         }
 

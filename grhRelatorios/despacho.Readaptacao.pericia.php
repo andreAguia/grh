@@ -44,6 +44,11 @@ if ($acesso) {
     # Pega os dados da readaptacao anterior quando for renovação
     if ($tipo == 2) {
         $idAnterior = $readaptacao->get_dadosAnterior($id);
+
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            var_dump($idAnterior);
+        }
+
         $dtTermino = date_to_php($idAnterior["dtTermino"]);
         $dtPublicacao = date_to_php($idAnterior["dtPublicacao"]);
     }
@@ -79,13 +84,13 @@ if ($acesso) {
 
     # Monta o despacho
     $despacho = new Despacho();
-    
+
     $despacho->set_origemNome($nome);
     if (!empty($cargo)) {
         $despacho->set_origemDescricao($cargo);
     }
     $despacho->set_origemIdFuncional($idFuncional);
-    
+
     $despacho->set_destino($destino);
     $despacho->set_data($data);
 

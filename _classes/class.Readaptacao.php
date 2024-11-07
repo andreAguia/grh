@@ -347,11 +347,14 @@ class Readaptacao {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        # Inicia as variáveis
-        $idReadaptacaoAnterior = null;  // Guarda o idRedução imediatamente anterior
-        $dadosAnterior = null;          // Guarda os dados da redução referentes a essa id anterior
+        # Guarda o idRedução imediatamente anterior
+        $idReadaptacaoAnterior = null;
+        
+        # Guarda os dados da redução referentes a essa id anterior
+        $dadosAnterior = null;
+        
         # Verifica se foi informado
-        if (vazio($idReadaptacao)) {
+        if (empty($idReadaptacao)) {
             alert("É necessário informar o id da readaptacao.");
             return;
         }
@@ -363,7 +366,7 @@ class Readaptacao {
         # Com o IdServidor pega todas as reduções dele
         $select = "SELECT idReadaptacao
                      FROM tbreadaptacao
-                    WHERE idServidor = $idServidor
+                    WHERE idServidor = {$idServidor}
                     ORDER BY dtSolicitacao";
 
         $row = $pessoal->select($select);

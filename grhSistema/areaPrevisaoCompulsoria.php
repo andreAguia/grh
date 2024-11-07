@@ -162,6 +162,14 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
+        
+        #######################################
+
+        case "relatorio" :
+            
+            break;
+        
+        #######################################
     }
 
     $grid->fechaColuna();

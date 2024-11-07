@@ -182,6 +182,11 @@ class PrevisaoAposentadoria {
 
     # Modalidade
     private $modalidade;
+    
+    # Tempo Interrompuido
+    private $tempoInterrompido = 0;       // Tempo que interrompe tempo de serviço
+    private $servidorTempoUenf_semTempoInterrompido = null;
+    private $servidorTempoTotal_semTempoInterrompido = null;
 
     ###########################################################
 
@@ -748,10 +753,14 @@ class PrevisaoAposentadoria {
          */
 
         $aposentadoria = new Aposentadoria();
+        
+        # Tempo Interrompido
+        $this->tempoInterrompido = $aposentadoria->get_tempoInterrompido($this->idServidor);
 
         # Tempo Uenf
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor); 
-
+        $this->servidorTempoUenf_semTempoInterrompido = $aposentadoria->get_tempoServicoUenf($this->idServidor, false); 
+                
         # Data de ingresso
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
 
@@ -764,6 +773,7 @@ class PrevisaoAposentadoria {
         
         # Tempo Total
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
+        $this->servidorTempoTotal_semTempoInterrompido = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf_semTempoInterrompido;
         
         # Tempo de contribuição
         $this->servidorTempoContribuicao = $this->servidorTempoTotal;

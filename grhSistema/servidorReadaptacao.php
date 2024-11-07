@@ -1145,11 +1145,7 @@ if ($acesso) {
         ###################################################################
         # Despacho para Perícia
         case "despachoPerícia" :
-
-            # Voltar
-            #botaoVoltar("?");
-            # Dados do Servidor
-            #get_DadosServidor($idServidorPesquisado);
+                        
             # Pega os dados da redução
             $dados = $readaptacao->get_dados($id);
             $tipo = $dados["tipo"];
@@ -1194,7 +1190,7 @@ if ($acesso) {
                 $grid->fechaColuna();
                 $grid->fechaGrid();
             } else {
-                loadPage("../grhRelatorios/despacho.Readaptacao.pericia.php?id=$id");
+                loadPage("../grhRelatorios/despacho.Readaptacao.pericia.php?id={$id}");
             }
             break;
 

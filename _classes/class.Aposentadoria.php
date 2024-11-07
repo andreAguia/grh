@@ -340,7 +340,7 @@ class Aposentadoria {
      * 
      * @param string $idServidor idServidor do servidor
      */
-    public function get_tempoServicoUenf($idServidor) {
+    public function get_tempoServicoUenf($idServidor, $comTempoInterrompido = true) {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
@@ -357,7 +357,11 @@ class Aposentadoria {
 
         $numdias = getNumDias($dtInicial, $dtFinal);
 
-        return $numdias - $this->get_tempoInterrompido($idServidor);
+        if ($comTempoInterrompido) {
+            return $numdias - $this->get_tempoInterrompido($idServidor);
+        } else {
+            return $numdias;
+        }
     }
 
     ##################################################### 
@@ -778,7 +782,7 @@ class Aposentadoria {
         $select2 = "SELECT numDias                           
                       FROM tblicencasemvencimentos                       
                       WHERE idServidor = {$idServidor}
-                        AND (optouContribuir <> 1 OR optouContribuir is null)";
+                        AND (optouContribuir = 2 OR optouContribuir is null)";
 
         # Soma
         $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));

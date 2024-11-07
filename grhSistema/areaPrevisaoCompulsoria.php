@@ -41,7 +41,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "relatorio") {
+        AreaServidor::cabecalho();
+    }
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
@@ -49,20 +51,12 @@ if ($acesso) {
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
 
+    # Idade obrigatória
+    $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
     # Limita a página
     $grid = new Grid();
     $grid->abreColuna(12);
-
-    # Cria um menu
-    $menu = new MenuBar();
-
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "areaPrevisao.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
-    $menu->show();
 
     #######################################
 
@@ -87,8 +81,26 @@ if ($acesso) {
         #######################################
 
         case "compulsoriaPorAno" :
-            # Idade obrigatória
-            $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaPrevisao.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=relatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
 
             # Formulário de Pesquisa
             $form = new Form('?fase=aguardeCompulsoriaPorAno');
@@ -162,13 +174,39 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
-        
-        #######################################
 
+        ################################################################
+        # Relatório
         case "relatorio" :
-            
+
+            $select = "SELECT month(dtNasc),  
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              TIMESTAMPDIFF(YEAR,tbpessoa.dtNasc,CURDATE()),
+                              ADDDATE(dtNasc, INTERVAL {$idade} YEAR),
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                        WHERE tbservidor.situacao = 1
+                          AND idPerfil = 1
+                          AND ({$parametroAno} - YEAR(tbpessoa.dtNasc) = {$idade})                    
+                     ORDER BY dtNasc";
+
+            $result = $pessoal->select($select);
+
+            # Monta o Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Previsão de Aposentadoria Compulsória");
+            $relatorio->set_subtitulo("Ano de {$parametroAno}");
+            $relatorio->set_label(['Mês', 'Servidor', 'Cargo', 'Lotação', "Idade", "Fará / Fez {$idade}"]);
+            $relatorio->set_conteudo($result);
+            $relatorio->set_align(['center', 'left', 'left', 'left', 'center', 'center']);
+            $relatorio->set_classe([null, "Pessoal", "Pessoal", "Pessoal"]);
+            $relatorio->set_metodo([null, "get_nome", "get_cargoSimples", "get_lotacao"]);
+            $relatorio->set_funcao(["get_nomeMes", null, null, null, null, "date_to_php"]);
+            $relatorio->show();
             break;
-        
+
         #######################################
     }
 

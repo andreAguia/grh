@@ -10,20 +10,27 @@ class ListaAfastamentosServidor {
     private $idServidor = null;
     private $exibeObs = true;
     private $titulo = "Afastamentos";
-    private $interrompe = false;
-    private $tempoServico = false;
+    private $subtitulo = null;
+
+    # Quanto a interrupção dos tempos
+    private $semTempoServico = null;
+    private $semTempoContribuicao = null;
 
     ###########################################################
 
     /**
      * Método Construtor
      */
-    public function __construct($idServidor, $titulo = null) {
+    public function __construct($idServidor, $titulo = null, $subtitulo = null) {
 
         $this->idServidor = $idServidor;
 
         if (!empty($titulo)) {
             $this->titulo = $titulo;
+        }
+
+        if (!empty($subtitulo)) {
+            $this->subtitulo = $subtitulo;
         }
     }
 
@@ -41,26 +48,26 @@ class ListaAfastamentosServidor {
 
     ###############################################################
 
-    public function set_interrompe($interrompe) {
+    public function set_semTempoContribuicao($tempoContribiocao) {
 
         /**
-         * define se será exibido somente os afastamentos que interrompem o tempo de serviço
+         * define se será exibido somente os afastamentos que interrompem o tempo de contribuição
          *
-         * @syntax $input->set_interrompeTs([$interrompe]);
+         * @syntax $input->set_tempoContribuicao([$tempoContribiocao]);
          */
-        $this->interrompe = $interrompe;
+        $this->semTempoContribuicao = $tempoContribiocao;
     }
 
     ###############################################################
 
-    public function set_tempoServico($tempoServico) {
+    public function set_semTempoServico($tempoServico) {
 
         /**
          * define se será exibido somente os afastamentos que interrompem o tempo de serviço
          *
-         * @syntax $input->set_interrompeTs([$interrompe]);
+         * @syntax $input->set_tempoServico([$tempoServico]);
          */
-        $this->tempoServico = $tempoServico;
+        $this->semTempoServico = $tempoServico;
     }
 
     ###############################################################
@@ -72,10 +79,7 @@ class ListaAfastamentosServidor {
          *
          * @syntax $input->exibeTabela();
          */
-        # Inicia o banco de Dados
-        $pessoal = new Pessoal();
-
-        ###############################################################33
+        #######################
         # Licença Geral
         $select = "(SELECT YEAR(tblicenca.dtInicial),
                            tblicenca.dtInicial,
@@ -88,13 +92,23 @@ class ListaAfastamentosServidor {
                                      JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE tbservidor.idServidor = {$this->idServidor}";
 
-        if ($this->interrompe OR $this->tempoServico) {
-            $select .= " AND tbtipolicenca.tempoServico is true ";
+        # Interrompe o tempo de serviço
+        if ($this->semTempoServico) {
+            $select .= " AND tbtipolicenca.tempoServico = 'Sim'";
+        }
+
+        # Interrompe o tempo de contribuição
+        if (!is_null($this->semTempoContribuicao)) {
+            if ($this->semTempoContribuicao) {
+                $select .= " AND tbtipolicenca.tempoContribuicao = 'Sim'";
+            } else {
+                $select .= " AND tbtipolicenca.tempoContribuicao = 'Não'";
+            }
         }
 
         #######################    
         # Licença Prêmio
-        if (!$this->interrompe AND !$this->tempoServico) {
+        if (!$this->semTempoContribuicao AND !$this->semTempoServico) {
             $select .= ") UNION (
                   SELECT YEAR(tblicencapremio.dtInicial),
                          tblicencapremio.dtInicial,
@@ -109,7 +123,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Férias
-        if (!$this->interrompe AND !$this->tempoServico) {
+        if (!$this->semTempoContribuicao AND !$this->semTempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbferias.dtInicial),
                           tbferias.dtInicial,
@@ -124,7 +138,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Faltas abonadas
-        if (!$this->interrompe AND !$this->tempoServico) {
+        if (!$this->semTempoContribuicao AND !$this->semTempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbatestado.dtInicio),
                           tbatestado.dtInicio,
@@ -139,7 +153,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Trabalhando TRE
-        if (!$this->interrompe AND !$this->tempoServico) {
+        if (!$this->semTempoContribuicao AND !$this->semTempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbtrabalhotre.data),
                           tbtrabalhotre.data,
@@ -154,7 +168,7 @@ class ListaAfastamentosServidor {
 
         #######################
         # Folga TRE
-        if (!$this->interrompe AND !$this->tempoServico) {
+        if (!$this->semTempoContribuicao AND !$this->semTempoServico) {
             $select .= ") UNION (
                    SELECT YEAR(tbfolga.data),
                           tbfolga.data,
@@ -176,15 +190,19 @@ class ListaAfastamentosServidor {
                            tblicencasemvencimentos.dtInicial,
                            tblicencasemvencimentos.numDias,
                            ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                           CONCAT(tbtipolicenca.nome, IF(optouContribuir=1,' - Optou Pagar Rio Previdência','')),
+                           CONCAT(tbtipolicenca.nome, IF(optouContribuir=1,' - (Optou Pagar RP)',' - (Optou NÃO Pagar RP)')),
                            CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
                       FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                    JOIN tbpessoa USING (idPessoa)
                                                    JOIN tbtipolicenca USING (idTpLicenca)
                       WHERE tbservidor.idServidor = {$this->idServidor}";
 
-        if ($this->interrompe) {
-            $select .= " AND (optouContribuir = 2 OR optouContribuir is NULL)";
+        if (!is_null($this->semTempoContribuicao)) {
+            if ($this->semTempoContribuicao) {
+                $select .= " AND (optouContribuir = 2 OR optouContribuir is NULL)";
+            } else {
+                $select .= " AND optouContribuir = 1";
+            }
         }
 
         #######################                      
@@ -198,8 +216,9 @@ class ListaAfastamentosServidor {
 
         $tabela = new Tabela();
         $tabela->set_titulo($this->titulo);
+        $tabela->set_subtitulo($this->subtitulo);
 
-        if ($this->interrompe OR $this->tempoServico) {
+        if ($this->semTempoContribuicao OR $this->semTempoServico) {
             $tabela->set_colunaSomatorio(2);
             $tabela->set_totalRegistro(false);
         }
@@ -215,7 +234,7 @@ class ListaAfastamentosServidor {
         $tabela->set_width([10, 10, 5, 10, 50, 15]);
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
-        $tabela->set_conteudo($result);        
+        $tabela->set_conteudo($result);
         $tabela->show();
     }
 }

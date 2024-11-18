@@ -72,7 +72,8 @@ if ($acesso) {
                                       processo,                                  
                                       dtPeriodo,
                                       limite_sexo,
-                                      if(tempoServico = 1,"Sim","Não"),
+                                      tempoServico,
+                                      tempoContribuicao,
                                       idTpLicenca
                                  FROM tbtipolicenca
                                 WHERE nome LIKE "%' . $parametro . '%"
@@ -88,6 +89,7 @@ if ($acesso) {
                                      dtPeriodo,
                                      limite_sexo,
                                      tempoServico,
+                                     tempoContribuicao,
                                      lei,
                                      documentacao,
                                      obs
@@ -109,9 +111,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Interrompe TS"]);
+    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço", "Suspende Tempo de Contribuição"]);
     $objeto->set_width([5, 27, 9, 9, 9, 9, 9, 9, 9]);
-    $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao"]);
+    $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao", "ressaltaSimNao"]);
     $objeto->set_align(["center", "left"]);
     $objeto->set_classe([null, "Licenca"]);
     $objeto->set_metodo([null, "exibeNome"]);
@@ -186,9 +188,17 @@ if ($acesso) {
             'col' => 3,
             'nome' => 'tempoServico',
             'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de serviço',
-            'label' => 'Interrompe contagem de TS:',
+            'label' => 'Suspende Tempo de Serviço:',
             'tipo' => 'combo',
-            'array' => array(array(1, "Sim"), array(0, "Não")),
+            'array' => array("Sim", "Não"),
+            'size' => 10),
+        array('linha' => 3,
+            'col' => 3,
+            'nome' => 'tempoContribuicao',
+            'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de contribuicao',
+            'label' => 'Suspende Tempo de Contribuição:',
+            'tipo' => 'combo',
+            'array' => array("Sim", "Não"),
             'size' => 10),
         array('linha' => 2,
             'nome' => 'lei',

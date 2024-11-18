@@ -236,24 +236,26 @@ if ($acesso) {
             $grid1->abreColuna(12, 12, 6);
 
             # Exibe os afastamentos que interrompem o tempo de contribuição
-            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Interrompe o Tempo de Contribuição");
-            $afast1->set_interrompe(true);
+            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos SEM Contribuição","Que Interrompes o Tempo de Serviço");
+            $afast1->set_semTempoServico(true);
+            $afast1->set_semTempoContribuicao(true);
             $afast1->exibeTabela();
 
             $grid1->fechaColuna();
             $grid1->abreColuna(12, 12, 6);
 
             # Exibe os afastamentos que interrompem o tempo de serviço     
-            $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Interrompe o Tempo de Serviço");
-            $afast1->set_tempoServico(true);
-            $afast1->exibeTabela();
+            $afast2 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos COM Contribuição","Que Interrompes o Tempo de Serviço");         
+            $afast2->set_semTempoServico(true);
+            $afast2->set_semTempoContribuicao(false);
+            $afast2->exibeTabela();
 
             $grid1->fechaColuna();
             $grid1->abreColuna(12);
 
             # exibe todos os afastamentos
-            $afast2 = new ListaAfastamentosServidor($idServidorPesquisado, "Todos os Afastamentos");
-            $afast2->exibeTabela();
+            $afast3 = new ListaAfastamentosServidor($idServidorPesquisado, "Todos os Afastamentos");
+            $afast3->exibeTabela();
 
             $grid1->fechaColuna();
             $grid1->fechaGrid();

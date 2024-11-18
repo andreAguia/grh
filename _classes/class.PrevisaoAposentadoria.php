@@ -123,7 +123,7 @@ class PrevisaoAposentadoria {
      */
     private $idServidor = null;
     private $servidorIdade = null;
-    private $servidorSexo = null;    
+    private $servidorSexo = null;
     private $servidorDataIngresso = null;
     private $servidorPontos = null;
     private $servidorDataNascimento = null;
@@ -156,6 +156,12 @@ class PrevisaoAposentadoria {
     private $analiseReducao = null;
     private $analiseCarreira = null;
 
+    # Obs
+    private $obsContribuicao = null;
+    private $obsCarreira = null;
+    private $obsServicoPublico = null;
+    private $obsTempoCargo = null;
+
     /*
      *  Variaveis de Retorno    
      */
@@ -164,11 +170,14 @@ class PrevisaoAposentadoria {
     private $dataCriterioPontos = null;
     private $dataCriterioPedagio = null;
     private $dataCriterioTempoContribuicao = null;
+    private $dataCriterioTempoContribuicaoOriginal = null;
     private $dataCriterioTempoServicoPublico = null;
+    private $dataCriterioTempoServicoPublicoOriginal = null;
     private $dataCriterioTempoCargo = null;
     private $dataDireitoAposentadoria = null;
     private $dataCriterioRedutor = null;
     private $dataCriterioCarreira = null;
+    private $dataCriterioCarreiraOriginal = null;
     private $temDireito = true;
     private $textoRetorno = null;
     private $textoReduzido = null;
@@ -182,11 +191,9 @@ class PrevisaoAposentadoria {
 
     # Modalidade
     private $modalidade;
-    
-    # Tempo Interrompuido
-    private $tempoInterrompido = 0;       // Tempo que interrompe tempo de serviço
-    private $servidorTempoUenf_semTempoInterrompido = null;
-    private $servidorTempoTotal_semTempoInterrompido = null;
+
+    # Exibição dos dados
+    private $mensagem = null;
 
     ###########################################################
 
@@ -705,7 +712,9 @@ class PrevisaoAposentadoria {
         $this->modalidade = $modalidade;
     }
 
-    ###########################################################    
+    ###########################################################
+    #
+    ###########################################################   
 
     public function fazAnalise($idServidor) {
 
@@ -715,7 +724,7 @@ class PrevisaoAposentadoria {
 
         # Inicializa a flag
         $this->temDireito = true;
-        
+
         ####################################################################
 
         /*
@@ -732,7 +741,7 @@ class PrevisaoAposentadoria {
 
         # Sexo
         $this->servidorSexo = $pessoal->get_sexo($this->idServidor);
-        
+
         ####################################################################
 
         /*
@@ -745,7 +754,7 @@ class PrevisaoAposentadoria {
 
         # Tempo Privado
         $this->servidorTempoAverbadoPrivado = $averbacao->get_tempoAverbadoPrivado($this->idServidor);
-        
+
         ####################################################################
 
         /*
@@ -753,14 +762,10 @@ class PrevisaoAposentadoria {
          */
 
         $aposentadoria = new Aposentadoria();
-        
-        # Tempo Interrompido
-        $this->tempoInterrompido = $aposentadoria->get_tempoInterrompido($this->idServidor);
 
         # Tempo Uenf
-        $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor); 
-        $this->servidorTempoUenf_semTempoInterrompido = $aposentadoria->get_tempoServicoUenf($this->idServidor, false); 
-                
+        $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
+
         # Data de ingresso
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
 
@@ -769,18 +774,17 @@ class PrevisaoAposentadoria {
             # Retorna a data da transformação em estatutários
             # Daqueles que entraram com celetistas na Uenf
             $this->servidorDataIngresso = "09/09/2003";
-        }        
-        
+        }
+
         # Tempo Total
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
-        $this->servidorTempoTotal_semTempoInterrompido = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf_semTempoInterrompido;
-        
+
         # Tempo de contribuição
         $this->servidorTempoContribuicao = $this->servidorTempoTotal;
 
         # Tempo Initerrupto
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
-        
+
         # Tempo Publico
         $this->servidorTempoPublico = $this->servidorTempoAverbadoPublico + $this->servidorTempoUenf - $aposentadoria->get_tempoAfastadoComContribuicao($idServidor);
 
@@ -790,11 +794,11 @@ class PrevisaoAposentadoria {
 
             # Verifica se tem divisor de idade
             if (empty($this->dataDivisorIdade)) {
-                $this->regraIdade = $this->idadeHomem;                
+                $this->regraIdade = $this->idadeHomem;
             } else {
                 # Calcula a data
                 $dataTemporaria = addAnos($this->servidorDataNascimento, $this->idadeHomemAntes);
-                
+
                 if (year($this->dataDivisorIdade) <= year($dataTemporaria)) {
                     $this->regraIdade = $this->idadeHomemDepois;
                 } else {
@@ -823,7 +827,7 @@ class PrevisaoAposentadoria {
 
         # Data da Aposentadoria Compulsoria
         $this->dataCompulsoria = $aposentadoria->get_dataAposentadoriaCompulsoria($this->idServidor);
-        
+
         ####################################################################
 
         /*
@@ -838,7 +842,7 @@ class PrevisaoAposentadoria {
                 $this->temDireito = false;
             }
         }
-        
+
         ####################################################################
 
         /*
@@ -853,7 +857,7 @@ class PrevisaoAposentadoria {
                 $this->temDireito = false;
             }
         }
-        
+
         ####################################################################
 
         /*
@@ -867,59 +871,140 @@ class PrevisaoAposentadoria {
             # Calcula a data
             $this->analiseIdade = "Ainda faltam<br/>" . dataDif(date("d/m/Y"), $this->dataCriterioIdade) . " dias.";
         }
-        
+
         ####################################################################
 
         /*
          *  Tempo de Contribuição
          */
+
+        # Pega o tempo que falta em dias
         $resta1 = ($this->regraContribuicao * 365) - $this->servidorTempoContribuicao;
-        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
-        if ($this->servidorTempoContribuicao >= ($this->regraContribuicao * 365)) {
+
+        # Calcula a data - retiro a contagem do primeiro dia para não contar hoje 2 vezes
+        $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);
+
+        # Verifica se considerando a data, o servidor tem algum afastamento 
+        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoContribuicao);
+
+        if ($diasSemContribuicao > 0) {
+            # Pega a data antes da alteração
+            $this->dataCriterioTempoContribuicaoOriginal = $this->dataCriterioTempoContribuicao;
+
+            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
+            $this->dataCriterioTempoContribuicao = addDias($this->dataCriterioTempoContribuicao, $diasSemContribuicao, false);
+            $this->obsContribuicao = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoContribuicaoOriginal} para {$this->dataCriterioTempoContribuicao}.";
+
+            # Atualiza os dias
+            $resta1 = getNumDias($hoje, $this->dataCriterioTempoContribuicao);
+        }
+
+        # Verifica se atende ou não os requisitos
+        #if ($this->servidorTempoContribuicao >= ($this->regraContribuicao * 365)) {
+        if (jaPassou($this->dataCriterioTempoContribuicao)) {
             $this->analiseContribuicao = "OK";
         } else {
             $this->analiseContribuicao = "Ainda faltam<br/>{$resta1} dias.";
         }
-        
+
         ####################################################################
 
         /*
          *  Tempo de Carreira
          */
+        # Pega o tempo que falta em dias
         $resta1 = ($this->carreira * 365) - $this->servidorTempoUenf;
-        $this->dataCriterioCarreira = addDias($hoje, $resta1, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
+
+        # Calcula a data - retiro a contagem do primeiro dia para não contar hoje 2 vezes
+        $this->dataCriterioCarreira = addDias($hoje, $resta1, false);
+
+        # Verifica se considerando a data, o servidor tem algum afastamento 
+        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioCarreira);
+
+        if ($diasSemContribuicao > 0) {
+            # Pega a data antes da alteração
+            $this->dataCriterioCarreiraOriginal = $this->dataCriterioCarreira;
+
+            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
+            $this->dataCriterioCarreira = addDias($this->dataCriterioCarreira, $diasSemContribuicao, false);
+            $this->obsCarreira = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioCarreiraOriginal} para {$this->dataCriterioCarreira}.";
+
+            # Atualiza os dias
+            $resta1 = getNumDias($hoje, $this->dataCriterioCarreira);
+        }
+
+        # Verifica se atende ou não os requisitos
         if ($this->servidorTempoUenf >= ($this->carreira * 365)) {
             $this->analiseCarreira = "OK";
         } else {
             $this->analiseCarreira = "Ainda faltam<br/>{$resta1} dias.";
         }
-        
+
         ####################################################################
 
         /*
          *  Serviço Público
          */
+        # Pega o tempo que falta em dias
         $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublico;
-        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
-        if ($this->servidorTempoPublico >= ($this->servicoPublico * 365)) {
+
+        # Calcula a data - retiro a contagem do primeiro dia para não contar hoje 2 vezes
+        $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);
+
+        # Verifica se considerando a data, o servidor tem algum afastamento 
+        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
+
+        if ($diasSemContribuicao > 0) {
+            # Pega a data antes da alteração
+            $this->dataCriterioTempoServicoPublicoOriginal = $this->dataCriterioTempoServicoPublico;
+
+            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
+            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemContribuicao, false);
+            $this->obsServicoPublico = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
+
+            # Atualiza os dias
+            $resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
+        }
+
+        #if ($this->servidorTempoPublico >= ($this->servicoPublico * 365)) {
+        if(jaPassou($this->dataCriterioTempoServicoPublico)) {
             $this->analisePublico = "OK";
         } else {
             $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
         }
-        
+
         ####################################################################
 
         /*
          *  Cargo Efetivo
          */
+        # Pega o tempo que falta em dias
         $resta3 = ($this->cargoEfetivo * 365) - $this->servidorTempoUenf;
-        $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
+
+        # Calcula a data - retiro a contagem do primeiro dia para não contar hoje 2 vezes
+        $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);
+
+        # Verifica se considerando a data, o servidor tem algum afastamento 
+        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoCargo);
+
+        if ($diasSemContribuicao > 0) {
+            # Pega a data antes da alteração
+            $this->dataCriterioTempoCargoOriginal = $this->dataCriterioTempoCargo;
+
+            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
+            $this->dataCriterioTempoCargo = addDias($this->dataCriterioTempoCargo, $diasSemContribuicao, false);
+            $this->obsTempoCargo = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoCargoOriginal} para {$this->dataCriterioTempoCargo}.";
+
+            # Atualiza os dias
+            $resta3 = getNumDias($hoje, $this->dataCriterioTempoCargo);
+        }
+
         if ($this->servidorTempoUenf >= ($this->cargoEfetivo * 365)) {
             $this->analiseCargoEfetivo = "OK";
         } else {
-            $this->analiseCargoEfetivo = "Ainda faltam<br/>{$resta3} dias.";
+            $this->analiseCargoEfetivo = "Ainda faltam<br/>" . abs($resta3) . " dias.";
         }
-        
+
         ####################################################################
 
         /*
@@ -983,16 +1068,21 @@ class PrevisaoAposentadoria {
                 $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.";
             }
         }
-        
+
         ####################################################################
 
         /*
          * Pedágio
          */
 
+        # Verifica se tem pedágio na regra que está sendo exibida
         if (!empty($this->pedagio)) {
+            # Pega o tempo em dias antes da data alvo do pedágio para ver se tem direito a esta regra
             $this->servidorTempoAntesData = $aposentadoria->get_tempoTotalAntesDataAlvo($this->idServidor, $this->pedagioData);
+
+            # Pega o que sobra
             $this->servidorTempoSobra = ($this->regraContribuicao * 365) - $this->servidorTempoAntesData;
+
             $this->servidorPedagio = round($this->servidorTempoSobra * ($this->pedagio / 100));
 
             # Ajeita a descrição
@@ -1012,7 +1102,7 @@ class PrevisaoAposentadoria {
                 }
             }
         }
-        
+
         ####################################################################
 
         /*
@@ -1070,7 +1160,7 @@ class PrevisaoAposentadoria {
                 $this->analiseReducao = "Não cabe o uso do redutor pois o servidor cumpriu o requisito de idade antes do de tempo de contribuição.";
             }
         }
-        
+
         ####################################################################
 
         /*
@@ -1185,11 +1275,10 @@ class PrevisaoAposentadoria {
         # Exibe obs para quando o servidor tem tempo celetista
         if (!empty($this->dtIngresso) OR !empty($this->dtIngressoApartir)) {
             if ($this->servidorDataIngresso == "09/09/2003") {
-                $this->servidorDataIngresso .= " *";
-                $mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
+                $mensagem = "O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
                         . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
             } else {
-                $mensagem = null;
+                $mensagem = "---";
             }
         }
 
@@ -1200,7 +1289,8 @@ class PrevisaoAposentadoria {
                 "{$this->regraIdade} anos",
                 "{$this->servidorIdade} anos<br/>({$this->servidorDataNascimento})",
                 $this->dataCriterioIdade . $this->mensagemRedutor,
-                $this->analiseIdade],
+                $this->analiseIdade,
+                null],
         ];
 
         # Data de Ingresso (se tiver)      
@@ -1211,7 +1301,8 @@ class PrevisaoAposentadoria {
                         $this->dtIngresso,
                         $this->servidorDataIngresso,
                         "---",
-                        $this->analisaDtIngresso]);
+                        $this->analisaDtIngresso,
+                        null]);
         }
 
         # Data de Ingresso A partir (se tiver)      
@@ -1222,7 +1313,8 @@ class PrevisaoAposentadoria {
                         $this->dtIngressoApartir,
                         $this->servidorDataIngresso,
                         "---",
-                        $this->analisaDtIngressoApartir]);
+                        $this->analisaDtIngressoApartir,
+                        null]);
         }
 
         # Tempo de carreira (se tiver)
@@ -1233,7 +1325,8 @@ class PrevisaoAposentadoria {
                         "{$this->carreira} anos<br/>(" . ($this->carreira * 365) . " dias)",
                         intval($this->servidorTempoUenf / 365) . " anos<br/>({$this->servidorTempoUenf} dias)",
                         $this->dataCriterioCarreira,
-                        $this->analiseCarreira]);
+                        $this->analiseCarreira,
+                        $this->obsCarreira]);
         }
 
         # Tempo de Contribuição (se tiver)
@@ -1244,7 +1337,8 @@ class PrevisaoAposentadoria {
                         "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)",
                         intval($this->servidorTempoContribuicao / 365) . " anos<br/>({$this->servidorTempoContribuicao} dias)",
                         $this->dataCriterioTempoContribuicao,
-                        $this->analiseContribuicao]);
+                        $this->analiseContribuicao,
+                        $this->obsContribuicao]);
         }
 
         # Pontos (se tiver)
@@ -1254,7 +1348,8 @@ class PrevisaoAposentadoria {
                 "{$regraPontos} pontos",
                 "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicao / 365) . ")",
                 trataNulo($this->dataCriterioPontos),
-                $this->analisePontos]);
+                $this->analisePontos,
+                null]);
         }
 
         # Pedágio (se tiver)
@@ -1271,7 +1366,8 @@ class PrevisaoAposentadoria {
                 "{$this->pedagio} %",
                 $textoPedagio,
                 $this->dataCriterioPedagio,
-                $this->analisePedagio]);
+                $this->analisePedagio,
+                null]);
         }
 
         # Tempo Público (se tiver)
@@ -1281,7 +1377,8 @@ class PrevisaoAposentadoria {
                 "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)",
                 "{$this->servidorTempoPublico} dias",
                 $this->dataCriterioTempoServicoPublico,
-                $this->analisePublico]);
+                $this->analisePublico,
+                $this->obsServicoPublico]);
         }
 
         # Cargo Efetivo (se tiver)
@@ -1291,7 +1388,8 @@ class PrevisaoAposentadoria {
                 "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)",
                 "{$this->servidorTempoUenf} dias",
                 $this->dataCriterioTempoCargo,
-                $this->analiseCargoEfetivo]);
+                $this->analiseCargoEfetivo,
+                $this->obsTempoCargo]);
         }
 
         # Data Limite
@@ -1300,8 +1398,9 @@ class PrevisaoAposentadoria {
                 $this->dtRequesitosCumpridosDescicao,
                 $this->dtRequesitosCumpridos,
                 $this->dataDireitoAposentadoria,
-                "-",
-                $this->analiseDtRequesitosCumpridos]);
+                "---",
+                $this->analiseDtRequesitosCumpridos,
+                null]);
         }
 
         # Aposentadoria Compulsória
@@ -1312,7 +1411,8 @@ class PrevisaoAposentadoria {
                 "{$this->dataCompulsoria}<br/>(Compulsória)",
                 $this->dataDireitoAposentadoria,
                 "---",
-                $this->analiseCompulsoria]);
+                $this->analiseCompulsoria,
+                null]);
         }
 
         # Exibe a tabela
@@ -1331,9 +1431,9 @@ class PrevisaoAposentadoria {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise"]);
-        $tabela->set_width([14, 30, 14, 14, 14, 14]);
-        $tabela->set_align(["left", "left"]);
+        $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise", "Obs"]);
+        $tabela->set_width([11, 23, 11, 11, 11, 11, 22]);
+        $tabela->set_align(["left", "left", "center", "center", "center", "center", "left"]);
         $tabela->set_totalRegistro(false);
 
         if (!$relatorio) {
@@ -1355,11 +1455,12 @@ class PrevisaoAposentadoria {
         $tabela->show();
 
         # Mensagem
-        if (!empty($mensagem)) {
+        if (!empty($this->mensagem)) {
             if ($relatorio) {
-                p($mensagem, "left", "f12");
+                p($this->mensagem, "left", "f12");
             } else {
-                callout($mensagem);
+                titulotable("Observações Importantes");
+                callout($this->mensagem);
             }
         }
 
@@ -2012,7 +2113,7 @@ class PrevisaoAposentadoria {
                 ["Data que completa o tempo de contribuição:", $this->dataCriterioTempoContribuicao],
                 ["Data que completaria a idade:", $this->dataCriterioIdade],
                 ["Tempo que faltava para<br/>o critério da idade. Em Dias", "{$this->diasIdadeQueFalta} dias"],
-                ["Tempo que faltava para<br/>o critério da idade. Em Meses: ({$this->diasIdadeQueFalta} / 30)","Real -> " . ($this->diasIdadeQueFalta / 30) . " meses<br/>Arredondado -> {$this->mesesIdadeQueFalta} meses"],
+                ["Tempo que faltava para<br/>o critério da idade. Em Meses: ({$this->diasIdadeQueFalta} / 30)", "Real -> " . ($this->diasIdadeQueFalta / 30) . " meses<br/>Arredondado -> {$this->mesesIdadeQueFalta} meses"],
                 ["Nova data do critário idade com o redutor", $this->dataCriterioRedutor]
             ];
 

@@ -237,8 +237,8 @@ if ($acesso) {
 
             # Exibe os afastamentos que interrompem o tempo de contribuição
             $afast1 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos SEM Contribuição","Que Interrompes o Tempo de Serviço");
-            $afast1->set_semTempoServico(true);
-            $afast1->set_semTempoContribuicao(true);
+            $afast1->set_semTempoServicoSemTempoContribuicao(true);
+            $afast1->set_semTempoServicoComTempoContribuicao(false);
             $afast1->exibeTabela();
 
             $grid1->fechaColuna();
@@ -246,8 +246,8 @@ if ($acesso) {
 
             # Exibe os afastamentos que interrompem o tempo de serviço     
             $afast2 = new ListaAfastamentosServidor($idServidorPesquisado, "Afastamentos COM Contribuição","Que Interrompes o Tempo de Serviço");         
-            $afast2->set_semTempoServico(true);
-            $afast2->set_semTempoContribuicao(false);
+            $afast2->set_semTempoServicoSemTempoContribuicao(true);
+            $afast2->set_semTempoServicoComTempoContribuicao(true);
             $afast2->exibeTabela();
 
             $grid1->fechaColuna();

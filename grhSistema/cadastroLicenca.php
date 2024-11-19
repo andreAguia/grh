@@ -64,7 +64,7 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT idTpLicenca,
+    $objeto->set_selectLista("SELECT idTpLicenca,
                                      idTpLicenca,
                                       periodo,
                                       pericia,
@@ -73,15 +73,14 @@ if ($acesso) {
                                       dtPeriodo,
                                       limite_sexo,
                                       tempoServico,
-                                      tempoContribuicao,
                                       idTpLicenca
                                  FROM tbtipolicenca
-                                WHERE nome LIKE "%' . $parametro . '%"
-                                   OR idTpLicenca LIKE "%' . $parametro . '%"
-                             ORDER BY tbtipolicenca.nome');
+                                WHERE nome LIKE '%{$parametro}%'
+                                   OR idTpLicenca LIKE '%{$parametro}%'
+                             ORDER BY tbtipolicenca.nome");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nome,
+    $objeto->set_selectEdita("SELECT nome,
                                      periodo,
                                      pericia,
                                      publicacao,
@@ -89,12 +88,11 @@ if ($acesso) {
                                      dtPeriodo,
                                      limite_sexo,
                                      tempoServico,
-                                     tempoContribuicao,
                                      lei,
                                      documentacao,
                                      obs
                                 FROM tbtipolicenca
-                               WHERE idTpLicenca = ' . $id);
+                               WHERE idTpLicenca = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -111,9 +109,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço", "Suspende Tempo de Contribuição"]);
+    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço"]);
     $objeto->set_width([5, 27, 9, 9, 9, 9, 9, 9, 9]);
-    $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao", "ressaltaSimNao"]);
+    $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao"]);
     $objeto->set_align(["center", "left"]);
     $objeto->set_classe([null, "Licenca"]);
     $objeto->set_metodo([null, "exibeNome"]);
@@ -189,14 +187,6 @@ if ($acesso) {
             'nome' => 'tempoServico',
             'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de serviço',
             'label' => 'Suspende Tempo de Serviço:',
-            'tipo' => 'combo',
-            'array' => array("Sim", "Não"),
-            'size' => 10),
-        array('linha' => 3,
-            'col' => 3,
-            'nome' => 'tempoContribuicao',
-            'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de contribuicao',
-            'label' => 'Suspende Tempo de Contribuição:',
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
             'size' => 10),

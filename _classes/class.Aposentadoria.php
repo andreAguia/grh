@@ -752,82 +752,6 @@ class Aposentadoria {
     #####################################################
 
     /**
-     * Método get_afastamentoSemContribuicao
-     * informa o total de dias dos afastamentos que interrompem o tempo de serviço sem contribuição
-     * 
-     * @param	string $idServidor idServidor do servidor
-     * @param	date $date data de quando o tempo é período específico
-     */
-    public function get_afastamentoSemContribuicao($idServidor, $data = null) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Licença Geral
-        $select1 = "SELECT numDias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico IS true";
-        # Soma
-        $retorno = array_sum(array_column($pessoal->select($select1), 'numDias'));
-
-        # Licença Sem Vencimentos
-        $select2 = "SELECT numDias                           
-                      FROM tblicencasemvencimentos                       
-                      WHERE idServidor = {$idServidor}
-                        AND (optouContribuir = 2 OR optouContribuir is null)";
-
-        # Soma
-        $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
-
-        # Retorna
-        return $retorno;
-    }
-
-    #####################################################
-
-    /**
-     * Método get_afastamentoComContribuicao
-     * informa o total de dias dos afastamentos que interrompem o tempo de serviço COM contribuição
-     * 
-     * @param	string $idServidor idServidor do servidor
-     * @param	date $date data de quando o tempo é período específico
-     */
-    public function get_afastamentoComContribuicao($idServidor, $data = null) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Licença Geral
-        $select1 = "SELECT numDias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico IS true";
-        # Soma
-        $retorno = array_sum(array_column($pessoal->select($select1), 'numDias'));
-
-        # Licença Sem Vencimentos
-        $select2 = "SELECT numDias                           
-                      FROM tblicencasemvencimentos                       
-                      WHERE idServidor = {$idServidor}
-                        AND optouContribuir = 1";
-
-        # Soma
-        $retorno += array_sum(array_column($pessoal->select($select2), 'numDias'));
-
-        # Retorna
-        return $retorno;
-    }
-
-    #####################################################
-
-    /**
      * Método get_tempoAfastadoComContribuicao
      * informa o total de dias de tempo afastado mas com contribuição
      * 
@@ -1158,8 +1082,8 @@ class Aposentadoria {
          */
 
         $array = [
-            ["<b>COM</b> Contribuição", $this->get_afastamentoComContribuicao($idServidor)],
-            ["<b>SEM</b> Contribuição", $this->get_afastamentoSemContribuicao($idServidor)]
+            ["<b>COM</b> Contribuição", $this->get_semTempoServicoComTempoContribuicao($idServidor)],
+            ["<b>SEM</b> Contribuição", $this->get_semTempoServicoSemTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1527,7 +1451,7 @@ class Aposentadoria {
 
     #####################################################  
 
-    public function get_tempoSemContribuicao($idServidor = null, $dataPrevista = null) {
+    public function get_semTempoServicoSemTempoContribuicao($idServidor = null, $dataPrevista = null) {
 
         # Inicia a variável de retorno
         $retorno = 0;
@@ -1536,46 +1460,22 @@ class Aposentadoria {
         $pessoal = new Pessoal();
 
         ######
-        # Licença Geral cuja data final é anterior a data
-        $select = "SELECT dtInicial,
-                          numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal,
-                          tbtipolicenca.tempoContribuicao,
-                          tbtipolicenca.nome
-                     FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
-                    WHERE idServidor = {$idServidor}
-                      AND tbtipolicenca.tempoContribuicao = 'Sim'
-                 ORDER BY dtInicial";
-
-        $result1 = $pessoal->select($select);
-
-        # Percorre e soma os afastamentos
-        foreach ($result1 as $item) {
-            if (!is_null($dataPrevista)) {
-                
-                # Verifica se a data final do afastamento é anterior a data prevista
-                if(strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))){
-                    $retorno += $item["numDias"];
-                }
-                
-                # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if(entre($dataPrevista, date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]), false)){
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]));
-                }
-            } else {
-                $retorno += $item["numDias"];
-            }
-        }
-
-        ######
         # Licença sem vencimentos
-        $select = "SELECT dtInicial,
+        $select = "(SELECT dtInicial,
                           numDias,
                           ADDDATE(dtInicial,numDias-1) as dtFinal
                      FROM tblicencasemvencimentos
                     WHERE idServidor = {$idServidor}
-                      AND (optouContribuir = 2 OR optouContribuir is NULL)
-                 ORDEr BY dtInicial";
+                      AND (optouContribuir = 2 OR optouContribuir is NULL))
+                    UNION
+                    (SELECT dtInicial,
+                            numDias,
+                            ADDDATE(dtInicial,numDias-1) as dtFinal
+                       FROM tblicenca JOIN tbservidor USING (idServidor)
+                                      JOIN tbtipolicenca USING (idTpLicenca)
+                      WHERE idServidor = {$idServidor}
+                        AND tbtipolicenca.tempoServico = 'Sim')
+                 ORDER BY 1";
 
         $result2 = $pessoal->select($select);
 
@@ -1603,7 +1503,7 @@ class Aposentadoria {
 
     #####################################################  
 
-    public function get_tempoSemServico($idServidor = null, $dataInicial = null) {
+    public function get_semTempoServicoComTempoContribuicao($idServidor = null, $dataPrevista = null) {
 
         # Inicia a variável de retorno
         $retorno = 0;
@@ -1612,45 +1512,38 @@ class Aposentadoria {
         $pessoal = new Pessoal();
 
         ######
-        # Licença Geral
-        $select = "SELECT dtInicial,
-                          numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
-                     FROM tblicenca JOIN tbtipolicenca USING (idTpLicenca)
-                    WHERE idServidor = {$idServidor}
-                      AND tbtipolicenca.tempoServico is true
-                 ORDEr BY dtInicial";
-
-        $result1 = $pessoal->select($select);
-
-        var_dump($result1);
-
-        # Percorre e soma os afastamentos
-        foreach ($result1 as $item) {
-            $retorno += $item["numDias"];
-        }
-
-        ######
         # Licença sem vencimentos
         $select = "SELECT dtInicial,
                           numDias,
                           ADDDATE(dtInicial,numDias-1) as dtFinal
                      FROM tblicencasemvencimentos
                     WHERE idServidor = {$idServidor}
+                      AND optouContribuir = 1
                  ORDER BY dtInicial";
 
         $result2 = $pessoal->select($select);
 
-        var_dump($result2);
-
         # Percorre e soma os afastamentos
         foreach ($result2 as $item) {
-            $retorno += $item["numDias"];
+            if (!is_null($dataPrevista)) {
+                
+                # Verifica se a data final do afastamento é anterior a data prevista
+                if(strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))){
+                    $retorno += $item["numDias"];
+                }
+                
+                # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
+                if(entre($dataPrevista, date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]), false)){
+                    $retorno += getNumDias(date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]));
+                }
+            } else {
+                $retorno += $item["numDias"];
+            }
         }
 
         # Retorna o valor calculado
         return $retorno;
     }
 
-    #####################################################
+    #####################################################    
 }

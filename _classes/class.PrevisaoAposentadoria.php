@@ -885,7 +885,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoContribuicao);
+        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoContribuicao);
 
         if ($diasSemContribuicao > 0) {
             # Pega a data antes da alteração
@@ -919,7 +919,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioCarreira = addDias($hoje, $resta1, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioCarreira);
+        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioCarreira);
 
         if ($diasSemContribuicao > 0) {
             # Pega a data antes da alteração
@@ -952,7 +952,22 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
+        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
+
+        if ($diasSemContribuicao > 0) {
+            # Pega a data antes da alteração
+            $this->dataCriterioTempoServicoPublicoOriginal = $this->dataCriterioTempoServicoPublico;
+
+            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
+            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemContribuicao, false);
+            $this->obsServicoPublico = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
+
+            # Atualiza os dias
+            $resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
+        }
+        
+        # Verifica se considerando a data, o servidor tem algum afastamento 
+        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
 
         if ($diasSemContribuicao > 0) {
             # Pega a data antes da alteração
@@ -985,7 +1000,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_tempoSemContribuicao($this->idServidor, $this->dataCriterioTempoCargo);
+        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoCargo);
 
         if ($diasSemContribuicao > 0) {
             # Pega a data antes da alteração

@@ -72,7 +72,7 @@ class ListaAfastamentosServidor {
 
     ###############################################################
 
-    public function exibeTabela() {
+    public function montaSelect() {
 
         /**
          * monta o select para toda a classe
@@ -247,6 +247,24 @@ class ListaAfastamentosServidor {
                      ORDER BY 1 desc, 2 desc";
         }
 
+        return $select;
+    }
+
+    ###############################################################
+
+    public function exibeTabela() {
+
+        /**
+         * monta o select para toda a classe
+         *
+         * @syntax $input->exibeTabela();
+         */
+        /*
+         * Todas as licenças
+         */
+
+        $select = $this->montaSelect();
+
         ###########################################33
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
@@ -277,4 +295,49 @@ class ListaAfastamentosServidor {
         $tabela->set_conteudo($result);
         $tabela->show();
     }
+
+    ###########################################################
+
+    public function exibeRelatorio() {
+
+        /**
+         * Exibe um relatório com a relação dos servidores com afastamento
+         *
+         * @syntax $afast->exibeRelatorio();
+         */
+        $select = $this->montaSelect();
+
+        ###########################################33
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+
+        $result = $pessoal->select($select);
+        $cont = $pessoal->count($select);
+
+        # Titulo
+        tituloRelatorio($this->titulo);
+
+        $tabela = new Relatorio();
+        $tabela->set_cabecalhoRelatorio(false);
+        $tabela->set_cabecalhoRelatorioGeral(false);
+        $tabela->set_menuRelatorio(false);
+        $tabela->set_dataImpressao(false);
+
+        if ($this->semTempoServicoComTempoContribuicao OR $this->semTempoServicoSemTempoContribuicao) {
+            $tabela->set_colunaSomatorio(2);
+            $tabela->set_totalRegistro(false);
+        }
+
+
+        $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+        $tabela->set_funcao([null, "date_to_php", null, "date_to_php", null]);
+        $tabela->set_align(['center', 'center', 'center', 'center', 'left']);
+        #$tabela->set_width([10, 10, 5, 10, 60]);
+        $tabela->set_rowspan(0);
+        #$tabela->set_grupoCorColuna(0);
+        $tabela->set_conteudo($result);
+        $tabela->show();
+    }
+
+    ###########################################################
 }

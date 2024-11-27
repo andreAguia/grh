@@ -161,6 +161,7 @@ class PrevisaoAposentadoria {
     private $obsCarreira = null;
     private $obsServicoPublico = null;
     private $obsTempoCargo = null;
+    private $dtIngressoObs = null;
 
     /*
      *  Variaveis de Retorno    
@@ -192,7 +193,10 @@ class PrevisaoAposentadoria {
     # Modalidade
     private $modalidade;
 
-    # Exibição dos dados
+    # Afastamentos Especificos
+    private $afastementosEspecificos = true;
+    
+    # Mensagem na tabela de dados
     private $mensagem = null;
 
     ###########################################################
@@ -266,6 +270,9 @@ class PrevisaoAposentadoria {
                 # Cartilha
                 $this->cartilha1 = "lc195compulsoria1.png";
                 $this->cartilha2 = "lc195compulsoria2.png";
+
+                # Afastamentos Especícicos
+                $this->afastementosEspecificos = false;
                 break;
 
             ######################################3
@@ -774,6 +781,11 @@ class PrevisaoAposentadoria {
             # Retorna a data da transformação em estatutários
             # Daqueles que entraram com celetistas na Uenf
             $this->servidorDataIngresso = "09/09/2003";
+            
+            $this->dtIngressoObs = "A data de ingresso foi alterada para 09/09/2003 seguindo determinação do Rio Previdência. *";
+            
+            $this->mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
+                        . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
         }
 
         # Tempo Total
@@ -919,15 +931,15 @@ class PrevisaoAposentadoria {
         $this->dataCriterioCarreira = addDias($hoje, $resta1, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioCarreira);
+        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioCarreira);
 
-        if ($diasSemContribuicao > 0) {
+        if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
             $this->dataCriterioCarreiraOriginal = $this->dataCriterioCarreira;
 
             # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
-            $this->dataCriterioCarreira = addDias($this->dataCriterioCarreira, $diasSemContribuicao, false);
-            $this->obsCarreira = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioCarreiraOriginal} para {$this->dataCriterioCarreira}.";
+            $this->dataCriterioCarreira = addDias($this->dataCriterioCarreira, $diasSemTempoServico, false);
+            $this->obsCarreira = "Tendo em vista {$diasSemTempoServico} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioCarreiraOriginal} para {$this->dataCriterioCarreira}.";
 
             # Atualiza os dias
             $resta1 = getNumDias($hoje, $this->dataCriterioCarreira);
@@ -952,37 +964,22 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
+        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioTempoServicoPublico);
 
-        if ($diasSemContribuicao > 0) {
+        if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
             $this->dataCriterioTempoServicoPublicoOriginal = $this->dataCriterioTempoServicoPublico;
 
             # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
-            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemContribuicao, false);
-            $this->obsServicoPublico = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
-
-            # Atualiza os dias
-            $resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
-        }
-        
-        # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoServicoPublico);
-
-        if ($diasSemContribuicao > 0) {
-            # Pega a data antes da alteração
-            $this->dataCriterioTempoServicoPublicoOriginal = $this->dataCriterioTempoServicoPublico;
-
-            # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
-            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemContribuicao, false);
-            $this->obsServicoPublico = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
+            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemTempoServico, false);
+            $this->obsServicoPublico = "Tendo em vista {$diasSemTempoServico} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
 
             # Atualiza os dias
             $resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
         }
 
         #if ($this->servidorTempoPublico >= ($this->servicoPublico * 365)) {
-        if(jaPassou($this->dataCriterioTempoServicoPublico)) {
+        if (jaPassou($this->dataCriterioTempoServicoPublico)) {
             $this->analisePublico = "OK";
         } else {
             $this->analisePublico = "Ainda faltam<br/>{$resta2} dias.";
@@ -1000,15 +997,15 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoCargo);
+        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioTempoCargo);
 
-        if ($diasSemContribuicao > 0) {
+        if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
             $this->dataCriterioTempoCargoOriginal = $this->dataCriterioTempoCargo;
 
             # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
-            $this->dataCriterioTempoCargo = addDias($this->dataCriterioTempoCargo, $diasSemContribuicao, false);
-            $this->obsTempoCargo = "Tendo em vista {$diasSemContribuicao} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoCargoOriginal} para {$this->dataCriterioTempoCargo}.";
+            $this->dataCriterioTempoCargo = addDias($this->dataCriterioTempoCargo, $diasSemTempoServico, false);
+            $this->obsTempoCargo = "Tendo em vista {$diasSemTempoServico} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoCargoOriginal} para {$this->dataCriterioTempoCargo}.";
 
             # Atualiza os dias
             $resta3 = getNumDias($hoje, $this->dataCriterioTempoCargo);
@@ -1287,16 +1284,6 @@ class PrevisaoAposentadoria {
          *  Tabela
          */
 
-        # Exibe obs para quando o servidor tem tempo celetista
-        if (!empty($this->dtIngresso) OR !empty($this->dtIngressoApartir)) {
-            if ($this->servidorDataIngresso == "09/09/2003") {
-                $mensagem = "O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
-                        . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
-            } else {
-                $mensagem = "---";
-            }
-        }
-
         # Idade (todos tem)
         $array = [
             ["Idade",
@@ -1317,7 +1304,7 @@ class PrevisaoAposentadoria {
                         $this->servidorDataIngresso,
                         "---",
                         $this->analisaDtIngresso,
-                        null]);
+                        $this->dtIngressoObs]);
         }
 
         # Data de Ingresso A partir (se tiver)      
@@ -2363,6 +2350,12 @@ class PrevisaoAposentadoria {
 
         $this->exibe_tabelaDados();
 
+        # Exibe afastamentos que interrompem o tempo de serviço
+        $aposentadoria = new Aposentadoria();
+        if ($this->afastementosEspecificos AND $aposentadoria->get_semTempoServico($idServidor) > 0) {
+            $this->exibe_tabelaAfastamentosSemtempoServico($idServidor);
+        }
+
         # Pedágio
         if (!empty($this->pedagio)) {
             $gridPedagio = new Grid();
@@ -2433,6 +2426,12 @@ class PrevisaoAposentadoria {
         # Dados Gerais
         $this->exibe_tabelaDados(true);
 
+        # Exibe afastamentos que interrompem o tempo de serviço
+        $aposentadoria = new Aposentadoria();
+        if ($this->afastementosEspecificos AND $aposentadoria->get_semTempoServico($idServidor) > 0) {
+            $this->exibe_tabelaAfastamentosSemtempoServico($idServidor, true);
+        }
+
         # Pedágio
         if (!empty($this->pedagio)) {
             $gridPedagio = new Grid();
@@ -2468,6 +2467,50 @@ class PrevisaoAposentadoria {
         # Regras Pontos
         if (!empty($this->pontosHomem)) {
             $this->exibe_tabelaRegrasPontos(true);
+        }
+    }
+
+    ###########################################################
+
+    public function exibe_tabelaAfastamentosSemTempoServico($idServidor, $relatorio = false) {
+
+        if ($relatorio) {
+            tituloRelatorio("Afastamentos Que interrompem o Tempo de Serviço");
+        } else {
+            titulotable("Afastamentos Que interrompem o Tempo de Serviço");
+
+            $painel1 = new Callout();
+            $painel1->abre();
+        }
+
+        $aposentadoria = new Aposentadoria();
+
+        # Exibe os afastamentos que interrompem o tempo de contribuição
+        if ($aposentadoria->get_semTempoServicoSemTempoContribuicao($idServidor) > 0) {
+            $afast1 = new ListaAfastamentosServidor($idServidor, "SEM Contribuição");
+            $afast1->set_semTempoServicoSemTempoContribuicao(true);
+            $afast1->set_semTempoServicoComTempoContribuicao(false);
+            if ($relatorio) {
+                $afast1->exibeRelatorio();
+            } else {
+                $afast1->exibeTabela();
+            }
+        }
+
+        # Exibe os afastamentos que interrompem o tempo de serviço
+        if ($aposentadoria->get_semTempoServicoComTempoContribuicao($idServidor) > 0) {
+            $afast2 = new ListaAfastamentosServidor($idServidor, "COM Contribuição");
+            $afast2->set_semTempoServicoSemTempoContribuicao(true);
+            $afast2->set_semTempoServicoComTempoContribuicao(true);
+            if ($relatorio) {
+                $afast2->exibeRelatorio();
+            } else {
+                $afast2->exibeTabela();
+            }
+        }
+
+        if (!$relatorio) {
+            $painel1->fecha();
         }
     }
 

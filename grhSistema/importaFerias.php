@@ -70,7 +70,7 @@ if ($acesso) {
 
             br(5);
             if ($temArquivoCsv) {
-                aguarde("Abrindo o arquivo csv importado");
+                aguarde("Montando a Tabela");
             }
 
             loadPage("?fase=inicial2");
@@ -79,10 +79,6 @@ if ($acesso) {
         #################################################
 
         case "inicial2":
-            # Aguarda 2 segundos
-            if ($temArquivoCsv) {
-                sleep(2);
-            }
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -498,7 +494,7 @@ if ($acesso) {
         case "importar1" :
 
             br(5);
-            aguarde("Excluindo a tabela temporária");
+            aguarde("Liberando Espaço na Memória");
 
             # Apaga a tabela tbsispatri
             $select = 'SELECT idFeriasSigrh
@@ -523,7 +519,7 @@ if ($acesso) {
         case "importar2" :
 
             br(5);
-            aguarde("Excluindo a tabela temporária<br/>Fazendo o upload do arquivo");
+            aguarde("Fazendo o upload do arquivo");
 
             sleep(3);
             loadPage("?fase=importar3");
@@ -684,6 +680,8 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $atividade = "Apagou o arquivo csv de férias do SigRh";
             $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3);
+            
+            aguarde("Apagando os registros");
 
             loadPage("?");
             break;

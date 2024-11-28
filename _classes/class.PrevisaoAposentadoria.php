@@ -1050,7 +1050,8 @@ class PrevisaoAposentadoria {
                     $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
 
                     # Data do tempo de contribuicao
-                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
+                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;                    
+                    
                     $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicao;
                     $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
                     # Verifica o mais distante.
@@ -1875,11 +1876,7 @@ class PrevisaoAposentadoria {
         $anoInicial = 2024;
         $anoFinal = 2051;
         $anoAtual = date("Y");
-        $anoNascimento = year($this->servidorDataNascimento);
-
-        $aposentadoria = new Aposentadoria();
-        $anoIngresso = year($aposentadoria->get_dtIngresso($this->idServidor));
-
+        
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
 
             # Pega os dados
@@ -1904,7 +1901,7 @@ class PrevisaoAposentadoria {
 
         # Exibe a tabela
         if ($relatorio) {
-            tituloRelatorio("Histórico da Pontuação");
+            tituloRelatorio("Cálculo da Pontuação");
             $tabela = new Relatorio();
             $tabela->set_cabecalhoRelatorio(false);
             $tabela->set_menuRelatorio(false);
@@ -1914,7 +1911,7 @@ class PrevisaoAposentadoria {
             $tabela->set_log(false);
         } else {
             $tabela = new Tabela();
-            $tabela->set_titulo("Histórico da Pontuação");
+            $tabela->set_titulo("Cálculo da Pontuação");
             $tabela->set_subtitulo("(A cada ano o servidor aumenta 2 pontos, a cada 2 anos a regra aumenta 1 ponto)");
         }
 
@@ -2088,8 +2085,8 @@ class PrevisaoAposentadoria {
         $anoNascimento = year($this->servidorDataNascimento);
 
         # Pega o tempo de contribuição hoje
-        $tempoContribuicaoHoje = $this->servidorTempoContribuicao;
-
+        $tempoContribuicaoHoje = $this->servidorTempoContribuicao;       
+        
         # Soma com os dias possíveis do ano indicado
         $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
 

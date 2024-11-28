@@ -52,6 +52,16 @@ if ($acesso) {
     $grid1 = new Grid();
     $grid1->abreColuna(12);
 
+    # Verifica se tem arquivo CSV esperando importação
+    $temArquivo = null;
+    $select = "SELECT idFeriasSigrh                     
+                 FROM tbferiassigrh";
+    if ($pessoal->count($select) > 0) {
+        $temArquivoCsv = true;
+    } else {
+        $temArquivoCsv = false;
+    }
+
     switch ($fase) {
 
         #################################################    
@@ -59,7 +69,9 @@ if ($acesso) {
         case "inicial" :
 
             br(5);
-            aguarde("Montando a tabela com o arquivo csv");
+            if ($temArquivoCsv) {
+                aguarde("Abrindo o arquivo csv importado");
+            }
 
             loadPage("?fase=inicial2");
             break;
@@ -67,18 +79,13 @@ if ($acesso) {
         #################################################
 
         case "inicial2":
+            # Aguarda 2 segundos
+            if ($temArquivoCsv) {
+                sleep(2);
+            }
 
             # Cria um menu
             $menu1 = new MenuBar();
-
-            # Verifica se tem arquivo CSV esperando importação
-            $select = "SELECT idFeriasSigrh                     
-                         FROM tbferiassigrh";
-            if ($pessoal->count($select) > 0) {
-                $temArquivoCsv = true;
-            } else {
-                $temArquivoCsv = false;
-            }
 
             # Voltar
             $linkVoltar = new Link("Voltar", "areaFeriasExercicio.php");
@@ -490,6 +497,9 @@ if ($acesso) {
 
         case "importar1" :
 
+            br(5);
+            aguarde("Excluindo a tabela temporária");
+
             # Apaga a tabela tbsispatri
             $select = 'SELECT idFeriasSigrh
                          FROM tbferiassigrh';
@@ -513,8 +523,9 @@ if ($acesso) {
         case "importar2" :
 
             br(5);
-            aguarde("Fazendo o upload do arquivo");
+            aguarde("Excluindo a tabela temporária<br/>Fazendo o upload do arquivo");
 
+            sleep(3);
             loadPage("?fase=importar3");
             break;
 
@@ -530,8 +541,9 @@ if ($acesso) {
             $arquivo = "../_temp/ferias.csv";
 
             # Altere o divisor de acordo com o arquivo
-            $divisor = ",";
-
+            #$divisor = ";";
+            $divisor = get_arquivoDivisor($arquivo);
+            
             # Flags
             $certos = 0;
             $linhas = 0;
@@ -559,11 +571,10 @@ if ($acesso) {
                         "obs"
                     );
 
-                    #var_dump($campos);
                     # Percorre o arquivo e guarda os dados em um array
                     foreach ($lines as $linha) {
 
-                        $colunas = explode(",", $linha);
+                        $colunas = explode($divisor, $linha);
 
                         # Verifica se é cabeçalho
                         if ($colunas[0] <> "numfunc") {
@@ -641,6 +652,7 @@ if ($acesso) {
                     }
                 }
             }
+
             loadPage("?");
             break;
 

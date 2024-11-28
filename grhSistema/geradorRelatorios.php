@@ -55,6 +55,7 @@ $parametroPerfil = post('parametroPerfil', 1);
 # Oedenação
 $parametroOrdenaTipo = post('parametroOrdenaTipo', 'asc');
 $parametroOrdena = post('parametroOrdena', "tbpessoa.nome");
+$parametroAgrupamento = post('parametroAgrupamento');
 
 # Subtitulo
 $subTitulo = null;
@@ -533,7 +534,7 @@ if ($acesso) {
     $form->add_item($controle);
 
     #################################### Ordenação #######################################
-    # Ordenação
+    # Ordenação e Agrupamento
     $ordena = [
         ["idfuncional", "IdFuncional"],
         ["tbpessoa.nome", "Nome"]
@@ -563,6 +564,18 @@ if ($acesso) {
         ["asc", "asc"],
         ["desc", "desc"],
     ]);
+    $form->add_item($controle);
+    
+    # Agrupamento
+    $controle = new Input('parametroAgrupamento', 'combo', 'Agrupado', 1);
+    $controle->set_size(20);
+    $controle->set_title('Agrupamento do relatório');
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(6);
+    $controle->set_valor($parametroAgrupamento);
+    $controle->set_array($ordena);
+    $controle->set_fieldset("Informe a Ordenação:");
     $form->add_item($controle);
 
     $form->show();
@@ -964,9 +977,12 @@ if ($acesso) {
         set_session("sessionMethod", $method);
         set_session("sessionFunction", $function);
         set_session("sessionLotacao", $subTitulo);
+        
+        $painel = new Callout();
+        $painel->abre();
 
-        $tabela = new Tabela();
-        $tabela->set_titulo("Relatório");
+        $tabela = new Relatorio();
+        $tabela->set_titulo("");
         $tabela->set_label($label);
         $tabela->set_align($align);
         #$tabela->set_width($width);
@@ -974,7 +990,12 @@ if ($acesso) {
         $tabela->set_metodo($method);
         $tabela->set_funcao($function);
         $tabela->set_conteudo($row);
+        $tabela->set_cabecalhoRelatorio(false);
+        $tabela->set_menuRelatorio(false);
+        $tabela->set_dataImpressao(false);
         $tabela->show();
+        
+        $painel->fecha();
     } else {
         tituloTable("Relatório");
         $painel = new Callout();

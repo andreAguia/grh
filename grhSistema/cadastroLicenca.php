@@ -109,7 +109,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço"]);
+    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço Público"]);
     $objeto->set_width([5, 27, 9, 9, 9, 9, 9, 9, 9]);
     $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao"]);
     $objeto->set_align(["center", "left"]);
@@ -186,7 +186,7 @@ if ($acesso) {
             'col' => 3,
             'nome' => 'tempoServico',
             'title' => 'informa se essa licença/afastamento interrompe a contagem do tempo de serviço',
-            'label' => 'Suspende Tempo de Serviço:',
+            'label' => 'Suspende Tempo de Serviço Público:',
             'tipo' => 'combo',
             'array' => array("Sim", "Não"),
             'size' => 10),

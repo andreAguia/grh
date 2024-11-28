@@ -776,17 +776,20 @@ class PrevisaoAposentadoria {
         # Data de ingresso
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
 
-        # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
-        if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
-            # Retorna a data da transformação em estatutários
-            # Daqueles que entraram com celetistas na Uenf
-            $this->servidorDataIngresso = "09/09/2003";
-            
-            $this->dtIngressoObs = "A data de ingresso foi alterada para 09/09/2003 seguindo determinação do Rio Previdência. *";
-            
-            $this->mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
-                        . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
-        }
+//        # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
+//        if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
+//            # Retorna a data da transformação em estatutários
+//            # Daqueles que entraram com celetistas na Uenf
+//            $this->servidorDataIngresso = "09/09/2003";
+//            
+//            $this->dtIngressoObs = "A data de ingresso foi alterada para 09/09/2003 seguindo determinação do Rio Previdência. *";
+//            
+//            $this->mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
+//                        . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
+//        } # Alterado pois Simone me informou que o Vagner e Lívia
+//          # disseram que no caso de contratos CLT - Uenf, a data de 
+//          # efetivo exercício público retroage a data de admissão
+        
 
         # Tempo Total
         $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;

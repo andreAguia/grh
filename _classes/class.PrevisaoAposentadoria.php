@@ -466,7 +466,7 @@ class PrevisaoAposentadoria {
                 $this->descricao = "Aposentadoria por Idade e Tempo de Contribuição<br/>Regra do Pedágio - Integralidade e Paridade";
                 $this->descricaoResumida1 = "Pedágio";
                 $this->descricaoResumida2 = "Integralidade e Paridade";
-                $this->legislacao = "Inciso V do artigo 4º da EC nº 90/2021";
+                $this->legislacao = "Artigo 4º da EC nº 90/2021";
 
                 # Regras
                 $this->idadeHomem = 60;

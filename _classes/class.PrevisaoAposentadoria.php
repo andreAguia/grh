@@ -137,10 +137,10 @@ class PrevisaoAposentadoria {
     private $servidorTempoAverbadoPublico = null;
     private $servidorTempoAverbadoPrivado = null;
     private $servidorTempoUenf = null;
-    private $servidorTempoTotal = null;
     private $servidorTempoPublicoIninterrupto = null;
     private $servidorTempoPublico = null;
     private $servidorTempoContribuicao = null;
+    private $servidorTempoContribuicaoDescontado = null;
 
     # Analises
     private $analisaDtIngresso = null;
@@ -195,7 +195,7 @@ class PrevisaoAposentadoria {
 
     # Afastamentos Especificos
     private $afastementosEspecificos = true;
-    
+
     # Mensagem na tabela de dados
     private $mensagem = null;
 
@@ -789,13 +789,11 @@ class PrevisaoAposentadoria {
 //        } # Alterado pois Simone me informou que o Vagner e Lívia
 //          # disseram que no caso de contratos CLT - Uenf, a data de 
 //          # efetivo exercício público retroage a data de admissão
-        
+        # Tempo de contribuição Geral - Sem considerar os afastamentos sem contribuição
+        $this->servidorTempoContribuicao = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
 
-        # Tempo Total
-        $this->servidorTempoTotal = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
-
-        # Tempo de contribuição
-        $this->servidorTempoContribuicao = $this->servidorTempoTotal;
+        # Tempo de contribuição Real - Considerando os afastamentos sem contribuição
+        $this->servidorTempoContribuicaoDescontado = $this->servidorTempoContribuicao - $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor);
 
         # Tempo Initerrupto
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
@@ -1050,9 +1048,9 @@ class PrevisaoAposentadoria {
                     $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
 
                     # Data do tempo de contribuicao
-                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;                    
-                    
-                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicao;
+                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
+
+                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicaoDescontado;
                     $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
                     # Verifica o mais distante.
                     $this->dataCriterioPontos = dataMaior($data1, $data2);
@@ -1067,7 +1065,7 @@ class PrevisaoAposentadoria {
 
                     # Data do tempo de contribuicao
                     $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
-                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicao;
+                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicaoDescontado;
                     $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
 
                     $this->dataCriterioPontos = dataMenor($data1, $data2);
@@ -1341,7 +1339,7 @@ class PrevisaoAposentadoria {
                     ["Contribuição",
                         $this->tempoContribuiçãoDescricao,
                         "{$this->regraContribuicao} anos<br/>(" . ($this->regraContribuicao * 365) . " dias)",
-                        intval($this->servidorTempoContribuicao / 365) . " anos<br/>({$this->servidorTempoContribuicao} dias)",
+                        intval($this->servidorTempoContribuicaoDescontado / 365) . " anos<br/>({$this->servidorTempoContribuicaoDescontado} dias)",
                         $this->dataCriterioTempoContribuicao,
                         $this->analiseContribuicao,
                         $this->obsContribuicao]);
@@ -1352,7 +1350,7 @@ class PrevisaoAposentadoria {
             array_push($array, ["Pontuação",
                 "Pontuação Atual (" . date("Y") . ")",
                 "{$regraPontos} pontos",
-                "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicao / 365) . ")",
+                "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicaoDescontado / 365) . ")",
                 trataNulo($this->dataCriterioPontos),
                 $this->analisePontos,
                 null]);
@@ -1876,7 +1874,7 @@ class PrevisaoAposentadoria {
         $anoInicial = 2024;
         $anoFinal = 2051;
         $anoAtual = date("Y");
-        
+
         for ($i = $anoAtual; $i <= $anoFinal; $i++) {
 
             # Pega os dados
@@ -2037,7 +2035,7 @@ class PrevisaoAposentadoria {
         $anoNascimento = year($this->servidorDataNascimento);
 
         # Pega o tempo de contribuição hoje
-        $tempoContribuicaoHoje = $this->servidorTempoContribuicao;
+        $tempoContribuicaoHoje = $this->servidorTempoContribuicaoDescontado;
 
         # Soma com os dias possíveis do ano indicado
         $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
@@ -2059,7 +2057,7 @@ class PrevisaoAposentadoria {
         $anoNascimento = year($this->servidorDataNascimento);
 
         # Pega o tempo de contribuição hoje
-        $tempoContribuicaoHoje = $this->servidorTempoContribuicao;
+        $tempoContribuicaoHoje = $this->servidorTempoContribuicaoDescontado;
 
         # Soma com os dias possíveis do ano indicado
         $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
@@ -2084,9 +2082,10 @@ class PrevisaoAposentadoria {
         # Pega o ano de Nascimento
         $anoNascimento = year($this->servidorDataNascimento);
 
-        # Pega o tempo de contribuição hoje
-        $tempoContribuicaoHoje = $this->servidorTempoContribuicao;       
-        
+        # Pega o tempo de contribuição hoje, em dias, sem considerar
+        # os afastamentos que interrompem a contribuição
+        $tempoContribuicaoHoje = $this->servidorTempoContribuicaoDescontado;
+
         # Soma com os dias possíveis do ano indicado
         $tempoPossivel = getNumDias(date("d/m/Y"), "31/12/{$ano}");
 
@@ -2100,7 +2099,10 @@ class PrevisaoAposentadoria {
 
     public function get_pontoAtual() {
 
-        return intval($this->servidorIdade + ($this->servidorTempoContribuicao / 365));
+        # Pega o tempo de contribuição
+
+
+        return intval($this->servidorIdade + ($this->servidorTempoContribuicaoDescontado / 365));
     }
 
     ###########################################################

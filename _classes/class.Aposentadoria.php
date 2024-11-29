@@ -787,14 +787,14 @@ class Aposentadoria {
                            numDias
                       FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
                      WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico IS true
+                       AND tbtipolicenca.tempoServico = 'Sim'
                    ) UNION (
                     SELECT dtInicial,
                            dtTermino,
                            numDias                           
                       FROM tblicencasemvencimentos
                       WHERE idServidor = {$idServidor}
-                        AND (optouContribuir <> 1 OR optouContribuir is null)
+                        AND (optouContribuir = 2 OR optouContribuir is NULL)
                         ) ORDER BY 1";
 
         # Conecta o banco de dados
@@ -842,14 +842,14 @@ class Aposentadoria {
                            numDias
                       FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
                      WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico IS true
+                       AND tbtipolicenca.tempoServico = 'Sim'
                    ) UNION (
                     SELECT dtInicial,
                            dtTermino,
                            numDias                           
                       FROM tblicencasemvencimentos
                       WHERE idServidor = {$idServidor}
-                        AND (optouContribuir <> 1 OR optouContribuir is null)
+                        AND (optouContribuir = 2 OR optouContribuir is NULL)
                         ) ORDER BY 1";
 
         # Conecta o banco de dados

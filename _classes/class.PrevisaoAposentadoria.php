@@ -595,7 +595,7 @@ class PrevisaoAposentadoria {
 
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
-                $this->dtIngressoApartir = "31/12/2003";
+                #$this->dtIngressoApartir = "31/12/2003"; // Retirado a pedido de Simone
 
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Lei Federal 10.887";
@@ -626,7 +626,7 @@ class PrevisaoAposentadoria {
 
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
-                $this->dtIngressoApartir = "31/12/2003";
+                #$this->dtIngressoApartir = "31/12/2003";   // retirado a pedido de Simone
 
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Proporcional ao tempo de contribuição - Lei Federal 10.887";

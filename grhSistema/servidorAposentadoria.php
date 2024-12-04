@@ -59,7 +59,7 @@ if ($acesso) {
     if (substr($fase, 0, 9) <> "relatorio") {
         AreaServidor::cabecalho();
     } else {
-        $page->set_title("Previsão de Posentadoria - " . substr($fase, 10));
+        $page->set_title("Previsão de Aposentadoria - " . substr($fase, 10));
     }
     $page->iniciaPagina();
 

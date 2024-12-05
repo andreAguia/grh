@@ -55,7 +55,8 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorTre.php?fase=dias');
 
     # select da lista
-    $objeto->set_selectLista("SELECT data,
+    $objeto->set_selectLista("SELECT idTrabalhoTre,
+                                     data,
                                      ADDDATE(data,dias-1),
                                      dias,
                                      folgas,
@@ -88,10 +89,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Início", "Término", "Dias", "Folgas Concedidas", "Descrição do Trabalho", "Documento"]);
-    $objeto->set_width([10, 10, 10, 10, 30, 20]);
-    $objeto->set_align(['center', 'center', 'center', 'center', 'left', 'left']);
-    $objeto->set_funcao(["date_to_php", "date_to_php"]);
+    $objeto->set_label(["#", "Início", "Término", "Dias", "Folgas Concedidas", "Descrição do Trabalho", "Documento"]);
+    #$objeto->set_width([5, 10, 10, 10, 10, 30, 20]);
+    $objeto->set_align(['center', 'center', 'center', 'center', 'center', 'left', 'left']);
+    $objeto->set_funcao([null, "date_to_php", "date_to_php"]);
+    $objeto->set_colunaSomatorio([3, 4]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

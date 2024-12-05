@@ -137,9 +137,11 @@ if ($acesso) {
             $grid->abreColuna(3);
 
             ########################################
-            # Exibe o Processo de férias            
-            $classeFerias = new Ferias();
-            $classeFerias->exibeProcesso($parametroLotacao);
+            # Exibe o Processo de férias
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                $classeFerias = new Ferias();
+                $classeFerias->exibeProcesso($parametroLotacao);
+            }
 
             ########################################
             # Menu
@@ -169,9 +171,7 @@ if ($acesso) {
             $servidor = new Pessoal();
 
             # Pega os dados
-            $select = "SELECT idFuncional,
-                              matricula,
-                              tbpessoa.nome,
+            $select = "SELECT idServidor,
                               idServidor,
                               (SELECT IFnull(sum(dias),0) FROM tbtrabalhotre  WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as trabalhados,
                               (SELECT IFnull(sum(folgas),0) FROM tbtrabalhotre WHERE tbtrabalhotre.idServidor = tbservidor.idServidor) as concedidas,
@@ -228,14 +228,13 @@ if ($acesso) {
 
             # Monta a tabela
             $tabela = new Tabela();
-            $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"]);
-            $tabela->set_align(["center", "center", "left", "left"]);
-            #$tabela->set_width(array(5,15,15,15,8,15,15,15));
-            $tabela->set_funcao([null, "dv"]);
-            $tabela->set_classe([null, null, null, "pessoal"]);
-            $tabela->set_metodo([null, null, null, "get_lotacao"]);
             $tabela->set_titulo("TRE");
+            $tabela->set_conteudo($resumo);
+
+            $tabela->set_label(["IdFuncional / Matricula", "Servidor", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"]);
+            $tabela->set_align(["center", "left"]);
+            $tabela->set_classe(["pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeELotacao"]);
 
             if (!is_null($parametroNomeMat)) {
                 $tabela->set_textoRessaltado($parametroNomeMat);

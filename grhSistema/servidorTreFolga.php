@@ -55,7 +55,8 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorTre.php?fase=folgas');
 
     # select da lista
-    $objeto->set_selectLista('SELECT data,
+    $objeto->set_selectLista('SELECT idFolga,
+                                     data,
                                      ADDDATE(data,dias-1),                                 
                                      dias,
                                      obs,
@@ -65,12 +66,12 @@ if ($acesso) {
                        ORDER BY data desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT data,
+    $objeto->set_selectEdita("SELECT data,
                                      dias,
                                      obs,
                                      idServidor
                                 FROM tbfolga
-                               WHERE idFolga = ' . $id);
+                               WHERE idFolga = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -84,10 +85,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data do Início", "Data do Término", "Folgas Fruídas", "Observação"]);
-    $objeto->set_width([10, 10, 10, 60]);
-    $objeto->set_align(["center", "center", "center", "left"]);
-    $objeto->set_funcao(["date_to_php", "date_to_php", null]);
+    $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Observação"]);
+    $objeto->set_align(["center", "center", "center", "center", "left"]);
+    $objeto->set_funcao([null, "date_to_php", "date_to_php", null]);
+    $objeto->set_colunaSomatorio([3]);    
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -97,9 +98,10 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idFolga');
-    
+
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'data',
+    $objeto->set_campos(array(
+        array('nome' => 'data',
             'label' => 'Data do Início da Folga:',
             'tipo' => 'data',
             'size' => 20,

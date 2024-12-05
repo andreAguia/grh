@@ -47,11 +47,11 @@ if ($acesso) {
         $relatorio->set_tituloLinha2($titulo2);
     }
 
-    $relatorio->set_label(["Id", "Matricula", "Nome", "Lotação", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"]);
-    $relatorio->set_align(["center", "center", "left", "left"]);
-    $relatorio->set_classe([null, null, null, "pessoal"]);
-    $relatorio->set_metodo([null, null, null, "get_lotacao"]);
-    $relatorio->set_funcao([null, "dv"]);
+    $relatorio->set_label(["IdFuncional / Matricula", "Servidor", "Dias Trabalhados", "Folgas Concedidas", "Folgas Fruidas", "Folgas Pendentes"]);
+    $relatorio->set_align(["center", "left"]);
+    $relatorio->set_classe(["pessoal", "pessoal"]);
+    $relatorio->set_metodo(["get_idFuncionalEMatricula", "get_nomeELotacao"]);
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_conteudo($result);
     $relatorio->show();

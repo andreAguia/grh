@@ -9,6 +9,26 @@ class Licenca {
      */
 ##############################################################
 
+    public function get_dados($id = null) {
+
+        /**
+         * Informa os dados da base de dados
+         * 
+         * @param $id integer null O id 
+         * 
+         * @syntax $licenca->get_dados([$id]);
+         */
+        # Joga o valor informado para a variável da classe
+        if (!empty($id)) {
+            $pessoal = new Pessoal();
+            return $pessoal->select("SELECT * FROM tblicenca WHERE idLicenca = {$id}", false);
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
     public function exibeNome($idTpLicenca = null) {
         # Verifica se o id foi informado
         if (empty($idTpLicenca)) {
@@ -238,16 +258,37 @@ class Licenca {
                     $faltas = new Faltas();
                     $faltas->exibeDoc($id);
                     break;
-                
+
                 case 26:
                     $suspensao = new Suspensao();
                     $suspensao->exibePublicacaoPdf($id);
                     break;
-                
+
+                case 3:
+                    $this->exibeDeclaracaoLicencaGestante($id);
+                    break;
+
                 default:
                     echo "---";
                     break;
             }
+        }
+    }
+
+    ###########################################################
+
+    public function exibeDeclaracaoLicencaGestante($idLicenca = null) {
+        # Verifica se o id foi informado
+        if (empty($idLicenca)) {
+            return "---";
+        } else {
+            $botao = new BotaoGrafico();
+            $botao->set_label("Declaração");
+            $botao->set_url("../grhRelatorios/declaracao.LicencaMaternidade.php?id={$idLicenca}");
+            $botao->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+            $botao->set_title("Exibe a Declaração do período de licença maternidade. Esta declaração é necessário para solicitar a licença aleitamento");
+            $botao->set_target("_blank");
+            $botao->show();
         }
     }
 

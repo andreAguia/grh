@@ -17,6 +17,9 @@ include ("../grhSistema/_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
+# Pega o id
+$id = get("id");
+
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
@@ -31,8 +34,10 @@ if ($acesso) {
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
 
     # Pega os dados da última licença maternidade
-    $licencaMaternidade = new LicencaMaternidade();
-    $dados = $licencaMaternidade->getUltima($idServidorPesquisado);
+    #$licencaMaternidade = new LicencaMaternidade();
+    #$dados = $licencaMaternidade->getUltima($idServidorPesquisado);
+    $licenca = new Licenca();
+    $dados = $licenca->get_dados($id);
     
     $dtInicial = date_to_php($dados["dtInicial"]);    
     $dtTermino = addDias($dtInicial, $dados['numDias']);

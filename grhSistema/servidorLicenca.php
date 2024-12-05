@@ -342,7 +342,7 @@ if ($acesso) {
 
         # select da lista
         /*
-         * Licança geral
+         * Licença geral
          */
 
         $selectLicença = '(SELECT YEAR(dtInicial),

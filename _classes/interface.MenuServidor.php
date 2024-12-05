@@ -661,10 +661,10 @@ class MenuServidor {
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
         }
 
-        $licencaMaternidade = new LicencaMaternidade();
-        if ($licencaMaternidade->teveLicenca($this->idServidor)) {
-            $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
-        }
+//        $licencaMaternidade = new LicencaMaternidade();
+//        if ($licencaMaternidade->teveLicenca($this->idServidor)) {
+//            $menu->add_item('linkWindow', 'Declaração de Licença Maternidade', '../grhRelatorios/declaracao.LicencaMaternidade.php');
+//        }
 
         $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php');
         $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');

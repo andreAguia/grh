@@ -182,13 +182,7 @@ if ($acesso) {
             $linkProc->set_title('Acessa a área de procedimentos');
             $linkProc->set_target("_blank4");
             $menu->add_link($linkProc, "right");
-
-//            # Atualizações
-//            $linkArea = new Link("Atualizações", '?fase=atualizacoes&grh=1');
-//            $linkArea->set_class('button');
-//            $linkArea->set_target('_blank');
-//            $linkArea->set_title('Exibe o histórico de atualizações do sistema');
-//            $menu->add_link($linkArea, "right");
+            
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

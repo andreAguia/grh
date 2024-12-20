@@ -30,7 +30,7 @@ if ($acesso) {
 
     ######
 
-    if ($parametroLotacao == "Cedidos") {
+    if ($parametroLotacao == "Servidores Cedidos") {
         $subtitulo = "Cedidos";
         $select = "SELECT tbservidor.idFuncional,
                      tbservidor.idServidor,                     

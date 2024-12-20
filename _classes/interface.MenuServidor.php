@@ -395,7 +395,7 @@ class MenuServidor {
             #$botao->set_accessKey('i');
             $menu->add_item($botao);
         }
-        
+
         # Horário
         $botao = new BotaoGrafico();
         $botao->set_label('Horário');
@@ -740,7 +740,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'nome.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Alteração do Nome do Servidor');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Pessoais');
         $botao->set_url('servidorPessoais.php?grh=1');
@@ -818,11 +818,11 @@ class MenuServidor {
         $botao->set_title('Todos os afastamentos do servidor');
         #$botao->set_accessKey('i');
         $menu->add_item($botao);
-        
+
         $menu->show();
-        
+
         hr();
-        
+
         $menu = new MenuGrafico(3);
 
         if ($pessoal->get_perfilFerias($this->perfil) == "Sim") {
@@ -1119,8 +1119,14 @@ class MenuServidor {
             $cessao = new Cessao();
             $dados = $cessao->getDados($cessao->getidCessaoVigente($this->idServidor));
 
-            p($dados["orgao"], "pramalLotacao");
-            p("Tel / Ramais / E-mails", "pramalDetalhe");
+            if (!empty($dados["orgao"])) {
+                p($dados["orgao"], "pramalLotacao");
+                p("Tel / Ramais / E-mails", "pramalDetalhe");
+            } else {
+                br();
+                p("Servidor na Lotação de Cedido mas sem Cessão Vigente", "pramalLotacao");
+                br();
+            }
 
             if (!empty($dados["orgaoTel"])) {
                 p("Tel: " . $dados["orgaoTel"], "f12", "center");

@@ -30,7 +30,27 @@ if ($acesso) {
 
     ######
 
-    $select = "SELECT tbservidor.idFuncional,
+    if ($parametroLotacao == "Cedidos") {
+        $subtitulo = "Cedidos";
+        $select = "SELECT tbservidor.idFuncional,
+                     tbservidor.idServidor,                     
+                     tbhistcessao.orgao,
+                     tbperfil.nome,
+                     '_________________________________'
+                FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                        JOIN tbperfil USING (idPerfil)
+                                        RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
+               WHERE tbservidor.situacao = 1
+                 AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 
+                 AND tbperfil.tipo <> 'Outros'
+                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+    } else {
+
+        $classeLot = new Lotacao();
+        $subtitulo = $classeLot->get_nomeDiretoriaSigla($parametroLotacao);
+        $select = "SELECT tbservidor.idFuncional,
                      tbservidor.idServidor,
                      concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
                      tbperfil.nome,
@@ -42,6 +62,7 @@ if ($acesso) {
                WHERE tbservidor.situacao = 1
                  AND tbperfil.tipo <> 'Outros'
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+    }
 
     # lotacao
     if (!is_null($parametroLotacao)) {
@@ -53,21 +74,16 @@ if ($acesso) {
         }
     }
 
-    $select .= " ORDER BY lotacao, tbpessoa.nome";
+    $select .= " ORDER BY 3, tbpessoa.nome";
 
     $result = $servidor->select($select);
 
-    $classeLot = new Lotacao();
-
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
-    $relatorio->set_tituloLinha2($classeLot->get_nomeDiretoriaSigla($parametroLotacao));
+    $relatorio->set_tituloLinha2($subtitulo);
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Lotação', 'Perfil', 'Assinatura']);
     $relatorio->set_align(["center", "left"]);
-    #$relatorio->set_valign([null, null, null, "bottom"]);
-    #$relatorio->set_bordaInterna(true);
-    #$relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
 
     $relatorio->set_classe([null, "pessoal"]);
     $relatorio->set_metodo([null, "get_nomeECargoSimples"]);

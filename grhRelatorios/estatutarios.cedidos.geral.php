@@ -33,7 +33,7 @@ if ($acesso) {
                      tbhistcessao.dtInicio,
                      tbhistcessao.dtFim
                 FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
-                                   RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
+                               RIGHT JOIN tbhistcessao ON(tbservidor.idServidor = tbhistcessao.idServidor)
                WHERE tbservidor.idPerfil = 1
                  AND situacao = 1 
                  AND (tbhistcessao.dtFim IS NULL OR (now() BETWEEN tbhistcessao.dtInicio AND tbhistcessao.dtFim)) 

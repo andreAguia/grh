@@ -18,6 +18,9 @@ class ListaAfastamentos {
     private $tipo = false;          // Tipo do afastamento
     private $formulario = false;
 
+    # Campos
+    private $exibeDetalhes = true; // Exibe o processo, publicação e obs
+
     ###########################################################
 
     /**
@@ -195,6 +198,19 @@ class ListaAfastamentos {
 
     ###########################################################
 
+    public function exibeDetalhes($detalhes) {
+        /**
+         * Informa se exibe ou não os detalhes do afastamento
+         *
+         * @param $detalhes bool true
+         *
+         * @syntax $afastamento->exibeDetalhes($detalhes);
+         */
+        $this->exibeDetalhes = $detalhes;
+    }
+
+    ###########################################################
+
     public function montaSelect() {
 
         /**
@@ -328,7 +344,7 @@ class ListaAfastamentos {
                          tblicencapremio.processo,
                          CONCAT("tblicencapremio","&",idLicencaPremio),
                          tbservidor.idServidor,
-                          tbpessoa.nome
+                         tbpessoa.nome
                     FROM tbtipolicenca,tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -907,28 +923,18 @@ class ListaAfastamentos {
             }
         }
 
-        ####################### 
-        $order0 = 4;
-        $order1 = 9;
-        $order2 = 1;
-
-        if ($this->idFuncional) {
-            $order0++;
-            $order1++;
-            $order2++;
-        }
+        #######################
 
         if (empty($this->idServidor)) {
-            $order0++;
-            $order1++;
-            $order2++;
-
-            $order0++;
-            $order1++;
-            $order2++;
+            if ($this->idFuncional) {
+                $select .= ') ORDER BY 12, 3';
+            } else {
+                $select .= ') ORDER BY 11, 2';
+            }
+        } else {
+            $select .= ') ORDER BY 9';
         }
 
-        $select .= ') ORDER BY ' . $order0 . ', ' . $order1 . ', ' . $order2;
         return $select;
     }
 
@@ -953,6 +959,7 @@ class ListaAfastamentos {
             $titulo = 'Servidores com Afastamentos';
         } else {
             $titulo = 'Afastamentos';
+            $this->idFuncional = false;
         }
 
         if (!empty($this->mes)) {
@@ -967,13 +974,19 @@ class ListaAfastamentos {
 
             if ($this->idFuncional) {
 
-                $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo', 'Obs']);
-                $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
+                if ($this->exibeDetalhes) {
+                    $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo', 'Obs']);
+                    $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
+                    $tabela->set_width([10, 25, 10, 8, 5, 8, 15, 10, 10, 5]);
+                } else {
+                    $tabela->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                    $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
+                    $tabela->set_width([10, 25, 10, 10, 5, 10, 20]);
+                }
 
+                $tabela->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
                 $tabela->set_classe([null, null, "pessoal"]);
                 $tabela->set_metodo([null, null, "get_lotacaoSimples"]);
-                $tabela->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php", null, "exibeObsLicenca"]);
-                $tabela->set_width([10, 25, 10, 8, 5, 8, 15, 10, 10, 5]);
 
                 if ($this->nomeSimples) {
                     $tabela->set_classe([null, "pessoal", "pessoal"]);
@@ -987,7 +1000,12 @@ class ListaAfastamentos {
                 $tabela->set_grupoCorColuna(1);
             } else {
 
-                $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+                if ($this->exibeDetalhes) {
+                    $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+                } else {
+                    $tabela->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                }
+
                 $tabela->set_align(['left', 'left', 'center', 'center', 'center', 'left', 'left']);
                 $tabela->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
 
@@ -1053,10 +1071,17 @@ class ListaAfastamentos {
         }
 
         if ($this->idFuncional) {
-            $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+
+            if ($this->exibeDetalhes) {
+                $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+                $relatorio->set_width([10, 15, 10, 10, 5, 10, 20, 10, 10]);
+            } else {
+                $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                $relatorio->set_width([10, 20, 20, 10, 5, 10, 20]);
+            }
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
-            $relatorio->set_width([10, 15, 10, 10, 5, 10, 20, 10, 10]);
+
             $relatorio->set_numGrupo(6);
 
             if ($this->nomeSimples) {
@@ -1067,10 +1092,17 @@ class ListaAfastamentos {
                 $relatorio->set_metodo([null, "get_nomeECargo", "get_lotacaoSimples"]);
             }
         } else {
-            $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+
+            if ($this->exibeDetalhes) {
+                $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição', 'Publicacao', 'Processo']);
+                $relatorio->set_width([20, 10, 10, 5, 10, 25, 10, 10]);
+            } else {
+                $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+                $relatorio->set_width([20, 20, 10, 5, 10, 25]);
+            }
+            
             $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
-            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
-            $relatorio->set_width([20, 10, 10, 5, 10, 25, 10, 10]);
+            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);            
             $relatorio->set_numGrupo(5);
 
             if ($this->nomeSimples) {

@@ -167,14 +167,14 @@ if ($acesso) {
             $painel = new Callout();
             $painel->abre();
 
-            # Exibe a tabela de Servidores afastados
-            $afast = new ListaAfastamentosSimples();
+            # Exibe a tabela de Servidores afastados;
+            $afast = new ListaAfastamentos();
             $afast->set_ano($parametroAno);
             $afast->set_mes($parametroMes);
             $afast->set_lotacao(66);
             $afast->set_idFuncional(false);
             $afast->set_nomeSimples(true);
-            $afast->set_exibeCargo(false);
+            $afast->exibeDetalhes(false);
             $afast->exibeTabela();
 
             $painel->fecha();

@@ -110,14 +110,13 @@ if ($acesso) {
             $botaoRel->set_title("Relatório dessa pesquisa");
             $botaoRel->set_target("_blank");
             $menu1->add_link($botaoRel, "right");
-            
+
             # Relatório Simples           
             $botaoRel2 = new Link("Relatório Simples", "?fase=relatorio2");
             $botaoRel2->set_class('button');
             $botaoRel2->set_title("Relatório simples dessa pesquisa");
             $botaoRel2->set_target("_blank");
             $menu1->add_link($botaoRel2, "right");
-
 
             $menu1->show();
 
@@ -280,7 +279,7 @@ if ($acesso) {
         # Relatório
         case "relatorio2" :
 
-            $afast = new ListaAfastamentosSimples();
+            $afast = new ListaAfastamentos();
             $afast->set_ano($parametroAno);
             if ($parametroMes <> "*") {
                 $afast->set_mes($parametroMes);
@@ -290,7 +289,7 @@ if ($acesso) {
                 $afast->set_cargo($parametroCargo);
             }
             $afast->set_tipo($parametroTipo);
-            $afast->set_linkEditar('?fase=editaServidor');
+            $afast->exibeDetalhes(false);
             $afast->exibeRelatorio();
             break;
 

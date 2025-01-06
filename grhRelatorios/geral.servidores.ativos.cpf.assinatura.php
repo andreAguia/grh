@@ -49,7 +49,7 @@ if ($acesso) {
     $relatorio->set_classe([null, null, null, "pessoal"]);
     $relatorio->set_metodo([null, null, null, "get_lotacaoRel"]);
 
-    $relatorio->set_conteudo($result);;
+    $relatorio->set_conteudo($result);
     $relatorio->show();
 
     $page->terminaPagina();

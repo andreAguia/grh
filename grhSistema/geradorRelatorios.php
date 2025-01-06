@@ -534,7 +534,7 @@ if ($acesso) {
     $form->add_item($controle);
 
     #################################### Ordenação #######################################
-    # Ordenação e Agrupamento
+    # Ordenação 
     $ordena = [
         ["idfuncional", "IdFuncional"],
         ["tbpessoa.nome", "Nome"]
@@ -565,20 +565,6 @@ if ($acesso) {
         ["desc", "desc"],
     ]);
     $form->add_item($controle);
-    
-    # Agrupamento
-    $controle = new Input('parametroAgrupamento', 'combo', 'Agrupado', 1);
-    $controle->set_size(20);
-    $controle->set_title('Agrupamento do relatório');
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(6);
-    $controle->set_valor($parametroAgrupamento);
-    $controle->set_array($ordena);
-    $controle->set_fieldset("Informe a Ordenação:");
-    $form->add_item($controle);
-
-    $form->show();
 
     #################################### Monta os Arrays #######################################
     #IdFuncional
@@ -608,7 +594,7 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "pessoal";
         $method[] = "get_idFuncionalEMatricula";
-        $function[] = "";
+        $function[] = "";        
     }
 
     # Nome
@@ -881,7 +867,22 @@ if ($acesso) {
         $method[] = "";
         $function[] = "";
     }
+    
+    #################################### Agrupamento #######################################
+//    # Agrupamento
+//    $controle = new Input('parametroAgrupamento', 'combo', 'Agrupado', 1);
+//    $controle->set_size(20);
+//    $controle->set_title('Agrupamento do relatório');
+//    $controle->set_onChange('formPadrao.submit();');
+//    $controle->set_linha(1);
+//    $controle->set_col(6);
+//    $controle->set_valor($parametroAgrupamento);
+//    $controle->set_array($label);
+//    $controle->set_fieldset("Informe a Ordenação:");
+//    $form->add_item($controle);
 
+    $form->show();
+    
     #################################### Monta a tabela #######################################
 
     $grid->fechaColuna();

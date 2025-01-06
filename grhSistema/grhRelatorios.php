@@ -430,6 +430,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Administrativos e Técnicos', '../grhRelatorios/geral.servidores.ativos.admTec.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Diretoria / Centro', '../grhRelatorios/geral.servidores.ativos.porDiretoria.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Agrupados por Diretoria / Centro - Assinatura', '../grhRelatorios/geral.servidores.ativos.porDiretoria.assinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.sexo.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.cpf.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geral.servidores.ativos.cpf.php');

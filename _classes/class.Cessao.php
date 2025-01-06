@@ -11,19 +11,19 @@ class Cessao {
 
     public function getDados($idHistCessao = null) {
         # Verifica se o id foi informado
-        if (vazio($idHistCessao)) {
-            alert("É necessário informar o id.");
-            return;
-        }
+        if (empty($idHistCessao)) {
+            return null;
+        } else {
 
-        # Pega os dados
-        $servidor = new Pessoal();
-        $select = "SELECT *
+            # Pega os dados
+            $servidor = new Pessoal();
+            $select = "SELECT *
                      FROM tbhistcessao
                     WHERE idHistCessao = {$idHistCessao}";
 
-        # Retorno
-        return $servidor->select($select, false);
+            # Retorno
+            return $servidor->select($select, false);
+        }
     }
 
 ###########################################################
@@ -307,7 +307,11 @@ class Cessao {
                    LIMIT 1";
 
         $row = $servidor->select($select, false);
-        return $row[0];
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
     }
 
 ###########################################################

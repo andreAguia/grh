@@ -146,6 +146,7 @@ if ($acesso) {
             $afast->set_mes($parametroMes);
             $afast->set_lotacao($parametroLotacao);
             $afast->set_idFuncional(false);
+            $afast->exibeDetalhes(false);
             $afast->exibeTabela();
 
             $grid->fechaColuna();

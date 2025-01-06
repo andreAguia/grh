@@ -927,9 +927,9 @@ class ListaAfastamentos {
 
         if (empty($this->idServidor)) {
             if ($this->idFuncional) {
-                $select .= ') ORDER BY 12, 3';
+                $select .= ') ORDER BY 12, 4';
             } else {
-                $select .= ') ORDER BY 11, 2';
+                $select .= ') ORDER BY 11, 3';
             }
         } else {
             $select .= ') ORDER BY 9';

@@ -669,6 +669,11 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php');
         $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
 
+        # Somente Contrato Nuloas
+        if ($this->perfil == 5) {
+            $menu->add_item('linkWindow', 'Declaração para o INSS', '../grhRelatorios/declaracao.inss.contratoNulo.php');
+        }
+
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');
 //            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');

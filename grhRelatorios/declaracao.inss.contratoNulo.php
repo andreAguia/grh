@@ -91,6 +91,7 @@ if ($acesso) {
     $dec->set_texto($paragrafo4);
 
     $dec->set_assinatura(true);
+    $dec->set_saltoAssinatura(1);
     $dec->show();
 
     # Grava o log da visualização do relatório

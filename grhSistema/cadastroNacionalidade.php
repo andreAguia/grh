@@ -75,17 +75,21 @@ if ($acesso) {
         $orderTipo = 'asc';
 
     # select da lista
-    $objeto->set_selectLista('SELECT idnacionalidade,nacionalidade,
-                                      idnacionalidade
-                                 FROM tbnacionalidade
-                                WHERE nacionalidade LIKE "%' . $parametro . '%"
-                             ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+    $objeto->set_selectLista("SELECT idnacionalidade,
+                                     nacionalidade,
+                                     idnacionalidade,
+                                     idnacionalidade,
+                                     idnacionalidade,
+                                     idnacionalidade
+                                FROM tbnacionalidade
+                               WHERE nacionalidade LIKE '%{$parametro}%'
+                            ORDER BY {$orderCampo} {$orderTipo}");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nacionalidade
+    $objeto->set_selectEdita("SELECT nacionalidade
                                 FROM tbnacionalidade
-                               WHERE idnacionalidade = ' . $id);
-    
+                               WHERE idnacionalidade = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -103,9 +107,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Nacionalidade"));
-    $objeto->set_width(array(10, 80));
-    $objeto->set_align(array("center", "left"));
+    $objeto->set_label(["Id", "Nacionalidade", "Servidores Ativos", "Servidores Inativos", "Total de Servidores"]);
+    $objeto->set_width([10, 45, 10, 10, 10]);
+    $objeto->set_align(["center", "left"]);
+    $objeto->set_colunaSomatorio([2, 3, 4]);
+
+    $objeto->set_classe([null, null, "Nacionalidade", "Nacionalidade", "Nacionalidade"]);
+    $objeto->set_metodo([null, null, "get_numServidoresAtivos", "get_numServidoresInativos", "get_numServidores"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -211,7 +211,7 @@ class ListaAfastamentos {
 
     ###########################################################
 
-    public function montaSelect() {
+    public function montaSelect($relatorio = false) {
 
         /**
          * monta o select para toda a classe
@@ -924,15 +924,28 @@ class ListaAfastamentos {
         }
 
         #######################
+        # Ordenação
 
-        if (empty($this->idServidor)) {
-            if ($this->idFuncional) {
-                $select .= ') ORDER BY 12, 4';
+        if ($relatorio) {
+            if (empty($this->idServidor)) {
+                if ($this->idFuncional) {
+                    $select .= ') ORDER BY 7, 12, 4';
+                } else {
+                    $select .= ') ORDER BY 6, 11, 3';
+                }
             } else {
-                $select .= ') ORDER BY 11, 3';
+                $select .= ') ORDER BY 4, 9';
             }
         } else {
-            $select .= ') ORDER BY 9';
+            if (empty($this->idServidor)) {
+                if ($this->idFuncional) {
+                    $select .= ') ORDER BY 12, 4';
+                } else {
+                    $select .= ') ORDER BY 11, 3';
+                }
+            } else {
+                $select .= ') ORDER BY 9';
+            }
         }
 
         return $select;
@@ -1050,7 +1063,7 @@ class ListaAfastamentos {
         $pessoal = new Pessoal();
         $licenca = new Licenca();
 
-        $select = $this->montaSelect();
+        $select = $this->montaSelect(true);
 
         $relatorio = new Relatorio();
         $relatorio->set_titulo('Servidores com Afastamentos');
@@ -1081,7 +1094,6 @@ class ListaAfastamentos {
             }
             $relatorio->set_align(['center', 'left', 'left', 'center', 'center', 'center', 'left']);
             $relatorio->set_funcao([null, null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
-
             $relatorio->set_numGrupo(6);
 
             if ($this->nomeSimples) {
@@ -1100,9 +1112,9 @@ class ListaAfastamentos {
                 $relatorio->set_label(['Nome', 'Lotação', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
                 $relatorio->set_width([20, 20, 10, 5, 10, 25]);
             }
-            
+
             $relatorio->set_align(['left', 'left', 'center', 'center', 'center', 'left']);
-            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);            
+            $relatorio->set_funcao([null, null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
             $relatorio->set_numGrupo(5);
 
             if ($this->nomeSimples) {

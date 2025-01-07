@@ -47,7 +47,19 @@ if ($acesso) {
         $nome = "Documento";
         $tabela = "tblicenca";
         $extensoes = ["pdf"];
-    } else {
+    } elseif ($tipo == 11) {
+        # Dados da rotina de Upload
+        $pasta = PASTA_AFASTAMENTOS;
+        $nome = "Certidão de Casamento";
+        $tabela = "tblicenca";
+        $extensoes = ["pdf"];
+    } elseif ($tipo == 12) {
+        # Dados da rotina de Upload
+        $pasta = PASTA_AFASTAMENTOS;
+        $nome = "Atestado de Óbito";
+        $tabela = "tblicenca";
+        $extensoes = ["pdf"];
+    } else{
         # Dados da rotina de Upload
         $pasta = PASTA_BIM;
         $nome = "Bim";

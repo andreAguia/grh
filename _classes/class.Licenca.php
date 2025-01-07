@@ -253,24 +253,35 @@ class Licenca {
             $pessoal = new Pessoal();
             $tipo = $pessoal->get_tipoLicenca($id);
 
-            switch ($tipo) {
-                case 25:
-                    $faltas = new Faltas();
-                    $faltas->exibeDoc($id);
-                    break;
+            if ($pessoal->get_licencaPericia($tipo) == "Sim") {
+                $medica = new LicencaMedica();
+                $medica->exibeBim($id);
+            } else {
 
-                case 26:
-                    $suspensao = new Suspensao();
-                    $suspensao->exibePublicacaoPdf($id);
-                    break;
+                switch ($tipo) {
+                    case 25: // Faltas
+                        $faltas = new Faltas();
+                        $faltas->exibeDoc($id);
+                        break;
 
-                case 3:
-                    $this->exibeDeclaracaoLicencaGestante($id);
-                    break;
+                    case 26: // Suspensão
+                        $suspensao = new Suspensao();
+                        $suspensao->exibePublicacaoPdf($id);
+                        break;
 
-                default:
-                    echo "---";
-                    break;
+                    case 3: // Declaração
+                        $this->exibeDeclaracaoLicencaGestante($id);
+                        break;
+
+                    case 11: // Casamento
+                    case 12: // Nojo
+                        $this->exibeDocumentoAfastamentoPdf($id);
+                        break;
+
+                    default:
+                        echo "---";
+                        break;
+                }
             }
         }
     }
@@ -292,5 +303,30 @@ class Licenca {
         }
     }
 
-########################################################### 
+    ###########################################################
+
+    public function exibeDocumentoAfastamentoPdf($idLicenca = null) {
+        # Verifica se o id foi informado
+        if (empty($idLicenca)) {
+            return "---";
+        } else {
+            # Monta o arquivo
+            $arquivo = PASTA_AFASTAMENTOS . "{$idLicenca}.pdf";
+
+            # Verifica se ele existe
+            if (file_exists($arquivo)) {
+
+                $botao = new BotaoGrafico();
+                $botao->set_url($arquivo);
+                $botao->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+                $botao->set_title("Exibe o documento arquivado");
+                $botao->set_target("_blank");
+                $botao->show();
+            } else {
+                return "---";
+            }
+        }
+    }
+
+    ########################################################### 
 }

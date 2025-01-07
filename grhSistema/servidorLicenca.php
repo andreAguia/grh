@@ -350,8 +350,8 @@ if ($acesso) {
                                      CASE alta
                                         WHEN 1 THEN "Sim"
                                         WHEN 2 THEN "Não"
+                                        ELSE "---"
                                         end,
-                                     idLicenca,   
                                      idLicenca,   
                                      dtInicial,
                                      numdias,
@@ -373,8 +373,7 @@ if ($acesso) {
         $selectLicença .= ') UNION (
                      SELECT YEAR(dtInicial),
                                   tblicenca.idTpLicenca,
-                                     "-",
-                                     idLicenca,   
+                                      "---",
                                      idLicenca,   
                                      dtInicial,
                                      numdias,
@@ -398,8 +397,7 @@ if ($acesso) {
         $selectLicença .= ') UNION (
                      SELECT YEAR(dtInicial),
                             6,
-                            "",
-                            "",
+                             "---",
                             "",
                             dtInicial,
                             tblicencapremio.numdias,
@@ -421,8 +419,7 @@ if ($acesso) {
         $selectLicença .= ') UNION (
                                SELECT YEAR(tblicencasemvencimentos.dtInicial),
                                        tblicencasemvencimentos.idTpLicenca,
-                                       "",
-                                       "",
+                                       "---",
                                        "",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
@@ -438,7 +435,7 @@ if ($acesso) {
             $selectLicença .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $parametro;
         }
 
-        $selectLicença .= ' ) ORDER BY 6 desc';
+        $selectLicença .= ' ) ORDER BY 5 desc';
 
         $objeto->set_selectLista($selectLicença);
 
@@ -479,18 +476,18 @@ if ($acesso) {
         $stringComparacao = $nome . "<br/>" . $lei;
 
         # Editar e excluir condicional
-        $objeto->set_editarCondicional('?fase=editar', '-', 11, "<>");
+        $objeto->set_editarCondicional('?fase=editar', '-', 10, "<>");
         if (Verifica::acesso($idUsuario, [1, 2])) {
-            $objeto->set_excluirCondicional('?fase=excluir', '-', 11, "<>");
+            $objeto->set_excluirCondicional('?fase=excluir', '-', 10, "<>");
         }
 
         # Parametros da tabela
-        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Bim", "Documento", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Documento", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
         #$objeto->set_width([5, 20, 5, 5, 10, 10, 5, 10, 10, 10, 5]);
         $objeto->set_align([null, "left"]);
-        $objeto->set_funcao([null, null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
-        $objeto->set_classe([null, "Licenca", null, "LicencaMedica", "Licenca"]);
-        $objeto->set_metodo([null, "exibeNome", null, "ExibeBim", "exibeDoc"]);
+        $objeto->set_funcao([null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
+        $objeto->set_classe([null, "Licenca", null, "Licenca"]);
+        $objeto->set_metodo([null, "exibeNome", null, "exibeDoc"]);
         $objeto->set_rowspan(0);
         $objeto->set_grupoCorColuna(0);
 
@@ -668,6 +665,44 @@ if ($acesso) {
                     # Dados da rotina de Upload
                     $pasta = PASTA_FALTAS;
                     $nome = "Documento";
+                    $tabela = "tblicenca";
+                    $extensoes = ["pdf"];
+
+                    # Botão de Upload
+                    $botao = new Button("Upload {$nome}");
+                    $botao->set_url("servidorLicencaUpload.php?fase=upload&id={$id}");
+                    $botao->set_title("Faz o Upload do {$nome}");
+                    $botao->set_target("_blank");
+
+                    $objeto->set_botaoEditarExtra([$botao]);
+                }
+            }
+
+            if ($tipo == 11) { // Casamento
+                if (Verifica::acesso($idUsuario, [1, 16])) {
+
+                    # Dados da rotina de Upload
+                    $pasta = PASTA_AFASTAMENTOS;
+                    $nome = "Certidão de Casamento";
+                    $tabela = "tblicenca";
+                    $extensoes = ["pdf"];
+
+                    # Botão de Upload
+                    $botao = new Button("Upload {$nome}");
+                    $botao->set_url("servidorLicencaUpload.php?fase=upload&id={$id}");
+                    $botao->set_title("Faz o Upload do {$nome}");
+                    $botao->set_target("_blank");
+
+                    $objeto->set_botaoEditarExtra([$botao]);
+                }
+            }
+
+            if ($tipo == 12) { // Nojo
+                if (Verifica::acesso($idUsuario, [1, 16])) {
+
+                    # Dados da rotina de Upload
+                    $pasta = PASTA_AFASTAMENTOS;
+                    $nome = "Atestado de Óbito";
                     $tabela = "tblicenca";
                     $extensoes = ["pdf"];
 

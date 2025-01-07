@@ -36,7 +36,7 @@ class LicencaMedica {
                         $botao->set_target("_blank");
                         $botao->show();
                     } else {
-                        return "---<br/>" . $this->getnumBim($idLicenca);
+                        return $this->getnumBim($idLicenca);
                     }
                 } else {
                     return "---";
@@ -62,7 +62,7 @@ class LicencaMedica {
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
-        return $row[0];
+        echo $row[0];
     }
 
     ###########################################################

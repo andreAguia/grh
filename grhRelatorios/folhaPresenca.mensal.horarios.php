@@ -47,7 +47,8 @@ if ($acesso) {
     $result = $pessoal->select($select);
 
     $relatorio = new Relatorio('relatorioProcessosArquivados');
-    $relatorio->set_titulo('ANEXO IV<br/>Controle de Frequência Diária');
+    $relatorio->set_cabecalho_exibeDiretoriaGerencia(false);
+    $relatorio->set_titulo('ANEXO IV - Controle de Frequência Diária');
     $relatorio->set_tituloLinha2("Mês {$nomeMes[$mesBase]} Ano " . $anoBase);
     $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Admissão']);
     $relatorio->set_align(["center"]);

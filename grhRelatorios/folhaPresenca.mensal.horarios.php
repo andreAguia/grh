@@ -115,7 +115,7 @@ if ($acesso) {
         echo '<tr>';
 
         # Exibe o número do dia
-        echo "<td align='center'>{$contador}/{$mesBase}/{$anoBase}</td>";
+        echo "<td align='center'>" . str_pad($contador, 2, "0", STR_PAD_LEFT) . " / " . str_pad($mesBase, 2, "0", STR_PAD_LEFT) . " / {$anoBase}</td>";
 
         if ($contador <= $dias) {
             # Cria variavel com a data no formato americano (ano/mes/dia)
@@ -133,15 +133,15 @@ if ($acesso) {
 
             # informa as ocorrências                
             if (!empty($feriado)) {     // verifica se tem feriado
-                echo '<td align="center">' . $feriado . '</td>';
-                echo '<td align="center">' . $feriado . '</td>';
-                echo '<td align="center">' . $feriado . '</td>';
-                echo '<td align="center">' . $feriado . '</td>';
+                echo "<td align='center'>{$feriado}</td>";
+                echo "<td align='center'>{$feriado}</td>";
+                echo "<td align='center'>{$feriado}</td>";
+                echo "<td align='center'>{$feriado}</td>";
             } elseif (!empty($afastamento)) {     // verifica se tem licença
-                echo '<td align="center">' . $afastamento . '</td>';
-                echo '<td align="center">' . $afastamento . '</td>';
-                echo '<td align="center">' . $afastamento . '</td>';
-                echo '<td align="center">' . $afastamento . '</td>';
+                echo "<td align='center'>{$afastamento}</td>";
+                echo "<td align='center'>{$afastamento}</td>";
+                echo "<td align='center'>{$afastamento}</td>";
+                echo "<td align='center'>{$afastamento}</td>";
             } else {
 
                 $tstamp = mktime(0, 0, 0, $mesBase, $contador, $anoBase);
@@ -150,27 +150,27 @@ if ($acesso) {
 
                 switch ($wday1) {
                     case 0:
-                        echo '<td align="center"><b>DOMINGO</b></td>';
-                        echo '<td align="center"><b>DOMINGO</b></td>';
-                        echo '<td align="center"><b>DOMINGO</b></td>';
-                        echo '<td align="center"><b>DOMINGO</b></td>';
+                        echo "<td align='center'><b>DOMINGO</b></td>";
+                        echo "<td align='center'><b>DOMINGO</b></td>";
+                        echo "<td align='center'><b>DOMINGO</b></td>";
+                        echo "<td align='center'><b>DOMINGO</b></td>";
                         break;
                     case 6:
-                        echo '<td align="center"><b>SÁBADO</b></td>';
-                        echo '<td align="center"><b>SÁBADO</b></td>';
-                        echo '<td align="center"><b>SÁBADO</b></td>';
-                        echo '<td align="center"><b>SÁBADO</b></td>';
+                        echo "<td align='center'><b>SÁBADO</b></td>";
+                        echo "<td align='center'><b>SÁBADO</b></td>";
+                        echo "<td align='center'><b>SÁBADO</b></td>";
+                        echo "<td align='center'><b>SÁBADO</b></td>";
                         break;
                     default:
-                        echo '<td>&nbsp</td>';
-                        echo '<td>&nbsp</td>';
-                        echo '<td>&nbsp</td>';
-                        echo '<td>&nbsp</td>';
+                        echo "<td>&nbsp</td>";
+                        echo "<td>&nbsp</td>";
+                        echo "<td>&nbsp</td>";
+                        echo "<td>&nbsp</td>";
                         break;
                 }
             }
         } else {
-            echo '<td>------------</td>';
+            echo "<td>------------</td>";
         }
 
         # Coluna do codigo // Não tem mais
@@ -197,9 +197,9 @@ if ($acesso) {
     echo '</table>';
 
     p("<br/>Obs: A frequência será registrada diariamente mediante assinatura do servidor participante"
-    . "do programa nos horários determinados no artigo 14 da Resolução. Nos dias em que o horário"
-    . "não for cumprido, a chefia imediata deverá registrar o atraso com exposição do horário"
-    . " e rubrica no campo de assinatura.","f14");
+            . "do programa nos horários determinados no artigo 14 da Resolução. Nos dias em que o horário"
+            . "não for cumprido, a chefia imediata deverá registrar o atraso com exposição do horário"
+            . " e rubrica no campo de assinatura.", "f14");
 
     $grid->fechaColuna();
     $grid->fechaGrid();

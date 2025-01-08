@@ -197,8 +197,8 @@ if ($acesso) {
     echo '</table>';
 
     p("<br/>Obs: A frequência será registrada diariamente mediante assinatura do servidor participante"
-            . "do programa nos horários determinados no artigo 14 da Resolução. Nos dias em que o horário"
-            . "não for cumprido, a chefia imediata deverá registrar o atraso com exposição do horário"
+            . " do programa nos horários determinados no artigo 14 da Resolução. Nos dias em que o horário"
+            . " não for cumprido, a chefia imediata deverá registrar o atraso com exposição do horário"
             . " e rubrica no campo de assinatura.", "f14");
 
     $grid->fechaColuna();

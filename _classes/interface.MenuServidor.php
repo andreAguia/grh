@@ -708,6 +708,7 @@ class MenuServidor {
         if ($this->situacao == "Ativo") {
             $menu->add_item("linkWindow", "Folha de Frequência Trimestral", "../grhRelatorios/folhaPresenca.php");
             $menu->add_item("linkWindow", "Folha de Frequência Mensal", "../grhRelatorios/folhaPresenca.mensal.php");
+            $menu->add_item("linkWindow", "Folha de Frequência - PROUENF", "../grhRelatorios/folhaPresenca.mensal.horarios.php");
         }
 
         if ($this->perfil == 1) {

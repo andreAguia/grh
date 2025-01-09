@@ -20,25 +20,25 @@ class CalendarioPgto {
 
         $array = [
             ["Janeiro", "05/02"],
-            ["Fevereiro", "05/03"],
+            ["Fevereiro", "06/03"],
             ["Março", "03/04"],
             ["Abril", "06/05"],
-            ["Maio", "05/06"],
-            ["13º Salário (1ª Parcela)", "28/06"],
+            ["Maio", "04/06"],
+            ["13º Salário (1ª Parcela)", "30/06"],
             ["Junho", "03/07"],
             ["Julho", "05/08"],
-            ["Agosto", "04/09"],
+            ["Agosto", "03/09"],
             ["Setembro", "03/10"],
             ["Outubro", "05/11"],
-            ["Novembro", "04/12"],
-            ["13º Salário (2ª Parcela)", "20/12"],
-            ["Dezembro", "06/01/2025"]
+            ["Novembro", "03/12"],
+            ["13º Salário (2ª Parcela)", "19/12"],
+            ["Dezembro", "06/01/2026"]
         ];
 
         # Exemplo mais complexo
         $tabela = new Tabela();
         $tabela->set_titulo("Calendário de Pagamento");
-        $tabela->set_subtitulo("2024");
+        $tabela->set_subtitulo("2025");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Mês de Competência", "Data do Pagamento"]);
         $tabela->set_align(["left", "center"]);

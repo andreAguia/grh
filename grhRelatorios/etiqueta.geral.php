@@ -22,7 +22,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->iniciaPagina();    
+    $page->iniciaPagina();
 
     # Pega os parâmetros
     $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
@@ -35,7 +35,7 @@ if ($acesso) {
                                           FROM tbsituacao                                
                                       ORDER BY 1');
     array_unshift($situacaoCombo, array('*', '-- Todos --'));
-        
+
     # Servidores
     $comboselect = "SELECT tbpessoa.nome,
                            tbpessoa.nome
@@ -49,7 +49,7 @@ if ($acesso) {
 
     $comboselect .= " ORDER BY tbpessoa.nome";
     $servidoresCombo = $pessoal->select($comboselect);
-    
+
     array_unshift($servidoresCombo, array('*', '-- Todos --'));
 
     $menuRelatorio = new menuRelatorio();
@@ -125,7 +125,7 @@ if ($acesso) {
                  FROM tbservidor JOIN tbperfil USING (idPerfil)
                                  JOIN tbpessoa USING (idPessoa)
                 WHERE tbperfil.tipo <> 'Outros'";
-    
+
     if ($comeca <> "*" AND $termina <> "*") {
         $select .= " AND tbpessoa.nome BETWEEN '{$comeca}' AND '{$termina}'";
     }
@@ -151,13 +151,10 @@ if ($acesso) {
         # quantas etiquetas
         for ($i = 1; $i <= $numEtiquetas; $i++) {
 
+            # Primeira Coluna
             echo "<tr>";
             echo "<td style = 'width: 50%' align='center'>";
-            p($nome, "pnomeEtiqueta4");
-            p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
-            echo "</td>";
-            echo"<td style = 'width: 0%'></td>";
-            echo "<td style = 'width: 50%' align='center'>";
+
             # Escolhe pelo tamanho do nome
             if (strlen($nome) > 20) {
                 p($nome, "pnomeEtiqueta4");
@@ -165,7 +162,35 @@ if ($acesso) {
                 p($nome, "pnomeEtiqueta3");
             }
 
-            p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+            # Escolhe pelo perfil
+            if ($idPerfil == 6) { // Contrato Administrativo
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta2");
+            } else {
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+            }
+            
+            echo "</td>";
+
+            # Coluna do meio
+            echo"<td style = 'width: 0%'></td>";
+
+            # Segunda Coluna
+            echo "<td style = 'width: 50%' align='center'>";
+
+            # Escolhe pelo tamanho do nome
+            if (strlen($nome) > 20) {
+                p($nome, "pnomeEtiqueta4");
+            } else {
+                p($nome, "pnomeEtiqueta3");
+            }
+
+            # Escolhe pelo perfil
+            if ($idPerfil == 6) { // Contrato Administrativo
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta2");
+            } else {
+                p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+            }
+            
             echo "</td>";
             echo "</tr>";
         }

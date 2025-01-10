@@ -85,6 +85,7 @@ if ($acesso) {
 
         echo "<tr>";
         echo "<td style = 'width: 50%' align='center'>";
+
         # Escolhe pelo tamanho do nome
         if (strlen($nome) > 20) {
             p($nome, "pnomeEtiqueta4");
@@ -92,10 +93,18 @@ if ($acesso) {
             p($nome, "pnomeEtiqueta3");
         }
 
-        p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        # Escolhe pelo perfil
+        if ($idPerfil == 6) { // Contrato Administrativo
+            p("({$matricula} - {$perfil})", "pperfilEtiqueta2");
+        } else {
+            p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        }
+        
         echo "</td>";
         echo"<td style = 'width: 0%'></td>";
+        
         echo "<td style = 'width: 50%' align='center'>";
+        
         # Escolhe pelo tamanho do nome
         if (strlen($nome) > 20) {
             p($nome, "pnomeEtiqueta4");
@@ -103,7 +112,13 @@ if ($acesso) {
             p($nome, "pnomeEtiqueta3");
         }
 
-        p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        # Escolhe pelo perfil
+        if ($idPerfil == 6) { // Contrato Administrativo
+            p("({$matricula} - {$perfil})", "pperfilEtiqueta2");
+        } else {
+            p("({$matricula} - {$perfil})", "pperfilEtiqueta1");
+        }
+        
         echo "</td>";
         echo "</tr>";
     }

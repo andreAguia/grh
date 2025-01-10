@@ -114,7 +114,7 @@ if ($acesso) {
 
     # Coluna
     $grid->fechaColuna();
-    $grid->abreColuna(8);
+    $grid->abreColuna(7);
 
     # Servidores
     $select = "SELECT idServidor,

@@ -22,17 +22,35 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->iniciaPagina();
+    $page->iniciaPagina();    
 
     # Pega os parâmetros
     $numEtiquetas = get('numEtiquetas', post('numEtiquetas', 1));
     $situacao = post('situacao', "*");
+    $comeca = post('comeca', "*");
+    $termina = post('termina', "*");
 
     # Situação
     $situacaoCombo = $pessoal->select('SELECT idsituacao, situacao
                                           FROM tbsituacao                                
                                       ORDER BY 1');
     array_unshift($situacaoCombo, array('*', '-- Todos --'));
+        
+    # Servidores
+    $comboselect = "SELECT tbpessoa.nome,
+                           tbpessoa.nome
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbpessoa USING (idPessoa)
+                     WHERE tbperfil.tipo <> 'Outros'";
+
+    if ($situacao <> "*") {
+        $comboselect .= " AND situacao = {$situacao}";
+    }
+
+    $comboselect .= " ORDER BY tbpessoa.nome";
+    $servidoresCombo = $pessoal->select($comboselect);
+    
+    array_unshift($servidoresCombo, array('*', '-- Todos --'));
 
     $menuRelatorio = new menuRelatorio();
     $menuRelatorio->set_formCampos(array(
@@ -44,7 +62,7 @@ if ($acesso) {
             'padrao' => $numEtiquetas,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
-            'linha' => 2),
+            'linha' => 1),
         array('nome' => 'situacao',
             'label' => 'Situação:',
             'tipo' => 'combo',
@@ -53,6 +71,24 @@ if ($acesso) {
             'padrao' => $situacao,
             'onChange' => 'formPadrao.submit();',
             'col' => 4,
+            'linha' => 1),
+        array('nome' => 'comeca',
+            'label' => 'Começa em:',
+            'tipo' => 'combo',
+            'array' => $servidoresCombo,
+            'size' => 3,
+            'padrao' => $comeca,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 10,
+            'linha' => 2),
+        array('nome' => 'termina',
+            'label' => 'Termina em:',
+            'tipo' => 'combo',
+            'array' => $servidoresCombo,
+            'size' => 3,
+            'padrao' => $termina,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 10,
             'linha' => 2),
     ));
 
@@ -67,20 +103,6 @@ if ($acesso) {
      * Dados Principais
      */
 
-    $select = "SELECT idFuncional,
-                      matricula,
-                      idServidor
-                 FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                 JOIN tbpessoa USING (idPessoa)
-                WHERE tbperfil.tipo <> 'Outros'";
-
-    if ($situacao <> "*") {
-        $select .= " AND situacao = {$situacao}";
-    }
-
-    $select .= " ORDER BY tbpessoa.nome";
-    $result = $pessoal->select($select);
-
     # Inicializa o contador
     $contador = 0;
 
@@ -93,6 +115,27 @@ if ($acesso) {
     # Coluna
     $grid->fechaColuna();
     $grid->abreColuna(7);
+
+    # Servidores
+    $select = "SELECT idServidor,
+                      tbpessoa.nome,
+                      idFuncional,
+                      matricula,
+                      idServidor
+                 FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                 JOIN tbpessoa USING (idPessoa)
+                WHERE tbperfil.tipo <> 'Outros'";
+    
+    if ($comeca <> "*" AND $termina <> "*") {
+        $select .= " AND tbpessoa.nome BETWEEN '{$comeca}' AND '{$termina}'";
+    }
+
+    if ($situacao <> "*") {
+        $select .= " AND situacao = {$situacao}";
+    }
+
+    $select .= " ORDER BY tbpessoa.nome";
+    $result = $pessoal->select($select);
 
     echo "<table width='100%' id='etiqueta' border='2px'>";
 

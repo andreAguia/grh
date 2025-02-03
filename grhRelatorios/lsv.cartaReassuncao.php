@@ -49,7 +49,7 @@ if ($acesso) {
     if (empty($dtRetornoDigitado)) {
         $dtRetornoDigitado = $dtTermino;
     }
-    
+
     if (empty($pgPublicacaoDigitado)) {
         $pgPublicacaoDigitado = null;
     }
@@ -96,11 +96,15 @@ if ($acesso) {
             $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividades, "tblicencasemvencimentos", $id, $tipoLog, $idServidorPesquisado);
         }
 
-        # Verifica se o retorno foi antecipado
+        # Verifica se o retorno foi antes ou após a data de retorno
+        $dtRetornoTexto = date_to_php($dtRetornoDigitado) . ", ";
+
         if (strtotime($dtRetornoDigitado) < strtotime($dtTermino)) {
-            $dtRetornoTexto = date_to_php($dtRetornoDigitado) . " ,antecipando o ";
-        } else {
-            $dtRetornoTexto = date_to_php($dtTermino);
+            $dtRetornoTexto .= "antecipando o ";
+        }
+
+        if (strtotime($dtRetornoDigitado) > strtotime($dtTermino)) {
+            $dtRetornoTexto .= "após o ";
         }
 
         # Trata a publicação
@@ -122,9 +126,9 @@ if ($acesso) {
                 . "ID {$pessoal->get_idFuncional($idServidorPesquisado)}, "
                 . "cargo {$pessoal->get_cargoSimples($idServidorPesquisado)}, "
                 . "para reassumir o exercício de suas atividades na {$pessoal->get_lotacao($idServidorPesquisado)}, "
-                . "a contar de {$dtRetornoTexto}, término do prazo da Licença Sem Vencimentos publicada no DOERJ de {$publicacao}.");
+                . "a contar de {$dtRetornoTexto} término do prazo da Licença Sem Vencimentos publicada no DOERJ de {$publicacao}.");
 
-        $carta->set_saltoRodape(3);
+        #$carta->set_saltoRodape(3);
         $carta->show();
 
         # Grava o log da visualização do relatório

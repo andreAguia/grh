@@ -446,6 +446,10 @@ if ($acesso) {
             $dtRetorno = $dados["dtRetorno"];
             $dtPublicacao = $dados['dtPublicacao'];
             $pgPublicacao = $dados['pgPublicacao'];
+            
+            $dtInicial = $dados["dtInicial"];
+            $dtTermino = $dados["dtTermino"];
+            $numDias = $dados["numDias"];
 
             # Chefia imediata desse servidor
             $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
@@ -463,11 +467,41 @@ if ($acesso) {
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}");
+            
+            # dtInicial
+            $controle = new Input('dtInicial', 'data', 'Data Inicial', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtInicial);
+            $controle->set_readonly(true);
+            $controle->set_title('A data inicial da licença.');
+            $form->add_item($controle);
+
+            # dtTermino
+            $controle = new Input('dtTermino', 'data', 'Data de Término', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor($dtTermino);            
+            $controle->set_readonly(true);
+            $controle->set_title('A data de término da licença.');
+            $form->add_item($controle);
+            
+            # numDias
+            $controle = new Input('numDias', 'texto', 'Dias:', 1);
+            $controle->set_size(5);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor($numDias);
+            $controle->set_readonly(true);
+            $controle->set_title('Dias de Licença.');
+            $form->add_item($controle);
 
             # dtRetorno
             $controle = new Input('dtRetorno', 'data', 'Data do Retorno', 1);
             $controle->set_size(10);
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(4);
             $controle->set_valor($dtRetorno);
             $controle->set_autofocus(true);
@@ -477,7 +511,7 @@ if ($acesso) {
             # dtPublicacao
             $controle = new Input('dtPublicacao', 'data', 'Data da Publicação:', 1);
             $controle->set_size(10);
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(4);
             $controle->set_valor($dtPublicacao);
             #$controle->set_required(true);
@@ -487,7 +521,7 @@ if ($acesso) {
             # pgPublicacao
             $controle = new Input('pgPublicacao', 'texto', 'Página:', 1);
             $controle->set_size(5);
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(3);
             $controle->set_valor($pgPublicacao);
             #$controle->set_required(true);

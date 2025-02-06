@@ -21,7 +21,7 @@ class AuxilioTransporte {
             # Inicia o banco de Dados
             $pessoal = new Pessoal();
 
-            $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+            $mes = str_pad($mes, 2, '0', STR_PAD_LEFT);
 
             $data = "{$ano}-{$mes}-01";
             $contador = 0;
@@ -499,7 +499,7 @@ class AuxilioTransporte {
             # Inicia o banco de Dados
             $pessoal = new Pessoal();
 
-            $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+            $mes = str_pad($mes, 2, '0', STR_PAD_LEFT);
 
             # Pega os dasos
             $select = "SELECT idtransporte
@@ -530,7 +530,7 @@ class AuxilioTransporte {
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
 
-        $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
+        $mes = str_pad($mes, 2, '0', STR_PAD_LEFT);
 
         # Pega os dasos
         $select = "SELECT idtransporte
@@ -556,8 +556,8 @@ class AuxilioTransporte {
         # Inicia o banco de Dados
         $pessoal = new Pessoal();
 
-        $mes = str_pad($mes , 2 , '0' , STR_PAD_LEFT);
-        
+        $mes = str_pad($mes, 2, '0', STR_PAD_LEFT);
+
         # Verifica se tem algum inativo que recebeu
         $selectInativos = "SELECT tbtransporte.idServidor
                      FROM tbtransporte LEFT JOIN tbservidor USING (idServidor)
@@ -568,7 +568,7 @@ class AuxilioTransporte {
                       AND situacao <> 1
                       AND ano = '{$ano}'
                       AND mes = '{$mes}'";
-                      
+
         # lotacao
         if (!empty($lotacao) and $lotacao <> "todos") {
             if (is_numeric($lotacao)) {
@@ -577,8 +577,8 @@ class AuxilioTransporte {
                 $selectInativos .= " AND (tblotacao.DIR = '{$lotacao}')";
             }
         }
-        
-        $receberamInativos = $pessoal->count($selectInativos);             
+
+        $receberamInativos = $pessoal->count($selectInativos);
 
         # Pega os dasos
         $select = "SELECT tbtransporte.idServidor
@@ -590,9 +590,7 @@ class AuxilioTransporte {
                       AND situacao = 1
                       AND ano = '{$ano}'
                       AND mes = '{$mes}'";
-                      
-             
-                      
+
         # lotacao
         if (!empty($lotacao) and $lotacao <> "todos") {
             $servidores = $pessoal->get_numServidoresAtivos($lotacao);
@@ -604,26 +602,25 @@ class AuxilioTransporte {
                 $select .= " AND (tblotacao.DIR = '{$lotacao}')";
                 $titulo = $lotacao;
             }
-        }else{
+        } else {
             $titulo = "Resumo Geral";
             $servidores = $pessoal->get_numServidoresAtivos();
-        }        
-        
-        $receberamAtivos = $pessoal->count($select);        
+        }
+
+        $receberamAtivos = $pessoal->count($select);
         $nreceberam = $servidores - $receberamAtivos;
-        
-        $array[] = ["Não Receberam", $nreceberam];
-        $array[] = ["Receberam - Ativos", $receberamAtivos];
-        $array[] = ["Receberam - Inativos", $receberamInativos];
-        
+
+        $array[] = ["Não", $nreceberam, 0, $nreceberam];
+        $array[] = ["Sim", $receberamAtivos, $receberamInativos, $receberamAtivos + $receberamInativos];
+
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Descrição", "Nº de Servidores"]);
+        $tabela->set_label(["Receberam", "Ativos", "Inativos", "Total"]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_align(["left"]);
+        #$tabela->set_align(["left"]);
         $tabela->set_titulo($titulo);
-        $tabela->set_colunaSomatorio(1);
+        $tabela->set_colunaSomatorio([1, 2, 3]);
         $tabela->show();
     }
 

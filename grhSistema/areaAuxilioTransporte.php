@@ -44,7 +44,7 @@ if ($acesso) {
     $parametroNome = post('parametroNome', retiraAspas(get_session('parametroNome')));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
-    $parametroRecebeu = post('parametroRecebeu', get_session('parametroRecebeu', 'Todos'));
+    $parametroRecebeu = post('parametroRecebeu', get_session('parametroRecebeu', 'Sim'));
 
     # Coloca o mês com 2 digitos
     $parametroMes = str_pad($parametroMes, 2, '0', STR_PAD_LEFT);
@@ -226,7 +226,7 @@ if ($acesso) {
             $controle = new Input('parametroRecebeu', 'combo', 'Recebeu?:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por recebimento do auxílio');
-            $controle->set_array(["Todos", "Sim", "Não"]);
+            $controle->set_array(["Sim", "Não"]);
             $controle->set_valor($parametroRecebeu);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
@@ -244,6 +244,8 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
+            
+            #################################################################################
 
             # Exibe a tabela de problemas
             $selectProblemas = "SELECT obs
@@ -262,9 +264,9 @@ if ($acesso) {
             $tabela->set_align(["left"]);
             $tabela->set_bordaInterna(true);
             $tabela->show();
-
-            #################################################################################
-            # Receberam
+            
+            #################################################################################                                  
+            # Servidores que receberam
             if ($parametroRecebeu == "Sim") {
                 $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
@@ -310,11 +312,11 @@ if ($acesso) {
                 if ($parametroPerfil <> "*") {
                     $select .= " AND idperfil = {$parametroPerfil}";
                 }
-
-                $select .= " ORDER BY tbpessoa.nome";
+                $select .= " ORDER BY situacao desc, tbpessoa.nome";
             }
 
             #################################################################################
+            # Servidores que não receberam
             if ($parametroRecebeu == "Não") {
 
                 $select = "SELECT tbservidor.idfuncional,
@@ -367,94 +369,7 @@ if ($acesso) {
             }
 
             #################################################################################
-            # Receberam
-            if ($parametroRecebeu == "Todos") {
-                $select = "(SELECT tbservidor.idfuncional,
-                                  tbservidor.idServidor,
-                                  tbservidor.idServidor,
-                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                                  tbpessoa.nome
-                             FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
-                                             JOIN tbhistlot USING (idServidor)
-                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao) 
-                                             JOIN tbperfil USING (idPerfil)
-                            WHERE situacao = 1
-                              AND tbperfil.tipo <> 'Outros'
-                              AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                              AND tbservidor.idServidor NOT IN (SELECT idServidor FROM tbtransporte WHERE idServidor IS NOT NULL AND ano = '{$parametroAno}' AND mes = '{$parametroMes}')";
-
-                # Nome
-                if (!is_null($parametroNome)) {
-
-                    # Verifica se tem espaços
-                    if (strpos($parametroNome, ' ') !== false) {
-                        # Separa as palavras
-                        $palavras = explode(' ', $parametroNome);
-
-                        # Percorre as palavras
-                        foreach ($palavras as $item) {
-                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
-                        }
-                    } else {
-                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
-                    }
-                }
-
-                # lotacao
-                if ($parametroLotacao <> "todos") {
-                    # Verifica se o que veio é numérico
-                    if (is_numeric($parametroLotacao)) {
-                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
-                    } else { # senão é uma diretoria genérica
-                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
-                    }
-                }
-
-                # perfil
-                if ($parametroPerfil <> "*") {
-                    $select .= " AND idperfil = {$parametroPerfil}";
-                }
-
-                $select .= ") UNION (SELECT tbservidor.idfuncional,
-                                  tbservidor.idServidor,
-                                  tbservidor.idServidor,
-                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                                  CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
-                                  tbpessoa.nome    
-                             FROM tbtransporte JOIN tbservidor USING (idServidor) 
-                                               JOIN tbpessoa USING (idPessoa)                                         
-                                               JOIN tbhistlot USING (idServidor)
-                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)                        
-                          AND ano = '{$parametroAno}'
-                          AND mes = '{$parametroMes}'";
-
-                # Pesquisa por nome
-                if (!empty($parametroNome)) {
-                    $select .= " AND tbpessoa.nome LIKE '%{$parametroNome}%'";
-                }
-
-                # lotacao
-                if ($parametroLotacao <> "todos") {
-                    # Verifica se o que veio é numérico
-                    if (is_numeric($parametroLotacao)) {
-                        $select .= " AND tblotacao.idlotacao = {$parametroLotacao}";
-                    } else { # senão é uma diretoria genérica
-                        $select .= " AND tblotacao.DIR = '{$parametroLotacao}'";
-                    }
-                }
-
-                # perfil
-                if ($parametroPerfil <> "*") {
-                    $select .= " AND idperfil = {$parametroPerfil}";
-                }
-
-                $select .= ") ORDER BY 6";
-            }
-
-            #################################################################################
-
+            # Exibe a tabela
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
@@ -466,10 +381,8 @@ if ($acesso) {
             $tabela->set_classe([null, "pessoal", "pessoal"]);
             $tabela->set_metodo([null, "get_nomeECargoEPerfilESituacao", "get_lotacao"]);
             $tabela->set_funcao([null, null, null, "exibeSituacaoAuxilioTransporte", "exibeRecebeuAuxilioTransporte"]);
-            $tabela->set_bordaInterna(true);
-//            $tabela->set_rowspan(0);
-//            $tabela->set_grupoCorColuna(0);
-
+            #$tabela->set_bordaInterna(true);
+            
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();

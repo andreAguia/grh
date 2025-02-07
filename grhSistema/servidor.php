@@ -60,7 +60,7 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
-    $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "tbpessoa.nome asc"));
+    $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "tbpessoa.nome asc, 6 asc"));
     
     # Zera alguns parâmetros da lic prêmio
     set_session('parametroMeses');

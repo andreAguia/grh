@@ -1155,8 +1155,8 @@ class Aposentadoria {
          *  Tempo Público
          */
         $array = [
-            ["Uenf - Afastamentos", $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],
-            ["Averbado Público", $averbacao->get_tempoAverbadoPublico($idServidor)]
+            ["Tempo Uenf", $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],
+            ["Tempo Averbado", $averbacao->get_tempoAverbadoPublico($idServidor)]
         ];
 
         # Exibe a tabela

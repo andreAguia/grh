@@ -119,7 +119,7 @@ if ($acesso) {
     }
     
     # termna o texto
-    $texto .= " Declaramos, também, que o cargo, acima citado, não está sujeito a bloqueio no SIGRH.";
+    $texto .= " Declaramos também, que o cargo acima citado, não está sujeito a bloqueio no SIGRH.";
 
     # Monta a Declaração
     $dec = new Declaracao();

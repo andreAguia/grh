@@ -90,7 +90,7 @@ class MenuServidor {
             }
         }
 
-        # funcionais
+        # Funcionais
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 6);
         } else {
@@ -367,14 +367,6 @@ class MenuServidor {
             $menu->add_item($botao);
         }
 
-        # Obs
-        $botao = new BotaoGrafico();
-        $botao->set_label('Observações');
-        $botao->set_url('servidorObs.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Observações Gerais do Servidor');
-        $menu->add_item($botao);
-
         # Advertências
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
@@ -402,6 +394,22 @@ class MenuServidor {
         $botao->set_url('servidorHorario.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'horario.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Horário do Servidor');
+        $menu->add_item($botao);
+
+        # Ocorrências
+        $botao = new BotaoGrafico();
+        $botao->set_label('Ocorrências');
+        $botao->set_url('servidorOcorrencias.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'ocorrencias.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Ocorrências Especias do Servidor');
+        $menu->add_item($botao);
+        
+        # Obs
+        $botao = new BotaoGrafico();
+        $botao->set_label('Observações');
+        $botao->set_url('servidorObs.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'obs.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Observações Gerais do Servidor');
         $menu->add_item($botao);
 
         $menu->show();
@@ -464,7 +472,8 @@ class MenuServidor {
         $painel = new Callout("warning");
         $painel->abre();
 
-        p("Ocorrências", "palertaServidor");
+        #p("Ocorrências", "palertaServidor");
+        p("Pendências", "palertaServidor");
 
         # Verifica se tem alguma ocorrência
         if ($qtdMensagem > 0) {

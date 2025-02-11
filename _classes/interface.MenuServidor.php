@@ -403,7 +403,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'ocorrencias.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Ocorrências Especias do Servidor');
         $menu->add_item($botao);
-        
+
         # Obs
         $botao = new BotaoGrafico();
         $botao->set_label('Observações');
@@ -668,6 +668,13 @@ class MenuServidor {
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
+        }
+
+        // Somente estatutários e celetistas
+        if ($this->perfil == 1 OR $this->perfil == 4) {
+            if ($this->situacao <> "Ativo") {
+                $menu->add_item('linkWindow', 'Declaração de Cargo Sem Bloqueio no SigRh', '../grhRelatorios/declaracao.bloqueioSigrh.php');
+            }
         }
 
 //        $licencaMaternidade = new LicencaMaternidade();

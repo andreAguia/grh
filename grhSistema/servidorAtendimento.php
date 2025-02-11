@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cadastro de Ocorrencias de um servidor
+ * Histórico de atendimentos de um servidor
  *  
  * By Alat
  */
@@ -22,12 +22,15 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    
+    # usuario
+    $usuario = $intra->get_nickUsuario($idUsuario);
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Ocorrências";
+        $atividade = "Cadastro do servidor - Atendimentos";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -51,25 +54,27 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Ocorrências');
+    $objeto->set_nome('Histórico de Atendimentos');
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
     $objeto->set_selectLista("SELECT data,
-                                     ocorrencia,
-                                     idOcorrencia
-                                FROM tbocorrencia
+                                     idUsuario,
+                                     atendimento,
+                                     idAtendimento
+                                FROM tbatendimento
                                WHERE idServidor = {$idServidorPesquisado}
-                            ORDER BY data desc");
+                            ORDER BY data desc, idAtendimento desc");
 
     # select do edita
     $objeto->set_selectEdita("SELECT data,
-                                     ocorrencia,
-                                     idServidor
-                                FROM tbocorrencia
-                               WHERE idOcorrencia = {$id}");
+                                     atendimento,
+                                     idServidor,
+                                     idUsuario
+                                FROM tbatendimento
+                               WHERE idAtendimento = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -77,25 +82,33 @@ if ($acesso) {
     }
 
     # Caminhos
-    $objeto->set_linkExcluir('?fase=excluir');
+    #$objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_botaoEditar(false);
+
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
+    # Editar e excluir condicional
+    $objeto->set_editarCondicional('?fase=editar', $usuario, 1, "=");
+    $objeto->set_excluirCondicional('?fase=excluir', $usuario, 1, "=");
+
     # Parametros da tabela
-    $objeto->set_label(["Data", "Ocorrência"]);
-    $objeto->set_width([10, 80]);
-    $objeto->set_align(["center", "left"]);
+    $objeto->set_label(["Data", "Servidor GRH", "Atendimento"]);
+    $objeto->set_width([10, 10, 70]);
+    $objeto->set_align(["center", "center", "left"]);
     $objeto->set_funcao(["date_to_php"]);
+    $objeto->set_classe([null, "Intra"]);
+    $objeto->set_metodo([null, "get_nickUsuario"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbocorrencia');
+    $objeto->set_tabela('tbatendimento');
 
     # Nome do campo id
-    $objeto->set_idCampo('idOcorrencia');
+    $objeto->set_idCampo('idAtendimento');
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -104,33 +117,33 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 20,
             'maxLength' => 20,
+            'padrao' => date("Y-m-d"),
             'required' => true,
-            'autofocus' => true,
             'col' => 3,
             'linha' => 1),
         array('linha' => 2,
             'col' => 12,
-            'nome' => 'ocorrencia',
-            'label' => 'Ocorrência:',
+            'nome' => 'atendimento',
+            'label' => 'Atendimento:',
+            'required' => true,            
+            'autofocus' => true,
             'tipo' => 'textarea',
-            'size' => array(80, 5)),
+            'size' => array(80, 8)),
         array('nome' => 'idServidor',
             'label' => 'idServidor:',
             'tipo' => 'hidden',
             'padrao' => $idServidorPesquisado,
             'size' => 5,
             'title' => 'idServidor',
-            'linha' => 4)));
-
-    # Relatório
-    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-    $botaoRel = new Button();
-    $botaoRel->set_imagem($imagem);
-    $botaoRel->set_title("Imprimir Relatório de Histórico de Lotação");
-    $botaoRel->set_url("../grhRelatorios/servidorLotacao.php");
-    $botaoRel->set_target("_blank");
-
-    $objeto->set_botaoListarExtra(array($botaoRel));
+            'linha' => 4),
+        array('nome' => 'idUsuario',
+            'label' => 'idUsuario:',
+            'tipo' => 'hidden',
+            'padrao' => $idUsuario,
+            'size' => 5,
+            'title' => 'idServidor',
+            'linha' => 4),
+    ));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

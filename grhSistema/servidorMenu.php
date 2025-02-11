@@ -84,6 +84,13 @@ if ($acesso) {
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1, "left");
+        
+        # Atendimentos
+        $linkAtend = new Link("Registro de Atendimentos", "servidorAtendimento.php");
+        $linkAtend->set_class('button');
+        $linkAtend->set_title('Acessa o registro de Atendimentos');
+        #$linkProc->set_target("_blank4");
+        $menu->add_link($linkAtend, "right");
 
         # Procedimentos
         $linkProc = new Link("Procedimentos", "../../areaServidor/sistema/procedimentos.php");

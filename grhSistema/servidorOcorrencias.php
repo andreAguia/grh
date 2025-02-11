@@ -60,7 +60,8 @@ if ($acesso) {
                                      ocorrencia,
                                      idOcorrencia
                                 FROM tbocorrencia
-                               WHERE idServidor = {$idServidorPesquisado}");
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY data desc");
 
     # select do edita
     $objeto->set_selectEdita("SELECT data,

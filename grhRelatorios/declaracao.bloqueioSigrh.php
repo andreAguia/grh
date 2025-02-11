@@ -131,7 +131,7 @@ if ($acesso) {
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");
-    $atividades = 'Visualizou a declaração de Vínculo Empregatício';
+    $atividades = 'Visualizou a declaração de de cargo sem bloqueio no SIGRH';
     $tipoLog = 4;
     $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
 

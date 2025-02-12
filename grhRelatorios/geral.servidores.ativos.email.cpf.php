@@ -43,7 +43,7 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Email Instiotucional e CPF<br/>Ordenados pelo Nome do Servidor');
-    $relatorio->set_label(['IdFuncional', 'Servidor','Lotação','CPF', 'Emails']);
+    $relatorio->set_label(['IdFuncional', 'Servidor','Lotação','CPF', 'Email']);
     $relatorio->set_width([10,25,25,15,25]);
     $relatorio->set_bordaInterna(true);
     $relatorio->set_align(["center", "left", "left", "left","left"]);

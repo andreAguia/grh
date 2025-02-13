@@ -71,7 +71,7 @@ if ($acesso) {
                                      idferiado
                                 FROM tbferiado
                                WHERE descricao LIKE "%' . $parametro . '%"
-                            ORDER BY tipo, month(data), day(data)');
+                            ORDER BY tipo desc, data desc');
 
     # select do edita
     $objeto->set_selectEdita('SELECT data,

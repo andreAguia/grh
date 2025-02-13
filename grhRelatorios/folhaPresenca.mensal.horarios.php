@@ -84,6 +84,7 @@ if ($acesso) {
 
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou a Folha de Presença Mensal de {$nomeMes[(int) $mesBase]} / {$anoBase}");
+    $relatorio->set_dataImpressao(false);
     $relatorio->show();
 
     br();
@@ -181,8 +182,8 @@ if ($acesso) {
     }
 
     echo '</table>';
-    # data de impressão
-    p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
+    # data de impressão // retirada a pedido de Chris
+    #p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
 
     br();
     echo '<table class="tabelaRelatorio" id="tableFolhaPresenca2">';

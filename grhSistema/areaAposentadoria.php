@@ -41,7 +41,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "porAnoRelatorio") {
+        AreaServidor::cabecalho();
+    }
 
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
@@ -60,28 +62,47 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    $menu = new MenuBar();
+    if ($fase <> "porAnoRelatorio") {
+        $menu = new MenuBar();
 
-    # Voltar
-    $botaoVoltar = new Link("Voltar", "areaPrevisao.php");
-    $botaoVoltar->set_class('button');
-    $botaoVoltar->set_title('Voltar a página anterior');
-    $botaoVoltar->set_accessKey('V');
-    $menu->add_link($botaoVoltar, "left");
+        # Voltar
+        $botaoVoltar = new Link("Voltar", "areaPrevisao.php");
+        $botaoVoltar->set_class('button');
+        $botaoVoltar->set_title('Voltar a página anterior');
+        $botaoVoltar->set_accessKey('V');
+        $menu->add_link($botaoVoltar, "left");
 
-    # Servidores Aposentados
-    $botao1 = new Link("Por Ano", "?fase=aguardePorAno");
-    $botao1->set_class('button');
-    $menu->add_link($botao1, "right");
+        # Servidores Aposentados por Ano
+        if ($fase == "porAno" OR $fase == "aguardePorAno") {
+            $botao1 = new Link("Por Ano", "#");
+            $botao1->set_class('hollow button');
+        } else {
+            $botao1 = new Link("Por Ano", "?fase=aguardePorAno");
+            $botao1->set_class('button');
+        }
+        $menu->add_link($botao1, "right");
 
-    $botao1 = new Link("Por Tipo", "?fase=aguardePorTipo");
-    $botao1->set_class('button');
-    $menu->add_link($botao1, "right");
+        # Servidores Aposentados por ATipo de Aposentadoria    
+        if ($fase == "porTipo" OR $fase == "aguardePorTipo") {
+            $botao1 = new Link("Por Tipo", "#");
+            $botao1->set_class('hollow button');
+        } else {
+            $botao1 = new Link("Por Tipo", "?fase=aguardePorTipo");
+            $botao1->set_class('button');
+        }
+        $menu->add_link($botao1, "right");
 
-    $botao1 = new Link("Estatística", "?fase=aguardeEstatistica");
-    $botao1->set_class('button');
-    $menu->add_link($botao1, "right");
-    $menu->show();
+        # Estatística dos Servidores Aposentados
+        if ($fase == "estatistica" OR $fase == "aguardeEstatistica") {
+            $botao1 = new Link("Estatística", "#");
+            $botao1->set_class('hollow button');
+        } else {
+            $botao1 = new Link("Estatística", "?fase=aguardeEstatistica");
+            $botao1->set_class('button');
+        }
+        $menu->add_link($botao1, "right");
+        $menu->show();
+    }
 
     $grid->fechaColuna();
     $grid->abreColuna(12);
@@ -110,6 +131,10 @@ if ($acesso) {
 
         case "porAno" :
 
+            # Coloca 2 colunas
+            $grid1 = new Grid();
+            $grid1->abreColuna(8);
+
             # Formulário de Pesquisa
             $form = new Form('?fase=aguardePorAno');
 
@@ -130,16 +155,47 @@ if ($acesso) {
             $controle->set_autofocus(true);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
+
+            $grid1->fechaColuna();
+
+            #####
+
+            $grid1->abreColuna(4);
+
+            # Botão de Relatório
+            $menu1 = new MenuBar();
+
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=porAnoRelatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel, "right");
+
+            $menu1->show();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
 
             # Exibe a lista
             $aposentadoria->exibeAposentadosPorAno($parametroAno, "editarPorAno");
             break;
 
-        #######################################    
+        #######################################
+
+        case "porAnoRelatorio" :
+
+            # Exibe a lista
+            $aposentadoria->exibeAposentadosPorAno($parametroAno, "editarPorAno", true);
+            break;
+
+        #######################################        
 
         case "editarPorAno" :
 

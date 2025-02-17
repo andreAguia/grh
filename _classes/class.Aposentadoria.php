@@ -148,7 +148,7 @@ class Aposentadoria {
 
     ############################################################################ 
 
-    function exibeAposentadosPorAno($parametroAno = null, $fase = null) {
+    function exibeAposentadosPorAno($parametroAno = null, $fase = null, $relatório = false) {
 
         /**
          * Exibe tabela com os aposentados por ano de aposentadoria
@@ -183,25 +183,44 @@ class Aposentadoria {
 
         $result = $pessoal->select($select);
 
-        $tabela = new Tabela();
-        $tabela->set_titulo('Servidores Aposentados em ' . $parametroAno);
-        $tabela->set_subtitulo('Ordenado pela Data de Saída');
+        if ($relatório) {
+            
+            $tabela = new Relatorio();
+            $tabela->set_titulo('Servidores Aposentados em ' . $parametroAno);
+            $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
-        $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
-        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+            $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
+            $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
+            $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
-        $tabela->set_classe([null, "pessoal", "pessoal"]);
-        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargo"]);
+            $tabela->set_classe([null, "pessoal", "pessoal"]);
+            $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
 
-        $tabela->set_conteudo($result);
+            $tabela->set_conteudo($result);
+            $tabela->show();
+            
+        } else {
 
-        $tabela->set_rowspan(0);
-        $tabela->set_grupoCorColuna(0);
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores Aposentados em ' . $parametroAno);
+            $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
-        $tabela->set_idCampo("idServidor");
-        $tabela->set_editar("?fase={$fase}");
-        $tabela->show();
+            $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Motivo']);
+            $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
+            $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+
+            $tabela->set_classe([null, "pessoal", "pessoal"]);
+            $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
+
+            $tabela->set_conteudo($result);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_idCampo("idServidor");
+            $tabela->set_editar("?fase={$fase}");
+            $tabela->show();
+        }
     }
 
     ##################################################### 
@@ -291,7 +310,7 @@ class Aposentadoria {
         $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
 
         $tabela->set_classe([null, "pessoal", "pessoal"]);
-        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargo"]);
+        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargoELotacao"]);
 
         $tabela->set_conteudo($result);
 
@@ -1482,15 +1501,15 @@ class Aposentadoria {
         # Percorre e soma os afastamentos
         foreach ($result2 as $item) {
             if (!is_null($dataPrevista)) {
-                
+
                 # Verifica se a data final do afastamento é anterior a data prevista
-                if(strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))){
+                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
                     $retorno += $item["numDias"];
                 }
-                
+
                 # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if(entre($dataPrevista, date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]), false)){
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]));
+                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
+                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
                 }
             } else {
                 $retorno += $item["numDias"];
@@ -1526,15 +1545,15 @@ class Aposentadoria {
         # Percorre e soma os afastamentos
         foreach ($result2 as $item) {
             if (!is_null($dataPrevista)) {
-                
+
                 # Verifica se a data final do afastamento é anterior a data prevista
-                if(strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))){
+                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
                     $retorno += $item["numDias"];
                 }
-                
+
                 # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if(entre($dataPrevista, date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]), false)){
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]));
+                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
+                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
                 }
             } else {
                 $retorno += $item["numDias"];
@@ -1577,15 +1596,15 @@ class Aposentadoria {
         # Percorre e soma os afastamentos
         foreach ($result2 as $item) {
             if (!is_null($dataPrevista)) {
-                
+
                 # Verifica se a data final do afastamento é anterior a data prevista
-                if(strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))){
+                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
                     $retorno += $item["numDias"];
                 }
-                
+
                 # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if(entre($dataPrevista, date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]), false)){
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]),date_to_php($item["dtFinal"]));
+                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
+                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
                 }
             } else {
                 $retorno += $item["numDias"];

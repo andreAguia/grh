@@ -49,9 +49,9 @@ if ($acesso) {
     set_session('parametroLotacao', $parametroLotacao);
 
     # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro')))     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro'));# passa o parametro da session para a variavel parametro retirando as aspas
-    else {
+    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
+        $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
+    } else {
         $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
@@ -301,7 +301,7 @@ if ($acesso) {
     $botaoInativo->set_title("Exibe os Cargos Inativos");
 
     # Cria o array de botões
-    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg);
+    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoOrga);
     if ($tipo) {
         array_unshift($arrayBotoes, $botaoInativo);
     } else {

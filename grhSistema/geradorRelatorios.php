@@ -55,7 +55,7 @@ $parametroPerfil = post('parametroPerfil', 1);
 # Oedenação
 $parametroOrdenaTipo = post('parametroOrdenaTipo', 'asc');
 $parametroOrdena = post('parametroOrdena', "tbpessoa.nome");
-$parametroAgrupamento = post('parametroAgrupamento');
+$parametroAgrupamento = post('parametroAgrupamento', '---');
 
 # Subtitulo
 $subTitulo = null;
@@ -172,7 +172,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # Cargo
     $controle = new Input('postCargoSimples', 'simnao', 'Cargo Simp.', 1);
     $controle->set_size(5);
@@ -594,7 +594,7 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "pessoal";
         $method[] = "get_idFuncionalEMatricula";
-        $function[] = "";        
+        $function[] = "";
     }
 
     # Nome
@@ -676,7 +676,7 @@ if ($acesso) {
         $method[] = "get_cargo";
         $function[] = "";
     }
-    
+
     # Cargo Simples
     if ($postCargoSimples) {
         $field[] = "tbservidor.idServidor";
@@ -709,11 +709,12 @@ if ($acesso) {
 
     # Perfil
     if ($postPerfil) {
-        $field[] = "tbservidor.idServidor";
+        $field[] = "tbperfil.nome";
+        $ordenacao[] = "tbperfil.nome";
         $label[] = "Perfil";
         $align[] = "center";
-        $class[] = "Pessoal";
-        $method[] = "get_perfil";
+        $class[] = "";
+        $method[] = "";
         $function[] = "";
     }
 
@@ -779,11 +780,11 @@ if ($acesso) {
 
     # Situação
     if ($postSituacao) {
-        $field[] = "tbservidor.idServidor";
+        $field[] = "tbsituacao.situacao";
         $label[] = "Situação";
         $align[] = "center";
-        $class[] = "Pessoal";
-        $method[] = "get_situacao";
+        $class[] = "";
+        $method[] = "";
         $function[] = "";
     }
 
@@ -839,11 +840,11 @@ if ($acesso) {
 
     # sexo
     if ($postSexo) {
-        $field[] = "tbservidor.idServidor";
+        $field[] = "tbpessoa.sexo";
         $label[] = "Sexo";
         $align[] = "center";
-        $class[] = "pessoal";
-        $method[] = "get_sexo";
+        $class[] = "";
+        $method[] = "";
         $function[] = "";
     }
 
@@ -860,29 +861,109 @@ if ($acesso) {
     # Assinatura
     if ($postAssinatura) {
         $field[] = "'<br/>_______________________________'";
-
         $label[] = "Assinatura";
+        $ordenacao[] = "";
         $align[] = "center";
         $class[] = "";
         $method[] = "";
         $function[] = "";
     }
-    
+
     #################################### Agrupamento #######################################
-//    # Agrupamento
-//    $controle = new Input('parametroAgrupamento', 'combo', 'Agrupado', 1);
-//    $controle->set_size(20);
-//    $controle->set_title('Agrupamento do relatório');
-//    $controle->set_onChange('formPadrao.submit();');
-//    $controle->set_linha(1);
-//    $controle->set_col(6);
-//    $controle->set_valor($parametroAgrupamento);
-//    $controle->set_array($label);
-//    $controle->set_fieldset("Informe a Ordenação:");
-//    $form->add_item($controle);
+    # Agrupamento
+    $tiposAgrupamento = ["---", "Cargo", "Lotação", "Nacionalidade", "Perfil", "Sexo", "Situação"];
+    $controle = new Input('parametroAgrupamento', 'combo', 'Agrupamento', 1);
+    $controle->set_size(20);
+    $controle->set_title('Agrupamento do relatório');
+    #$controle->set_helptext('Obs: Para que o agrupamento funcione é necessário que o campo agrupado esteja selecionado no relatório');
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(6);
+    $controle->set_valor($parametroAgrupamento);
+    $controle->set_array($tiposAgrupamento);
+    $controle->set_fieldset("Informe a Ordenação:");
+    $form->add_item($controle);
 
     $form->show();
-    
+
+    # Formata o agrupamento
+    $agrupamento = null;
+    if ($parametroAgrupamento <> "---") {
+        switch ($parametroAgrupamento) {
+            case "Cargo" :
+                $field[] = "IF (tbcargo.idTipoCargo < 3, tbcargo.nome, CONCAT(tbtipocargo.sigla, ' - ',tbcargo.nome))";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("OrdenaCargo", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+
+            case "Perfil" :
+                $field[] = "tbperfil.nome";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+
+            case "Situação" :
+                $field[] = "tbsituacao.situacao";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+
+            case "Lotação" :
+                $field[] = "concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,''))";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+
+            case "Sexo" :
+                $field[] = "tbpessoa.sexo";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+            
+            case "Nacionalidade" :
+                $field[] = "tbnacionalidade.nacionalidade";
+                $label[] = "Ordena{$parametroAgrupamento}";
+                $align[] = "left";
+                $class[] = "";
+                $method[] = "";
+                $function[] = "";
+
+                $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
+                $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
+                break;
+        }
+    }
+
     #################################### Monta a tabela #######################################
 
     $grid->fechaColuna();
@@ -909,7 +990,10 @@ if ($acesso) {
                                 LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                 LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                 LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
-                                LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)";
+                                LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                                LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                LEFT JOIN tbnacionalidade ON (tbpessoa.nacionalidade = tbnacionalidade.idNacionalidade)";
 
         # Cargo em comissão
         if (!empty($parametroCargoComissao)) {
@@ -922,12 +1006,14 @@ if ($acesso) {
 
         # Situação
         if (!empty($parametroSituacao)) {
-            $select .= " AND situacao = {$parametroSituacao}";
+            $select .= " AND tbservidor.situacao = {$parametroSituacao}";
         }
 
         # Perfil
         if (!empty($parametroPerfil)) {
-            $select .= " AND idPerfil = {$parametroPerfil}";
+            $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
+        } else {
+            $select .= " AND tbperfil.tipo <> 'Outros'";
         }
 
         # Lotacao
@@ -967,6 +1053,7 @@ if ($acesso) {
 
         # Estabelece a ordenação
         $select .= " ORDER BY {$parametroOrdena} {$parametroOrdenaTipo}";
+        #echo $select;
 
         $row = $pessoal->select($select);
 
@@ -978,24 +1065,27 @@ if ($acesso) {
         set_session("sessionMethod", $method);
         set_session("sessionFunction", $function);
         set_session("sessionLotacao", $subTitulo);
-        
+        set_session("sessionAgrupamento", $agrupamento);
+
         $painel = new Callout();
         $painel->abre();
 
-        $tabela = new Relatorio();
-        $tabela->set_titulo("");
-        $tabela->set_label($label);
-        $tabela->set_align($align);
+        $relatorio = new Relatorio();
+        $relatorio->set_titulo("");
+        $relatorio->set_label($label);
+        $relatorio->set_align($align);
         #$tabela->set_width($width);
-        $tabela->set_classe($class);
-        $tabela->set_metodo($method);
-        $tabela->set_funcao($function);
-        $tabela->set_conteudo($row);
-        $tabela->set_cabecalhoRelatorio(false);
-        $tabela->set_menuRelatorio(false);
-        $tabela->set_dataImpressao(false);
-        $tabela->show();
-        
+        $relatorio->set_classe($class);
+        $relatorio->set_metodo($method);
+        $relatorio->set_funcao($function);
+        $relatorio->set_conteudo($row);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_numGrupo($agrupamento);
+
+        $relatorio->show();
+
         $painel->fecha();
     } else {
         tituloTable("Relatório");

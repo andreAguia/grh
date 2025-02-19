@@ -34,6 +34,7 @@ if ($acesso) {
     $class = get_session("sessionClass");
     $method = get_session("sessionMethod");
     $function = get_session("sessionFunction");
+    $agrupamento = get_session("sessionAgrupamento");
 
     if (empty($select)) {
         br(7);
@@ -50,6 +51,7 @@ if ($acesso) {
         $relatorio->set_classe($class);
         $relatorio->set_metodo($method);
         $relatorio->set_funcao($function);
+        $relatorio->set_numGrupo($agrupamento);
         #$relatorio->set_bordaInterna(true);
         $relatorio->set_titulo($parametroTitulo);
         $relatorio->set_subtitulo($parametroSubtitulo);

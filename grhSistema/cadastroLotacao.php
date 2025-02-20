@@ -282,15 +282,10 @@ if ($acesso) {
     $botaoOrg->set_target("_blank");
     $botaoOrg->set_url('../../_arquivos/documentos/25.pdf');
 
-    # Organograma Selecionado (somente admin)
-    // retirei pois não era usado
-    if (Verifica::acesso($idUsuario, 1)) {
-        $imagem3 = new Imagem(PASTA_FIGURAS . 'organograma2.png', null, 15, 15);
-        $botaoOrga = new Button();
-        $botaoOrga->set_title("Exibe o Organograma2 da UENF");
-        $botaoOrga->set_imagem($imagem3);
-        $botaoOrga->set_url("?fase=organograma");
-    }
+    # Estrutura da Uenf
+    $botaoEstrtutura = new Button("Estrutura", "?fase=estrutura");
+    $botaoEstrtutura->set_title("Exibe a estrutura da UENF");
+    $botaoEstrtutura->set_target("_blank");
 
     # Cargos Ativos
     $botaoAtivo = new Button("Lotações Ativas", "?tipo=1");
@@ -301,7 +296,7 @@ if ($acesso) {
     $botaoInativo->set_title("Exibe os Cargos Inativos");
 
     # Cria o array de botões
-    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoOrga);
+    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoEstrtutura);
     if ($tipo) {
         array_unshift($arrayBotoes, $botaoInativo);
     } else {
@@ -579,6 +574,90 @@ if ($acesso) {
 
         ################################################################
 
+        case "estrutura" :
+
+            # Limita a Tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            $lotacaoClasse = new Lotacao();
+
+//            # Menu 
+//            $menu = new MenuBar();
+//
+//            # Voltar
+//            $botaoVoltar = new Link("Voltar", "?");
+//            $botaoVoltar->set_class('button');
+//            $botaoVoltar->set_title('Voltar a página anterior');
+//            $botaoVoltar->set_accessKey('V');
+//            #$menu->add_link($botaoVoltar, "left");
+//            # Relatórios
+//            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+//            $botaoRel = new Button();
+//            $botaoRel->set_title("Relatório dessa pesquisa");
+//            $botaoRel->set_url("?fase=relatorio");
+//            $botaoRel->set_target("_blank");
+//            $botaoRel->set_imagem($imagem);
+//            $menu->add_link($botaoRel, "right");
+//
+//            $menu->show();
+
+            # Título
+            br();
+            tituloTable("Estrutura da UENF");
+
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            $lotacao1 = $pessoal->select("SELECT idLotacao, DIR, GER, nome
+                                           FROM tblotacao
+                                          WHERE ativo
+                                            AND DIR = 'Reitoria'
+                                       ORDER BY DIR, GER");
+
+            $lotacao2 = $pessoal->select("SELECT idLotacao, DIR, GER, nome
+                                           FROM tblotacao
+                                          WHERE ativo
+                                            AND SUBSTRING(DIR, 1, 3) = 'PRO'
+                                       ORDER BY DIR, GER");
+            
+            $lotacao3 = $pessoal->select("SELECT idLotacao, DIR, GER, nome
+                                           FROM tblotacao
+                                          WHERE ativo
+                                            AND DIR <> 'Outros'
+                                            AND DIR <> 'Reitoria'
+                                            AND SUBSTRING(DIR, 1, 3) <> 'PRO'
+                                       ORDER BY DIR, GER");
+
+            $estrutura = array_merge($lotacao1, $lotacao2, $lotacao3);
+
+            $primeiraDiretoria = "";
+            $primeiraGerencia = "";
+
+            # Começa a lista
+            echo "<dl>";
+            foreach ($estrutura as $item) {
+                if ($item['DIR'] <> $primeiraDiretoria) {
+                    br();
+                    echo "<dt>{$item['DIR']} - " . $lotacaoClasse->get_nomeDiretoria($item['idLotacao']) . "</dt>";
+                    $primeiraDiretoria = $item['DIR'];
+                }
+
+                if (!empty($item['GER'])) {
+                    echo "<dd>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - {$item['GER']} - {$item['nome']}</dd>";
+                    $primeiraGerencia = $item['GER'];
+                }
+            }
+
+
+            echo "</dl>";
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+
         case "aguardeHistorico" :
             br(10);
             aguarde("Montando a Listagem");
@@ -710,4 +789,4 @@ if ($acesso) {
     }
 } else {
     loadPage("../../areaServidor/sistema/login.php");
-}
+}    

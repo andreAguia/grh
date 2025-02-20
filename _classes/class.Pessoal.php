@@ -4556,7 +4556,7 @@ class Pessoal extends Bd {
                                          JOIN tbdependente USING(idPessoa) 
                         WHERE situacao = 1 
                           AND tbpessoa.sexo = '{$sexo}'
-                          AND parentesco = 2
+                          AND idParentesco = 2
                           AND tbperfil.tipo <> 'Outros'";
 
             return parent::count($select);

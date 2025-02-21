@@ -210,14 +210,26 @@ if ($acesso) {
             foreach ($servidores as $item) {
                 $idades[] = $item[1];
             }
-
+            
+            # Pega todas as idades para calcular a moda
+            $selectModa = "SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
+                             FROM tbpessoa JOIN tbservidor USING (idPessoa)
+                                           JOIN tbperfil USING (idPerfil) 
+                            WHERE situacao = 1 
+                                 AND tbperfil.tipo <> 'Outros'";
+            $servidoresModa = $pessoal->select($selectModa);            
+            foreach($servidoresModa as $item){
+                $arrayModa[] = $item[0];
+            }
+            
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
-
+            
             # Dados da tabela
             $dados[] = array("Maior Idade", maiorValor($idades));
             $dados[] = array("Menor Idade", menorValor($idades));
-            $dados[] = array("Idade Média", media_aritmetica($idades));
+            $dados[] = array("Média", media_aritmetica($idades));
+            $dados[] = array("Moda", moda($arrayModa));
 
             # Tabela
             $tabela = new Tabela();

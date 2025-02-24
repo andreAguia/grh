@@ -32,21 +32,18 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # Verifica tipo (1->ativo ou 0->inativo)
-    $tipo = get('tipo', 1);
-
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Pega os parâmetros da rotina de Organograma
+    # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'DGA'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao'));
+    $parametroTipo = get('parametroTipo', get_session('parametroTipo', 1));
 
     # Joga os parâmetros para as sessions
     set_session('parametroSituacao', $parametroSituacao);
-
-    # Joga os parâmetros par as sessions    
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroTipo', $parametroTipo);
 
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
@@ -70,7 +67,7 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    if ($tipo) {
+    if ($parametroTipo) {
         $complemento = " Ativas";
     } else {
         $complemento = " Inativas";
@@ -99,7 +96,7 @@ if ($acesso) {
                                       if(ativo = 0,"Não","Sim"),
                                       idLotacao
                                  FROM tblotacao LEFT JOIN tbcampus USING (idCampus)
-                                WHERE ativo = ' . $tipo . '  
+                                WHERE ativo = ' . $parametroTipo . '  
                                 AND (DIR LIKE "%' . $parametro . '%"
                                    OR GER LIKE "%' . $parametro . '%"
                                    OR nome LIKE "%' . $parametro . '%"
@@ -287,22 +284,31 @@ if ($acesso) {
     $botaoEstrtutura->set_title("Exibe a estrutura da UENF");
     $botaoEstrtutura->set_target("_blank");
 
-    # Cargos Ativos
-    $botaoAtivo = new Button("Lotações Ativas", "?tipo=1");
-    $botaoAtivo->set_title("Exibe os Cargos Ativos");
+    if ($parametroTipo == 1) {
+        # Lotações Ativas
+        $botaoAtivo = new Button("Lotações Ativas", "#");
+        $botaoAtivo->set_title("Exibe os Cargos Ativos");
+        $botaoAtivo->set_class("hollow button");
 
-    # Cargos Ativos
-    $botaoInativo = new Button("Lotações Inativas", "?tipo=0");
-    $botaoInativo->set_title("Exibe os Cargos Inativos");
+        # Lotações Inativas
+        $botaoInativo = new Button("Lotações Inativas", "?parametroTipo=0");
+        $botaoInativo->set_title("Exibe os Cargos Inativos");
 
-    # Cria o array de botões
-    $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoEstrtutura);
-    if ($tipo) {
-        array_unshift($arrayBotoes, $botaoInativo);
+        $arrayBotoes = array($botaoGra, $botaoRel, $botaoOrg, $botaoEstrtutura, $botaoAtivo, $botaoInativo);
     } else {
-        $arrayBotoes = array($botaoAtivo);
+        # Lotações Ativas
+        $botaoAtivo = new Button("Lotações Ativas", "?parametroTipo=1");
+        $botaoAtivo->set_title("Exibe os Cargos Ativos");
+
+        # Lotações Inativas
+        $botaoInativo = new Button("Lotações Inativas", "#");
+        $botaoInativo->set_title("Exibe os Cargos Inativos");
+        $botaoInativo->set_class("hollow button");
+
+        $arrayBotoes = array($botaoAtivo, $botaoInativo);
     }
 
+    # array de botões    
     $objeto->set_botaoListarExtra($arrayBotoes);
 
     ################################################################
@@ -601,7 +607,6 @@ if ($acesso) {
 //            $menu->add_link($botaoRel, "right");
 //
 //            $menu->show();
-
             # Título
             br();
             tituloTable("Estrutura da UENF");
@@ -620,7 +625,7 @@ if ($acesso) {
                                           WHERE ativo
                                             AND SUBSTRING(DIR, 1, 3) = 'PRO'
                                        ORDER BY DIR, GER");
-            
+
             $lotacao3 = $pessoal->select("SELECT idLotacao, DIR, GER, nome
                                            FROM tblotacao
                                           WHERE ativo

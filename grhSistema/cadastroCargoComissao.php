@@ -37,11 +37,14 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # Verifica tipo de cargo será exibido (1->ativos ou 0->inativos)
-    $tipo = get('tipo', 1);
-
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega os parâmetros
+    $parametroTipo = get('parametroTipo', get_session('parametroTipo', 1));
+
+    # Joga os parâmetros para as sessions
+    set_session('parametroTipo', $parametroTipo);
 
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
@@ -69,7 +72,7 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    if ($tipo) {
+    if ($parametroTipo) {
         $complemento = " Ativos";
     } else {
         $complemento = " Inativos";
@@ -94,7 +97,7 @@ if ($acesso) {
                                       IF(ativo = 0, "Não", "Sim") as ativo,
                                       idTipoComissao
                                  FROM tbtipocomissao
-                                WHERE ativo = ' . $tipo . '
+                                WHERE ativo = ' . $parametroTipo . '
                                   AND (descricao LIKE "%' . $parametro . '%"
                                    OR simbolo LIKE "%' . $parametro . '%" 
                                    OR idTipoComissao LIKE "%' . $parametro . '%") 
@@ -210,23 +213,23 @@ if ($acesso) {
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir");
     $botaoRel->set_target("_blank");
-    if ($tipo) {
+    if ($parametroTipo) {
         $botaoRel->set_url('../grhRelatorios/cargoComissao.ativos.php');
     } else {
         $botaoRel->set_url('../grhRelatorios/cargoComissao.inativos.php');
     }
 
     # Cargos Ativos
-    $botaoAtivo = new Button("Cargos Ativos", "?tipo=1");
+    $botaoAtivo = new Button("Cargos Ativos", "?parametroTipo=1");
     $botaoAtivo->set_title("Exibe os Cargos Ativos");
-    if ($tipo) {
+    if ($parametroTipo) {
         $botaoAtivo->set_class("hollow button");
     }
 
     # Cargos Inativos
-    $botaoInativo = new Button("Cargos Inativos", "?tipo=0");
+    $botaoInativo = new Button("Cargos Inativos", "?parametroTipo=0");
     $botaoInativo->set_title("Exibe os Cargos Inativos");
-    if (!$tipo) {
+    if (!$parametroTipo) {
         $botaoInativo->set_class("hollow button");
     }
 

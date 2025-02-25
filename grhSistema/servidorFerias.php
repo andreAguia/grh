@@ -106,10 +106,18 @@ if ($acesso) {
     $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
 
+    function ressaltaFruindo($statusFerias) {
+        if ($statusFerias == "fruindo") {
+            p($statusFerias, "vermelho");
+        } else {
+            echo $statusFerias;
+        }
+    }
+
     # Parametros da tabela
     $objeto->set_label(["Exercicio", "Status", "Data Inicial", "Dias", "Data Final", "Período", "Obs", "Problemas"]);
     $objeto->set_align(["center"]);
-    $objeto->set_funcao([null, null, 'date_to_php', null, 'date_to_php', null]);
+    $objeto->set_funcao([null, "ressaltaFruindo", 'date_to_php', null, 'date_to_php', null]);
     $objeto->set_classe([null, null, null, null, null, "pessoal", "Ferias", "Ferias"]);
     $objeto->set_metodo([null, null, null, null, null, "get_feriasPeriodo", "exibeObs", "exibeProblemas"]);
 

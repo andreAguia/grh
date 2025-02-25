@@ -149,9 +149,13 @@ function exibeDescricaoStatus($status) {
         case "solicitada" :
             $texto = "Férias solicitadas pelo Servidor";
             break;
+        
+        case "fruindo" :
+            $texto = "Férias que o servidor está fruindo nesse momento.";
+            break;
 
         case "fruída" :
-            $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias solicitadas em que a data de início já passou.";
+            $texto = "Férias já gozadas, desfrutadas. O sistema altera para fruídas todas as férias solicitadas em que a data de término já passou.";
             break;
     }
     echo "<abbr title='$texto'>$status</abbr>";

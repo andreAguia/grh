@@ -539,7 +539,7 @@ if ($acesso) {
             # Altere o divisor de acordo com o arquivo
             #$divisor = ";";
             $divisor = get_arquivoDivisor($arquivo);
-            
+
             # Flags
             $certos = 0;
             $linhas = 0;
@@ -680,7 +680,7 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $atividade = "Apagou o arquivo csv de férias do SigRh";
             $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3);
-            
+
             aguarde("Apagando os registros");
 
             loadPage("?");
@@ -964,11 +964,23 @@ if ($acesso) {
                     "status"
                 );
 
+                # cria as variáveis
+                $hoje = date("Y-m-d");
+                $numDias = $tt[3];
+                $dtInicial = $tt[2];
+                $dtTermino = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
+
                 # Muda o status para solicitada ou fruída de acordo com a data Inicial e a data de hoje
-                if ($tt[2] <= date("Y-m-d")) {
+                if ($dtTermino < $hoje) {
                     $status = "fruída";
-                } else {
+                }
+
+                if ($dtInicial > $hoje) {
                     $status = "solicitada";
+                }
+
+                if ($hoje >= $dtInicial AND $hoje <= $dtTermino) {
+                    $status = "fruindo";
                 }
 
                 # Valores

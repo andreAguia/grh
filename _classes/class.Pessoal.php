@@ -3960,15 +3960,21 @@ class Pessoal extends Bd {
          * Muda para fruídas as férias que foram solicitadas cuja data inicial já passou e
          * Muda para solicitadas as férias que foram fruídas cuja data inicial ainda não passou
          */
-        # primeira alteração
+        # Passa as férias que começaram e não acabaram para fruindo
+        $sql = 'UPDATE tbferias SET status = "fruindo"
+                 WHERE (status = "solicitada" OR status = "fruída")
+                   AND current_date() BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)';
+        parent::update($sql);
+        
+        # Passa as férias que acabaram em fruidas
         $sql = 'UPDATE tbferias SET status = "fruída"
-                 WHERE status = "solicitada"
-                   AND dtInicial < current_date()';
+                 WHERE (status = "solicitada" OR status = "fruindo")
+                   AND ADDDATE(dtInicial,numDias-1) < current_date()';
         parent::update($sql);
 
-        # segunda alteração
+        # férias não fruídas são solicitadas
         $sql = 'UPDATE tbferias SET status = "solicitada"
-                 WHERE status = "fruída"
+                 WHERE (status = "fruída" OR status = "fruindo")
                    AND dtInicial > current_date()';
         parent::update($sql);
     }

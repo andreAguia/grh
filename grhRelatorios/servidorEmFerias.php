@@ -44,7 +44,7 @@ if ($acesso) {
                                         JOIN tbferias on (tbservidor.idServidor = tbferias.idServidor)
                WHERE tbservidor.situacao = 1
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                 AND (tbferias.status = "fruída" OR tbferias.status = "solicitada" OR tbferias.status = "confirmada")
+                 AND (tbferias.status = "fruída" OR tbferias.status = "solicitada" OR tbferias.status = "confirmada" OR tbferias.status = "fruindo")
                  AND (("' . $data . '" BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                   OR  (LAST_DAY("' . $data . '") BETWEEN dtInicial AND ADDDATE(tbferias.dtInicial,tbferias.numDias-1))
                   OR  ("' . $data . '" < dtInicial AND LAST_DAY("' . $data . '") > ADDDATE(tbferias.dtInicial,tbferias.numDias-1)))

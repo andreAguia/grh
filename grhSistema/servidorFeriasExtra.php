@@ -22,10 +22,16 @@ $idPerfil = $pessoal->get_idPerfil($idServidor);
 $hoje = date("Y-m-d");
 
 # Muda o status para solicitada ou fruída de acordo com a data Inicial e a data de hoje
-if ($dtInicial <= $hoje) {
+if ($dtTermino < $hoje) {
     $campoValor[5] = "fruída";
-} else {
+} 
+
+if ($dtInicial > $hoje) {
     $campoValor[5] = "solicitada";
+} 
+
+if ($hoje >=  $dtInicial AND $hoje <= $dtTermino) {
+    $campoValor[5] = "fruindo";
 }
 
 # Verifica se nao e ferias antecipadas. Com o inicio anterior ao ano exercicio

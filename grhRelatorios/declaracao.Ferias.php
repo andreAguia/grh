@@ -76,7 +76,7 @@ if ($acesso) {
             }
 
             # Se já foi fruída ou está sendo fruída
-            if ($item['status'] == "fruída") {
+            if ($item['status'] == "fruída" OR $item['status'] == "fruindo" ) {
 
                 # Verifica se o servidor está em férias no momento
                 if (entre(date('d/m/Y'), $dtInicial, $dtTermino)) {

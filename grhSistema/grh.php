@@ -182,7 +182,7 @@ if ($acesso) {
             $linkProc->set_title('Acessa a área de procedimentos');
             $linkProc->set_target("_blank4");
             $menu->add_link($linkProc, "right");
-            
+
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
@@ -353,7 +353,7 @@ if ($acesso) {
 
             # Tabela
             $grid = new Grid();
-            $grid->abreColuna(3);
+            $grid->abreColuna(12, 5, 3);
 
             # Resumo
             $pessoal = new Pessoal();
@@ -380,7 +380,7 @@ if ($acesso) {
             $cal->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid->abreColuna(12, 7, 9);
 
             # Exibe a tabela            
             $select = 'SELECT DAY(tbpessoa.dtNasc),

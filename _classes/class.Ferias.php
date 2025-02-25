@@ -372,7 +372,7 @@ class Ferias {
                      FROM tbferias
                     WHERE idServidor = {$idServidor}
                       AND anoExercicio = '{$ano}'
-                      AND (status = 'fruída' OR status = 'solicitada') ";
+                      AND (status = 'fruída' OR status = 'solicitada' OR status = 'fruindo') ";
 
         $retorno = $pessoal->select($select, false);
         return $retorno["dias"];
@@ -457,7 +457,7 @@ class Ferias {
                           SUM(numDias) as total                        
                      FROM tbferias
                     WHERE idservidor = {$idServidor}
-                      AND (status = 'fruída' OR status = 'solicitada' OR status = 'confirmada')
+                      AND (status = 'fruída' OR status = 'solicitada' OR status = 'confirmada' OR status = 'fruindo')
                  GROUP BY anoexercicio
                  ORDER BY anoexercicio desc";
 

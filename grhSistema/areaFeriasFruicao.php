@@ -140,7 +140,7 @@ if ($acesso) {
     $controle = new Input('parametroStatus', 'combo', 'Status:', 1);
     $controle->set_size(10);
     $controle->set_title('Filtra por Status');
-    $controle->set_array(["Todos", "solicitada", "fruída"]);
+    $controle->set_array(["Todos", "solicitada", "fruída", "fruindo"]);
     $controle->set_valor($parametroStatus);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);

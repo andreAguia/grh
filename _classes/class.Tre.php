@@ -68,12 +68,10 @@ class Tre {
 
         # Dias Trabalhados e Folgas Concedidas
         $select = "SELECT YEAR(data),
-                              idTrabalhotre,
                               data,
                               ADDDATE(data,dias-1),
                               dias,
                               folgas,
-                              descricao,
                               documento
                          FROM tbtrabalhotre
                         WHERE idServidor = {$this->idServidor} 
@@ -85,11 +83,11 @@ class Tre {
         $tabela = new Tabela();
         $tabela->set_titulo("Dias Trabalhados e Folgas Concedidas");
         $tabela->set_conteudo($row);
-        $tabela->set_label(["Ano", "#", "Início", "Término", "Dias", "Folgas<br/>Concedidas", "Descrição do Trabalho"]);
-        $tabela->set_align(['center', 'center', 'center', 'center', 'center', 'center', 'left', 'left']);
-        $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
-        $tabela->set_width([10, 5, 15, 15, 10, 10, 35]);
-        $tabela->set_colunaSomatorio([4, 5]);
+        $tabela->set_label(["Ano", "Início", "Término", "Dias", "Folgas<br/>Concedidas", "Documento"]);
+        $tabela->set_align(['center', 'center', 'center', 'center', 'center', 'left']);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+
+        $tabela->set_colunaSomatorio([3, 4]);
         $tabela->set_totalRegistro(false);
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);
@@ -106,13 +104,13 @@ class Tre {
         # Folgas Fruídas
         $select = "SELECT YEAR(data),
                           idFolga, 
-                                  data,
-                                  ADDDATE(data,dias-1),                                 
-                                  dias,
-                                  Obs
-                             FROM tbfolga
-                            WHERE idServidor = {$this->idServidor} 
-                         ORDER BY data desc";
+                          data,
+                          ADDDATE(data,dias-1),                                 
+                          dias,
+                          documento
+                     FROM tbfolga
+                    WHERE idServidor = {$this->idServidor} 
+                 ORDER BY data desc";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select);
@@ -120,7 +118,7 @@ class Tre {
         $tabela = new Tabela();
         $tabela->set_titulo('Folgas Fruídas');
         $tabela->set_conteudo($row);
-        $tabela->set_label(["Ano", "#", "Início", "Término", "Folgas Fruídas", "Observações"]);
+        $tabela->set_label(["Ano", "#", "Início", "Término", "Folgas Fruídas", "Documento"]);
         $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
         $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
         $tabela->set_colunaSomatorio(4);

@@ -7,7 +7,7 @@
 
 $dtInicial = $campoValor[0];
 $numDias = $campoValor[1];
-$idServidor = $campoValor[3];
+$idServidor = $campoValor[4];
 $dtTermino = date_to_bd(addDias(date_to_php($dtInicial), $numDias));
 
 $pessoal = new Pessoal();

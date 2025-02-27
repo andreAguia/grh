@@ -59,6 +59,7 @@ if ($acesso) {
                                      data,
                                      ADDDATE(data,dias-1),                                 
                                      dias,
+                                     documento,
                                      obs,
                                      idFolga
                                 FROM tbfolga
@@ -68,6 +69,7 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita("SELECT data,
                                      dias,
+                                     documento,
                                      obs,
                                      idServidor
                                 FROM tbfolga
@@ -85,8 +87,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Observação"]);
-    $objeto->set_align(["center", "center", "center", "center", "left"]);
+    $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Documento","Observação"]);
+    $objeto->set_align(["center", "center", "center", "center","center", "left"]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php", null]);
     $objeto->set_colunaSomatorio([3]);    
 
@@ -117,6 +119,13 @@ if ($acesso) {
             'col' => 3,
             'required' => true,
             'title' => 'Quantidade de dias folgados.',
+            'linha' => 1),
+        array('nome' => 'documento',
+            'label' => 'Documento:',
+            'tipo' => 'texto',
+            'size' => 50,
+            'title' => 'Documento',
+            'col' => 4,
             'linha' => 1),
         array('linha' => 2,
             'nome' => 'obs',

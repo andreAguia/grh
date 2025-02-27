@@ -86,6 +86,7 @@ class Tre {
         $tabela->set_label(["Ano", "Início", "Término", "Dias", "Folgas<br/>Concedidas", "Documento"]);
         $tabela->set_align(['center', 'center', 'center', 'center', 'center', 'left']);
         $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+        $tabela->set_width([10, 15, 15, 10, 10, 40]);
 
         $tabela->set_colunaSomatorio([3, 4]);
         $tabela->set_totalRegistro(false);
@@ -120,6 +121,7 @@ class Tre {
         $tabela->set_label(["Ano", "Início", "Término", "Folgas Fruídas", "Documento"]);
         $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
         $tabela->set_align(["center", "center", "center", "center", "left"]);
+        $tabela->set_width([10, 15, 15, 10, 50]);
         $tabela->set_colunaSomatorio(3);
         $tabela->set_totalRegistro(false);
         $tabela->set_rowspan(0);

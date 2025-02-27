@@ -87,10 +87,11 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Documento","Observação"]);
-    $objeto->set_align(["center", "center", "center", "center","center", "left"]);
+    $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Documento", "Observação"]);
+    $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
+    $objeto->set_width([5, 10, 10, 10, 30, 30]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php", null]);
-    $objeto->set_colunaSomatorio([3]);    
+    $objeto->set_colunaSomatorio([3]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

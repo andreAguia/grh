@@ -103,7 +103,6 @@ class Tre {
 
         # Folgas Fruídas
         $select = "SELECT YEAR(data),
-                          idFolga, 
                           data,
                           ADDDATE(data,dias-1),                                 
                           dias,
@@ -118,10 +117,10 @@ class Tre {
         $tabela = new Tabela();
         $tabela->set_titulo('Folgas Fruídas');
         $tabela->set_conteudo($row);
-        $tabela->set_label(["Ano", "#", "Início", "Término", "Folgas Fruídas", "Documento"]);
-        $tabela->set_funcao([null, null, "date_to_php", "date_to_php"]);
-        $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
-        $tabela->set_colunaSomatorio(4);
+        $tabela->set_label(["Ano", "Início", "Término", "Folgas Fruídas", "Documento"]);
+        $tabela->set_funcao([null, "date_to_php", "date_to_php"]);
+        $tabela->set_align(["center", "center", "center", "center", "left"]);
+        $tabela->set_colunaSomatorio(3);
         $tabela->set_totalRegistro(false);
         $tabela->set_rowspan(0);
         $tabela->set_grupoCorColuna(0);

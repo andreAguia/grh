@@ -34,6 +34,14 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))) {
+        $parametro = retiraAspas(get_session('sessionParametro'));
+    } else {
+        $parametro = post('parametro');
+        set_session('sessionParametro', $parametro);
+    }
 
     # Começa uma nova página
     $page = new Page();
@@ -58,6 +66,10 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista("../../areaServidor/sistema/administracao.php");
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # select da lista
     $objeto->set_selectLista("SELECT idMenuDocumentos,
@@ -72,6 +84,9 @@ if ($acesso) {
                                      idMenuDocumentos,
                                      idMenuDocumentos
                                 FROM tbmenudocumentos
+                                WHERE categoria LIKE '%{$parametro}%'
+                                   OR texto LIKE '%{$parametro}%'
+                                   OR title = '{$parametro}'
                        ORDER BY categoria, texto");
 
     # select do edita

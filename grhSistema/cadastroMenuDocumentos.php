@@ -86,7 +86,7 @@ if ($acesso) {
                                 FROM tbmenudocumentos
                                 WHERE categoria LIKE '%{$parametro}%'
                                    OR texto LIKE '%{$parametro}%'
-                                   OR title = '{$parametro}'
+                                   OR title LIKE '{$parametro}'
                        ORDER BY categoria, texto");
 
     # select do edita

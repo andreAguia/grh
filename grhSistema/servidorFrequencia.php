@@ -36,6 +36,14 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    if (is_null(post('parametro'))) {
+        $parametro = retiraAspas(get_session('sessionParametro'));
+    } else {
+        $parametro = post('parametro');
+        set_session('sessionParametro', $parametro);
+    }
 
     # Pega os parâmetros
     $idHistCessao = soNumeros(get('idHistCessao', get_session('idHistCessao')));
@@ -70,6 +78,10 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorCessao.php');
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # So Frequencia
     $select1 = "SELECT YEAR(dtInicial),
@@ -82,6 +94,7 @@ if ($acesso) {
                        idFrequencia
                   FROM tbfrequencia
                  WHERE idHistCessao = {$idHistCessao}
+                   AND (YEAR(dtInicial) LIKE '%{$parametro}%' OR documento LIKE '%{$parametro}%')
                      ORDER BY 3 DESC";
 
     # Frequencias e ferias

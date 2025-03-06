@@ -82,17 +82,32 @@ if ($acesso) {
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
 
-    # Histórico
+    # Botões
     if ($fase == "dias") {
+
+        # Histórico
         $botao1 = new Link("Histórioco de Dias Trabalhados", '?fase=historicoDias');
         $botao1->set_class('button');
+        $menu1->add_link($botao1, "right");
+
+        # Editar
+        $botao1 = new Link("Editar", "servidorTreAfastamento.php?grh=1");
+        $botao1->set_class('button');
+        $botao1->set_title("Cadastro de Dias Trabalhados e Folgas Concedidas");
         $menu1->add_link($botao1, "right");
     }
 
     if ($fase == "folgas") {
+        # Histórico
         $botao1 = new Link("Histórioco de Folgas fruídas", '?fase=historicoFolga');
         $botao1->set_class('button');
         $menu1->add_link($botao1, "right");
+
+        # Editar
+        $botao2 = new Link("Editar", "servidorTreFolga.php?grh=1");
+        $botao2->set_class('button');
+        $botao2->set_title("Cadastro de Folgas Fruídas");
+        $menu1->add_link($botao2, "right");
     }
 
     $menu1->show();
@@ -114,9 +129,11 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "dias" :
-
             # Menu      
-            $grid->abreColuna(4);
+            $grid->abreColuna(12, 4);
+
+            # Exibe resumo
+            $tre->exibeResumo();
 
             # Menu Principal
             $menu = new Menu("menuProcedimentos");
@@ -133,28 +150,7 @@ if ($acesso) {
             $menu->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(8);
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $tre->exibeResumo();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Dias Trabalhados
-            $botao1 = new Link("Editar", "servidorTreAfastamento.php?grh=1");
-            $botao1->set_class('button');
-            $botao1->set_title("Cadastro de Dias Trabalhados e Folgas Concedidas");
-            $menu1->add_link($botao1, "right");
-            $menu1->show();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+            $grid->abreColuna(12, 8);
 
             $tre->exibeDias();
 
@@ -165,7 +161,10 @@ if ($acesso) {
 
         case "folgas" :
             # Menu      
-            $grid->abreColuna(4);
+            $grid->abreColuna(12, 4);
+
+            # Exibe resumo
+            $tre->exibeResumo();
 
             # Menu Principal
             $menu = new Menu("menuProcedimentos");
@@ -182,31 +181,7 @@ if ($acesso) {
             $menu->show();
 
             $grid->fechaColuna();
-            $grid->abreColuna(8);
-
-            $grid1 = new Grid();
-            $grid1->abreColuna(6);
-
-            $tre->exibeResumo();
-
-            $grid1->fechaColuna();
-            $grid1->abreColuna(6);
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Folgas Fruídas
-            $botao2 = new Link("Editar", "servidorTreFolga.php?grh=1");
-            $botao2->set_class('button');
-            $botao2->set_title("Cadastro de Folgas Fruídas");
-            $menu1->add_link($botao2, "right");
-            $menu1->show();
-
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            # Cria um menu
-            $menu1 = new MenuBar();
+            $grid->abreColuna(12, 8);
 
             $tre->exibeFolgasFruídas();
 

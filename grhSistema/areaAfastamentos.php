@@ -236,6 +236,7 @@ if ($acesso) {
             }
             $afast->set_linkEditar('?fase=editaServidor');
             $afast->exibeTabela();
+            #$afast->exibeGrafico();  // ainda não está pronto
 
             $grid->fechaColuna();
             $grid->fechaGrid();

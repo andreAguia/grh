@@ -1052,6 +1052,176 @@ class ListaAfastamentos {
 
     ###########################################################
 
+    public function exibeGrafico() {
+
+        /**
+         * Exibe uma tabela com a relação dos servidores comafastamento
+         *
+         * @syntax $input->exibeTabela();
+         */
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+        $select = $this->montaSelect();
+
+        # Servidores com afastamentos
+        $result = $pessoal->select($select);
+        $numAtividades = $pessoal->count($select);
+        $numItens = 0;
+
+        # Define o último dia do mês escolhido
+        $ultimoDiaMes = day(ultimoDiaMes("01/{$this->mes}/{$this->ano}"));
+
+        # Monta um array com todos os servidores desta lotação
+        $selectTodosServidores = "SELECT idServidor
+                                    FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                                         JOIN tbhistlot USING (idServidor)
+                                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                                    LEFT JOIN tbperfil USING (idPerfil)
+                                                    LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                                    LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                                   WHERE situacao = 1 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+
+        # lotacao
+        if (!is_null($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $selectTodosServidores .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $selectTodosServidores .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # cargo
+        if (!is_null($this->cargo)) {
+            if (is_numeric($this->cargo)) {
+                $selectTodosServidores .= ' AND (tbcargo.idcargo = "' . $this->cargo . '")';
+            } else { # senão é nivel do cargo
+                if ($this->cargo == "Professor") {
+                    $selectTodosServidores .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $selectTodosServidores .= ' AND (tbtipocargo.cargo = "' . $this->cargo . '")';
+                }
+            }
+        }
+
+        $selectTodosServidores .= ' ORDER BY tbpessoa.nome';
+        $result2 = $pessoal->select($selectTodosServidores);
+
+        # Percorre os dois arrays para preencher quem não está em um array para o outro
+        foreach ($result2 as $item2) {
+            $marcador = false;
+            foreach ($result as $item1) {
+                if ($item2[0] == $item1[1]) {
+                    $marcador = true;
+                    break;
+                }
+            }
+
+            if (!$marcador) {
+                array_push($result, 
+                        [ $pessoal->get_idFuncional($item2["idServidor"]), 
+                            $item2["idServidor"], 
+                            $item2["idServidor"],
+                            "{$this->ano}-{$this->mes}-01", 
+                            cal_days_in_month(CAL_GREGORIAN, $this->mes, $this->ano),
+                            "{$this->ano}-{$this->mes}-$ultimoDiaMes", 
+                            "Trabalhando",
+                            "",
+                            "",
+                            "",
+                            $item2["idServidor"],
+                            $pessoal->get_nome($item2["idServidor"])]);
+                $marcador = false;
+                $numItens++;
+            }
+        }
+
+        
+        $contador = $numAtividades + $numItens;
+
+        # Somente exibe quando for de um grupo de servidores
+        if (empty($this->idServidor)) {
+            
+            # Verifica se tem dados
+            if ($numAtividades + $numItens > 0) {
+
+                tituloTable("Grafico");
+
+                # Carrega a rotina do Google
+                echo '<script type="text/javascript" src="' . PASTA_FUNCOES_GERAIS . '/loader.js"></script>';
+
+                # Inicia o script
+                echo "<script type='text/javascript'>";
+                echo "google.charts.load('current', {'packages':['timeline'], 'language': 'pt-br'});
+                      google.charts.setOnLoadCallback(drawChart);
+                      function drawChart() {
+                            var container = document.getElementById('timeline');
+                            var chart = new google.visualization.Timeline(container);
+                            var dataTable = new google.visualization.DataTable();";
+
+                echo "dataTable.addColumn({ type: 'string' });
+                      dataTable.addColumn({ type: 'string' });
+                      dataTable.addColumn({ type: 'date' });
+                      dataTable.addColumn({ type: 'date' });";
+
+                echo "dataTable.addRows([";
+
+                $separador = '-';
+
+                foreach ($result as $row) {
+
+                    # Define as data para o limite do mês
+                    $dtInicial = $row[3];
+                    $dtFinal = $row[5];
+
+                    $dtInicialMês = "{$this->ano}-{$this->mes}-01";
+                    $dtFinalMês = "{$this->ano}-{$this->mes}-{$ultimoDiaMes}";
+
+                    # Verifica se a data inicial é anterior ao primeiro dia do mês
+                    if (strtotime($dtInicial) < strtotime($dtInicialMês)) {
+                        $dtInicial = $dtInicialMês;
+                    }
+
+                    # Verifica se a data de termino é anterior ao primeiro dia do mês
+                    if (strtotime($dtFinal) > strtotime($dtFinalMês)) {
+                        $dtFinal = $dtFinalMês;
+                    }
+
+                    # Trata as datas
+                    $dt1 = explode($separador, $dtInicial);
+                    $dt2 = explode($separador, $dtFinal);
+
+                    echo "['{$pessoal->get_nome($row[10])}','" . str_replace('<br/>', ' - ', $row[6]) . " - {$row[4]} dias', new Date($dt1[0], $dt1[1]-1, $dt1[2]), new Date($dt2[0], $dt2[1]-1, $dt2[2])]";
+
+                    $contador--;
+
+                    if ($contador > 0) {
+                        echo ",";
+                    }
+                }
+
+
+                echo "]);";
+
+                echo "var options = {
+                             timeline: { colorByRowLabel: true },
+                             backgroundColor: '#f2f2f2',
+                             timeline: { rowLabelStyle: {fontSize: 10}},
+                             hAxis: { format: 'dd', },
+                             };";
+
+                echo "chart.draw(dataTable, options);";
+                echo "}";
+                echo "</script>";
+
+                $altura = (($numAtividades + 1) * 45) + 50;
+                echo '<div id="timeline" style="height: ' . $altura . 'px; width: 100%;"></div>';
+            }
+        }
+    }
+
+    ###########################################################
+
     public function exibeRelatorio() {
 
         /**

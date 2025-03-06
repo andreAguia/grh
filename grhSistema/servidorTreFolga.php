@@ -89,7 +89,7 @@ if ($acesso) {
     # Parametros da tabela
     $objeto->set_label(["#", "Data do Início", "Data do Término", "Folgas Fruídas", "Documento", "Observação"]);
     $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
-    $objeto->set_width([5, 10, 10, 10, 30, 30]);
+    $objeto->set_width([5, 10, 10, 10, 25, 30]);
     $objeto->set_funcao([null, "date_to_php", "date_to_php", null]);
     $objeto->set_colunaSomatorio([3]);
 
@@ -126,7 +126,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'size' => 50,
             'title' => 'Documento',
-            'col' => 4,
+            'col' => 6,
             'linha' => 1),
         array('linha' => 2,
             'nome' => 'obs',

@@ -230,12 +230,11 @@ class ListaServidores {
                     foreach ($palavras as $item) {
                         $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
-                    
                 } else {
                     $select .= ' AND (';
                     $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
-            }            
+            }
 
             # Faz pesquisa na matricula e outros
             if (is_numeric($this->matNomeId)) {
@@ -518,7 +517,7 @@ class ListaServidores {
         # Dados da Tabela
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
             $label = ["ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Situação"];
-            $width = [8, 20, 20, 18, 14, 5, 5];
+            $width = [8, 20, 20, 22, 15, 5, 5];
             $function = [null, null, null, null, null, "date_to_php", $situacao];
         } else {
             $label = ["ID/Matrícula", "Servidor", "Cargo - Área - Função (Comissão)", "Lotação", "Perfil", "Admissão", "Saída", "Situação"];
@@ -526,7 +525,7 @@ class ListaServidores {
             $function = [null, null, null, null, null, "date_to_php", "date_to_php", $situacao];
         }
 
-        $align = ["center", "left", "center", "left"];
+        $align = ["center", "left", "left", "left"];
         $classe = ["pessoal", "pessoal", "pessoal", "pessoal", "pessoal"];
 
         # Exibe o idServidor e idPessoa somente quando for para exibir

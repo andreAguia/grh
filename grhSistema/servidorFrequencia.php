@@ -80,7 +80,7 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorCessao.php');
     
     # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroLabel('Pesquisar pelo Ano e pelo documento');
     $objeto->set_parametroValue($parametro);
 
     # So Frequencia

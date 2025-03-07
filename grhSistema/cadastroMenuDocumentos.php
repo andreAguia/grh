@@ -68,7 +68,7 @@ if ($acesso) {
     $objeto->set_voltarLista("../../areaServidor/sistema/administracao.php");
     
     # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroLabel('Pesquisar'); 
     $objeto->set_parametroValue($parametro);
 
     # select da lista

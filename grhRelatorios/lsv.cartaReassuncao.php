@@ -41,6 +41,7 @@ if ($acesso) {
     # Pega os dados do banco
     $dados = $lsv->get_dados($id);
     $dtRetorno = $dados["dtRetorno"];
+    $dtPublicacaoRetorno = $dados["dtPublicacaoRetorno"];
     $dtTermino = $dados["dtTermino"];
     $dtPublicacao = $dados["dtPublicacao"];
     $pgPublicacao = $dados["pgPublicacao"];
@@ -114,6 +115,13 @@ if ($acesso) {
             $publicacao = date_to_php($dtPublicacaoDigitado) . ", pág. $pgPublicacaoDigitado";
         }
 
+        # Trata a data da publicação do retorno
+        if (empty($dados["dtPublicacaoRetorno"])) {
+            $inicio = 'Apresentamos';
+        } else {
+            $inicio = "Conforme publicação no DOERJ em " . date_to_php($dados['dtPublicacaoRetorno']). ", apresentamos";
+        }
+
         # Monta a Carta
         $carta = new Carta();
 
@@ -122,7 +130,7 @@ if ($acesso) {
         $carta->set_destinoSetor($cargo);
         $carta->set_assinatura(true);
 
-        $carta->set_texto("Apresentamos a V.Sª. o(a) Sr(a) <b>{$pessoal->get_nome($idServidorPesquisado)}</b>, "
+        $carta->set_texto("{$inicio} a V.Sª. o(a) Sr(a) <b>{$pessoal->get_nome($idServidorPesquisado)}</b>, "
                 . "ID {$pessoal->get_idFuncional($idServidorPesquisado)}, "
                 . "cargo {$pessoal->get_cargoSimples($idServidorPesquisado)}, "
                 . "para reassumir o exercício de suas atividades na {$pessoal->get_lotacao($idServidorPesquisado)}, "

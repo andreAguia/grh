@@ -998,7 +998,8 @@ class Aposentadoria {
 
         $array = [
             ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenf($idServidor)],
-            ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidor)]
+            ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidor)],
+            ["Afastamento <b>SEM</b> Contribuição", -$this->get_semTempoServicoSemTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1175,7 +1176,9 @@ class Aposentadoria {
          */
         $array = [
             ["Tempo Uenf", $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],
-            ["Tempo Averbado", $averbacao->get_tempoAverbadoPublico($idServidor)]
+            ["Tempo Averbado", $averbacao->get_tempoAverbadoPublico($idServidor)],
+            ["Afastamento <b>SEM</b> Contribuição", -$this->get_semTempoServicoSemTempoContribuicao($idServidor)],
+            ["Afastamento <b>COM</b> Contribuição", -$this->get_semTempoServicoComTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela

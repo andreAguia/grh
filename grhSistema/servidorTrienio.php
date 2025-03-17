@@ -55,6 +55,7 @@ if ($acesso) {
     $ultimoTrienio = $trienio->getDataInicial($idServidorPesquisado);
     $dataAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
+    # Sugere o próximo triênio
     if (is_null($ultimoTrienio)) {
         $proximoTrienio = addAnos($dataAdmissao, 3);
     } else {
@@ -82,7 +83,7 @@ if ($acesso) {
                                      idTrienio
                                 FROM tbtrienio
                                WHERE idServidor = {$idServidorPesquisado}
-                            ORDER BY 2 DESC");
+                            ORDER BY dtInicial desc, 2 DESC");
 
     # select do edita
     $objeto->set_selectEdita('SELECT percentual,
@@ -150,6 +151,7 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'array' => $percentuaisPossiveis,
+            'padrao' => $percentuais[0],
             'size' => 20,
             'col' => 2,
             'title' => 'período de férias',
@@ -161,7 +163,7 @@ if ($acesso) {
             'size' => 20,
             'col' => 3,
             'required' => true,
-            'padrao' => $proximoTrienio,
+            'padrao' => date_to_bd($proximoTrienio),
             'title' => 'Data inícial do Triênio.',
             'linha' => 1),
         array('nome' => 'dtInicioPeriodo',

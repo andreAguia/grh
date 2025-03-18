@@ -866,7 +866,7 @@ class LicencaPremio {
 
 ###########################################################
 
-    public function exibeLicencaPremio($idServidor) {
+    public function exibeLicencaPremio($idServidor, $outroVinculo = true) {
 
         /**
          * Exibe uma tabela com as Licença Prêmio de um servidor
@@ -900,32 +900,43 @@ class LicencaPremio {
             $motivo = "Ativo";
         }
 
-        # Cria um menu
-        $menu = new MenuBar();
+        # Verifica se é uma tabela para exibir  licença de outro vínculo
+        if ($outroVinculo) {
 
-        # Cadastro de Publicações
-        $linkBotao3 = new Link("Ir para o Vínculo abaixo", "?fase=outroVinculo&id={$idServidor}");
-        $linkBotao3->set_class('button');
-        $linkBotao3->set_title("Acessa o Cadastro de Publicações");
-        $menu->add_link($linkBotao3, "right");
-        $menu->show();
+            # Cria um menu
+            $menu = new MenuBar();
 
-        # TítuloLink
-        $titulo = "Licenças Fruídas do Vínculo: Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)";
-
-        # Exibe a tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo($titulo);
-        $tabela->set_conteudo($result);
-        $tabela->set_label(["Data da Publicaçãod", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Fruição", "Obs"]);
-        $tabela->set_align(["center"]);
-        $tabela->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
-        $tabela->set_classe([null, null, null, null, null, null, 'LicencaPremio']);
-        $tabela->set_metodo([null, null, null, null, null, null, 'exibeObs']);
-        $tabela->set_numeroOrdem(true);
-        $tabela->set_numeroOrdemTipo("d");
-        $tabela->set_exibeTempoPesquisa(false);
-        $tabela->show();
+            # Cadastro de Publicações
+            $linkBotao3 = new Link("Ir para o Vínculo abaixo", "?fase=outroVinculo&id={$idServidor}");
+            $linkBotao3->set_class('button');
+            $linkBotao3->set_title("Acessa o Cadastro de Publicações");
+            $menu->add_link($linkBotao3, "right");
+            $menu->show();
+            
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Licenças Fruídas do Vínculo: Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)");
+            $tabela->set_conteudo($result);
+            $tabela->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Fruição", "Obs"]);
+            $tabela->set_align(["center"]);
+            $tabela->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+            $tabela->set_classe([null, null, null, null, null, null, 'LicencaPremio']);
+            $tabela->set_metodo([null, null, null, null, null, null, 'exibeObs']);
+            $tabela->set_numeroOrdem(true);
+            $tabela->set_numeroOrdemTipo("d");
+            $tabela->show();
+        }else{
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Licenças Fruídas");
+            $tabela->set_conteudo($result);
+            $tabela->set_label(["Data da Publicação", "Período Aquisitivo", "Inicio", "Dias", "Término", "Processo de Fruição"]);
+            $tabela->set_align(["center"]);
+            $tabela->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+            $tabela->set_numeroOrdem(true);
+            $tabela->set_numeroOrdemTipo("d");
+            $tabela->show();
+        }
     }
 
     ###########################################################

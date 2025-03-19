@@ -668,6 +668,7 @@ class MenuServidor {
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
+            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício - Com Salário', '../grhRelatorios/declaracao.vinculoEmpregaticioComSalario.php');
         }
 
         // Somente estatutários e celetistas

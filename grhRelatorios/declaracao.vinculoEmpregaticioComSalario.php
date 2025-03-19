@@ -79,7 +79,7 @@ if ($acesso) {
     # Estatutário
     if ($idPerfil == 1) {
         if ($idSituacao == 1) {
-            $texto .= " é {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público, para o cargo de {$cargoEfetivo}, enquadrado na faixa/padrão salarial {$faixa} com vencimento mensal de R$ {$salario}";
+            $texto .= " é {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público, para o cargo de {$cargoEfetivo}, enquadrado na faixa/padrão salarial {$faixa} com vencimento mensal de R$ {$salario}.";
         } else {
             $texto .= " foi {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público para o cargo de {$cargoEfetivo}, até {$dtSaida}";
 

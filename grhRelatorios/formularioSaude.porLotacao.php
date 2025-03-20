@@ -43,7 +43,7 @@ if ($acesso) {
     switch ($fase) {
         case "":
             # Título
-            titulo("Folha de Frequência por Lotação");
+            titulo("Formulário de Saúde por Lotação");
 
             # Formulário de Pesquisa
             $form = new Form('?fase=aguarde');

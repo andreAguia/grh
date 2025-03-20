@@ -415,7 +415,7 @@ if ($acesso) {
         case "outros";
             $menu = new Menu();
             $menu->add_item('titulo', 'Outros');
-            $menu->add_item('linkWindow', 'Formulário de saúde de uma lotação', '../grhRelatorios/formularioSaude.porLotacao.php');
+            $menu->add_item('linkWindow', 'Formulário de Saúde por Lotação', '../grhRelatorios/formularioSaude.porLotacao.php');
 
             $menu->show();
             break;
@@ -674,6 +674,7 @@ if ($acesso) {
         case "historico";
             $menu = new Menu();
             $menu->add_item('titulo', 'Histórico');
+            
             $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos - Agrupador por Cargo', '../grhRelatorios/historico.exFenorte.porCargo.ativos.php');
@@ -687,6 +688,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - em um Determinado Ano', '../grhRelatorios/historico.servidores.ativos.porAno.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Admissão - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Saída - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoSaida.php');
+            
+            $menu->add_item('titulo1', 'Servidores Ex-CLT');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Ex-CLT - Com Idade', '../grhRelatorios/historico.exClt.ativo.idade.php');
+            
             $menu->show();
             break;
 

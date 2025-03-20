@@ -83,7 +83,7 @@ if ($acesso) {
     $campos = array(array('linha' => 1,
             'nome' => 'obsTrienio',
             'label' => 'Observações:',
-            'tipo' => 'textarea',
+            'tipo' => 'editor',
             'size' => array(80, 4),
             'autofocus' => true,
             'title' => 'Observação sobre todos os triênios deste servidor.'));

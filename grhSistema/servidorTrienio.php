@@ -71,7 +71,7 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista('servidorMenu.php');
-    
+
     # select da lista
     $objeto->set_selectLista("SELECT dtInicial,
                                      percentual,
@@ -97,7 +97,7 @@ if ($acesso) {
                                      idServidor
                                 FROM tbtrienio
                                WHERE idTrienio = ' . $id);
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -110,8 +110,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("a partir de", "%", "Período Aquisitivo", "Processo", "DOERJ", "Documento","Obs"));
-    $objeto->set_width(array(10,5,20,15,10,15,15));
+    $objeto->set_label(array("a partir de", "%", "Período Aquisitivo", "Processo", "DOERJ", "Documento", "Obs"));
+    $objeto->set_width(array(10, 5, 20, 15, 10, 15, 15));
     $objeto->set_align(array("center"));
     $objeto->set_funcao(array("date_to_php", null, null, null, "date_to_php"));
 
@@ -227,7 +227,14 @@ if ($acesso) {
     $botaoRel->set_url("../grhRelatorios/servidorTrienio.php");
     $botaoRel->set_target("_blank");
 
-    $objeto->set_botaoListarExtra(array($botaoRel));
+    # Edita Obs
+    if (Verifica::acesso($idUsuario, [1, 2])) {
+        $botaoObs = new Button("Obs Triênio", "servidorInformacaoAdicionalTrienio.php");
+        $botaoObs->set_title("Insere / edita as observações gerais.");
+        $objeto->set_botaoListarExtra([$botaoObs, $botaoRel]);
+    } else {
+        $objeto->set_botaoListarExtra(array($botaoRel));
+    }
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -264,8 +271,7 @@ if ($acesso) {
 
             ####
 
-            function teste($idServidor)
-        {
+            function teste($idServidor) {
 
                 # Monta a tabela de tempo averbado
                 $select = 'SELECT dtInicial,
@@ -309,9 +315,15 @@ if ($acesso) {
             }
 
             ###
+            # Função para acrescentar a rotina extra
 
-            $objeto->set_rotinaExtraListar(array("callout", "teste"));
-            $objeto->set_rotinaExtraListarParametro(array($mensagem2, $idServidorPesquisado));
+            function exibeObs($idServidor) {
+                $tt = new trienio();
+                $tt->exibeObsGeral($idServidor);
+            }
+
+            $objeto->set_rotinaExtraListar(array("callout", "teste", "exibeObs"));
+            $objeto->set_rotinaExtraListarParametro(array($mensagem2, $idServidorPesquisado, $idServidorPesquisado));
 
             $objeto->listar($id);
             break;

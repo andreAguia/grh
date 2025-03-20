@@ -235,4 +235,48 @@ class Trienio {
     }
 
     ###########################################################
+
+    function get_obsGeral($idServidor) {
+
+        /**
+         * Informe obs do triênio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (is_numeric($idServidor)) {
+
+            # Pega os dados
+            $select = "SELECT obsTrienio
+                         FROM tbservidor
+                        WHERE idServidor = {$idServidor}";
+
+            $retorno = $pessoal->select($select, false);
+
+            # Retorno
+            return $retorno[0];
+        } else {
+            return $idServidor;
+        }
+    }
+
+    ###########################################################
+
+    function exibeObsGeral($idServidor) {
+
+        # Pega os Dados
+        $mensagem = $this->get_obsGeral($idServidor);
+
+        if (!is_null($mensagem)) {
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("Observação Geral do Triênio:", "labelOcorrencias");
+            p(nl2br($mensagem), "left", "f14");
+
+            $painel->fecha();
+        }
+    }
+
+    ###########################################################
 }

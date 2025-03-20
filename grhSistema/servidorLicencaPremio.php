@@ -359,7 +359,6 @@ if ($acesso) {
                 }
 
                 # Função para acrescentar a rotina extra
-
                 function exibeObs($idServidor) {
                     $licencPremio = new LicencaPremio();
                     $licencPremio->exibeObsGeral($idServidor);

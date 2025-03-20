@@ -998,9 +998,7 @@ if ($acesso) {
 
         /*
          * Observações adicionais de Triênio
-         */
-
-        
+         */        
 
             $select = "SELECT obsTrienio
                          FROM tbservidor

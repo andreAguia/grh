@@ -105,10 +105,10 @@ if ($acesso) {
                         data1.setDate(data1.getDate() - 0);                    
                         formatado = data1.getFullYear() + "-" + (data1.getMonth() + 1).toString().padStart(2, "0") + "-" + data1.getDate().toString().padStart(2, "0");
 
-                        $("#dtTermino").val(formatado);
+                        //$("#dtTermino").val(formatado);
 
                         var dt1 = $("#dtInicial").val();
-                        var dt2 = $("#dtTermino").val();
+                        var dt2 = $("#dtRetorno").val();
 
                         data1 = new Date(dt1);
                         data2 = new Date(dt2);

@@ -444,9 +444,19 @@ if ($acesso) {
             $objeto->listar();
             break;
             
-        case "editar" :
+        case "editar" :           
+            
+            $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
+                . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
+            
+            $objeto->set_rotinaExtraListar(array("callout"));
+            $objeto->set_rotinaExtraListarParametro(array($mensagem));
+            $objeto->editar($id);
+            break;
+        
         case "excluir" :
-            $objeto->$fase($id);
+            
+            $objeto->excluir($id);
             break;
 
         case "gravar" :

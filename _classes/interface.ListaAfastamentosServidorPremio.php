@@ -81,7 +81,7 @@ class ListaAfastamentosServidorPremio
                    SELECT YEAR(tblicencasemvencimentos.dtInicial),
                           tblicencasemvencimentos.dtInicial,
                           tblicencasemvencimentos.numDias,
-                          ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                          IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)),
                           tbtipolicenca.nome
                      FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
                                                   JOIN tbpessoa USING (idPessoa)

@@ -764,7 +764,7 @@ class ListaAfastamentos {
 
         $select .= '     tblicencasemvencimentos.dtInicial,
                          tblicencasemvencimentos.numDias,
-                         ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                         IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)),
                          tbtipolicenca.nome,
                          tblicencasemvencimentos.dtPublicacao,
                          tblicencasemvencimentos.processo,

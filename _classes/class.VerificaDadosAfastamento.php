@@ -103,12 +103,12 @@ class VerificaDadosAfastamento{
          *  Licenças sem vencimentos
          */
         $pessoal = new Pessoal();
-         $select = "SELECT dtInicial, ADDDATE(dtInicial,numDias-1) as dtFinal
+         $select = "SELECT dtInicial, IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) as dtFinal
                  FROM tblicencasemvencimentos
                 WHERE idServidor = {$this->idServidor}
-                  AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1)))
+                  AND (('{$this->dtFinal}' BETWEEN dtInicial AND IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))) 
+                     OR ('{$this->dtInicial}' BETWEEN dtInicial AND AIFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))) 
+                     OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))))
              ORDER BY 1";
 
         $afast = $pessoal->select($select,false);

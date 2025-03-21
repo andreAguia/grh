@@ -51,27 +51,34 @@ if ($acesso) {
                  $("#dtTermino").change(function(){
                     var dt1 = $("#dtInicial").val();
                     var dt2 = $("#dtTermino").val();
+                    var dt3 = $("#dtRetorno").val();
                     
                     data1 = new Date(dt1);
                     data2 = new Date(dt2);
                     
-                    dias = (data2 - data1)/(1000*3600*24)+1;
-
-                    $("#numDias").val(dias);
+                    if(dt3 == ""){                    
+                        dias = (data2 - data1)/(1000*3600*24)+1;
+                        $("#numDias").val(dias);
+                    }else{
+                        alert("Como a data de Retorno está preenchida o número de dias não vai se alterar");
+                    }
                   });                  
 
                  // Quando muda o período 
                  $("#numDias").change(function(){
                    
                     var dt1 = $("#dtInicial").val();
+                    var dt3 = $("#dtRetorno").val();
                     var numDias = $("#numDias").val();
                     
-                    data1 = new Date(dt1);
-                    data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));
-                    
-                    formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");
-            
-                    $("#dtTermino").val(formatado);
+                    if(dt3 == ""){                    
+                        data1 = new Date(dt1);
+                        data2 = new Date(data1.getTime() + (numDias * 24 * 60 * 60 * 1000));                    
+                        formatado = data2.getFullYear() + "-" + (data2.getMonth() + 1).toString().padStart(2, "0") + "-" + data2.getDate().toString().padStart(2, "0");            
+                        $("#dtTermino").val(formatado);
+                    }else{
+                        alert("Como a data de Retorno está preenchida a data de Término não irá se alterar");
+                    }
                   });
                   
                 // Quando muda a data Inicial
@@ -321,7 +328,7 @@ if ($acesso) {
             'title' => 'Data de Termino.',
             'linha' => 4),
         array('nome' => 'dtRetorno',
-            'label' => 'Data de Retorno:',
+            'label' => 'Data de Retorno Antecipado:',
             'tipo' => 'data',
             'size' => 10,
             'col' => 3,
@@ -428,6 +435,15 @@ if ($acesso) {
 
         case "" :
         case "listar" :
+            
+            $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
+                . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
+            
+            $objeto->set_rotinaExtraListar(array("callout"));
+            $objeto->set_rotinaExtraListarParametro(array($mensagem));
+            $objeto->listar();
+            break;
+            
         case "editar" :
         case "excluir" :
             $objeto->$fase($id);

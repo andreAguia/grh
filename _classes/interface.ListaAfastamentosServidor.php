@@ -170,7 +170,7 @@ class ListaAfastamentosServidor {
                    SELECT YEAR(tblicencasemvencimentos.dtInicial),
                            tblicencasemvencimentos.dtInicial,
                            tblicencasemvencimentos.numDias,
-                           ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                           IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)),
                            CONCAT(tbtipolicenca.nome, IF(optouContribuir=1,' - (Optou Pagar RP)',' - (Optou NÃO Pagar RP)')),
                            CONCAT('tblicencasemvencimentos','&',idLicencaSemVencimentos)
                       FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)

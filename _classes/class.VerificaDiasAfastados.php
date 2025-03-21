@@ -192,12 +192,12 @@ class VerificaDiasAfastados {
          */
         $select = "SELECT dtInicial,
                           numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
+                          IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) as dtFinal
                      FROM tblicencasemvencimentos JOIN tbtipolicenca USING (idTpLicenca)
                     WHERE idServidor = {$this->idServidor}                      
-                      AND (('{$this->dtFinal}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                       OR ('{$this->dtInicial}' BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)) 
-                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= ADDDATE(dtInicial,numDias-1))
+                      AND (('{$this->dtFinal}' BETWEEN dtInicial AND IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))) 
+                       OR ('{$this->dtInicial}' BETWEEN dtInicial AND IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1))) 
+                       OR ('{$this->dtInicial}' <= dtInicial AND '{$this->dtFinal}' >= IFNULL(tblicencasemvencimentos.dtretorno, ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)))
                        OR (dtInicial <= '{$this->dtFinal}' AND numDias IS NULL))
                  ORDER BY dtInicial";
 

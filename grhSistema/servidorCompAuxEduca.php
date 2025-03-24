@@ -273,20 +273,20 @@ if ($acesso) {
                     $tabela->set_subtitulo($dados["cpf"]);
                     $tabela->set_conteudo($array);
                     $tabela->set_label([
-                        "Período SEM Comprovação",
+                        "NÃO é Necessária Comprovação",
                         "{$aux->get_idadeInicialLei()} anos:",
-                        "Período COM Comprovação",
+                        "É Necessária a Comprovação",
                         "Encerra o Direito:",
                         "{$aux->get_idadeFinalLei()} anos:"
                     ]);
                     $tabela->set_width([27, 15, 27, 15, 15]);
                     #$tabela->set_align(["left"]);
                     $tabela->set_totalRegistro(false);
-                    $tabela->set_formatacaoCondicional(array(
-                        array('coluna' => 0,
-                            'valor' => $scomp,
-                            'operador' => '=',
-                            'id' => 'alerta')));
+//                    $tabela->set_formatacaoCondicional(array(
+//                        array('coluna' => 0,
+//                            'valor' => $scomp,
+//                            'operador' => '=',
+//                            'id' => 'alerta')));
                     $tabela->show();
                 }
             }

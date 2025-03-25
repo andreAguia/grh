@@ -53,7 +53,7 @@ if ($acesso) {
     $relatorio->set_cabecalhoRelatorio(false);
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_colunaSomatorio(3);
-    $relatorio->set_label(['Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Documentaçao']);
+    $relatorio->set_label(['Data Inicial', 'Data Final', 'Dias', 'Folgas<br/>Concedidas', 'Descriçao', 'Processo']);
     $relatorio->set_align(['center', 'center', 'center', 'center', 'left', 'left']);
     $relatorio->set_funcao(["date_to_php", "date_to_php"]);
     $relatorio->set_conteudo($result);

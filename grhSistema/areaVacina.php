@@ -257,6 +257,7 @@ if ($acesso) {
                 }
 
                 $tabela->set_label(["Servidor", "Vacinas"]);
+                $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".date_to_php($aposDataAdmissao));
                 $tabela->set_width([50, 45]);
                 $tabela->set_conteudo($result);
                 $tabela->set_align(["left", "left"]);

@@ -758,8 +758,8 @@ class Pessoal extends Bd {
      * @param string $idServidor    null idServidor do servidor
      */
     public function get_tipoCargo($idServidor) {
-        
-   
+
+
         # Monta o select
         $select = "SELECT tbtipocargo.cargo as cargo,
                           idPerfil
@@ -769,17 +769,15 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
         $retorno = null;
-        
-        if($row["idPerfil"] == 1){
+
+        if ($row["idPerfil"] == 1) {
             return $row["cargo"];
-        }else{
+        } else {
             return null;
         }
-            
     }
 
     ###########################################################
-
 
     /**
      * Método get_cargoSigla
@@ -2848,6 +2846,27 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_nomeELotacaoEDtAdmissao
+     * fornece o nome, cargo e perfil de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_nomeELotacaoEDtAdmissao($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            pLista(
+                    $this->get_nome($idServidor),
+                    $this->get_cargo($idServidor),
+                    $this->get_lotacao($idServidor),
+                    "Admissão: " . $this->get_dtAdmissao($idServidor)
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_nomeELotacao
      * fornece o nome e lotação de um servidor
      * 
@@ -3984,7 +4003,7 @@ class Pessoal extends Bd {
                  WHERE (status = "solicitada" OR status = "fruída")
                    AND current_date() BETWEEN dtInicial AND ADDDATE(dtInicial,numDias-1)';
         parent::update($sql);
-        
+
         # Passa as férias que acabaram em fruidas
         $sql = 'UPDATE tbferias SET status = "fruída"
                  WHERE (status = "solicitada" OR status = "fruindo")
@@ -4465,6 +4484,41 @@ class Pessoal extends Bd {
                 $select .= ' AND (tblotacao.idlotacao = "' . $idLotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $idLotacao . '")';
+            }
+        }
+
+        $count = parent::count($select);
+        return $count;
+    }
+
+    ###########################################################
+
+    function get_numServidoresAtivosLotacaoAdmissao($idLotacao = null, $aposDataAdmissao = null) {
+
+        /**
+         * informa o número de Servidores Ativos
+         * 
+         * @param integer $idPessoa do servidor
+         */
+        $select = "SELECT idServidor
+                     FROM tbservidor JOIN tbhistlot USING (idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbperfil USING (idPerfil)
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbperfil.tipo <> 'Outros' 
+                      AND situacao = 1";
+        
+        if(!is_null($aposDataAdmissao)){
+            $aposDataAdmissao = date_to_bd($aposDataAdmissao);
+            $select .= " AND dtAdmissao < '{$aposDataAdmissao}'";
+        }
+
+        # Lotação
+        if ((!is_null($idLotacao)) and ($idLotacao <> "*")) {
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = '{$idLotacao}')";
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
         }
 

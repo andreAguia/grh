@@ -7,6 +7,10 @@ class Vacina {
      * 
      * @author André Águia (Alat) - alataguia@gmail.com  
      */
+    
+    # Limite máximo da data de admissão
+    private $aposDataAdmissao = "01/03/2023";
+        
     ##############################################################
 
     public function get_dados($idVacina = null) {
@@ -77,6 +81,9 @@ class Vacina {
          * 
          * @syntax $this->get_dados($idRpa);
          */
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
+        
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbhistlot USING (idServidor)
@@ -84,6 +91,7 @@ class Vacina {
                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                    JOIN tbperfil USING (idPerfil)
                     WHERE situacao = 1
+                      AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND tbperfil.tipo <> 'Outros'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -114,6 +122,9 @@ class Vacina {
          * 
          * @syntax $this->get_dados($idRpa);
          */
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
+        
         # Monta o select
         $select = "SELECT tbvacina.idServidor
                      FROM tbvacina 
@@ -121,6 +132,7 @@ class Vacina {
                      JOIN tbservidor USING (idServidor)
                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                     WHERE situacao = 1
+                      AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
         # Verifica se tem filtro por lotação
@@ -153,6 +165,8 @@ class Vacina {
         # Subtítulo
         $subtitulo = null;
         
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
+        
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
@@ -165,7 +179,7 @@ class Vacina {
         }
 
         # Pega os dados        
-        $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
+        $numServidores = $pessoal->get_numServidoresAtivosLotacaoAdmissao($idLotacao,$this->aposDataAdmissao);
         $vacinados = $this->getNumServidoresAtivosVacinados($idLotacao);
 
         $porcentagemVacinados = number_format(($vacinados * 100) / $numServidores, 1, '.', '');
@@ -181,6 +195,7 @@ class Vacina {
         $tabela->set_conteudo($array);
         $tabela->set_titulo("Entrega de Comprovantes");
         $tabela->set_subtitulo($subtitulo);
+        $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".$this->aposDataAdmissao);
         $tabela->set_label(["Entregaram", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
         $tabela->set_formatacaoCondicional(array(
@@ -223,7 +238,7 @@ class Vacina {
         }
 
         # Pega os dados
-        $numServidores = $pessoal->get_numServidoresAtivos($idLotacao);
+        $numServidores = $pessoal->get_numServidoresAtivosLotacaoAdmissao($idLotacao,$this->aposDataAdmissao);
         $aptos = $this->getNumServidoresAptos($idLotacao);
 
         $porcentagemAptos = number_format(($aptos * 100) / $numServidores, 1, '.', '');
@@ -238,6 +253,7 @@ class Vacina {
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
         $tabela->set_titulo("Acessar os Campi da Uenf");
+        $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".$this->aposDataAdmissao);
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_label(["Aptos", "Servidores", "%"]);
         $tabela->set_width([33, 33, 33]);
@@ -269,6 +285,8 @@ class Vacina {
         # Subtítulo
         $subtitulo = null;
         
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
+        
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
             if (is_numeric($idLotacao)) {
@@ -288,6 +306,7 @@ class Vacina {
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                           JOIN tbperfil USING (idPerfil)
                     WHERE situacao = 1
+                    AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND tbperfil.tipo <> 'Outros'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -314,6 +333,7 @@ class Vacina {
         $tabela->set_conteudo($servidores);
         $tabela->set_titulo("Doses por Vacina");
         $tabela->set_subtitulo($subtitulo);
+        $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".$this->aposDataAdmissao);
         $tabela->set_label(["Vacina", "Doses"]);
         $tabela->set_colunaSomatorio(1);
         $tabela->set_textoSomatorio("Total:");
@@ -332,6 +352,8 @@ class Vacina {
         
         # Subtítulo
         $subtitulo = null;
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
         
         # Trata a lotação        
         if (!empty($idLotacao) AND ($idLotacao <> "Todos")) {
@@ -352,6 +374,7 @@ class Vacina {
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                           JOIN tbperfil USING (idPerfil)
                     WHERE situacao = 1
+                    AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND tbperfil.tipo <> 'Outros'
                       AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -389,6 +412,7 @@ class Vacina {
         $tabela->set_conteudo($arraySimples3);
         $tabela->set_titulo("Quantidade de Doses");
         $tabela->set_subtitulo($subtitulo);
+        $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".$this->aposDataAdmissao);
         $tabela->set_label(["Doses", "Servidores", "%"]);
 
         $tabela->set_formatacaoCondicional(array(
@@ -411,11 +435,14 @@ class Vacina {
     ###########################################################
 
     public function getNumServidoresAtivosVacinadosVacina($idTipoVacina = null) {
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
 
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)
                     WHERE tbservidor.situacao = 1 
+                    AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND idTipoVacina = {$idTipoVacina}";
 
         $pessoal = new Pessoal();
@@ -426,11 +453,14 @@ class Vacina {
     ###########################################################
 
     public function getNumServidoresInativosVacinadosVacina($idTipoVacina = null) {
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
 
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)
                     WHERE tbservidor.situacao <> 1 
+                    AND dtAdmissao < '{$aposDataAdmissao}' 
                       AND idTipoVacina = {$idTipoVacina}";
 
         $pessoal = new Pessoal();
@@ -441,11 +471,13 @@ class Vacina {
     ###########################################################
 
     public function getNumServidoresGeralVacinadosVacina($idTipoVacina = null) {
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
 
         # Monta o select
         $select = "SELECT DISTINCT tbvacina.idServidor
                      FROM tbvacina JOIN tbservidor USING (idServidor)
-                    WHERE idTipoVacina = {$idTipoVacina}";
+                    WHERE idTipoVacina = {$idTipoVacina} AND dtAdmissao < '{$aposDataAdmissao}' ";
 
         $pessoal = new Pessoal();
         $num = $pessoal->count($select);
@@ -491,12 +523,16 @@ class Vacina {
          * 
          * @syntax $this->get_dados($idRpa);
          */
+        
+        $aposDataAdmissao = date_to_bd($this->aposDataAdmissao);
+        
         # Monta o select
         $select = "SELECT DISTINCT rr.idServidor
                      FROM tbservidor as rr JOIN tbpessoa USING (idPessoa)
                                            JOIN tbhistlot USING (idServidor)
                                            JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                        AND dtAdmissao < '{$aposDataAdmissao}' 
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) > 2";
 

@@ -46,6 +46,9 @@ if ($acesso) {
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroApto', $parametroApto);
     set_session('parametroJustificativa', $parametroJustificativa);
+    
+    # Limite da data de admissão
+    $aposDataAdmissao = date_to_bd("01/03/2023");
 
     # Começa uma nova página
     $page = new Page();
@@ -196,6 +199,7 @@ if ($acesso) {
                                                    JOIN tbhistlot USING (idServidor)
                                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND dtAdmissao < '{$aposDataAdmissao}'
                           AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
@@ -257,7 +261,7 @@ if ($acesso) {
                 $tabela->set_conteudo($result);
                 $tabela->set_align(["left", "left"]);
                 $tabela->set_classe(["pessoal", "Vacina"]);
-                $tabela->set_metodo(["get_nomeECargoELotacao", "exibeVacinas"]);
+                $tabela->set_metodo(["get_nomeELotacaoEDtAdmissao", "exibeVacinas"]);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
                 $tabela->show();
@@ -281,6 +285,7 @@ if ($acesso) {
                                                    JOIN tbhistlot USING (idServidor)
                                                    JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND dtAdmissao < '{$aposDataAdmissao}'
                           AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
@@ -298,6 +303,7 @@ if ($acesso) {
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND dtAdmissao < '{$aposDataAdmissao}'
                           AND tbperfil.tipo <> 'Outros'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
@@ -349,13 +355,15 @@ if ($acesso) {
                 $select .= "ORDER BY tbpessoa.nome";
 
                 $result = $pessoal->select($select);
+                
+                $subtitulo = "";
 
                 $tabela = new Tabela();
                 if ($parametroLotacao <> "Todos") {
                     if (is_numeric($parametroLotacao)) {
-                        $titulo .= " - {$pessoal->get_nomeLotacao($parametroLotacao)}";
+                        $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao);
                     } else {
-                        $titulo .= " - {$parametroLotacao}";
+                        $subtitulo = $lotacao->get_nomeDiretoriaSigla($parametroLotacao);
                     }
                 }
 
@@ -371,9 +379,11 @@ if ($acesso) {
                     $tabela->set_align(["left", "left"]);
                 }
                 $tabela->set_titulo($titulo);
+                $tabela->set_subtitulo($subtitulo);
+                $tabela->set_mensagemPreTabela("Servidores admitidos antes de ".date_to_php($aposDataAdmissao));
                 $tabela->set_conteudo($result);
                 $tabela->set_classe(["pessoal", "vacina", "pessoal"]);
-                $tabela->set_metodo(["get_nomeECargoELotacao", "exibeVacinas", "get_emails"]);
+                $tabela->set_metodo(["get_nomeELotacaoEDtAdmissao", "exibeVacinas", "get_emails"]);
                 $tabela->set_funcao([null, null, null, "get_situacao"]);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidor');
@@ -424,6 +434,7 @@ if ($acesso) {
                                                   JOIN tbhistlot USING (idServidor)
                                                   JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND dtAdmissao < '{$aposDataAdmissao}'
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                           AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) >= {$dosesAptidao}
                           ";
@@ -479,7 +490,7 @@ if ($acesso) {
                 $relatorio->set_conteudo($result);
                 $relatorio->set_align(["left", "left", "left", "left"]);
                 $relatorio->set_classe([null, "pessoal", null, "Vacina"]);
-                $relatorio->set_metodo([null, "get_cargo", null, "exibeVacinas"]);
+                $relatorio->set_metodo([null, "get_cargoSimples", null, "exibeVacinas"]);
                 $relatorio->set_bordaInterna(true);
                 $relatorio->set_numGrupo(2);
                 $relatorio->show();
@@ -504,6 +515,7 @@ if ($acesso) {
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                  WHERE situacao = 1
+                                   AND dtAdmissao < '{$aposDataAdmissao}'
                                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                                    AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 } else {
@@ -515,6 +527,7 @@ if ($acesso) {
                                                        JOIN tbhistlot USING (idServidor)
                                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                  WHERE situacao = 1
+                                   AND dtAdmissao < '{$aposDataAdmissao}'
                                    AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = rr.idServidor)
                                    AND (SELECT COUNT(idServidor) FROM tbvacina as tt WHERE tt.idServidor = rr.idServidor) < {$dosesAptidao}";
                 }
@@ -578,13 +591,13 @@ if ($acesso) {
                     $relatorio->set_align(["left", "left", "left", "left", "left"]);
                     $relatorio->set_width([30, 30, 0, 40]);
                     $relatorio->set_classe([null, "pessoal"]);
-                    $relatorio->set_metodo([null, "get_cargo"]);
+                    $relatorio->set_metodo([null, "get_cargoSimples"]);
                 } else {
                     $relatorio->set_label(["Servidor", "Cargo", "Lotação", "Vacinas"]);
                     $relatorio->set_align(["left", "left", "left", "left", "left"]);
                     $relatorio->set_width([30, 30, 0, 40]);
                     $relatorio->set_classe([null, "pessoal", null, "Vacina"]);
-                    $relatorio->set_metodo([null, "get_cargo", null, "exibeVacinas"]);
+                    $relatorio->set_metodo([null, "get_cargoSimples", null, "exibeVacinas"]);
                     $relatorio->set_bordaInterna(true);
                 }
 

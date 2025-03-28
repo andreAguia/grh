@@ -28,31 +28,31 @@ if ($acesso) {
     ######
 
     $select = 'SELECT tbservidor.idFuncional,
-                     tbpessoa.nome,
-                     tbservidor.idServidor,
-                     tbservidor.idServidor,
-                     tbperfil.nome,
-                     tbservidor.dtAdmissao,
-                     tbservidor.dtdemissao
-                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                LEFT JOIN tbcargo USING (idCargo)
-                                     JOIN tbtipocargo USING (idTipoCargo)
-                                LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
-               WHERE tbservidor.situacao = 2
-                 AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 2) 
-            ORDER BY tbpessoa.nome';
+                      tbservidor.idServidor,
+                      tbservidor.dtAdmissao,
+                      tbservidor.dtdemissao,
+                     tbservidor.idServidor
+                 FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                 LEFT JOIN tbcargo USING (idCargo)
+                                      JOIN tbtipocargo USING (idTipoCargo)
+                                 LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+                WHERE tbservidor.situacao = 2
+                  AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4) 
+             ORDER BY tbpessoa.nome';
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Geral de Servidores Aposentados');
     $relatorio->set_subtitulo("Ordenados pelo Nome");
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Aposentadoria']);
-    $relatorio->set_align(["center", "left", "left", "left"]);
-    $relatorio->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_label(['IdFuncional', 'Servidor', 'Admissão', 'Aposentadoria', 'Tipo']);
+    $relatorio->set_align(["center", "left", "center", "center", "left"]);
+    $relatorio->set_funcao([null, null, "date_to_php", "date_to_php"]);
+    $relatorio->set_width([10, 30, 10, 10, 30]);
+    $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_cargo", "get_Lotacao"]);
+    $relatorio->set_classe([null, "pessoal", null, null, "pessoal"]);
+    $relatorio->set_metodo([null, "get_nomeECargo", null, null, "get_tipoAposentadoria"]);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

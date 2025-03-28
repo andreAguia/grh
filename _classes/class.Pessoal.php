@@ -4929,14 +4929,6 @@ class Pessoal extends Bd {
             return null;
         } else {
             $return = $valor["identidade"];
-
-            if (!empty($valor["orgaoId"])) {
-                $return .= " - " . $valor["orgaoId"];
-            }
-
-            if (!empty($valor["dtId"])) {
-                $return .= " - " . date_to_php($valor["dtId"]);
-            }
         }
 
         return $return;

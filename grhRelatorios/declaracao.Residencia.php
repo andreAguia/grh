@@ -30,7 +30,7 @@ if ($acesso) {
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);    
-    $identidade = $pessoal->get_identidade($idPessoa);
+    $identidade = $pessoal->get_identidadeSimples($idPessoa);
     $cpf = $pessoal->get_cpf($idPessoa);
     $nacionalidade = strtolower($pessoal->get_nacionalidade($idServidorPesquisado));
     $naturalidade = $pessoal->get_naturalidade($idServidorPesquisado);

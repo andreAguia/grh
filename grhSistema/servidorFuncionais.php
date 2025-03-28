@@ -354,11 +354,11 @@ if ($acesso) {
                 'size' => 15),
             array('linha' => 7,
                 'nome' => 'motivoDetalhe',
-                'label' => 'Motivo Detalhado:',
+                'label' => 'Fundamentação Legal:',
                 'tipo' => 'texto',
                 'size' => 100,
                 'col' => 6,
-                'title' => 'Motivo detalhado da Saida do Servidor.')
+                'title' => 'Fundamentação Legal da Saida do Servidor.')
     );
 
     $objeto->set_campos($campos);

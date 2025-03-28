@@ -84,13 +84,13 @@ if ((is_null($dtSaida)) XOR (is_null($motivo))) {
     }
 }
 
-# Verifica se quando a data de saída estiver preenchida o motivo detalhado tb estará
+# Verifica se quando a data de saída estiver preenchida a fundamentação legal tb estará
 if ($situacao <> 1) {
     if ((is_null($dtSaida)) AND (!is_null($motivoDetalhe))) {
         $erro = 1;
 
         if (is_null($dtSaida)) {
-            $msgErro .= 'Se o motivo detalhado de saida está preenchido, a data de saída também deverá ser informada !\n';
+            $msgErro .= 'Se a fundamentação legal está preenchido, a data de saída também deverá ser informada !\n';
         }
     }
 }

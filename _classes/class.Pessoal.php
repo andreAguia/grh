@@ -6921,6 +6921,35 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_naturalidade
+     * informa a naturalidade de um servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_naturalidade($idServidor) {
+        
+        # Pega o idPessoa
+        $idPessoa = $this->get_idPessoa($idServidor);
+        
+        # Monta o select
+        $select = "SELECT naturalidade
+                     FROM tbpessoa
+                    WHERE idPessoa = {$idPessoa}";
+
+        # Pega o resultado
+        $result = parent::select($select, false);
+
+        # Trata o retorno
+        if (empty($result[0])) {
+            return null;
+        } else {
+            return $result[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_fundamentacaoInvestidura
      *
      * @param integer $idServidor O idServidor do servidor em questão

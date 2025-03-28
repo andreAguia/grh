@@ -29,6 +29,7 @@ if ($acesso) {
     $situacao = $pessoal->get_idSituacao($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
     $idLotacao = $pessoal->get_idLotacao($idServidorPesquisado);
+    $sexo = $pessoal->get_sexo($idServidorPesquisado);
     
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($pessoal->get_perfilTipo($idPerfil) == "Concursados") {

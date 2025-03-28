@@ -646,10 +646,10 @@ class MenuServidor {
         }
 
         /*
-         * Declarações
+         * Declarações Da GRH
          */
 
-        $menu->add_item('titulo', 'Declarações', '#');
+        $menu->add_item('titulo', 'Declarações da GRH', '#');
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         if ($this->perfil == 1) {
             $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
@@ -657,11 +657,10 @@ class MenuServidor {
 
         if ($this->situacao == "Ativo") {
             $menu->add_item('linkWindow', 'Declaração de Férias', '../grhRelatorios/declaracao.Ferias.php');
-            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.cargaHoraria.php');
+            $menu->add_item('linkWindow', 'Declaração de Carga Horária', '../grhRelatorios/declaracao.CargaHoraria.php');
 
             if ($this->perfil == 1) {
                 $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
-                $menu->add_item('linkWindow', 'Declaração de NÃO Acumulação', '../grhRelatorios/declaracao.naoAcumulacao.php');
             }
         }
 
@@ -684,12 +683,25 @@ class MenuServidor {
 //        }
 
         $menu->add_item('linkWindow', 'Declaração para o TRE', '../grhRelatorios/declaracao.tre.php');
-        $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
 
         # Somente Contrato Nuloas
         if ($this->perfil == 5) {
             $menu->add_item('linkWindow', 'Declaração para o INSS', '../grhRelatorios/declaracao.inss.contratoNulo.php');
         }
+
+        /*
+         * Declarações Do Servidor
+         */
+
+        $menu->add_item('titulo', 'Declarações do Servidor', '#');
+
+        if ($this->perfil == 1) {
+            $menu->add_item('linkWindow', 'Declaração de NÃO Acumulação', '../grhRelatorios/declaracao.naoAcumulacao.php');
+        }
+                
+        $menu->add_item('linkWindow', 'Declaração de Residência', '../grhRelatorios/declaracao.Residencia.php');
+        $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
+
 
 //        if($idPerfil == 2){
 //            $menu->add_item('titulo', 'Declarações Cedidos', '#');

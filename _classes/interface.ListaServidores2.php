@@ -507,7 +507,7 @@ class ListaServidores2 {
 
         # Verifica se é detalhado
         if ($this->detalhado) {
-            $situacao = "get_situacao";
+            $situacao = "get_situacaoRel";
         } else {
             $situacao = "get_situacaoRel";
         }

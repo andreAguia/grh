@@ -22,7 +22,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # usuario
     $usuario = $intra->get_nickUsuario($idUsuario);
 
@@ -125,7 +125,7 @@ if ($acesso) {
             'col' => 12,
             'nome' => 'atendimento',
             'label' => 'Atendimento:',
-            'required' => true,            
+            'required' => true,
             'autofocus' => true,
             'tipo' => 'textarea',
             'size' => array(80, 8)),

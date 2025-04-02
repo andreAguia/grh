@@ -184,7 +184,7 @@ class Aposentadoria {
         $result = $pessoal->select($select);
 
         if ($relatório) {
-            
+
             $tabela = new Relatorio();
             $tabela->set_titulo('Servidores Aposentados em ' . $parametroAno);
             $tabela->set_subtitulo('Ordenado pela Data de Saída');
@@ -198,7 +198,6 @@ class Aposentadoria {
 
             $tabela->set_conteudo($result);
             $tabela->show();
-            
         } else {
 
             $tabela = new Tabela();
@@ -1283,7 +1282,8 @@ class Aposentadoria {
         $select .= "      END,
                       cargo,
                       dtPublicacao,
-                      processo
+                      processo,
+                      idAverbacao
                  FROM tbaverbacao
                 WHERE idServidor = {$idServidor}
              ORDER BY dtInicial desc";
@@ -1312,13 +1312,13 @@ class Aposentadoria {
             $tabela = new Tabela();
             $tabela->set_titulo("Tempo Averbado - Detalhado");
 
-            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores a 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-            $tabela->set_width([9, 9, 6, 6, 6, 25, 6, 6, 6, 6, 15]);
+            $tabela->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo", "Obs"]);
+            $tabela->set_width([8, 8, 8, 8, 8, 20, 5, 5, 5, 8, 10, 5]);
             $tabela->set_align(["center", "center", "center", "center", "center", "left"]);
             $tabela->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
-            $tabela->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
+            $tabela->set_classe([null, null, null, "Averbacao", "Averbacao", null, null, null, null, null, null, "Averbacao"]);
+            $tabela->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98", null, null, null, null, null, null, "exibeObs"]);
 
             $tabela->set_formatacaoCondicional(array(
                 array('coluna' => 4,

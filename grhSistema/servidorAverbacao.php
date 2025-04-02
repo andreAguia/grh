@@ -97,6 +97,7 @@ if ($acesso) {
                       cargo,
                       dtPublicacao,
                       processo,
+                      idAverbacao,
                       idAverbacao
                  FROM tbaverbacao
                 WHERE idServidor = {$idServidorPesquisado}
@@ -132,8 +133,8 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"]);
-    #$objeto->set_width([8, 8, 8, 8, 8, 20, 8, 8, 8, 8]);
+    $objeto->set_label(["Data Inicial", "Data Final", "Dias Digitados", "Dias Calculados", "Dias Anteriores de 15/12/1998", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo", "Obs"]);
+    $objeto->set_width([8, 8, 8, 8, 8, 20, 5, 5, 5, 8, 10, 5]);
     $objeto->set_align(["center", "center", "center", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php", "date_to_php", null, null, null, null, null, null, null, "date_to_php"]);
 
@@ -141,8 +142,8 @@ if ($acesso) {
     $objeto->set_textoSomatorio("Total:");
     $objeto->set_totalRegistro(false);
 
-    $objeto->set_classe([null, null, null, "Averbacao", "Averbacao"]);
-    $objeto->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98"]);
+    $objeto->set_classe([null, null, null, "Averbacao", "Averbacao", null, null, null, null, null, null, "Averbacao"]);
+    $objeto->set_metodo([null, null, null, "getNumDias", "getDiasAnterior15_12_98", null, null, null, null, null, null, "exibeObs"]);
 
     $objeto->set_formatacaoCondicional(array(
         array('coluna' => 4,
@@ -337,7 +338,7 @@ if ($acesso) {
                 $mensagem2 = "Atenção - Períodos com Sobreposição de Dias !!!<br/>
                               Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao);
 
-                calloutAlert($mensagem2,"ff");
+                calloutAlert($mensagem2, "ff");
             }
 
 

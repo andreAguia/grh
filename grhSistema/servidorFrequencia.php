@@ -300,10 +300,10 @@ if ($acesso) {
     $objeto->set_grupoCorColuna(0);
 
     # Parametros da tabela
-    $objeto->set_label(array("Ano", "Mês", "Data Inicial", "Data Final", "Documento", "Tipo", "Obs"));
-    $objeto->set_align(array("center", "center", "center", "center", "left", "center", "left"));
-    $objeto->set_funcao(array(null, "get_nomeMes", "date_to_php", "date_to_php"));
-    $objeto->set_width(array(10, 10, 10, 10, 20, 10, 20));
+    $objeto->set_label(["Ano", "Mês", "Data Inicial", "Data Final", "Documento", "Tipo", "Obs"]);
+    $objeto->set_align(["center", "center", "center", "center", "left", "center", "left"]);
+    $objeto->set_funcao([null, "get_nomeMes", "date_to_php", "date_to_php"]);
+    $objeto->set_width([10, 10, 10, 10, 20, 10, 20]);
 
     # Editar e excluir condicional
     $objeto->set_editarCondicional('?fase=editar', '<span class=\'label primary\'>Frequência</span>', 5, "=");

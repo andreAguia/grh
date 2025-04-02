@@ -92,7 +92,7 @@ class Cessao {
         $dataEscolhida = null;
 
         # Conecta com o banco de dados
-        $servidor = new Pessoal();
+        $servidor = new Pessoal();        
 
         # Pega os dados desta Cessão
         $dadosCessao = $this->getDados($idHistCessao);
@@ -133,8 +133,8 @@ class Cessao {
         }
 
         # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
-        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
-        $verifica = $verificaDados->verifica();
+        $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);        
+        $verifica = $verificaDados->verifica();            
 
         # Se tiver afastamento Temos que avaliar as datas deste afastamento
         if (!empty($verifica)) {
@@ -157,7 +157,7 @@ class Cessao {
         # Verifica se tem afastamento o período entre a data escolhida e o último dia do mês
         $verificaDados = new VerificaDadosAfastamento($idServidor, $dataEscolhida, $ultimoDia);
         $verifica = $verificaDados->verifica();
-
+       
         # Se tiver afastamento Temos que avaliar as datas deste afastamento
         if (!empty($verifica)) {
             # Pega as datas do afastamento

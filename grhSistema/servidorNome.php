@@ -96,7 +96,7 @@ if ($acesso) {
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
-        
+
     # Parametros da tabela
     $objeto->set_label(["Data", "Nome", "Motivo"]);
     $objeto->set_width([10, 30, 55]);
@@ -155,6 +155,14 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
+    # Procedimentos
+    $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
+    $botaoProcedimentos->set_class('button');
+    $botaoProcedimentos->set_title('Exibe os procedimentos');
+    $botaoProcedimentos->set_target("_blank");
+    
+    $objeto->set_botaoListarExtra([$botaoProcedimentos]);
+
     ################################################################
 
     switch ($fase) {
@@ -178,6 +186,17 @@ if ($acesso) {
             # Atualizando o nome
             $pessoal->gravar(["nome"], $pessoal->get_ultimoNome($idPessoa), $idPessoa, "tbpessoa", "idPessoa");
             break;
+
+        ############################################################################
+
+        case "procedimentos" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimento(97);
+            break;
+
+        ############################################################################   
     }
     $page->terminaPagina();
 } else {

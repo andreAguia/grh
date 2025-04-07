@@ -229,13 +229,14 @@ if ($acesso) {
         }
     }
 
+    # Verifica se o servidor teve que optar em se transferir da FENMORTE PARa UENF
     if ($pessoal->temOpcaoFenorteUenf($idServidorPesquisado)) {
         array_push($campos,
                 array('linha' => 3,
                     'nome' => 'opcaoFenorteUenf',
                     'label' => 'Optou ser transferido?',
                     'helptext' => 'Quando da separação das Instituições FENORTE e UENF (Lei nº3.684 de 23/10/2001) o servidor optou por trasnferir-se da FENORTE para a UENF?',
-                    'tipo' => 'simnao2',
+                    'tipo' => 'simnao3',
                     'size' => 10,
                     'col' => 3,
                     'padrao' => 0,
@@ -394,9 +395,11 @@ if ($acesso) {
                         $mensagem .= "<br/>";
                     }
 
-                    if ($pessoal->opcaoFenorteUenf($idServidorPesquisado)) {
+                    if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 's') {
                         $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.";
-                    } else {
+                    } 
+                    
+                    if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 'n') {
                         $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.";
                     }
                 }

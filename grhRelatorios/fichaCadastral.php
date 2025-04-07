@@ -348,9 +348,11 @@ if ($acesso) {
                     $mensagem .= "<br/>";
                 }
 
-                if ($pessoal->opcaoFenorteUenf($idServidorPesquisado)) {
+                if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 's') {
                     $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.";
-                } else {
+                } 
+                
+                if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 'n') {
                     $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.";
                 }
             }

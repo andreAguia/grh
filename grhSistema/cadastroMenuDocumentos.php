@@ -23,7 +23,7 @@ if ($acesso) {
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
-        # Grava no log a atividade
+    # Grava no log a atividade
         $atividade = "Cadastro do menu de documentos";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
@@ -34,7 +34,7 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
+
     # Pega o parametro de pesquisa (se tiver)
     if (is_null(post('parametro'))) {
         $parametro = retiraAspas(get_session('sessionParametro'));
@@ -66,17 +66,19 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista("../../areaServidor/sistema/areaServidor.php?fase=sistema");
-    
+
     # controle de pesquisa
-    $objeto->set_parametroLabel('Pesquisar'); 
+    $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
     # select da lista
     $objeto->set_selectLista("SELECT idMenuDocumentos,
                                      categoria,
+                                     visivel,
                                      CASE
                                         WHEN tipo = 1 THEN 'Documento'
                                         WHEN tipo = 2 THEN 'Link'
+                                        WHEN tipo = 3 THEN 'Procedimento'
                                         ELSE '---'
                                      END,
                                      texto,
@@ -87,14 +89,15 @@ if ($acesso) {
                                 WHERE categoria LIKE '%{$parametro}%'
                                    OR texto LIKE '%{$parametro}%'
                                    OR title LIKE '{$parametro}'
-                       ORDER BY categoria, texto");
+                             ORDER BY categoria, texto");
 
     # select do edita
     $objeto->set_selectEdita("SELECT categoria,
                                      tipo, 
                                      texto,
                                      title,
-                                     link
+                                     link,
+                                     visivel
                                 FROM tbmenudocumentos
                                WHERE idMenuDocumentos = {$id}");
 
@@ -105,12 +108,12 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Categoria", "Tipo", "Texto", "Title", "Ver"]);
-    $objeto->set_width([5, 20, 5, 25, 30, 5, 5]);
-    $objeto->set_align(["center", "center", "center", "left", "left"]);
+    $objeto->set_label(["Id", "Categoria", "Visível?", "Tipo", "Texto", "Title", "Ver"]);
+    $objeto->set_width([5, 20, 5, 5, 25, 30, 5, 5]);
+    $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
 
-    $objeto->set_classe([null, null, null, null, null, "MenuDocumentos"]);
-    $objeto->set_metodo([null, null, null, null, null, "exibeDocumento"]);
+    $objeto->set_classe([null, null, null, null, null, null, "MenuDocumentos"]);
+    $objeto->set_metodo([null, null, null, null, null, null, "exibeDocumento"]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
@@ -126,8 +129,9 @@ if ($acesso) {
 
     # Pega os dados da datalist categorias
     $valoresCategorias = $pessoal->select('SELECT distinct categoria
-                                      FROM tbmenudocumentos
-                                  ORDER BY categoria');
+                                             FROM tbmenudocumentos
+                                          ORDER BY categoria');
+    
     array_unshift($valoresCategorias, array(null));
 
     # Campos para o formulario
@@ -148,7 +152,7 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'required' => true,
-            'array' => [[null, null], [1, "Documento"], [2, "Link"]],
+            'array' => [[null, null], [1, "Documento"], [2, "Link"], [3, "Procedimento"]],
             'size' => 15),
         array('nome' => 'texto',
             'label' => 'Texto do link',
@@ -172,7 +176,14 @@ if ($acesso) {
             'col' => 8,
             'title' => 'O Caminho quando o tipo foor link.',
             'linha' => 3),
-        ));
+        array('nome' => "visivel",
+            'label' => 'Visível?:',
+            'tipo' => 'simnao2',
+            'size' => 10,
+            'col' => 2,
+            'linha' => 3,
+            'title' => 'Se o documento ficará visível ou não.'),
+    ));
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -188,7 +199,7 @@ if ($acesso) {
 
         # Botão de Upload
         $botao = new Button("Upload {$nome}");
-        $botao->set_url("cadastroMenuDocumentosUpload.php?fase=upload&id={$id}");
+        $botao->set_url("cadastroMenuDocumentosUpload.php?fase = upload&id = {$id}");
         $botao->set_title("Faz o Upload do {$nome}");
         $botao->set_target("_blank");
 
@@ -208,12 +219,12 @@ if ($acesso) {
         case "excluir" :
             # Verifica se tem arquivo vinculado
             if (file_exists("{$pasta}{$id}.pdf")) {
-                
+
                 # Verifica se existe a pasta dos arquivos apagados
                 if (!file_exists("{$pasta}_apagados/") || !is_dir("{$pasta}_apagados/")) {
                     mkdir("{$pasta}_apagados/", 0755);
                 }
-                
+
                 # Move o arquivo para a pasta dos arquivos apagados
                 rename("{$pasta}{$id}.pdf", "{$pasta}_apagados/{$id}_" . $intra->get_usuario($idUsuario) . "_" . date("Y.m.d_H:i") . ".pdf");
             }
@@ -222,7 +233,7 @@ if ($acesso) {
             $objeto->excluir($id);
             break;
 
-    ################################################################
+        ################################################################
     }
 
     $page->terminaPagina();

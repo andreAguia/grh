@@ -53,7 +53,7 @@ class MenuPrincipal {
         }
 
         # Sispatri        
-        #$this->moduloSispatri();
+        $this->moduloSispatri();
         # Eventos        
         #$this->moduloEventos();
 
@@ -241,15 +241,14 @@ class MenuPrincipal {
      * Método moduloSispatri
      */
     private function moduloSispatri() {
-
+        
         $botao = new BotaoGrafico();
         $botao->set_label();
-        $botao->set_url("https://www.sispatriapp.rj.gov.br/PaginasPublicas/Login.aspx");
-        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2.png', '100%', '100%');
+        $botao->set_url("https://www.rj.gov.br/servico/acessar-sispatri-declaracao-patrimonial-2023169");
+        $botao->set_imagem(PASTA_FIGURAS . 'Sispatri2025.jpg', '100%', '100%');
         $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
         $botao->set_target("_blank");
         $botao->show();
-        br();
     }
 
     ######################################################################################################################

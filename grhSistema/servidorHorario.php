@@ -51,15 +51,15 @@ if ($acesso) {
     ################################################################
     # Exibe os dados do Servidor
     $textoCallout = "O horário para o servidor da Uenf segue o estipulado na portaria UENF 003 de 25 de setembro de 2002:<br/><br/>"
-            . "Art 1º - O horáno normal de trabalho será de 8 (oito) horas "
+            . "Art 1º - O horário normal de trabalho será de 8 (oito) horas "
             . "às 18 (dezoito) horas, com intervalo de 02 (duas) horas para refeição, "
-            . "admitindo-se, em casos de necessidade da instituição, a cnténo do Diretor ou "
-            . "quivalente, com prévia aprovação da Rertona, e respeitando-se o regime de "
+            . "admitindo-se, em casos de necessidade da instituição, a critéio do Diretor ou "
+            . "equivalente, com prévia aprovação da Reitoria, e respeitando-se o regime de "
             . "trabalho de 8 (oito) horas diárias e 40 (quarenta) horas semanais, desde que "
             . "não haja prejuízo para os serviços prestados, jornada flexível, entre 7 (sete) "
             . "horas e 22 (vinte e duas) horas.";
-    $objeto->set_rotinaExtra(["get_DadosServidor","callout"]);
-    $objeto->set_rotinaExtraParametro([$idServidorPesquisado,$textoCallout]);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "callout"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $textoCallout]);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Horário');
@@ -67,7 +67,8 @@ if ($acesso) {
     # select do edita
     $selectEdita = "SELECT horarioInicial,
                            horarioFinal,
-                           almoco
+                           almoco,
+                           horarioDocumento
                       FROM tbservidor
                      WHERE idServidor = {$idServidorPesquisado}";
 
@@ -125,9 +126,17 @@ if ($acesso) {
             'label' => 'Tempo para Almoço:',
             'tipo' => 'combo',
             'required' => true,
-            'array' => ["2h", "1h"],
+            'array' => ["2h", "1h", "---"],
             'col' => 2,
-            'size' => 50)
+            'size' => 50),
+        array('linha' => 1,
+            'nome' => 'horarioDocumento',
+            'label' => 'Documento:',
+            'tipo' => 'texto',
+            'helptext' => 'Documento que informa a alteração do horário.',
+            'col' => 6,
+            'size' => 250,
+            'title' => 'Documento que informa a alteração do horário.')
     );
 
     $objeto->set_campos($campos);

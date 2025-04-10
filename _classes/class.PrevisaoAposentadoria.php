@@ -162,6 +162,7 @@ class PrevisaoAposentadoria {
     private $obsServicoPublico = null;
     private $obsTempoCargo = null;
     private $dtIngressoObs = null;
+    private $obsGeral = null;
 
     /*
      *  Variaveis de Retorno    

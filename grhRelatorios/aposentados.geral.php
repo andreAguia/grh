@@ -51,7 +51,7 @@ if ($acesso) {
     $relatorio->set_width([10, 30, 10, 10, 30]);
     $relatorio->set_bordaInterna(true);
 
-    $relatorio->set_classe([null, "pessoal", null, null, "pessoal"]);
+    $relatorio->set_classe([null, "pessoal", null, null, "Aposentadoria"]);
     $relatorio->set_metodo([null, "get_nomeECargo", null, null, "get_tipoAposentadoria"]);
 
     $relatorio->set_conteudo($result);

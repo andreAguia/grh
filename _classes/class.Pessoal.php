@@ -6979,41 +6979,4 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
-
-    /**
-     * Método get_tipoAposentadoria
-     * Informa tipo de aposentadoria de um servidor aposentado
-     * 
-     * @param string $idServidor    null idServidor do servidor
-     */
-    public function get_tipoAposentadoria($idServidor) {
-
-
-        # Monta o select
-        $select = "SELECT tbmotivo.motivo,
-                          tbservidor.tipoAposentadoria,
-                          tbservidor.motivoDetalhe
-                     FROM tbservidor LEFT JOIN tbmotivo ON(tbservidor.motivo = tbmotivo.idMotivo)
-                    WHERE idServidor = {$idServidor}";
-
-        $row = parent::select($select, false);
-        $retorno = null;
-        
-        if(!empty($row[0])){
-            $retorno = $row[0] . "<br/>";
-        }
-        
-        if(!empty($row[1])){
-            $retorno .= $row[1] . "<br/>";
-        }
-        
-        
-        if(!empty($row[2])){
-            $retorno .= $row[2] . "<br/>";
-        }
-        
-        return $retorno;
-    }
-
-    ###########################################################
 }

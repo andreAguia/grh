@@ -33,6 +33,7 @@ class PrevisaoAposentadoria {
     private $servicoPublico = null;
     private $cargoEfetivo = null;
     private $carreira = null;
+    private $permiteAbonoPermanencia = true;
 
     /*
      *  Regras tratadas
@@ -162,7 +163,6 @@ class PrevisaoAposentadoria {
     private $obsServicoPublico = null;
     private $obsTempoCargo = null;
     private $dtIngressoObs = null;
-    private $obsGeral = null;
 
     /*
      *  Variaveis de Retorno    
@@ -226,6 +226,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 10;
                 $this->cargoEfetivo = 5;
 
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
+
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples de TODAS as remunerações a partir de julho de 1994 - Lei Federal 10.887";
                 $this->percentualDevido = "60% + 2% para cada ano que exceder 20 anos de contribuição";
@@ -258,6 +261,9 @@ class PrevisaoAposentadoria {
                 $this->contribuicaoMulher = null;
                 $this->servicoPublico = null;
                 $this->cargoEfetivo = null;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples de TODAS as remunerações a partir de julho de 1994 - Lei Federal 10.887";
@@ -294,6 +300,9 @@ class PrevisaoAposentadoria {
                 $this->contribuicaoMulher = 30;
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Datas
                 $this->dtIngresso = "31/12/2003";
@@ -380,6 +389,9 @@ class PrevisaoAposentadoria {
                 $this->contribuicaoMulher = 30;
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Datas
                 $this->dtIngresso = "31/12/2021";
@@ -477,6 +489,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
 
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
+
                 # Pedagio
                 $this->pedagio = 20;
                 $this->pedagioData = "31/12/2021";
@@ -515,6 +530,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
 
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
+
                 # Pedagio
                 $this->pedagio = 20;
                 $this->pedagioData = "31/12/2021";
@@ -552,6 +570,9 @@ class PrevisaoAposentadoria {
                 $this->contribuicaoMulher = 30;
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Pedagio
                 $this->pedagio = 20;
@@ -594,10 +615,12 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 10;
                 $this->cargoEfetivo = 5;
 
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
+
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
                 #$this->dtIngressoApartir = "31/12/2003"; // Retirado a pedido de Simone
-
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Lei Federal 10.887";
                 $this->teto = "Última remuneração do servidor no cargo efetivo";
@@ -625,10 +648,12 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 10;
                 $this->cargoEfetivo = 5;
 
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = false;
+
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
                 #$this->dtIngressoApartir = "31/12/2003";   // retirado a pedido de Simone
-
                 # Remuneração
                 $this->calculoInicial = "Média aritmética simples dos 80% das maiores remunerações de contribuições corrigidas desde julho/94 - Proporcional ao tempo de contribuição - Lei Federal 10.887";
                 $this->teto = "Remuneração do servidor no cargo efetivo";
@@ -657,6 +682,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 20;
                 $this->cargoEfetivo = 5;
                 $this->carreira = 10;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Datas
                 $this->dtRequesitosCumpridos = "31/12/2021";
@@ -690,6 +718,9 @@ class PrevisaoAposentadoria {
                 $this->servicoPublico = 25;
                 $this->cargoEfetivo = 5;
                 $this->carreira = 15;
+
+                # Abono Permanência
+                $this->permiteAbonoPermanencia = true;
 
                 # Redutor
                 $this->temRedutor = true;
@@ -1670,6 +1701,12 @@ class PrevisaoAposentadoria {
         array_push($array, ["Reajuste", $this->reajuste]);
         array_push($array, ["Paridade", $this->paridade]);
 
+        if ($this->permiteAbonoPermanencia) {
+            array_push($array, ["Abono Permanência", "Sim"]);
+        } else {
+            array_push($array, ["Abono Permanência", "Não - Essa regra <b>NÃO</b> concede Abono Permanência!"]);
+        }
+
         # Exibe a tabela
         if ($relatorio) {
             tituloRelatorio("Remuneração");
@@ -1686,9 +1723,9 @@ class PrevisaoAposentadoria {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(array("Item", "Descrição"));
-        $tabela->set_width(array(30, 70));
-        $tabela->set_align(array("left", "left"));
+        $tabela->set_label(["Item", "Descrição"]);
+        $tabela->set_width([40, 60]);
+        $tabela->set_align(["left", "left"]);
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
@@ -2392,7 +2429,15 @@ class PrevisaoAposentadoria {
         $grid1->fechaColuna();
         $grid1->abreColuna(12, 12, 4);
 
+        # Remuneração
         $this->exibe_tabelaRemuneração();
+
+        # Abono Permanência
+        if (!$this->permiteAbonoPermanencia) {
+            callout("Essa regra <b>NÃO</b> concede Abono Permanência!","warning","center");
+        }
+
+        # Regras Gerais
         $this->exibe_tabelaRegras();
         if (!empty($this->pontosHomem)) {
             $this->exibe_tabelaRegrasPontos();

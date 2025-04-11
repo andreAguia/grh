@@ -42,7 +42,7 @@ if ($acesso) {
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
                                  LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
                                  LEFT JOIN tbdocumentacao ON (tbpessoa.idPessoa = tbdocumentacao.idPessoa)
-                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                                 LEFT JOIN tbmotivo USING (idMotivo)
                 WHERE YEAR(tbservidor.dtDemissao) = '{$relatorioAno}'
                   AND tbperfil.tipo <> 'Outros'   
              ORDER BY MONTH(tbservidor.dtDemissao), dtDemissao";

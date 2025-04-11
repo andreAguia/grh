@@ -35,8 +35,8 @@ if ($acesso) {
                           tbservidor.dtDemissao,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                    WHERE tbservidor.motivo = ' . $parametroMotivo . '
+                                     LEFT JOIN tbmotivo USING (idMotivo)
+                    WHERE tbservidor.idMotivo = ' . $parametroMotivo . '
                       AND situacao = 2
                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  ORDER BY dtDemissao';

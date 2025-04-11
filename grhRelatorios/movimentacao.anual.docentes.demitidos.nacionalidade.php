@@ -38,7 +38,7 @@ if ($acesso) {
                       MONTH(tbservidor.dtDemissao)
                 FROM tbservidor JOIN tbpessoa USING (idPessoa)                                
                                 JOIN tbperfil USING (idPerfil)
-                                LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                                LEFT JOIN tbmotivo USING (idMotivo)
                  WHERE YEAR(tbservidor.dtDemissao) = '{$relatorioAno}'
                   AND (tbservidor.idCargo = 128 OR tbservidor.idCargo = 129)
                   AND tbperfil.tipo <> 'Outros'  

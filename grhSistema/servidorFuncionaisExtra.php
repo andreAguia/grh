@@ -26,7 +26,7 @@ for ($i = 0; $i < $quantidade; $i++) {
     }
 
     # Motido de saída
-    if ($campoNome[$i] == "motivo") {
+    if ($campoNome[$i] == "idMotivo") {
         $motivo = $campoValor[$i];
     }
 
@@ -173,7 +173,7 @@ if (!is_null($motivo)) {
             # 03 - Aposentadoria voluntária
             # 04 - Aposentadoria compulsória
             # 05 - Aposentadoria por invalidez por acidente
-            # 06 - Aposentadoria por invalidez por doença
+            # 06 - Aposentadoria por incapacidade permanente
             # 07 - Rescisão de contrato à pedido
             # 08 - Término de contrato
             # 09 - Demissão com justa causa

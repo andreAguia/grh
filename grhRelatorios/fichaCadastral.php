@@ -447,7 +447,7 @@ if ($acesso) {
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
                  FROM tbservidor LEFT OUTER JOIN tbconcurso ON (tbservidor.idConcurso = tbconcurso.idConcurso)
-                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)             
+                                 LEFT JOIN tbmotivo USING (idMotivo)         
                 WHERE tbservidor.idServidor = ' . $idServidorPesquisado;
 
     $result = $pessoal->select($select);

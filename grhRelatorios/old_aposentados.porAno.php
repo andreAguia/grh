@@ -33,7 +33,7 @@ if ($acesso) {
                       tbservidor.dtDemissao,
                       tbmotivo.motivo
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                 LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                                 LEFT JOIN tbmotivo USING (idMotivo)
                 WHERE YEAR(tbservidor.dtDemissao) = "' . $parametroAno . '"
                   AND situacao = 2
                   AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)

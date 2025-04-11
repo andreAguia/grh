@@ -100,7 +100,7 @@ if ($acesso) {
                      processoExo,
                      dtPublicExo,
                      ciGepagExo,
-                     motivo,
+                     idMotivo,
                      tipoAposentadoria,
                      motivoDetalhe
                 FROM tbservidor
@@ -338,7 +338,7 @@ if ($acesso) {
                 'col' => 3,
                 'title' => 'Documento informando a saída do servidor'),
             array('linha' => 7,
-                'nome' => 'motivo',
+                'nome' => 'idMotivo',
                 'label' => 'Motivo:',
                 'tipo' => 'combo',
                 'array' => $motivo,

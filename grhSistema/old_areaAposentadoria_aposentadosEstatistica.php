@@ -99,7 +99,7 @@ if ($acesso) {
 
             # Monta o select
             $selectGrafico = 'SELECT tbmotivo.motivo, count(tbservidor.idServidor) as jj
-                                FROM tbservidor LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                                FROM tbservidor LEFT JOIN tbmotivo USING (idMotivo)
                                WHERE tbservidor.situacao = 2
                                AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                             GROUP BY tbmotivo.motivo
@@ -139,7 +139,7 @@ if ($acesso) {
             ###            
             # Select
             $selectGrafico = 'SELECT YEAR(tbservidor.dtDemissao), count(tbservidor.idServidor) as jj
-                                FROM tbservidor LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                                FROM tbservidor LEFT JOIN tbmotivo USING (idMotivo)
                                WHERE tbservidor.situacao = 2
                             GROUP BY YEAR(tbservidor.dtDemissao)
                             ORDER BY 1 asc ';

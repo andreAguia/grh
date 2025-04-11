@@ -100,7 +100,7 @@ if ($acesso) {
             # Cria um array com os tipo possíveis
             $selectMotivo = "SELECT DISTINCT idMotivo,
                                     tbmotivo.motivo
-                               FROM tbmotivo JOIN tbservidor ON (tbservidor.motivo = tbmotivo.idMotivo)
+                               FROM tbmotivo JOIN tbservidor USING (idMotivo)
                               WHERE situacao = 2
                                 AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                            ORDER BY 2";

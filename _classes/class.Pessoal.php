@@ -2432,7 +2432,7 @@ class Pessoal extends Bd {
      */
     function get_motivo($idServidor) {
         $select = 'SELECT tbmotivo.motivo
-                     FROM tbmotivo JOIN tbservidor ON (tbmotivo.idMotivo = tbservidor.motivo) 
+                     FROM tbmotivo JOIN tbservidor USING (idMotivo)
                     WHERE idServidor = ' . $idServidor;
 
         $motivo = parent::select($select, false);
@@ -2503,9 +2503,9 @@ class Pessoal extends Bd {
      * @param	string $idMotivo idMotivo
      */
     function get_motivoAposentadoria($idMotivo) {
-        $select = 'SELECT tbmotivo.motivo
+        $select = "SELECT tbmotivo.motivo
                          FROM tbmotivo 
-                        WHERE idMotivo = ' . $idMotivo;
+                        WHERE idMotivo = {$idMotivo}";
 
         $motivo = parent::select($select, false);
 
@@ -4507,8 +4507,8 @@ class Pessoal extends Bd {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbperfil.tipo <> 'Outros' 
                       AND situacao = 1";
-        
-        if(!is_null($aposDataAdmissao)){
+
+        if (!is_null($aposDataAdmissao)) {
             $aposDataAdmissao = date_to_bd($aposDataAdmissao);
             $select .= " AND dtAdmissao < '{$aposDataAdmissao}'";
         }
@@ -6919,10 +6919,10 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_naturalidade($idServidor) {
-        
+
         # Pega o idPessoa
         $idPessoa = $this->get_idPessoa($idServidor);
-        
+
         # Monta o select
         $select = "SELECT naturalidade
                      FROM tbpessoa
@@ -6976,6 +6976,22 @@ class Pessoal extends Bd {
                     ORDER BY data desc";
 
         return parent::select($select, false);
+    }
+
+    ###########################################################
+
+    function get_numServidoresMotivoSaida($idMotivo = null) {
+
+        /**
+         * informa o número de Servidores que tiveram esse motivo de saída
+         * 
+         * @param integer $idMotivo 
+         */
+        if (empty($idMotivo)) {
+            return null;
+        } else {
+            return parent::count("SELECT idServidor FROM tbservidor WHERE idMotivo = {$idMotivo}");
+        }
     }
 
     ###########################################################

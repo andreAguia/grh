@@ -35,7 +35,7 @@ if ($acesso) {
                       tbservidor.dtAdmissao
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)                                
                                  LEFT JOIN tbperfil ON(tbservidor.idPerfil = tbperfil.idPerfil)
-                                 LEFT JOIN tbmotivo ON (tbservidor.motivo = tbmotivo.idMotivo)
+                                 LEFT JOIN tbmotivo USING (idMotivo)
                  WHERE tbservidor.dtAdmissao >= '{$relatorioData}'
                    AND tbperfil.tipo <> 'Outros'  
                    AND situacao = 1

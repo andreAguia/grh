@@ -2485,12 +2485,12 @@ class Checkup {
                           tbperfil.nome,                          
                           idServidor,
                           idServidor,
-                          motivo,
+                          idMotivo,
                           idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbperfil USING (idPerfil)                                     
                     WHERE situacao <> 1
-                      AND (motivo is null OR motivo = 0)';
+                      AND (idMotivo is null OR idMotivo = 0)';
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }

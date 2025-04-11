@@ -175,7 +175,7 @@ class Aposentadoria {
                           tbservidor.dtDemissao,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                                     LEFT JOIN tbmotivo USING (idMotivo)
                     WHERE YEAR(tbservidor.dtDemissao) = '{$parametroAno}'
                       AND situacao = 2
                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
@@ -233,7 +233,7 @@ class Aposentadoria {
                               tbservidor.dtDemissao,
                               tbmotivo.motivo
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                         LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
+                                         LEFT JOIN tbmotivo USING (idMotivo)
                         WHERE (tbservidor.dtDemissao >= '{$dtInicial}' AND tbservidor.dtDemissao <= '{$dtFinal})'
                           AND situacao = 2
                           AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
@@ -284,8 +284,8 @@ class Aposentadoria {
                           tbservidor.dtDemissao,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbmotivo on (tbservidor.motivo = tbmotivo.idMotivo)
-                    WHERE tbservidor.motivo = {$parametroMotivo}
+                                     LEFT JOIN tbmotivo USING (idMotivo)
+                    WHERE tbservidor.idMotivo = {$parametroMotivo}
                       AND situacao = 2
                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  ORDER BY dtDemissao desc";
@@ -1638,7 +1638,7 @@ class Aposentadoria {
         $select = "SELECT tbmotivo.motivo,
                           tbservidor.tipoAposentadoria,
                           tbservidor.motivoDetalhe
-                     FROM tbservidor LEFT JOIN tbmotivo ON(tbservidor.motivo = tbmotivo.idMotivo)
+                     FROM tbservidor LEFT JOIN tbmotivo USING (idMotivo)
                     WHERE idServidor = {$idServidor}";
 
         $row = $pessoal->select($select, false);

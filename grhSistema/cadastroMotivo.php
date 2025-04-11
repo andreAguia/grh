@@ -42,10 +42,6 @@ if ($acesso) {
         set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
     }
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -67,52 +63,40 @@ if ($acesso) {
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
 
-    # ordenaç?o
-    if (is_null($orderCampo)) {
-        $orderCampo = "1";
-    }
-
-    if (is_null($orderTipo)) {
-        $orderTipo = 'asc';
-    }
-
     # select da lista
-    $objeto->set_selectLista('SELECT idmotivo,
+    $objeto->set_selectLista("SELECT idMotivo,
                                       motivo,
-                                      obs
+                                      obs,
+                                      idMotivo
                                  FROM tbmotivo
-                                WHERE motivo LIKE "%' . $parametro . '%"
-                             ORDER BY ' . $orderCampo . ' ' . $orderTipo);
+                                WHERE motivo LIKE '%{$parametro}%'
+                             ORDER BY motivo");
 
     # select do edita
-    $objeto->set_selectEdita('SELECT motivo,
+    $objeto->set_selectEdita("SELECT motivo,
                                      obs
                                 FROM tbmotivo
-                               WHERE idmotivo = ' . $id);
-    
+                               WHERE idmotivo = {$id}");
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
     }
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Motivo", "Obs"));
-    $objeto->set_width(array(5, 35, 50));
-    $objeto->set_align(array("center", "left", "left"));
+    $objeto->set_label(["Id", "Motivo", "Obs", "Nº Servidores"]);
+    $objeto->set_width([5, 35, 40, 10]);
+    $objeto->set_align(["center", "left", "left"]);
 
-    #$objeto->set_classe(array(null,null,null,"Pessoal"));
-    #$objeto->set_metodo(array(null,null,null,"get_servidoresSituacao"));
+    $objeto->set_classe([null, null, null, "Pessoal"]);
+    $objeto->set_metodo([null, null, null, "get_numServidoresMotivoSaida"]);
+
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
@@ -120,7 +104,7 @@ if ($acesso) {
     $objeto->set_tabela('tbmotivo');
 
     # Nome do campo id
-    $objeto->set_idCampo('idmotivo');
+    $objeto->set_idCampo('idMotivo');
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -132,7 +116,7 @@ if ($acesso) {
             'required' => true,
             'autofocus' => true,
             'col' => 12,
-            'size' => 50),
+            'size' => 100),
         array(
             'linha' => 2,
             'nome' => 'obs',
@@ -152,10 +136,19 @@ if ($acesso) {
             break;
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
             break;
+        
+        case "excluir" :
+            if($pessoal->get_numServidoresMotivoSaida($id) == 0){
+                $objeto->excluir($id);
+            }else{
+                alert("Existe(m) {$pessoal->get_numServidoresMotivoSaida($id)} servidor(es) cadastrado(s) com esse motivo de saída. O Mesmo não poderá ser excluído.");
+                back(1);
+            }
+            break;
+            
     }
 
     $page->terminaPagina();

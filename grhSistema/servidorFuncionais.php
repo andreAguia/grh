@@ -165,6 +165,12 @@ if ($acesso) {
                               ORDER BY motivo');
 
     array_unshift($motivo, [null, null]);
+    
+    # combo da Fundamentação Legal
+    $fundLegal = $pessoal->select('SELECT distinct motivoDetalhe
+                                   FROM tbservidor
+                               ORDER BY motivoDetalhe');
+    array_unshift($fundLegal, array(null));
 
     $colunaCargo = 12;
 
@@ -359,6 +365,7 @@ if ($acesso) {
                 'nome' => 'motivoDetalhe',
                 'label' => 'Fundamentação Legal:',
                 'tipo' => 'texto',
+                'datalist' => $fundLegal,
                 'size' => 100,
                 'col' => 6,
                 'title' => 'Fundamentação Legal da Saida do Servidor.'),

@@ -102,7 +102,9 @@ if ($acesso) {
                      ciGepagExo,
                      idMotivo,
                      tipoAposentadoria,
-                     motivoDetalhe
+                     motivoDetalhe,
+                     processoTce,
+                     dtRegistroTce
                 FROM tbservidor
                WHERE idServidor = ' . $idServidorPesquisado;
 
@@ -359,7 +361,21 @@ if ($acesso) {
                 'tipo' => 'texto',
                 'size' => 100,
                 'col' => 6,
-                'title' => 'Fundamentação Legal da Saida do Servidor.')
+                'title' => 'Fundamentação Legal da Saida do Servidor.'),
+            array('linha' => 8,
+                'nome' => 'processoTce',
+                'label' => 'Processo TCE:',
+                'tipo' => 'texto',
+                'size' => 30,
+                'col' => 4,
+                'title' => 'Número do Processo TCE.'),
+            array('linha' => 8,
+                'nome' => 'dtRegistroTce',
+                'label' => 'Data do Registro:',
+                'tipo' => 'data',
+                'size' => 20,
+                'col' => 3,
+                'title' => 'Data do Registro no TCE.')
     );
 
     $objeto->set_campos($campos);

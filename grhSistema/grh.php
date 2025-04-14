@@ -183,6 +183,15 @@ if ($acesso) {
             $linkProc->set_target("_blank4");
             $menu->add_link($linkProc, "right");
 
+            # Procedimentos 2
+            if (Verifica::acesso($idUsuario, 1)) {
+                $linkProc = new Link("Serviços", "../../areaServidor/sistema/servicos.php");
+                $linkProc->set_class('button');
+                $linkProc->set_title('Acessa a área de procedimentos');
+                $linkProc->set_target("_blank4");
+                $menu->add_link($linkProc, "right");
+            }
+
             # Relatórios
             $imagem1 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();

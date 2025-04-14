@@ -62,6 +62,7 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT data,
                                      idUsuario,
+                                     assunto,
                                      atendimento,
                                      idAtendimento
                                 FROM tbatendimento
@@ -70,6 +71,7 @@ if ($acesso) {
 
     # select do edita
     $objeto->set_selectEdita("SELECT data,
+                                     assunto,   
                                      atendimento,
                                      idServidor,
                                      idUsuario
@@ -94,9 +96,9 @@ if ($acesso) {
     $objeto->set_excluirCondicional('?fase=excluir', $usuario, 1, "=");
 
     # Parametros da tabela
-    $objeto->set_label(["Data", "Servidor GRH", "Atendimento"]);
-    $objeto->set_width([10, 10, 70]);
-    $objeto->set_align(["center", "center", "left"]);
+    $objeto->set_label(["Data", "Servidor GRH", "Assunto", "Atendimento"]);
+    $objeto->set_width([10, 10, 10, 60]);
+    $objeto->set_align(["center", "center", "center", "left"]);
     $objeto->set_funcao(["date_to_php"]);
     $objeto->set_classe([null, "Intra"]);
     $objeto->set_metodo([null, "get_nickUsuario"]);
@@ -110,6 +112,12 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idAtendimento');
 
+    # combo do assunto do atendimento
+    $assunto = $pessoal->select('SELECT distinct assunto
+                                   FROM tbatendimento
+                               ORDER BY atendimento');
+    array_unshift($assunto, array(null));
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'data',
@@ -120,6 +128,15 @@ if ($acesso) {
             'padrao' => date("Y-m-d"),
             'required' => true,
             'col' => 3,
+            'linha' => 1),
+        array('nome' => 'assunto',
+            'label' => 'Assunto:',
+            'tipo' => 'texto',
+            'datalist' => $assunto,
+            'size' => 100,
+            'col' => 8,
+            'required' => true,
+            'title' => 'Assunto do Atendimento.',
             'linha' => 1),
         array('linha' => 2,
             'col' => 12,

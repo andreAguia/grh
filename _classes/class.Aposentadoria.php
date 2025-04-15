@@ -349,9 +349,15 @@ class Aposentadoria {
                           tbservidor.dtDemissao,
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbmotivo USING (idMotivo)
-                    WHERE tbservidor.motivoDetalhe = {$parametroFundamentacao}
-                      AND situacao = 2
+                                     LEFT JOIN tbmotivo USING (idMotivo)";
+        
+        if(empty($parametroFundamentacao)){
+            $select .= " WHERE tbservidor.motivoDetalhe IS NULL";
+        }else{
+            $select .= " WHERE tbservidor.motivoDetalhe = '{$parametroFundamentacao}'";
+        }
+         
+        $select .= "  AND situacao = 2
                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  ORDER BY dtDemissao desc";
 

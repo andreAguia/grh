@@ -120,6 +120,7 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     #######################################
+    #######################################
 
     switch ($fase) {
         case "":
@@ -225,6 +226,7 @@ if ($acesso) {
             break;
 
         #######################################
+        #######################################
 
         case "aguardePorTipo":
 
@@ -329,6 +331,113 @@ if ($acesso) {
             loadPage('servidorMenu.php');
             break;
 
+        #######################################
+        #######################################
+
+        case "aguardePorFundamentacao":
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=porFundamentacao');
+            break;
+
+        #######################################
+
+        case "porFundamentacao" :
+
+            # Coloca 2 colunas
+            $grid1 = new Grid();
+            $grid1->abreColuna(8);
+
+            # Formulário de Pesquisa
+            $form = new Form('?fase=aguardePorFundamentacao');
+
+            # Cria um array com os tipo possíveis
+            $selectMotivo = "SELECT DISTINCT motivoDetalhe,
+                                    motivoDetalhe
+                               FROM tbmotivo JOIN tbservidor USING (idMotivo)
+                              WHERE situacao = 2
+                                AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                           ORDER BY 2";
+
+            $motivosPossiveis = $pessoal->select($selectMotivo);
+
+            $controle = new Input('parametroFundamentacao', 'combo', null, 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Fundamentação Legal');
+            $controle->set_array($motivosPossiveis);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroFundamentacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid1->fechaColuna();
+
+            #####
+
+            $grid1->abreColuna(4);
+
+            # Botão de Relatório
+            $menu1 = new MenuBar();
+
+            # Relatórios
+            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dessa pesquisa");
+            $botaoRel->set_url("?fase=porFundamentacaoRelatorio");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_imagem($imagem);
+            $menu1->add_link($botaoRel, "right");
+
+            $menu1->show();
+
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            # Exibe a lista
+            $aposentadoria->exibeAposentadosPorFundamentacaoLegal($parametroFundamentacao, "editarPorFundamentacao");
+            break;
+
+        #######################################
+
+        case "porFundamentacaoRelatorio" :
+
+            # Exibe a lista
+            $aposentadoria->exibeAposentadosPorFundamentacaoLegal($parametroFundamentacao, null, true);
+            break;
+
+        #######################################            
+
+        case "editarPorFundamentacao" :
+
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaAposentadoria.php?fase=aguardePorFundamentacao');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        #######################################
         #######################################
 
         case "aguardeEstatistica":

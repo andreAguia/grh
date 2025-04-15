@@ -21,16 +21,8 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
-    # Servidor
-    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
-    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-    $matricula = $pessoal->get_matricula($idServidorPesquisado);
-    $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
+    # Servidor    
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado);
-    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
-    $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
-    $cpf = $pessoal->get_cpf($idPessoa);
 
     # Começa uma nova página
     $page = new Page();
@@ -38,7 +30,7 @@ if ($acesso) {
     $page->iniciaPagina();
     
     # Monta a Declaração
-    $dec = new Declaracao("Senhor Gerente de Recursos Humsanos");
+    $dec = new Declaracao("Senhor Gerente de Recursos Humanos");
     
     $dec->set_texto("Data do Exercício: {$dtAdmin}");
     

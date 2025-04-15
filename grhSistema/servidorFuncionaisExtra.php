@@ -101,8 +101,14 @@ if (!is_null($dtSaida)) {
     $verifica->setPeriodo(date_to_php($dtSaida), addDias(date_to_php($dtSaida), 365));
 
     if ($verifica->verifica()) {
-        $erro = 1;
-        $msgErro .= 'Esse servidor está com um afastamento ('.$verifica->getDetalhe().') marcado para depois/durante a sua data de saída!\n';
+
+        # Verifica se não é demissão,
+        # pois demissao pode mesmo com afastamento
+        
+        if ($situacao <> 4) {
+            $erro = 1;
+            $msgErro .= 'Esse servidor está com um afastamento (' . $verifica->getDetalhe() . ') marcado para depois/durante a sua data de saída!\n';
+        }
     }
 }
 

@@ -326,6 +326,71 @@ class Aposentadoria {
 
     #####################################################
 
+    function exibeAposentadosPorFundamentacaoLegal($parametroFundamentacao = null, $fase = null, $relatório = false) {
+
+        /**
+         * Exibe tabela com os aposentados por tipo de aposentadoria
+         * 
+         * @param string $parametroMotivo da aposentadoria
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata os parametros
+        if (empty($fase)) {
+            $fase = "editar";
+        }
+
+        # Monta o select
+        $select = "SELECT year(dtDemissao),
+                          tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.dtAdmissao,
+                          tbservidor.dtDemissao,
+                          tbservidor.idServidor
+                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                     LEFT JOIN tbmotivo USING (idMotivo)
+                    WHERE tbservidor.motivoDetalhe = {$parametroFundamentacao}
+                      AND situacao = 2
+                      AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
+                 ORDER BY dtDemissao desc";
+
+        $result = $pessoal->select($select);
+        
+        if ($relatório) {
+
+            $tabela = new Relatorio();
+            $tabela->set_numGrupo(0);
+            $tabela->set_bordaInterna(true);
+            
+        } else {
+            $tabela = new Tabela();
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_idCampo("idServidor");
+            $tabela->set_editar("?fase={$fase}");
+        }
+        
+        $tabela->set_titulo($parametroFundamentacao);
+        $tabela->set_subtitulo('Ordenado pela Data de Saída');
+
+        $tabela->set_label(["Ano", 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Tipo']);
+        $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
+        $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
+
+        $tabela->set_width([10, 10, 25, 10, 10, 25]);
+
+        $tabela->set_classe([null, "pessoal", "pessoal", null, null, "Aposentadoria"]);
+        $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, null, "get_tipoAposentadoria"]);
+
+        $tabela->set_conteudo($result);
+        $tabela->show();
+    }
+
+    #####################################################
+
     /**
      * Método get_ultimoAnoAposentadoria
      * informa ultimo ano de uma aposentadoria no banco de dados

@@ -48,12 +48,14 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroAno = post('parametroAno', get_session('parametroAno', $aposentadoria->get_ultimoAnoAposentadoria()));
     $parametroMotivo = post('parametroMotivo', get_session('parametroMotivo', 3));
+    $parametroFundamentacao = post('parametroFundamentacao', get_session('parametroFundamentacao'));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroTipo = post('parametroTipo', get_session('parametroTipo', "Todos"));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
     set_session('parametroMotivo', $parametroMotivo);
+    set_session('parametroFundamentacao', $parametroFundamentacao);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroTipo', $parametroTipo);
 
@@ -82,12 +84,22 @@ if ($acesso) {
         }
         $menu->add_link($botao1, "right");
 
-        # Servidores Aposentados por ATipo de Aposentadoria    
+        # Servidores Aposentados por Tipo de Aposentadoria    
         if ($fase == "porTipo" OR $fase == "aguardePorTipo") {
             $botao1 = new Link("Por Tipo", "#");
             $botao1->set_class('hollow button');
         } else {
             $botao1 = new Link("Por Tipo", "?fase=aguardePorTipo");
+            $botao1->set_class('button');
+        }
+        $menu->add_link($botao1, "right");
+        
+        # Servidores Aposentados por Fundamentação Legal  
+        if ($fase == "porFundamentacao" OR $fase == "aguardePorFundamentacao") {
+            $botao1 = new Link("Por Fundamentação Legal", "#");
+            $botao1->set_class('hollow button');
+        } else {
+            $botao1 = new Link("Por Fundamentação Legal", "?fase=aguardePorFundamentacao");
             $botao1->set_class('button');
         }
         $menu->add_link($botao1, "right");

@@ -67,7 +67,7 @@ if ($acesso) {
 
     $carta->set_texto($texto);
 
-    $carta->set_saltoRodape(3);
+    #$carta->set_saltoRodape(3);
     $carta->show();
 
     # Grava o log da visualização do relatório

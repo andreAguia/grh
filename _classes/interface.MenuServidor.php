@@ -742,6 +742,7 @@ class MenuServidor {
 
         if ($this->perfil == 1) {
             $menu->add_item("linkWindow", "Mapa do Cargo", "../grhRelatorios/mapaCargo.php?cargo={$cargo}");
+            $menu->add_item("linkWindow", "Folha para Processo de Lic.Prêmio", "../grhRelatorios/folhaInicial.processo.licencaPremio.php");
         }
 
         $menu->add_item('linkWindow', 'Etiqueta para a Pasta Funcional', "../grhRelatorios/etiqueta.servidor.php");

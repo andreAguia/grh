@@ -41,7 +41,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "porAnoRelatorio" AND $fase <> "porTipoRelatorio") {
+    if ($fase <> "porAnoRelatorio" AND $fase <> "porTipoRelatorio" AND $fase <> "porFundamentacaoRelatorio") {
         AreaServidor::cabecalho();
     }
 
@@ -64,7 +64,7 @@ if ($acesso) {
     $grid->abreColuna(12);
 
     # Cria um menu
-    if ($fase <> "porAnoRelatorio" AND $fase <> "porTipoRelatorio") {
+    if ($fase <> "porAnoRelatorio" AND $fase <> "porTipoRelatorio" AND $fase <> "porFundamentacaoRelatorio") {
         $menu = new MenuBar();
 
         # Voltar

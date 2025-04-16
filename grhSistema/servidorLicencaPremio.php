@@ -299,7 +299,7 @@ if ($acesso) {
         $botaoCalendario = new Link("Calendário", "calendario.php");
         $botaoCalendario->set_class('button');
         $botaoCalendario->set_title('Exibe o calendário');
-        $botaoCalendario->set_target("_calenmdario");
+        $botaoCalendario->set_target("_calendario");
 
         # Procedimentos
         $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");

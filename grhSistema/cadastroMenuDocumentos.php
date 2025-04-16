@@ -65,7 +65,7 @@ if ($acesso) {
     $objeto->set_nome('Cadastro do Menu de Documentos');
 
     # botão de voltar da lista
-    $objeto->set_voltarLista("../../areaServidor/sistema/areaServidor.php?fase=sistema");
+    $objeto->set_voltarLista("../../areaServidor/sistema/administracao.php");
 
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');

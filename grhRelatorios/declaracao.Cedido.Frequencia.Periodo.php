@@ -136,10 +136,10 @@ if ($acesso) {
                ORDER BY dtInicial";
 
     $row = $pessoal->select($select2);
-    $texto = "<ul>";
+    $texto = "<ul id='pCi'>";
 
     foreach ($row as $item) {
-        $texto .= "<li>" . date_to_php($item['dtInicial']);
+        $texto .= "<li id='pCi'>" . date_to_php($item['dtInicial']);
         $texto .= " - " . $item['dtf'];
         $texto .= " (" . $item['numDias'];
         $texto .= " dias)</li>";

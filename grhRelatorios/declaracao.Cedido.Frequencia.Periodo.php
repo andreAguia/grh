@@ -24,9 +24,8 @@ if ($acesso) {
     # Pega os parâmetros dos relatórios
     $relatorioDtInicial = post('dtInicial', date('Y') . "-01-01");
     $relatorioDtfinal = post('dtFinal', date('Y') . "-12-31");
-    
-    ###### Parei aqui . Tem que tratar o mês e o ano para nunca declarar o mês vigente
 
+    ###### Parei aqui . Tem que tratar o mês e o ano para nunca declarar o mês vigente
     # Desde de qual data?
     $dataInicial = "02/01/2020";
 
@@ -109,7 +108,7 @@ if ($acesso) {
             'title' => 'Atualiza a tabela',
             'linha' => 1),
     ));
-    
+
     $dec->set_formLink('?');
 
     if (!empty($ultimaFalta)) {
@@ -121,7 +120,35 @@ if ($acesso) {
     $dec->set_data(date("d/m/Y"));
 
     $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, cedido(a) a esta Universidade desde {$dtAdmissao}, lotado(a) no(a) {$lotacao}, {$cargoEfetivo}, teve sua frequência INTEGRAL no período entre " . date_to_php($relatorioDtInicial) . " a ". date_to_php($relatorioDtfinal));
+            . " ID funcional nº {$idFuncional}, cedido(a) a esta Universidade desde {$dtAdmissao}, lotado(a)"
+            . " no(a) {$lotacao}, {$cargoEfetivo}, teve sua frequência INTEGRAL no período entre " . date_to_php($relatorioDtInicial) . " a "
+            . date_to_php($relatorioDtfinal) . ", considerando os seguintes períodos de férias:");
+
+    # Pega as férias durante o período
+    $select2 = "SELECT dtInicial,
+                       numDias,
+                       date_format(ADDDATE(dtInicial,numDias-1),'%d/%m/%Y') dtf
+                  FROM tbferias
+                  WHERE idServidor = {$idServidorPesquisado}
+                    AND ((dtInicial <= '{$relatorioDtInicial}' AND ADDDATE(dtInicial,numDias-1) >= '{$relatorioDtInicial}')
+                     OR (dtInicial BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}')  
+                     OR (ADDDATE(dtInicial,numDias-1) BETWEEN '{$relatorioDtInicial}' AND '{$relatorioDtfinal}'))  
+               ORDER BY dtInicial";
+
+    $row = $pessoal->select($select2);
+    $texto = "<ul>";
+
+    foreach ($row as $item) {
+        $texto .= "<li>" . date_to_php($item['dtInicial']);
+        $texto .= " - " . $item['dtf'];
+        $texto .= " (" . $item['numDias'];
+        $texto .= " dias)</li>";
+    }
+    
+
+    $texto .= "</ul>";
+
+    $dec->set_texto($texto);
 
     $dec->set_saltoAssinatura(2);
     if (!$erro) {

@@ -22,8 +22,8 @@ if ($acesso) {
     $pessoal = new Pessoal();
 
     # Pega os parâmetros dos relatórios
-    $relatorioMes = post('mes', date('m'));
-    $relatorioAno = post('ano', date('Y'));
+    $relatorioDtInicial = post('dtInicial', date('Y') . "-01-01");
+    $relatorioDtfinal = post('dtFinal', date('Y') . "-12-31");
     
     ###### Parei aqui . Tem que tratar o mês e o ano para nunca declarar o mês vigente
 
@@ -65,6 +65,7 @@ if ($acesso) {
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $sexo = $pessoal->get_sexo($idServidorPesquisado);
+    $dtAdmissao = $pessoal->get_dtAdmissao($idServidorPesquisado);
 
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
@@ -83,25 +84,31 @@ if ($acesso) {
     $dec->set_assinatura(true);
 
     $dec->set_formCampos(array(
-        array('nome' => 'ano',
-            'label' => 'Ano:',
-            'tipo' => 'texto',
+        array('nome' => 'dtInicial',
+            'label' => 'Início:',
+            'tipo' => 'data',
             'size' => 4,
-            'title' => 'Ano',
-            'onChange' => 'formPadrao.submit();',
-            'padrao' => $relatorioAno,
+            'title' => 'Insira a data inicial',
             'col' => 3,
+            'padrao' => $relatorioDtInicial,
             'linha' => 1),
-        array('nome' => 'mes',
-            'label' => 'Mês',
-            'tipo' => 'combo',
-            'array' => $mes,
-            'size' => 10,
-            'padrao' => $relatorioMes,
-            'title' => 'Mês do Ano.',
-            'onChange' => 'formPadrao.submit();',
+        array('nome' => 'dtFinal',
+            'label' => 'Término:',
+            'tipo' => 'data',
+            'size' => 4,
+            'title' => 'Insira a data final',
             'col' => 3,
-            'linha' => 1)));
+            'padrao' => $relatorioDtfinal,
+            'linha' => 1),
+        array('nome' => 'submit',
+            'valor' => 'Atualiza',
+            'label' => '-',
+            'size' => 4,
+            'col' => 3,
+            'tipo' => 'submit',
+            'title' => 'Atualiza a tabela',
+            'linha' => 1),
+    ));
     
     $dec->set_formLink('?');
 
@@ -113,8 +120,8 @@ if ($acesso) {
 
     $dec->set_data(date("d/m/Y"));
 
-    $dec->set_texto("Declaro para fins de frequência, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
-            . " ID funcional nº {$idFuncional}, lotado(a) no(a) {$lotacao}, {$cargoEfetivo}, teve sua frequência INTEGRAL no mês de " . get_nomeMes($relatorioMes) . " de {$relatorioAno}.");
+    $dec->set_texto("Declaro para os devidos fins, que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
+            . " ID funcional nº {$idFuncional}, cedido(a) a esta Universidade desde {$dtAdmissao}, lotado(a) no(a) {$lotacao}, {$cargoEfetivo}, teve sua frequência INTEGRAL no período entre " . date_to_php($relatorioDtInicial) . " a ". date_to_php($relatorioDtfinal));
 
     $dec->set_saltoAssinatura(2);
     if (!$erro) {

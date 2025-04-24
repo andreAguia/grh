@@ -703,11 +703,12 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
 
 
-//        if($idPerfil == 2){
-//            $menu->add_item('titulo', 'Declarações Cedidos', '#');
-//            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
-//            $menu->add_item('linkWindow', 'Declaração de Frequência Total', '../grhRelatorios/declaracao.Cedido.Frequencia.Total.php');
-//        }
+        if($idPerfil == 2){
+            $menu->add_item('titulo', 'Declarações Cedidos', '#');
+            $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
+            $menu->add_item('linkWindow', 'Declaração de Frequência Período', '../grhRelatorios/declaracao.Cedido.Frequencia.Periodo.php');
+            $menu->add_item('linkWindow', 'Declaração de Frequência Total', '../grhRelatorios/declaracao.Cedido.Frequencia.Total.php');
+        }
 
         /*
          * Despachos

@@ -54,7 +54,7 @@ if ($acesso) {
         $select .= ' AND tbtipocomissao.idTipoComissao = ' . $comissao;
     }
 
-    $select .= ' ORDER BY 6, tbdescricaocomissao.descricao, tbcomissao.dtNom';
+    $select .= ' ORDER BY 6, tbcomissao.dtNom';
 
     $result = $servidor->select($select);
 

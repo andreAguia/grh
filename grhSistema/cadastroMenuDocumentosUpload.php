@@ -24,8 +24,6 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
-    
-    echo "id->{$id}";
 
     # Começa uma nova página
     $page = new Page();

@@ -6995,4 +6995,24 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    function get_entregouCtc($idServidor = null) {
+
+        /**
+         * informa se o servidor entregou ou não o CTC inss
+         * 
+         * @param integer $idMotivo 
+         */
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            if(parent::select("SELECT entregouCtc FROM tbservidor WHERE idServidor = {$idServidor}") == 's'){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
+    ###########################################################
 }

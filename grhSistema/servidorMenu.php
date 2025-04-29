@@ -15,6 +15,7 @@ include ("_config.php");
 # Zera session usadas
 set_session('sessionParametro');
 set_session('sessionPaginacao');
+set_session('origem2');
 
 # Verifica a origem 
 $origem = get_session("origem");

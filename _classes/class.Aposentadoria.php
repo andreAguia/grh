@@ -1722,4 +1722,31 @@ class Aposentadoria {
     }
 
     ###########################################################   
+    
+    /**
+     * Método exibe_alertaEntregaCtc
+     * Informa Exibe o alerta para quando não entregou o CTC inss
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    
+    public function exibe_alertaEntregaCtc($idServidor = null){
+        
+        # Define a data divisora
+        $dtDivisora = "01/01/2002";
+        
+        # Pega a data de admissão
+        $pessoal = new Pessoal();
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+        
+        # Compara se a adimossão é anterior a data divisora
+        if(strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))){
+            if(!$pessoal->get_entregouCtc($idServidor)){
+                callout("Servidor não entregou o CTC INSS","alert");
+            }else{
+                echo "oi";
+            }
+        }
+        
+    }
 }

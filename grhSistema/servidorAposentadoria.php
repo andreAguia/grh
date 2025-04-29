@@ -76,6 +76,7 @@ if ($acesso) {
     # Cria um menu
     if (substr($fase, 0, 9) <> "relatorio") {
         $menu = new MenuBar();
+        $linkvoltar = null;
 
         # Verifica a rotina e define o link
         if ($fase == "tabs") {
@@ -112,6 +113,9 @@ if ($acesso) {
         # Exibe os dados do servidor
         get_DadosServidor($idServidorPesquisado);
     }
+
+    # Exibe o alerta de entrega do ctc Inss
+    $aposentadoria->exibe_alertaEntregaCtc($idServidorPesquisado);
 
     ########################################################
 
@@ -170,6 +174,11 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorioAverbado");
             $botaoRel->set_target("_blank");
             $menu->add_link($botaoRel, "right");
+
+            # Botão voltar    
+            $linkBotaoEdita = new Button('Editar', '?fase=editarAverbado');
+            $linkBotaoEdita->set_title('Edita os dados do tempo averbado');
+            $menu->add_link($linkBotaoEdita, "right");
 
             $menu->show();
 
@@ -234,7 +243,7 @@ if ($acesso) {
 
             $grid1 = new Grid();
             $grid1->abreColuna(12);
-            
+
             titulotable("Afastamentos Que interrompem o Tempo de Serviço");
 
             $painel1 = new Callout();
@@ -610,6 +619,20 @@ if ($acesso) {
 
             $aposentadoria = new Aposentadoria();
             $aposentadoria->exibeTempoAverbado($idServidorPesquisado, true);
+            break;
+
+        ########################################################
+
+        /*
+         * Editar Temp Averbado
+         */
+
+        case "editarAverbado" :
+
+            # Informa a origem
+            set_session('origem2', 'servidorAposentadoria.php?aba=2');
+            
+            loadPage("servidorAverbacao.php");
             break;
 
         ########################################################

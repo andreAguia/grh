@@ -20,6 +20,7 @@ if ($acesso) {
     $intra = new Intra();
     $pessoal = new Pessoal();
     $averbacao = new Averbacao();
+    $aposentadoria = new Aposentadoria();
 
     # Variáveis
     $empresaTipo = [
@@ -45,6 +46,9 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
+    
+    # Verifica se veio da rotina de aposentadoria
+    $origem = get_session("origem2");    
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -71,9 +75,17 @@ if ($acesso) {
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
+    
+    # botão de voltar da lista
+        if (empty($origem)) {
+            $volta = 'servidorMenu.php';
+            
+        } else {            
+            $volta = $origem;
+        }
 
     # botão de voltar da lista$em
-    $objeto->set_voltarLista('servidorMenu.php');
+    $objeto->set_voltarLista($volta);
 
     $select = "SELECT dtInicial,
                       dtFinal,
@@ -279,7 +291,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar", 'servidorMenu.php');
+            $linkVoltar = new Link("Voltar", $volta);
             $linkVoltar->set_class('button');
             $menu1->add_link($linkVoltar, "left");
 
@@ -340,9 +352,11 @@ if ($acesso) {
 
                 calloutAlert($mensagem2, "ff");
             }
-
-
+            
             callout($mensagem1);
+
+            # Exibe o alerta de entrega do ctc Inss
+            $aposentadoria->exibe_alertaEntregaCtc($idServidorPesquisado);
 
             $grid->fechaColuna();
             $grid->abreColuna(3);

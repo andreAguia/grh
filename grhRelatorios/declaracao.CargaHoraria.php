@@ -65,21 +65,21 @@ if ($acesso) {
             $dec->set_texto("Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                     . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
                     . " {$lotacao} vem cumprindo normalmente sua carga"
-                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda à sexta, com 2 h de almoço.");
         } else {
             $dec->set_texto("Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                     . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público vem cumprindo normalmente sua carga"
-                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+                    . " horária de 40 horas semanais, de 8 h às 18 h, de segunda à sexta, com 2 h de almoço.");
         }
     } else {
         if ($idLotacao <> 113) {
             $dec->set_texto("Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                     . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, {$textoExtra} lotado(a) no(a) {$lotacao} vem cumprindo"
-                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda à sexta, com 2 h de almoço.");
         } else {
             $dec->set_texto("Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                     . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin} vem cumprindo"
-                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda á sexta, com 2 h de almoço.");
+                    . " normalmente sua carga horária de 40 horas semanais, de 8 h às 18 h, de segunda à sexta, com 2 h de almoço.");
         }
     }
 

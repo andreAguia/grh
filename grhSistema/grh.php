@@ -32,6 +32,7 @@ if ($acesso) {
 
     # Zera sessions
     set_session('origem');
+    set_session('origem2');
     set_session('origemId');
     set_session('parametroPlano');
     set_session('parametroNivel');

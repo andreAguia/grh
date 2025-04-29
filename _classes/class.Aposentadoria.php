@@ -1731,6 +1731,26 @@ class Aposentadoria {
      */
     
     public function exibe_alertaEntregaCtc($idServidor = null){
+
+        # Compara se a adimossão é anterior a data divisora
+        if($this->precisaEntregarCtc($idServidor)){
+            $pessoal = new Pessoal();
+            if(!$pessoal->get_entregouCtc($idServidor)){
+                callout("Servidor não entregou o CTC INSS","alert");
+            }
+        }        
+    }
+    
+    ###########################################################   
+    
+    /**
+     * Método precisaEntregarCtc
+     * Informa Se precisa ou não entregar CTC Inss
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    
+    public function precisaEntregarCtc($idServidor = null){
         
         # Define a data divisora
         $dtDivisora = "01/01/2002";
@@ -1741,11 +1761,9 @@ class Aposentadoria {
         
         # Compara se a adimossão é anterior a data divisora
         if(strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))){
-            if(!$pessoal->get_entregouCtc($idServidor)){
-                callout("Servidor não entregou o CTC INSS","alert");
-            }else{
-                echo "oi";
-            }
+            return true;
+        }else{
+            return false;
         }
         
     }

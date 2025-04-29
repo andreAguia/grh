@@ -46,9 +46,9 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
-    
+
     # Verifica se veio da rotina de aposentadoria
-    $origem = get_session("origem2");    
+    $origem = get_session("origem2");
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -75,14 +75,13 @@ if ($acesso) {
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
-    
+
     # botão de voltar da lista
-        if (empty($origem)) {
-            $volta = 'servidorMenu.php';
-            
-        } else {            
-            $volta = $origem;
-        }
+    if (empty($origem)) {
+        $volta = 'servidorMenu.php';
+    } else {
+        $volta = $origem;
+    }
 
     # botão de voltar da lista$em
     $objeto->set_voltarLista($volta);
@@ -295,6 +294,12 @@ if ($acesso) {
             $linkVoltar->set_class('button');
             $menu1->add_link($linkVoltar, "left");
 
+            if ($aposentadoria->precisaEntregarCtc($idServidorPesquisado)) {
+                $botaoCtc = new Button('CTC Inss', 'servidorCtc.php?volta=0');
+                $botaoCtc->set_title("Informa se o servidor entregou o CTC Inss");
+                $menu1->add_link($botaoCtc, "right");
+            }
+
             $botaoAfast = new Button('Afastamentos', 'servidorAfastamentos.php?volta=0');
             $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
             $botaoAfast->set_target("_blank");
@@ -352,7 +357,7 @@ if ($acesso) {
 
                 calloutAlert($mensagem2, "ff");
             }
-            
+
             callout($mensagem1);
 
             # Exibe o alerta de entrega do ctc Inss

@@ -6237,6 +6237,24 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    function get_idServidorReitor() {
+
+        # Função que retorna o idServidor do reitor atual
+        # Monta o select		
+        $select = 'SELECT tbservidor.idServidor 
+                        FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                      LEFT JOIN tbcomissao USING (idServidor)
+                                      LEFT JOIN tbtipocomissao USING (idTipoComissao)
+                       WHERE ((CURRENT_DATE BETWEEN dtNom AND dtExo)
+                          OR (dtExo is null))                 
+                         AND idTipoComissao = 13';
+
+        $row = parent::select($select, false);
+        return $row[0];
+    }
+
+    ##########################################################################################
+
     function get_dadosTipoComissao($idTipoComissao) {
 
         /**
@@ -6383,6 +6401,11 @@ class Pessoal extends Bd {
 
         $row = parent::select($select, false);
 
+        # Redireciona para o reitor quando a diretoria for a Reitoria
+        if ($this->get_lotacaoDiretoria($idLotacao) == "Reitoria") {
+            $row[0] = $this->get_idServidorReitor();
+        }
+
         if (empty($row[0])) {
             return null;
         } else {
@@ -6417,7 +6440,7 @@ class Pessoal extends Bd {
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbcomissao.dtExo is null
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
-                      AND (tblotacao.idlotacao = $idLotacao) 
+                      AND (tblotacao.idlotacao = {$idLotacao}) 
                  ORDER BY tbtipocomissao.simbolo LIMIT 1";
 
         $row = parent::select($select, false);
@@ -6433,7 +6456,7 @@ class Pessoal extends Bd {
                 $chefia = $this->get_diretor($idLotacao);
             }
 
-            # Verifica se o servidor é diretorr
+            # Verifica se o servidor é diretor
             if (($chefia == $idServidor) or (is_null($chefia))) {
                 $chefia = $this->get_reitor();
             }
@@ -7006,9 +7029,11 @@ class Pessoal extends Bd {
         if (empty($idServidor)) {
             return null;
         } else {
-            if(parent::select("SELECT entregouCtc FROM tbservidor WHERE idServidor = {$idServidor}") == 's'){
+            $entregou = parent::select("SELECT entregouCtc FROM tbservidor WHERE idServidor = {$idServidor}", false);
+            
+            if ($entregou[0] == 's') {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }

@@ -24,6 +24,8 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    echo "id->{$id}";
 
     # Começa uma nova página
     $page = new Page();
@@ -41,7 +43,7 @@ if ($acesso) {
     $nome = "Documento";
     $tabela = "tbmenudocumentos";
     $extensoes = ["pdf"];
-
+    
     ################################################################
 
     switch ($fase) {
@@ -156,6 +158,10 @@ if ($acesso) {
             # Verifica se existe a pasta dos arquivos deletados
             if (!file_exists("{$pasta}_apagados/") || !is_dir("{$pasta}_apagados/")) {
                 mkdir("{$pasta}_apagados/", 0755);
+            }
+            
+            if(empty($id)){
+                alert("algo está errado");
             }
 
             # Apaga o arquivo (na verdade renomeia)

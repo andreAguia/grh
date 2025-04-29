@@ -123,7 +123,7 @@ if ($acesso) {
             'title' => 'Horário do Servidor.'),
         array('linha' => 1,
             'nome' => 'almoco',
-            'label' => 'Tempo para Almoço:',
+            'label' => 'Intervalo:',
             'tipo' => 'combo',
             'required' => true,
             'array' => ["2h", "1h", "---"],

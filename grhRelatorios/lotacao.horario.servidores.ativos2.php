@@ -71,7 +71,7 @@ if ($acesso) {
     $relatorio->set_titulo('Horário Geral de Servidores Ativos');
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pelo Nome');
     $relatorio->set_subtitulo2($titulo);
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Perfil', 'Horário', 'Almoço']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Perfil', 'Horário', 'Intervalo']);
     $relatorio->set_align(["center", "left", "left"]);
 
     $relatorio->set_classe([null, "pessoal"]);

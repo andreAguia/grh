@@ -36,6 +36,7 @@ if ($acesso) {
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
     $dtSaida = $pessoal->get_dtSaida($idServidorPesquisado);
     $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
+    echo "oi";
     $idMotivo = $pessoal->get_idMotivo($idServidorPesquisado);
 
     # Começa o texto

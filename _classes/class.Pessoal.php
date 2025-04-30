@@ -2453,7 +2453,7 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     function get_idMotivo($idServidor) {
-        $select = "SELECT motivo
+        $select = "SELECT idMotivo
                      FROM tbservidor
                     WHERE idServidor = {$idServidor}";
 

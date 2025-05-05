@@ -46,12 +46,6 @@ class MenuServidor {
 
         $grid = new Grid();
 
-//        Retirado pois ocargo atual já aparece nos dados do servidor  
-//        if (!is_null($this->cargoComissao)) {
-//            $grid->abreColuna(12);
-//            $this->moduloCargoComissao();
-//            $grid->fechaColuna();
-//        }
         # Órgão de um servidor cedido
         if (!is_null($this->orgaoCedido)) {
             $grid->abreColuna(12);
@@ -59,7 +53,7 @@ class MenuServidor {
             $grid->fechaColuna();
         }
 
-        # Ocorrências
+        # Ocorrências e Vinculos
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             if ($situacao == "Ativo") {
                 $grid->abreColuna(12, 6, 4);
@@ -67,16 +61,6 @@ class MenuServidor {
                 $grid->abreColuna(12, 6, 6);
             }
             $this->moduloOcorrencias();
-            $grid->fechaColuna();
-        }
-
-        # Vínculos Anteriores
-        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            if ($situacao == "Ativo") {
-                $grid->abreColuna(12, 6, 4);
-            } else {
-                $grid->abreColuna(12, 6, 6);
-            }
             $this->moduloVinculos();
             $grid->fechaColuna();
         }
@@ -88,6 +72,13 @@ class MenuServidor {
                 $this->moduloRamais();
                 $grid->fechaColuna();
             }
+        }
+
+        # Atendimento
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $grid->abreColuna(12, 6, 4);
+            $this->moduloAtendimento();
+            $grid->fechaColuna();
         }
 
         # Funcionais
@@ -698,12 +689,11 @@ class MenuServidor {
         if ($this->perfil == 1) {
             $menu->add_item('linkWindow', 'Declaração de NÃO Acumulação', '../grhRelatorios/declaracao.naoAcumulacao.php');
         }
-                
+
         $menu->add_item('linkWindow', 'Declaração de Residência', '../grhRelatorios/declaracao.Residencia.php');
         $menu->add_item('linkWindow', 'Autodeclaração Étinico-Racial', '../grhRelatorios/declaracao.etnicoRacial.php');
 
-
-        if($idPerfil == 2){
+        if ($idPerfil == 2) {
             $menu->add_item('titulo', 'Declarações Cedidos', '#');
             $menu->add_item('linkWindow', 'Declaração de Frequência Mensal', '../grhRelatorios/declaracao.Cedido.Frequencia.Mensal.php');
             $menu->add_item('linkWindow', 'Declaração de Frequência Período', '../grhRelatorios/declaracao.Cedido.Frequencia.Periodo.php');
@@ -1064,26 +1054,6 @@ class MenuServidor {
     ######################################################################################################################
 
     /**
-     * Método moduloCargoComissao
-     *  
-     * Exibe os dados de cargo em comissão
-     */
-    private function moduloCargoComissao() {
-
-        $painel = new Callout("success");
-        $painel->abre();
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
-        p($pessoal->get_cargoComissaoDescricao($this->idServidor), "f14", "center");
-
-        $painel->fecha();
-    }
-
-    ######################################################################################################################
-
-    /**
      * Método moduloOrgaoCedido
      *  
      * Informa o órgão onde o servidor está cedido
@@ -1178,4 +1148,41 @@ class MenuServidor {
     }
 
 ######################################################################################################################
+
+    /**
+     * Método moduloPandemia
+     *  
+     * Exibe os dados de benefícios desse servidor
+     */
+    private function moduloAtendimento() {
+
+        # Select
+        $select = "SELECT idAtendimento,
+                          idAtendimento
+                   FROM tbatendimento
+                  WHERE idServidor = {$this->idServidor}
+               ORDER BY data desc, idAtendimento desc LIMIT 2";
+
+        # Banco de Dados
+        $pessoal = new Pessoal();
+        $array = $pessoal->select($select);
+
+        # Exemplo com mais itens
+        $tabela = new Tabela();
+        $tabela->set_titulo("Ultimos Atendimentos");
+        $tabela->set_conteudo($array);
+
+        $tabela->set_label(["Atendimento", "Atendimento"]);
+        $tabela->set_width([20, 80]);
+        $tabela->set_align(["center", "left"]);
+        #$tabela->set_funcao(["date_to_php"]);
+        $tabela->set_classe(["Atendimento", "Atendimento"]);
+        $tabela->set_metodo(["exibeDataAtendente", "exibeAssuntoAtendimento"]);
+        
+        $tabela->set_numeroOrdem(true);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+    ######################################################################################################################
 }

@@ -41,7 +41,7 @@ class Atendimento {
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-        
+
         # Define a quantidade de caracteres
         $quantidade = 100;
 
@@ -56,7 +56,8 @@ class Atendimento {
             echo "---";
         } else {
             if (strlen($retorno[1]) > $quantidade) {
-                pLista($retorno[0], substr($retorno[1], 0, $quantidade) . " ...");
+                p($retorno[0], "pLinha1");
+                p(substr($retorno[1], 0, $quantidade) . " ...", "pLinha2", null, $retorno[1]);
             } else {
                 pLista($retorno[0], $retorno[1]);
             }

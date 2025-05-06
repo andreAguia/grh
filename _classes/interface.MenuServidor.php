@@ -55,23 +55,25 @@ class MenuServidor {
 
         # Ocorrências e Vinculos
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $grid->abreColuna(12, 6, 4);
             if ($situacao == "Ativo") {
-                $grid->abreColuna(12, 6, 4);
+                $this->moduloOcorrencias();
+                $this->moduloVinculos();
             } else {
-                $grid->abreColuna(12, 6, 6);
+                $this->moduloOcorrencias();
             }
-            $this->moduloOcorrencias();
-            $this->moduloVinculos();
             $grid->fechaColuna();
         }
 
         # Ramais
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $grid->abreColuna(12, 6, 4);
             if ($situacao == "Ativo") {
-                $grid->abreColuna(12, 6, 4);
                 $this->moduloRamais();
-                $grid->fechaColuna();
+            } else {
+                $this->moduloVinculos();
             }
+            $grid->fechaColuna();
         }
 
         # Atendimento
@@ -1178,7 +1180,7 @@ class MenuServidor {
         #$tabela->set_funcao(["date_to_php"]);
         $tabela->set_classe(["Atendimento", "Atendimento"]);
         $tabela->set_metodo(["exibeDataAtendente", "exibeAssuntoAtendimento"]);
-        
+
         $tabela->set_numeroOrdem(true);
         $tabela->set_totalRegistro(false);
         $tabela->show();

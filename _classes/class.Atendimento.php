@@ -43,7 +43,7 @@ class Atendimento {
         $pessoal = new Pessoal();
 
         # Define a quantidade de caracteres
-        $quantidade = 100;
+        $quantidade = 200;
 
         # Select
         $select = "SELECT assunto,
@@ -52,15 +52,11 @@ class Atendimento {
                     WHERE idAtendimento = {$id}";
 
         $retorno = $pessoal->select($select, false);
-        if (empty($retorno[0])) {
-            echo "---";
+        if (strlen($retorno[1]) > $quantidade) {
+            p($retorno[0], "pLinha1");
+            p(substr($retorno[1], 0, $quantidade) . " ...", "pLinha2", null, $retorno[1]);
         } else {
-            if (strlen($retorno[1]) > $quantidade) {
-                p($retorno[0], "pLinha1");
-                p(substr($retorno[1], 0, $quantidade) . " ...", "pLinha2", null, $retorno[1]);
-            } else {
-                pLista($retorno[0], $retorno[1]);
-            }
+            pLista($retorno[0], $retorno[1]);
         }
     }
 

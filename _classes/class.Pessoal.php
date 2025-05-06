@@ -6472,6 +6472,19 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
+    function get_chefiaImediataNomeCargo($idServidor) {
+
+        /**
+         * Retorna o nome da chefia imediata
+         * 
+         * @param $idServidor integer o id do servidor
+         */
+        
+        $this->get_nomeEDescricaoCargo($this->get_chefiaImediata($idServidor));        
+    }
+
+    ##########################################################################################
+
     function get_chefiaImediataIdLotacao($idLotacao) {
 
         /**

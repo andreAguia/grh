@@ -22,6 +22,9 @@ if ($acesso) {
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
 
+    # Verifica a origem 
+    $origem = get_session("origemRamal");
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -99,6 +102,12 @@ if ($acesso) {
     #$objeto->set_linkExcluir('?fase=excluir');     // Retirado para evidar exclusão acidental
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
+    
+    if (!empty($origem)) {
+        $objeto->set_linkAposGravar($origem);
+        $objeto->set_voltarForm($origem);
+    }
+    
 
     $objeto->set_botaoIncluir(false);
 

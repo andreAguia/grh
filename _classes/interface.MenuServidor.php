@@ -1146,6 +1146,24 @@ class MenuServidor {
             }
         }
 
+        $div = new Div("divEdita1");
+        $div->abre();
+
+        $div = new Div("divEdita2");
+        $div->abre();
+        
+        set_session("origemRamal","servidorMenu.php");
+
+        # Botão
+        $botaoEditar = new Link("Editar", "areaTelefones.php?fase=editar&id={$idLotacao}");
+        $botaoEditar->set_class('tiny button secondary');
+        $botaoEditar->set_title('Editar ramais do setor');
+        $botaoEditar->show();
+
+        $div->fecha();
+
+        $div->fecha();
+
         $painel->fecha();
     }
 

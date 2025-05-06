@@ -34,6 +34,7 @@ if ($acesso) {
     set_session('origem');
     set_session('origem2');
     set_session('origemId');
+    set_session('origemRamal');
     set_session('parametroPlano');
     set_session('parametroNivel');
     set_session('parametro');

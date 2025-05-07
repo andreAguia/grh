@@ -324,6 +324,7 @@ class PrevisaoAposentadoria {
 
                 # Tabela de Pontos
                 $this->tabelaM = [
+                    [2022, 96],
                     [2023, 97],
                     [2024, 97],
                     [2025, 98],
@@ -344,6 +345,7 @@ class PrevisaoAposentadoria {
                     [2040, 105],
                 ];
                 $this->tabelaF = [
+                    [2022, 86],
                     [2023, 87],
                     [2024, 87],
                     [2025, 88],
@@ -420,6 +422,7 @@ class PrevisaoAposentadoria {
 
                 # Tabela de Pontos
                 $this->tabelaM = [
+                    [2022, 96],
                     [2023, 97],
                     [2024, 97],
                     [2025, 98],
@@ -441,6 +444,7 @@ class PrevisaoAposentadoria {
                 ];
 
                 $this->tabelaF = [
+                    [2022, 86],
                     [2023, 87],
                     [2024, 87],
                     [2025, 88],
@@ -1059,10 +1063,10 @@ class PrevisaoAposentadoria {
         if (!empty($this->pontosHomem)) {
             # Define os anos
             $anoFinal = 2051;
-            $anoAtual = date("Y");
+            $anoInicial = 2022;
 
             # Calcula a data do critério de pontos
-            for ($i = $anoAtual; $i <= $anoFinal; $i++) {
+            for ($i = $anoInicial; $i <= $anoFinal; $i++) {
 
                 # Pega os pontos da regra para o ano $i
                 $pontosRegra = $this->get_regraPontos($i);
@@ -1380,7 +1384,7 @@ class PrevisaoAposentadoria {
         # Pontos (se tiver)
         if (!is_null($this->pontosHomem)) {
             array_push($array, ["Pontuação",
-                "Pontuação Atual (" . date("Y") . ")",
+                "Idade + Tempo de Serviço",
                 "{$regraPontos} pontos",
                 "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicaoDescontado / 365) . ")",
                 trataNulo($this->dataCriterioPontos),
@@ -1909,11 +1913,10 @@ class PrevisaoAposentadoria {
     public function exibe_tabelaHistoricoPontuacao($relatorio = false) {
 
         # Define os anos
-        $anoInicial = 2024;
+        $anoInicial = 2022;
         $anoFinal = 2051;
-        $anoAtual = date("Y");
 
-        for ($i = $anoAtual; $i <= $anoFinal; $i++) {
+        for ($i = $anoInicial; $i <= $anoFinal; $i++) {
 
             # Pega os dados
             $pontos = $this->get_pontoPossivel($i);
@@ -2434,7 +2437,7 @@ class PrevisaoAposentadoria {
 
         # Abono Permanência
         if (!$this->permiteAbonoPermanencia) {
-            callout("Essa regra <b>NÃO</b> concede Abono Permanência!","warning","center");
+            callout("Essa regra <b>NÃO</b> concede Abono Permanência!", "warning", "center");
         }
 
         # Regras Gerais

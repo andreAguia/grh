@@ -32,8 +32,7 @@ if ($acesso) {
                       idServidor,
                       tbabono.data,
                       tbabono.processo,
-                      tbabono.dtPublicacao,
-                      if(status = 1,'Deferido','Indeferido')
+                      tbservidor.motivoDetalhe
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                       JOIN tbabono USING (idServidor)
                 WHERE tbabono.status = 1 
@@ -46,12 +45,12 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Geral de Estatutários Ativos');
     $relatorio->set_tituloLinha2('com Abono Permanencia Deferido');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Data", "Processo", "Publicaçao", "Status"]);
+    $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Sexo", "Data", "Processo", "Regra"]);
     #$relatorio->set_width(array(10,10,10,5,8,10,15));
     $relatorio->set_align(["left", "left", "left", "left"]);
-    $relatorio->set_funcao([null, null, null, null, "date_to_php", null, "date_to_php"]);
+    $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
     $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_cargoRel", "get_lotacaoRel"]);
+    $relatorio->set_metodo([null, null, "get_cargoRel", "get_sexo"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_logServidor($idServidorPesquisado);

@@ -45,7 +45,7 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório Geral de Estatutários Ativos');
     $relatorio->set_tituloLinha2('com Abono Permanencia Deferido');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
-    $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Sexo", "Data", "Processo", "Regra"]);
+    $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Sexo", "Data", "Processo", "Fundamentação Legal"]);
     $relatorio->set_width([10, 20, 20, 10, 10, 15, 15]);
     $relatorio->set_align(["center", "left", "left", "center", "center", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php"]);

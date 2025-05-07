@@ -19,6 +19,9 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
+    
+    # Pega os parâmetros dos relatórios
+    $transferencia = get('transferencia', post('transferencia'));
 
     # Começa uma nova página
     $page = new Page();
@@ -51,33 +54,39 @@ if ($acesso) {
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
         $paragrafo2 .= "o Sr. <b>" . strtoupper($nomeServidor) . "</b>,";
+        $palavra1 = "inscrito";
+        $palavra2 = "contratado";
+        $palavra3 = "transferido";
     } else {
         $paragrafo2 .= "a Sra. <b>" . strtoupper($nomeServidor) . "</b>,";
+        $palavra1 = "inscrita";
+        $palavra2 = "contratada";
+        $palavra3 = "transferida";
     }
 
     # Verifica se tem id
     if (!empty($idFuncional)) {
         $paragrafo2 .= " ID funcional nº {$idFuncional},";
     }
-
-    $paragrafo2 .= " matrícula {$matricula}, inscrito no PIS/PASEP sob o nº {$pis} e CPF nº {$cpf}, ";
     
-    if ($sexo == "Masculino") {
-        $paragrafo2 .= "foi contratado ";
-    } else {
-        $paragrafo2 .= "foi contratada ";
-    }
-    
-    $paragrafo2 .= "sob o regime CLT, com desconto previdenciário para o INSS no período de "
-            . "{$dtAdmissao} a {$dtSaida}, pela FUNDAÇÃO ESTADUAL NORTE FLUMINENSE,"
-            . " CNPJ nº 39.229.406/0001-86, sendo transferido para a UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE"
+    # Transferido para a Uenf?
+    if($transferencia){
+        $texto1 = ", sendo {$palavra3} para a UNIVERSIDADE ESTADUAL DO NORTE FLUMINENSE"
             . " DARCY RIBEIRO, a partir de 01/01/2002, por força da Lei Estadual nº 3.684/01.";
+    }else{
+        $texto1 = "."; 
+    }
+
+    $paragrafo2 .= " matrícula {$matricula}, {$palavra1} no PIS/PASEP sob o nº {$pis} e CPF nº {$cpf}, foi "
+            . " {$palavra2} sob o regime CLT, <b>com desconto previdenciário para o INSS</b> no período de "
+            . "{$dtAdmissao} a {$dtSaida}, pela FUNDAÇÃO ESTADUAL NORTE FLUMINENSE,"
+            . " CNPJ nº 39.229.406/0001-86{$texto1}";
 
     $paragrafo3 = "Esclarecemos que a referida Fundação era uma Instituição de Direito Público Estadual e "
             . "mantenedora da Universidade Estadual Norte Fluminense Darcy Ribeiro – UENF, sendo extinta pela "
             . "Lei Estadual nº 7.237 de 16 de março de 2016, que transferiu as atribuições, estrutura e "
             . "patrimônio para a UENF.";
-    
+
     $paragrafo4 = "Adicionalmente declaramos que o referido contrato foi considerado Nulo pelo Tribunal de Contas"
             . " do Estado do Rio de Janeiro com publicação no DOERJ de 07/12/1998, pág. 23.";
 
@@ -92,6 +101,16 @@ if ($acesso) {
 
     $dec->set_assinatura(true);
     $dec->set_saltoAssinatura(1);
+
+    $dec->set_formCampos(array(
+        array('nome' => 'transferencia',
+            'label' => 'Transferido para Uenf?:',
+            'tipo' => 'simnao',
+            'size' => 10,
+            'padrao' => $transferencia,
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1)));
+    
     $dec->show();
 
     # Grava o log da visualização do relatório

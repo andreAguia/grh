@@ -3,7 +3,7 @@
 class Declaracao {
 
     /**
-     * Monta uma Ci
+     * Monta uma Declaração
      *
      * @author André Águia (Alat) - alataguia@gmail.com
      *

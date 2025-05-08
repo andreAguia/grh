@@ -32,7 +32,7 @@ if ($acesso) {
                       idServidor,
                       tbabono.data,
                       tbabono.processo,
-                      tbservidor.motivoDetalhe
+                      tbabono.obs
                  FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                       JOIN tbabono USING (idServidor)
                 WHERE tbabono.status = 1 
@@ -46,8 +46,8 @@ if ($acesso) {
     $relatorio->set_tituloLinha2('com Abono Permanencia Deferido');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     $relatorio->set_label(["IdFuncional", "Nome", "Cargo", "Sexo", "Data", "Processo", "Fundamentação Legal"]);
-    $relatorio->set_width([10, 20, 20, 10, 10, 15, 15]);
-    $relatorio->set_align(["center", "left", "left", "center", "center", "left"]);
+    $relatorio->set_width([10, 20, 15, 10, 10, 15, 20]);
+    $relatorio->set_align(["center", "left", "left", "center", "center", "left", "left"]);
     $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
     $relatorio->set_classe([null, null, "pessoal", "pessoal"]);
     $relatorio->set_metodo([null, null, "get_cargoRel", "get_sexo"]);

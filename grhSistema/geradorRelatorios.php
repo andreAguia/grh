@@ -752,10 +752,10 @@ if ($acesso) {
     if ($postLotacaoOrigem) {
         $field[] = "tbservidor.idServidor";
         $label[] = "Lotação de Origem";
-        $align[] = "left";
+        $align[] = "center";
         $class[] = "Vaga";
         $method[] = "get_nomeLaboratorioOrigemServidor";
-        $function[] = "";
+        $function[] = "trataNulo";
     }
 
     # Endereço

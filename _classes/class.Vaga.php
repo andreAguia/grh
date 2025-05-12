@@ -573,7 +573,7 @@ class Vaga {
         $conteudo = $this->get_dados($idVaga);
 
         $painel = new Callout("secondary");
-        $painel->abre();        
+        $painel->abre();
 
         p("Vaga nº:", "vagaIdLabel");
         br();
@@ -1037,6 +1037,40 @@ class Vaga {
     ###########################################################
 
     /**
+     * Método get_nomeLaboratorioOrigem
+     * fornece o primeiro laboratório de uma vaga. o laborató ao qual a vaga foi criada,
+     * 
+     * @param	integer $idVaga O id da vaga
+     */
+    function get_nomeLaboratorioOrigemServidor($idServidor) {
+
+        # Conecta o banco
+        $pessoal = new Pessoal();
+
+        # Pega o idVega
+        if (empty($this->get_idVaga($idServidor))) {
+            return "";
+        } else {
+            $idVaga = $this->get_idVaga($idServidor);
+        }
+
+        # Pega o idLotação
+        $idLotacao = $this->get_laboratorioOrigem($idVaga);
+
+        # Pega o nome dessa lotação
+        if (vazio($idLotacao)) {
+            $nome = null;
+        } else {
+            $nome = $pessoal->get_nomeLotacao($idLotacao);
+        }
+
+        # Retorna o nome
+        return $nome;
+    }
+
+    ###########################################################
+
+    /**
      * Método verificaProblemaVaga
      * Verifica se tem algum problema na vaga
      * 
@@ -1410,8 +1444,11 @@ class Vaga {
                         WHERE idServidor = {$idServidor}";
 
             $dados = $pessoal->select($select, false);
-
-            return $dados[0];
+            if (empty($dados[0])) {
+                return null;
+            } else {
+                return $dados[0];
+            }
         } else {
             return null;
         }

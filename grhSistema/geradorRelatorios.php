@@ -27,6 +27,7 @@ $postCargoSimples = post('postCargoSimples');
 $postComissao = post('postComissao');
 $postLotacao = post('postLotacao');
 $postLotacaoOrigem = post('postLotacaoOrigem');
+$postNumVinculos = post('postNumVinculos');
 $postPerfil = post('postPerfil');
 $postSituacao = post('postSituacao');
 $postConcurso = post('postConcurso');
@@ -323,6 +324,15 @@ if ($acesso) {
     $controle = new Input('postLotacaoOrigem', 'simnao', 'Lotac.Origem:', 1);
     $controle->set_title('Lotação de Origem de um Professor');
     $controle->set_valor($postLotacaoOrigem);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(4);
+    $form->add_item($controle);
+    
+    # Vínculos Anteriores
+    $controle = new Input('postNumVinculos', 'simnao', 'Num Vínculos:', 1);
+    $controle->set_title('Lotação de Origem de um Professor');
+    $controle->set_valor($postNumVinculos);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $controle->set_linha(4);
@@ -755,6 +765,16 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "Vaga";
         $method[] = "get_nomeLaboratorioOrigemServidor";
+        $function[] = "trataNulo";
+    }
+    
+    # Número de Vínculos Anteriuores
+    if ($postNumVinculos) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Num Vínculos";
+        $align[] = "center";
+        $class[] = "Pessoal";
+        $method[] = "get_numVinculos";
         $function[] = "trataNulo";
     }
 

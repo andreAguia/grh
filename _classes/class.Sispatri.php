@@ -654,22 +654,24 @@ class Sispatri {
 
         $array = array(
             array("Entregaram o Sispatri", $numSispatriAtivos),
-            array("Não Entregaram", $numServidores - $numSispatriAtivos),
-            array("Total", $numServidores),
+            array("Não Entregaram", $numServidores - $numSispatriAtivos)
         );
 
+        tituloTable("Servidores Ativos");
+        $chart = new Chart("Pie", $array);
+        $chart->set_idDiv("cargo");
+        $chart->set_legend(false);
+        $chart->set_tamanho($largura = 300, $altura = 300);
+        $chart->show();
+
         $tabela = new Tabela();
-        $tabela->set_titulo("Servidores Ativos");
+        #$tabela->set_titulo("Servidores Ativos");
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Servidores"]);
         $tabela->set_align(["left", "center"]);
+        $tabela->set_colunaSomatorio(1);
         $tabela->set_totalRegistro(false);
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 0,
-                'valor' => "Total",
-                'operador' => '=',
-                'id' => 'estatisticaTotal')));
         $tabela->show();
     }
 

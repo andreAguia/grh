@@ -163,7 +163,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'title' => 'Número do processo do edital do concurso',
             'col' => 3,
-            'size' => 20),
+            'size' => 40),
         array('linha' => 2,
             'nome' => 'dtPublicacaoEdital',
             'label' => 'Data da Publicação do Edital:',

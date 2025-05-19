@@ -188,7 +188,6 @@ class Aposentadoria {
             $tabela = new Relatorio();
             $tabela->set_numGrupo(0);
             $tabela->set_bordaInterna(true);
-            
         } else {
             $tabela = new Tabela();
 
@@ -205,7 +204,7 @@ class Aposentadoria {
         $tabela->set_label(['Ano', 'IdFuncional<br/>Matrícula', 'Servidor', 'Admissão', 'Saída', 'Tipo']);
         $tabela->set_align([null, 'center', 'left', 'center', 'center', 'left']);
         $tabela->set_funcao([null, null, null, "date_to_php", "date_to_php"]);
-        $tabela->set_width([10, 10, 25, 10, 10, 25]);        
+        $tabela->set_width([10, 10, 25, 10, 10, 25]);
 
         $tabela->set_classe([null, "pessoal", "pessoal", null, null, "Aposentadoria"]);
         $tabela->set_metodo([null, "get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, null, "get_tipoAposentadoria"]);
@@ -291,13 +290,12 @@ class Aposentadoria {
                  ORDER BY dtDemissao desc";
 
         $result = $pessoal->select($select);
-        
+
         if ($relatório) {
 
             $tabela = new Relatorio();
             $tabela->set_numGrupo(0);
             $tabela->set_bordaInterna(true);
-            
         } else {
             $tabela = new Tabela();
 
@@ -307,7 +305,7 @@ class Aposentadoria {
             $tabela->set_idCampo("idServidor");
             $tabela->set_editar("?fase={$fase}");
         }
-        
+
         $tabela->set_titulo($pessoal->get_motivoAposentadoria($parametroMotivo));
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
@@ -350,25 +348,24 @@ class Aposentadoria {
                           tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                      LEFT JOIN tbmotivo USING (idMotivo)";
-        
-        if(empty($parametroFundamentacao)){
+
+        if (empty($parametroFundamentacao)) {
             $select .= " WHERE tbservidor.motivoDetalhe IS NULL";
-        }else{
+        } else {
             $select .= " WHERE tbservidor.motivoDetalhe = '{$parametroFundamentacao}'";
         }
-         
+
         $select .= "  AND situacao = 2
                       AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)
                  ORDER BY dtDemissao desc";
 
         $result = $pessoal->select($select);
-        
+
         if ($relatório) {
 
             $tabela = new Relatorio();
             $tabela->set_numGrupo(0);
             $tabela->set_bordaInterna(true);
-            
         } else {
             $tabela = new Tabela();
 
@@ -378,7 +375,7 @@ class Aposentadoria {
             $tabela->set_idCampo("idServidor");
             $tabela->set_editar("?fase={$fase}");
         }
-        
+
         $tabela->set_titulo($parametroFundamentacao);
         $tabela->set_subtitulo('Ordenado pela Data de Saída');
 
@@ -428,11 +425,13 @@ class Aposentadoria {
 
     /**
      * Método get_tempoServicoUenf
-     * informa o total de dias corridos de tempo de serviço dentro da uenf
+     * informa o total de dias corridos de tempo de serviço bruto dentro da uenf, 
+     * sem os afastamentos.
      * 
      * @param string $idServidor idServidor do servidor
+     * @param string $data até a data especificada. Se estiver em branco estipula a data de hoje
      */
-    public function get_tempoServicoUenf($idServidor) {
+    public function get_tempoServicoUenf($idServidor, $data = null) {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
@@ -442,12 +441,36 @@ class Aposentadoria {
 
         # Verifica se o servidor é inativo e pega a data de saída dele
         if ($pessoal->get_idSituacao($idServidor) == 1) {
-            $dtFinal = date("d/m/Y");
+            
+            # verifica a data
+            if (empty($data)) {
+                // Data final padrão de ativo é hoje
+                $data = date("d/m/Y");
+            } else {
+                // Verifica se a data final é anterior que a data inicial
+                if (strtotime(date_to_bd($data)) < strtotime(date_to_bd($dtInicial))) {
+                    $data = $dtInicial;
+                }
+            }
         } else {
-            $dtFinal = $pessoal->get_dtSaida($idServidor);
+            // Pega a data de Saída
+            $dtSaida = $pessoal->get_dtSaida($idServidor);
+            
+            # verifica a data
+            if (empty($data)) {
+                // Data final padrão de inativo é a data de saída
+                $data = $dtSaida;
+            } else {
+                // Verifica se a data final está entre o período do servidor na Uenf
+                // senão tiver muda para a data de saída
+                if (!entre($data, $dtInicial, $dtSaida)) {
+                    $data = $dtSaida;
+                }
+            }
         }
 
-        $numdias = getNumDias($dtInicial, $dtFinal);
+        # Calcula o número de dias
+        $numdias = getNumDias($dtInicial, $data);
         return $numdias;
     }
 
@@ -1072,7 +1095,7 @@ class Aposentadoria {
         $array = [
             ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenf($idServidor)],
             ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidor)],
-            ["Afastamento <b>SEM</b> Contribuição", -$this->get_semTempoServicoSemTempoContribuicao($idServidor)]
+            ["Afastamento <b>SEM</b> Contribuição", -$this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1175,8 +1198,8 @@ class Aposentadoria {
          */
 
         $array = [
-            ["<b>COM</b> Contribuição", $this->get_semTempoServicoComTempoContribuicao($idServidor)],
-            ["<b>SEM</b> Contribuição", $this->get_semTempoServicoSemTempoContribuicao($idServidor)]
+            ["<b>COM</b> Contribuição", $this->get_periodoSemTempoServicoComTempoContribuicao($idServidor)],
+            ["<b>SEM</b> Contribuição", $this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1250,8 +1273,8 @@ class Aposentadoria {
         $array = [
             ["Tempo Uenf", $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],
             ["Tempo Averbado", $averbacao->get_tempoAverbadoPublico($idServidor)],
-            ["Afastamento <b>SEM</b> Contribuição", -$this->get_semTempoServicoSemTempoContribuicao($idServidor)],
-            ["Afastamento <b>COM</b> Contribuição", -$this->get_semTempoServicoComTempoContribuicao($idServidor)]
+            ["Afastamento <b>SEM</b> Contribuição", -$this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)],
+            ["Afastamento <b>COM</b> Contribuição", -$this->get_periodoSemTempoServicoComTempoContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1547,7 +1570,7 @@ class Aposentadoria {
 
     #####################################################  
 
-    public function get_semTempoServicoSemTempoContribuicao($idServidor = null, $dataPrevista = null) {
+    public function get_periodoSemTempoServicoSemTempoContribuicao($idServidor = null, $dataPrevista = null) {
 
         # Inicia a variável de retorno
         $retorno = 0;
@@ -1599,7 +1622,7 @@ class Aposentadoria {
 
     #####################################################  
 
-    public function get_semTempoServicoComTempoContribuicao($idServidor = null, $dataPrevista = null) {
+    public function get_periodoSemTempoServicoComTempoContribuicao($idServidor = null, $dataPrevista = null) {
 
         # Inicia a variável de retorno
         $retorno = 0;
@@ -1643,7 +1666,7 @@ class Aposentadoria {
 
     #####################################################  
 
-    public function get_semTempoServico($idServidor = null, $dataPrevista = null) {
+    public function get_periodoSemTempoServico($idServidor = null, $dataPrevista = null) {
 
         # Inicia a variável de retorno
         $retorno = 0;
@@ -1722,49 +1745,46 @@ class Aposentadoria {
     }
 
     ###########################################################   
-    
+
     /**
      * Método exibe_alertaEntregaCtc
      * Informa Exibe o alerta para quando não entregou o CTC inss
      * 
      * @param string $idServidor    null idServidor do servidor
      */
-    
-    public function exibe_alertaEntregaCtc($idServidor = null){
+    public function exibe_alertaEntregaCtc($idServidor = null) {
 
         # Compara se a adimossão é anterior a data divisora
-        if($this->precisaEntregarCtc($idServidor)){
+        if ($this->precisaEntregarCtc($idServidor)) {
             $pessoal = new Pessoal();
-            if(!$pessoal->get_entregouCtc($idServidor)){
-                callout("Servidor não entregou o CTC INSS","alert");
+            if (!$pessoal->get_entregouCtc($idServidor)) {
+                callout("Servidor não entregou o CTC INSS", "alert");
             }
-        }        
+        }
     }
-    
+
     ###########################################################   
-    
+
     /**
      * Método precisaEntregarCtc
      * Informa Se precisa ou não entregar CTC Inss
      * 
      * @param string $idServidor    null idServidor do servidor
      */
-    
-    public function precisaEntregarCtc($idServidor = null){
-        
+    public function precisaEntregarCtc($idServidor = null) {
+
         # Define a data divisora
         $dtDivisora = "01/01/2002";
-        
+
         # Pega a data de admissão
         $pessoal = new Pessoal();
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-        
+
         # Compara se a adimossão é anterior a data divisora
-        if(strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))){
+        if (strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))) {
             return true;
-        }else{
+        } else {
             return false;
         }
-        
     }
 }

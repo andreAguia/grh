@@ -760,10 +760,20 @@ class PrevisaoAposentadoria {
     ###########################################################   
 
     public function fazAnalise($idServidor) {
+        
+        /*
+         * Faz a análise e presnche as variáveis de aposentadoria
+         */
 
+        # Verifica se foi informado o idServidor
         if (!empty($idServidor)) {
             $this->idServidor = $idServidor;
         }
+        
+        # Inicia as classes
+        $pessoal = new Pessoal();
+        $averbacao = new Averbacao();
+        $aposentadoria = new Aposentadoria();
 
         # Inicializa a flag
         $this->temDireito = true;
@@ -772,11 +782,9 @@ class PrevisaoAposentadoria {
 
         /*
          * Dados pessoais do servidor
-         */
+         */        
 
-        $pessoal = new Pessoal();
-
-        # Idade
+        # Idade Atual
         $this->servidorIdade = $pessoal->get_idade($this->idServidor);
 
         # Data do Nascimento
@@ -789,8 +797,7 @@ class PrevisaoAposentadoria {
 
         /*
          * Tempo Averbado
-         */
-        $averbacao = new Averbacao();
+         */        
 
         # Tempo Público
         $this->servidorTempoAverbadoPublico = $averbacao->get_tempoAverbadoPublico($this->idServidor);
@@ -802,11 +809,9 @@ class PrevisaoAposentadoria {
 
         /*
          * Dados Uenf
-         */
+         */        
 
-        $aposentadoria = new Aposentadoria();
-
-        # Tempo Uenf
+        # Tempo Uenf Bruto de Hoje 
         $this->servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor);
 
         # Data de ingresso
@@ -829,7 +834,7 @@ class PrevisaoAposentadoria {
         $this->servidorTempoContribuicao = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
 
         # Tempo de contribuição Real - Considerando os afastamentos sem contribuição
-        $this->servidorTempoContribuicaoDescontado = $this->servidorTempoContribuicao - $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor);
+        $this->servidorTempoContribuicaoDescontado = $this->servidorTempoContribuicao - $aposentadoria->get_periodoSemTempoServicoSemTempoContribuicao($this->idServidor);
 
         # Tempo Initerrupto
         $this->servidorTempoPublicoIninterrupto = $aposentadoria->get_tempoPublicoIninterrupto($this->idServidor);
@@ -934,7 +939,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoContribuicao = addDias($hoje, $resta1, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemContribuicao = $aposentadoria->get_semTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoContribuicao);
+        $diasSemContribuicao = $aposentadoria->get_periodoSemTempoServicoSemTempoContribuicao($this->idServidor, $this->dataCriterioTempoContribuicao);
 
         if ($diasSemContribuicao > 0) {
             # Pega a data antes da alteração
@@ -968,7 +973,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioCarreira = addDias($hoje, $resta1, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioCarreira);
+        $diasSemTempoServico = $aposentadoria->get_periodoSemTempoServico($this->idServidor, $this->dataCriterioCarreira);
 
         if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
@@ -1001,7 +1006,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoServicoPublico = addDias($hoje, $resta2, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioTempoServicoPublico);
+        $diasSemTempoServico = $aposentadoria->get_periodoSemTempoServico($this->idServidor, $this->dataCriterioTempoServicoPublico);
 
         if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
@@ -1034,7 +1039,7 @@ class PrevisaoAposentadoria {
         $this->dataCriterioTempoCargo = addDias($hoje, $resta3, false);
 
         # Verifica se considerando a data, o servidor tem algum afastamento 
-        $diasSemTempoServico = $aposentadoria->get_semTempoServico($this->idServidor, $this->dataCriterioTempoCargo);
+        $diasSemTempoServico = $aposentadoria->get_periodoSemTempoServico($this->idServidor, $this->dataCriterioTempoCargo);
 
         if ($diasSemTempoServico > 0) {
             # Pega a data antes da alteração
@@ -1077,33 +1082,28 @@ class PrevisaoAposentadoria {
                 # Pega os Pontos Atuais
                 $this->servidorPontos = $this->get_pontoAtual();
 
+                # Data do aniversário
+                $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
+
+                # Data do tempo de contribuicao
+                $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
+
+                # Dias que restam (ou sobram)
+                $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicaoDescontado;
+                //$diasqueResta = $this->servidorTempoContribuicaoDescontado;
+                # Retiro a contagem do primeiro dia para não contar hoje 2 vezes
+                $data2 = addDias($hoje, $diasqueResta, false);
+
                 # Se alcançou com a data maior
                 if ($pontosPossíveis == $pontosRegra) {
-
-                    # Data do aniversário
-                    $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
-
-                    # Data do tempo de contribuicao
-                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
-
-                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicaoDescontado;
-                    $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
-                    # Verifica o mais distante.
+                    # Pega o dia mais distante.
                     $this->dataCriterioPontos = dataMaior($data1, $data2);
                     break;
                 }
 
                 # Se alcançou com a data menor
                 if ($pontosPossíveis > $pontosRegra) {
-
-                    # Data do aniversário
-                    $data1 = day($this->servidorDataNascimento) . "/" . month($this->servidorDataNascimento) . "/" . $i;
-
-                    # Data do tempo de contribuicao
-                    $diasContribuicao = $this->get_contribuicaoPosivel($i) * 365;
-                    $diasqueResta = $diasContribuicao - $this->servidorTempoContribuicaoDescontado;
-                    $data2 = addDias($hoje, $diasqueResta, false);  // retiro a contagem do primeiro dia para não contar hoje 2 vezes
-
+                    # Pega o dia mais próximo.
                     $this->dataCriterioPontos = dataMenor($data1, $data2);
                     break;
                 }
@@ -1471,7 +1471,7 @@ class PrevisaoAposentadoria {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Item", "Descrição", "Regra", "Servidor", "Data", "Análise", "Obs"]);
+        $tabela->set_label(["Item", "Descrição", "Regra", "Servidor<br/>" . date('Y'), "Data", "Análise", "Obs"]);
         $tabela->set_width([11, 23, 11, 11, 11, 11, 22]);
         $tabela->set_align(["left", "left", "center", "center", "center", "center", "left"]);
         $tabela->set_totalRegistro(false);
@@ -1915,14 +1915,24 @@ class PrevisaoAposentadoria {
         # Define os anos
         $anoInicial = 2022;
         $anoFinal = 2051;
+        $anoNascimento = year($this->servidorDataNascimento);
 
         for ($i = $anoInicial; $i <= $anoFinal; $i++) {
 
-            # Pega os dados
-            $pontos = $this->get_pontoPossivel($i);
+            // A idade que ele alcançará no aniversário desse ano
+            $idade = $i - $anoNascimento;
+
+            // O tempo de contribuição nesse ano
+            $tempoContribuicao = $this->get_tempoContribuicaoPossivelAno($i);
+
+            // A soma dos dois acima
+            $pontos = $idade + $tempoContribuicao;
+            #$pontos = $this->get_pontoPossivel($i);
+            // Exibe os pontos da regra
             $pontosRegra = $this->get_regraPontos($i);
+
+            // Exibe o que falta
             $resta = $pontosRegra - $pontos;
-            $demostrativo = $this->get_demonstrativoCalculoPontoPossivel($i);
 
             # Calcula a diferença
             if ($pontosRegra > $pontos) {
@@ -1931,7 +1941,7 @@ class PrevisaoAposentadoria {
                 $diferenca = "OK";
             }
 
-            $array[] = [$i, $demostrativo, $pontos, $pontosRegra, $diferenca];
+            $array[] = [$i, $idade, $tempoContribuicao, $pontos, $pontosRegra, $diferenca];
 
             if ($diferenca == "OK") {
                 break;
@@ -1955,13 +1965,13 @@ class PrevisaoAposentadoria {
         }
 
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Ano", "Cálculo<br/>Idade + Tempo", "Pontos do Servidor", "Regra", "Diferença"]);
-        $tabela->set_width([18, 18, 18, 18, 28]);
+        $tabela->set_label(["Ano", "Idade", "Tempo", "Pontos do Servidor<br/>(Idade + Tempo)", "Regra", "Diferença"]);
+        $tabela->set_width([15, 15, 15, 15, 15, 25]);
         $tabela->set_totalRegistro(false);
 
         if (!$relatorio) {
             $tabela->set_formatacaoCondicional(array(
-                array('coluna' => 4,
+                array('coluna' => 5,
                     'operador' => '=',
                     'valor' => "OK",
                     'id' => 'vigente')));
@@ -2120,8 +2130,6 @@ class PrevisaoAposentadoria {
          * Informa a contribuição Possível do ano informado
          */
 
-        # Pega o ano de Nascimento
-        $anoNascimento = year($this->servidorDataNascimento);
 
         # Pega o tempo de contribuição hoje, em dias, sem considerar
         # os afastamentos que interrompem a contribuição
@@ -2395,7 +2403,7 @@ class PrevisaoAposentadoria {
 
         # Exibe afastamentos que interrompem o tempo de serviço
         $aposentadoria = new Aposentadoria();
-        if ($this->afastementosEspecificos AND $aposentadoria->get_semTempoServico($idServidor) > 0) {
+        if ($this->afastementosEspecificos AND $aposentadoria->get_periodoSemTempoServico($idServidor) > 0) {
             $this->exibe_tabelaAfastamentosSemtempoServico($idServidor);
         }
 
@@ -2479,7 +2487,7 @@ class PrevisaoAposentadoria {
 
         # Exibe afastamentos que interrompem o tempo de serviço
         $aposentadoria = new Aposentadoria();
-        if ($this->afastementosEspecificos AND $aposentadoria->get_semTempoServico($idServidor) > 0) {
+        if ($this->afastementosEspecificos AND $aposentadoria->get_periodoSemTempoServico($idServidor) > 0) {
             $this->exibe_tabelaAfastamentosSemtempoServico($idServidor, true);
         }
 
@@ -2537,7 +2545,7 @@ class PrevisaoAposentadoria {
         $aposentadoria = new Aposentadoria();
 
         # Exibe os afastamentos que interrompem o tempo de contribuição
-        if ($aposentadoria->get_semTempoServicoSemTempoContribuicao($idServidor) > 0) {
+        if ($aposentadoria->get_periodoSemTempoServicoSemTempoContribuicao($idServidor) > 0) {
             $afast1 = new ListaAfastamentosServidor($idServidor, "SEM Contribuição");
             $afast1->set_semTempoServicoSemTempoContribuicao(true);
             $afast1->set_semTempoServicoComTempoContribuicao(false);
@@ -2549,7 +2557,7 @@ class PrevisaoAposentadoria {
         }
 
         # Exibe os afastamentos que interrompem o tempo de serviço
-        if ($aposentadoria->get_semTempoServicoComTempoContribuicao($idServidor) > 0) {
+        if ($aposentadoria->get_periodoSemTempoServicoComTempoContribuicao($idServidor) > 0) {
             $afast2 = new ListaAfastamentosServidor($idServidor, "COM Contribuição");
             $afast2->set_semTempoServicoSemTempoContribuicao(true);
             $afast2->set_semTempoServicoComTempoContribuicao(true);
@@ -2563,6 +2571,35 @@ class PrevisaoAposentadoria {
         if (!$relatorio) {
             $painel1->fecha();
         }
+    }
+
+    ###########################################################
+
+    public function get_tempoContribuicaoPossivelAno($ano) {
+
+        /*
+         * Informa, em dias, o tempo de contribuição possivel até aquela ano
+         */
+
+        # Quando não informa o ano pega o tempo de hoje
+        if (empty($ano)) {
+            $ano = date("Y");
+        }
+
+        # Define a data
+        $data = "31/12/{$ano}";
+
+        # Pega o tempo Uenf na data especificada
+        $aposentadoria = new Aposentadoria();
+        $servidorTempoUenf = $aposentadoria->get_tempoServicoUenf($this->idServidor, $data);
+        
+        # Pega o tempo sem contribuição
+        $servidorTemposemContribuicao = $aposentadoria->get_periodoSemTempoServicoSemTempoContribuicao($this->idServidor, $data);
+
+        # Pega o tempo de contribuição 
+        $tempoPossivel = ($this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $servidorTempoUenf) - $servidorTemposemContribuicao;
+
+        return intval($tempoPossivel / 365);
     }
 
     ###########################################################

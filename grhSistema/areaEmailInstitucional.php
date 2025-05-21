@@ -252,7 +252,7 @@ if ($acesso) {
             $tabela->set_width([10, 30, 30, 10, 30]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
             $tabela->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoSimples", "get_lotacao"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao"]);
             $tabela->set_conteudo($resumo);
 
             $tabela->set_editar('?fase=editaServidor&id=');

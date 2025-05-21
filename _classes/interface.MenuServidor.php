@@ -59,6 +59,7 @@ class MenuServidor {
             if ($situacao == "Ativo") {
                 $this->moduloOcorrencias();
                 $this->moduloVinculos();
+                $this->moduloChefiaImediata();
             } else {
                 $this->moduloOcorrencias();
             }
@@ -96,6 +97,7 @@ class MenuServidor {
         if ($this->perfilTipo == "Outros") { // Ser for estagiário ou bolsista
             if ($situacao == "Ativo") {
                 $this->moduloRamais();
+                $this->moduloChefiaImediata();
             }
         }
         $grid->fechaColuna();
@@ -1151,8 +1153,8 @@ class MenuServidor {
 
         $div = new Div("divEdita2");
         $div->abre();
-        
-        set_session("origemRamal","servidorMenu.php");
+
+        set_session("origemRamal", "servidorMenu.php");
 
         # Botão
         $botaoEditar = new Link("Editar", "areaTelefones.php?fase=editar&id={$idLotacao}");
@@ -1205,4 +1207,34 @@ class MenuServidor {
     }
 
     ######################################################################################################################
+
+    /**
+     * Método moduloRamais
+     * 
+     * Exibe o Chefe imediato do servidor
+     */
+    private function moduloChefiaImediata() {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $lotacao = new Lotacao();
+        $idLotacao = $pessoal->get_idLotacao($this->idServidor);
+        $idServidorChefe = $pessoal->get_chefiaImediata($this->idServidor);
+
+        # Somente lotação da Uenf - retira os cedidos
+        if ($idLotacao <> 113) {
+
+            if (!empty($idServidorChefe)) {
+                $painel = new Callout("primary");
+                $painel->abre();
+
+                p("Chefia Imediata", "palertaServidor");
+                p($pessoal->get_nomeEDescricaoCargo($idServidorChefe), "center");
+
+                $painel->fecha();
+            }
+        }
+    }
+
+######################################################################################################################
 }

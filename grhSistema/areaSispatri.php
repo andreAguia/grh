@@ -151,6 +151,7 @@ if ($acesso) {
     $sispatri->set_lotacao($parametroLotacao);
     $sispatri->exibeEmail($exibeEmail);
     $sispatri->exibeAfastamento($exibeAfastamento);
+    
 ################################################################
 
     switch ($fase) {
@@ -269,12 +270,13 @@ if ($acesso) {
             }
 
             if ($parametroSituacao == "Entregaram") {
+                
+                # Exibe os servidores inativos que entregaram o sispatri
+                $sispatri->exibeServidoresEntregaramInativos();
 
                 # Exibe os servidores ativos que entregaram o sispatri
                 $sispatri->exibeServidoresEntregaramAtivos();
 
-                # Exibe os servidores inativos que entregaram o sispatri
-                $sispatri->exibeServidoresEntregaramInativos();
             } else {
                 # Exibe os servidores ativos que Não entregaram o sispatri
                 if ($parametroAfastamento == "Todos") {

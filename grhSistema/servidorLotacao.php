@@ -172,6 +172,9 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
+            $objeto->set_rotinaExtraListar("callout");
+            $objeto->set_rotinaExtraListarParametro("Atenção!<br/>Toda alteração de lotação de servidor deverá ser informada aos administradores do SEI na Uenf através do e-mail sei@uenf.br");
+
         case "editar" :
         case "excluir" :
             $objeto->$fase($id);

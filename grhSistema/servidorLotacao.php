@@ -166,6 +166,8 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+    
+    $mensagem = "Atenção!<br/>Toda alteração de lotação de servidor deverá ser informada aos administradores do SEI na Uenf através do e-mail sei@uenf.br";
 
     ################################################################
 
@@ -173,11 +175,18 @@ if ($acesso) {
         case "" :
         case "listar" :
             $objeto->set_rotinaExtraListar("callout");
-            $objeto->set_rotinaExtraListarParametro("Atenção!<br/>Toda alteração de lotação de servidor deverá ser informada aos administradores do SEI na Uenf através do e-mail sei@uenf.br");
+            $objeto->set_rotinaExtraListarParametro($mensagem);
+            $objeto->listar();
+            break;
 
-        case "editar" :
-        case "excluir" :
-            $objeto->$fase($id);
+        case "editar" :            
+            $objeto->set_rotinaExtraEditar("callout");
+            $objeto->set_rotinaExtraEditarParametro($mensagem);
+            $objeto->editar($id);
+            break;
+            
+        case "excluir" :            
+            $objeto->excluir($id);            
             break;
 
         case "gravar" :

@@ -43,6 +43,7 @@ if ($acesso) {
     $parametroStatus = post('parametroStatus', get_session('parametroStatus'));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil'));
     $parametroProblemas = post('parametroProblemas', get_session('parametroProblemas'));
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
 
     # Joga os parâmetros par as sessions
     set_session('parametroAno', $parametroAno);
@@ -50,6 +51,7 @@ if ($acesso) {
     set_session('parametroStatus', $parametroStatus);
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroProblemas', $parametroProblemas);
+    set_session('parametroCargo', $parametroCargo);
 
     # Começa uma nova página
     $page = new Page();
@@ -158,6 +160,25 @@ if ($acesso) {
     $controle->set_col(2);
     $form->add_item($controle);
 
+    # cargos por nivel
+    $result = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
+
+    # acrescenta Professor
+    array_unshift($result, array('Professor', 'Professores'));
+
+    # acrescenta todos
+    array_unshift($result, array('*', '-- Todos --'));
+
+    $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Cargo');
+    $controle->set_array($result);
+    $controle->set_valor($parametroCargo);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(4);
+    $form->add_item($controle);
+
     $form->show();
 
 ################################################################
@@ -215,8 +236,8 @@ if ($acesso) {
 
             #######################################
             # Resumo por Ano Exercício
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
+            
+            $subTitulo = null;
 
             # Pega os dados
             $select = "SELECT anoExercicio,
@@ -224,6 +245,8 @@ if ($acesso) {
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                       LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                       JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                         WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -237,6 +260,18 @@ if ($acesso) {
                 }
             }
 
+            # cargo
+            if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+                if ($parametroCargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                    $subTitulo .= "Cargo: Professor<br/>";
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                    $subTitulo .= "Cargo: {$parametroCargo}<br/>";
+                }
+            }
+
+
             # Verifica se tem filtro por perfil
             if (($parametroPerfil <> "*") AND ($parametroPerfil <> "")) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
@@ -249,7 +284,7 @@ if ($acesso) {
 
             $select .= " GROUP BY anoExercicio ORDER BY anoExercicio";
 
-            $resumo = $servidor->select($select);
+            $resumo = $pessoal->select($select);
 
             # Pega a soma dos campos
             $soma = 0;
@@ -260,10 +295,10 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Exercício", "Solicitações"));
+            $tabela->set_label(["Exercício", "Solicitações"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
-            $tabela->set_align(array("center"));
+            $tabela->set_align(["center"]);
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
             $tabela->set_titulo("Ano Exercício");
             $tabela->show();
@@ -279,6 +314,8 @@ if ($acesso) {
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                       LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                       JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                          WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -289,6 +326,17 @@ if ($acesso) {
                     $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
                 } else { # senão é uma diretoria genérica
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+            
+            # cargo
+            if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+                if ($parametroCargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                    $subTitulo .= "Cargo: Professor<br/>";
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                    $subTitulo .= "Cargo: {$parametroCargo}<br/>";
                 }
             }
 
@@ -314,11 +362,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Mês", "Solicitações"));
+            $tabela->set_label(["Mês", "Solicitações"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
-            $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("get_nomeMes"));
+            $tabela->set_align(["center"]);
+            $tabela->set_funcao(["get_nomeMes"]);
             $tabela->set_titulo("Mensal (Data Inicial)");
             $tabela->show();
 
@@ -333,6 +381,8 @@ if ($acesso) {
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                       LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                       JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                          WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -343,6 +393,17 @@ if ($acesso) {
                     $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
                 } else { # senão é uma diretoria genérica
                     $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                }
+            }
+            
+            # cargo
+            if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+                if ($parametroCargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                    $subTitulo .= "Cargo: Professor<br/>";
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                    $subTitulo .= "Cargo: {$parametroCargo}<br/>";
                 }
             }
 
@@ -364,11 +425,11 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(array("Status", "Solicitações"));
+            $tabela->set_label(["Status", "Solicitações"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
-            $tabela->set_align(array("center"));
-            $tabela->set_funcao(array("exibeDescricaoStatus"));
+            $tabela->set_align(["center"]);
+            $tabela->set_funcao(["exibeDescricaoStatus"]);
             $tabela->set_titulo("Status");
             $tabela->show();
 
@@ -398,6 +459,8 @@ if ($acesso) {
                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                                              JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                             LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                             JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                          AND YEAR(tbferias.dtInicial) = $parametroAno";
 
@@ -408,6 +471,17 @@ if ($acesso) {
                     $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
                 } else { # senão é uma diretoria genérica
                     $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                }
+            }
+            
+            # cargo
+            if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+                if ($parametroCargo == "Professor") {
+                    $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                    $subTitulo .= "Cargo: Professor<br/>";
+                } else {
+                    $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                    $subTitulo .= "Cargo: {$parametroCargo}<br/>";
                 }
             }
 

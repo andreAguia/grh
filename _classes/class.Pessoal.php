@@ -61,15 +61,21 @@ class Pessoal extends Bd {
      */
     public function gravar($campos = null, $valor = null, $idValor = null, $tabela = null, $idCampo = null, $alerta = false) {
 
+        # Verifica se a tabela foi informada
         if (is_null($tabela)) {
             $tabela = $this->tabela;
         }
 
+        # Verifica se o campo id foi informado
         if (is_null($idCampo)) {
             $idCampo = $this->idCampo;
         }
 
+        # Chama a classe mãe e faz a gravação
         parent::gravar($campos, $valor, $idValor, $tabela, $idCampo, $alerta);
+
+        # Gera, se necessário, o arquivo csv
+        $this->geraCsvInfo($tabela);
     }
 
     ###########################################################
@@ -6479,8 +6485,7 @@ class Pessoal extends Bd {
          * 
          * @param $idServidor integer o id do servidor
          */
-        
-        $this->get_nomeEDescricaoCargo($this->get_chefiaImediata($idServidor));        
+        $this->get_nomeEDescricaoCargo($this->get_chefiaImediata($idServidor));
     }
 
     ##########################################################################################
@@ -7043,11 +7048,108 @@ class Pessoal extends Bd {
             return null;
         } else {
             $entregou = parent::select("SELECT entregouCtc FROM tbservidor WHERE idServidor = {$idServidor}", false);
-            
+
             if ($entregou[0] == 's') {
                 return true;
             } else {
                 return false;
+            }
+        }
+    }
+
+    ###########################################################
+
+    function geraCsvInfo($tabela = null) {
+
+        /**
+         * Gera um arquivo csv para a informática
+         */
+        
+        # Verifica se veio o npme da tabela
+        if (!empty($tabela)) {
+
+            # Somente se for dessas tabelas
+            $array = [
+                "tbpessoa",
+                "tbdocumentacao",
+                "tbsituacao",
+                "tbcargo",
+                "tbservidor"
+            ];
+
+            if (in_array($tabela, $array)) {
+
+                # Parâmetros
+                $nomeArquivo = "../../csv/arquivo.csv";
+                #$nomeArquivo = "/home/andre/csv/arquivo.csv";
+
+                # Select
+                $select = "SELECT idServidor,
+                          tbpessoa.idPessoa,
+                          tbpessoa.nome,
+                          dtNasc,
+                          dtFalecimento,
+                          sexo,
+                          matricula,
+                          dtAdmissao,
+                          dtDemissao,
+                          idFuncional,
+                          dtPublicExo,
+                          tbsituacao.situacao,
+                          tbtipocargo.cargo as cargo,
+                          tbcargo.nome as funcao,
+                          cpf,
+                          telCelularDDD,
+                          telCelular,
+                          emailUenf
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                     JOIN tbdocumentacao USING (idPessoa)
+                                LEFT JOIN tbcargo USING (idCargo)
+                                     JOIN tbtipocargo USING (idTipoCargo)
+                                     JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                    ORDER BY tbpessoa.nome";
+
+                # Faz o select - Observe o último true - Força o retorno somente 
+                # com array associativo, para evitar dados duplicados
+                # Observe que quando se trava para receber somente array associativo e 
+                # quando se tem nomes semelhantyes de campos, é necessário colocar um alias
+                # senão não é exibido. Exemplo o tbcargo.nome do select acima
+                $dados = parent::select($select, true, true);
+
+                # Cabeçalho
+                $cabecalho = [
+                    "idServidor",
+                    "idPessoa",
+                    "nome",
+                    "dtNasc",
+                    "dtFalecimento",
+                    "sexo",
+                    "matricula",
+                    "dtAdmissao",
+                    "dtDemissao",
+                    "idFuncional",
+                    "dtPublicExo",
+                    "situacao",
+                    "cargo",
+                    "funcao",
+                    "cpf",
+                    "telCelularDDD",
+                    "telCelular",
+                    "emailUenf"];
+
+                // Abrir/criar arquivo
+                $arquivo = fopen($nomeArquivo, 'w');
+
+                // Grava o cabeçalho
+                fputcsv($arquivo, $cabecalho);
+
+                // Popular os dados
+                foreach ($dados as $linha) {
+                    fputcsv($arquivo, $linha);
+                }
+
+                // Fechar o arquivo
+                fclose($arquivo);
             }
         }
     }

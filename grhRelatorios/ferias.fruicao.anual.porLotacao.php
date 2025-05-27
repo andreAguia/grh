@@ -29,6 +29,7 @@ if ($acesso) {
     $parametroLotacao = get_session('parametroLotacao');
     $parametroStatus = get_session('parametroStatus');
     $parametroPerfil = get_session("parametroPerfil");
+    $parametroCargo = get_session('parametroCargo');
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {
@@ -45,7 +46,10 @@ if ($acesso) {
     }
 
     ############################################################################
+    # Inicia o subtitulo
+    $subtitulo = null;
 
+    # Monta o select
     $select = "SELECT tbservidor.idfuncional,        
                      tbpessoa.nome,
                      concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao,
@@ -60,6 +64,8 @@ if ($acesso) {
                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                      JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao) 
+                                     LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                     JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                WHERE YEAR(tbferias.dtInicial) = $parametroAno
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
@@ -71,16 +77,36 @@ if ($acesso) {
         } else { # senão é uma diretoria genérica
             $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
         }
+
+        # SubTítulo
+        $subtitulo .= $servidor->get_nomeLotacao($parametroLotacao);
+    }
+
+    # Cargo
+    if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+        if ($parametroCargo == "Professor") {
+            $select .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+            $subtitulo .= "<br/>Professores";
+        } else {
+            $select .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+            $subtitulo .= "<br/>$parametroCargo";
+        }
     }
 
     # Status
     if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
         $select .= ' AND (tbferias.status = "' . $parametroStatus . '")';
+        
+        # SubTítulo
+        $subtitulo .= "<br/>Ferias {$parametroStatus}s";
     }
 
-    # Verifica se tem filtro por perfil
+    # Perfil
     if (!is_null($parametroPerfil)) {
         $select .= " AND idPerfil = {$parametroPerfil}";
+        
+        # SubTítulo
+        $subtitulo .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
     }
 
     $select .= " ORDER BY lotacao, tbferias.dtInicial";
@@ -90,25 +116,11 @@ if ($acesso) {
     $relatorio = new Relatorio();
 
     $titulo3 = null;
-
-    # Lotação no subtítulo
-    if (!is_null($parametroLotacao)) {
-        $titulo3 .= $servidor->get_nomeLotacao($parametroLotacao);
-    }
-
-    # Status no subtítulo
-    if (!is_null($parametroStatus)) {
-        $titulo3 .= "<br/>Ferias {$parametroStatus}s";
-    }
-
-    if (!is_null($parametroPerfil)) {
-        $titulo3 .= "<br/>Perfil: {$servidor->get_nomePerfil($parametroPerfil)}";
-    }
-
-    $relatorio->set_tituloLinha3($titulo3);
-
+    
     $relatorio->set_titulo('Relatório Anual de Férias');
     $relatorio->set_tituloLinha2($parametroAno);
+    
+    $relatorio->set_tituloLinha3($subtitulo);
     $relatorio->set_subtitulo('Agrupados por Lotação - Ordenados pela Data Inicial');
 
     $relatorio->set_label(['IdFuncional', 'Nome', 'Lotação', 'Exercício', 'Dt Inicial', 'Dias', 'Dt Final', 'Período', 'Situação']);

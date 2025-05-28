@@ -1195,13 +1195,10 @@ class MenuServidor {
         $tabela->set_conteudo($array);
 
         $tabela->set_label(["Atendimento", "Atendimento"]);
-        $tabela->set_width([20, 80]);
+        $tabela->set_width([25, 75]);
         $tabela->set_align(["center", "left"]);
-        #$tabela->set_funcao(["date_to_php"]);
         $tabela->set_classe(["Atendimento", "Atendimento"]);
         $tabela->set_metodo(["exibeDataAtendente", "exibeAssuntoAtendimento"]);
-
-        $tabela->set_numeroOrdem(true);
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }

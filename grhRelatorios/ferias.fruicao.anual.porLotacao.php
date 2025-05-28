@@ -110,13 +110,9 @@ if ($acesso) {
     }
 
     $select .= " ORDER BY lotacao, tbferias.dtInicial";
-
     $result = $servidor->select($select);
 
-    $relatorio = new Relatorio();
-
-    $titulo3 = null;
-    
+    $relatorio = new Relatorio();    
     $relatorio->set_titulo('Relatório Anual de Férias');
     $relatorio->set_tituloLinha2($parametroAno);
     

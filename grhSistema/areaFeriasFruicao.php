@@ -93,14 +93,14 @@ if ($acesso) {
     $anoAtual = date('Y');
     $anos = arrayPreenche($anoInicial, $anoAtual + 2, "d");
 
-    $controle = new Input('parametroAno', 'combo', 'Ano de Fruição:', 1);
+    $controle = new Input('parametroAno', 'combo', 'Fruição:', 1);
     $controle->set_size(8);
     $controle->set_title('Filtra por Ano em que as férias foi/será fruída');
     $controle->set_array($anos);
     $controle->set_valor($parametroAno);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(2);
+    $controle->set_col(1);
     $form->add_item($controle);
 
     # Lotação    
@@ -119,7 +119,7 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(4);
+    $controle->set_col(3);
     $form->add_item($controle);
 
     # Perfil
@@ -161,7 +161,7 @@ if ($acesso) {
     $form->add_item($controle);
 
     # cargos por nivel
-    $result = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
+    $result = $pessoal->select('SELECT cargo, cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
 
     # acrescenta Professor
     array_unshift($result, array('Professor', 'Professores'));
@@ -176,7 +176,7 @@ if ($acesso) {
     $controle->set_valor($parametroCargo);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(4);
+    $controle->set_col(2);
     $form->add_item($controle);
 
     $form->show();

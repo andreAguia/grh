@@ -441,7 +441,7 @@ class Aposentadoria {
 
         # Verifica se o servidor é inativo e pega a data de saída dele
         if ($pessoal->get_idSituacao($idServidor) == 1) {
-            
+
             # verifica a data
             if (empty($data)) {
                 // Data final padrão de ativo é hoje
@@ -455,7 +455,7 @@ class Aposentadoria {
         } else {
             // Pega a data de Saída
             $dtSaida = $pessoal->get_dtSaida($idServidor);
-            
+
             # verifica a data
             if (empty($data)) {
                 // Data final padrão de inativo é a data de saída
@@ -1780,11 +1780,53 @@ class Aposentadoria {
         $pessoal = new Pessoal();
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
-        # Compara se a adimossão é anterior a data divisora
+        # Compara se a adimissão é anterior a data divisora
         if (strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    ###########################################################   
+
+    /**
+     * Método exibeEntregouCtc
+     * Exibe Sim / Não ou N/I para o servidor com relação a se entregou ou não o CTC
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function exibeEntregouCtc($idServidor = null) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Verifica se o servidor precisa entregar o CTC
+            if ($this->precisaEntregarCtc($idServidor)) {
+
+                # Inicia o banco de Dados
+                $pessoal = new Pessoal();
+
+                # Monta o select
+                $select = "SELECT entregouCtc
+                             FROM tbservidor
+                            WHERE idServidor = {$idServidor}";
+
+                $row = $pessoal->select($select, false);
+
+                if (empty($row[0])) {
+                    label("Não Informado");
+                } elseif ($row[0] == "s") {
+                    label("Sim", "success");
+                } elseif ($row[0] == "n'") {
+                    label("Não", "alert");
+                } else {
+                    echo "---";
+                }
+            } else {
+                echo "Não Precisa";
+            }
         }
     }
 }

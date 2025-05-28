@@ -73,6 +73,13 @@ if ($acesso) {
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar, "left");
 
+        # Controle de entrega do tempo de serviço do Inss
+        $botaoCompulsoria = new Link("Entrega da Certidão");
+        $botaoCompulsoria->set_class('button');
+        $botaoCompulsoria->set_title("Controle da Entrega da Certidão de Tempo de Serviço do INSS");
+        $botaoCompulsoria->set_url("areaCtcInss.php");
+        $menu->add_link($botaoCompulsoria, "right");
+        
         # Servidores Aposentados
         $botaoCompulsoria = new Link("Servidores Aposentados");
         $botaoCompulsoria->set_class('button');

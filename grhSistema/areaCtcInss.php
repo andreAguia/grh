@@ -44,9 +44,11 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroEntregou = post('parametroEntregou', get_session('parametroEntregou', "Todos"));
 
     # Joga os parâmetros para as sessions
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroEntregou', $parametroEntregou);
 
     # Limita a página
     $grid = new Grid();
@@ -90,12 +92,12 @@ if ($acesso) {
         $controle->set_linha(1);
         $controle->set_col(6);
         $form->add_item($controle);
-        
+
         # Entregou ? 
         $controle = new Input('parametroEntregou', 'combo', 'Entregou ?', 1);
         $controle->set_size(30);
         $controle->set_title('Filtra por Entrega');
-        $controle->set_array([Sim¨,¨Não¨, Não Informado¨]);
+        $controle->set_array(["Todos", "Sim", "Não", "Não Informado"]);
         $controle->set_valor($parametroEntregou);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
@@ -207,13 +209,25 @@ if ($acesso) {
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
                 } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
 
-            $select .= " ORDER BY tbpessoa.nome";
+            # Entregou  
+            if ($parametroEntregou <> "Todos") {
+                if ($parametroEntregou == "Sim") {
+                    $select .= " AND tbservidor.entregouCtc = 's'";
+                } elseif ($parametroEntregou == "Não") {
+                    $select .= " AND tbservidor.entregouCtc = 'n'";
+                } else {
+                    $select .= " AND (tbservidor.entregouCtc is null)";
+                }
+            }
+
+
+            $select .= " ORDER BY tbservidor.entregouCtc desc, tbpessoa.nome";
 
             $result = $servidor->select($select);
 
@@ -234,6 +248,25 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->show();
             break;
+
+        #######################################            
+
+        case "editaServidor" :
+
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'areaCtcInss.php?fase=aguarde');
+
+            # Carrega a página específica
+            loadPage('servidorMenu.php');
+            break;
+
+        #######################################
     }
 
     $grid->fechaColuna();

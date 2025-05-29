@@ -1815,14 +1815,12 @@ class Aposentadoria {
 
                 $row = $pessoal->select($select, false);
 
-                if (empty($row[0])) {
-                    label("Não Informado");
-                } elseif ($row[0] == "s") {
+                if ($row[0] == "s") {
                     label("Sim", "success");
-                } elseif ($row[0] == "n'") {
+                } elseif ($row[0] == "n") {
                     label("Não", "alert");
                 } else {
-                    echo "---";
+                    label("Não Informado");
                 }
             } else {
                 echo "Não Precisa";

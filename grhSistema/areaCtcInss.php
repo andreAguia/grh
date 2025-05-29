@@ -88,7 +88,18 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(4);
+        $controle->set_col(6);
+        $form->add_item($controle);
+        
+        # Entregou ? 
+        $controle = new Input('parametroEntregou', 'combo', 'Entregou ?', 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Entrega');
+        $controle->set_array([Sim¨,¨Não¨, Não Informado¨]);
+        $controle->set_valor($parametroEntregou);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
         $form->add_item($controle);
         $form->show();
     }
@@ -116,14 +127,14 @@ if ($acesso) {
         #######################################
 
         case "listar" :
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(3);
-            
+
             #######################################
-            # Resumo por Ano Exercício
-            
-            $subTitulo = null;
+            # Resumo 
+
+            $subtitulo = null;
 
             # Pega os dados
             $select = "SELECT CASE entregouCtc
@@ -146,8 +157,10 @@ if ($acesso) {
                 # Verifica se o que veio é numérico
                 if (is_numeric($parametroLotacao)) {
                     $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao);
                 } else { # senão é uma diretoria genérica
                     $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $subtitulo = $parametroLotacao;
                 }
             }
 
@@ -161,15 +174,16 @@ if ($acesso) {
             $tabela->set_label(["Entregou?", "Quantidade"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_align(["center"]);
-            $tabela->set_titulo("Ano Exercício");
+            $tabela->set_titulo("Quantidades");
+            $tabela->set_subtitulo($subtitulo);
             $tabela->set_colunaSomatorio(1);
             $tabela->show();
 
             #######################################
-            
+
             $grid->fechaColuna();
             $grid->abreColuna(9);
-            
+
             # Conecta com o banco de dados
             $servidor = new Pessoal();
 

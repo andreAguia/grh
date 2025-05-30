@@ -43,7 +43,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));    
     $parametroEntregou = post('parametroEntregou', get_session('parametroEntregou', "Todos"));
 
     # Joga os parâmetros para as sessions
@@ -90,7 +90,7 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(6);
+        $controle->set_col(8);
         $form->add_item($controle);
 
         # Entregou ? 

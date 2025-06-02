@@ -164,7 +164,7 @@ if ($acesso) {
     $relatorio->set_conteudo($result);
     $relatorio->set_classe([null, "pessoal"]);
     $relatorio->set_metodo([null, "get_nome"]);
-    $relatorio->set_numGrupo(2);
+    #$relatorio->set_numGrupo(2);
     $relatorio->show();
 
     $grid->fechaColuna();

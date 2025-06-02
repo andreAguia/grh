@@ -154,17 +154,17 @@ if ($acesso) {
 
     $relatorio->set_funcaoFinalRelatorio('exibeTextoFinal');
 
-    $relatorio->set_label(array('idFuncional', 'Nome', 'Cargo', 'Lotação'));
-    $relatorio->set_width(array(20, 40, 40));
-    $relatorio->set_align(array("center", "left", "left"));
+    $relatorio->set_label(['idFuncional', 'Nome', 'Lotação']);
+    $relatorio->set_width([20, 40, 40]);
+    $relatorio->set_align(["center", "left", "left"]);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
     $relatorio->set_dataImpressao(false);
     $relatorio->set_linhaNomeColuna(false);
     $relatorio->set_conteudo($result);
-    $relatorio->set_classe(array(null, null, "pessoal"));
-    $relatorio->set_metodo(array(null, null, "get_cargoSimples"));
-    $relatorio->set_numGrupo(3);
+    $relatorio->set_classe([null, "pessoal"]);
+    $relatorio->set_metodo([null, "get_nome"]);
+    $relatorio->set_numGrupo(2);
     $relatorio->show();
 
     $grid->fechaColuna();

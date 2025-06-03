@@ -45,7 +45,6 @@ if ($acesso) {
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                 WHERE tbservidor.situacao = 1
-                AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <> 129)
                   AND tbperfil.tipo <> "Outros"
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 

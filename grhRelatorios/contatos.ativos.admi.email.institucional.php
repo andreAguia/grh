@@ -45,7 +45,8 @@ if ($acesso) {
                                  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                  JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                 WHERE tbservidor.situacao = 1
-                  AND idPerfil = 1
+                  AND tbperfil.tipo <> "Outros"
+                  AND (tbservidor.idCargo <> 128 AND tbservidor.idCargo <> 129)
                   AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     if (!is_null($lotacao)) {
@@ -63,7 +64,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio->set_titulo('Relatório de Email Institucional');
-    $relatorio->set_subtitulo('Servidores Estatutários Ativos<br/>Administrativo e Técnicos<br/>Ordenados pelo Nome');
+    $relatorio->set_subtitulo('Servidores Ativos<br/>Administrativo e Técnicos<br/>Ordenados pelo Nome');
     $relatorio->set_subtitulo2($subTitulo);
     $relatorio->set_label(['Servidor', 'Cargo', 'Perfil', 'Lotação', 'Email']);
     $relatorio->set_align(["left", "left", "center", "left"]);

@@ -377,7 +377,7 @@ class MenuPrincipal {
         #$menu->set_espacoEntreLink(true);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Arquivos Compartilhados');
+        $botao->set_label('Arquivos<br/>Compartilhados');
         $botao->set_url('https://drive.google.com/drive/u/5/folders/1prxKYuf9HF-ardQMom06G1BeRQxyeqW8');
         $botao->set_imagem(PASTA_FIGURAS . 'arquivosCompartilhados.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Acessa a pasta de Arquivos Compartilhados');
@@ -386,7 +386,7 @@ class MenuPrincipal {
 
         # Controle de pastas Digitalizadas
         $botao = new BotaoGrafico();
-        $botao->set_label('Publicações');
+        $botao->set_label('Publicações<br/>(SEPOF)');
         $botao->set_url('https://drive.google.com/drive/u/5/folders/1CfnhjPtiBI8N1OhDVrAQXN1wOhr3U-Ns');
         $botao->set_imagem(PASTA_FIGURAS . 'publicacao2.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Acessa a pasta de publicações no Google Drive');
@@ -437,6 +437,7 @@ class MenuPrincipal {
                           title,
                           link
                      FROM tbmenudocumentos
+                    WHERE visivel = 1
                   ORDER BY categoria, texto';
 
         $dados = $pessoal->select($select);

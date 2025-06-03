@@ -74,7 +74,11 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT idMenuDocumentos,
                                      categoria,
-                                     visivel,
+                                     CASE
+                                        WHEN visivel = 1 THEN 'Sim'
+                                        WHEN visivel = 0 THEN 'Não'
+                                        ELSE '---'
+                                     END,
                                      CASE
                                         WHEN tipo = 1 THEN 'Documento'
                                         WHEN tipo = 2 THEN 'Link'

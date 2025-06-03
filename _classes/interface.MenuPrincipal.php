@@ -367,8 +367,36 @@ class MenuPrincipal {
 
         $painel = new Callout();
         $painel->abre();
+        
+        # Google Drive
+        titulo('Google Drive');
+        br();
 
-        # Servidores
+        $tamanhoImage = 60;
+        $menu = new MenuGrafico(2);
+        #$menu->set_espacoEntreLink(true);
+
+        $botao = new BotaoGrafico();
+        $botao->set_label('Arquivos Compartilhados');
+        $botao->set_url('https://drive.google.com/drive/u/5/folders/1prxKYuf9HF-ardQMom06G1BeRQxyeqW8');
+        $botao->set_imagem(PASTA_FIGURAS . 'arquivosCompartilhados.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Acessa a pasta de Arquivos Compartilhados');
+        $botao->set_target("_blank3");
+        $menu->add_item($botao);
+
+        # Controle de pastas Digitalizadas
+        $botao = new BotaoGrafico();
+        $botao->set_label('Publicações');
+        $botao->set_url('https://drive.google.com/drive/u/5/folders/1CfnhjPtiBI8N1OhDVrAQXN1wOhr3U-Ns');
+        $botao->set_imagem(PASTA_FIGURAS . 'publicacao2.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Acessa a pasta de publicações no Google Drive');
+        $botao->set_target("_blank3");
+        $menu->add_item($botao);
+
+        $menu->show();
+        br();
+
+        # Documentos
         titulo('Documentos');
         br();
 

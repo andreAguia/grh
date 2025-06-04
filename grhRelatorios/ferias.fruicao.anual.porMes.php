@@ -19,17 +19,18 @@ $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 if ($acesso) {
     # Conecta ao Banco de Dados
     $servidor = new Pessoal();
-
-    # Começa uma nova página
-    $page = new Page();
-    $page->iniciaPagina();
-
+    
     # Pega os parâmetros
     $parametroAno = get_session('parametroAno', date("Y"));
     $parametroLotacao = get_session('parametroLotacao');
     $parametroStatus = get_session('parametroStatus');
     $parametroPerfil = get_session("parametroPerfil");
     $parametroCargo = get_session('parametroCargo');
+
+    # Começa uma nova página
+    $page = new Page();
+    $page->set_title("Férias - {$parametroAno}");
+    $page->iniciaPagina();    
 
     # Transforma em nulo a máscara *
     if ($parametroLotacao == "*") {

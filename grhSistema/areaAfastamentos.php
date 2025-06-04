@@ -54,13 +54,16 @@ if ($acesso) {
     set_session('parametroCargo', $parametroCargo);
 
     # Começa uma nova página
-    $page = new Page();
-    $page->iniciaPagina();
+    $page = new Page();    
 
     # Cabeçalho da Página
     if ($fase <> "relatorio" AND $fase <> "relatorio2") {
         AreaServidor::cabecalho();
+    }else{
+        $page->set_title("Afastamentos - {$parametroAno}");
     }
+    
+    $page->iniciaPagina();
 
 ################################################################
 

@@ -27,6 +27,7 @@ if ($acesso) {
     $parametroLotacao = get_session('parametroLotacao', 'Todos');
     $parametroSituacao = get_session('parametroSituacao', 'Entregaram');
     $parametroAfastamento = get_session('parametroAfastamento', 'Todos');
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
 
     $exibeAfastamento = get_session('exibeAfastamento', 1);
     $exibeEmail = get_session('exibeEmail', 1);
@@ -36,6 +37,7 @@ if ($acesso) {
     $sispatri->set_lotacao($parametroLotacao);
     $sispatri->exibeEmail($exibeEmail);
     $sispatri->exibeAfastamento($exibeAfastamento);
+    $sispatri->set_matNomeId($parametroNomeMat);
     $sispatri->set_ordenacao("lotacao");
 
     ######

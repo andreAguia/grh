@@ -36,6 +36,7 @@ if ($acesso) {
 
     # Pega os parâmetros    
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
+    $parametroNomeMat = retiraAspas(post('parametroNomeMat', get_session('parametroNomeMat')));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Entregaram'));
     $parametroAfastamento = post('parametroAfastamento', get_session('parametroAfastamento', 'Todos'));
 
@@ -44,6 +45,7 @@ if ($acesso) {
     
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: rtrim(ltrim($parametroNomeMat)));
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroAfastamento', $parametroAfastamento);
 
@@ -149,6 +151,7 @@ if ($acesso) {
     # Inicia a Classe
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($parametroLotacao);
+    $sispatri->set_matNomeId($parametroNomeMat);
     $sispatri->exibeEmail($exibeEmail);
     $sispatri->exibeAfastamento($exibeAfastamento);
     
@@ -208,8 +211,19 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_autofocus(true);
-            $controle->set_col(9);
+            $controle->set_col(6);
 
+            $form->add_item($controle);
+            
+            # Nome ou Matrícula
+            $controle = new Input('parametroNomeMat', 'texto', 'Nome, Mat ou Id:', 1);
+            $controle->set_size(55);
+            $controle->set_title('Nome, matrícula ou ID:');
+            $controle->set_valor($parametroNomeMat);
+            $controle->set_autofocus(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Situação no sispatri

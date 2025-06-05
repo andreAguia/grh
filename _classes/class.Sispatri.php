@@ -9,6 +9,7 @@ class Sispatri {
      */
     private $lotacao = null;
     private $situacao = null;
+    private $matNomeId = null;
     private $ordenacao = "nome";
     private $exibeAfastamento = true;
     private $exibeEmail = true;
@@ -36,6 +37,19 @@ class Sispatri {
     public function set_situacao($situacao) {
         if ($situacao <> "Todos") {
             $this->situacao = $situacao;
+        }
+    }
+
+###########################################################
+
+    /**
+     * Método set_lotacao
+     * 
+     * @param $matNomeId 
+     */
+    public function set_matNomeId($matNomeId) {
+        if (!empty($matNomeId)) {
+            $this->matNomeId = $matNomeId;
         }
     }
 
@@ -103,6 +117,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         # Ordenação
         if ($this->ordenacao == "nome") {
             $select .= ' ORDER BY tbpessoa.nome';
@@ -150,6 +200,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 
@@ -221,6 +307,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
                                               FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -286,6 +408,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 
@@ -359,6 +517,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
                                               FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -427,6 +621,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
                                               FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -481,6 +711,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 
@@ -548,7 +814,7 @@ class Sispatri {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-
+        
         $pessoal = new Pessoal();
         $retorno = $pessoal->count($select);
 
@@ -575,6 +841,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 
@@ -1161,6 +1463,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         $select .= ') ORDER BY tbpessoa.nome';
 
         $pessoal = new Pessoal();
@@ -1197,6 +1535,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 
@@ -1258,6 +1632,42 @@ class Sispatri {
             }
         }
 
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
         $select .= ' AND tbservidor.idServidor NOT IN (SELECT tbsispatri.idServidor
                                               FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -1311,6 +1721,42 @@ class Sispatri {
                 $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
             } else { # senão é uma diretoria genérica
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
             }
         }
 

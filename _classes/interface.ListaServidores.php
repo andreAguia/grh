@@ -214,7 +214,7 @@ class ListaServidores {
 
         $select .= ' WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
-        # Matrícula, nome ou id ou cpf
+        # Matrícula, nome ou id
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';

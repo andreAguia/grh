@@ -103,10 +103,10 @@ if ($acesso) {
 
                 if ($parametroLotacao <> "Todos") {
                     # ci
-                    $botaoci = new Link("CI", "?fase=ci");
+                    $botaoci = new Link("Texto", "?fase=ci");
                     $botaoci->set_target("_blank");
                     $botaoci->set_class('button');
-                    $botaoci->set_title('CI dos servidores que NÃO entregaram o Sispatri');
+                    $botaoci->set_title('Texto para o e-mail dos servidores que NÃO entregaram o Sispatri');
                     $menu1->add_link($botaoci, "right");
                 }
 
@@ -255,7 +255,7 @@ if ($acesso) {
                 $form->add_item($controle);
 
                 # E-mail
-                $controle = new Input('exibeEmail', 'simnao2', 'E-mail:', 1);
+                $controle = new Input('exibeEmail', 'simnao2', 'Exibe o E-mail:', 1);
                 $controle->set_size(5);
                 $controle->set_title('Exibe ou não o e-mail');
                 $controle->set_valor($exibeEmail);
@@ -265,7 +265,7 @@ if ($acesso) {
                 $form->add_item($controle);
 
                 # Afastamento
-                $controle = new Input('exibeAfastamento', 'simnao2', 'Afastamento:', 1);
+                $controle = new Input('exibeAfastamento', 'simnao2', 'Exibe os Afastamento:', 1);
                 $controle->set_size(5);
                 $controle->set_title('Exibe ou não o afastamento');
                 $controle->set_valor($exibeAfastamento);
@@ -372,16 +372,16 @@ if ($acesso) {
             # Formuário da CI
             $form = new Form("../grhRelatorios/sispatri.ci.php");
 
-            # usuário
-            $controle = new Input('ci', 'numero', 'N° CI:', 1);
-            $controle->set_size(5);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_required(true);
-            $controle->set_autofocus(true);
-            $controle->set_tabIndex(1);
-            $controle->set_title('O número da CI');
-            $form->add_item($controle);
+//            # usuário
+//            $controle = new Input('ci', 'numero', 'N° CI:', 1);
+//            $controle->set_size(5);
+//            $controle->set_linha(1);
+//            $controle->set_col(3);
+//            $controle->set_required(true);
+//            $controle->set_autofocus(true);
+//            $controle->set_tabIndex(1);
+//            $controle->set_title('O número da CI');
+//            $form->add_item($controle);
 
             # chefia
             $controle = new Input('chefia', 'texto', 'Chefia Imediata:', 1);

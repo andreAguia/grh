@@ -127,6 +127,7 @@ if ($acesso) {
     # Inicia a Classe
     $sispatri = new Sispatri();
     $sispatri->set_lotacao($lotacao);
+    $sispatri->set_ordenacao(null);
 
     # Exibe os servidores ativos que Não entregaram o sispatri
     if ($parametroAfastamento == "Todos") {
@@ -164,7 +165,7 @@ if ($acesso) {
     $relatorio->set_conteudo($result);
     $relatorio->set_classe([null, "pessoal"]);
     $relatorio->set_metodo([null, "get_nome"]);
-    #$relatorio->set_numGrupo(2);
+    $relatorio->set_numGrupo(2);
     $relatorio->show();
 
     $grid->fechaColuna();

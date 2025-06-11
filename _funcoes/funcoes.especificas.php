@@ -319,7 +319,7 @@ function exibeDiasLicencaPremio($idServidor) {
     }
 
     # Monta o retorno
-    $retorno = "$diasPublicados / $diasFruidos / ";
+    $retorno = "$diasPublicados | $diasFruidos | ";
 
     # Coloca em vermelho quando negativo
     if ($diasDisponiveis < 0) {
@@ -340,7 +340,7 @@ function exibeDiasLicencaPremio($idServidor) {
                 $diasDisponiveis = $licenca->get_numDiasDisponiveis($tt[0]);
 
                 $retorno .= "<br/>";
-                $retorno .= "$diasPublicados / $diasFruidos / ";
+                $retorno .= "$diasPublicados | $diasFruidos | ";
 
                 # Coloca em vermelho quando negativo
                 if ($diasDisponiveis < 0) {
@@ -352,7 +352,7 @@ function exibeDiasLicencaPremio($idServidor) {
         }
 
         $retorno .= "<hr id='alerta'/>";
-        $retorno .= "$diasPublicadosTotal / $diasFruidosTotal / ";
+        $retorno .= "$diasPublicadosTotal | $diasFruidosTotal | ";
 
         # Coloca em vermelho quando negativo
         if ($diasDisponiveisTotal < 0) {
@@ -393,7 +393,7 @@ function exibeNumPublicacoesLicencaPremio($idServidor) {
 
 
     # Monta o retorno
-    $retorno = "$numPublicacao / $numPublicacaoPossivel / ";
+    $retorno = "$numPublicacao | $numPublicacaoPossivel | ";
 
     # Coloca em vermelho quando negativo
     if ($numPublicacaoFaltante < 0) {
@@ -413,7 +413,7 @@ function exibeNumPublicacoesLicencaPremio($idServidor) {
                 $numPublicacaoFaltante = $numPublicacaoPossivel - $numPublicacao;
 
                 $retorno .= "<br/>";
-                $retorno .= "$numPublicacao / $numPublicacaoPossivel / ";
+                $retorno .= "$numPublicacao | $numPublicacaoPossivel | ";
 
                 # Coloca em vermelho quando negativo
                 if ($numPublicacaoFaltante < 0) {
@@ -425,7 +425,7 @@ function exibeNumPublicacoesLicencaPremio($idServidor) {
         }
 
         $retorno .= "<hr id='alerta'/>";
-        $retorno .= "$numPublicacaoTotal / $numPublicacaoPossivelTotal / ";
+        $retorno .= "$numPublicacaoTotal | $numPublicacaoPossivelTotal | ";
 
         # Coloca em vermelho quando negativo
         if ($numPublicacaoFaltanteTotal < 0) {

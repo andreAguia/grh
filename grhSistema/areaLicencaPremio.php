@@ -452,7 +452,7 @@ if ($acesso) {
                 $relatorio->set_subtitulo($subtitulo);
             }
 
-            $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Dias<br/>Publ./ Fruídos / Disp."]);
+            $relatorio->set_label(["Id / Matrícula", "Servidor", "Lotação", "Admissão", "Número de Dias<br/>Publ. | Fruídos | Disp."]);
             $relatorio->set_align(["center", "left"]);
             $relatorio->set_funcao([null, null, null, null, "exibeDiasLicencaPremio"]);
             $relatorio->set_classe(["pessoal", "pessoal", "pessoal", "pessoal", null, "pessoal"]);

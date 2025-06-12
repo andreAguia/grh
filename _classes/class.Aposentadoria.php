@@ -1103,8 +1103,13 @@ class Aposentadoria {
             ["Idade", $pessoal->get_idade($idServidor)],
             ["Data de Nascimento", $pessoal->get_dataNascimento($idServidor)],
             ["Data de Admissão", $pessoal->get_dtadmissao($idServidor)],
-            ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $dtIngresso]
+            ["Data de Ingresso<br/><p id='psubtitulo'>para Tempo de Serviço Público</p>", $dtIngressoTempoPublico]
         ];
+        
+        if ($dtIngressoTempoPublico <> $dtIngresso) {
+            array_push($array,["Data de Ingresso<br/><p id='psubtitulo'>para regra de Aposentadoria<p id='psubtitulo'></p>", $dtIngresso]);
+        }
+        
 
         # Exibe a tabela
         if ($relatorio) {

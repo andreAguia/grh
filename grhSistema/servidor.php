@@ -28,9 +28,11 @@ if ($acesso) {
         $horaBackup = $intra->get_variavel("backupHora");
         $horaAtual = date("H");
 
+        # Horarios em que o backup é feito
+        $horarioBackup = [10, 15];
+
         # Compara se são diferentes
-        if ($horaAtual <> $horaBackup) {
-            # Realiza backup
+        if ($horaAtual <> $horaBackup AND in_array($horaAtual, $horarioBackup)) {
             $processo = new Processo();
             $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
         }
@@ -61,7 +63,7 @@ if ($acesso) {
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', '*'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroOrdenacao = post('parametroOrdenacao', get_session('parametroOrdenacao', "tbpessoa.nome asc, 6 asc"));
-    
+
     # Zera alguns parâmetros da lic prêmio
     set_session('parametroMeses');
     set_session('parametroDtInicial');
@@ -84,7 +86,7 @@ if ($acesso) {
     $subTitulo = get_session('sessionSubTitulo');
 
     # Joga os parâmetros par as sessions
-    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: rtrim(ltrim($parametroNomeMat)));
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat : rtrim(ltrim($parametroNomeMat)));
     set_session('parametroCpf', $parametroCpf);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroCargoComissao', $parametroCargoComissao);

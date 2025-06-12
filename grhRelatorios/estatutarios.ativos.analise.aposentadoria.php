@@ -93,7 +93,7 @@ if ($acesso) {
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, null, "idade", "date_to_php", null, null, null, null, null, null, "date_to_php"]);
     $relatorio->set_classe([null, null, null, null, null, null, "Aposentadoria", "Aposentadoria", "Aposentadoria", "Averbacao", "Averbacao", null, "Aposentadoria", "Aposentadoria", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
-    $relatorio->set_metodo([null, null, null, null, null, null, "get_dtIngresso", "get_tempoTotalAntes31_12_21", "get_tempoTotal", "get_tempoAverbadoPublico", "get_tempoAverbadoPrivado", null, "get_data10anosPublicos", "get_data20anosPublicos", "get_data25anosPublicos", "get_data30anosPublicos", "get_data35anosPublicos"]);
+    $relatorio->set_metodo([null, null, null, null, null, null, "get_dtIngressoParaTempoPublico", "get_tempoTotalAntes31_12_21", "get_tempoTotal", "get_tempoAverbadoPublico", "get_tempoAverbadoPrivado", null, "get_data10anosPublicos", "get_data20anosPublicos", "get_data25anosPublicos", "get_data30anosPublicos", "get_data35anosPublicos"]);
     $relatorio->set_conteudo($result);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao

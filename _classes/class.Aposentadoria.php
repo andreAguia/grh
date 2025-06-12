@@ -17,11 +17,6 @@ class Aposentadoria {
 
     public function exibeMenu($itemBold = null) {
 
-        # Pega as idades de aposentadoria
-        $intra = new Intra();
-        $idadeAposentMasculino = $intra->get_variavel("aposentadoria.integral.idade.masculino");
-        $idadeAposentFeminino = $intra->get_variavel("aposentadoria.integral.idade.feminino");
-
         tituloTable("Menu");
         $menu = new Menu("menuAposentadoria", $itemBold);
 
@@ -661,11 +656,61 @@ class Aposentadoria {
 
     /**
      * Método get_dtIngresso
-     * informa a data de ingresso
+     * 
+     * Informa a data de ingresso para ser usada como fixação de data de ingresso.
+     * Essa data NÃO considera tempo público averbado celetista
+     * Atente que essa data é diferente da data de ingresso para contagem de tempo público
      * 
      * @param	string $idServidor idServidor do servidor
      */
     public function get_dtIngresso($idServidor) {
+
+        # Conecta o banco de dados
+        $pessoal = new Pessoal();
+
+        # Pega os dados do servidor
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+        # Pega os dados
+        $select = "SELECT dtInicial,
+                          dtFinal
+                     FROM tbaverbacao
+                    WHERE empresaTipo = 1
+                      AND regime = 2
+                      AND idServidor = {$idServidor}
+                 ORDER BY dtInicial DESC";
+
+        $result = $pessoal->select($select);
+        $dtReferencia = $dtAdmissao;
+
+        # Percorre os registros
+        foreach ($result as $periodo) {
+            $dtInicial = date_to_php($periodo[0]);
+            $dtFinal = date_to_php($periodo[1]);
+
+            # Verifica se é initerrupto
+            if (($dtFinal == $dtReferencia) OR ($dtFinal == addDias($dtReferencia, -1, false))) {
+                $dtReferencia = $dtInicial;
+            } else {
+                break;
+            }
+        }
+
+        return $dtReferencia;
+    }
+
+    #####################################################
+
+    /**
+     * Método get_dtIngressoParaTempoPublico
+     * 
+     * Informa a data de ingresso para ser usada como início do tempo público
+     * Essa data considera tempo público averbado celetista
+     * Atente que essa data é diferente da data de ingresso
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_dtIngressoParaTempoPublico($idServidor) {
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
@@ -713,7 +758,7 @@ class Aposentadoria {
         $pessoal = new Pessoal();
 
         # Pega a data de Ingresso
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
 
         # Pega os dados
         $select = "SELECT dtInicial,
@@ -804,7 +849,7 @@ class Aposentadoria {
      */
     public function get_data20anosPublicos($idServidor) {
 
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 20);
     }
 
@@ -818,7 +863,7 @@ class Aposentadoria {
      */
     public function get_data10anosPublicos($idServidor) {
 
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 10);
     }
 
@@ -832,7 +877,7 @@ class Aposentadoria {
      */
     public function get_data25anosPublicos($idServidor) {
 
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 25);
     }
 
@@ -846,7 +891,7 @@ class Aposentadoria {
      */
     public function get_data30anosPublicos($idServidor) {
 
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 30);
     }
 
@@ -860,7 +905,7 @@ class Aposentadoria {
      */
     public function get_data35anosPublicos($idServidor) {
 
-        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
         return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 35);
     }
 
@@ -1032,11 +1077,13 @@ class Aposentadoria {
          * Exibe os dados de aposentadoria do servidor
          */
 
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-
         # Conecta as Classes
+        $pessoal = new Pessoal();
         $averbacao = new Averbacao();
+
+        # pega os valores
+        $dtIngresso = $this->get_dtIngresso($idServidor);
+        $dtIngressoTempoPublico = $this->get_dtIngressoParaTempoPublico($idServidor);
 
         $regime = [
             [1, "Celetista"],
@@ -1056,7 +1103,7 @@ class Aposentadoria {
             ["Idade", $pessoal->get_idade($idServidor)],
             ["Data de Nascimento", $pessoal->get_dataNascimento($idServidor)],
             ["Data de Admissão", $pessoal->get_dtadmissao($idServidor)],
-            ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $this->get_dtIngresso($idServidor)]
+            ["Data de Ingresso<br/><p id='psubtitulo'>no Serviço Público</p>", $dtIngresso]
         ];
 
         # Exibe a tabela
@@ -1080,6 +1127,17 @@ class Aposentadoria {
         $tabela->set_align(["left", "center"]);
         $tabela->set_totalRegistro(false);
         $tabela->show();
+
+        # Informa quando a data de ingresso para tempo de serviço é
+        # diferente da data de ingresso de fato
+        if ($dtIngressoTempoPublico <> $dtIngresso) {
+            $painel = new Callout();
+            $painel->abre();
+            tituloTable("Atenção");
+            br();
+            p("Servidor com data de ingresso diferente da data de ingresso considerada para tempo de serviço", "center");
+            $painel->fecha();
+        }
 
         $grid1->fechaColuna();
         if ($relatorio) {

@@ -28,11 +28,9 @@ if ($acesso) {
         $horaBackup = $intra->get_variavel("backupHora");
         $horaAtual = date("H");
 
-        # Horarios em que o backup é feito
-        $horarioBackup = [10, 15];
-
         # Compara se são diferentes
-        if ($horaAtual <> $horaBackup AND in_array($horaAtual, $horarioBackup)) {
+        if ($horaAtual <> $horaBackup) {
+            # Realiza backup
             $processo = new Processo();
             $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
         }

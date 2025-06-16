@@ -182,7 +182,7 @@ class Sispatri {
 
         # Exibe o e-mail ou não
         if ($this->exibeEmail) {
-            $select .= ' tbpessoa.emailUenf,';
+            $select .= ' concat(IFnull(tbpessoa.emailUenf,""),"<br/>",IFnull(tbpessoa.emailPessoal,"")),';
         }
 
         $select .= ' tbservidor.idServidor
@@ -285,7 +285,7 @@ class Sispatri {
 
         # Exibe o e-mail ou não
         if ($this->exibeEmail) {
-            $select .= ' tbpessoa.emailUenf,';
+            $select .= ' concat(IFnull(tbpessoa.emailUenf,""),"<br/>",IFnull(tbpessoa.emailPessoal,"")),';
         }
 
         $select .= ' tbservidor.idServidor
@@ -389,7 +389,7 @@ class Sispatri {
 
         # Exibe o e-mail ou não
         if ($this->exibeEmail) {
-            $select .= ' tbpessoa.emailUenf,';
+            $select .= ' concat(IFnull(tbpessoa.emailUenf,""),"<br/>",IFnull(tbpessoa.emailPessoal,"")),';
         }
 
         $select .= ' tbservidor.idServidor
@@ -493,7 +493,7 @@ class Sispatri {
 
         # Exibe o e-mail ou não
         if ($this->exibeEmail) {
-            $select .= ' tbpessoa.emailUenf,';
+            $select .= ' concat(IFnull(tbpessoa.emailUenf,""),"<br/>",IFnull(tbpessoa.emailPessoal,"")),';
         }
 
         $select .= ' tbservidor.idServidor
@@ -599,7 +599,7 @@ class Sispatri {
 
         # Exibe o e-mail ou não
         if ($this->exibeEmail) {
-            $select .= ' tbpessoa.emailUenf,';
+            $select .= ' concat(IFnull(tbpessoa.emailUenf,""),"<br/>",IFnull(tbpessoa.emailPessoal,"")),';
         }
 
         $select .= ' tbservidor.idServidor

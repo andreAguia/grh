@@ -814,7 +814,7 @@ class Sispatri {
                 $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
             }
         }
-        
+
         $pessoal = new Pessoal();
         $retorno = $pessoal->count($select);
 
@@ -1427,15 +1427,23 @@ class Sispatri {
      * Método exibeEmails
      * 
      * Método exibe uma relação de e-mail para serem copiados e colados 
+     * 
+     * @param	integer	$tipo	-> 1 - e-mail institucional | 2 - e-mail pessoal
      */
-    public function exibeEmails() {
+    public function exibeEmails($tipo = 1) {
         # Pega os dados
-        $select = 'SELECT tbpessoa.emailUenf
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+        if ($tipo == 1) {
+            $select = 'SELECT tbpessoa.emailUenf ';
+        } else {
+            $select = 'SELECT tbpessoa.emailPessoal ';
+        }
+        $select .= ' FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                          JOIN tbperfil USING (idPerfil) 
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                      AND tbservidor.situacao = 1';
+                      AND tbservidor.situacao = 1
+                      AND tbperfil.tipo <> "Outros"';
         # Lotacao
         if (!vazio($this->lotacao)) {
             # Verifica se o que veio é numérico
@@ -1518,15 +1526,21 @@ class Sispatri {
      * 
      * Método exibe uma relação de e-mail para serem copiados e colados 
      */
-    public function exibeEmailsFerias() {
+    public function exibeEmailsFerias($tipo = 1) {
         # Pega os dados
-        $select = 'SELECT tbpessoa.emailUenf
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+        if ($tipo == 1) {
+            $select = 'SELECT tbpessoa.emailUenf ';
+        } else {
+            $select = 'SELECT tbpessoa.emailPessoal ';
+        }
+        $select .= ' FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
-                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.situacao = 1
+                                         JOIN tbperfil USING (idPerfil) 
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbservidor.situacao = 1
+                      AND tbperfil.tipo <> "Outros"
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1610,15 +1624,21 @@ class Sispatri {
      * 
      * Método exibe uma relação de e-mail para serem copiados e colados 
      */
-    public function exibeEmailsLicMedica() {
+    public function exibeEmailsLicMedica($tipo = 1) {
         # Pega os dados
-        $select = 'SELECT tbpessoa.emailUenf
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+        if ($tipo == 1) {
+            $select = 'SELECT tbpessoa.emailUenf ';
+        } else {
+            $select = 'SELECT tbpessoa.emailPessoal ';
+        }
+        $select .= '  tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          JOIN tblicenca ON (tbservidor.idServidor = tblicenca.idServidor)
-                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                         JOIN tbperfil USING (idPerfil) 
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
+                     AND tbperfil.tipo <> "Outros"
                      AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
                      AND (CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1) OR alta <> 1)
                      AND (idTpLicenca = 1 OR idTpLicenca = 30)';
@@ -1704,15 +1724,21 @@ class Sispatri {
      * 
      * Método exibe uma relação de e-mail para serem copiados e colados 
      */
-    public function exibeEmailsLicPremio() {
+    public function exibeEmailsLicPremio($tipo = 1) {
         # Pega os dados
-        $select = 'SELECT tbpessoa.emailUenf
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+        if ($tipo == 1) {
+            $select = 'SELECT tbpessoa.emailUenf ';
+        } else {
+            $select = 'SELECT tbpessoa.emailPessoal ';
+        }
+        $select .= '  tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          JOIN tblicencapremio ON (tbservidor.idServidor = tblicencapremio.idServidor)
-                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.situacao = 1
+                                         JOIN tbperfil USING (idPerfil) 
+                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                      AND tbservidor.situacao = 1
+                      AND tbperfil.tipo <> "Outros"
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
         # Lotacao
         if (!vazio($this->lotacao)) {

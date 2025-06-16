@@ -42,10 +42,10 @@ if ($acesso) {
 
     $exibeAfastamento = post('exibeAfastamento', get_session('exibeAfastamento', 1));
     $exibeEmail = post('exibeEmail', get_session('exibeEmail', 1));
-    
+
     # Joga os parâmetros par as sessions   
     set_session('parametroLotacao', $parametroLotacao);
-    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat: rtrim(ltrim($parametroNomeMat)));
+    set_session('parametroNomeMat', empty($parametroNomeMat) ? $parametroNomeMat : rtrim(ltrim($parametroNomeMat)));
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroAfastamento', $parametroAfastamento);
 
@@ -111,10 +111,16 @@ if ($acesso) {
                 }
 
                 # e-mail
-                $botaoci = new Link("Enviar e-mails", "?fase=email");
+                $botaoci = new Link("E-mail Institucional", "?fase=email");
                 $botaoci->set_target("_blank");
                 $botaoci->set_class('button');
-                $botaoci->set_title('Relação de e-mails dos servidores desta listagem');
+                $botaoci->set_title('Relação de e-mails institucionais dos servidores desta listagem');
+                $menu1->add_link($botaoci, "right");
+
+                $botaoci = new Link("E-mail Pessoal", "?fase=emailPessoal");
+                $botaoci->set_target("_blank");
+                $botaoci->set_class('button');
+                $botaoci->set_title('Relação de e-mails pessoais dos servidores desta listagem');
                 $menu1->add_link($botaoci, "right");
             }
 
@@ -154,7 +160,7 @@ if ($acesso) {
     $sispatri->set_matNomeId($parametroNomeMat);
     $sispatri->exibeEmail($exibeEmail);
     $sispatri->exibeAfastamento($exibeAfastamento);
-    
+
 ################################################################
 
     switch ($fase) {
@@ -214,7 +220,7 @@ if ($acesso) {
             $controle->set_col(6);
 
             $form->add_item($controle);
-            
+
             # Nome ou Matrícula
             $controle = new Input('parametroNomeMat', 'texto', 'Nome, Mat ou Id:', 1);
             $controle->set_size(55);
@@ -284,13 +290,12 @@ if ($acesso) {
             }
 
             if ($parametroSituacao == "Entregaram") {
-                
+
                 # Exibe os servidores inativos que entregaram o sispatri
                 $sispatri->exibeServidoresEntregaramInativos();
 
                 # Exibe os servidores ativos que entregaram o sispatri
                 $sispatri->exibeServidoresEntregaramAtivos();
-
             } else {
                 # Exibe os servidores ativos que Não entregaram o sispatri
                 if ($parametroAfastamento == "Todos") {
@@ -382,7 +387,6 @@ if ($acesso) {
 //            $controle->set_tabIndex(1);
 //            $controle->set_title('O número da CI');
 //            $form->add_item($controle);
-
             # chefia
             $controle = new Input('chefia', 'texto', 'Chefia Imediata:', 1);
             $controle->set_size(200);
@@ -418,7 +422,7 @@ if ($acesso) {
             # Exibe a lista de email para ser compiada e colada
             # quando se deseja enviar e-mails para todos os
             # servidores da listagem
-            
+
             if ($parametroAfastamento == "Todos") {
                 $sispatri->exibeEmails();
             }
@@ -433,6 +437,30 @@ if ($acesso) {
 
             if ($parametroAfastamento == "Licença Médica") {
                 $sispatri->exibeEmailsLicMedica();
+            }
+            break;
+
+        ################################################################
+
+        case "emailPessoal" :
+            # Exibe a lista de email para ser compiada e colada
+            # quando se deseja enviar e-mails para todos os
+            # servidores da listagem
+
+            if ($parametroAfastamento == "Todos") {
+                $sispatri->exibeEmails(2);
+            }
+
+            if ($parametroAfastamento == "Férias") {
+                $sispatri->exibeEmailsFerias(2);
+            }
+
+            if ($parametroAfastamento == "Licença Prêmio") {
+                $sispatri->exibeEmailsLicPremio(2);
+            }
+
+            if ($parametroAfastamento == "Licença Médica") {
+                $sispatri->exibeEmailsLicMedica(2);
             }
             break;
 

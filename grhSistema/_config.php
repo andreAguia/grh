@@ -62,6 +62,7 @@ define("PASTA_COMP_AUX_EDUCA", "../../_arquivos/compAuxEduca/");            # do
 define("PASTA_SUSPENSAO", "../../_arquivos/suspensao/");                    # publicação da suspensão de servidor
 define("PASTA_PENALIDADES", "../../_arquivos/penalidades/");                # publicação das penalidades do servidor
 define("PASTA_PROVAS", "../../_arquivos/provas/");                          # provas de concurso
+define("PASTA_SERVICOANEXOS", "../../_arquivos/servicoAnexos/");    # arquivos para a rotina de Servicos
 /*
  *  Tags aceitas em campos com htmlTag = true
  */

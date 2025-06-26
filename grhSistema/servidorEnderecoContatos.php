@@ -166,7 +166,7 @@ if ($acesso) {
         array('linha' => 7,
             'nome' => 'telCelular',
             'label' => 'Telefone Celular:',
-            'tipo' => 'celular',
+            'tipo' => 'texto',
             'title' => 'Telefone Celular',
             'col' => 3,
             'size' => 30),

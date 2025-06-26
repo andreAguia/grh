@@ -586,4 +586,34 @@ class Lotacao {
     }
 
     ###########################################################
+
+    public function get_email($idLotacao = null) {
+        /**
+         * Exibe o nome da lotação e o e-mail cadastrado
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select = "SELECT email
+                          FROM tblotacao ";
+
+            # Lotacao
+            # Verifica se o que veio é numérico
+            if (is_numeric($idLotacao)) {
+                $select .= " WHERE idlotacao = $idLotacao";
+            } else { # senão é uma diretoria genérica
+                $select .= " WHERE DIR = '$idLotacao'";
+            }
+            
+            $row = $pessoal->select($select, false);
+            return $row["email"];
+        }
+    }
+
+    ###########################################################
 }

@@ -151,7 +151,7 @@ if ($acesso) {
         array('linha' => 7,
             'nome' => 'telResidencial',
             'label' => 'Telefone Residencial:',
-            'tipo' => 'telefone',
+            'tipo' => 'texto',
             'title' => 'Telefone Residencial',
             'col' => 3,
             'fieldset' => 'Telefones',

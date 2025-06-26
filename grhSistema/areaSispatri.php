@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $lotacao = new Lotacao();
 
     # Verifica a fase do programa
     $fase = get('fase', "inicio");
@@ -181,6 +182,24 @@ if ($acesso) {
 
             # Exibe a data da Última importação
             $sispatri->exibeDataUltimaImportacao();
+
+            if ($parametroLotacao <> "Todos") {
+                $idChefe = $pessoal->get_chefiaImediataIdLotacao($parametroLotacao);
+                $cargoChefe = $pessoal->get_chefiaImediataDescricao($idChefe);
+                $chefe = $pessoal->get_nome($idChefe);
+                $emailChefe = $pessoal->get_emailUenf($idChefe);
+                $emailLotacao = $lotacao->get_email($parametroLotacao);
+
+                # Começa o painel
+                $painel = new Callout("warning");
+                $painel->abre();
+
+                p($chefe, "pdataImportacaoSispatriValor");
+                p($cargoChefe, "pdataImportacaoSispatriTexto");
+                p("{$emailChefe}, {$emailLotacao}", "center");
+
+                $painel->fecha();
+            }
 
             # Resumo
             $sispatri->exibeResumo();

@@ -5356,6 +5356,12 @@ class Pessoal extends Bd {
      * Informa se o servidor tem email principal e qual seria
      */
     public function get_emailUenf($idServidor) {
+        
+        # Verifica o id
+        if(empty($idServidor)){
+            return null;
+        }
+        
         $select = 'SELECT emailUenf
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
@@ -6432,10 +6438,10 @@ class Pessoal extends Bd {
         $idLotacao = $this->get_idLotacao($idServidor);
 
         # Verifica se é o setor de cedidos (113)
-        if ($idLotacao == 113) {
+        if (is_null($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
         }
-
+        
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -6497,6 +6503,11 @@ class Pessoal extends Bd {
          * 
          * @param $idLotacao integer o id da lotaçao
          */
+        # Verifica se é o setor de cedidos (113)
+        if (empty($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
+            return null;
+        }
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -6536,6 +6547,12 @@ class Pessoal extends Bd {
          * @param $idServidor integer o id do servidor com cargo
          * 
          */
+        
+        # Verifica o id
+        if (empty($idServidor)) {
+            return null;
+        }
+        
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediata($idServidor);
 
@@ -6566,6 +6583,12 @@ class Pessoal extends Bd {
          * @param $idLotacao integer o id da lotação
          * 
          */
+        
+        # Verifica se é o setor de cedidos (113)
+        if (empty($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
+            return null;
+        }
+
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediataIdLotacao($idLotacao);
 
@@ -7064,7 +7087,6 @@ class Pessoal extends Bd {
         /**
          * Gera um arquivo csv para a informática
          */
-        
         # Verifica se veio o npme da tabela
         if (!empty($tabela)) {
 
@@ -7082,7 +7104,6 @@ class Pessoal extends Bd {
                 # Parâmetros
                 $nomeArquivo = "../../csv/arquivo.csv";
                 #$nomeArquivo = "/home/andre/csv/arquivo.csv";
-
                 # Select
                 $select = "SELECT idServidor,
                           tbpessoa.idPessoa,

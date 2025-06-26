@@ -190,15 +190,19 @@ if ($acesso) {
                 $emailChefe = $pessoal->get_emailUenf($idChefe);
                 $emailLotacao = $lotacao->get_email($parametroLotacao);
 
-                # Começa o painel
-                $painel = new Callout("warning");
-                $painel->abre();
+                # verifica se teve algum dado para exibir
+                if (!empty($chefe) OR !empty($emailLotacao)) {
 
-                p($chefe, "pdataImportacaoSispatriValor");
-                p($cargoChefe, "pdataImportacaoSispatriTexto");
-                p("{$emailChefe}, {$emailLotacao}", "center");
+                    # Começa o painel
+                    $painel = new Callout("warning");
+                    $painel->abre();
 
-                $painel->fecha();
+                    p($chefe, "pdataImportacaoSispatriValor");
+                    p($cargoChefe, "pdataImportacaoSispatriTexto");
+                    p("{$emailChefe}, {$emailLotacao}", "center");
+
+                    $painel->fecha();
+                }
             }
 
             # Resumo

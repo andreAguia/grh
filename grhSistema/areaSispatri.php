@@ -185,7 +185,7 @@ if ($acesso) {
 
             if ($parametroLotacao <> "Todos") {
                 $idChefe = $pessoal->get_chefiaImediataIdLotacao($parametroLotacao);
-                $cargoChefe = $pessoal->get_chefiaImediataDescricao($idChefe);
+                $cargoChefe = $pessoal->get_chefiaImediataDescricaoIdLotacao($parametroLotacao);
                 $chefe = $pessoal->get_nome($idChefe);
                 $emailChefe = $pessoal->get_emailUenf($idChefe);
                 $emailLotacao = $lotacao->get_email($parametroLotacao);

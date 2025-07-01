@@ -991,9 +991,9 @@ class MenuPrincipal {
         }
         
         $botao = new BotaoGrafico();
-        $botao->set_label('Instagram GRH');
+        $botao->set_label('Instagram da GRH');
         $botao->set_url('https://www.instagram.com/grh_uenf/');
-        $botao->set_imagem(PASTA_FIGURAS . 'instaGrh.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_imagem(PASTA_FIGURAS . 'instaGrh.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Instagram da GRH');
         $menu->add_item($botao);
 

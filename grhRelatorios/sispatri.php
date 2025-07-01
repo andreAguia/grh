@@ -44,12 +44,15 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
 
-    # Pega os registros
+    # Servidores que entregaram
     if ($parametroSituacao == "Entregaram") {
         # Exibe os servidores ativos que entregaram o sispatri
         $lista = $sispatri->get_servidoresEntregaramAtivos();
         $relatorio->set_titulo('Relatório de Declarações Entregues do Sispatri');
-    } else {
+    }
+
+    # Servidores que NÃO entregaram
+    if ($parametroSituacao == "Não Entregaram") {
 
         # Exibe os servidores ativos que Não entregaram o sispatri
         if ($parametroAfastamento == "Todos") {
@@ -76,13 +79,21 @@ if ($acesso) {
         }
     }
 
+    # Servidores retirados
+    if ($parametroSituacao == "Retirados") {
+
+        $lista = $sispatri->get_servidoresRetirados();
+        $relatorio->set_titulo('Relatório de Servidores Retirados');
+    }
+
     if (!is_numeric($parametroLotacao)) {
         $relatorio->set_tituloLinha2($parametroLotacao);
     }
 
     $relatorio->set_subtitulo('Ordenados pelo Nome');
 
-    if ($parametroSituacao == "Entregaram") {
+    # Servidores que entregaram ou retirados
+    if ($parametroSituacao == "Entregaram" OR $parametroSituacao == "Retirados") {
 
         $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Situação']);
         $relatorio->set_align(["center", "left", "left", "left"]);
@@ -91,7 +102,10 @@ if ($acesso) {
         $relatorio->set_funcao([null, null, null, null, "get_situacaoRel"]);
         $relatorio->set_conteudo($lista);
         $relatorio->set_numGrupo(3);
-    } else {
+    }
+
+    # Servidores que NÃO entregaram
+    if ($parametroSituacao == "Não Entregaram") {
 
         $relatorio->set_conteudo($lista);
         $relatorio->set_classe([null, "pessoal"]);
@@ -126,6 +140,7 @@ if ($acesso) {
         $relatorio->set_align($align);
         $relatorio->set_funcao($funcao);
         $relatorio->set_width($width);
+        $relatorio->set_numGrupo(2);
     }
 
     $relatorio->show();

@@ -183,6 +183,7 @@ if ($acesso) {
             # Exibe a data da Última importação
             $sispatri->exibeDataUltimaImportacao();
 
+            # Exibe a Chefia Imediata
             if ($parametroLotacao <> "Todos") {
                 $idChefe = $pessoal->get_chefiaImediataIdLotacao($parametroLotacao);
                 $cargoChefe = $pessoal->get_chefiaImediataDescricaoIdLotacao($parametroLotacao);
@@ -199,7 +200,7 @@ if ($acesso) {
 
                     p($chefe, "pdataImportacaoSispatriValor");
                     p($cargoChefe, "pdataImportacaoSispatriTexto");
-                    p("{$emailChefe}, {$emailLotacao}", "center");
+                    p("{$emailChefe} {$emailLotacao}", "center");
 
                     $painel->fecha();
                 }

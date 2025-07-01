@@ -5356,12 +5356,12 @@ class Pessoal extends Bd {
      * Informa se o servidor tem email principal e qual seria
      */
     public function get_emailUenf($idServidor) {
-        
+
         # Verifica o id
-        if(empty($idServidor)){
+        if (empty($idServidor)) {
             return null;
         }
-        
+
         $select = 'SELECT emailUenf
                          FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
                         WHERE idservidor = ' . $idServidor;
@@ -6441,7 +6441,7 @@ class Pessoal extends Bd {
         if (is_null($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
         }
-        
+
         # Monta o select
         $select = "SELECT tbservidor.idServidor
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
@@ -6547,12 +6547,11 @@ class Pessoal extends Bd {
          * @param $idServidor integer o id do servidor com cargo
          * 
          */
-        
         # Verifica o id
         if (empty($idServidor)) {
             return null;
         }
-        
+
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediata($idServidor);
 
@@ -6583,7 +6582,6 @@ class Pessoal extends Bd {
          * @param $idLotacao integer o id da lotação
          * 
          */
-        
         # Verifica se é o setor de cedidos (113)
         if (empty($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
@@ -6592,16 +6590,20 @@ class Pessoal extends Bd {
         # Pega a chefia imediata
         $idChefe = $this->get_chefiaImediataIdLotacao($idLotacao);
 
-        # Monta o select
-        $select = "SELECT tbdescricaocomissao.descricao
+        if (!empty($idChefe)) {
+            # Monta o select
+            $select = "SELECT tbdescricaocomissao.descricao
                      FROM tbdescricaocomissao LEFT JOIN tbcomissao USING (idDescricaoComissao)
                     WHERE (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND idServidor = $idChefe";
 
-        $row = parent::select($select, false);
+            $row = parent::select($select, false);
 
-        # Retorna
-        return $row[0];
+            # Retorna
+            return $row[0];
+        } else {
+            return null;
+        }
     }
 
     ##########################################################################################

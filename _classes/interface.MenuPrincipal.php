@@ -995,6 +995,7 @@ class MenuPrincipal {
         $botao->set_url('https://www.instagram.com/grh_uenf/');
         $botao->set_imagem(PASTA_FIGURAS . 'instaGrh.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Instagram da GRH');
+        $botao->set_target("_blank");
         $menu->add_item($botao);
 
 

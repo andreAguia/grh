@@ -398,6 +398,14 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'ocorrencias.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Ocorrências Especias do Servidor');
         $menu->add_item($botao);
+        
+        # Sispatri
+        $botao = new BotaoGrafico();
+        $botao->set_label('Sispatri');
+        $botao->set_url("servidorSispatri.php?grh=1");
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri.png', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Controle de Sispatri');
+        $menu->add_item($botao);
 
         # Obs
         $botao = new BotaoGrafico();

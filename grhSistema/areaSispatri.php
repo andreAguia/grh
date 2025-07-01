@@ -208,12 +208,14 @@ if ($acesso) {
             # Resumo
             $sispatri->exibeResumo();
 
-            if ($parametroSituacao == "Entregaram") {
-                $sispatri->exibeResumoPorCargoEntregaram();
-            } else {
-                $sispatri->exibeResumoPorCargoNaoEntregaram();
-            }
+            # Entregaram
+            $sispatri->exibeResumoPorCargoEntregaram();
 
+            # Não Entregaram
+            $sispatri->exibeResumoPorCargoNaoEntregaram();
+
+            # Retirados
+            $sispatri->exibeResumoRetirados();
             $grid->fechaColuna();
 
             ##############
@@ -256,7 +258,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Situação no sispatri
-            $array = ["Entregaram", "Não Entregaram"];
+            $array = ["Entregaram", "Não Entregaram", "Retirados"];
 
             $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
             $controle->set_size(30);
@@ -268,7 +270,7 @@ if ($acesso) {
             $controle->set_col(3);
             $form->add_item($controle);
 
-            if ($parametroSituacao <> "Entregaram") {
+            if ($parametroSituacao == "Não Entregaram") {
 
                 # Afastamentos
                 $array = ["Todos", "Férias", "Licença Prêmio", "Licença Médica"];
@@ -312,6 +314,7 @@ if ($acesso) {
                 $sispatri->exibeProblemas();
             }
 
+            # Servidores que entregaram
             if ($parametroSituacao == "Entregaram") {
 
                 # Exibe os servidores inativos que entregaram o sispatri
@@ -319,8 +322,11 @@ if ($acesso) {
 
                 # Exibe os servidores ativos que entregaram o sispatri
                 $sispatri->exibeServidoresEntregaramAtivos();
-            } else {
-                # Exibe os servidores ativos que Não entregaram o sispatri
+            }
+
+            # Servidores que NÃO entregaram
+            if ($parametroSituacao == "Não Entregaram") {
+
                 if ($parametroAfastamento == "Todos") {
                     $sispatri->exibeServidoresNaoEntregaramAtivos();
                 }
@@ -336,6 +342,13 @@ if ($acesso) {
                 if ($parametroAfastamento == "Licença Médica") {
                     $sispatri->exibeServidoresNaoEntregaramAtivosLicMedica();
                 }
+            }
+
+            # Servidores retirados
+            if ($parametroSituacao == "Retirados") {
+
+                # Exibe os servidores retirados
+                $sispatri->exibeServidoresRetirados();
             }
 
             # Fecha o grid

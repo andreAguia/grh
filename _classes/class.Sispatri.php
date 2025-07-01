@@ -105,7 +105,8 @@ class Sispatri {
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                   AND tbservidor.situacao = 1';
+                   AND tbservidor.situacao = 1
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -192,6 +193,7 @@ class Sispatri {
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbperfil.tipo <> "Outros"
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      AND tbservidor.situacao = 1';
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -244,7 +246,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -295,6 +298,7 @@ class Sispatri {
                                          JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
                      ';
         # Lotacao
@@ -348,7 +352,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -399,6 +404,7 @@ class Sispatri {
                                          JOIN tblicencapremio ON (tbservidor.idServidor = tblicencapremio.idServidor)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)
                      ';
         # Lotacao
@@ -452,7 +458,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -506,6 +513,7 @@ class Sispatri {
                      AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
                      AND (CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1) OR alta <> 1)
                      AND (idTpLicenca = 1 OR idTpLicenca = 30)
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      ';
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -558,7 +566,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -609,6 +618,7 @@ class Sispatri {
                                         LEFT JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      AND (CURDATE() < dtInicial OR CURDATE() > ADDDATE(dtInicial,numDias-1))
                      ';
         # Lotacao
@@ -662,7 +672,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -702,7 +713,8 @@ class Sispatri {
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                   AND tbservidor.situacao <> 1';
+                   AND tbservidor.situacao <> 1
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -775,7 +787,8 @@ class Sispatri {
                                          JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                    AND tbperfil.tipo <> "Outros" 
-                   AND tbservidor.situacao = 1';
+                   AND tbservidor.situacao = 1
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -803,7 +816,8 @@ class Sispatri {
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                   AND tbservidor.situacao <> 1';
+                   AND tbservidor.situacao <> 1
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -833,7 +847,8 @@ class Sispatri {
                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     AND tbservidor.situacao = 1';
+                     AND tbservidor.situacao = 1
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
         # Lotacao
         if (!empty($this->lotacao)) {
             # Verifica se o que veio é numérico
@@ -885,7 +900,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -959,15 +975,15 @@ class Sispatri {
             array("Não Entregaram", $numServidores - $numSispatriAtivos)
         );
 
-        tituloTable("Servidores Ativos");
-        $chart = new Chart("Pie", $array);
-        $chart->set_idDiv("cargo");
-        $chart->set_legend(false);
-        $chart->set_tamanho($largura = 300, $altura = 300);
-        $chart->show();
+//        tituloTable("Servidores Ativos");
+//        $chart = new Chart("Pie", $array);
+//        $chart->set_idDiv("cargo");
+//        $chart->set_legend(false);
+//        $chart->set_tamanho($largura = 300, $altura = 300);
+//        $chart->show();
 
         $tabela = new Tabela();
-        #$tabela->set_titulo("Servidores Ativos");
+        $tabela->set_titulo("Servidores Ativos");
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($array);
         $tabela->set_label(["Descrição", "Servidores"]);
@@ -995,7 +1011,8 @@ class Sispatri {
                                                      JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                   AND tbservidor.situacao = 1';
+                   AND tbservidor.situacao = 1
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1018,7 +1035,7 @@ class Sispatri {
         # Exemplo de tabela simples
         $tabela = new Tabela();
         $tabela->set_titulo("Entregaram");
-        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
+        #$tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
         $tabela->set_label(["Tipo do Cargo", "Servidores"]);
         $tabela->set_width([80, 20]);
@@ -1051,6 +1068,7 @@ class Sispatri {
                                                      JOIN tbperfil USING (idPerfil)
                    WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                    AND tbperfil.tipo <> "Outros"
+                   AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                    AND tbservidor.situacao = 1';
 
         # Lotacao
@@ -1068,7 +1086,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1092,7 +1111,7 @@ class Sispatri {
         # Exemplo de tabela simples
         $tabela = new Tabela();
         $tabela->set_titulo("NÃO Entregaram");
-        $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
+        #$tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($servidores);
         $tabela->set_label(["Tipo do Cargo", "Servidores"]);
         $tabela->set_width([80, 20]);
@@ -1128,6 +1147,36 @@ class Sispatri {
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
         $tabela->show();
+    }
+
+###########################################################
+
+    public function exibeServidoresRetirados() {
+
+        # Classe
+        $pessoal = new Pessoal();
+
+        $result = $this->get_servidoresRetirados();
+
+        if (count($result) > 0) {
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores Ativos Retirados da Listagem');
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
+            $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Situação"]);
+            $tabela->set_conteudo($result);
+            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_classe([null, null, "pessoal"]);
+            $tabela->set_metodo([null, null, "get_Cargo"]);
+            $tabela->set_funcao([null, null, null, null, "get_situacao"]);
+
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar('?fase=editaServidor');
+            $tabela->show();
+        } else {
+            tituloTable('Servidores Ativos Retirados da Listagem');
+            callout("Não há registros", "secondary");
+        }
     }
 
 ###########################################################
@@ -1443,6 +1492,7 @@ class Sispatri {
                                           JOIN tbperfil USING (idPerfil) 
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbservidor.situacao = 1
+                      AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                       AND tbperfil.tipo <> "Outros"';
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1459,7 +1509,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1540,6 +1591,7 @@ class Sispatri {
                                          JOIN tbperfil USING (idPerfil) 
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbservidor.situacao = 1
+                      AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                       AND tbperfil.tipo <> "Outros"
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
         # Lotacao
@@ -1593,7 +1645,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1638,6 +1691,7 @@ class Sispatri {
                                          JOIN tbperfil USING (idPerfil) 
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      AND tbservidor.situacao = 1
+                     AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                      AND tbperfil.tipo <> "Outros"
                      AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor)
                      AND (CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1) OR alta <> 1)
@@ -1693,7 +1747,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1738,6 +1793,7 @@ class Sispatri {
                                          JOIN tbperfil USING (idPerfil) 
                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                       AND tbservidor.situacao = 1
+                      AND (retiraSispatri <> "s" OR retiraSispatri is NULL)
                       AND tbperfil.tipo <> "Outros"
                      AND CURDATE() >= dtInicial AND CURDATE() <= ADDDATE(dtInicial,numDias-1)';
         # Lotacao
@@ -1791,7 +1847,8 @@ class Sispatri {
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                              WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                                               AND tbservidor.situacao = 1';
+                                               AND tbservidor.situacao = 1
+                                               AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
 
         # Lotacao
         if (!vazio($this->lotacao)) {
@@ -1815,5 +1872,164 @@ class Sispatri {
         }
     }
 
-    ###########################################################
+    ##########################################################
+
+    public function entregouSispatri($idServidor) {
+
+        # Verifica se o parâmetro foi passado
+        if (empty($idServidor)) {
+            return "ERRO !!";
+        }
+
+        # Pega os dados
+        $select = "SELECT idServidor
+                     FROM tbsispatri
+                    WHERE idServidor = {$idServidor}";
+        $pessoal = new Pessoal();
+        if ($pessoal->count($select) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+###########################################################
+
+    public function exibeResumoRetirados() {
+
+        # Servidores ativos que Entregaram o sispatri
+        $numSispatriAtivos = $this->get_numServidoresAtivos();
+
+        # Servidores no total
+        $pessoal = new Pessoal();
+
+        # Geral - Por Cargo
+        $select = 'SELECT tbtipocargo.sigla, count(tbservidor.idServidor) as jj
+                     FROM tbservidor LEFT JOIN tbcargo USING (idCargo)
+                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbservidor.situacao = 1
+                   AND retiraSispatri = "s"';
+
+        # Lotacao
+        if (!vazio($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $select .= ' GROUP BY tbtipocargo.cargo
+                     ORDER BY tbtipocargo.cargo DESC ';
+
+        $servidores = $pessoal->select($select);
+
+        if (count($servidores) > 0) {
+
+            $total = array_sum(array_column($servidores, "jj"));
+
+            array_push($servidores, array('Total', $total));
+
+            # Exemplo de tabela simples
+            $tabela = new Tabela();
+            $tabela->set_titulo("Servidores Retirados da Listagem");
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(["Tipo do Cargo", "Servidores"]);
+            $tabela->set_width([80, 20]);
+            $tabela->set_align(["left", "center"]);
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 0,
+                    'valor' => "Total",
+                    'operador' => '=',
+                    'id' => 'estatisticaTotal')));
+            $tabela->set_totalRegistro(false);
+            $tabela->show();
+        } else {
+            tituloTable('Servidores Retirados da Listagem');
+            callout("Não há registros", "secondary");
+        }
+    }
+
+###########################################################
+
+    public function get_servidoresRetirados() {
+
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional,
+                         tbpessoa.nome,
+                         tbservidor.idServidor,
+                         concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
+                         tbservidor.idServidor
+                    FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                    JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                    JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbservidor.situacao = 1
+                   AND retiraSispatri = "s"';
+
+        # Lotacao
+        if (!empty($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        # Matrícula, nome ou id
+        if (!is_null($this->matNomeId)) {
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' AND ((';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+            } else {
+
+                # Verifica se tem espaços
+                if (strpos($this->matNomeId, ' ') !== false) {
+                    # Separa as palavras
+                    $palavras = explode(' ', $this->matNomeId);
+
+                    # Percorre as palavras
+                    foreach ($palavras as $item) {
+                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                    }
+                } else {
+                    $select .= ' AND (';
+                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                }
+            }
+
+            # Faz pesquisa na matricula e outros
+            if (is_numeric($this->matNomeId)) {
+                $select .= ' OR (tbservidor.matricula LIKE "%' . $this->matNomeId . '%")
+		             OR (tbservidor.idfuncional LIKE "%' . $this->matNomeId . '%")';
+
+                if (!is_null($this->idServidorIdPessoa)) {
+                    $select .= ' OR (tbservidor.idServidor = ' . $this->idServidorIdPessoa . ')
+		                 OR (tbservidor.idPessoa = ' . $this->idServidorIdPessoa . ')';
+                }
+
+                $select .= ')';
+            }
+        }
+
+        # Ordenação
+        if ($this->ordenacao == "nome") {
+            $select .= ' ORDER BY tbpessoa.nome';
+        } else {
+            $select .= ' ORDER BY 4, 2';
+        }
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->select($select);
+
+        return $retorno;
+    }
+
+###########################################################
 }

@@ -53,7 +53,7 @@ class MenuPrincipal {
         }
 
         # Sispatri        
-        $this->moduloSispatri();
+        #$this->moduloSispatri();
         # Eventos        
         #$this->moduloEventos();
 

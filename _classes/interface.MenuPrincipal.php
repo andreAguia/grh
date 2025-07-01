@@ -989,6 +989,13 @@ class MenuPrincipal {
             $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
             $menu->add_item($botao);
         }
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('Instagram GRH');
+        $botao->set_url('https://www.instagram.com/grh_uenf/');
+        $botao->set_imagem(PASTA_FIGURAS . 'instaGrh.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Instagram da GRH');
+        $menu->add_item($botao);
 
 
         $menu->show();

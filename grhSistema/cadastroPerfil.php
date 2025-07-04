@@ -73,6 +73,7 @@ if ($acesso) {
                                       matIni,
                                       matFim,
                                       idPerfil,
+                                      idPerfil,
                                       CASE novoServidor
                                         WHEN 1 THEN '<span class=\"label success\">Sim</span>'
                                         WHEN 0 THEN '<span class=\"label alert\">Não</span>'
@@ -119,19 +120,19 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Tipo", "Perfil", "Matrícula Inicial", "Matrícula Final", "Permissões", "Permite Novos Servidores?", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
+    $objeto->set_label(["id", "Tipo", "Perfil", "Matrícula Inicial", "Matrícula Final", "Próxima Matrícula", "Permissões", "Permite Novos Servidores?", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver"]);
     $objeto->set_colspanLabel([null, null, null, null, null, null, null, 2, null, 2]);
-    $objeto->set_width([5, 12, 12, 5, 5, 20, 10, 5, 5, 5, 5]);
-    $objeto->set_align(["center", "center", "left", "center", "center", "left"]);
+    $objeto->set_width([5, 10, 10, 5, 5, 5, 20, 10, 5, 5, 5, 5]);
+    $objeto->set_align(["center", "center", "left", "center", "center", "center", "left"]);
     #$objeto->set_function(array (null,null,null,null,null,null,"get_nome"));
 
-    $objeto->set_classe([null, null, null, null, null, "Perfil", null, "Pessoal", null, "Pessoal", null]);
-    $objeto->set_metodo([null, null, null, null, null, "exibe_permissoes", null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null]);
+    $objeto->set_classe([null, null, null, null, null, "Pessoal", "Perfil", null, "Pessoal", null, "Pessoal", null]);
+    $objeto->set_metodo([null, null, null, null, null, "get_novaMatricula", "exibe_permissoes", null, "get_numServidoresAtivosPerfil", null, "get_numServidoresInativosPerfil", null]);
 
     $objeto->set_rowspan(1);
     $objeto->set_grupoCorColuna(1);
 
-    $objeto->set_colunaSomatorio([7, 9]);
+    $objeto->set_colunaSomatorio([8, 9]);
 
     # Ver servidores ativos
     $servAtivos = new Link(null, "?fase=aguardeAtivos&id={$id}");
@@ -144,7 +145,7 @@ if ($acesso) {
     $servInativos->set_title("Exibe os servidores inativos");
 
     # Coloca o objeto link na tabela			
-    $objeto->set_link([null, null, null, null, null, null, null, null, $servAtivos, null, $servInativos]);
+    $objeto->set_link([null, null, null, null, null, null, null, null, null, $servAtivos, null, $servInativos]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

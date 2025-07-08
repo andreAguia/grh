@@ -96,6 +96,12 @@ if ($acesso) {
         $linkBotaoVoltar->set_accessKey('V');
         $menu->add_link($linkBotaoVoltar, "left");
 
+        if ($aposentadoria->precisaEntregarCtc($idServidorPesquisado)) {
+            $botaoCtc = new Button('CTC Inss', '?fase=editarCtcInss');
+            $botaoCtc->set_title("Informa se o servidor entregou o CTC Inss");
+            $menu->add_link($botaoCtc, "right");
+        }
+
         if (in_array($fase, $aposentadoria->get_modalidades())) {
 
             # Relatório   
@@ -631,8 +637,22 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem2', 'servidorAposentadoria.php?aba=2');
-            
+
             loadPage("servidorAverbacao.php");
+            break;
+
+        ########################################################
+
+        /*
+         * Editar CtcInss
+         */
+
+        case "editarCtcInss" :
+
+            # Informa a origem
+            set_session('voltaCtc', 'servidorAposentadoria.php');
+
+            loadPage("servidorCtc.php");
             break;
 
         ########################################################

@@ -111,6 +111,9 @@ if ($acesso) {
     # area do sispatri
     set_session('exibeAfastamento');
     set_session('exibeEmail');
+    
+    # Variáveis de retorno
+    set_session('voltaCtc');
 
     # Pega os parâmetros dos aniversariantes
     $parametroMes = post('parametroMes', date("m"));

@@ -12,6 +12,9 @@ $idServidorPesquisado = null;
 # Configuração
 include ("_config.php");
 
+# Define o link da volta
+$voltaCtc = get_session("voltaCtc","servidorAverbacao.php");
+
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
@@ -60,8 +63,8 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('servidorAverbacao.php');
-    $objeto->set_voltarForm('servidorAverbacao.php');
+    $objeto->set_linkListar($voltaCtc);    
+    $objeto->set_voltarForm($voltaCtc);
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);

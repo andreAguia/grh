@@ -261,9 +261,10 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'areaCtcInss.php?fase=aguarde');
+            set_session('voltaCtc', 'areaCtcInss.php?fase=aguarde');
 
             # Carrega a página específica
-            loadPage('servidorMenu.php');
+            loadPage('servidorCtc.php');
             break;
 
         #######################################

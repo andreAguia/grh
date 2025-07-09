@@ -74,7 +74,7 @@ if ($acesso) {
             . "As regras de aposentadoria estão diponíveis no site da GRH. https://uenf.br/dga/grh/";
 
     # Cria um menu
-    if (substr($fase, 0, 9) <> "relatorio") {
+    if (substr($fase, 0, 9) <> "relatorio" AND $fase <> "editarCtcInss") {
         $menu = new MenuBar();
         $linkvoltar = null;
 
@@ -96,6 +96,7 @@ if ($acesso) {
         $linkBotaoVoltar->set_accessKey('V');
         $menu->add_link($linkBotaoVoltar, "left");
 
+        # CtcInss
         if ($aposentadoria->precisaEntregarCtc($idServidorPesquisado)) {
             $botaoCtc = new Button('CTC Inss', '?fase=editarCtcInss');
             $botaoCtc->set_title("Informa se o servidor entregou o CTC Inss");
@@ -120,8 +121,10 @@ if ($acesso) {
         get_DadosServidor($idServidorPesquisado);
     }
 
-    # Exibe o alerta de entrega do ctc Inss
-    $aposentadoria->exibe_alertaEntregaCtc($idServidorPesquisado);
+    if ($fase <> "editarCtcInss") {
+        # Exibe o alerta de entrega do ctc Inss
+        $aposentadoria->exibe_alertaEntregaCtc($idServidorPesquisado);
+    }
 
     ########################################################
 
@@ -648,6 +651,10 @@ if ($acesso) {
          */
 
         case "editarCtcInss" :
+            
+            # Exibe o aguarde
+            br(8);
+            aguarde("Carregando");
 
             # Informa a origem
             set_session('voltaCtc', 'servidorAposentadoria.php');

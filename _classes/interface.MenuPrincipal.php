@@ -1,4 +1,4 @@
- <?php
+<?php
 
 class MenuPrincipal {
 
@@ -56,7 +56,6 @@ class MenuPrincipal {
         #$this->moduloSispatri();
         # Eventos        
         #$this->moduloEventos();
-
         # sistemas
         $this->moduloSistemas();
 
@@ -258,7 +257,7 @@ class MenuPrincipal {
      * Método moduloEventos
      */
     private static function moduloEventos() {
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("../../_arquivos/documentos/42.pdf");
@@ -367,7 +366,7 @@ class MenuPrincipal {
 
         $painel = new Callout();
         $painel->abre();
-        
+
         # Google Drive
         titulo('Google Drive');
         br();
@@ -430,15 +429,15 @@ class MenuPrincipal {
         $pessoal = new Pessoal();
 
         # Pega os projetos cadastrados
-        $select = 'SELECT idMenuDocumentos,
+        $select = "SELECT idMenuDocumentos,
                           categoria,
                           tipo,
                           texto,
                           title,
                           link
                      FROM tbmenudocumentos
-                    WHERE visivel = 1
-                  ORDER BY categoria, texto';
+                    WHERE visivel = 's'
+                  ORDER BY categoria, texto";
 
         $dados = $pessoal->select($select);
         $num = $pessoal->count($select);
@@ -460,20 +459,31 @@ class MenuPrincipal {
                     $title = $valor["title"];
                 }
 
-                # Verifica qual o tipo: 1-Documento e 2-Link
+                # Tipo Documento digitado
                 if ($valor["tipo"] == 1) {
-                    # É do tipo Documento
+                    
+                }
+                
+                # Tipo jpg
+                if ($valor["tipo"] == 2) {
+                    $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".jpg";
+                    if (file_exists($arquivoDocumento)) {
+                        # Caso seja PDF abre uma janela com o pdf
+                        $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
+                    }
+                }
+
+                # Tipo pdf
+                if ($valor["tipo"] == 3) {
                     $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
                     if (file_exists($arquivoDocumento)) {
                         # Caso seja PDF abre uma janela com o pdf
                         $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                    } else {
-                        # Caso seja um .doc, somente faz o download
-                        $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
-                    }
+                    } 
                 }
 
-                if ($valor["tipo"] == 2) {
+                # Tipo link
+                if ($valor["tipo"] == 4) {
                     # É do tipo Link                    
                     $menu->add_item('linkWindow', $valor["texto"], $valor["link"], $title);
                 }
@@ -989,7 +999,7 @@ class MenuPrincipal {
             $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
             $menu->add_item($botao);
         }
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('Instagram da GRH');
         $botao->set_url('https://www.instagram.com/grh_uenf/');
@@ -997,7 +1007,6 @@ class MenuPrincipal {
         $botao->set_title('Instagram da GRH');
         $botao->set_target("_blank");
         $menu->add_item($botao);
-
 
         $menu->show();
         $painel->fecha();

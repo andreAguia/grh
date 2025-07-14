@@ -23,7 +23,7 @@ if ($acesso) {
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
-    # Grava no log a atividade
+        # Grava no log a atividade
         $atividade = "Cadastro do menu de documentos";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
@@ -43,6 +43,10 @@ if ($acesso) {
         set_session('sessionParametro', $parametro);
     }
 
+    # Define os tipos de documentos (Pega os mesmos tipos dos Procedimentos)
+    $procedimento = new Procedimento();
+    $arrayTipos = $procedimento->get_tiposProcedimento();
+    
     # Começa uma nova página
     $page = new Page();
     if ($fase == "upload") {
@@ -72,28 +76,34 @@ if ($acesso) {
     $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista("SELECT idMenuDocumentos,
-                                     categoria,
-                                     CASE
-                                        WHEN visivel = 1 THEN 'Sim'
-                                        WHEN visivel = 0 THEN 'Não'
-                                        ELSE '---'
-                                     END,
-                                     CASE
-                                        WHEN tipo = 1 THEN 'Documento'
-                                        WHEN tipo = 2 THEN 'Link'
-                                        WHEN tipo = 3 THEN 'Procedimento'
-                                        ELSE '---'
-                                     END,
-                                     texto,
-                                     title,
-                                     idMenuDocumentos,
-                                     idMenuDocumentos
-                                FROM tbmenudocumentos
-                                WHERE categoria LIKE '%{$parametro}%'
-                                   OR texto LIKE '%{$parametro}%'
-                                   OR title LIKE '{$parametro}'
-                             ORDER BY categoria, texto");
+    $selectListar = "SELECT idMenuDocumentos,
+                            categoria,
+                            CASE
+                               WHEN visivel = 's' THEN 'Sim'
+                               WHEN visivel = 'n' THEN 'Não'
+                               ELSE '---'
+                            END,
+                            CASE tipo";
+
+    foreach ($arrayTipos as $item) {
+        if (!empty($item[0])) {
+            $selectListar .= " WHEN {$item[0]} THEN '{$item[1]}' ";
+        }
+    }
+
+    $selectListar .= "     ELSE '' 
+                           END,
+                            texto,
+                            title,
+                            idMenuDocumentos,
+                            idMenuDocumentos
+                       FROM tbmenudocumentos
+                       WHERE categoria LIKE '%{$parametro}%'
+                          OR texto LIKE '%{$parametro}%'
+                          OR title LIKE '{$parametro}'
+                    ORDER BY categoria, texto";
+    
+    $objeto->set_selectLista($selectListar);
 
     # select do edita
     $objeto->set_selectEdita("SELECT categoria,
@@ -113,7 +123,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Id", "Categoria", "Visível?", "Tipo", "Texto", "Title", "Ver"]);
-    $objeto->set_width([5, 20, 5, 5, 25, 30, 5, 5]);
+    $objeto->set_width([5, 20, 5, 10, 20, 25, 5, 5]);
     $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
 
     $objeto->set_classe([null, null, null, null, null, null, "MenuDocumentos"]);
@@ -135,7 +145,7 @@ if ($acesso) {
     $valoresCategorias = $pessoal->select('SELECT distinct categoria
                                              FROM tbmenudocumentos
                                           ORDER BY categoria');
-    
+
     array_unshift($valoresCategorias, array(null));
 
     # Campos para o formulario
@@ -156,7 +166,7 @@ if ($acesso) {
             'label' => 'Tipo:',
             'tipo' => 'combo',
             'required' => true,
-            'array' => [[null, null], [1, "Documento"], [2, "Link"], [3, "Procedimento"]],
+            'array' => $arrayTipos,
             'size' => 15),
         array('nome' => 'texto',
             'label' => 'Texto do link',
@@ -182,7 +192,7 @@ if ($acesso) {
             'linha' => 3),
         array('nome' => "visivel",
             'label' => 'Visível?:',
-            'tipo' => 'simnao2',
+            'tipo' => 'simnao3',
             'size' => 10,
             'col' => 2,
             'linha' => 3,

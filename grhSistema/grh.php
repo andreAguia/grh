@@ -112,6 +112,9 @@ if ($acesso) {
     set_session('exibeAfastamento');
     set_session('exibeEmail');
     
+    # Outros
+    set_session("escondeCabecalho");
+    
     # Variáveis de retorno
     set_session('voltaCtc');
 

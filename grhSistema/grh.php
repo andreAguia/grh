@@ -583,7 +583,7 @@ if ($acesso) {
             if (!empty($dados)) {
 
                 # Se for anexo digitado
-                if ($dados['tipo'] == 6) {
+                if ($dados['tipo'] == 1) {
 
                     $servico = new Servico();
                     $servico->exibeAnexo($dados["idServicoAnexos"]);

@@ -28,7 +28,9 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    if ($fase <> "exibeDocumento") {
+        AreaServidor::cabecalho();
+    }
 
     # Zera sessions
     set_session('origem');
@@ -111,10 +113,10 @@ if ($acesso) {
     # area do sispatri
     set_session('exibeAfastamento');
     set_session('exibeEmail');
-    
+
     # Outros
     set_session("escondeCabecalho");
-    
+
     # Variáveis de retorno
     set_session('voltaCtc');
 
@@ -565,9 +567,54 @@ if ($acesso) {
             break;
 
 ##################################################################
+
+        case "exibeDocumento" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Pega o id
+            $idDocumento = get("idDocumento");
+
+            # Pega os dados
+            $dados = $pessoal->select("SELECT * FROM tbmenudocumentos WHERE idMenuDocumentos = {$idDocumento}", false);
+
+            if (!empty($dados)) {
+
+                # Se for anexo digitado
+                if ($dados['tipo'] == 6) {
+
+                    $servico = new Servico();
+                    $servico->exibeAnexo($dados["idServicoAnexos"]);
+                }
+
+                # Se for link
+                if ($dados['tipo'] == 4) {
+
+                    br(3);
+                    aguarde("Carregando ...");
+                    loadPage($dados["link"]);
+                }
+
+                # Se for rotina
+                if ($dados['tipo'] == 5) {
+
+                    $rotina = new Rotina();
+                    $rotina->exibeRotina($dados['idRotina']);
+                }
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            break;
+
+##################################################################        
     }
 
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");
 }
+    

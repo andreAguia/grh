@@ -46,7 +46,7 @@ if ($acesso) {
     # Define os tipos de documentos (Pega os mesmos tipos dos Procedimentos)
     $procedimento = new Procedimento();
     $arrayTipos = $procedimento->get_tiposProcedimento();
-    
+
     # Começa uma nova página
     $page = new Page();
     if ($fase == "upload") {
@@ -102,16 +102,18 @@ if ($acesso) {
                           OR texto LIKE '%{$parametro}%'
                           OR title LIKE '{$parametro}'
                     ORDER BY categoria, texto";
-    
+
     $objeto->set_selectLista($selectListar);
 
     # select do edita
     $objeto->set_selectEdita("SELECT categoria,
-                                     tipo, 
+                                     tipo,
+                                     visivel, 
                                      texto,
                                      title,
                                      link,
-                                     visivel
+                                     idRotina,
+                                     idServicoAnexos
                                 FROM tbmenudocumentos
                                WHERE idMenuDocumentos = {$id}");
 
@@ -141,6 +143,21 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idMenuDocumentos');
 
+    # Pega os dados da combo de anexo de servico
+    $servico = $intra->select('SELECT idServicoAnexos,
+                                     CONCAT(categoria," - ",titulo)
+                                FROM tbservicoanexos
+                               WHERE tipo = 1 
+                            ORDER BY categoria, titulo');
+    array_unshift($servico, array(null, null));
+    
+    # Pega os dados da combo de rotina
+    $rotina = $intra->select('SELECT idRotina,
+                                     CONCAT(categoria," - ",nome)
+                                FROM tbrotina
+                            ORDER BY categoria, nome');
+    array_unshift($rotina, array(null, null));
+
     # Pega os dados da datalist categorias
     $valoresCategorias = $pessoal->select('SELECT distinct categoria
                                              FROM tbmenudocumentos
@@ -168,35 +185,51 @@ if ($acesso) {
             'required' => true,
             'array' => $arrayTipos,
             'size' => 15),
+        array('nome' => "visivel",
+            'label' => 'Visível?:',
+            'tipo' => 'simnao3',
+            'size' => 10,
+            'col' => 2,
+            'linha' => 1,
+            'title' => 'Se o documento ficará visível ou não.'),
         array('nome' => 'texto',
             'label' => 'Texto do link',
             'tipo' => 'texto',
             'required' => true,
             'size' => 200,
-            'col' => 8,
+            'col' => 12,
             'title' => 'O nome do documento, o texto que aparecerá no menu.',
             'linha' => 2),
         array('nome' => "title",
             'label' => 'Descrição:',
             'tipo' => 'texto',
             'size' => 200,
-            'col' => 8,
+            'col' => 12,
             'title' => 'O texto que aparecerá no mouseover.',
             'linha' => 3),
         array('nome' => "link",
             'label' => 'Link:',
             'tipo' => 'texto',
             'size' => 200,
-            'col' => 8,
+            'col' => 12,
             'title' => 'O Caminho quando o tipo foor link.',
             'linha' => 3),
-        array('nome' => "visivel",
-            'label' => 'Visível?:',
-            'tipo' => 'simnao3',
-            'size' => 10,
-            'col' => 2,
-            'linha' => 3,
-            'title' => 'Se o documento ficará visível ou não.'),
+        array('linha' => 5,
+            'nome' => 'idRotina',
+            'title' => 'Rotinas',
+            'label' => 'Rotina: (Quando for rotina)',
+            'tipo' => 'combo',
+            'array' => $rotina,
+            'col' => 12,
+            'size' => 250),
+        array('linha' => 6,
+            'nome' => 'idServicoAnexos',
+            'title' => 'Anexos de Serviços',
+            'label' => 'Anexos de Serviços:',
+            'tipo' => 'combo',
+            'array' => $servico,
+            'col' => 12,
+            'size' => 250)
     ));
 
     # Log

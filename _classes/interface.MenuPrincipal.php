@@ -459,9 +459,9 @@ class MenuPrincipal {
                     $title = $valor["title"];
                 }
 
-                # Tipo Documento digitado
-                if ($valor["tipo"] == 1) {
-                    
+                # Documento Digitado e Link
+                if ($valor["tipo"] == 1 OR $valor["tipo"] == 4 OR $valor["tipo"] == 5 OR $valor["tipo"] == 6) {
+                    $menu->add_item('linkWindow', $valor["texto"], "?fase=exibeDocumento&idDocumento={$valor['idMenuDocumentos']}", $title);
                 }
                 
                 # Tipo jpg
@@ -480,13 +480,7 @@ class MenuPrincipal {
                         # Caso seja PDF abre uma janela com o pdf
                         $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
                     } 
-                }
-
-                # Tipo link
-                if ($valor["tipo"] == 4) {
-                    # É do tipo Link                    
-                    $menu->add_item('linkWindow', $valor["texto"], $valor["link"], $title);
-                }
+                }              
             }
         }
 

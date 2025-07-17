@@ -486,18 +486,18 @@ class Progressao {
 
             # Verifica se são iguais
             if ($planoCadastrado <> $planoSugerido) {
-                
+
                 # Pegaa data inicial
                 $dados = $this->get_dados($idProgressao);
                 $dtinicial = date_to_php($dados['dtInicial']);
-                               
+
                 if ($exibeTabela) {
                     echo "<span id='vermelho'>SIM</span>";
                     echo "<span id='f10'><br/>Este plano não estava<br/>vigente nesta data</span>";
                 } else {
                     $painel = new Callout("warning");
                     $painel->abre();
-                    p("<b>Atenção Problema Encontrado:</b><br/>O Plano de Cargos do <b>{$planoCadastrado}</b> não estava vigente em {$dtinicial}.<br/> O plano sugerido é: <b>{$planoSugerido}</b>","f16","center");
+                    p("<b>Atenção Problema Encontrado:</b><br/>O Plano de Cargos do <b>{$planoCadastrado}</b> não estava vigente em {$dtinicial}.<br/> O plano sugerido é: <b>{$planoSugerido}</b>", "f16", "center");
                     $painel->fecha();
                 }
             } else {
@@ -518,16 +518,16 @@ class Progressao {
         # Troca o valor informado para a variável da classe
         if (empty($idProgressao)) {
             return null;
+        } else {
+
+            $select = "SELECT tbclasse.idPlano
+                         FROM tbprogressao LEFT JOIN tbclasse USING (idCLasse)
+                        WHERE idProgressao = {$idProgressao}";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+            return $row[0];
         }
-
-        $select = "SELECT tbclasse.idPlano
-                     FROM tbprogressao LEFT JOIN tbclasse USING (idCLasse)
-                    WHERE idProgressao = {$idProgressao}";
-
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
-
-        return $row[0];
     }
 
     ###########################################################

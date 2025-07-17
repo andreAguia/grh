@@ -61,15 +61,19 @@ class PlanoCargos {
          * @param $idPlano integer null o $idPlano
          * 
          */
-        # Pega os planos cadastrados
-        $select = 'SELECT numDecreto
+        if (empty($idPlano)) {
+            return null;
+        } else {
+            # Pega os planos cadastrados
+            $select = 'SELECT numDecreto
                      FROM tbplano
                      WHERE idPlano = ' . $idPlano;
 
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select, false);
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
 
-        return $row[0];
+            return $row[0];
+        }
     }
 
     ###########################################################

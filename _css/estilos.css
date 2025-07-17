@@ -1020,7 +1020,7 @@ hr#vagasAdm{
  *******************************************/
 
 p#procedimentoPai{
-    font-size: 12px;
+    font-size: 13px;
     padding: 0px;
     margin: 0px;
     text-align: left;
@@ -1048,11 +1048,11 @@ hr#procedimento{
 }
 
 div#divNota ul,li{
-    font-size: 12px;
+    font-size: 13px;
 }
 
 div#divNota ul{
-    font-size: 12px;
+    font-size: 13px;
     padding-top: 3px;
 }
 

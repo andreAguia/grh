@@ -318,7 +318,7 @@ class PrevisaoAposentadoria {
                 $this->cartilha1 = "transicaoPontos11.png";
                 $this->cartilha2 = "transicaoPontos12.png";
 
-                # Pontuação
+                # Pontuação Inicial
                 $this->pontosHomem = 96;
                 $this->pontosMulher = 86;
 
@@ -416,8 +416,8 @@ class PrevisaoAposentadoria {
                 $this->cartilha1 = "transicaoPontos21.png";
                 $this->cartilha2 = "transicaoPontos22.png";
 
-                # Pontuação
-                $this->pontosHomem = 90;
+                # Pontuação Inicial
+                $this->pontosHomem = 96;
                 $this->pontosMulher = 86;
 
                 # Tabela de Pontos
@@ -1108,13 +1108,23 @@ class PrevisaoAposentadoria {
                     break;
                 }
             }
-
-            if ($this->servidorPontos >= $this->get_regraPontos(date("Y"))) {
+            
+            # Define o ano que se deve pegar os pontos
+            # Ou seja o maior ano da outras datas
+            $anoEscolhido = maiorValor([
+                year($this->dataCriterioCarreira),
+                year($this->dataCriterioTempoContribuicao),
+                year($this->dataCriterioPedagio),
+                year($this->dataCriterioTempoServicoPublico),
+                year($this->dataCriterioTempoCargo)                
+            ]);
+            
+            if ($this->servidorPontos >= $this->get_regraPontos($anoEscolhido)) {
                 $this->analisePontos = "OK";
                 //$this->dataCriterioPontos = null; // retira a data pois dava erro ao calcular datas passadas
             } else {
                 # Pega o resto
-                $resta4 = $this->get_regraPontos(date("Y")) - $this->servidorPontos;
+                $resta4 = $this->get_regraPontos($anoEscolhido) - $this->servidorPontos;
                 $this->analisePontos = "Ainda faltam<br/>{$resta4} pontos.";
             }
         }
@@ -1315,7 +1325,17 @@ class PrevisaoAposentadoria {
 
         # Verifica se tem pontos
         if (!empty($this->pontosHomem)) {
-            $regraPontos = $this->get_regraPontos(date("Y"));
+            # Define o ano que se deve pegar os pontos
+            # Ou seja o maior ano da outras datas
+            $anoEscolhido = maiorValor([
+                year($this->dataCriterioCarreira),
+                year($this->dataCriterioTempoContribuicao),
+                year($this->dataCriterioPedagio),
+                year($this->dataCriterioTempoServicoPublico),
+                year($this->dataCriterioTempoCargo)                
+            ]);
+            
+            $regraPontos = $this->get_regraPontos($anoEscolhido);
         }
 
         /*
@@ -1385,7 +1405,7 @@ class PrevisaoAposentadoria {
         if (!is_null($this->pontosHomem)) {
             array_push($array, ["Pontuação",
                 "Idade + Tempo de Serviço",
-                "{$regraPontos} pontos",
+                "{$regraPontos} pontos<br/>({$anoEscolhido})",
                 "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicaoDescontado / 365) . ")",
                 trataNulo($this->dataCriterioPontos),
                 $this->analisePontos,

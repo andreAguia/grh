@@ -398,7 +398,7 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'ocorrencias.png', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Ocorrências Especias do Servidor');
         $menu->add_item($botao);
-        
+
         # Sispatri
         $botao = new BotaoGrafico();
         $botao->set_label('Sispatri');
@@ -1004,6 +1004,19 @@ class MenuServidor {
         $botao->set_imagem(PASTA_FIGURAS . 'banco.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
         $botao->set_title('Cadastro dos dados bancários do Servidor');
         $menu->add_item($botao);
+
+        # Dados Bancários
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Dados Bancários');
+            $botao->set_url('servidorBancario2.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'banco.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Cadastro dos dados bancários do Servidor');
+            $botao->set_novo(true);
+            $menu->add_item($botao);
+        }
+
+
 
         $botao = new BotaoGrafico();
         $botao->set_label('Resumo Financeiro');

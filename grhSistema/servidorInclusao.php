@@ -650,7 +650,7 @@ if ($acesso) {
 
                 # dados
                 if ($temAtivo) {
-                    $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional', 'dtDemissao', 'motivo');
+                    $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional', 'dtDemissao', 'idMotivo');
                     $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, $situacao, $idFuncional, $dtDemissao, $motivo);
                 } else {
                     $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional');

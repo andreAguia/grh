@@ -103,7 +103,7 @@ if ($acesso) {
         if (Verifica::acesso($idUsuario, 1)) {
 
             # Histórico
-            $linkBotao4 = new Link("Histórico", "../../areaServidor/sistema/historico.php?idServidor=" . $idServidorPesquisado);
+            $linkBotao4 = new Link("Histórico", "../../areaServidor/sistema/admin_historico.php?idServidor=" . $idServidorPesquisado);
             $linkBotao4->set_class('button success');
             $linkBotao4->set_title('Exibe as alterações feita no cadastro desse servidor');
             $linkBotao4->set_accessKey('H');

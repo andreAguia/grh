@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null; # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include "_config.php";
 
@@ -29,8 +30,13 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
-    # Verifica a fase do programa
-    $fase = get('fase', 'listar');
+    # Verifica se tem direito
+    if ($trienio->temDireito($idServidorPesquisado)) {
+        # Verifica a fase do programa
+        $fase = get('fase', 'listar');
+    } else {
+        $fase = "aviso";
+    }
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -334,6 +340,22 @@ if ($acesso) {
 
         case "gravar":
             $objeto->gravar($id, "servidorTrienioExtra.php");
+            break;
+
+        case "aviso":
+            botaoVoltar("servidorMenu.php");
+            get_DadosServidor($idServidorPesquisado);
+
+            # Limita a página
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            tituloTable("Importante");
+            callout("Conforme a Lei Complementar 194/2021, esse servidor não tem direito ao triênio pois o concurso ao qual foi aprovado teve seu edital publicado após a data definida pela lei.");
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
             break;
     }
     $page->terminaPagina();

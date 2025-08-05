@@ -279,4 +279,42 @@ class Trienio {
     }
 
     ###########################################################
+
+    /**
+     * informa os dados de um triênio
+     */
+    function temDireito($idServidor) {
+
+        # A data estipulada pela lei
+        $dataLimite = "31/12/2021";
+
+        # Verifica se o id foi fornecido
+        if (is_null($idServidor)) {
+            return null;
+        } else {
+            # Banco de dados
+            $pessoal = new Pessoal();
+            $concurso = new Concurso();
+
+            # Verifica se é estatutário
+            if ($pessoal->get_idPerfil($idServidor) <> 1) {
+                return false;
+            }
+
+            # Pega o concurso do servidor
+            $idConcurso = $pessoal->get_idConcurso($idServidor);
+
+            # Pega a data de publicação do concurso
+            $dtPublicacaoEdital = $concurso->get_dtPublicacaoEdital($idConcurso);
+
+            # Verifica qual data é mais antiga
+            if (dataMenor($dataLimite, $dtPublicacaoEdital) == $dtPublicacaoEdital) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    ###########################################################
 }

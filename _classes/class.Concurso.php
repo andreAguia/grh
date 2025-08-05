@@ -169,9 +169,9 @@ class Concurso {
     public function get_dtPublicacaoEdital($idconcurso) {
 
         # Monta o select            
-        $select = 'SELECT dtPublicacaoEdital              
+        $select = "SELECT dtPublicacaoEdital              
                          FROM tbconcurso
-                        WHERE idconcurso = ' . $idconcurso;
+                        WHERE idconcurso = {$idconcurso}";
 
         # Pega os dados
         $pessoal = new Pessoal();

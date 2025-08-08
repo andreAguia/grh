@@ -29,7 +29,7 @@ if ($acesso) {
     $select = 'SELECT tbservidor.idFuncional,
                      tbpessoa.nome,
                      CONCAT(tbtipocargo.cargo," - ",tbcargo.nome),
-                     CONCAT(tblotacao.UADM," - ",tblotacao.DIR," - ",tblotacao.GER) lotacao,
+                     concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                      tbperfil.nome,
                      tbservidor.dtAdmissao,
                      tbservidor.idServidor

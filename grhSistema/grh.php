@@ -78,6 +78,7 @@ if ($acesso) {
     set_session('idServidorPesquisado');
     set_session('parametroParentesco');
     set_session('parametroDias');
+    set_session('parametroMarcador');
 
     set_session('concursoTipo');
 

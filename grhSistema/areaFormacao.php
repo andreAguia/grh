@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $formacao = new Formacao();
 
     # Verifica a fase do programa
     $fase = get('fase');
@@ -37,12 +38,12 @@ if ($acesso) {
     # Pega os parâmetros    
     $parametroNivel = post('parametroNivel', get_session('parametroNivel', 'Todos'));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
-    #$parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
     $parametroCurso = post('parametroCurso', get_session('parametroCurso', 'Todos'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
     $parametroAno = post('parametroAno', get_session('parametroAno'));
+    $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
 
     if ($grh) {
         $parametroAno = 'Todos';
@@ -55,8 +56,8 @@ if ($acesso) {
     set_session('parametroInstituicao', $parametroInstituicao);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroPerfil', $parametroPerfil);
-    #set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroAno', $parametroAno);
+    set_session('parametroMarcador', $parametroMarcador);
 
     # Começa uma nova página
     $page = new Page();
@@ -149,22 +150,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(3);
             $form->add_item($controle);
-//
-//            # Situação
-//            $result = $pessoal->select('SELECT idsituacao, situacao
-//                                              FROM tbsituacao                                
-//                                          ORDER BY 1');
-//            array_unshift($result, array('Todos', 'Todos'));
-//
-//            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
-//            $controle->set_size(30);
-//            $controle->set_title('Filtra por Situação');
-//            $controle->set_array($result);
-//            $controle->set_valor($parametroSituacao);
-//            $controle->set_onChange('formPadrao.submit();');
-//            $controle->set_linha(1);
-//            $controle->set_col(2);
-//            $form->add_item($controle);
+
             # Lotação
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -181,7 +167,22 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(7);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Marcador
+            # Pega os dados da datalist marcador
+            $arrayMarcador = $formacao->get_arrayMarcadores();
+            array_unshift($arrayMarcador, array('Todos', 'Todos'));
+
+            $controle = new Input('parametroMarcador', 'combo', 'Marcador:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($arrayMarcador);
+            $controle->set_valor($parametroMarcador);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Pega os dados da combo ano
@@ -349,6 +350,10 @@ if ($acesso) {
                     $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
                 }
             }
+            
+            if ($parametroMarcador <> "Todos") {
+                $select .= " AND (tbformacao.marcador1 = {$parametroMarcador} OR tbformacao.marcador2 = {$parametroMarcador} OR tbformacao.marcador3 = {$parametroMarcador} OR tbformacao.marcador4 = {$parametroMarcador})";
+            }
 
             # Verifica se tem filtro por lotação
             if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
@@ -448,6 +453,11 @@ if ($acesso) {
             if ($parametroAno <> "Todos") {
                 $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
                 $subTitulo .= "Filtro Ano: {$parametroAno}<br/>";
+            }
+            
+            if ($parametroMarcador <> "Todos") {
+                $select .= " AND (tbformacao.marcador1 = {$parametroMarcador} OR tbformacao.marcador2 = {$parametroMarcador} OR tbformacao.marcador3 = {$parametroMarcador} OR tbformacao.marcador4 = {$parametroMarcador})";
+                $subTitulo .= "Filtro Marcador: {$formacao->get_marcador($parametroMarcador)}<br/>";
             }
 
             # Verifica se tem filtro por lotação

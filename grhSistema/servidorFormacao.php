@@ -90,6 +90,7 @@ if ($acesso) {
     # select da lista
     $selectFormacao = "SELECT anoTerm,
                               escolaridade,
+                              idFormacao,
                               habilitacao,                              
                               instEnsino,
                               horas,
@@ -117,6 +118,10 @@ if ($acesso) {
                                      instEnsino,                                     
                                      horas,
                                      anoTerm,
+                                     marcador1,
+                                     marcador2,
+                                     marcador3,
+                                     marcador4,
                                      obs,
                                      idPessoa
                                 FROM tbformacao
@@ -134,14 +139,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano de Término", "Nível", "Curso", "Instituição", "Horas", "Ver"]);
+    $objeto->set_label(["Ano de Término", "Nível", "Marcadores", "Curso", "Instituição", "Horas", "Ver"]);
     #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
-    $objeto->set_align(["center", "center", "left", "left"]);
+    $objeto->set_align(["center", "center", "center", "left", "left"]);
 
-    $objeto->set_funcao([null, null, null, null, "trataNulo"]);
+    $objeto->set_funcao([null, null, null, null, null, "trataNulo"]);
 
-    $objeto->set_classe([null, null, null, null, null, "Formacao"]);
-    $objeto->set_metodo([null, null, null, null, null, "exibeCertificado"]);
+    $objeto->set_classe([null, null, "Formacao", null, null, null, "Formacao"]);
+    $objeto->set_metodo([null, null, "exibeMarcador", null, null, null, "exibeCertificado"]);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -177,6 +182,11 @@ if ($acesso) {
                                        FROM tbformacao
                                    ORDER BY instEnsino');
     array_unshift($instEnsino, array(null));
+
+    # Pega os dados da datalist marcador
+    $formacao = new Formacao();
+    $arrayMarcador = $formacao->get_arrayMarcadores();
+    array_unshift($arrayMarcador, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -226,8 +236,42 @@ if ($acesso) {
             'col' => 3,
             'title' => 'Nome da Instituição de Ensino.',
             'linha' => 2),
-        array('linha' => 3,
+        array('nome' => 'marcador1',
+            'label' => '',
+            'fieldset' => 'Marcadores:',
+            'tipo' => 'combo',
+            'array' => $arrayMarcador,
+            'size' => 50,
+            'col' => 6,
+            'title' => 'Marcador.',
+            'linha' => 3),
+        array('nome' => 'marcador2',
+            'label' => '',
+            'tipo' => 'combo',
+            'array' => $arrayMarcador,
+            'size' => 50,
+            'col' => 6,
+            'title' => 'Marcador.',
+            'linha' => 3),
+        array('nome' => 'marcador3',
+            'label' => '',
+            'tipo' => 'combo',
+            'array' => $arrayMarcador,
+            'size' => 50,
+            'col' => 6,
+            'title' => 'Marcador.',
+            'linha' => 4),
+        array('nome' => 'marcador4',
+            'label' => '',
+            'tipo' => 'combo',
+            'array' => $arrayMarcador,
+            'size' => 50,
+            'col' => 6,
+            'title' => 'Marcador.',
+            'linha' => 4),
+        array('linha' => 5,
             'nome' => 'obs',
+            'fieldset' => 'fecha',
             'col' => 12,
             'label' => 'Observação:',
             'tipo' => 'textarea',

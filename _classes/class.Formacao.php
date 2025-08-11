@@ -16,8 +16,8 @@ class Formacao {
          */
         # Pega os dados
         $select = "SELECT *
-                   FROM tbformacao
-                 WHERE idFormacao = {$id}";
+                     FROM tbformacao
+                    WHERE idFormacao = {$id}";
 
         $pessoal = new Pessoal();
         return $pessoal->select($select, false);
@@ -119,7 +119,7 @@ class Formacao {
 
             # Retorna a maior escolaridade registrada
             return $maior;
-        }else{
+        } else {
             return $idEscolaridade;
         }
     }
@@ -173,4 +173,67 @@ class Formacao {
     }
 
 ###########################################################
+
+    function exibeMarcador($id) {
+
+        /**
+         * Fornece Detalhes do curso
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        # Marcador 1
+        if (!empty($dados['marcador1'])) {
+            p($this->get_marcador($dados['marcador1']), "pNota");
+        }
+
+        # Marcador 2
+        if (!empty($dados['marcador2'])) {
+            p($this->get_marcador($dados['marcador2']), "pNota");
+        }
+
+        # Marcador 3
+        if (!empty($dados['marcador3'])) {
+            p($this->get_marcador($dados['marcador3']), "pNota");
+        }
+
+        # Marcador 4
+        if (!empty($dados['marcador4'])) {
+            p($this->get_marcador($dados['marcador4']), "pNota");
+        }
+    }
+
+    ###########################################################
+
+    function get_arrayMarcadores() {
+        /**
+         * Fornece um array com os marcadores
+         */
+        $arrayMarcadores = [
+            [1, "Investidura"],
+            [2, "Progressão Funcional"],
+            [3, "Pró Uenf"],
+            [4, "Petec"]
+        ];
+        
+        return $arrayMarcadores;
+    }
+
+    ###########################################################
+
+    function get_marcador($id = null) {
+        /**
+         * Fornece um array com os marcadores
+         */
+        
+         $arrayMarcadores = $this->get_arrayMarcadores();
+         
+         foreach($arrayMarcadores as $item){
+             if($item[0] == $id){
+                 return $item[1];
+             }
+         }
+    }
+
+    ###########################################################
 }

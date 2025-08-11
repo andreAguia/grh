@@ -47,7 +47,7 @@ if ($acesso) {
     if ($grh) {
         $parametroAno = 'Todos';
     }
-    
+
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
     set_session('parametroEscolaridade', $parametroEscolaridade);
@@ -309,6 +309,7 @@ if ($acesso) {
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
                               idFormacao,
+                              idFormacao,
                               idFormacao
                          FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbservidor USING (idPessoa)
@@ -318,7 +319,7 @@ if ($acesso) {
                                          LEFT JOIN tbcargo USING (idCargo)
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-            
+
             $select .= " AND situacao = 1";
 
             if ($parametroPerfil <> "Todos") {
@@ -366,11 +367,11 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional/Matrícula", "Servidor", "Escolaridade", "Curso", "Certificado"]);
+            $tabela->set_label(["IdFuncional/Matrícula", "Servidor", "Escolaridade", "Marcadores", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "exibeCurso", "exibeCertificado"]);
+            $tabela->set_align(["center", "left", "center", "center", "left"]);
+            $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
             $tabela->set_rowspan([0, 1]);
             $tabela->set_grupoCorColuna(1);
 
@@ -462,7 +463,6 @@ if ($acesso) {
 
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
             #echo $select;
-
             # Monta o Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo('Relatório Geral de Formação Servidores');

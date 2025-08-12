@@ -39,19 +39,13 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 'DGA'));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao'));
     $parametroTipo = get('parametroTipo', get_session('parametroTipo', 1));
+    $parametro = post('parametro', get_session('parametro'));
 
     # Joga os parâmetros para as sessions
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroTipo', $parametroTipo);
-
-    # Pega o parametro de pesquisa (se tiver)
-    if (is_null(post('parametro'))) {     # Se o parametro n?o vier por post (for nulo)
-        $parametro = retiraAspas(get_session('sessionParametro')); # passa o parametro da session para a variavel parametro retirando as aspas
-    } else {
-        $parametro = post('parametro');                # Se vier por post, retira as aspas e passa para a variavel parametro
-        set_session('sessionParametro', $parametro);    # transfere para a session para poder recuperá-lo depois
-    }
+    set_session('parametro', $parametro);
 
     # Começa uma nova página
     $page = new Page();

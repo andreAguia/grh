@@ -21,6 +21,12 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
+    
+    # Pega os parâmetros
+    $parametro = post('parametro', get_session('parametro'));
+
+    # Joga os parâmetros para as sessions
+    set_session('parametro', $parametro);
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -50,15 +56,22 @@ if ($acesso) {
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaFeriasExercicio.php');
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT lotacao,
+    $objeto->set_selectLista("SELECT lotacao,
                                      periodo,
                                      processo,
                                      obs,
                                      idFeriasProcesso
                                 FROM tbferiasprocesso
-                            ORDER BY lotacao, periodo desc');
+                               WHERE periodo LIKE '%{$parametro}%'
+                                  OR processo LIKE '%{$parametro}%'                               
+                                  OR lotacao LIKE '%{$parametro}%'                               
+                            ORDER BY lotacao, periodo desc");
 
     # select do edita
     $objeto->set_selectEdita('SELECT lotacao,

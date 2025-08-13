@@ -35,10 +35,6 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    # Ordem da tabela
-    $orderCampo = get('orderCampo');
-    $orderTipo = get('orderTipo');
-
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -61,24 +57,23 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT data,
-                                     idBanco,
+    $objeto->set_selectLista("SELECT padrao,
+                                     CONCAT(codigo,' (', banco,')'),
                                      agencia,
                                      conta,
-                                     obs,
+                                     tbhistbanco.obs,
                                      idHistBanco
-                                FROM tbhistbanco
+                                FROM tbhistbanco JOIN tbbanco USING (idBanco)
                                WHERE idServidor = {$idServidorPesquisado}
-                            ORDER BY data");
+                            ORDER BY padrao DESC");
 
     # select do edita
-    $objeto->set_selectEdita("SELECT data,
-                                     idBanco,
+    $objeto->set_selectEdita("SELECT idBanco,
                                      agencia,
                                      conta,
                                      padrao,
                                      obs,
-                                     idHistBanco
+                                     idServidor
                                 FROM tbhistbanco
                                WHERE idHistBanco = {$id}");
 
@@ -87,11 +82,6 @@ if ($acesso) {
         $objeto->set_modoLeitura(true);
     }
 
-    # ordem da lista
-    $objeto->set_orderCampo($orderCampo);
-    $objeto->set_orderTipo($orderTipo);
-    $objeto->set_orderChamador('?fase=listar');
-
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
     $objeto->set_linkExcluir('?fase=excluir');
@@ -99,9 +89,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Data", "Banco", "Agência", "Conta", "Obs"]);
+    $objeto->set_label(["Padrão", "Banco", "Agência", "Conta", "Obs"]);
+    $objeto->set_width([10, 20, 15, 15, 30]);
     $objeto->set_align(["center"]);
-    $objeto->set_funcao(["date_to_php"]);
+    $objeto->set_funcao(["ressaltaSimNao"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
@@ -121,15 +112,6 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('nome' => 'data',
-            'label' => 'Data:',
-            'tipo' => 'data',
-            'size' => 20,
-            'col' => 3,
-            'required' => true,
-            'autofocus' => true,
-            'title' => 'Data.',
-            'linha' => 1),
         array('linha' => 1,
             'nome' => 'padrao',
             'label' => 'Conta Padrão:',
@@ -137,7 +119,7 @@ if ($acesso) {
             'required' => true,
             'col' => 2,
             'size' => 15),
-        array('linha' => 2,
+        array('linha' => 1,
             'nome' => 'idBanco',
             'label' => 'Banco:',
             'tipo' => 'combo',
@@ -147,7 +129,7 @@ if ($acesso) {
             'col' => 4,
             'title' => 'Nome do Banco do Servidor',
             'size' => 20),
-        array('linha' => 2,
+        array('linha' => 1,
             'nome' => 'agencia',
             'label' => 'Agência:',
             'tipo' => 'texto',
@@ -155,7 +137,7 @@ if ($acesso) {
             'col' => 3,
             'title' => 'Número da Agência',
             'size' => 10),
-        array('linha' => 2,
+        array('linha' => 1,
             'nome' => 'conta',
             'label' => 'Conta Corrente:',
             'tipo' => 'texto',
@@ -163,12 +145,19 @@ if ($acesso) {
             'required' => true,
             'title' => 'Número da conta corrente do servidor',
             'size' => 20),
-        array('linha' => 4,
+        array('linha' => 2,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'col' => 12,
-            'size' => array(80, 5))));
+            'size' => array(80, 5)),
+        array('nome' => 'idServidor',
+            'label' => 'idServidor:',
+            'tipo' => 'hidden',
+            'padrao' => $idServidorPesquisado,
+            'size' => 5,
+            'title' => 'idServidor',
+            'linha' => 4)));
 
     # Log
     $objeto->set_idUsuario($idUsuario);

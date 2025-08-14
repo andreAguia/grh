@@ -36,6 +36,7 @@ $postDtSaida = post('postDtSaida');
 $postEmailUenf = post('postEmailUenf');
 $postEndereco = post('postEndereco');
 $postCpf = post('postCpf');
+$postObs = post('postObs');
 
 $postPai = post('postPai');
 $postMae = post('postMae');
@@ -331,8 +332,17 @@ if ($acesso) {
     
     # Vínculos Anteriores
     $controle = new Input('postNumVinculos', 'simnao', 'Num Vínculos:', 1);
-    $controle->set_title('Lotação de Origem de um Professor');
+    $controle->set_title('Número de Vínculos di servidor');
     $controle->set_valor($postNumVinculos);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(4);
+    $form->add_item($controle);
+    
+    # Obs
+    $controle = new Input('postObs', 'simnao', 'Obs:', 1);
+    $controle->set_title('Observações');
+    $controle->set_valor($postObs);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $controle->set_linha(4);
@@ -775,6 +785,16 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "Pessoal";
         $method[] = "get_numVinculos";
+        $function[] = "trataNulo";
+    }
+    
+    # Obs
+    if ($postObs) {
+        $field[] = "tbservidor.obs";
+        $label[] = "Observações";
+        $align[] = "left";
+        $class[] = "";
+        $method[] = "";
         $function[] = "trataNulo";
     }
 

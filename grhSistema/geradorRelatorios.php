@@ -1143,6 +1143,7 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_numGrupo($agrupamento);
+        $relatorio->set_bordaInterna(true);
 
         $relatorio->show();
 

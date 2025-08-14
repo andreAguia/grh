@@ -37,6 +37,7 @@ $postEmailUenf = post('postEmailUenf');
 $postEndereco = post('postEndereco');
 $postCpf = post('postCpf');
 $postObs = post('postObs');
+$postLinha = post('postLinha');
 
 $postPai = post('postPai');
 $postMae = post('postMae');
@@ -320,7 +321,7 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(4);
     $form->add_item($controle);
-    
+
     # Lotação Origem
     $controle = new Input('postLotacaoOrigem', 'simnao', 'Lotac.Origem:', 1);
     $controle->set_title('Lotação de Origem de um Professor');
@@ -329,7 +330,7 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(4);
     $form->add_item($controle);
-    
+
     # Vínculos Anteriores
     $controle = new Input('postNumVinculos', 'simnao', 'Num Vínculos:', 1);
     $controle->set_title('Número de Vínculos di servidor');
@@ -338,7 +339,7 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(4);
     $form->add_item($controle);
-    
+
     # Obs
     $controle = new Input('postObs', 'simnao', 'Obs:', 1);
     $controle->set_title('Observações');
@@ -430,7 +431,7 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $form->add_item($controle);
 
-    # Endereço
+    # Assinatura
     $controle = new Input('postAssinatura', 'simnao', 'Assinatura:', 1);
     $controle->set_size(5);
     $controle->set_linha(3);
@@ -439,6 +440,15 @@ if ($acesso) {
     $controle->set_valor($postAssinatura);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
+    # Borda Interna
+    $controle = new Input('postLinha', 'simnao', 'Linha:', 1);
+    $controle->set_title('Linhas Internas');
+    $controle->set_valor($postLinha);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(3);
     $form->add_item($controle);
 
     #################################### Filtro #######################################
@@ -767,7 +777,7 @@ if ($acesso) {
         $method[] = "get_emailUenf";
         $function[] = "";
     }
-    
+
     # Lotação de Origem
     if ($postLotacaoOrigem) {
         $field[] = "tbservidor.idServidor";
@@ -777,7 +787,7 @@ if ($acesso) {
         $method[] = "get_nomeLaboratorioOrigemServidor";
         $function[] = "trataNulo";
     }
-    
+
     # Número de Vínculos Anteriuores
     if ($postNumVinculos) {
         $field[] = "tbservidor.idServidor";
@@ -787,7 +797,7 @@ if ($acesso) {
         $method[] = "get_numVinculos";
         $function[] = "trataNulo";
     }
-    
+
     # Obs
     if ($postObs) {
         $field[] = "tbservidor.obs";
@@ -1009,7 +1019,7 @@ if ($acesso) {
                 $agrupamento = array_search("Ordena{$parametroAgrupamento}", $label);
                 $parametroOrdena = $field[$agrupamento] . " ," . $parametroOrdena;
                 break;
-            
+
             case "Nacionalidade" :
                 $field[] = "tbnacionalidade.nacionalidade";
                 $label[] = "Ordena{$parametroAgrupamento}";
@@ -1143,7 +1153,10 @@ if ($acesso) {
         $relatorio->set_menuRelatorio(false);
         $relatorio->set_dataImpressao(false);
         $relatorio->set_numGrupo($agrupamento);
-        $relatorio->set_bordaInterna(true);
+
+        if ($postLinha) {
+            $relatorio->set_bordaInterna(true);
+        }
 
         $relatorio->show();
 

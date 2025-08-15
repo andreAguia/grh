@@ -83,7 +83,13 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
-            
+
+            # Procedimentos
+            $botaoProcedimentos = new Link("Procedimentos", "?fase=procedimentos");
+            $botaoProcedimentos->set_class('button');
+            $botaoProcedimentos->set_title('Exibe os procedimentos');
+            $botaoProcedimentos->set_target("_blank");
+
             # Controle de notas
             $botao2 = new Button("Controle das Avaliações", "grh.php");
             $botao2->set_class('button');
@@ -101,7 +107,7 @@ if ($acesso) {
             #$menu1->add_link($botaoRel, "right");
 
             $menu1->show();
-            
+
             # Formulário de Pesquisa
             $form = new Form('?');
 
@@ -226,7 +232,7 @@ if ($acesso) {
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
@@ -245,6 +251,15 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorAvaliacao.php');
+            break;
+
+        ############################################################################
+
+        case "procedimentos" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimentoSubCategoria("Estágio Probatório");
             break;
 
         ################################################################

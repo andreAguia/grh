@@ -532,4 +532,27 @@ class Avaliacao {
     }
 
 ###########################################################
+
+    public function exibeDataAdmissaoETempo($idServidor) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        
+        # Pega a data de admissão
+        $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+        if (empty($idServidor)) {
+            echo "---";
+        } else {
+            pLista(
+                    $dtAdmissao,
+                    intval(dataDif($dtAdmissao) / 30) . " meses"
+            );
+        }
+    }
+
+###########################################################
 }

@@ -89,6 +89,7 @@ if ($acesso) {
             $botaoProcedimentos->set_class('button');
             $botaoProcedimentos->set_title('Exibe os procedimentos');
             $botaoProcedimentos->set_target("_blank");
+            $menu1->add_link($botaoProcedimentos, "right");
 
             # Controle de notas
             $botao2 = new Button("Controle das Avaliações", "grh.php");

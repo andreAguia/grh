@@ -866,7 +866,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Avaliação Funcional');
-        $botao->set_url('areaAvaliacao.php?grh=1');
+        $botao->set_url('areaAvaliacaoProcesso.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'avaliacao.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área de Avaliação dos Servidores');
         $menu->add_item($botao);

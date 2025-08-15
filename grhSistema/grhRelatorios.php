@@ -72,7 +72,6 @@ if ($acesso) {
         ['Afastamentos', 'afastamentos'],
         ['Aposentadoria e Tempo Averbado', 'aposentados'],
         ['Atestado', 'atestado'],
-        ['Avaliação', 'avaliacao'],
         ['Cargo Efetivo', 'cargoEfetivo'],
         ['Cargo em Comissão', 'cargoEmComissao'],
         ['Cedidos', 'cedidos'],

@@ -163,9 +163,8 @@ if ($acesso) {
                                          LEFT JOIN tbavaliacao USING (idServidor)
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                         JOIN tbperfil USING (idPerfil)
                         WHERE situacao = 1
-                          AND tbperfil.tipo <> 'Outros' 
+                          AND idPerfil = 1 
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Verifica se tem filtro por lotação
@@ -197,9 +196,8 @@ if ($acesso) {
                       FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                       JOIN tbhistlot USING (idServidor)
                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                      JOIN tbperfil USING (idPerfil)
                         WHERE situacao = 1
-                          AND tbperfil.tipo <> 'Outros'
+                          AND idPerfil = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
@@ -219,9 +217,8 @@ if ($acesso) {
                                          LEFT JOIN tbavaliacao USING (idServidor)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                                              JOIN tbperfil USING (idPerfil)
                               WHERE situacao = 1
-                                AND tbperfil.tipo <> 'Outros'
+                                AND idPerfil = 1
                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
@@ -308,6 +305,7 @@ if ($acesso) {
                                          JOIN tbhistlot USING (idServidor)
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                         WHERE situacao = 1
+                          AND idPerfil = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Verifica se tem filtro por lotação
@@ -339,6 +337,7 @@ if ($acesso) {
                                       JOIN tbhistlot USING (idServidor)
                                       JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                       WHERE situacao = 1
+                        AND idPerfil = 1
                         AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação
@@ -359,6 +358,7 @@ if ($acesso) {
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                               WHERE situacao = 1
+                                AND idPerfil = 1
                                 AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
                 # Verifica se tem filtro por lotação

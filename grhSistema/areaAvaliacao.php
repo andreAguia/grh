@@ -80,7 +80,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
+            $botaoVoltar = new Link("Voltar", "areaAvaliacaoProcesso.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
@@ -114,7 +114,7 @@ if ($acesso) {
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
+            $controle->set_col(3);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -134,7 +134,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(9);
             $form->add_item($controle);
 
             $form->show();
@@ -148,6 +148,7 @@ if ($acesso) {
             }
 
             $select .= "      tbservidor.idServidor,
+                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               CASE tbavaliacao.tipo
                                     WHEN 1 THEN 'Estágio' 
@@ -184,6 +185,7 @@ if ($acesso) {
                 # Informa os servidores que não tem cadastrado esse ano específico
                 $select .= ") UNION (
                     SELECT tbservidor.idfuncional,
+                           tbservidor.idServidor,
                            tbservidor.idServidor,
                            tbservidor.idServidor,
                            '---',
@@ -235,24 +237,24 @@ if ($acesso) {
             }
 
             if ($parametroAno <> "*") {
-                $select .= " ORDER BY 9";
+                $select .= " ORDER BY 10";
             } else {
-                $select .= " ORDER BY 9, 4, 7 DESC";
+                $select .= " ORDER BY 10, 5, 8 DESC";
             }
 
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo('Controle de Avaliação Funcional');
-            $tabela->set_label(["IdFuncional", "Servidor", "Processo", "Tipo", "Referencia", "Período", "Obs"]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Processo", "Tipo", "Referencia", "Período", "Obs"]);
             #$tabela->set_width([10, 40, 40]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left"]);
-            $tabela->set_classe([null, "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacao", "exibeProcesso", null, null, null, "exibeObs"]);
+            $tabela->set_classe([null, "pessoal", "pessoal", "Avaliacao", null, null, null, "Avaliacao"]);
+            $tabela->set_metodo([null, "get_nomeECargo", "get_lotacao", "exibeProcesso", null, null, null, "exibeObs"]);
             #$tabela->set_funcao([null, null, "date_to_php"]);
 
-            $tabela->set_rowspan([0, 1, 2]);
+            $tabela->set_rowspan([0, 1, 2, 3]);
             $tabela->set_grupoCorColuna(1);
 
             $tabela->set_idCampo('idServidor');
@@ -395,7 +397,7 @@ if ($acesso) {
             # Informa o ano de referência
             if ($parametroAno <> "*") {
                 $relatorio->set_tituloLinha2($parametroAno);
-            }else{
+            } else {
                 $relatorio->set_rowspan(1);
             }
 

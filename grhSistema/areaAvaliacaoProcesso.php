@@ -139,12 +139,11 @@ if ($acesso) {
                                tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                              JOIN tbperfil USING (idPerfil)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
-                          AND tbperfil.tipo <> 'Outros'
+                          AND idPerfil = 1
                           AND (processoAvaliacaoSei IS NULL OR processoAvaliacaoSei = '')
                           AND (processoAvaliacaoFisico IS NULL OR processoAvaliacaoFisico = '')";
 
@@ -161,7 +160,7 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores Sem Processo Cadastrado');
+            $tabela->set_titulo('Servidores Estatutários Sem Processo Cadastrado');
             $tabela->set_subtitulo('Ordenado pela Data de Admissão');
             $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Admissão", "Processo"]);
             #$tabela->set_width([10, 40, 40]);
@@ -191,12 +190,11 @@ if ($acesso) {
                                tbservidor.idServidor,
                                tbservidor.idServidor
                           FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                              JOIN tbperfil USING (idPerfil)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                           AND situacao = 1
-                          AND tbperfil.tipo <> 'Outros'
+                          AND idPerfil = 1
                           AND (processoAvaliacaoSei IS NOT NULL OR processoAvaliacaoSei <> '' OR processoAvaliacaoFisico IS NOT NULL OR processoAvaliacaoFisico <> '')";
 
             # Verifica se tem filtro por lotação
@@ -212,8 +210,8 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores Com Processo Cadastrado');
-            $tabela->set_subtitulo('Ordenado pelo Nome do servidor');
+            $tabela->set_titulo('Servidores Estatutários Com Processo Cadastrado');
+            $tabela->set_subtitulo('Ordenado pelo Nome do Servidor');
             $tabela->set_label(["IdFuncional", "Servidor", "Lotação ", "Processo"]);
             #$tabela->set_width([10, 40, 40]);
             $tabela->set_conteudo($result);

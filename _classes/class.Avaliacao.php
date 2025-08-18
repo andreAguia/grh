@@ -547,14 +547,14 @@ class Avaliacao {
         if (empty($idServidor)) {
             echo "---";
         } else {
-            $tempo = intval(dataDif($dtAdmissao) / 30) . " meses";
+            $tempo = intval(dataDif($dtAdmissao) / 30);
 
-            p($dtAdmissao, "padrao");
+            p($dtAdmissao, "pprogressaoAdmissao");
 
             if ($tempo > 8) {
-                p($tempo, "pacima8Meses");
+                p("({$tempo} meses)", "vermelho");
             } else {
-                p($tempo, "pabaixo8Meses");
+                p("({$tempo} meses)", "verde");
             }
         }
     }

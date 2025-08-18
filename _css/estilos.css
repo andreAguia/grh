@@ -382,6 +382,23 @@ p#pprogressao2{
     margin: 0px;
     font-size: 10px;
 }
+
+p#pacima8Meses{
+    padding: 0px;
+    margin: 0px;
+    font-size: 10px;
+    font-weight: bold;
+    color: red;
+}
+
+p#pabaixo8Meses{
+    padding: 0px;
+    margin: 0px;
+    font-size: 10px;
+    font-weight: bold;
+    color: green;
+}
+
 /*******************************************
  * Área de Progressão
  *******************************************/

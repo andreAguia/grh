@@ -27,6 +27,29 @@ class Avaliacao {
         return $servidor->select($select, false);
     }
 
+##############################################################
+
+    public function exibe_tabelaRegras() {
+        
+        
+        # Define o array
+        $array = [
+            ["AV1","8 meses"],
+            ["AV2","16 meses"],
+            ["AV3","24 meses"],
+            ["AV4","36 meses"]            
+        ];
+        
+        $tabela = new Tabela();
+        $tabela->set_conteudo($array);
+        $tabela->set_titulo("Avaliações");
+        $tabela->set_label(["Avaliação","Período"]);
+        $tabela->set_width([60, 40]);
+        $tabela->set_align(["center", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
 ###########################################################
 
     function exibePublicacao($id) {

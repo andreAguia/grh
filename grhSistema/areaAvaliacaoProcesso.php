@@ -260,7 +260,7 @@ if ($acesso) {
 
             br();
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimentoSubCategoria("Estágio Probatório");
+            $procedimento->exibeProcedimentoSubCategoria("Progressão e Enquadramento");
             break;
 
         ################################################################

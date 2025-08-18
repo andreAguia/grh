@@ -98,6 +98,10 @@ if ($acesso) {
                               idFormacao,
                               idFormacao
                          FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
+                                         LEFT JOIN tbformacaomarcador A ON (marcador1 = A.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador B ON (marcador2 = B.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador C ON (marcador3 = C.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador D ON (marcador4 = D.idFormacaoMarcador) 
                         WHERE idPessoa={$idPessoa}";
 
     if (!empty($parametro)) {
@@ -105,6 +109,10 @@ if ($acesso) {
                               OR habilitacao LIKE '%{$parametro}%'
                               OR instEnsino LIKE '%{$parametro}%'
                               OR anoTerm LIKE '%{$parametro}%'
+                              OR A.marcador LIKE '%{$parametro}%'
+                              OR B.marcador LIKE '%{$parametro}%'
+                              OR C.marcador LIKE '%{$parametro}%'
+                              OR D.marcador LIKE '%{$parametro}%'
                               OR horas LIKE '%{$parametro}%')";
     }
 
@@ -143,7 +151,7 @@ if ($acesso) {
     #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
     $objeto->set_align(["center", "center", "center", "left", "left"]);
 
-    $objeto->set_funcao([null, null, null, null, null, "trataNulo"]);
+    #$objeto->set_funcao([null, null, null, null, null, "trataNulo"]);
 
     $objeto->set_classe([null, null, "Formacao", null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, "exibeMarcador", null, null, null, "exibeCertificado"]);

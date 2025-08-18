@@ -209,14 +209,10 @@ class Formacao {
         /**
          * Fornece um array com os marcadores
          */
-        $arrayMarcadores = [
-            [1, "Investidura"],
-            [2, "Progressão Funcional"],
-            [3, "Pró Uenf"],
-            [4, "Petec"]
-        ];
         
-        return $arrayMarcadores;
+        $pessoal = new Pessoal();
+        $array = $pessoal->select("SELECT * FROM tbformacaomarcador");        
+        return $array;
     }
 
     ###########################################################

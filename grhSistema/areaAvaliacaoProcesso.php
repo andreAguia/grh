@@ -134,6 +134,15 @@ if ($acesso) {
 
             $form->show();
 
+            $grid->fechaGrid();
+            $grid->abreColuna(3);
+            
+            $avaliacao = new Avaliacao();
+            $avaliacao->exibe_tabelaRegras();
+
+            $grid->fechaGrid();
+            $grid->abreColuna(9);
+
             /*
              * Sem processo cadastrado
              */

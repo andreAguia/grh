@@ -147,6 +147,8 @@ if ($acesso) {
 
     $objeto->set_classe([null, null, "Formacao", null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, "exibeMarcador", null, null, null, "exibeCertificado"]);
+    
+    $objeto->set_colunaSomatorio(5);
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);

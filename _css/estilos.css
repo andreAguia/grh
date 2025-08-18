@@ -383,22 +383,11 @@ p#pprogressao2{
     font-size: 10px;
 }
 
-p#pacima8Meses{
+p#pprogressaoAdmissao{
     padding: 0px;
     margin: 0px;
-    font-size: 10px;
-    font-weight: bold;
-    color: red;
+    font-size: 12px;
 }
-
-p#pabaixo8Meses{
-    padding: 0px;
-    margin: 0px;
-    font-size: 10px;
-    font-weight: bold;
-    color: green;
-}
-
 /*******************************************
  * Área de Progressão
  *******************************************/

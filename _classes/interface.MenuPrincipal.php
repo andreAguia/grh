@@ -1214,6 +1214,7 @@ class MenuPrincipal {
         $menu->add_item('link', 'Tipos de Penalidades', 'cadastroTipoPenalidades.php?grh=1', 'Acessa o Cadastro de Tipos de penalidades');
         $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão');
         $menu->add_item('link', 'Categoria de Habilitação', 'cadastroHabilitacaoCategoria.php?grh=1', 'Acessa o Cadastro de Categorias de Habilitação');
+        $menu->add_item('link', 'Marcadores para Cadastro de Formação', 'cadastroMarcador.php?grh=1', 'Acessa o Cadastro Marcedores para o Cadastro de Formação');
 
         $menu->show();
         $painel->fecha();

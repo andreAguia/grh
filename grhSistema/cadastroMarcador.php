@@ -59,7 +59,7 @@ if ($acesso) {
     # controle de pesquisa
     $objeto->set_parametroLabel('Pesquisar');
     $objeto->set_parametroValue($parametro);
-    
+
     # select da lista
     $objeto->set_selectLista("SELECT idFormacaoMarcador,
                                      marcador,
@@ -73,7 +73,7 @@ if ($acesso) {
                                      obs
                                 FROM tbformacaomarcador
                                WHERE idFormacaoMarcador = {$id}");
-    
+
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
         $objeto->set_modoLeitura(true);
@@ -81,14 +81,18 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
+    # Somente Admin exclui
+    if (Verifica::acesso($idUsuario, 1)) {
+        $objeto->set_linkExcluir('?fase=excluir');
+    }
+
     # Parametros da tabela
     $objeto->set_label(["Id", "Marcador", "Obs"]);
-    $objeto->set_width([5, 35, 40, 10]);
-    $objeto->set_align(["center", "center", "left"]);
+    $objeto->set_width([5, 30, 50]);
+    $objeto->set_align(["center", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -98,7 +102,7 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idFormacaoMarcador');
-    
+
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,

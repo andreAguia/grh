@@ -540,17 +540,22 @@ class Avaliacao {
          */
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
-        
+
         # Pega a data de admissão
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
         if (empty($idServidor)) {
             echo "---";
         } else {
-            pLista(
-                    $dtAdmissao,
-                    intval(dataDif($dtAdmissao) / 30) . " meses"
-            );
+            $tempo = intval(dataDif($dtAdmissao) / 30) . " meses";
+
+            p($dtAdmissao, "padrao");
+
+            if ($tempo > 8) {
+                p($tempo, "pacima8Meses");
+            } else {
+                p($tempo, "pabaixo8Meses");
+            }
         }
     }
 

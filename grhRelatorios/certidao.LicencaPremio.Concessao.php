@@ -826,7 +826,7 @@ if ($acesso) {
                 $dec->set_texto("{$texto}.");
             } else {
                 $data9 = date_to_php($parametroPublicacaoData);
-                $dec->set_texto("{$texto}, tornando sem efeito a publicação de {$data9} página {$parametroPublicacaoPag}.");
+                $dec->set_texto("{$texto}, tornando sem efeito a publicação de {$data9}, página {$parametroPublicacaoPag}.");
             }
 
             $dec->set_texto("");

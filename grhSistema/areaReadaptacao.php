@@ -103,7 +103,7 @@ if ($acesso) {
             $botaoCalendario = new Link("Calendário", "calendario.php");
             $botaoCalendario->set_class('button');
             $botaoCalendario->set_title('Exibe o calendário');
-            $botaoCalendario->set_target("_calenmdario");
+            $botaoCalendario->set_target("_calendario");
             $menu1->add_link($botaoCalendario, "right");
 
             $linkBotao3 = new Link("Procedimentos", "servidorReadaptacao.php?fase=procedimentos");

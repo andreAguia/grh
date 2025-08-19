@@ -149,11 +149,11 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Decreto nº 43.249 de 24/10/2011', '?fase=d43');
             $menu->add_item('linkWindow', 'Portaria n° 63 de 20/04/2021', '?fase=p63');
 
-            $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
-            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
-            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
-            $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
+//            $menu->add_item('titulo', 'Relatórios');
+//            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
+//            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
+//            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
+//            $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
 
             $menu->show();
 

@@ -136,9 +136,26 @@ if ($acesso) {
 
             $grid->fechaGrid();
             $grid->abreColuna(3);
-            
+
             $avaliacao = new Avaliacao();
             $avaliacao->exibe_tabelaRegras();
+
+            # Menu
+            tituloTable("Menu");
+
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Legislação');
+            $menu->add_item('linkWindow', 'Portaria nº 9 de 16/10/2008', '?fase=p9');
+            $menu->add_item('linkWindow', 'Decreto nº 43.249 de 24/10/2011', '?fase=d43');
+            $menu->add_item('linkWindow', 'Portaria n° 63 de 20/04/2021', '?fase=p63');
+
+            $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
+            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
+            $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
+
+            $menu->show();
 
             $grid->fechaGrid();
             $grid->abreColuna(9);
@@ -269,7 +286,34 @@ if ($acesso) {
 
             br();
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimentoSubCategoria("Progressão e Enquadramento");
+            $procedimento->exibeProcedimento(132);
+            break;
+
+        ############################################################################
+
+        case "p9" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimento(134);
+            break;
+
+        ############################################################################
+
+        case "p63" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimento(133);
+            break;
+
+        ############################################################################
+
+        case "d43" :
+
+            br();
+            $procedimento = new Procedimento();
+            $procedimento->exibeProcedimento(135);
             break;
 
         ################################################################

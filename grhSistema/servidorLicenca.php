@@ -527,7 +527,8 @@ if ($acesso) {
                 'label' => 'Alta: *',
                 'tipo' => 'combo',
                 'size' => 20,
-                'array' => array(array(null, null),
+                'array' => array(
+                    array(null, null),
                     array(2, "Não"),
                     array(1, "Sim")),
                 'col' => 2,
@@ -622,7 +623,7 @@ if ($acesso) {
         $botaoCalendario = new Link("Calendário", "calendario.php");
         $botaoCalendario->set_class('button');
         $botaoCalendario->set_title('Exibe o calendário');
-        $botaoCalendario->set_target("_calenmdario");
+        $botaoCalendario->set_target("_calendario");
 
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();

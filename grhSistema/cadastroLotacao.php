@@ -52,7 +52,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio" AND $fase <> "relatorioHistorico") {
         AreaServidor::cabecalho();
     }
 
@@ -689,9 +689,9 @@ if ($acesso) {
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio&subFase=1&id=$id");
+            $botaoRel->set_url("?fase=relatorioHistorico&id={$id}");
             $botaoRel->set_imagem($imagem2);
-            #$menu->add_link($botaoRel, "right");
+            $menu->add_link($botaoRel, "right");
             $menu->show();
 
             # Formulário de Pesquisa
@@ -742,7 +742,7 @@ if ($acesso) {
             $tabela->set_subtitulo($pessoal->get_nomeLotacao2($id));
             $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Situação', 'Chegada ao Setor', 'Saída do Setor', 'Editar']);
             $tabela->set_align(["center", "left", "left"]);
-            #$tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
+            $tabela->set_width([10, 20, 15, 10, 10, 15, 15, 5]);
 
             $tabela->set_classe([null, null, "pessoal", null, "pessoal", "Lotacao", "Lotacao"]);
             $tabela->set_metodo([null, null, "get_Cargo", null, "get_Situacao", "getDataChegadaDeOnde", "getDataSaidaPraOnde"]);
@@ -779,9 +779,59 @@ if ($acesso) {
             # Carrega a página específica
             loadPage('servidorMenu.php');
             break;
-    }
 
-    ################################################################
+        ################################################################
+
+        case "relatorioHistorico" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            
+            # Monta o select
+            $select = "SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,                     
+                              tbperfil.nome,
+                              tbservidor.idServidor,
+                              tbhistlot.idHistLot,
+                              tbhistlot.idHistLot
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         LEFT JOIN tbperfil ON (tbservidor.idPerfil = tbperfil.idPerfil)
+               WHERE idLotacao = {$id}";
+
+            if ($parametroSituacao <> null AND $parametroSituacao <> "*") {
+                $select .= " AND tbservidor.situacao = {$parametroSituacao}";
+            }
+
+            $select .= " ORDER BY tbpessoa.nome, tbhistlot.data DESC";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Relatorio();
+            $tabela->set_titulo('Histórico de Servidores');
+            $tabela->set_subtitulo($pessoal->get_nomeLotacao2($id));
+            $tabela->set_label(['IdFuncional', 'Nome', 'Cargo', 'Perfil', 'Situação', 'Chegada ao Setor', 'Saída do Setor']);
+            $tabela->set_align(["center", "left", "left"]);
+            $tabela->set_width([10, 20, 15, 10, 10, 15, 15, 5]);
+
+            $tabela->set_classe([null, null, "pessoal", null, "pessoal", "Lotacao", "Lotacao"]);
+            $tabela->set_metodo([null, null, "get_Cargo", null, "get_Situacao", "getDataChegadaDeOnde", "getDataSaidaPraOnde"]);
+
+            #$tabela->set_rowspan(1);
+            #$tabela->set_grupoCorColuna(1);
+            $tabela->set_bordaInterna(true);
+
+            $tabela->set_conteudo($result);
+            $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ################################################################
+    }
 
     if ($fase <> "organograma") {
         $page->terminaPagina();

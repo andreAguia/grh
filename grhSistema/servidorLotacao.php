@@ -167,7 +167,8 @@ if ($acesso) {
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
     
-    $mensagem = "Atenção!<br/>Toda alteração de lotação de servidor deverá ser informada aos administradores do SEI na Uenf através do e-mail sei@uenf.br";
+    $mensagem = "Atenção!<br/> - Toda alteração de lotação de servidor deverá ser informada aos administradores do SEI na Uenf através do e-mail sei@uenf.br"
+            . "<br/> - As movimentações de lotação anteriores a 10/11/2016 não estão exatas pois são anteriores ao sistema atual e o sistema antigo não armazenava o histórico das lotações.";
 
     ################################################################
 

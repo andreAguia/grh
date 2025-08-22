@@ -594,6 +594,7 @@ class ListaServidores2 {
             $tabela->set_funcao($function);
             $tabela->set_totalRegistro(true);
             $tabela->set_idCampo('idServidor');
+            $tabela->set_scroll(false);
             if ($this->permiteEditar) {
                 $tabela->set_editar($this->caminho);
             }

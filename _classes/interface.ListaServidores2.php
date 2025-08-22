@@ -48,6 +48,7 @@ class ListaServidores2 {
      */
     private $totReg = 0;        # Total de registros encontrados
     private $detalhado = true;  # Exibe detalhes 
+    private $comFoto = false;   # Exibe ou não Fotos
 
     /*
      *  Parâmetros da paginação da listagem
@@ -182,6 +183,10 @@ class ListaServidores2 {
 
         if (($this->situacao <> 1) OR (($this->situacao == 1) AND ($this->situacaoSinal == "<>"))) {
             $select .= 'tbservidor.dtDemissao,';
+        }
+
+        if ($this->comFoto) {
+            $select .= 'tbservidor.idServidor,';
         }
 
         $select .= '      tbservidor.idServidor,
@@ -541,6 +546,30 @@ class ListaServidores2 {
             }
         }
 
+        # Anexa Fotos
+        if ($this->comFoto) {
+            array_push($label, "Foto");
+            if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
+                array_push($classe, null);
+                array_push($classe, null);
+                array_push($classe, "Pessoal");
+                
+                array_push($metodo, null);
+                array_push($metodo, null);
+                array_push($metodo, "get_foto");
+            } else {
+                array_push($classe, null);
+                array_push($classe, null);
+                array_push($classe, null);
+                array_push($classe, "Pessoal");
+                
+                array_push($metodo, null);
+                array_push($metodo, null);
+                array_push($metodo, null);
+                array_push($metodo, "get_foto");
+            }
+        }
+
         # Executa o select juntando o selct e o select de paginacao
         $conteudo = $servidor->select($this->select . $this->selectPaginacao, true);
 
@@ -558,7 +587,7 @@ class ListaServidores2 {
             $tabela->set_titulo($this->nomeLista);
             $tabela->set_conteudo($conteudo);
             $tabela->set_label($label);
-            $tabela->set_width($width);
+            #$tabela->set_width($width);
             $tabela->set_align($align);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);

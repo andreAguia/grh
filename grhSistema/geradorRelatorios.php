@@ -46,6 +46,7 @@ $postNaturalidade = post('postNaturalidade');
 $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
+$postTicket = post('postTicket');
 
 $postAssinatura = post('postAssinatura');
 
@@ -450,6 +451,15 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(3);
     $form->add_item($controle);
+    
+    # postTicket
+    $controle = new Input('postTicket', 'simnao', 'Ticket:', 1);
+    $controle->set_title('Linhas Internas');
+    $controle->set_valor($postTicket);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(3);
+    $form->add_item($controle);
 
     #################################### Filtro #######################################
 
@@ -607,6 +617,16 @@ if ($acesso) {
     $form->add_item($controle);
 
     #################################### Monta os Arrays #######################################
+    #IdFuncional
+    if ($postTicket) {
+        $field[] = "'[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]'";
+        $label[] = "";
+        $align[] = "center";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
+    
     #IdFuncional
     if ($postIdfuncional) {
         $field[] = "idFuncional";

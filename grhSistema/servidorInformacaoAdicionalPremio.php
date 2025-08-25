@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12, 19]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -53,7 +53,7 @@ if ($acesso) {
                      WHERE idServidor = ' . $idServidorPesquisado;
 
     # Habilita o modo leitura para usuario de regra 12
-    if (Verifica::acesso($idUsuario, 12)) {
+    if (Verifica::acesso($idUsuario, 12) AND !Verifica::acesso($idUsuario, 19)) {
         $objeto->set_modoLeitura(true);
     }
 

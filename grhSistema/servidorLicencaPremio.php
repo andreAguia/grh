@@ -12,7 +12,7 @@ $idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
 include ("_config.php");
 
 # Permissão de Acesso
-$acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
+$acesso = Verifica::acesso($idUsuario, [1, 2, 12, 19]);
 
 if ($acesso) {
     # Conecta ao Banco de Dados
@@ -168,7 +168,7 @@ if ($acesso) {
                                    WHERE idLicencaPremio = ' . $id);
 
         # Habilita o modo leitura para usuario de regra 12
-        if (Verifica::acesso($idUsuario, 12)) {
+        if (Verifica::acesso($idUsuario, 12) AND !Verifica::acesso($idUsuario, 19)) {
             $objeto->set_modoLeitura(true);
         }
 
@@ -315,13 +315,13 @@ if ($acesso) {
         $botaoRel->set_target("_blank");
 
         # Edita Obs
-        if (Verifica::acesso($idUsuario, [1, 2])) {
+        if (Verifica::acesso($idUsuario, [1, 2, 19])) {
             $botaoObs = new Button("Obs Licença Prêmio", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
             $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoCalendario]);
         }
 
-        if (Verifica::acesso($idUsuario, 12)) {
+        if (Verifica::acesso($idUsuario, 12) AND !Verifica::acesso($idUsuario, 19)) {
             $objeto->set_botaoListarExtra([$botaoRel, $botaoAfastPremio, $botaoAfast, $botaoCalendario]);
         }
 
@@ -405,7 +405,7 @@ if ($acesso) {
                 }
 
                 # Cria um menu
-                if (Verifica::acesso($idUsuario, [1, 2])) {
+                if (Verifica::acesso($idUsuario, [1, 2, 19])) {
                     $menu = new MenuBar();
 
                     # Editar Processo
@@ -455,7 +455,7 @@ if ($acesso) {
                 $grid->abreColuna(12);
 
                 # Cria um menu
-                if (Verifica::acesso($idUsuario, [1, 2])) {
+                if (Verifica::acesso($idUsuario, [1, 2, 19])) {
 
                     $menu = new MenuBar();
 

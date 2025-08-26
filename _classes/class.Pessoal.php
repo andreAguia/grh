@@ -5578,10 +5578,10 @@ class Pessoal extends Bd {
         } else {
 
             # Pega o cargo do servidor
-            $select = 'SELECT idServidor
+            $select = "SELECT idServidor
                              FROM tbservidor
-                            WHERE idPessoa = ' . $idPessoa . '  
-                         ORDER BY situacao, dtAdmissao desc';
+                            WHERE idPessoa = {$idPessoa}  
+                         ORDER BY situacao, dtAdmissao desc";
 
             $row = parent::select($select, false);
 

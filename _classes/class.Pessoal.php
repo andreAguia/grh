@@ -7178,4 +7178,177 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function get_contaBancaria($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $select = "SELECT idBanco,
+                          agencia,
+                          conta 
+                     FROM tbhistbanco
+                    WHERE idServidor = {$idServidor}
+                      AND padrao = 's'";
+
+        return parent::select($select, false);
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function get_contaBancariaAntiga($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $idPessoa = $this->get_idPessoa($idServidor);
+        $select = "SELECT banco,
+                          agencia,
+                          conta 
+                     FROM tbpessoa
+                    WHERE idPessoa = {$idPessoa}";
+
+        return parent::select($select, false);
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function exibe_contaBancariaAntiga($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $row = $this->get_contaBancariaAntiga($idServidor);
+        if (!empty($row[0])) {
+            plista(
+                    $this->get_nomeBanco($row[0]),
+                    $row[1],
+                    $row[2]
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function exibe_contaBancaria($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $row = $this->get_contaBancaria($idServidor);
+        if (!empty($row[0])) {
+            plista(
+                    $this->get_nomeBanco($row[0]),
+                    $row[1],
+                    $row[2]
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function analisaImportacaoContaBancaria($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega a tabela antiga
+        $tbAntiga = $this->get_contaBancariaAntiga($idServidor);
+
+        # Pega a tabela Nova
+        $tbNova = $this->get_contaBancaria($idServidor);
+
+        # Verifica tem tabela antiga está zerada
+        if (empty($tbAntiga[0])) {
+            label("Não Precisa Importar", "sucess");
+        } else {
+            # Verifica se tabela nova está em Branco
+            if (empty($tbNova[0])) {
+                label("PRECISA IMPORTAR", "alert");
+                botao("?fase=importaBaseAntiga&idServidor={$idServidor}", "Gravar");
+            } else {
+                # Verifica se os valores são iguais
+                if ($tbNova[0] == $tbAntiga[0]) {
+                    label("Não Precisa Importar", "sucess");
+                } else {
+                    # Verifica se os valores são diferentes
+                    botao("?fase=importaBaseAntiga&idServidor={$idServidor}&padrao=n", "Gravar");
+                    botao("?fase=importaBaseAntiga", "Gravar");
+                }
+            }
+        }
+    }
+
+     ###########################################################
+
+    /**
+     * Método get_contaBancaria
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna um array com os dados da conta bancária padrão
+     */
+    function get_nomeBanco($idBanco) {
+
+        # Valida o id
+        if (empty($idBanco)) {
+            return null;
+        }
+        
+        # Pega os dados
+        $select = "SELECT CONCAT(codigo,' - ',banco)
+                     FROM tbbanco
+                    WHERE idBanco = {$idBanco}";
+
+        return parent::select($select, false)[0];
+
+        
+    }
+
+    ###########################################################
 }

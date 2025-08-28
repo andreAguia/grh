@@ -365,7 +365,6 @@ if ($acesso) {
             $menu->add_item($botao);
 
             $botao = new BotaoGrafico();
-            #$botao->set_novo(true);
             $botao->set_label('Controle da Entrega da Declaração Anual');
             $botao->set_url('servidorAcumulacaoDeclaracao.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'declaracao.png', $tamanhoImage, $tamanhoImage);

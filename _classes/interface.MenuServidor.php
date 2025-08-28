@@ -998,25 +998,24 @@ class MenuServidor {
         $menu->add_item($botao);
 
         # Dados Bancários
-        $botao = new BotaoGrafico();
-        $botao->set_label('Dados Bancários');
-        $botao->set_url('servidorBancario.php?grh=1');
-        $botao->set_imagem(PASTA_FIGURAS . 'banco.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
-        $botao->set_title('Cadastro dos dados bancários do Servidor');
-        $menu->add_item($botao);
-
-        # Dados Bancários
         if (Verifica::acesso($this->idUsuario, 1)) {
+
+            # Dados Bancários
             $botao = new BotaoGrafico();
             $botao->set_label('Dados Bancários');
-            $botao->set_url('servidorBancario2.php?grh=1');
+            $botao->set_url('servidorBancario.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'banco.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Cadastro dos dados bancários do Servidor');
-            $botao->set_novo(true);
+            $botao->set_etiqueta("Rotina Antiga");
             $menu->add_item($botao);
         }
 
-
+        $botao = new BotaoGrafico();
+        $botao->set_label('Dados Bancários');
+        $botao->set_url('servidorBancario2.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'banco.jpg', $this->tamanhoImagem, $this->tamanhoImagem);
+        $botao->set_title('Cadastro dos dados bancários do Servidor');
+        $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Resumo Financeiro');

@@ -162,19 +162,33 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+    
+    $mensagem = "Atenção!<br/> Todo servidor poderá ter apenas uma conta padrão."
+            . "<br/>Quando uma conta padrão é incluída as outras contas, caso existam, serão automaticamente alteradas para NÃO padrão.";
+
 
     ################################################################
 
     switch ($fase) {
         case "" :
         case "listar" :
-        case "editar" :
+        $objeto->set_rotinaExtraListar("callout");
+            $objeto->set_rotinaExtraListarParametro($mensagem);
+            $objeto->listar();
+            break;
+
+        case "editar" :            
+            $objeto->set_rotinaExtraEditar("callout");
+            $objeto->set_rotinaExtraEditarParametro($mensagem);
+            $objeto->editar($id);
+            break;
+        
         case "excluir" :
             $objeto->$fase($id);
             break;
 
         case "gravar" :
-            $objeto->$fase($id);
+            $objeto->$fase($id, "servidorBancarioExtra.php");
             break;
     }
     $page->terminaPagina();

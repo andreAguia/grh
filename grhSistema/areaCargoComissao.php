@@ -666,7 +666,8 @@ if ($acesso) {
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Relatório de Servidores Nomeados");
             $relatorio->set_subtitulo($pessoal->get_nomeCargoComissao($parametroCargo));
-            $relatorio->set_label(['Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior']);
+            #$relatorio->set_label(['Nome', 'Nomeação', 'Exoneração', 'Descrição', 'Ocupante Anterior']);
+            $relatorio->set_label(['Nome', 'Nomeação', 'Exoneração', 'Descrição']);
             $relatorio->set_conteudo($result);
             $relatorio->set_align(["left", "left", "left", "left", "left"]);
             $relatorio->set_classe(["Pessoal", "CargoComissao", "CargoComissao", "CargoComissao", "CargoComissao"]);

@@ -168,7 +168,7 @@ class Formacao {
             $link->set_target("_blank");
             $link->show();
         } else {
-            echo "-";
+            label("Sem<br/>Comprovação", "alert");
         }
     }
 
@@ -209,9 +209,8 @@ class Formacao {
         /**
          * Fornece um array com os marcadores
          */
-        
         $pessoal = new Pessoal();
-        $array = $pessoal->select("SELECT * FROM tbformacaomarcador");        
+        $array = $pessoal->select("SELECT * FROM tbformacaomarcador");
         return $array;
     }
 
@@ -221,14 +220,13 @@ class Formacao {
         /**
          * Fornece um array com os marcadores
          */
-        
-         $arrayMarcadores = $this->get_arrayMarcadores();
-         
-         foreach($arrayMarcadores as $item){
-             if($item[0] == $id){
-                 return $item[1];
-             }
-         }
+        $arrayMarcadores = $this->get_arrayMarcadores();
+
+        foreach ($arrayMarcadores as $item) {
+            if ($item[0] == $id) {
+                return $item[1];
+            }
+        }
     }
 
     ###########################################################

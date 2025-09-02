@@ -392,6 +392,15 @@ class MenuPrincipal {
         $botao->set_target("_blank3");
         $menu->add_item($botao);
 
+        # Pastas Funcionais
+        $botao = new BotaoGrafico();
+        $botao->set_label('Pastas Funcionais');
+        $botao->set_url('https://drive.google.com/drive/folders/1EMW7VHnUpNQBvWfd0zyNGY0a09oYPoki?usp=drive_link');
+        $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Pastas funcionais dos servidores');
+        $botao->set_target("_blank3");
+        $menu->add_item($botao);
+
         $menu->show();
         br();
 
@@ -463,7 +472,7 @@ class MenuPrincipal {
                 if ($valor["tipo"] == 1 OR $valor["tipo"] == 4 OR $valor["tipo"] == 5 OR $valor["tipo"] == 6) {
                     $menu->add_item('linkWindow', $valor["texto"], "?fase=exibeDocumento&idDocumento={$valor['idMenuDocumentos']}", $title);
                 }
-                
+
                 # Tipo jpg
                 if ($valor["tipo"] == 2) {
                     $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".jpg";
@@ -479,8 +488,8 @@ class MenuPrincipal {
                     if (file_exists($arquivoDocumento)) {
                         # Caso seja PDF abre uma janela com o pdf
                         $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                    } 
-                }              
+                    }
+                }
             }
         }
 

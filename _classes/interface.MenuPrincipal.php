@@ -398,7 +398,7 @@ class MenuPrincipal {
         $botao->set_url('https://drive.google.com/drive/folders/1EMW7VHnUpNQBvWfd0zyNGY0a09oYPoki?usp=drive_link');
         $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Pastas funcionais dos servidores');
-        $botao->set_target("_blank3");
+        $botao->set_target("_blank5");
         $menu->add_item($botao);
 
         $menu->show();

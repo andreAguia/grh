@@ -42,6 +42,15 @@ class CalendarioPgto {
         $tabela->set_conteudo($array);
         $tabela->set_label(["Mês de Competência", "Data do Pagamento"]);
         $tabela->set_align(["left", "center"]);
+        
+        
+        
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 0,
+                  'valor' => get_nomeMes(date('m')),
+                  'operador' => '=',
+                  'id' => 'calendarioPgto')));        
+        
         $tabela->show();
     }
 

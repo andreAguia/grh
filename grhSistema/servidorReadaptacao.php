@@ -84,7 +84,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-        AreaServidor::cabecalho();
+    AreaServidor::cabecalho();
 
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
@@ -128,8 +128,8 @@ if ($acesso) {
         $linkBotao3->set_title('Regras da readaptação');
         $linkBotao3->set_target("_blank3");
         $menu->add_link($linkBotao3, "right");
-        
-         # Site
+
+        # Site
         $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/readaptacao/");
         $botaoSite->set_class('button');
         $botaoSite->set_title('Site da GRH');
@@ -155,9 +155,9 @@ if ($acesso) {
         get_DadosServidor($idServidorPesquisado);
     } else {
         # Exibe os dados do Servidor
-            $objeto->set_rotinaExtra("get_DadosServidor");
-            $objeto->set_rotinaExtraParametro($idServidorPesquisado);
-        }
+        $objeto->set_rotinaExtra("get_DadosServidor");
+        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    }
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
@@ -654,9 +654,9 @@ if ($acesso) {
             $textoCi = post("textoCi");
 
             # envia os dados por session
-            set_session("chefeDigitado",$chefeDigitado);
-            set_session("cargoDigitado",$cargoDigitado);
-            set_session("servidorGrh",$servidorGrh);
+            set_session("chefeDigitado", $chefeDigitado);
+            set_session("cargoDigitado", $cargoDigitado);
+            set_session("servidorGrh", $servidorGrh);
 
             # Verifica se houve alterações
             $alteracoes = null;
@@ -1152,7 +1152,7 @@ if ($acesso) {
         ###################################################################
         # Despacho para Perícia
         case "despachoPerícia" :
-                        
+
             # Pega os dados da redução
             $dados = $readaptacao->get_dados($id);
             $tipo = $dados["tipo"];
@@ -1230,7 +1230,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $procedimento = new Procedimento();
             $procedimento->exibeProcedimentoSubCategoria("Readaptação");
 

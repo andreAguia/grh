@@ -128,6 +128,12 @@ if ($acesso) {
         $linkBotao3->set_title('Regras da readaptação');
         $linkBotao3->set_target("_blank3");
         $menu->add_link($linkBotao3, "right");
+        
+         # Site
+        $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/readaptacao/");
+        $botaoSite->set_class('button');
+        $botaoSite->set_title('Site da GRH');
+        $botaoSite->set_target("_blank");
 
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

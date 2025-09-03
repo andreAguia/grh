@@ -641,7 +641,7 @@ if ($acesso) {
             br();
 
             $procedimento = new Procedimento();
-            $procedimento->exibeProcedimentoSubCategoria("Redução de Carga Horária");
+            $procedimento->exibeProcedimento(108);
 
             $grid->fechaColuna();
             $grid->fechaGrid();

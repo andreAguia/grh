@@ -144,7 +144,7 @@ if ($acesso) {
         $menu->add_link($linkBotao3, "right");
         
         # Site
-        $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/readaptacao/");
+        $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao/");
         $botaoSite->set_class('button');
         $botaoSite->set_title('Site da GRH');
         $botaoSite->set_target("_blank");

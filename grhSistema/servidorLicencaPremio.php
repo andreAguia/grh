@@ -509,7 +509,7 @@ if ($acesso) {
 
                 br();
                 $procedimento = new Procedimento();
-                $procedimento->exibeProcedimentoSubCategoria("Licença Prêmio");
+                $procedimento->exibeProcedimento(77);
                 break;
 
             ############################################################################    

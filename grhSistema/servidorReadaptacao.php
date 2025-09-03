@@ -134,6 +134,7 @@ if ($acesso) {
         $botaoSite->set_class('button');
         $botaoSite->set_title('Site da GRH');
         $botaoSite->set_target("_blank");
+        $menu->add_link($botaoSite, "right");
 
         # Relatório
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

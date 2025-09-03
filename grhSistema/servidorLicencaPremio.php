@@ -307,6 +307,12 @@ if ($acesso) {
         $botaoProcedimentos->set_title('Exibe os procedimentos');
         $botaoProcedimentos->set_target("_blank");
 
+        # Site
+        $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/requerimento-de-licenca-especial/");
+        $botaoSite->set_class('button');
+        $botaoSite->set_title('Site da GRH');
+        $botaoSite->set_target("_blank");
+
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_imagem($imagem);
@@ -318,7 +324,7 @@ if ($acesso) {
         if (Verifica::acesso($idUsuario, [1, 2, 19])) {
             $botaoObs = new Button("Obs Licença Prêmio", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
-            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoCalendario]);
+            $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoSite, $botaoCalendario]);
         }
 
         if (Verifica::acesso($idUsuario, 12) AND !Verifica::acesso($idUsuario, 19)) {

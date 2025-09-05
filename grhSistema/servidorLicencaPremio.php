@@ -446,7 +446,7 @@ if ($acesso) {
 
                 # Exibe alerta
                 tituloTable("Atenção");
-                callout(" - Antes de informar ao servidor sobre a licença prêmio,"
+                callout(" Antes de informar ao servidor sobre a licença prêmio,"
                         . " verifique se o mesmo possui algum afastamento"
                         . " específico que poderia alterar as datas da"
                         . " licença.<br/>O sistema, ainda, não verifica"
@@ -485,9 +485,9 @@ if ($acesso) {
                 break;
 
             case "editar" :
-                $mensagem1 = "Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
-                              Se já existir uma fruição da licença prêmio do mesmo período aquisitivo, <br/>a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
-                              Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
+                $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
+                              - Se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
+                              - Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
 
                 $objeto->set_rotinaExtraEditar("calloutAlert");
                 $objeto->set_rotinaExtraEditarParametro($mensagem1);

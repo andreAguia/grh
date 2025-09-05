@@ -116,10 +116,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("a partir de", "%", "Período Aquisitivo", "Processo", "DOERJ", "Documento", "Obs"));
-    $objeto->set_width(array(10, 5, 20, 15, 10, 15, 15));
-    $objeto->set_align(array("center"));
-    $objeto->set_funcao(array("date_to_php", null, null, null, "date_to_php"));
+    $objeto->set_label(["a partir de", "%", "Período Aquisitivo", "Processo", "DOERJ", "Documento", "Obs"]);
+    $objeto->set_width([10, 5, 20, 15, 10, 15, 15]);
+    $objeto->set_align(["center"]);
+    $objeto->set_funcao(["date_to_php", null, null, null, "date_to_php"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

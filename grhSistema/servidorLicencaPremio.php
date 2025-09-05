@@ -487,7 +487,7 @@ if ($acesso) {
             case "editar" :
                 $mensagem1 = "Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
                               Se a fruição for de 30 ou 60 dias e já houver uma fruição da licença prêmio do mesmo período aquisitivo,<br/>
-                              a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir nova fruição.<br/>
+                              a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir nova licença.<br/>
                               Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
 
                 $objeto->set_rotinaExtraEditar("calloutAlert");

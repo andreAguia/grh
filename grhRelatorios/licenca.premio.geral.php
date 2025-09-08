@@ -43,7 +43,7 @@ if ($acesso) {
                                  JOIN tbperfil USING (idPerfil)
                 WHERE tbperfil.tipo <> 'Outros'
                   AND situacao = 1
-             ORDER BY tbpessoa.nome, dtInicioPeriodo, dtInicial";
+             ORDER BY tbpessoa.nome, dtInicial desc";
 
     $result = $servidor->select($select);
 

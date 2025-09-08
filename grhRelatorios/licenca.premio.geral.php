@@ -30,13 +30,13 @@ if ($acesso) {
 
     ######
 
-    $select = "SELECT CONCAT(tbservidor.idFuncional, ' - ', tbpessoa.nome),
+    $select = "SELECT CONCAT(tbservidor.idFuncional, ' - ', tbpessoa.nome,'<br/>', IFNULL(processoPremio,'')),
                       dtInicial,
                       tblicencapremio.numdias,
                       ADDDATE(dtInicial,tblicencapremio.numDias-1),
                       IFNULL(CONCAT(DATE_FORMAT(dtInicioPeriodo, '%d/%m/%Y'),' - ',DATE_FORMAT(dtFimPeriodo, '%d/%m/%Y')),'---'),
                       tbpublicacaopremio.dtPublicacao,
-                      idLicencaPremio
+                      processo
                  FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                  LEFT JOIN tblicencapremio  USING (idServidor)
                                  LEFT JOIN tbpublicacaopremio USING (idPublicacaoPremio)
@@ -51,7 +51,7 @@ if ($acesso) {
     $relatorio->set_titulo('Relatório de Fruição de Licença Prêmio Geral');
     $relatorio->set_subtitulo('Ordenados pelo Nome');
     #$relatorio->set_width([10, 30, 10, 10, 5, 25, 10]);
-    $relatorio->set_label(['Servidor', 'Data Inicial', 'Dias', 'Data Final', 'Período', 'Publicação']);
+    $relatorio->set_label(['Servidor', 'Data Inicial', 'Dias', 'Data Final', 'Período', 'Publicação', 'Processo Fruição']);
     $relatorio->set_align(["left"]);
     $relatorio->set_funcao([null, "date_to_php", null, "date_to_php", null, "date_to_php"]);
     $relatorio->set_bordaInterna(true);

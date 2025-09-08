@@ -484,6 +484,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Licença Prêmio');
             $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Anual', '../grhRelatorios/licenca.premio.anual.php');
             $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Período', '../grhRelatorios/licenca.premio.periodo.php');
+            $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Geral', '../grhRelatorios/licenca.premio.geral.php');
             $menu->show();
             break;
 

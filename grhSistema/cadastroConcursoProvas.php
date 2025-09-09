@@ -30,6 +30,12 @@ if ($acesso) {
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
+    
+    # Pega os parâmetros
+    $parametro = post('parametro', get_session('parametro'));
+
+    # Joga os parâmetros para as sessions
+    set_session('parametro', $parametro);
 
     # Começa uma nova página
     $page = new Page();
@@ -57,6 +63,10 @@ if ($acesso) {
     ################################################################
     # Nome do Modelo
     $objeto->set_nome('Provas');
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # Botão de voltar da lista
     if ($tipo == 1) {
@@ -72,6 +82,8 @@ if ($acesso) {
                                      idConcursoProva
                                 FROM tbconcursoprova JOIN tbtipocargo USING (idTipoCargo)
                                WHERE idConcurso = {$idConcurso}
+                                 AND (tbtipocargo.cargo LIKE '%{$parametro}%'
+                                  OR tbconcursoprova.cargo LIKE '%{$parametro}%')
                             ORDER BY tbtipocargo.cargo, tbconcursoprova.cargo");
 
     # select do edita

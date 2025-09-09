@@ -139,7 +139,7 @@ if ($acesso) {
                                 WHERE tbtipocargo.tipo = "Adm/Tec"             
                              ORDER BY tbtipocargo.cargo');
 
-    array_unshift($cargo, [0, null]);
+    array_unshift($cargo, [null, null]);
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -154,7 +154,8 @@ if ($acesso) {
         array('linha' => 1,
             'nome' => 'cargo',
             'label' => 'Cargo:',
-            'tipo' => 'texto',
+            'tipo' => 'texto',            
+            'required' => true,
             'col' => 8,
             'size' => 250),
         array('linha' => 3,

@@ -335,6 +335,20 @@ if ($acesso) {
             $div->fecha();
 
             $painel->fecha();
+            
+            $avaliacao = new Avaliacao();
+            $avaliacao->exibe_tabelaRegras();
+
+            # Menu
+            #tituloTable("Menu");
+
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Legislação');
+            $menu->add_item('linkWindow', 'Portaria nº 9 de 16/10/2008', 'areaAvaliacaoProcesso.php?fase=p9');
+            $menu->add_item('linkWindow', 'Decreto nº 43.249 de 24/10/2011', 'areaAvaliacaoProcesso.php?fase=d43');
+            $menu->add_item('linkWindow', 'Portaria n° 63 de 20/04/2021', 'areaAvaliacaoProcesso.php?fase=p63');
+
+            $menu->show();
 
             $grid->fechaColuna();
 

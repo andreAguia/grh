@@ -33,6 +33,7 @@ if ($acesso) {
     
     # Pega os parâmetros
     $parametro = post('parametro', get_session('parametro'));
+    $valorAnterior = get_session('valorAnterior');
 
     # Joga os parâmetros para as sessions
     set_session('parametro', $parametro);
@@ -150,6 +151,7 @@ if ($acesso) {
             'array' => $cargo,
             'col' => 4,
             'required' => true,
+            'padrao' => $valorAnterior,
             'size' => 200),
         array('linha' => 1,
             'nome' => 'cargo',
@@ -225,8 +227,11 @@ if ($acesso) {
             break;
 
         case "editar" :
-        case "gravar" :
-            $objeto->$fase($id);
+            $objeto->editar($id);
+            break;
+        
+        case "gravar" :            
+            $objeto->gravar($id, 'cadastroConcursoProvasExtra.php');
             break;
         case "excluir" :
             # Verifica se tem arquivo vinculado

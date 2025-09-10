@@ -1130,6 +1130,7 @@ class MenuServidor {
         $lotacao = new Lotacao();
         $idLotacao = $pessoal->get_idLotacao($this->idServidor);
         $ramais = $lotacao->getRamais($idLotacao);
+        $emails = $lotacao->get_email($idLotacao);
 
         $painel = new Callout("success");
         $painel->abre();
@@ -1137,12 +1138,14 @@ class MenuServidor {
         if ($idLotacao <> 113) {
 
             p($pessoal->get_lotacao($this->idServidor), "pramalLotacao");
-            p("Tel / Ramais", "pramalDetalhe");
+            p("Tel / Ramais / E-mails", "pramalDetalhe");
 
             if (empty($ramais)) {
                 p("---", "center");
+                p(nl2br2($emails), "f12");
             } else {
                 p(nl2br2($ramais), "f12");
+                p(nl2br2("Email do Setor: {$emails}"), "f12");
             }
         } else {
 

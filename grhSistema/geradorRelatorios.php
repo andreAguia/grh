@@ -11,34 +11,39 @@ $idUsuario = null;
 # Configuração
 include ("_config.php");
 
-# Colunas
+# Dados Principais
 $postIdfuncional = post('postIdFuncional');
 $postMatricula = post('postMatricula');
 $postIdMatricula = post('postIdMatricula');
 $postNome = post('postNome');
 $postNomeCargo = post('postNomeCargo');
-$postNomeCargoId = post('postNomeCargoId');
-$postNomeCargoLotacao = post('postNomeCargoLotacao');
-$postNomeCargoLotacaoId = post('postNomeCargoLotacaoId');
-$postNomeCargoLotacaoPerfil = post('postNomeCargoLotacaoPerfil');
-$postNomeCargoLotacaoPerfilSituacao = post('postNomeCargoLotacaoPerfilSituacao');
-$postCargo = post('postCargo');
 $postCargoSimples = post('postCargoSimples');
-$postComissao = post('postComissao');
 $postLotacao = post('postLotacao');
-$postLotacaoOrigem = post('postLotacaoOrigem');
-$postNumVinculos = post('postNumVinculos');
 $postPerfil = post('postPerfil');
 $postSituacao = post('postSituacao');
+
+# Junto com o Nome
+$postCargo = post('postCargo');
+$postNomeCargoLotacaoId = post('postNomeCargoLotacaoId');
+$postNomeCargoLotacao = post('postNomeCargoLotacao');
+$postNomeCargoId = post('postNomeCargoId');
+$postNomeCargoLotacaoPerfil = post('postNomeCargoLotacaoPerfil');
+$postNomeCargoLotacaoPerfilSituacao = post('postNomeCargoLotacaoPerfilSituacao');
+
+# Outros Dados
+$postComissao = post('postComissao');
 $postConcurso = post('postConcurso');
+$postConcursoDataEdital = post('postConcursoDataEdital');
 $postDtAdmissao = post('postDtAdmissao');
 $postDtSaida = post('postDtSaida');
 $postEmailUenf = post('postEmailUenf');
+$postLotacaoOrigem = post('postLotacaoOrigem');
+$postNumVinculos = post('postNumVinculos');
+$postObs = post('postObs');
+
+# Dados Pessoasi
 $postEndereco = post('postEndereco');
 $postCpf = post('postCpf');
-$postObs = post('postObs');
-$postLinha = post('postLinha');
-
 $postPai = post('postPai');
 $postMae = post('postMae');
 $postNacionalidade = post('postNacionalidade');
@@ -46,9 +51,11 @@ $postNaturalidade = post('postNaturalidade');
 $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
-$postTicket = post('postTicket');
 
+# Outros
 $postAssinatura = post('postAssinatura');
+$postLinha = post('postLinha');
+$postTicket = post('postTicket');
 
 # Filtros
 $parametroCargo = post('parametroCargo');
@@ -293,6 +300,16 @@ if ($acesso) {
     $controle->set_linha(3);
     $controle->set_col($tamColunas);
     $form->add_item($controle);
+    
+    # Data Edital do Concurso
+    $controle = new Input('postConcursoDataEdital', 'simnao', 'Public.Edital:', 1);
+    $controle->set_size(5);
+    $controle->set_title('Data da Publicação do Edital do Concurso do Servidor');
+    $controle->set_valor($postConcursoDataEdital);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(3);
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
 
     # Data de Admissão
     $controle = new Input('postDtAdmissao', 'simnao', 'Admissão:', 1);
@@ -311,7 +328,7 @@ if ($acesso) {
     $controle->set_valor($postDtSaida);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
-    $controle->set_linha(3);
+    $controle->set_linha(4);
     $form->add_item($controle);
 
     # E-mail Uenf
@@ -347,7 +364,7 @@ if ($acesso) {
     $controle->set_valor($postObs);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
-    $controle->set_linha(4);
+    $controle->set_linha(5);
     $form->add_item($controle);
 
     # Endereço
@@ -785,6 +802,16 @@ if ($acesso) {
         $align[] = "left";
         $class[] = "Pessoal";
         $method[] = "get_concurso";
+        $function[] = "";
+    }
+    
+    # Dats a Publicação do Edital do Concurso
+    if ($postConcursoDataEdital) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Publicação do Edital";
+        $align[] = "Center";
+        $class[] = "Pessoal";
+        $method[] = "get_concursoDataEdital";
         $function[] = "";
     }
 

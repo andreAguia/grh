@@ -6814,13 +6814,13 @@ class Pessoal extends Bd {
             return null;
         } else {
             # Pega o cargo do servidor
-            $select = 'SELECT anobase,
+            $select = "SELECT anobase,
                               regime,
                               OrgExecutor,
                               dtPublicacaoEdital,
                               tipo
                      FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
-                    WHERE idServidor = ' . $idServidor;
+                    WHERE idServidor = {$idServidor}";
 
             $row = parent::select($select, false);
 
@@ -6843,6 +6843,36 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_concursoDataEdital
+     * Informa a data de publicação do edital do concurso do servidor
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function get_concursoDataEdital($idServidor) {
+
+        # Verifica se  id foi informado
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Pega o cargo do servidor
+            $select = "SELECT dtPublicacaoEdital
+                         FROM tbconcurso LEFT JOIN tbservidor USING (idConcurso)
+                        WHERE idServidor = {$idServidor}";
+
+            $row = parent::select($select, false);
+
+            if (empty($row[0])) {
+                return null;
+            }else{
+                return date_to_php($row[0]);
+            }
+        }
+    }
+
+    ###########################################################
+
 
     /**
      * Método get_concursoRelatorio

@@ -608,24 +608,24 @@ if ($acesso) {
     
     
     # Data de Admissão Sinal
-    $controle = new Input('parametroDataAdmissaoSinal', 'combo', '', 1);
+    $controle = new Input('parametroDataAdmissaoSinal', 'combo', 'Data de Admissão', 1);
     $controle->set_size(20);
     $controle->set_title('Data de Admissão');
     $controle->set_valor($parametroDataAdmissaoSinal);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(3);
-    $controle->set_col(4);
-    $controle->set_array(['>','>=','<','<=','==']);
+    $controle->set_col(6);
+    $controle->set_array(['>','>=','<','<=','=']);
     $form->add_item($controle);
     
     # Data de Admissão
-    $controle = new Input('parametroDataAdmissao', 'data', '', 1);
+    $controle = new Input('parametroDataAdmissao', 'data', '-', 1);
     $controle->set_size(20);
     $controle->set_title('Data de Admissão');
     $controle->set_valor($parametroDataAdmissao);
-    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_onBlur('formPadrao.submit();');
     $controle->set_linha(3);
-    $controle->set_col(8);
+    $controle->set_col(6);
     $form->add_item($controle);
 
     #################################### Ordenação #######################################

@@ -79,6 +79,7 @@ if ($acesso) {
     set_session('parametroParentesco');
     set_session('parametroDias');
     set_session('parametroMarcador');
+    set_session('parametroDataAdmissao');
 
     set_session('concursoTipo');
 

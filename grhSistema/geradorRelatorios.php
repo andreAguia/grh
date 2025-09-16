@@ -63,6 +63,8 @@ $parametroCargoComissao = post('parametroCargoComissao');
 $parametroLotacao = post('parametroLotacao');
 $parametroSituacao = post('parametroSituacao', 1);
 $parametroPerfil = post('parametroPerfil', 1);
+$parametroDataAdmissaoSinal = post('parametroDataAdmissaoSinal', 1);
+$parametroDataAdmissao = post('parametroDataAdmissao', 1);
 
 # Oedenação
 $parametroOrdenaTipo = post('parametroOrdenaTipo', 'asc');
@@ -589,7 +591,7 @@ if ($acesso) {
 
     array_unshift($comboPerfil, array(null, "Todos"));
 
-    # Situação
+    # Perfil
     $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
     $controle->set_size(20);
     $controle->set_title('Situação');
@@ -598,6 +600,32 @@ if ($acesso) {
     $controle->set_linha(3);
     $controle->set_col(6);
     $controle->set_array($comboPerfil);
+    $form->add_item($controle);
+    
+     /*
+     * Data de Admissão
+     */
+    
+    
+    # Data de Admissão Sinal
+    $controle = new Input('parametroDataAdmissaoSinal', 'combo', '', 1);
+    $controle->set_size(20);
+    $controle->set_title('Data de Admissão');
+    $controle->set_valor($parametroDataAdmissaoSinal);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(3);
+    $controle->set_col(4);
+    $controle->set_array(['>','>=','<','<=','==']);
+    $form->add_item($controle);
+    
+    # Data de Admissão
+    $controle = new Input('parametroDataAdmissao', 'data', '', 1);
+    $controle->set_size(20);
+    $controle->set_title('Data de Admissão');
+    $controle->set_valor($parametroDataAdmissao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(3);
+    $controle->set_col(8);
     $form->add_item($controle);
 
     #################################### Ordenação #######################################
@@ -1131,6 +1159,11 @@ if ($acesso) {
             $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
         } else {
             $select .= " AND tbperfil.tipo <> 'Outros'";
+        }
+        
+        # Data de admissão
+        if (!empty($parametroDataAdmissao)) {
+            $select .= " AND tbservidor.dtAdmissao {$parametroDataAdmissaoSinal} '{$parametroDataAdmissao}'";
         }
 
         # Lotacao

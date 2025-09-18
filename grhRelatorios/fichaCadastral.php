@@ -495,7 +495,7 @@ if ($acesso) {
     $relatorio->set_label(['Salário Base', 'Triênio', 'Cargo em Comissão', 'Gratificação Especial', 'Total', 'Plano Previdenciário']);
     #$relatorio->set_width([20, 20, 20, 20, 20]);
     $relatorio->set_align(['center']);
-    $relatorio->set_funcao(['formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda']);
+    $relatorio->set_funcao(['formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda','trataNulo']);
     $relatorio->set_conteudo($conteudo);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);

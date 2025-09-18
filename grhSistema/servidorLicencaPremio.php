@@ -40,6 +40,10 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
+    $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
+                  - Se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
+                  - Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
+
     # Rotina em Jscript
     $script = '<script type="text/javascript" language="javascript">
         
@@ -381,6 +385,9 @@ if ($acesso) {
                 $grid = new Grid();
                 $grid->abreColuna(12);
 
+                tituloTable("Atenção");
+                callout($mensagem1, "alert", "calloutMensagemPremio");
+
                 # Exibe as licenças prêmio de outros vinculos com a UENF                
                 $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
 
@@ -446,11 +453,16 @@ if ($acesso) {
 
                 # Exibe alerta
                 tituloTable("Atenção");
-                callout(" Antes de informar ao servidor sobre a licença prêmio,"
+                $callout = new Callout("alert");
+                $callout->abre();
+
+                p(" Antes de informar ao servidor sobre a licença prêmio,"
                         . " verifique se o mesmo possui algum afastamento"
                         . " específico que poderia alterar as datas da"
                         . " licença.<br/>O sistema, ainda, não verifica"
-                        . " essa informação.", "alert", "calloutMensagemPremio");
+                        . " essa informação.", "calloutMensagemPremio");
+
+                $callout->fecha();
 
                 $grid->fechaColuna();
                 $grid->abreColuna(12, 12, 6);
@@ -485,10 +497,6 @@ if ($acesso) {
                 break;
 
             case "editar" :
-                $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
-                              - Se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
-                              - Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
-
                 $objeto->set_rotinaExtraEditar("calloutAlert");
                 $objeto->set_rotinaExtraEditarParametro($mensagem1);
 

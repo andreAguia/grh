@@ -350,8 +350,8 @@ if ($acesso) {
 
                 if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 's') {
                     $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.";
-                } 
-                
+                }
+
                 if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 'n') {
                     $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.";
                 }
@@ -480,20 +480,22 @@ if ($acesso) {
     $trienioClasse = new Trienio();
 
     # pega os valores
-    $salarioBase = $pessoal->get_salarioBase($idServidorPesquisado);                              // salário base
-    $trienio = $trienioClasse->getValor($idServidorPesquisado);                                   // triênio
-    $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);                        // cargo em comissão
-    $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);                            // gratificação especial
+    $salarioBase = $pessoal->get_salarioBase($idServidorPesquisado);                // salário base
+    $trienio = $trienioClasse->getValor($idServidorPesquisado);                     // triênio
+    $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);          // cargo em comissão
+    $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);              // gratificação especial
+    $planoPrevidenciario = $pessoal->get_planoPevidenciario($idServidorPesquisado); // plano previdenciário
+
     $total = $salarioBase + $trienio + $comissao + $gratificacao;
-    $conteudo = array(array($salarioBase, $trienio, $comissao, $gratificacao, $total));
+    $conteudo = array(array($salarioBase, $trienio, $comissao, $gratificacao, $total, $planoPrevidenciario));
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(array('Salário Base', 'Triênio', 'Cargo em Comissão', 'Gratificação Especial', 'Total'));
-    $relatorio->set_width(array(20, 20, 20, 20, 20));
-    $relatorio->set_align(array('center'));
-    $relatorio->set_funcao(array('formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda'));
+    $relatorio->set_label(['Salário Base', 'Triênio', 'Cargo em Comissão', 'Gratificação Especial', 'Total', 'Plano Previdenciário']);
+    #$relatorio->set_width([20, 20, 20, 20, 20]);
+    $relatorio->set_align(['center']);
+    $relatorio->set_funcao(['formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda']);
     $relatorio->set_conteudo($conteudo);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -1000,42 +1002,42 @@ if ($acesso) {
 
         /*
          * Observações adicionais de Triênio
-         */        
+         */
 
-            $select = "SELECT obsTrienio
+        $select = "SELECT obsTrienio
                          FROM tbservidor
                         WHERE idServidor = {$idServidorPesquisado}";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            if (!empty($result[0][0])) {
+        if (!empty($result[0][0])) {
 
-                $relatorio = new Relatorio('relatorioFichaCadastral');
-                #$relatorio->set_titulo(null);
-                #$relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_label(array("Observações de Triênio"));
-                #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-                $relatorio->set_align(array("left"));
-                $relatorio->set_funcao(array("nl2br"));
-                $relatorio->set_conteudo($result);
-                $relatorio->set_subTotal(false);
-                $relatorio->set_totalRegistro(false);
-                $relatorio->set_dataImpressao(false);
-                $relatorio->set_cabecalhoRelatorio(false);
-                $relatorio->set_menuRelatorio(false);
-                $relatorio->set_log(false);
-                $relatorio->show();
-            }
+            $relatorio = new Relatorio('relatorioFichaCadastral');
+            #$relatorio->set_titulo(null);
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_label(array("Observações de Triênio"));
+            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+            $relatorio->set_align(array("left"));
+            $relatorio->set_funcao(array("nl2br"));
+            $relatorio->set_conteudo($result);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
     }
 
-        /*
-         * Histórico de Gratificação Especial
-         */
+    /*
+     * Histórico de Gratificação Especial
+     */
 
-        if ($postGratificacao) {
-            tituloRelatorio('Histórico de Gratificação Especial');
+    if ($postGratificacao) {
+        tituloRelatorio('Histórico de Gratificação Especial');
 
-            $select = 'SELECT dtInicial,
+        $select = 'SELECT dtInicial,
                           dtFinal,
                           valor,
                           processo
@@ -1043,34 +1045,34 @@ if ($acesso) {
                     WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array('Data Inicial', 'Data Final', 'Valor', 'Processo'));
-            #$relatorio->set_width(array(25,25,25,25));
-            $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda'));
-            $relatorio->set_align(array('left', 'left', 'left', 'left'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Data Inicial', 'Data Final', 'Valor', 'Processo'));
+        #$relatorio->set_width(array(25,25,25,25));
+        $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda'));
+        $relatorio->set_align(array('left', 'left', 'left', 'left'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Direito pessoal
-         */
+    /*
+     * Histórico de Direito pessoal
+     */
 
-        if ($postDireito) {
-            tituloRelatorio('Histórico de Direito Pessoal');
+    if ($postDireito) {
+        tituloRelatorio('Histórico de Direito Pessoal');
 
-            $select = 'SELECT dtInicial,
+        $select = 'SELECT dtInicial,
                           dtFinal,
                           valor,
                           processo,
@@ -1079,34 +1081,34 @@ if ($acesso) {
                     WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY dtInicial desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array('Data Inicial', 'Data Final', 'Valor', 'Processo', 'Publicaçao'));
-            #$relatorio->set_width(array(25,25,25,25));
-            $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda', null, 'date_to_php'));
-            $relatorio->set_align(array('center'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Data Inicial', 'Data Final', 'Valor', 'Processo', 'Publicaçao'));
+        #$relatorio->set_width(array(25,25,25,25));
+        $relatorio->set_funcao(array('date_to_php', 'date_to_php', 'formataMoeda', null, 'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Férias
-         */
+    /*
+     * Histórico de Férias
+     */
 
-        if ($postFerias) {
-            tituloRelatorio('Histórico de Férias');
+    if ($postFerias) {
+        tituloRelatorio('Histórico de Férias');
 
-            $select = 'SELECT anoExercicio,
+        $select = 'SELECT anoExercicio,
                           status,
                           dtInicial,
                           numDias,
@@ -1115,35 +1117,35 @@ if ($acesso) {
                     WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY anoExercicio desc,dtInicial desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array('Exercício', 'Status', 'Data Inicial', 'Dias', 'Data Final'));
-            #$relatorio->set_width(array(10,10,15,10,15,20,20));
-            $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php'));
-            $relatorio->set_align(array('center'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Exercício', 'Status', 'Data Inicial', 'Dias', 'Data Final'));
+        #$relatorio->set_width(array(10,10,15,10,15,20,20));
+        $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Afastamentos 
-         */
+    /*
+     * Histórico de Afastamentos 
+     */
 
-        if ($postLicenca) {
-            tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
+    if ($postLicenca) {
+        tituloRelatorio('Histórico de Afastamentos, Faltas e Licenças');
 
-            // Retira as licenças 23, 34 e 29 da ficha a pedido de Rose
-            $select = 'SELECT tbtipolicenca.nome,
+        // Retira as licenças 23, 34 e 29 da ficha a pedido de Rose
+        $select = 'SELECT tbtipolicenca.nome,
                         CASE alta
                            WHEN 1 THEN "Sim"
                            WHEN 2 THEN "Não"
@@ -1159,34 +1161,34 @@ if ($acesso) {
                     AND (idTpLicenca <> 23 AND idTpLicenca <> 34 AND idTpLicenca <> 29)
                   ORDER BY 3 desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array("Licença ou Afastamento", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação"));
-            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-            $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
-            $relatorio->set_align(array('left', 'center'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array("Licença ou Afastamento", "Alta", "Inicio", "Dias", "Término", "Processo", "Publicação"));
+        #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+        $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php'));
+        $relatorio->set_align(array('left', 'center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Licença Especial (Prêmio)
-         */
+    /*
+     * Histórico de Licença Especial (Prêmio)
+     */
 
-        if ($postLicenca) {
-            tituloRelatorio('Histórico de Fruição de Licença Especial (Prêmio)');
+    if ($postLicenca) {
+        tituloRelatorio('Histórico de Fruição de Licença Especial (Prêmio)');
 
-            $select = 'SELECT idLicencaPremio,
+        $select = 'SELECT idLicencaPremio,
                           dtInicial,
                           tblicencapremio.numdias,
                           ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -1197,67 +1199,67 @@ if ($acesso) {
                     WHERE tblicencapremio.idServidor = ' . $idServidorPesquisado . '
                  ORDER BY dtInicial desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(["Período Aquisitivo", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
+        $relatorio->set_funcao([null, 'date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $relatorio->set_classe(['LicencaPremio']);
+        $relatorio->set_metodo(['exibePeriodoAquisitivo']);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
+
+    /*
+     * Observações adicionais de Licença Especial (Prêmio)
+     */
+
+    if ($postLicenca) {
+
+        $select = "SELECT obsPremio
+                     FROM tbservidor
+                   WHERE idServidor = $idServidorPesquisado";
+
+        $result = $pessoal->select($select);
+
+        if (!empty($result[0][0])) {
 
             $relatorio = new Relatorio('relatorioFichaCadastral');
             #$relatorio->set_titulo(null);
             #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(["Período Aquisitivo", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
-            $relatorio->set_funcao([null, 'date_to_php', null, 'date_to_php', null, 'date_to_php']);
-            $relatorio->set_classe(['LicencaPremio']);
-            $relatorio->set_metodo(['exibePeriodoAquisitivo']);
+            $relatorio->set_label(array("Observações da Licença Prêmio"));
+            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+            $relatorio->set_align(array("left"));
+            $relatorio->set_funcao(array("nl2br"));
             $relatorio->set_conteudo($result);
             $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
+            $relatorio->set_totalRegistro(false);
             $relatorio->set_dataImpressao(false);
             $relatorio->set_cabecalhoRelatorio(false);
             $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
             $relatorio->set_log(false);
             $relatorio->show();
         }
-
-        /*
-         * Observações adicionais de Licença Especial (Prêmio)
-         */
-
-        if ($postLicenca) {
-
-            $select = "SELECT obsPremio
-                     FROM tbservidor
-                   WHERE idServidor = $idServidorPesquisado";
-
-            $result = $pessoal->select($select);
-
-            if (!empty($result[0][0])) {
-
-                $relatorio = new Relatorio('relatorioFichaCadastral');
-                #$relatorio->set_titulo(null);
-                #$relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_label(array("Observações da Licença Prêmio"));
-                #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-                $relatorio->set_align(array("left"));
-                $relatorio->set_funcao(array("nl2br"));
-                $relatorio->set_conteudo($result);
-                $relatorio->set_subTotal(false);
-                $relatorio->set_totalRegistro(false);
-                $relatorio->set_dataImpressao(false);
-                $relatorio->set_cabecalhoRelatorio(false);
-                $relatorio->set_menuRelatorio(false);
-                $relatorio->set_log(false);
-                $relatorio->show();
-            }
-        }
+    }
 
 
-        /*
-         * Histórico de Publicações de Licença Especial (Prêmio)
-         */
+    /*
+     * Histórico de Publicações de Licença Especial (Prêmio)
+     */
 
-        if ($postLicenca) {
-            tituloRelatorio('Períodos Aquisitivos de Licença Especial (Prêmio)');
+    if ($postLicenca) {
+        tituloRelatorio('Períodos Aquisitivos de Licença Especial (Prêmio)');
 
-            $select = "SELECT dtPublicacao,
+        $select = "SELECT dtPublicacao,
                         idPublicacaoPremio,
                         numDias,
                         idPublicacaoPremio,
@@ -1267,40 +1269,40 @@ if ($acesso) {
                    WHERE idServidor = $idServidorPesquisado
                 ORDER BY dtInicioPeriodo desc";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias Publicados", "Dias Fruídos", "Dias Disponíveis"));
-            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
-            $relatorio->set_align(array("center"));
-            $relatorio->set_numeroOrdem(true);
-            $relatorio->set_numeroOrdemTipo("d");
-            $relatorio->set_funcao(array('date_to_php'));
-            $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
-            $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_colunaSomatorio([2, 3, 4]);
-            #$relatorio->set_colunaSomatorio(4);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array("Data da Publicação", "Período Aquisitivo", "Dias Publicados", "Dias Fruídos", "Dias Disponíveis"));
+        #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+        $relatorio->set_align(array("center"));
+        $relatorio->set_numeroOrdem(true);
+        $relatorio->set_numeroOrdemTipo("d");
+        $relatorio->set_funcao(array('date_to_php'));
+        $relatorio->set_classe(array(null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio'));
+        $relatorio->set_metodo(array(null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_colunaSomatorio([2, 3, 4]);
+        #$relatorio->set_colunaSomatorio(4);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(false);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Licença Sem Vencimentos 
-         */
+    /*
+     * Histórico de Licença Sem Vencimentos 
+     */
 
-        if ($postLicenca) {
-            tituloRelatorio('Histórico de Licença Sem Vencimentos');
+    if ($postLicenca) {
+        tituloRelatorio('Histórico de Licença Sem Vencimentos');
 
-            $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
+        $select = 'SELECT SUBSTRING(tbtipolicenca.nome,27),
                           CASE
                                WHEN optouContribuir = 1 THEN "Optou Pagar" 
                                WHEN optouContribuir = 2 THEN "Optou NÃO Pagar" 
@@ -1316,60 +1318,60 @@ if ($acesso) {
                        WHERE tblicencasemvencimentos.idServidor = ' . $idServidorPesquisado . '
                   ORDER BY 3 desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            $relatorio->set_label(["Tipo", "RioPrevidência", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
-            $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php']);
-            $relatorio->set_align(['left', 'center', 'center', 'center', 'center', 'left']);
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não constam licenças sem vencimentos para o servidor");
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Tipo", "RioPrevidência", "Inicio", "Dias", "Término", "Processo", "Publicação"]);
+        $relatorio->set_funcao([null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php']);
+        $relatorio->set_align(['left', 'center', 'center', 'center', 'center', 'left']);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não constam licenças sem vencimentos para o servidor");
+        $relatorio->show();
+    }
 
-        /*
-         * Tempo de Serviço Averbado
-         */
+    /*
+     * Tempo de Serviço Averbado
+     */
 
-        if ($postAverbacao) {
-            tituloRelatorio('Tempo de Serviço Averbado');
+    if ($postAverbacao) {
+        tituloRelatorio('Tempo de Serviço Averbado');
 
-            # Variáveis
-            $empresaTipo = [
-                [1, "Pública"],
-                [2, "Privada"]
-            ];
+        # Variáveis
+        $empresaTipo = [
+            [1, "Pública"],
+            [2, "Privada"]
+        ];
 
-            $regime = [
-                [1, "Celetista"],
-                [2, "Estatutário"],
-                [3, "Próprio"],
-                [4, "Militar"]
-            ];
+        $regime = [
+            [1, "Celetista"],
+            [2, "Estatutário"],
+            [3, "Próprio"],
+            [4, "Militar"]
+        ];
 
-            $select = "SELECT dtInicial,
+        $select = "SELECT dtInicial,
                         dtFinal,
                         dias,
                         empresa,
                         CASE empresaTipo ";
 
-            foreach ($empresaTipo as $tipo) {
-                $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
-            }
+        foreach ($empresaTipo as $tipo) {
+            $select .= " WHEN {$tipo[0]} THEN '{$tipo[1]}' ";
+        }
 
-            $select .= "      END,
+        $select .= "      END,
                       CASE regime ";
-            foreach ($regime as $tipo2) {
-                $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
-            }
+        foreach ($regime as $tipo2) {
+            $select .= " WHEN {$tipo2[0]} THEN '{$tipo2[1]}' ";
+        }
 
-            $select .= "      END,
+        $select .= "      END,
                         cargo,
                         dtPublicacao,
                         processo
@@ -1377,37 +1379,37 @@ if ($acesso) {
                     WHERE idServidor= {$idServidorPesquisado}
                     ORDER BY dtInicial desc";
 
-            $result = $pessoal->select($select);
-            $relatorio = new Relatorio();
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);        
-            $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
-            #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
-            $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"));
-            $relatorio->set_align(array('center', 'center', 'center', 'left'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_colunaSomatorio(2);
-            #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
-            $relatorio->set_exibeSomatorioGeral(false);
-            #$relatorio->set_bordaInterna(true);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não consta nenhum tempo averbado para o servidor");
-            $relatorio->show();
-        }
+        $result = $pessoal->select($select);
+        $relatorio = new Relatorio();
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);        
+        $relatorio->set_label(array("Data Inicial", "Data Final", "Dias", "Empresa", "Tipo", "Regime", "Cargo", "Publicação", "Processo"));
+        #$relatorio->set_width(array(10,10,5,20,8,10,8,10,3,15));
+        $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, null, null, null, "date_to_php"));
+        $relatorio->set_align(array('center', 'center', 'center', 'left'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_colunaSomatorio(2);
+        #$relatorio->set_textoSomatorio("Total de Dias Averbados:");
+        $relatorio->set_exibeSomatorioGeral(false);
+        #$relatorio->set_bordaInterna(true);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não consta nenhum tempo averbado para o servidor");
+        $relatorio->show();
+    }
 
-        /*
-         * Histórico de Diária
-         */
+    /*
+     * Histórico de Diária
+     */
 
-        if ($postDiaria) {
-            tituloRelatorio('Histórico de Diária');
+    if ($postDiaria) {
+        tituloRelatorio('Histórico de Diária');
 
-            $select = 'SELECT dataSaida,
+        $select = 'SELECT dataSaida,
                           dataChegada,
                           CONCAT(numeroCi,"/",YEAR(dataCi)),
                           processo,
@@ -1420,35 +1422,35 @@ if ($acesso) {
                     WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY dataSaida desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array("Saída", "Chegada", "CI", "Processo", "Data", "Origem", "Destino", "Valor"));
-            #$relatorio->set_width(array(10,10,10,10,10,20,20,10));
-            $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, "date_to_php", null, null, "formataMoeda"));
-            $relatorio->set_align(array("center"));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não constam diárias para o servidor");
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array("Saída", "Chegada", "CI", "Processo", "Data", "Origem", "Destino", "Valor"));
+        #$relatorio->set_width(array(10,10,10,10,10,20,20,10));
+        $relatorio->set_funcao(array("date_to_php", "date_to_php", null, null, "date_to_php", null, null, "formataMoeda"));
+        $relatorio->set_align(array("center"));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não constam diárias para o servidor");
+        $relatorio->show();
+    }
 
-        /*
-         * Abono Permanência
-         */
+    /*
+     * Abono Permanência
+     */
 
-        if ($postAbono) {
-            tituloRelatorio('Abono Permanência');
+    if ($postAbono) {
+        tituloRelatorio('Abono Permanência');
 
-            $select = 'SELECT processo,
+        $select = 'SELECT processo,
                           dtPublicacao,
                           if(status = 1,"Deferido","Indeferido"),
                           data
@@ -1456,35 +1458,35 @@ if ($acesso) {
                     WHERE idServidor = ' . $idServidorPesquisado . '
                     ORDER BY data desc';
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            #$relatorio->set_titulo(null);
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_label(array('Processo', 'Publicação', 'Status', 'Data Inicial'));
-            #$relatorio->set_width(array(25,25,25,25));
-            $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php'));
-            $relatorio->set_align(array('center'));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            #$relatorio->set_linhaNomeColuna(false);
-            $relatorio->set_log(false);
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Processo', 'Publicação', 'Status', 'Data Inicial'));
+        #$relatorio->set_width(array(25,25,25,25));
+        $relatorio->set_funcao(array(null, 'date_to_php', null, 'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
 
-        /*
-         * Penalidades
-         */
+    /*
+     * Penalidades
+     */
 
-        if ($postPenalidade) {
-            tituloRelatorio('Penalidades');
+    if ($postPenalidade) {
+        tituloRelatorio('Penalidades');
 
-            $select = "SELECT data,
+        $select = "SELECT data,
                           penalidade,
                           processo,
                           dtPublicacao,
@@ -1494,32 +1496,32 @@ if ($acesso) {
                     WHERE idServidor={$idServidorPesquisado}
                  ORDER BY data desc";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            $relatorio->set_label(["Data", "Tipo", "Processo", "Publicação", "Pag", "Descrição"]);
-            $relatorio->set_width([10, 10, 15, 15, 5, 35]);
-            $relatorio->set_align(["center", "center", "center", "center", "center", "left"]);
-            $relatorio->set_funcao(["date_to_php", null, null, "date_to_php"]);
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Data", "Tipo", "Processo", "Publicação", "Pag", "Descrição"]);
+        $relatorio->set_width([10, 10, 15, 15, 5, 35]);
+        $relatorio->set_align(["center", "center", "center", "center", "center", "left"]);
+        $relatorio->set_funcao(["date_to_php", null, null, "date_to_php"]);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
+        $relatorio->show();
+    }
 
-        /*
-         * suspensão
-         */
+    /*
+     * suspensão
+     */
 
-        if ($postSuspensao) {
-            tituloRelatorio('Suspensão');
+    if ($postSuspensao) {
+        tituloRelatorio('Suspensão');
 
-            $select = "SELECT dtInicial,
+        $select = "SELECT dtInicial,
                           numdias,
                           ADDDATE(dtInicial,numDias-1),
                           processo,
@@ -1531,63 +1533,63 @@ if ($acesso) {
                       AND idTpLicenca = 26 
                  ORDER BY dtInicial desc";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            $relatorio->set_label(["Inicio", "Dias", "Término", "Processo", "Publicação", "pág", "Observação"]);
-            $relatorio->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
-            $relatorio->set_width([10, 5, 10, 20, 10, 5, 40]);
-            $relatorio->set_align(["center", "center", "center", "center", "center", "center", "left"]);
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Inicio", "Dias", "Término", "Processo", "Publicação", "pág", "Observação"]);
+        $relatorio->set_funcao(['date_to_php', null, 'date_to_php', null, 'date_to_php']);
+        $relatorio->set_width([10, 5, 10, 20, 10, 5, 40]);
+        $relatorio->set_align(["center", "center", "center", "center", "center", "center", "left"]);
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem penalidades para esse servidor !");
+        $relatorio->show();
+    }
 
-        /*
-         * Elogios
-         */
+    /*
+     * Elogios
+     */
 
-        if ($postElogio) {
-            tituloRelatorio('Elogios');
+    if ($postElogio) {
+        tituloRelatorio('Elogios');
 
-            $select = "SELECT data,
+        $select = "SELECT data,
                           descricao
                      FROM tbelogio
                     WHERE idServidor={$idServidorPesquisado}
                  ORDER BY data desc";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            $relatorio->set_label(array("Data", "Descrição"));
-            $relatorio->set_width(array(15, 85));
-            $relatorio->set_align(array("center", "left"));
-            $relatorio->set_funcao(array("date_to_php"));
-            $relatorio->set_conteudo($result);
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não existem elogios para esse servidor !");
-            $relatorio->show();
-        }
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(array("Data", "Descrição"));
+        $relatorio->set_width(array(15, 85));
+        $relatorio->set_align(array("center", "left"));
+        $relatorio->set_funcao(array("date_to_php"));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existem elogios para esse servidor !");
+        $relatorio->show();
+    }
 
-        /*
-         * Acumulação de Cargos
-         */
+    /*
+     * Acumulação de Cargos
+     */
 
-        if ($postAcumulacao) {
-            tituloRelatorio('Acumulação de Cargos');
+    if ($postAcumulacao) {
+        tituloRelatorio('Acumulação de Cargos');
 
-            $select = "SELECT instituicao,
+        $select = "SELECT instituicao,
                           cargo,                                     
                           matricula,
                           idAcumulacao,
@@ -1597,42 +1599,42 @@ if ($acesso) {
                      FROM tbacumulacao LEFT JOIN tbmotivo ON(tbacumulacao.motivoSaida = tbmotivo.idMotivo)
                     WHERE idServidor = {$idServidorPesquisado}";
 
-            $result = $pessoal->select($select);
+        $result = $pessoal->select($select);
 
-            $relatorio = new Relatorio('relatorioFichaCadastral');
-            $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Resultado", "Publicação", "Saída", "Motivo"]);
-            $relatorio->set_width([20, 20, 10, 10, 10, 10, 20]);
-            #$relatorio->set_align(["left", "center", "left"]);
-            $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
-            $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
-            $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
-            $relatorio->set_conteudo($result);
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        $relatorio->set_label(["Órgão", "Cargo", "Matrícula", "Resultado", "Publicação", "Saída", "Motivo"]);
+        $relatorio->set_width([20, 20, 10, 10, 10, 10, 20]);
+        #$relatorio->set_align(["left", "center", "left"]);
+        $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
+        $relatorio->set_classe([null, null, null, "Acumulacao", "Acumulacao"]);
+        $relatorio->set_metodo([null, null, null, "get_resultadoRelatorio", "exibePublicacao"]);
+        $relatorio->set_conteudo($result);
 
-            $relatorio->set_subTotal(false);
-            $relatorio->set_totalRegistro(true);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-            $relatorio->set_log(false);
-            $relatorio->set_textoMensagemSemRegistro("Não existe acumulação de cargos cadastrados para esse servidor !");
-            $relatorio->show();
-        }
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        $relatorio->set_log(false);
+        $relatorio->set_textoMensagemSemRegistro("Não existe acumulação de cargos cadastrados para esse servidor !");
+        $relatorio->show();
+    }
 
-        if ($postDadosUsuario) {
-            $intra = new Intra();
-            $idServidorUsuario = $intra->get_idServidor($idUsuario);
+    if ($postDadosUsuario) {
+        $intra = new Intra();
+        $idServidorUsuario = $intra->get_idServidor($idUsuario);
 
-            p('Emitido em: ' . date("d/m/Y - H:i:s"), 'pRelatorioDataImpressao');
-            p(' por: ' . $pessoal->get_nome($idServidorUsuario) . ' - Id: ' . $pessoal->get_idFuncional($idServidorUsuario), 'pRelatorioDataImpressao');
-            p($pessoal->get_cargo($idServidorUsuario), 'pRelatorioDataImpressao');
-            p($pessoal->get_lotacao($idServidorUsuario), 'pRelatorioDataImpressao');
-        } else {
-            # Data da Impressão
-            p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
-        }
+        p('Emitido em: ' . date("d/m/Y - H:i:s"), 'pRelatorioDataImpressao');
+        p(' por: ' . $pessoal->get_nome($idServidorUsuario) . ' - Id: ' . $pessoal->get_idFuncional($idServidorUsuario), 'pRelatorioDataImpressao');
+        p($pessoal->get_cargo($idServidorUsuario), 'pRelatorioDataImpressao');
+        p($pessoal->get_lotacao($idServidorUsuario), 'pRelatorioDataImpressao');
+    } else {
+        # Data da Impressão
+        p('Emitido em: ' . date('d/m/Y - H:i:s') . " (" . $idUsuario . ")", 'pRelatorioDataImpressao');
+    }
 
-        $grid->fechaColuna();
-        $grid->fechaGrid();
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
-        $page->terminaPagina();
-    }    
+    $page->terminaPagina();
+}    

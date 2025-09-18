@@ -6865,14 +6865,13 @@ class Pessoal extends Bd {
 
             if (empty($row[0])) {
                 return null;
-            }else{
+            } else {
                 return date_to_php($row[0]);
             }
         }
     }
 
     ###########################################################
-
 
     /**
      * Método get_concursoRelatorio
@@ -7354,7 +7353,7 @@ class Pessoal extends Bd {
         }
     }
 
-     ###########################################################
+    ###########################################################
 
     /**
      * Método get_contaBancaria
@@ -7369,15 +7368,68 @@ class Pessoal extends Bd {
         if (empty($idBanco)) {
             return null;
         }
-        
+
         # Pega os dados
         $select = "SELECT CONCAT(codigo,' - ',banco)
                      FROM tbbanco
                     WHERE idBanco = {$idBanco}";
 
         return parent::select($select, false)[0];
+    }
 
-        
+    ###########################################################
+
+    /**
+     * Método get_planoPevidenciario
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna o plano previdenciário de um servidor
+     */
+    function get_planoPevidenciario($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            # Pega o valor do Banco de dados
+            $select = "SELECT planoPrevidenciario
+                         FROM tbservidor
+                        WHERE idServidor = {$idServidor}";
+
+            $result = parent::select($select, false);
+            return $result["planoPrevidenciario"];
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_planoPevidenciario
+     * 
+     * @param	string $idServidor $idServidor do servidor
+     * 
+     * Retorna o plano previdenciário de um servidor
+     */
+    function define_planoPevidenciario($idServidor) {
+
+        # Valida o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            # Data que marca a divisão
+            $dataDivisao = "04/09/2013";
+
+            $dataEntrada = $this->get_dtAdmissao($idServidor);
+
+            if (dataMenor($dataDivisao, $dataEntrada) == $dataEntrada) {
+                return "RIOPREV FINANCEIRO";
+            } else {
+                return "RIOPREV PREVIDENCIÁRIO";
+            }
+        }
     }
 
     ###########################################################

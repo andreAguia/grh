@@ -89,7 +89,8 @@ if ($acesso) {
                      fundamentacaoInvestidura,';
 
     if (($perfilServidor == 1) OR ($perfilServidor == 4)) {
-        $selectEdita .= 'dtEstagio,';
+        $selectEdita .= ' dtEstagio,
+                          planoPrevidenciario,';
     }
 
     $selectEdita .= 'dtAdmissao,
@@ -165,7 +166,7 @@ if ($acesso) {
                               ORDER BY motivo');
 
     array_unshift($motivo, [null, null]);
-    
+
     # combo da Fundamentação Legal
     $fundLegal = $pessoal->select('SELECT distinct motivoDetalhe
                                    FROM tbservidor
@@ -202,16 +203,16 @@ if ($acesso) {
             'col' => 2,
             'title' => 'Situação',
             'size' => 15));
-    
+
     array_push($campos,
             array('linha' => 1,
-                    'nome' => 'matricula',
-                    'label' => 'Matricula Uenf:',
-                    'tipo' => 'texto',
-                    'size' => 10,
-                    'unique' => true,
-                    'col' => 2,
-                    'title' => 'Matrícula do servidor.'),
+                'nome' => 'matricula',
+                'label' => 'Matricula Uenf:',
+                'tipo' => 'texto',
+                'size' => 10,
+                'unique' => true,
+                'col' => 2,
+                'title' => 'Matrícula do servidor.'),
             array('linha' => 2,
                 'nome' => 'idCargo',
                 'label' => 'Cargo / Área / Função:',
@@ -262,7 +263,7 @@ if ($acesso) {
                 'col' => $colunaCargo,
                 'size' => 200,
                 'title' => 'Cargo de origem, que consta no ato de investidura.'));
-    
+
     array_push($campos,
             array('linha' => 3,
                 'nome' => 'fundamentacaoInvestidura',
@@ -281,8 +282,15 @@ if ($acesso) {
                     'tipo' => 'data',
                     'size' => 20,
                     'col' => 3,
-                    'fieldset' => 'Dados do Estagio Experimental',
-                    'title' => 'Data de designação do estagio experimental.'));
+                    'title' => 'Data de designação do estagio experimental.'),
+                array('linha' => 4,
+                    'nome' => 'planoPrevidenciario',
+                    'label' => 'Plano Previdênciário:',
+                    'tipo' => 'combo',
+                    'array' => [null, "RIOPREV FINANCEIRO", "RIOPREV PREVIDENCIÁRIO"],
+                    'size' => 100,
+                    'col' => 4,
+                    'title' => 'Plano previdenciário do servidor.'));
     }
 
     array_push($campos,
@@ -355,7 +363,7 @@ if ($acesso) {
                 'title' => 'Motivo da Saida do Servidor.'),
             array('linha' => 8,
                 'nome' => 'tipoAposentadoria',
-                'label' => 'Tipo:',                
+                'label' => 'Tipo:',
                 'fieldset' => 'Em Caso de Aposentadoria',
                 'tipo' => 'combo',
                 'array' => array("", "Integral", "Proporcional"),
@@ -421,8 +429,8 @@ if ($acesso) {
 
                     if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 's') {
                         $mensagem .= "- Transferência para UENF por opção do servidor a contar de 01/01/2002, conforme Lei nº 3684 de 23/10/2001.";
-                    } 
-                    
+                    }
+
                     if ($pessoal->opcaoFenorteUenf($idServidorPesquisado) == 'n') {
                         $mensagem .= "- Transferido para UENF a contar de 16/06/2016 em virtude da extinção da FENORTE, conforme Lei 7237 de 16/03/2016.";
                     }

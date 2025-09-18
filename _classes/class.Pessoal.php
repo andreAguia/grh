@@ -7410,7 +7410,13 @@ class Pessoal extends Bd {
      * 
      * @param	string $idServidor $idServidor do servidor
      * 
-     * Retorna o plano previdenciário de um servidor
+     * Retorna o plano previdenciário de um servidor calculado automaticamente,
+     * a partir da data de admissão. Mas esse cálculo não é correto
+     * pois tem que se considerar se o servidor tem vinculo anterior no estado sem
+     * interrupção. Dai a data a ser considerada é a de admissão desse
+     * vinculo
+     * 
+     * Por enquanto está sem uso.
      */
     function define_planoPevidenciario($idServidor) {
 

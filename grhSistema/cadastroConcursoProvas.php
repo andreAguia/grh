@@ -49,7 +49,7 @@ if ($acesso) {
     } else {
 
         # Grava no log a atividade
-        $atividade = "Visualizou as publicações do concurso " . $concurso->get_nomeConcurso($idConcurso);
+        $atividade = "Visualizou as provas do concurso " . $concurso->get_nomeConcurso($idConcurso);
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }

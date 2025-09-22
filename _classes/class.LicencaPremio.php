@@ -111,7 +111,7 @@ class LicencaPremio {
         $select = "SELECT SUM(numDias) 
                      FROM tbpublicacaopremio LEFT JOIN tbservidor USING (idServidor)
                                              LEFT JOIN tbpessoa USING (idPessoa)
-                    WHERE idPessoa = $idPessoa
+                    WHERE idPessoa = {$idPessoa}
                       AND tbservidor.idPerfil = 1";
 
         # Pega os valores
@@ -912,7 +912,7 @@ class LicencaPremio {
             $linkBotao3->set_title("Acessa o Cadastro de Publicações");
             $menu->add_link($linkBotao3, "right");
             $menu->show();
-            
+
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Licenças Fruídas do Vínculo: Cargo $cargo<br/>Admissão: $dtAdm - Saída: $dtSai ($motivo)");
@@ -925,7 +925,7 @@ class LicencaPremio {
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
             $tabela->show();
-        }else{
+        } else {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Licenças Fruídas");
@@ -1356,5 +1356,85 @@ class LicencaPremio {
         }
     }
 
-    ########################################################### 
+    ###########################################################
+
+    public function get_proximaData($idServidor) {
+        /**
+         * Informa a data inicial da próxima licença
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $licenca->proximaData($idServidor);
+         */
+        /*
+         * Pega a última publicação fruída.
+         */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        $select = "SELECT idPublicacaoPremio,                     
+                          ADDDATE(dtInicial,tblicencapremio.numDias-1)
+                     FROM tblicencapremio 
+                    WHERE idServidor = {$idServidor} 
+                    ORDER BY dtInicial DESC";
+
+        $row = $pessoal->select($select, false);
+
+        /*
+         * Pega quantos dias foram fruídos com essa publicação
+         */
+
+        $select = "SELECT SUM(numDias) 
+                     FROM tblicencapremio 
+                    WHERE idPublicacaoPremio = {$row[0]} 
+                    ORDER BY dtInicial DESC";
+
+        $numDias = $pessoal->select($select, false)[0];
+
+        if ($numDias < 90) {
+            return addDias(addAnos(date_to_php($row[1]), 1), 2);
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    public function get_proximoPeriodo($idServidor) {
+        /**
+         * Informa o período da próxima licença
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $licenca->proximaData($idServidor);
+         */
+        /*
+         * Pega a última publicação fruída.
+         */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        $select = "SELECT idPublicacaoPremio,
+                          dtTermino
+                     FROM tblicencapremio 
+                    WHERE idServidor = {$idServidor} 
+                    ORDER BY dtInicial DESC";
+
+        $row = $pessoal->select($select, false);
+
+        /*
+         * Pega quantos dias foram fruídos com essa publicação
+         */
+
+        $select = "SELECT CONCAT(DATE_FORMAT(dtInicioPeriodo, '%d/%m/%Y'),' - ',DATE_FORMAT(dtFimPeriodo, '%d/%m/%Y'))
+                     FROM tbpublicacaopremio 
+                    WHERE idPublicacaoPremio = {$row[0]}";
+
+        $periodo = $pessoal->select($select, false)[0];
+        return $periodo;
+    }
+
+    ###########################################################
 }

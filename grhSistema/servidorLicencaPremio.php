@@ -30,6 +30,15 @@ if ($acesso) {
 
     # Inicia a classe de licença
     $licenca = new LicencaPremio();
+    $proximaData = $licenca->get_proximaData($idServidorPesquisado);
+    $proximoPeriodo = $licenca->get_proximoPeriodo($idServidorPesquisado);
+
+    # Verifica se tem limitações quanto a data da próxima licença
+    if (!empty($proximaData)) {
+        $mensagem2 = "- Este servidor só poderá fruir licença prêmio apartir de: <b>{$proximaData}</b><br/>- Referente ao Período: <b>{$proximoPeriodo}</b><br/>";
+    } else {
+        $mensagem2 = null;
+    }
 
     # Verifica a fase do programa
     $fase = get('fase', 'listar');
@@ -40,9 +49,9 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir o período de 90 dias sem interrupção.<br/>
-                  - Se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
-                  - Entretanto, o servidor poderá fruir, sem interrupção (direto), 30, 60 e 90 dias de licença, quando forem de período aquisitivos diferentes.";
+    $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir 90 dias sem interrupção.<br/>
+                  - Entretanto, se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
+                  - Contudo, o servidor poderá fruir, sem interrupção (direto), 30, 60 ou 90 dias de licença, quando for de período aquisitivo diferente.";
 
     # Rotina em Jscript
     $script = '<script type="text/javascript" language="javascript">
@@ -134,8 +143,8 @@ if ($acesso) {
 
         ################################################################
         # Exibe os dados do Servidor
-        $objeto->set_rotinaExtra(array("get_DadosServidor"));
-        $objeto->set_rotinaExtraParametro(array($idServidorPesquisado));
+        $objeto->set_rotinaExtra(["get_DadosServidor", "callout", "calloutAlert"]);
+        $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $mensagem1, $mensagem2]);
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome("Licenças Fruídas");
@@ -194,6 +203,9 @@ if ($acesso) {
         $objeto->set_exibeTempoPesquisa(false);
         $objeto->set_numeroOrdem(true);
         $objeto->set_numeroOrdemTipo("d");
+
+        $objeto->set_rowspan(1);
+        $objeto->set_grupoCorColuna(1);
 
         # Classe do banco de dados
         $objeto->set_classBd('pessoal');
@@ -342,8 +354,7 @@ if ($acesso) {
             case "" :
             case "listar" :
                 # Exibe quadro de licença prêmio
-                /* Grh::quadroLicencaPremio($idServidorPesquisado); */
-
+                # Grh::quadroLicencaPremio($idServidorPesquisado);
                 # Pega os dados 
                 $diasPublicados = $licenca->get_numDiasPublicadosTotal($idServidorPesquisado);
                 $diasFruidos = $licenca->get_numDiasFruidosTotal($idServidorPesquisado);
@@ -384,9 +395,6 @@ if ($acesso) {
                 # Limita o tamanho da tela
                 $grid = new Grid();
                 $grid->abreColuna(12);
-
-                tituloTable("Atenção");
-                callout($mensagem1, "alert", "calloutMensagemPremio");
 
                 # Exibe as licenças prêmio de outros vinculos com a UENF                
                 $numVinculos = $licenca->get_numVinculosPremio($idServidorPesquisado);
@@ -497,9 +505,6 @@ if ($acesso) {
                 break;
 
             case "editar" :
-                $objeto->set_rotinaExtraEditar("calloutAlert");
-                $objeto->set_rotinaExtraEditarParametro($mensagem1);
-
                 $objeto->$fase($id);
                 break;
 

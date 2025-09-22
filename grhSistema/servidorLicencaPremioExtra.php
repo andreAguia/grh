@@ -11,6 +11,7 @@ $pessoal = new Pessoal();
 $dtInicial = $campoValor[0];
 $numDias = $campoValor[1];
 $dtTermino = $campoValor[2];
+$idPublicacaoPremio = $campoValor[4];
 $idServidor = $campoValor[6];
 
 # Preenche a data de término quando for nula

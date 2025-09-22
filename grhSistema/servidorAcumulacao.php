@@ -380,13 +380,19 @@ if ($acesso) {
     $linkBotao3->set_title('Procedimentos');
     $linkBotao3->set_target("_blank");
 
+    # Site
+    $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/");
+    $botaoSite->set_class('button');
+    $botaoSite->set_title('Site da GRH');
+    $botaoSite->set_target("_blank");
+
     # Botão exibe declaração
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
     $botaoDec->set_url("servidorAcumulacaoDeclaracao.php");
 
-    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoDec]);
-    
+    $objeto->set_botaoListarExtra([$botaoRel, $linkBotao3, $botaoSite, $botaoDec]);
+
     # Botão exibe declaração
     $botaoDec = new Button("Declarações");
     $botaoDec->set_title("Exibe as declaração positivas de acumulação deste servidor");
@@ -423,7 +429,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $procedimento = new Procedimento();
             $procedimento->exibeProcedimentoSubCategoria("Acumulação de Cargos Públicos");
 

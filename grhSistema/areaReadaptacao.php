@@ -106,11 +106,19 @@ if ($acesso) {
             $botaoCalendario->set_target("_calendario");
             $menu1->add_link($botaoCalendario, "right");
 
+            # Procedimentos
             $linkBotao3 = new Link("Procedimentos", "servidorReadaptacao.php?fase=procedimentos");
             $linkBotao3->set_class('button');
             $linkBotao3->set_title('Regras da readaptação');
             $linkBotao3->set_target("_blank3");
             $menu1->add_link($linkBotao3, "right");
+
+            # Site
+            $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/readaptacao/");
+            $botaoSite->set_class('button');
+            $botaoSite->set_title('Site da GRH');
+            $botaoSite->set_target("_blank");
+            $menu1->add_link($botaoSite, "right");
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

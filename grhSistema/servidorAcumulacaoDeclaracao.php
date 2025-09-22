@@ -206,20 +206,26 @@ if ($acesso) {
     $botaoProcedimentos->set_title('Procedimentos');
     $botaoProcedimentos->set_target("_blank");
 
+    # Site
+    $botaoSite = new Link("Site", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/acumulacao-de-cargos/declaracao-anual-de-acumulacao-de-cargos/");
+    $botaoSite->set_class('button');
+    $botaoSite->set_title('Site da GRH');
+    $botaoSite->set_target("_blank");
+
     # Botão exibe Processos
     $botaoDec = new Button("Processos de ACP");
     $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
 //    $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
     $botaoDec->set_url("servidorAcumulacao.php");
 
-    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoDec]);
+    $objeto->set_botaoListarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
 
     # Botão exibe Processos
     $botaoDec = new Button("Processos de ACP");
     $botaoDec->set_title("Exibe os Processos de acumulação deste servidor");
     $botaoDec->set_onClick("abreFechaDivId('divRegrasLsv');");
 
-    $objeto->set_botaoEditarExtra([$botaoProcedimentos, $botaoDec]);
+    $objeto->set_botaoEditarExtra([$botaoProcedimentos, $botaoSite, $botaoDec]);
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);
@@ -238,7 +244,7 @@ if ($acesso) {
         case "excluir" :
             $objeto->$fase($id);
             break;
-        
+
         case "gravar" :
             $objeto->gravar($id, "servidorAcumulacaoDeclaracaoExtra.php");
             break;
@@ -249,7 +255,7 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             $procedimento = new Procedimento();
             $procedimento->exibeProcedimentoSubCategoria("Declaração Anual de Acumulação");
 

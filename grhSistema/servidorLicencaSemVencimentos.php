@@ -422,8 +422,20 @@ if ($acesso) {
     $botaoProcedimentos->set_title('Exibe os procedimentos');
     $botaoProcedimentos->set_target("_blank4");
 
-    $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos, $botaoCalendario]);
-    $objeto->set_botaoEditarExtra([$botao2, $botaoProcedimentos]);
+    # Site
+    $botaoSite1 = new Link("Site: Acomp.Cônjuge", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/licenca-sem-vencimentos-opcao-contribuicao/licenca-sem-vencimentos-para-acompanhar-conjuge-companheiroa/");
+    $botaoSite1->set_class('button');
+    $botaoSite1->set_title('Site da GRH');
+    $botaoSite1->set_target("_blank");
+
+    # Site
+    $botaoSite2 = new Link("Site: Int.Particulares", "https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/licenca-sem-vencimentos-opcao-contribuicao/licenca-sem-vencimentos-para-trato-de-interesse-particular/");
+    $botaoSite2->set_class('button');
+    $botaoSite2->set_title('Site da GRH');
+    $botaoSite2->set_target("_blank");
+
+    $objeto->set_botaoListarExtra([$botaoRel, $botao2, $botaoProcedimentos, $botaoSite1, $botaoSite2, $botaoCalendario]);
+    $objeto->set_botaoEditarExtra([$botao2, $botaoProcedimentos, $botaoSite1, $botaoSite2]);
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -435,27 +447,27 @@ if ($acesso) {
 
         case "" :
         case "listar" :
-            
+
             $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
-                . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
-            
+                    . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
+
             $objeto->set_rotinaExtraListar(array("callout"));
             $objeto->set_rotinaExtraListarParametro(array($mensagem));
             $objeto->listar();
             break;
-            
-        case "editar" :           
-            
+
+        case "editar" :
+
             $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
-                . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
-            
+                    . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
+
             $objeto->set_rotinaExtraEditar(array("callout"));
             $objeto->set_rotinaExtraEditarParametro(array($mensagem));
             $objeto->editar($id);
             break;
-        
+
         case "excluir" :
-            
+
             $objeto->excluir($id);
             break;
 
@@ -472,7 +484,7 @@ if ($acesso) {
             $dtRetorno = $dados["dtRetorno"];
             $dtPublicacao = $dados['dtPublicacao'];
             $pgPublicacao = $dados['pgPublicacao'];
-            
+
             $dtInicial = $dados["dtInicial"];
             $dtTermino = $dados["dtTermino"];
             $numDias = $dados["numDias"];
@@ -493,7 +505,7 @@ if ($acesso) {
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
             $form = new Form("../grhRelatorios/lsv.cartaReassuncao.php?id={$id}");
-            
+
             # dtInicial
             $controle = new Input('dtInicial', 'data', 'Data Inicial', 1);
             $controle->set_size(10);
@@ -509,11 +521,11 @@ if ($acesso) {
             $controle->set_size(10);
             $controle->set_linha(1);
             $controle->set_col(4);
-            $controle->set_valor($dtTermino);            
+            $controle->set_valor($dtTermino);
             $controle->set_readonly(true);
             $controle->set_title('A data de término da licença.');
             $form->add_item($controle);
-            
+
             # numDias
             $controle = new Input('numDias', 'texto', 'Dias:', 1);
             $controle->set_size(5);

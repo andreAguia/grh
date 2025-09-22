@@ -1385,15 +1385,20 @@ class LicencaPremio {
          * Pega quantos dias foram fruídos com essa publicação
          */
 
-        $select = "SELECT SUM(numDias) 
+        if (!empty($row[0])) {
+
+            $select = "SELECT SUM(numDias) 
                      FROM tblicencapremio 
                     WHERE idPublicacaoPremio = {$row[0]} 
                     ORDER BY dtInicial DESC";
 
-        $numDias = $pessoal->select($select, false)[0];
+            $numDias = $pessoal->select($select, false)[0];
 
-        if ($numDias < 90) {
-            return addDias(addAnos(date_to_php($row[1]), 1), 2);
+            if ($numDias < 90) {
+                return addDias(addAnos(date_to_php($row[1]), 1), 2);
+            } else {
+                return null;
+            }
         } else {
             return null;
         }

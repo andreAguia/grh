@@ -31,10 +31,10 @@ if ($acesso) {
     # Inicia a classe de licença
     $licenca = new LicencaPremio();
     $proximaData = $licenca->get_proximaData($idServidorPesquisado);
-    $proximoPeriodo = $licenca->get_proximoPeriodo($idServidorPesquisado);
 
     # Verifica se tem limitações quanto a data da próxima licença
     if (!empty($proximaData)) {
+        $proximoPeriodo = $licenca->get_proximoPeriodo($idServidorPesquisado);
         $mensagem2 = "- Este servidor só poderá fruir licença prêmio apartir de: <b>{$proximaData}</b><br/>- Referente ao Período: <b>{$proximoPeriodo}</b><br/>";
     } else {
         $mensagem2 = null;

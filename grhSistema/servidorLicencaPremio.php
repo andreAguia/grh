@@ -437,7 +437,7 @@ if ($acesso) {
 
 
                 $grid->fechaColuna();
-                $grid->abreColuna(3);
+                $grid->abreColuna(12, 12, 3);
 
                 # Exibe o processo de contagem
                 if (Verifica::acesso($idUsuario, [1, 2, 19])) {
@@ -461,7 +461,7 @@ if ($acesso) {
                 $licenca->exibeOcorrencias($idServidorPesquisado);
 
                 $grid->fechaColuna();
-                $grid->abreColuna(9);
+                $grid->abreColuna(12, 12, 9);
 
                 # Cria um menu
                 if (Verifica::acesso($idUsuario, [1, 2, 19])) {
@@ -485,10 +485,6 @@ if ($acesso) {
                 # Exibe as publicações de Licença Prêmio
                 $licenca->exibePublicacoes($idServidorPesquisado);
 
-                # Exibe o idServidor e idPessoa
-                br(2);                
-                p("S {$idServidorPesquisado} / P {$pessoal->get_idPessoa($idServidorPesquisado)}", 'idServidor');
-                
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

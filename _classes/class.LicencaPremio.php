@@ -688,12 +688,12 @@ class LicencaPremio {
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
-            
+
             $tabela->set_mensagemPosTabela("Obs. Antes de informar ao servidor sobre a licença prêmio,"
-                        . " verifique se o mesmo possui algum afastamento"
-                        . " específico que poderia alterar as datas da"
-                        . " licença. O sistema, ainda, não verifica"
-                        . " essa informação.");
+                    . " verifique se o mesmo possui algum afastamento"
+                    . " específico que poderia alterar as datas da"
+                    . " licença. O sistema, ainda, não verifica"
+                    . " essa informação.");
 
             $tabela->set_colunaSomatorio([2, 3, 4]);
 
@@ -1405,12 +1405,16 @@ class LicencaPremio {
          * Pega quantos dias foram fruídos com essa publicação
          */
 
-        $select = "SELECT CONCAT(DATE_FORMAT(dtInicioPeriodo, '%d/%m/%Y'),' - ',DATE_FORMAT(dtFimPeriodo, '%d/%m/%Y'))
+        if (!empty($row[0])) {
+            $select = "SELECT CONCAT(DATE_FORMAT(dtInicioPeriodo, '%d/%m/%Y'),' - ',DATE_FORMAT(dtFimPeriodo, '%d/%m/%Y'))
                      FROM tbpublicacaopremio 
                     WHERE idPublicacaoPremio = {$row[0]}";
 
-        $periodo = $pessoal->select($select, false)[0];
-        return $periodo;
+            $periodo = $pessoal->select($select, false)[0];
+            return $periodo;
+        } else {
+            return null;
+        }
     }
 
     ###########################################################

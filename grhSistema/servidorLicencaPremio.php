@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    $licenca = new LicencaPremio();
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -26,18 +27,6 @@ if ($acesso) {
         $atividade = "Cadastro do servidor - Histórico de licenças prêmio";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
-    }
-
-    # Inicia a classe de licença
-    $licenca = new LicencaPremio();
-    $proximaData = $licenca->get_proximaData($idServidorPesquisado);
-
-    # Verifica se tem limitações quanto a data da próxima licença
-    if (!empty($proximaData)) {
-        $proximoPeriodo = $licenca->get_proximoPeriodo($idServidorPesquisado);
-        $mensagem2 = "- Este servidor só poderá fruir licença prêmio apartir de: <b>{$proximaData}</b><br/>- Referente ao Período: <b>{$proximoPeriodo}</b><br/>";
-    } else {
-        $mensagem2 = null;
     }
 
     # Verifica a fase do programa
@@ -49,9 +38,29 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
-    $mensagem1 = "- Dentro do mesmo período aquisitivo, o servidor poderá fruir 90 dias sem interrupção.<br/>
+    function exibeMensagemPremio($idServidor) {
+        # Inicia a classe de licença
+        $licenca = new LicencaPremio();
+        $proximaData = $licenca->get_proximaData($idServidor);
+        $proximoPeriodo = $licenca->get_proximoPeriodo($idServidor);
+
+        if (!empty($proximaData)) {
+            $grid = new Grid();
+            $grid->abreColuna(5);
+
+            calloutAlert("- Este servidor só poderá fruir licença prêmio apartir de: <b>{$proximaData}</b><br/>- Referente ao Período: <b>{$proximoPeriodo}</b><br/>");
+
+            $grid->fechaColuna();
+            $grid->abreColuna(7);
+
+            calloutWarning("- Dentro do mesmo período aquisitivo, o servidor poderá fruir 90 dias sem interrupção.<br/>
                   - Entretanto, se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
-                  - Contudo, o servidor poderá fruir, sem interrupção (direto), 30, 60 ou 90 dias de licença, quando for de período aquisitivo diferente.";
+                  - Contudo, o servidor poderá fruir, sem interrupção (direto), 30, 60 ou 90 dias de licença, quando for de período aquisitivo diferente.", "Regras");
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+        }
+    }
 
     # Rotina em Jscript
     $script = '<script type="text/javascript" language="javascript">
@@ -143,8 +152,8 @@ if ($acesso) {
 
         ################################################################
         # Exibe os dados do Servidor
-        $objeto->set_rotinaExtra(["get_DadosServidor", "callout", "calloutAlert"]);
-        $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $mensagem1, $mensagem2]);
+        $objeto->set_rotinaExtra(["get_DadosServidor", "exibeMensagemPremio"]);
+        $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado]);
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome("Licenças Fruídas");
@@ -426,7 +435,11 @@ if ($acesso) {
                     }
                 }
 
-                # Cria um menu
+
+                $grid->fechaColuna();
+                $grid->abreColuna(3);
+
+                # Exibe o processo de contagem
                 if (Verifica::acesso($idUsuario, [1, 2, 19])) {
                     $menu = new MenuBar();
 
@@ -438,53 +451,28 @@ if ($acesso) {
                     $menu->show();
                 }
 
-                $grid->fechaColuna();
-                $grid->abreColuna(12, 6, 4);
-
                 # Exibe o processo de contagem
                 $licenca->exibeProcessoContagem($idServidorPesquisado);
 
-                $grid->fechaColuna();
-                $grid->abreColuna(12, 6, 4);
-
-                # Exibe o Menu de Documentos
-                $licenca->exibeMenuDocumentos();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(12, 12, 4);
-
                 # Exibe o Número de Publicações
                 $licenca->exibeNumeroPublicacoes($idServidorPesquisado);
-
-                $grid->fechaColuna();
-                $grid->abreColuna(12, 12, 6);
-
-                # Exibe alerta
-                tituloTable("Atenção");
-                $callout = new Callout("alert");
-                $callout->abre();
-
-                p(" Antes de informar ao servidor sobre a licença prêmio,"
-                        . " verifique se o mesmo possui algum afastamento"
-                        . " específico que poderia alterar as datas da"
-                        . " licença.<br/>O sistema, ainda, não verifica"
-                        . " essa informação.", "calloutMensagemPremio");
-
-                $callout->fecha();
-
-                $grid->fechaColuna();
-                $grid->abreColuna(12, 12, 6);
 
                 # Exibe as notificações
                 $licenca->exibeOcorrencias($idServidorPesquisado);
 
                 $grid->fechaColuna();
-                $grid->abreColuna(12);
+                $grid->abreColuna(9);
 
                 # Cria um menu
                 if (Verifica::acesso($idUsuario, [1, 2, 19])) {
 
                     $menu = new MenuBar();
+
+                    # Certidão
+                    $linkBotao1 = new Button("Certidão", '../grhRelatorios/certidao.LicencaPremio.Concessao.php');
+                    $linkBotao1->set_title('Emite certidão');
+                    $linkBotao1->set_target('_blank');
+                    $menu->add_link($linkBotao1, "right");
 
                     # Cadastro de Publicações
                     $linkBotao3 = new Link("Cadastro de Publicações", "servidorPublicacaoPremio.php");
@@ -498,8 +486,9 @@ if ($acesso) {
                 $licenca->exibePublicacoes($idServidorPesquisado);
 
                 # Exibe o idServidor e idPessoa
+                br(2);                
                 p("S {$idServidorPesquisado} / P {$pessoal->get_idPessoa($idServidorPesquisado)}", 'idServidor');
-
+                
                 $grid->fechaColuna();
                 $grid->fechaGrid();
                 break;

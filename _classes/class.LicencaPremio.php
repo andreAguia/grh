@@ -502,40 +502,6 @@ class LicencaPremio {
 
     ###########################################################
 
-    public function exibeMenuDocumentos() {
-        # Servidores
-        titulotable('Documentos');
-
-        # Menu de Documentos
-        $painel = new Callout();
-        $painel->abre();
-
-        $tamanhoImage = 40;
-        $menu = new MenuGrafico(2);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('Certidão');
-        $botao->set_target('blank');
-        $botao->set_url('../grhRelatorios/certidao.LicencaPremio.Concessao.php');
-        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Emite certidão');
-        $menu->add_item($botao);
-
-        $botao = new BotaoGrafico();
-        $botao->set_label('MTS');
-        #$botao->set_target('blank');
-        #$botao->set_url('?');
-        $botao->set_onClick("alert('Rotina em Desenvolvimento!');");
-        $botao->set_imagem(PASTA_FIGURAS . 'doc.png', $tamanhoImage, $tamanhoImage);
-        $botao->set_title('Emite o MTS');
-        $menu->add_item($botao);
-
-        $menu->show();
-        $painel->fecha();
-    }
-
-    ###########################################################
-
     public function exibeNumeroPublicacoes($idServidor) {
 
         # Valida $id
@@ -566,7 +532,6 @@ class LicencaPremio {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("N° de Publicações");
-                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_align(["left"]);
                 $tabela->set_conteudo($conteudo2);
                 $tabela->set_grupoCorColuna(0);
@@ -589,7 +554,6 @@ class LicencaPremio {
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("N° de Publicações");
-                $tabela->set_subtitulo("<b>Data Provável da Próxima Publicação: {$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_conteudo($conteudo);
                 $tabela->set_label(["Possíveis", "Publicadas", "Pendentes"]);
                 $tabela->set_totalRegistro(false);
@@ -715,6 +679,7 @@ class LicencaPremio {
                 $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio']);
                 $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao']);
             } else {
+                $tabela->set_subtitulo("Próxima Publicação: <b>{$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DO", "Obs"]);
                 $tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
                 $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
@@ -723,6 +688,12 @@ class LicencaPremio {
 
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
+            
+            $tabela->set_mensagemPosTabela("Obs. Antes de informar ao servidor sobre a licença prêmio,"
+                        . " verifique se o mesmo possui algum afastamento"
+                        . " específico que poderia alterar as datas da"
+                        . " licença. O sistema, ainda, não verifica"
+                        . " essa informação.");
 
             $tabela->set_colunaSomatorio([2, 3, 4]);
 
@@ -1232,8 +1203,9 @@ class LicencaPremio {
             }
         }
 
-        titulotable("Ocorrências");
-        callout(trataNulo($mensagem, "<br/><br/><br/>"));
+        if (!empty($mensagem)) {
+            calloutWarning($mensagem, "Ocorrências");
+        }
     }
 
     ###########################################################

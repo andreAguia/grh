@@ -1174,33 +1174,57 @@ class LicencaPremio {
             $mensagem .= "- Servidor tem mais dias fruídos de $nome do que publicados.<br/>";
         }
 
-        # Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
+        /*
+         *  Servidor sem dias disponíveis. Precisa publicar antes de tirar nova licença
+         */
         if ($diasDisponiveis < 1) {
             $mensagem .= "- Servidor sem dias disponíveis. É necessário cadastrar uma publicação para incluir uma licença prêmio.<br/>";
         }
 
-        # Servidor sem processo cadastrado
+        /*
+         *  Servidor sem processo cadastrado
+         */
         if (is_null($numProcesso)) {
             $mensagem .= "- Servidor sem número de processo de $nome cadastrado.<br/>";
         }
 
-        # Servidor com publicação pendente
+        /*
+         * Servidor com publicação pendente
+         */
         if ($this->get_numPublicacoesFaltantes($idServidor) > 0) {
             $mensagem .= "- Existem publicações pendentes para este servidor.<br/>";
         }
 
-        # Servidor com mais de 90 dias fruídos em uma única publicação
+        /*
+         * Servidor com mais de 90 dias fruídos em uma única publicação
+         */
         # Exibe as Publicações
-        $select = "SELECT idPublicacaoPremio
+        $select1 = "SELECT idPublicacaoPremio
                          FROM tbpublicacaopremio
                         WHERE idServidor = {$idServidor}";
 
-        $row = $pessoal->select($select);
+        $row1 = $pessoal->select($select1);
 
-        foreach ($row as $item) {
+        foreach ($row1 as $item) {
             if ($this->get_numDiasFruidosPorPublicacao($item['idPublicacaoPremio']) > 90) {
                 $mensagem .= "- Existem publicações com mais de 90 dias fruidos.<br/>";
             }
+        }
+
+        /*
+         * Servidores com licença cadastrada sem informar publicação
+         */
+
+        $select2 = "SELECT idLicencaPremio                            
+                      FROM tblicencapremio
+                     WHERE idServidor = {$idServidor}
+                       AND (idPublicacaoPremio is null OR idPublicacaoPremio = 0)";
+
+        $row2 = $pessoal->count($select2);
+        
+
+        if ($row2 > 0) {
+            $mensagem .= "- Existem licenças cadastradas sem informar a publicação.<br/>";
         }
 
         if (!empty($mensagem)) {

@@ -418,4 +418,43 @@ class Averbacao {
     }
 
 ###########################################################
+
+    function get_obsGeral($idServidor) {
+
+        /**
+         * Informe obs da licença prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (is_numeric($idServidor)) {
+
+            # Pega os dados
+            $select = "SELECT obsAverbacao
+                         FROM tbservidor
+                        WHERE idServidor = {$idServidor}";
+
+            $retorno = $pessoal->select($select, false);
+
+            # Retorno
+            return $retorno[0];
+        } else {
+            return $idServidor;
+        }
+    }
+
+    ###########################################################
+
+    function exibeObsGeral($idServidor) {
+
+        # Pega os Dados
+        $mensagem = $this->get_obsGeral($idServidor);
+
+        if (!is_null($mensagem)) {
+            calloutWarning($mensagem,"Observação da Averbação");
+        }
+    }
+
+    ###########################################################
+
 }

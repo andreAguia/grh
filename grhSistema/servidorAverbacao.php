@@ -300,6 +300,13 @@ if ($acesso) {
                 $menu1->add_link($botaoCtc, "right");
             }
 
+            # Obs
+            if (Verifica::acesso($idUsuario, [1, 2, 19])) {
+                $botaoObs = new Button("Obs Averbação", "servidorInformacaoAdicionalAverbacao.php");
+                $botaoObs->set_title("Insere / edita as observações gerais.");
+                $menu1->add_link($botaoObs, "right");
+            }
+
             $botaoAfast = new Button('Afastamentos', 'servidorAfastamentos.php?volta=0');
             $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
             $botaoAfast->set_target("_blank");

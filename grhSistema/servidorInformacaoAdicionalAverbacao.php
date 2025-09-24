@@ -45,7 +45,7 @@ if ($acesso) {
     $perfilServidor = $pessoal->get_idPerfil($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome("Observações da Licença Prêmio");
+    $objeto->set_nome("Observações da Averbação");
 
     # select do edita
     $selectEdita = 'SELECT obsAverbacao

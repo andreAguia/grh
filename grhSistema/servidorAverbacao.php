@@ -73,6 +73,16 @@ if ($acesso) {
         $objeto->set_rotinaExtraParametro($idServidorPesquisado);
     }
 
+    # Função para acrescentar a rotina extra
+    function exibeObs($idServidor) {
+        $averbacao = new Averbacao();
+        $averbacao->exibeObsGeral($idServidor);
+    }
+
+    # Acrescenta as rotinas
+    $objeto->set_rotinaExtraListar("exibeObs");
+    $objeto->set_rotinaExtraListarParametro($idServidorPesquisado);
+
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro de Tempo de Serviço Averbado');
 
@@ -351,7 +361,7 @@ if ($acesso) {
                 $dtFinal = $dtHoje;
             }
 
-            $mensagem1 = "Atenção: Nem a data final nem o número de dias são calculados pelo sistema.<br/>
+            $mensagem1 = "Nem a data final nem o número de dias são calculados pelo sistema.<br/>
                  Estão conforme foram digitados pelo usuário, para refletir ao que foi publicado.<br/>
                  O problema consiste em que nem sempre o que se publica é fruto de um cálculo perfeito.<br/>
                  Dessa forma, para verificar possíveis equívocos, a tabela abaixo informa, além dos dias digitados, o cálculo desses dias considerando a data Inicial e a data Final.";
@@ -365,7 +375,7 @@ if ($acesso) {
                 calloutAlert($mensagem2, "ff");
             }
 
-            callout($mensagem1);
+            calloutWarning($mensagem1, "Atenção");
 
             # Exibe o alerta de entrega do ctc Inss
             $aposentadoria->exibe_alertaEntregaCtc($idServidorPesquisado);

@@ -1401,6 +1401,39 @@ if ($acesso) {
         $relatorio->set_textoMensagemSemRegistro("Não consta nenhum tempo averbado para o servidor");
         $relatorio->show();
     }
+    
+     /*
+     * Observações adicionais de Licença Especial (Prêmio)
+     */
+
+    if ($postAverbacao) {
+
+        $select = "SELECT obsAverbacao
+                     FROM tbservidor
+                   WHERE idServidor = $idServidorPesquisado";
+
+        $result = $pessoal->select($select);
+
+        if (!empty($result[0][0])) {
+
+            $relatorio = new Relatorio('relatorioFichaCadastral');
+            #$relatorio->set_titulo(null);
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_label(array("Observações da Averbação"));
+            #$relatorio->set_width(array(22,10,2,10,10,6,15,10,5));
+            $relatorio->set_align(array("left"));
+            $relatorio->set_funcao(array("nl2br"));
+            $relatorio->set_conteudo($result);
+            $relatorio->set_subTotal(false);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
+            $relatorio->set_log(false);
+            $relatorio->show();
+        }
+    }
+
 
     /*
      * Histórico de Diária

@@ -288,20 +288,50 @@ if ($acesso) {
             }
 
             /*
-             *  Faz o backup de hora em hora
+             * Faz o backup 3 vezes ao dia
+             * De manhã, na hora do almoço e no fim do dia
              */
             # Verifica se o backup automático está habilitado
             if ($intra->get_variavel("backupAutomatico")) {
 
-                # Verifica as horas
+                # Data e hora do último backup
+                $diaBackup = $intra->get_variavel("backupDia");
                 $horaBackup = $intra->get_variavel("backupHora");
+
+                # Data e horas atuais
+                $hoje = date("d");
                 $horaAtual = date("H");
 
-                # Compara se são diferentes
-                if ($horaAtual <> $horaBackup) {
+                # Backup da Manhã
+                if ($hoje <> $diaBackup) {
+
                     # Realiza backup
                     $processo = new Processo();
                     $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
+                } else {
+                    # Backup do Almoço
+                    if ($horaAtual > 12 AND $horaBackup < 12) {
+                        
+                        # Realiza backup
+                        $processo = new Processo();
+                        $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
+                    }
+                    
+                    # Backup do Fim do Dia
+                    if ($horaAtual > 17 AND $horaBackup < 17) {
+                        
+                        # Realiza backup
+                        $processo = new Processo();
+                        $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
+                    }
+                    
+                    # Backup raro da noite
+                    if ($horaAtual > 20 AND $horaBackup < 20) {
+                        
+                        # Realiza backup
+                        $processo = new Processo();
+                        $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
+                    }
                 }
             }
 

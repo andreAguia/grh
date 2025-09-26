@@ -81,12 +81,19 @@ if (!is_null($aposentadoria->get_dataAposentadoriaCompulsoria($idServidor))) {
     }
 }
 
-//# Verifica se é inclusão
-//if (empty($id)) {
-//    $proximaData = date_to_bd($licenca->get_proximaData($idServidor));
-//
-//    if ($dtInicial < $proximaData) {
-//        $erro = 1;
-//        $msgErro .= 'A Data inicial da Licença deverá ser um anonão poderá ser antes da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
-//    }
-//}
+/*
+ * Verifica a regra da anuidade
+ */
+
+#strtotime(date_to_bd($data1));
+
+# Verifica se é inclusão
+if (empty($id)) {
+    $licenca = new LicencaPremio();
+    $proximaData = date_to_bd($licenca->get_proximaData($idServidor));
+
+    if ($dtInicial < $proximaData) {
+        $erro = 1;
+        $msgErro .= 'A Data inicial da Licença deverá respeitar a Regra da Anuidade!\n';
+    }
+}

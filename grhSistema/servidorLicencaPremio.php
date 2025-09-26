@@ -6,8 +6,9 @@
  * By Alat
  */
 # Inicia as variáveis que receberão as sessions
-$idUsuario = null;              # Servidor logado
-$idServidorPesquisado = null; # Servidor Editado na pesquisa do sistema do GRH
+$idUsuario = null;
+$idServidorPesquisado = null;
+
 # Configuração
 include ("_config.php");
 
@@ -46,16 +47,16 @@ if ($acesso) {
 
         if (!empty($proximaData)) {
             $grid = new Grid();
-            $grid->abreColuna(5);
+            $grid->abreColuna(12, 5);
 
             calloutAlert("- Este servidor só poderá fruir licença prêmio apartir de: <b>{$proximaData}</b><br/>- Referente ao Período: <b>{$proximoPeriodo}</b><br/>");
 
             $grid->fechaColuna();
-            $grid->abreColuna(7);
+            $grid->abreColuna(12, 7);
 
             calloutWarning("- Dentro do mesmo período aquisitivo, o servidor poderá fruir 90 dias sem interrupção.<br/>
                   - Entretanto, se já existir uma fruição da licença prêmio do mesmo período aquisitivo, a lei determina que o servidor deverá respeitar um intervalo de 01 ano do término da licença anterior para fruir uma nova licença.<br/>
-                  - Contudo, o servidor poderá fruir, sem interrupção (direto), 30, 60 ou 90 dias de licença, quando for de período aquisitivo diferente.", "Regras");
+                  - Contudo, o servidor poderá fruir, sem interrupção (direto), 30, 60 ou 90 dias de licença, quando for de período aquisitivo diferente.", "Regra da Anuidade");
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -229,28 +230,44 @@ if ($acesso) {
         $numVinculos = $pessoal->get_numVinculosNaoAtivos($idServidorPesquisado);
         $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
 
-        # Pega os dados da combo licenca
-        $select = 'SELECT idPublicacaoPremio, 
+        /*
+         * Pega os dados da combo Publicação
+         */
+
+        # Verifica se é inclusão e força a usar a publicação disponível
+        if (empty($id)) {
+            
+            # Pega s dados da pródima publicação
+            $idProximaPublicacao = $licenca->get_proximaPublicacaoParaFruir($idServidorPesquisado);
+            $dados = $licenca->get_publicacaoPremioDados($idProximaPublicacao);
+
+            $publicacao = [
+                [$dados["idPublicacaoPremio"], date_to_php($dados["dtPublicacao"]) . " (" . date_to_php($dados["dtInicioPeriodo"]) . " - " . date_to_php($dados["dtFimPeriodo"]) . ")"]
+            ];
+        } else {
+
+            $select = 'SELECT idPublicacaoPremio, 
                           CONCAT(date_format(dtPublicacao,"%d/%m/%Y")," (",date_format(dtInicioPeriodo,"%d/%m/%Y")," - ",date_format(dtFimPeriodo,"%d/%m/%Y"),")")
                      FROM tbpublicacaopremio
                     WHERE idServidor = ' . $idServidorPesquisado;
 
-        # Inclui as publicações de outros vinculos
-        if (($numVinculos > 0) AND ($idSituacao == 1)) {
+            # Inclui as publicações de outros vinculos
+            if (($numVinculos > 0) AND ($idSituacao == 1)) {
 
-            # Carrega um array com os idServidor de cada vinculo
-            $vinculos = $pessoal->get_vinculos($idServidorPesquisado);
+                # Carrega um array com os idServidor de cada vinculo
+                $vinculos = $pessoal->get_vinculos($idServidorPesquisado);
 
-            # Percorre os vinculos
-            foreach ($vinculos as $tt) {
-                $select .= ' OR idServidor = ' . $tt[0];
+                # Percorre os vinculos
+                foreach ($vinculos as $tt) {
+                    $select .= ' OR idServidor = ' . $tt[0];
+                }
             }
+
+            $select .= ' ORDER BY dtInicioPeriodo desc';
+
+            $publicacao = $pessoal->select($select);
+            array_unshift($publicacao, array(null, ' -- Selecione uma Publicação'));
         }
-
-        $select .= ' ORDER BY dtInicioPeriodo desc';
-
-        $publicacao = $pessoal->select($select);
-        array_unshift($publicacao, array(null, ' -- Selecione uma Publicação'));
 
         # Campos para o formulario
         $objeto->set_campos(array(
@@ -391,8 +408,8 @@ if ($acesso) {
                 # Função para acrescentar a rotina extra
 
                 function exibeObs($idServidor) {
-                    $licencPremio = new LicencaPremio();
-                    $licencPremio->exibeObsGeral($idServidor);
+                    $licPremio = new LicencaPremio();
+                    $licPremio->exibeObsGeral($idServidor);
                 }
 
                 # Acrescenta as rotinas

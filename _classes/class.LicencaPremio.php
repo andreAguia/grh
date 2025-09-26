@@ -1221,7 +1221,6 @@ class LicencaPremio {
                        AND (idPublicacaoPremio is null OR idPublicacaoPremio = 0)";
 
         $row2 = $pessoal->count($select2);
-        
 
         if ($row2 > 0) {
             $mensagem .= "- Existem licenças cadastradas sem informar a publicação.<br/>";
@@ -1240,13 +1239,7 @@ class LicencaPremio {
         $mensagem = $this->get_obsGeral($idServidor);
 
         if (!is_null($mensagem)) {
-            $painel = new Callout("warning");
-            $painel->abre();
-
-            p("Observação da Licença Prêmio:", "labelOcorrencias");
-            p(nl2br($mensagem), "left", "f14");
-
-            $painel->fecha();
+            calloutWarning($mensagem, "Observação da Licença Prêmio");
         }
     }
 
@@ -1354,7 +1347,7 @@ class LicencaPremio {
 
     ###########################################################
 
-    public function get_proximaData($idServidor) {
+    public function get_ultimaPublicacaoFruída($idServidor) {
         /**
          * Informa a data inicial da próxima licença
          * 
@@ -1377,21 +1370,43 @@ class LicencaPremio {
 
         $row = $pessoal->select($select, false);
 
+        return $row;
+    }
+
+###########################################################
+
+    public function get_proximaData($idServidor) {
+        /**
+         * Informa a data inicial da próxima licença
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $licenca->proximaData($idServidor);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        /*
+         * Pega a última publicação fruída.
+         */
+
+        $proximaPublicacao = $this->get_ultimaPublicacaoFruída($idServidor);
+
         /*
          * Pega quantos dias foram fruídos com essa publicação
          */
 
-        if (!empty($row[0])) {
+        if (!empty($proximaPublicacao[0])) {
 
             $select = "SELECT SUM(numDias) 
                      FROM tblicencapremio 
-                    WHERE idPublicacaoPremio = {$row[0]} 
+                    WHERE idPublicacaoPremio = {$proximaPublicacao[0]} 
                     ORDER BY dtInicial DESC";
 
             $numDias = $pessoal->select($select, false)[0];
 
             if ($numDias < 90) {
-                return addDias(addAnos(date_to_php($row[1]), 1), 2);
+                return addDias(addAnos(date_to_php($proximaPublicacao[1]), 1), 2);
             } else {
                 return null;
             }
@@ -1436,6 +1451,67 @@ class LicencaPremio {
 
             $periodo = $pessoal->select($select, false)[0];
             return $periodo;
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    public function get_publicacaoPremioDados($idPublicacaoPremio) {
+        /**
+         * Fornece os dados da publicação
+         * 
+         * @param $idPublicacaoPremio integer null O id da publicação
+         * 
+         * @syntax $licenca->get_publicacaoPremioDados($idPublicacaoPremio);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (!empty($idPublicacaoPremio)) {
+            $select = "SELECT *
+                         FROM tbpublicacaopremio 
+                        WHERE idPublicacaoPremio = {$idPublicacaoPremio}";
+
+            $row = $pessoal->select($select, false);
+            return $row;
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    public function get_proximaPublicacaoParaFruir($idServidor) {
+        /**
+         * Fornece o id da próxima publicação a ser fruída
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $licenca->get_proximaPublicacaoParaFruir($idServidor);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (!empty($idServidor)) {
+            $select = "SELECT idPublicacaoPremio
+                         FROM tbpublicacaopremio 
+                        WHERE idServidor = {$idServidor}
+                         ORDER BY dtInicioPeriodo";
+
+            $row = $pessoal->select($select);
+
+            # Percorre o array
+            foreach ($row as $item) {
+                # Verifica os dias fruídos para cada publicação
+                $numDiasPub = $this->get_numDiasFruidosPorPublicacao($item[0]);
+                
+                # Verifica se é menos que 90
+                if ($numDiasPub < 90 OR empty($numDiasPub)) {                    
+                    return $item[0];
+                }
+            }
         } else {
             return null;
         }

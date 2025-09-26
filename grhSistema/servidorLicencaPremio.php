@@ -308,6 +308,7 @@ if ($acesso) {
                 'tipo' => 'texto',
                 'size' => 30,
                 'col' => 3,
+                'padrao' => $licenca->get_ultimoNumProcessoFruicao($idServidorPesquisado),
                 'title' => 'Número do Processo',
                 'linha' => 2),
             array('nome' => 'idPublicacaoPremio',

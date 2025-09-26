@@ -1506,11 +1506,68 @@ class LicencaPremio {
             foreach ($row as $item) {
                 # Verifica os dias fruídos para cada publicação
                 $numDiasPub = $this->get_numDiasFruidosPorPublicacao($item[0]);
-                
+
                 # Verifica se é menos que 90
-                if ($numDiasPub < 90 OR empty($numDiasPub)) {                    
+                if ($numDiasPub < 90 OR empty($numDiasPub)) {
                     return $item[0];
                 }
+            }
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    public function get_licencaPremioDados($idLicencaPremio) {
+        /**
+         * Fornece todos os dados da licença premio
+         * 
+         * @param $idLicencaPremio integer null O id da licença
+         * 
+         * @syntax $licenca->get_licencaPremioDados($idLicencaPremio);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (!empty($idPublicacaoPremio)) {
+            $select = "SELECT *
+                         FROM tblicencapremio
+                        WHERE idLicencaPremio = {$idPublicacaoPremio}";
+
+            $row = $pessoal->select($select, false);
+            return $row;
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    public function get_ultimoNumProcessoFruicao($idServidor) {
+        /**
+         * Fornece o numero do processo da ultima licança fruida
+         * Serve para sugerir esse processo quando da inclusão de uma nova licença
+         * 
+         * @param $idServidor integer null O id do servidor
+         * 
+         * @syntax $licenca->get_ultimoNumProcessoFruicao($idServidor);
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (!empty($idServidor)) {
+            $select = "SELECT processo
+                         FROM tblicencapremio
+                        WHERE idServidor = {$idServidor}
+                         ORDER BY dtInicial DESC";
+
+            $row = $pessoal->select($select, false);
+
+            if(empty($row[0])) {
+                return null;
+            } else {
+                return $row[0];
             }
         } else {
             return null;

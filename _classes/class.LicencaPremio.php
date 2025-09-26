@@ -1185,7 +1185,7 @@ class LicencaPremio {
          *  Servidor sem processo cadastrado
          */
         if (is_null($numProcesso)) {
-            $mensagem .= "- Servidor sem número de processo de $nome cadastrado.<br/>";
+            $mensagem .= "- Servidor sem número de processo de contagem cadastrado.<br/>";
         }
 
         /*

@@ -61,6 +61,9 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
         }
+
+        # Exibe as notificações
+        $licenca->exibeOcorrencias($idServidor);
     }
 
     # Rotina em Jscript
@@ -236,14 +239,18 @@ if ($acesso) {
 
         # Verifica se é inclusão e força a usar a publicação disponível
         if (empty($id)) {
-            
+
             # Pega s dados da pródima publicação
             $idProximaPublicacao = $licenca->get_proximaPublicacaoParaFruir($idServidorPesquisado);
             $dados = $licenca->get_publicacaoPremioDados($idProximaPublicacao);
 
-            $publicacao = [
-                [$dados["idPublicacaoPremio"], date_to_php($dados["dtPublicacao"]) . " (" . date_to_php($dados["dtInicioPeriodo"]) . " - " . date_to_php($dados["dtFimPeriodo"]) . ")"]
-            ];
+            if(empty($dados["idPublicacaoPremio"])) {
+                $publicacao = null;
+            } else {
+                $publicacao = [
+                    [$dados["idPublicacaoPremio"], date_to_php($dados["dtPublicacao"]) . " (" . date_to_php($dados["dtInicioPeriodo"]) . " - " . date_to_php($dados["dtFimPeriodo"]) . ")"]
+                ];
+            }
         } else {
 
             $select = 'SELECT idPublicacaoPremio, 
@@ -473,9 +480,6 @@ if ($acesso) {
 
                 # Exibe o Número de Publicações
                 $licenca->exibeNumeroPublicacoes($idServidorPesquisado);
-
-                # Exibe as notificações
-                $licenca->exibeOcorrencias($idServidorPesquisado);
 
                 $grid->fechaColuna();
                 $grid->abreColuna(12, 12, 9);

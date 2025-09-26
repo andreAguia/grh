@@ -337,11 +337,11 @@ if ($acesso) {
         $objeto->set_idUsuario($idUsuario);
         $objeto->set_idServidorPesquisado($idServidorPesquisado);
 
-        $botaoAfast = new Button('Todos os Afastamentos', 'servidorAfastamentos.php?volta=0');
+        $botaoAfast = new Button('Afastamentos', 'servidorAfastamentos.php?volta=0');
         $botaoAfast->set_title("Verifica todos os afastamentos deste servidor");
         $botaoAfast->set_target("_blank");
 
-        $botaoAfastPremio = new Button('Afastamentos Específicos', 'servidorAfastamentosPremio.php?volta=0');
+        $botaoAfastPremio = new Button('Afast.Espec.', 'servidorAfastamentosPremio.php?volta=0');
         $botaoAfastPremio->set_title("Verifica os afastamentos que interferem no período aquisitido da licença prêmio deste servidor");
         $botaoAfastPremio->set_target("_blank");
 
@@ -372,7 +372,7 @@ if ($acesso) {
 
         # Edita Obs
         if (Verifica::acesso($idUsuario, [1, 2, 19])) {
-            $botaoObs = new Button("Obs Licença Prêmio", "servidorInformacaoAdicionalPremio.php");
+            $botaoObs = new Button("Obs", "servidorInformacaoAdicionalPremio.php");
             $botaoObs->set_title("Insere / edita as observações gerais.");
             $objeto->set_botaoListarExtra([$botaoObs, $botaoRel, $botaoAfastPremio, $botaoAfast, $botaoProcedimentos, $botaoSite, $botaoCalendario]);
         }

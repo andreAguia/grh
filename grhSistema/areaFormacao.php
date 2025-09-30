@@ -271,7 +271,6 @@ if ($acesso) {
             # Escolaridade do Servidor    
             $controle = new Input('parametroEscolaridade', 'combo', 'Formação:', 1);
             $controle->set_size(20);
-            $controle->set_title('Escolaridade do Servidor');
             $controle->set_valor($parametroEscolaridade);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
@@ -286,7 +285,7 @@ if ($acesso) {
             # Pega os dados da combo curso
             $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
                                               habilitacao
-                                         FROM tbformacao
+                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
                                      ORDER BY habilitacao');
             array_unshift($curso, array("Todos", "Todos"));
 

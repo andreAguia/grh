@@ -340,7 +340,7 @@ if ($acesso) {
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-           # $select .= " AND situacao = 1";
+            $select .= " AND situacao = 1";
 
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";

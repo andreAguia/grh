@@ -44,6 +44,7 @@ if ($acesso) {
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
     $parametroAno = post('parametroAno', get_session('parametroAno'));
     $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
 
     if ($grh) {
         $parametroAno = 'Todos';
@@ -58,6 +59,7 @@ if ($acesso) {
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroAno', $parametroAno);
     set_session('parametroMarcador', $parametroMarcador);
+    set_session('parametroSituacao', $parametroSituacao);
 
     # Começa uma nova página
     $page = new Page();
@@ -127,7 +129,7 @@ if ($acesso) {
             $controle->set_valor($parametroNivel);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $controle->set_array(["Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"]);
             $controle->set_autofocus(true);
             $form->add_item($controle);
@@ -152,9 +154,46 @@ if ($acesso) {
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(2);
             $form->add_item($controle);
-            
+
+            # Situação
+            $result = $pessoal->select('SELECT idsituacao, situacao
+                                          FROM tbsituacao                                
+                                      ORDER BY 1');
+            array_unshift($result, array('Todos', 'Todos'));
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Situação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            /*
+             *  Lotação
+             */
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
             /*
              * Ano de Termino
              */
@@ -171,10 +210,9 @@ if ($acesso) {
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-//            if ($parametroSituacao <> "Todos") {
-//                $selectano .= " AND situacao = {$parametroSituacao}";
-//            }
-            #$selectano .= " AND situacao = 1";
+            if ($parametroSituacao <> "Todos") {
+                $selectano .= " AND situacao = {$parametroSituacao}";
+            }
 
             if ($parametroPerfil <> "Todos") {
                 $selectano .= " AND idPerfil = {$parametroPerfil}";
@@ -216,8 +254,8 @@ if ($acesso) {
             $controle->set_array($anoExercicio);
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_linha(2);
+            $controle->set_col(2);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -236,11 +274,32 @@ if ($acesso) {
             $controle->set_title('Escolaridade do Servidor');
             $controle->set_valor($parametroEscolaridade);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_linha(2);
+            $controle->set_col(2);
             $controle->set_array($escolaridade);
             $form->add_item($controle);
             
+            /*
+             * Nome do Curso
+             */
+
+            # Pega os dados da combo curso
+            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
+                                              habilitacao
+                                         FROM tbformacao
+                                     ORDER BY habilitacao');
+            array_unshift($curso, array("Todos", "Todos"));
+
+            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Curso');
+            $controle->set_valor($parametroCurso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(8);
+            $controle->set_array($curso);
+            $form->add_item($controle);
+
             /*
              *  Marcador
              */
@@ -254,52 +313,9 @@ if ($acesso) {
             $controle->set_array($arrayMarcador);
             $controle->set_valor($parametroMarcador);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
+            $controle->set_linha(3);
             $controle->set_col(3);
             $form->add_item($controle);
-
-            /*
-             *  Lotação
-             */
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
-
-            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroLotacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(9);
-            $form->add_item($controle);
-
-            /*
-             * Nome do Curso
-             */
-            
-            # Pega os dados da combo curso
-            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
-                                              habilitacao
-                                         FROM tbformacao
-                                     ORDER BY habilitacao');
-            array_unshift($curso, array("Todos", "Todos"));
-            
-            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
-            $controle->set_size(200);
-            $controle->set_title('Curso');
-            $controle->set_valor($parametroCurso);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(3);
-            $controle->set_col(6);
-            $controle->set_array($curso);
-            $form->add_item($controle);
-
             /*
              * Instituição
              */
@@ -316,10 +332,9 @@ if ($acesso) {
             $controle->set_valor($parametroInstituicao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(3);
-            $controle->set_col(6);
+            $controle->set_col(9);
             $controle->set_array($instEnsino);
             $form->add_item($controle);
-
 
             $form->show();
 
@@ -340,7 +355,9 @@ if ($acesso) {
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-            $select .= " AND situacao = 1";
+            if ($parametroSituacao <> "Todos") {
+                $select .= " AND situacao = {$parametroSituacao}";
+            }
 
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";
@@ -369,7 +386,7 @@ if ($acesso) {
                     $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
                 }
             }
-            
+
             if ($parametroMarcador <> "Todos") {
                 $select .= " AND (tbformacao.marcador1 = {$parametroMarcador} OR tbformacao.marcador2 = {$parametroMarcador} OR tbformacao.marcador3 = {$parametroMarcador} OR tbformacao.marcador4 = {$parametroMarcador})";
             }
@@ -395,9 +412,12 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "center", "center", "left"]);
             $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
-            $tabela->set_rowspan([0, 1]);
-            $tabela->set_grupoCorColuna(1);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
+
+            if ($parametroSituacao == 1) {
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+            }
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
@@ -473,7 +493,7 @@ if ($acesso) {
                 $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
                 $subTitulo .= "Filtro Ano: {$parametroAno}<br/>";
             }
-            
+
             if ($parametroMarcador <> "Todos") {
                 $select .= " AND (tbformacao.marcador1 = {$parametroMarcador} OR tbformacao.marcador2 = {$parametroMarcador} OR tbformacao.marcador3 = {$parametroMarcador} OR tbformacao.marcador4 = {$parametroMarcador})";
                 $subTitulo .= "Filtro Marcador: {$formacao->get_marcador($parametroMarcador)}<br/>";

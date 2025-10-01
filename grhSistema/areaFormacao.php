@@ -193,6 +193,49 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(6);
             $form->add_item($controle);
+            
+            
+            
+            /*
+             * Curso
+             */
+
+            # Pega os dados da combo curso
+            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
+                                              habilitacao
+                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
+                                     ORDER BY habilitacao');
+            array_unshift($curso, array("Todos", "Todos"));
+
+            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Curso');
+            $controle->set_valor($parametroCurso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $controle->set_array($curso);
+            $form->add_item($controle);
+            
+            /*
+             * Instituição
+             */
+            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
+                                                   instEnsino
+                                              FROM tbformacao
+                                             WHERE instEnsino <> ""
+                                          ORDER BY instEnsino');
+            array_unshift($instEnsino, array("Todos", "Todos"));
+
+            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Instituiçlão de Ensino');
+            $controle->set_valor($parametroInstituicao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(6);
+            $controle->set_array($instEnsino);
+            $form->add_item($controle);
 
             /*
              * Ano de Termino
@@ -277,28 +320,7 @@ if ($acesso) {
             $controle->set_col(2);
             $controle->set_array($escolaridade);
             $form->add_item($controle);
-            
-            /*
-             * Nome do Curso
-             */
-
-            # Pega os dados da combo curso
-            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
-                                              habilitacao
-                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
-                                     ORDER BY habilitacao');
-            array_unshift($curso, array("Todos", "Todos"));
-
-            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
-            $controle->set_size(200);
-            $controle->set_title('Curso');
-            $controle->set_valor($parametroCurso);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(8);
-            $controle->set_array($curso);
-            $form->add_item($controle);
-
+                      
             /*
              *  Marcador
              */
@@ -312,27 +334,8 @@ if ($acesso) {
             $controle->set_array($arrayMarcador);
             $controle->set_valor($parametroMarcador);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(3);
-            $controle->set_col(3);
-            $form->add_item($controle);
-            /*
-             * Instituição
-             */
-            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
-                                                   instEnsino
-                                              FROM tbformacao
-                                             WHERE instEnsino <> ""
-                                          ORDER BY instEnsino');
-            array_unshift($instEnsino, array("Todos", "Todos"));
-
-            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
-            $controle->set_size(200);
-            $controle->set_title('Instituiçlão de Ensino');
-            $controle->set_valor($parametroInstituicao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(3);
-            $controle->set_col(9);
-            $controle->set_array($instEnsino);
+            $controle->set_linha(2);
+            $controle->set_col(2);
             $form->add_item($controle);
 
             $form->show();

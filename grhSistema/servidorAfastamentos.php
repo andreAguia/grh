@@ -32,44 +32,65 @@ if ($acesso) {
     # Verifica se tem ou não botão de voltar
     $volta = get("volta", true);
 
+    # Verifica a fase do programa
+    $fase = get('fase');
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
 
-    # Cabeçalho da Página
-    AreaServidor::cabecalho();
+    # Menu e Cabeçalho
+    if ($fase <> "relatorio") {
+
+        # Cabeçalho da Página
+        AreaServidor::cabecalho();
+    }
 
 ##############################################################################################################################################
     # Limita o tamanho da tela
     $grid = new Grid();
     $grid->abreColuna(12);
 
-    # Cria um menu
-    if ($volta) {
-        $menu = new MenuBar();
+    #######################################
 
-        # Botão voltar
-        $linkBotaoVoltar = new Button('Voltar', 'servidorMenu.php');
-        $linkBotaoVoltar->set_title('Volta para a página anterior');
-        $linkBotaoVoltar->set_accessKey('V');
-        $menu->add_link($linkBotaoVoltar, "left");
+    switch ($fase) {
+        case "":
 
-        # Calendário
-        $botaoCalendario = new Link("Calendário", "calendario.php");
-        $botaoCalendario->set_class('button');
-        $botaoCalendario->set_title('Exibe o calendário');
-        $botaoCalendario->set_target("_calendario");
-        $menu->add_link($botaoCalendario, "right");
-        $menu->show();
-    } else {
-        br();
-    }
+            # Cria um menu
+            if ($volta) {
+                $menu = new MenuBar();
 
-    # Exibe os dados do servidor
-    get_DadosServidor($idServidorPesquisado);
+                # Botão voltar
+                $linkBotaoVoltar = new Button('Voltar', 'servidorMenu.php');
+                $linkBotaoVoltar->set_title('Volta para a página anterior');
+                $linkBotaoVoltar->set_accessKey('V');
+                $menu->add_link($linkBotaoVoltar, "left");
 
-    # classe de lic médica
-    $classeLicMedica = new LicencaMedica();
+                # Relatórios
+                $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+                $botaoRel = new Button();
+                $botaoRel->set_title("Relatório dessa pesquisa");
+                $botaoRel->set_url("?fase=relatorio");
+                $botaoRel->set_target("_blank");
+                $botaoRel->set_imagem($imagem);
+                $menu->add_link($botaoRel, "right");
+
+                # Calendário
+                $botaoCalendario = new Link("Calendário", "calendario.php");
+                $botaoCalendario->set_class('button');
+                $botaoCalendario->set_title('Exibe o calendário');
+                $botaoCalendario->set_target("_calendario");
+                $menu->add_link($botaoCalendario, "right");
+                $menu->show();
+            } else {
+                br();
+            }
+
+            # Exibe os dados do servidor
+            get_DadosServidor($idServidorPesquisado);
+
+            # classe de lic médica
+            $classeLicMedica = new LicencaMedica();
 
 //    for ($x = 2002; $x <= 2022; $x++) {
 //        $verificadias = new VerificaDiasAfastados($idServidorPesquisado);
@@ -90,8 +111,17 @@ if ($acesso) {
 //        }
 //    }
 
-    $afast = new ListaAfastamentosServidor($idServidorPesquisado);
-    $afast->exibeTabela();
+            $afast = new ListaAfastamentosServidor($idServidorPesquisado);
+            $afast->exibeTabela();
+            break;
+
+        case "relatorio":
+            
+            $afast = new ListaAfastamentosServidor($idServidorPesquisado);
+            $afast->exibeRelatorio2();            
+            break;
+    }
+
 
     $grid->fechaColuna();
     $grid->fechaGrid();

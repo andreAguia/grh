@@ -338,6 +338,40 @@ class ListaAfastamentosServidor {
         $tabela->set_conteudo($result);
         $tabela->show();
     }
-
+    
     ###########################################################
+
+    public function exibeRelatorio2() {
+
+        /**
+         * Exibe um relatório com a relação dos servidores com afastamento
+         *
+         * @syntax $afast->exibeRelatorio();
+         */
+        $select = $this->montaSelect();
+
+        ###########################################33
+        # Inicia o banco de Dados
+        $pessoal = new Pessoal();
+
+        $result = $pessoal->select($select);
+        $cont = $pessoal->count($select);
+
+        $tabela = new Relatorio();
+        $tabela->set_titulo($this->titulo);
+
+        if ($this->semTempoServicoComTempoContribuicao OR $this->semTempoServicoSemTempoContribuicao) {
+            $tabela->set_colunaSomatorio(2);
+            $tabela->set_totalRegistro(false);
+        }
+
+
+        $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
+        $tabela->set_funcao([null, "date_to_php", null, "date_to_php", null]);
+        $tabela->set_align(['center', 'center', 'center', 'center', 'left']);
+        #$tabela->set_width([10, 10, 5, 10, 60]);
+        $tabela->set_numGrupo(0);
+        $tabela->set_conteudo($result);
+        $tabela->show();
+    }
 }

@@ -369,7 +369,7 @@ class ListaAfastamentosServidor {
         $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
         $tabela->set_funcao([null, "date_to_php", null, "date_to_php", null]);
         $tabela->set_align(['center', 'center', 'center', 'center', 'left']);
-        #$tabela->set_width([10, 10, 5, 10, 60]);
+        $tabela->set_width([13, 13, 10, 13, 51]);
         $tabela->set_numGrupo(0);
         $tabela->set_conteudo($result);
         $tabela->show();

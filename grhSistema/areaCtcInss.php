@@ -43,7 +43,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));    
+    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroEntregou = post('parametroEntregou', get_session('parametroEntregou', "Todos"));
 
     # Joga os parâmetros para as sessions
@@ -68,6 +68,16 @@ if ($acesso) {
         $botaoVoltar->set_title('Voltar a página anterior');
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar, "left");
+
+        # Relatórios
+        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+        $botaoRel = new Button();
+        $botaoRel->set_title("Relatório dessa pesquisa");
+        $botaoRel->set_url("?fase=relatorio");
+        $botaoRel->set_target("_blank");
+        $botaoRel->set_imagem($imagem);
+        $menu->add_link($botaoRel, "right");
+
         $menu->show();
 
         ################################################################
@@ -186,9 +196,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->abreColuna(9);
 
-            # Conecta com o banco de dados
-            $servidor = new Pessoal();
-
             $select = "SELECT tbservidor.idServidor,
                               tbpessoa.nome,
                               tbservidor.idServidor,
@@ -229,7 +236,7 @@ if ($acesso) {
 
             $select .= " ORDER BY tbservidor.entregouCtc desc, tbpessoa.nome";
 
-            $result = $servidor->select($select);
+            $result = $pessoal->select($select);
 
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Estatutários Admitidos antes de {$dataLimite}");
@@ -267,7 +274,70 @@ if ($acesso) {
             loadPage('servidorCtc.php');
             break;
 
-        #######################################
+        #######################################        
+        # Relatório
+        case "relatorio" :
+
+            $subTitulo = null;
+
+            $select = "SELECT tbservidor.idServidor,
+                              tbpessoa.nome,
+                              tbservidor.idServidor,
+                              concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,'')) lotacao,
+                              tbservidor.dtAdmissao,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                             JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                       WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                             AND situacao = 1
+                             AND dtAdmissao < '" . date_to_bd($dataLimite) . "'";
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                    $subTitulo = null;
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    $subTitulo = $parametroLotacao;
+                }
+            }
+
+            # Entregou  
+            if ($parametroEntregou <> "Todos") {
+                if ($parametroEntregou == "Sim") {
+                    $select .= " AND tbservidor.entregouCtc = 's'";
+                } elseif ($parametroEntregou == "Não") {
+                    $select .= " AND tbservidor.entregouCtc = 'n'";
+                } else {
+                    $select .= " AND (tbservidor.entregouCtc is null)";
+                }
+            }
+
+            $select .= " ORDER BY  tbservidor.entregouCtc desc, tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Relatorio();
+            $tabela->set_titulo("Servidores Estatutários Admitidos antes de {$dataLimite}");
+            $tabela->set_subtitulo($subTitulo);
+            $tabela->set_label(['Id Funcional', 'Nome', 'Cargo', 'Lotação', 'Admissão', 'Entregou CTC?']);
+            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
+            $tabela->set_classe(["pessoal", null, "pessoal", null, null, "Aposentadoria"]);
+            $tabela->set_metodo(["get_idFuncional", null, "get_cargoSimples", null, null, "exibeEntregouCtcRelatorio"]);
+
+            if (is_numeric($parametroLotacao)) {
+                $tabela->set_numGrupo(3);
+            }
+            $tabela->set_conteudo($result);
+            $tabela->show();
+            break;
     }
 
     $grid->fechaColuna();

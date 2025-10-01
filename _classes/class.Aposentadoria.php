@@ -1890,4 +1890,46 @@ class Aposentadoria {
             }
         }
     }
+    
+    ###########################################################   
+
+    /**
+     * Método exibeEntregouCtc
+     * Exibe Sim / Não ou N/I para o servidor com relação a se entregou ou não o CTC
+     * 
+     * @param string $idServidor    null idServidor do servidor
+     */
+    public function exibeEntregouCtcRelatorio($idServidor = null) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Verifica se o servidor precisa entregar o CTC
+            if ($this->precisaEntregarCtc($idServidor)) {
+
+                # Inicia o banco de Dados
+                $pessoal = new Pessoal();
+
+                # Monta o select
+                $select = "SELECT entregouCtc
+                             FROM tbservidor
+                            WHERE idServidor = {$idServidor}";
+
+                $row = $pessoal->select($select, false);
+
+                if ($row[0] == "s") {
+                    return "Sim";
+                } elseif ($row[0] == "n") {
+                    return "Não";
+                } else {
+                    return "Não Informado";
+                }
+            } else {
+                return "Não Precisa";
+            }
+        }
+    }
+    
+    ###########################################################
 }

@@ -365,7 +365,6 @@ class ListaAfastamentosServidor {
             $tabela->set_totalRegistro(false);
         }
 
-
         $tabela->set_label(['Ano', 'Data Inicial', 'Dias', 'Data Final', 'Descrição']);
         $tabela->set_funcao([null, "date_to_php", null, "date_to_php", null]);
         $tabela->set_align(['center', 'center', 'center', 'center', 'left']);

@@ -193,7 +193,7 @@ if ($acesso) {
     switch ($fase) {
         case "" :
         case "listar" :
-            
+
             # Exibe quadro de licença prêmio
             #Grh::quadroLicencaPremio($idServidorPesquisado);
             # Pega os dados para o alerta
@@ -222,8 +222,11 @@ if ($acesso) {
             break;
 
         case "editar" :
-        case "gravar" :
             $objeto->$fase($id);
+            break;
+        
+        case "gravar" :
+            $objeto->$fase($id, "servidorPublicacaoPremioExtra.php");
             break;
 
         case "excluir" :

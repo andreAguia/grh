@@ -653,7 +653,7 @@ class LicencaPremio {
         } else {
             # Exibe as Publicações
             $select = "SELECT dtPublicacao,
-                              CONCAT(date_format(dtInicioPeriodo,'%d/%m/%Y'),' - ',date_format(dtFimPeriodo,'%d/%m/%Y')),
+                              idPublicacaoPremio,
                               numDias,
                               idPublicacaoPremio,
                               idPublicacaoPremio,
@@ -682,8 +682,8 @@ class LicencaPremio {
                 $tabela->set_subtitulo("Próxima Publicação: <b>{$this->get_dataFinalProximaPeriodo($idServidor)}</b>");
                 $tabela->set_label(["Data da Publicação", "Período Aquisitivo ", "Dias <br/> Publicados", "Dias <br/> Fruídos", "Dias <br/> Disponíveis", "DO", "Obs"]);
                 $tabela->set_width([15, 25, 10, 10, 10, 10, 10, 10]);
-                $tabela->set_classe([null, null, null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
-                $tabela->set_metodo([null, null, null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
+                $tabela->set_classe([null, 'LicencaPremio', null, 'LicencaPremio', 'LicencaPremio', 'LicencaPremio', 'LicencaPremio']);
+                $tabela->set_metodo([null, "exibePeriodoAquisitivo2", null, 'get_numDiasFruidosPorPublicacao', 'get_numDiasDisponiveisPorPublicacao', 'exibeDoerj', 'exibeObsPublicacao']);
             }
 
             $tabela->set_numeroOrdem(true);
@@ -1116,7 +1116,16 @@ class LicencaPremio {
 
         $row = $pessoal->select($select, false);
 
-        return strval(date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']));
+        # Informa o período em anos
+        $dias = getNumDias(date_to_php($row['dtInicioPeriodo']), date_to_php($row['dtFimPeriodo']));
+        $anos = intval($dias / 365);
+        
+        # Informa se teve menos que 5 aos de período aquisitivo
+        if ($anos < 5) {
+            return strval(date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']) . "<br/><span class='label warning'>Período menor que 5 anos!!</span>");
+        } else {
+            return strval(date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']));
+        }
     }
 
     ###########################################################
@@ -1564,7 +1573,7 @@ class LicencaPremio {
 
             $row = $pessoal->select($select, false);
 
-            if(empty($row[0])) {
+            if (empty($row[0])) {
                 return null;
             } else {
                 return $row[0];

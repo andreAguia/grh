@@ -25,7 +25,7 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-
+    
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
@@ -289,6 +289,7 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Endereços');
             $menu->add_item('linkWindow', 'Endereço de Servidores Ativos Agrupado por Cidade', '../grhRelatorios/endereco.porCidade.php');
+            $menu->add_item('linkWindow', 'Endereço e Telefone de Servidores Ativos Agrupado por Cidade', '../grhRelatorios/endereco.tel.porCidade.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Endereço, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/endereco.email.lotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos com Endereço, CPF, Emails e Telefones Agrupado por Lotaçao', '../grhRelatorios/endereco.email.lotacao.cpf.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos e Aposentados Com Endereço', '../grhRelatorios/endereco.ativos.aposentados.php');

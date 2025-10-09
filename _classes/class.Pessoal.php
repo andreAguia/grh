@@ -6066,19 +6066,21 @@ class Pessoal extends Bd {
         $idPessoa = $this->get_idPessoa($idServidor);
 
         # Monta o select		
-        $select = 'SELECT endereco,
-                              bairro,
-                              tbcidade.nome,
-                              cep
-                         FROM tbpessoa JOIN tbcidade USING (idCidade)
-                        WHERE idPessoa = ' . $idPessoa;
+        $select = "SELECT endereco,
+                          bairro,
+                          tbcidade.nome,
+                          tbestado.uf,
+                          cep
+                     FROM tbpessoa JOIN tbcidade USING (idCidade)
+                                   JOIN tbestado USING (idEstado)
+                    WHERE idPessoa = {$idPessoa}";
 
         $row = parent::select($select, false);
         $numero = parent::count($select);
         $return = null;
 
         if ($numero > 0) {
-            $return = $row[0] . " - " . $row[1] . " - " . $row[2] . " Cep: " . $row[3];
+            $return = "{$row[0]}<br/>{$row[1]} - {$row[2]} / {$row[3]}<br/>Cep: {$row[4]}";
         }
 
         return $return;
@@ -6098,16 +6100,16 @@ class Pessoal extends Bd {
 
         # Pega o idPessoa desse idServidor
         $idPessoa = $this->get_idPessoa($idServidor);
-
+        	
         # Monta o select		
-        $select = 'SELECT endereco,
-                              bairro,
-                              tbcidade.nome,
-                              tbestado.uf,
-                              cep
-                         FROM tbpessoa JOIN tbcidade USING (idCidade)
-                                       JOIN tbestado USING (idEstado)
-                        WHERE idPessoa = ' . $idPessoa;
+        $select = "SELECT endereco,
+                          bairro,
+                          tbcidade.nome,
+                          tbestado.uf,
+                          cep
+                     FROM tbpessoa JOIN tbcidade USING (idCidade)
+                                   JOIN tbestado USING (idEstado)
+                    WHERE idPessoa = {$idPessoa}";
 
         $row = parent::select($select, false);
         $numero = parent::count($select);
@@ -6115,9 +6117,9 @@ class Pessoal extends Bd {
 
         if ($numero > 0) {
             $return = plm($row[0]) . " - " .
-                    plm($row[1]) . "<br/> " .
-                    plm($row[2]) . " - " .
-                    strtoupper($row[3]) . " Cep: " . $row[4];
+                      plm($row[1]) . "<br/> " .
+                      plm($row[2]) . " - " .
+                      strtoupper($row[3]) . " Cep: " . $row[4];
         }
 
         return $return;

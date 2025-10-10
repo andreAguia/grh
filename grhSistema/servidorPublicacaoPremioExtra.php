@@ -8,6 +8,12 @@
 $dtInicio = date_to_php($campoValor[1]);
 $dtFim = date_to_php($campoValor[2]);
 
+if (empty($dtFim)) {
+    $dtFim = addAnos($dtInicio, 5);
+    $dtFim = addDias($dtFim, -1, false);
+    $campoValor[2] = date_to_bd($dtFim);
+}
+
 # Informa o período em anos
 $dias = getNumDias($dtInicio, $dtFim, false);
 $anos = intval($dias / 365);

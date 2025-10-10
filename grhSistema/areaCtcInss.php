@@ -180,7 +180,7 @@ if ($acesso) {
             if ($parametroSituacao == "Ativos") {
                 $select .= ' AND situacao = 1';
             } else {
-                $select .= ' AND situacao <> 1 AND idPerfil = 4';
+                $select .= ' AND situacao <> 1 AND (idPerfil = 4 OR idPerfil = 1)';
                 $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
             }
 
@@ -235,9 +235,9 @@ if ($acesso) {
                 $select .= ' AND situacao = 1';
                 $titulo = "Servidores Estatutários Ativos Admitidos antes de {$dataLimite}";
             } else {
-                $select .= ' AND situacao <> 1 AND idPerfil = 4';
+                $select .= ' AND situacao <> 1 AND (idPerfil = 4 OR idPerfil = 1)';
                 $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
-                $titulo = "Servidores Celetistas Inativos Admitidos antes de {$dataLimite}";
+                $titulo = "Servidores Celetistas e/ou Estatutários Inativos Admitidos antes de {$dataLimite}";
             }
 
             # Lotação
@@ -329,9 +329,9 @@ if ($acesso) {
                 $select .= ' AND situacao = 1';
                 $titulo = "Servidores Estatutários Ativos Admitidos antes de {$dataLimite}";
             } else {
-                $select .= ' AND situacao <> 1 AND idPerfil = 4';
+                $select .= ' AND situacao <> 1 AND (idPerfil = 4 OR idPerfil = 1)';
                 $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
-                $titulo = "Servidores Celetistas Inativos Admitidos antes de {$dataLimite}";
+                $titulo = "Servidores Celetistas e/ou Estatutários Inativos Admitidos antes de {$dataLimite}";
             }
 
             # Lotação

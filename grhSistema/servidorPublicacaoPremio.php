@@ -132,16 +132,16 @@ if ($acesso) {
             'required' => true,
             'padrao' => date_to_bd($licenca->get_dataInicialProximoPeriodo($idServidorPesquisado)),
             'title' => 'Data de início do período aquisitivo',
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'dtFimPeriodo',
             'label' => 'Período Aquisitivo Término:',
             'tipo' => 'data',
             'size' => 20,
             'col' => 3,
-            'required' => true,
+            'helptext' => "Deixe em branco para o sistema preencher",
             'padrao' => date_to_bd($licenca->get_dataFinalProximaPeriodo($idServidorPesquisado)),
             'title' => 'Data de término do período aquisitivo',
-            'linha' => 1),
+            'linha' => 2),
         array('nome' => 'numDias',
             'label' => 'Dias:',
             'tipo' => 'numero',
@@ -151,7 +151,7 @@ if ($acesso) {
             'col' => 2,
             'required' => true,
             'title' => 'Dias de Férias.',
-            'linha' => 1),
+            'linha' => 2),
         array('linha' => 5,
             'nome' => 'obs',
             'label' => 'Observação:',
@@ -216,7 +216,6 @@ if ($acesso) {
                 $objeto->set_rotinaExtraListarParametro($mensagem1);
                 #$objeto->set_botaoIncluir(false);
             }
-
 
             $objeto->listar();
             break;

@@ -45,10 +45,12 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroEntregou = post('parametroEntregou', get_session('parametroEntregou', "Todos"));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', "Ativos"));
 
     # Joga os parâmetros para as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroEntregou', $parametroEntregou);
+    set_session('parametroSituacao', $parametroSituacao);
 
     # Limita a página
     $grid = new Grid();
@@ -100,7 +102,7 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(8);
+        $controle->set_col(6);
         $form->add_item($controle);
 
         # Entregou ? 
@@ -109,6 +111,17 @@ if ($acesso) {
         $controle->set_title('Filtra por Entrega');
         $controle->set_array(["Todos", "Sim", "Não", "Não Informado"]);
         $controle->set_valor($parametroEntregou);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
+        $form->add_item($controle);
+
+        # Situacao 
+        $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Situação');
+        $controle->set_array(["Ativos", "Inativos"]);
+        $controle->set_valor($parametroSituacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
         $controle->set_col(3);
@@ -161,8 +174,15 @@ if ($acesso) {
                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                              JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                             AND situacao = 1
                              AND dtAdmissao < '" . date_to_bd($dataLimite) . "'";
+
+            # Situação
+            if ($parametroSituacao == "Ativos") {
+                $select .= ' AND situacao = 1';
+            } else {
+                $select .= ' AND situacao <> 1';
+                $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -197,7 +217,6 @@ if ($acesso) {
             $grid->abreColuna(9);
 
             $select = "SELECT tbservidor.idServidor,
-                              tbpessoa.nome,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.dtAdmissao,
@@ -209,8 +228,15 @@ if ($acesso) {
                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                              JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                             AND situacao = 1
                              AND dtAdmissao < '" . date_to_bd($dataLimite) . "'";
+            
+            # Situação
+            if ($parametroSituacao == "Ativos") {
+                $select .= ' AND situacao = 1';
+            } else {
+                $select .= ' AND situacao <> 1 AND idPerfil = 4';
+                $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -240,11 +266,12 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Servidores Estatutários Admitidos antes de {$dataLimite}");
-            $tabela->set_label(['Id Funcional / Matricula', 'Nome', 'Cargo', 'Lotação', 'Admissão', 'Entregou CTC?']);
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_label(['Id Funcional / Matricula', 'Servidor', 'Lotação', 'Admissão', 'Entregou CTC?']);
             $tabela->set_align(["center", "left", "left", "left"]);
-            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
-            $tabela->set_classe(["pessoal", null, "pessoal", "pessoal", null, "Aposentadoria"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", null, "get_cargo", "get_lotacao", null, "exibeEntregouCtc"]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_classe(["pessoal", "pessoal", "pessoal", null, "Aposentadoria"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoEPerfilESituacao", "get_lotacao", null, "exibeEntregouCtc"]);
             #$tabela->set_rowspan(0);
             #$tabela->set_grupoCorColuna(0);
             $tabela->set_editar('?fase=editaServidor&id=');

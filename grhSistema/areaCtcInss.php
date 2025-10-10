@@ -180,7 +180,7 @@ if ($acesso) {
             if ($parametroSituacao == "Ativos") {
                 $select .= ' AND situacao = 1';
             } else {
-                $select .= ' AND situacao <> 1';
+                $select .= ' AND situacao <> 1 AND idPerfil = 4';
                 $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
             }
 
@@ -233,9 +233,11 @@ if ($acesso) {
             # Situação
             if ($parametroSituacao == "Ativos") {
                 $select .= ' AND situacao = 1';
+                $titulo = "Servidores Estatutários Ativos Admitidos antes de {$dataLimite}";
             } else {
                 $select .= ' AND situacao <> 1 AND idPerfil = 4';
                 $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+                $titulo = "Servidores Celetistas Inativos Admitidos antes de {$dataLimite}";
             }
 
             # Lotação
@@ -265,7 +267,7 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo("Servidores Estatutários Admitidos antes de {$dataLimite}");
+            $tabela->set_titulo($titulo);
             $tabela->set_subtitulo($subtitulo);
             $tabela->set_label(['Id Funcional / Matricula', 'Servidor', 'Lotação', 'Admissão', 'Entregou CTC?']);
             $tabela->set_align(["center", "left", "left", "left"]);
@@ -320,8 +322,17 @@ if ($acesso) {
                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                              JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                             AND situacao = 1
                              AND dtAdmissao < '" . date_to_bd($dataLimite) . "'";
+
+            # Situação
+            if ($parametroSituacao == "Ativos") {
+                $select .= ' AND situacao = 1';
+                $titulo = "Servidores Estatutários Ativos Admitidos antes de {$dataLimite}";
+            } else {
+                $select .= ' AND situacao <> 1 AND idPerfil = 4';
+                $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+                $titulo = "Servidores Celetistas Inativos Admitidos antes de {$dataLimite}";
+            }
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -350,20 +361,20 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            $tabela = new Relatorio();
-            $tabela->set_titulo("Servidores Estatutários Admitidos antes de {$dataLimite}");
-            $tabela->set_subtitulo($subTitulo);
-            $tabela->set_label(['Id Funcional', 'Nome', 'Cargo', 'Lotação', 'Admissão', 'Entregou CTC?']);
-            $tabela->set_align(["center", "left", "left", "left"]);
-            $tabela->set_funcao([null, null, null, null, "date_to_php"]);
-            $tabela->set_classe(["pessoal", null, "pessoal", null, null, "Aposentadoria"]);
-            $tabela->set_metodo(["get_idFuncional", null, "get_cargoSimples", null, null, "exibeEntregouCtcRelatorio"]);
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo($titulo);
+            $relatorio->set_subtitulo($subTitulo);
+            $relatorio->set_label(['Id Funcional', 'Nome', 'Cargo', 'Lotação', 'Admissão', 'Entregou CTC?']);
+            $relatorio->set_align(["center", "left", "left", "left"]);
+            $relatorio->set_funcao([null, null, null, null, "date_to_php"]);
+            $relatorio->set_classe(["pessoal", null, "pessoal", null, null, "Aposentadoria"]);
+            $relatorio->set_metodo(["get_idFuncional", null, "get_cargoSimples", null, null, "exibeEntregouCtcRelatorio"]);
 
             if (is_numeric($parametroLotacao)) {
-                $tabela->set_numGrupo(3);
+                $relatorio->set_numGrupo(3);
             }
-            $tabela->set_conteudo($result);
-            $tabela->show();
+            $relatorio->set_conteudo($result);
+            $relatorio->show();
             break;
     }
 

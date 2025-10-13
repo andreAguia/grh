@@ -817,23 +817,12 @@ class PrevisaoAposentadoria {
         # Data de ingresso
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
 
-//        # Altera a data de ingresso para o servidor que tem tempo celetista Uenf 
-//        if ($aposentadoria->get_tempoServicoUenfCeletista($idServidor) > 0) {
-//            # Retorna a data da transformação em estatutários
-//            # Daqueles que entraram com celetistas na Uenf
-//            $this->servidorDataIngresso = "09/09/2003";
-//            
-//            $this->dtIngressoObs = "A data de ingresso foi alterada para 09/09/2003 seguindo determinação do Rio Previdência. *";
-//            
-//            $this->mensagem = "* O Rio Previdência considera, para definição da data de ingresso no serviço público, somente o tempo como estatutário.<br/>"
-//                        . "Dessa forma, todo servidor, admitido na Uenf antes de 09/09/2003, como celetista, tem considerada a data 09/09/2003 como a de ingresso no serviço público.";
-//        } # Alterado pois Simone me informou que o Vagner e Lívia
-//          # disseram que no caso de contratos CLT - Uenf, a data de 
-//          # efetivo exercício público retroage a data de admissão
-        # Tempo de contribuição Geral - Sem considerar os afastamentos sem contribuição
+        # Tempo de contribuição Geral
+        # SEM considerar os afastamentos sem contribuição
         $this->servidorTempoContribuicao = $this->servidorTempoAverbadoPublico + $this->servidorTempoAverbadoPrivado + $this->servidorTempoUenf;
 
-        # Tempo de contribuição Real - Considerando os afastamentos sem contribuição
+        # Tempo de contribuição Real
+        # CONSIDERANDO os afastamentos sem contribuição
         $this->servidorTempoContribuicaoDescontado = $this->servidorTempoContribuicao - $aposentadoria->get_periodoSemTempoServicoSemTempoContribuicao($this->idServidor);
 
         # Tempo Initerrupto
@@ -1000,6 +989,7 @@ class PrevisaoAposentadoria {
          *  Serviço Público
          */
         # Pega o tempo que falta em dias
+        # servidorTempoPublico já desconta os afastamentos
         $resta2 = ($this->servicoPublico * 365) - $this->servidorTempoPublico;
 
         # Calcula a data - retiro a contagem do primeiro dia para não contar hoje 2 vezes
@@ -1009,15 +999,13 @@ class PrevisaoAposentadoria {
         $diasSemTempoServico = $aposentadoria->get_periodoSemTempoServico($this->idServidor, $this->dataCriterioTempoServicoPublico);
 
         if ($diasSemTempoServico > 0) {
-            # Pega a data antes da alteração
-            $this->dataCriterioTempoServicoPublicoOriginal = $this->dataCriterioTempoServicoPublico;
 
             # Acrescenta os dias para compensar o tempo de afastamentos sem contribuição
-            $this->dataCriterioTempoServicoPublico = addDias($this->dataCriterioTempoServicoPublico, $diasSemTempoServico, false);
+            $this->dataCriterioTempoServicoPublicoOriginal = addDias($this->dataCriterioTempoServicoPublico, -$diasSemTempoServico, false);
             $this->obsServicoPublico = "Tendo em vista {$diasSemTempoServico} dias de afastamento sem contribuição, a data foi alterada, de {$this->dataCriterioTempoServicoPublicoOriginal} para {$this->dataCriterioTempoServicoPublico}.";
 
             # Atualiza os dias
-            $resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
+            #$resta2 = getNumDias($hoje, $this->dataCriterioTempoServicoPublico);
         }
 
         #if ($this->servidorTempoPublico >= ($this->servicoPublico * 365)) {

@@ -15,11 +15,12 @@ if (empty($dtFim)) {
 }
 
 # Informa o período em anos
-$dias = getNumDias($dtInicio, $dtFim, false);
+$dias = getNumDias($dtInicio, $dtFim);
+
 $anos = intval($dias / 365);
 
 # Informa se teve menos que 5 aos de período aquisitivo
 if ($anos < 5) {
     $erro = 1;
-    $msgErro .= "O Período Aquisitivo não pode ser menor que 5 anos! ({$dias} dias)n";
+    $msgErro .= 'O Período Aquisitivo não pode ser menor que 5 anos! ('.$dias.' dias).\n';
 }

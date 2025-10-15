@@ -54,8 +54,10 @@ class MenuPrincipal {
 
         # Sispatri        
         #$this->moduloSispatri();
+        
         # Eventos        
-        #$this->moduloEventos();
+        $this->moduloEventos();
+        
         # sistemas
         $this->moduloSistemas();
 
@@ -261,7 +263,7 @@ class MenuPrincipal {
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("../../_arquivos/documentos/42.pdf");
-        $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor.png', '100%', '100%');
+        $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor2025.jpeg', '100%', '100%');
         $botao->set_title('Semana do Servidor');
         $botao->set_target("_blank");
         $botao->show();

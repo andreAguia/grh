@@ -251,16 +251,20 @@ class MenuPrincipal {
     /**
      * Método moduloEventos
      */
-    private static function moduloEventos() {
+    private function moduloEventos() {
+
+        # Título
+        br();
+        titulo('9ª Semana do Servidor');
+        br();
 
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("#");
-        $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor2025.jpeg', '70%', '70%');
+        $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor2025.jpeg', '90%', '90%');
         $botao->set_title('Semana do Servidor');
         #$botao->set_target("_blank");
         $botao->show();
-        br();
     }
 
     ######################################################################################################################

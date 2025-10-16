@@ -28,7 +28,7 @@ class MenuPrincipal {
         $this->moduloServidores();
         $this->moduloAreaConcursos();
         $this->moduloDocumentos();
-        $this->moduloTabelaAuxiliares();
+        
         #$this->moduloAreaPandemia();
         #$this->moduloPlanoCargos();
         #$this->moduloSei();
@@ -52,20 +52,13 @@ class MenuPrincipal {
             $this->moduloNiverUenf();
         }
 
-        # Sispatri        
-        #$this->moduloSispatri();
-        
-        # Eventos        
-        $this->moduloEventos();
-        
-        # sistemas
-        $this->moduloSistemas();
-
-        # Área Especial
-        $this->moduloAreaEspecial();
-
-        # Links Externos
-        $this->moduloLinksExternos();
+        # Módulos
+        #$this->moduloSispatri();           // Sispatri
+        $this->moduloEventos();             // Eventos
+        $this->moduloSistemas();            // Sistemas
+        $this->moduloAreaEspecial();        // Área Especial        
+        $this->moduloTabelaAuxiliares();    // Tabelas Auxiliares
+        $this->moduloLinksExternos();       // Link Externo
 
         $grid->fechaColuna();
 
@@ -690,7 +683,7 @@ class MenuPrincipal {
         br();
 
         $tamanhoImage = 60;
-        $menu = new MenuGrafico(2);
+        $menu = new MenuGrafico(4);
 
         $botao = new BotaoGrafico();
         $botao->set_label('Perfil');

@@ -47,7 +47,7 @@ class ListaServidores2 {
      *  Outros
      */
     private $totReg = 0;        # Total de registros encontrados
-    private $detalhado = true;  # Exibe detalhes 
+    private $detalhado = false;  # Exibe detalhes 
     private $comFoto = false;   # Exibe ou não Fotos
 
     /*
@@ -512,7 +512,7 @@ class ListaServidores2 {
 
         # Verifica se é detalhado
         if ($this->detalhado) {
-            $situacao = "get_situacaoRel";
+            $situacao = "get_situacao";
         } else {
             $situacao = "get_situacaoRel";
         }

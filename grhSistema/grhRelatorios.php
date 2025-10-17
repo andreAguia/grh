@@ -437,6 +437,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.cpf.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geral.servidores.ativos.cpf.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 3 Assinaturas', '../grhRelatorios/geral.servidores.ativos.assinatura2.php');            
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geral.servidores.ativos.cpf.assinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email', '../grhRelatorios/geral.servidores.ativos.email.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geral.servidores.ativos.email.cpf.php');

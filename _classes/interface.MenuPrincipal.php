@@ -260,10 +260,10 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label();
-        $botao->set_url("#");
+        $botao->set_url("../../_arquivos/documentos/71.pdf");
         $botao->set_imagem(PASTA_FIGURAS . 'semanaServidor2025.jpeg', '90%', '90%');
         $botao->set_title('Semana do Servidor');
-        #$botao->set_target("_blank");
+        $botao->set_target("_blank");
         $botao->show();
         br();
     }

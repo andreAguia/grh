@@ -28,6 +28,9 @@ if ($acesso) {
 
     # Verifica se tem PAD
     $penalidades = new Penalidade();
+    
+    # Inicia a variável de avisos
+    $aviso = null;
 
     if ($penalidades->temPADFaltas($idServidorPesquisado)) {
         # Cabeçalho da Página
@@ -45,6 +48,9 @@ if ($acesso) {
         $grid->fechaColuna();
         $grid->fechaGrid();
     } else {
+        
+        # Monta a Declaração
+        $dec = new Declaracao();
 
         # Pega o número de faltas
         $faltas = new Faltas();
@@ -53,7 +59,16 @@ if ($acesso) {
 
         # Exibe alereta de faltas
         if ($numfaltas > 0) {
+            $aviso .= "ATENÇÃO !!<br/>Este Servidor TEM {$numduasfaltas} dias de FALTA(S) cadastrada(s) no sistema!";
             alert("ATENÇÃO !! Este Servidor TEM {$numduasfaltas} dias de FALTA(S) cadastrada(s) no sistema!");
+        }
+
+        # Pega os afastamentos
+        $verifica = new VerificaAfastamentos($idServidorPesquisado);
+
+        if ($verifica->verifica()) {
+            $aviso .= "ATENÇÃO !!<br/>Este Servidor está em {$verifica->getAfastamento()} ({$verifica->getDetalhe()})";
+            alert("ATENÇÃO !! Este Servidor está em {$verifica->getAfastamento()} ({$verifica->getDetalhe()})");
         }
 
         # Servidor
@@ -99,7 +114,6 @@ if ($acesso) {
                 . "lotado(a) no(a) {$lotacao}, ";
 
         # Monta a Declaração
-        $dec = new Declaracao();
         $dec->set_carimboCnpj(true);
         $dec->set_assinatura(true);
         $dec->set_data(date("d/m/Y"));
@@ -107,11 +121,8 @@ if ($acesso) {
                 . " comunicação de faltas nesta Universidade Estadual do Norte Fluminense Darcy Ribeiro.");
 
         $dec->set_saltoRodape(10);
-
-        # Exibe aviso de que tem faltas
-        if ($numfaltas > 0) {
-            $dec->set_aviso("ATENÇÃO !! Este servidor tem <b>{$numduasfaltas} dias</b> de FALTA(S) cadastrada(s) em {$numfaltas} lançamentos no sistema!");
-        }
+        
+        $dec->set_aviso($aviso);
 
         $dec->show();
 

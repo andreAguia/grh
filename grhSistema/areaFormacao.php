@@ -303,7 +303,7 @@ if ($acesso) {
             $form->add_item($controle);
 
             /*
-             * Formação (escolaridade)
+             * Nível do Curso
              */
             $escolaridade = $pessoal->select('SELECT idEscolaridade, 
                                                escolaridade
@@ -312,7 +312,7 @@ if ($acesso) {
             array_unshift($escolaridade, array("Todos", "Todos"));
 
             # Escolaridade do Servidor    
-            $controle = new Input('parametroEscolaridade', 'combo', 'Formação:', 1);
+            $controle = new Input('parametroEscolaridade', 'combo', 'Nível do Curso:', 1);
             $controle->set_size(20);
             $controle->set_valor($parametroEscolaridade);
             $controle->set_onChange('formPadrao.submit();');
@@ -410,7 +410,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Cadastro de Formação Servidores');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional/Matrícula", "Servidor", "Escolaridade", "Marcadores", "Curso", "Certificado"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "center", "center", "left"]);
             $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
@@ -524,7 +524,7 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            $relatorio->set_label(["Servidor", "Escolaridade", "Curso"]);
+            $relatorio->set_label(["Servidor", "Nível do Curso", "Curso"]);
             $relatorio->set_conteudo($result);
             $relatorio->set_align(["left", "center", "left"]);
             $relatorio->set_classe(["pessoal", null, "Formacao"]);

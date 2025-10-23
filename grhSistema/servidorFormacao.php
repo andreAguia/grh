@@ -147,7 +147,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano de Término", "Nível", "Marcadores", "Curso", "Instituição", "Horas", "Ver"]);
+    $objeto->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso", "Instituição", "Horas", "Ver"]);
     #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
     $objeto->set_align(["center", "center", "center", "left", "left"]);
 
@@ -201,7 +201,7 @@ if ($acesso) {
     # Campos para o formulario
     $objeto->set_campos(array(
         array('nome' => 'idEscolaridade',
-            'label' => 'Nível:',
+            'label' => 'Nível do Curso:',
             'tipo' => 'combo',
             'array' => $result,
             'required' => true,

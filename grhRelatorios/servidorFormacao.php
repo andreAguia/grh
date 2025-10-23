@@ -33,15 +33,14 @@ if ($acesso) {
 
     ######
     # Dados do Servidor
-    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de Formação', $subTitulo);
+    Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório de Formação');
     br();
 
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
     $selectFormacao = "SELECT escolaridade,
-                              habilitacao,
-                              instEnsino,
+                              CONCAT(habilitacao,'<br/>', instEnsino),
                               anoTerm,
                               horas,
                               idFormacao,
@@ -67,10 +66,12 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(["Nível", "Curso", "Instituição", "Ano de Término"]);
-    $relatorio->set_align(["center", "left", "left"]);
+    $relatorio->set_label(["Nível do Curso", "Curso / Instituição", "Ano de Término", "Carga Horária"]);
+    $relatorio->set_width([15, 50, 15, 15]);
+    $relatorio->set_align(["center", "left"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_botaoVoltar(false);
+    $relatorio->set_bordaInterna(true);
     $relatorio->set_logServidor($idServidorPesquisado);
     $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
     $relatorio->show();

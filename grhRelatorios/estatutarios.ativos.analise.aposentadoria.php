@@ -86,6 +86,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
+    $relatorio->set_manutencao(true);
     $relatorio->set_titulo('Relatório de Análise de Aposentadoria');
     $relatorio->set_tituloLinha2($subTitulo);
     $relatorio->set_subtitulo('Em Ordem Decrescente de Idade');

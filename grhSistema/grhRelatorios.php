@@ -93,6 +93,7 @@ if ($acesso) {
         ['Professores (Docentes)', 'professores'],
         ['Processo Eleitoral', 'eleitoral'],
         ['Seguro Anual', 'seguro'],
+        ['Semana do Servidor', 'semana'],
         ['Triênio', 'trienio'],
         ['Histórico', 'historico']
     ];
@@ -487,6 +488,15 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Anual', '../grhRelatorios/licenca.premio.anual.php');
             $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Período', '../grhRelatorios/licenca.premio.periodo.php');
             $menu->add_item('linkWindow', 'Relatório de Licença Prêmio Fruídas - Geral', '../grhRelatorios/licenca.premio.geral.php');
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "semana";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Semana do Servidor');
+            $menu->add_item('linkWindow', 'Lista de Números para Sorteio', '../grhRelatorios/semanaServidor.listaNumeros.php');
             $menu->show();
             break;
 

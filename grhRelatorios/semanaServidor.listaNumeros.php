@@ -28,6 +28,7 @@ if ($acesso) {
     # Pega quem assina
     $numInicial = post('numInicial', 1);
     $numFinal = post('numFinal', 500);
+    $numColunas = post('numColunas', 4);
     $primeiraLinha = post('primeiraLinha', "Semana do Servidor 2025");
     $segundaLinhac1 = post('segundaLinhac1', "Sorteio 1");
     $segundaLinhac2 = post('segundaLinhac2', "Sorteio 2");
@@ -57,7 +58,7 @@ if ($acesso) {
             'padrao' => $segundaLinhac2,
             'onChange' => 'formPadrao.submit();',
             'col' => 6,
-            'linha' => 3),
+            'linha' => 2),
         array('nome' => 'numInicial',
             'label' => 'Número Inicial:',
             'tipo' => 'texto',
@@ -75,18 +76,19 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 4),
+        array('nome' => 'numColunas',
+            'label' => 'Número de Colunas:',
+            'tipo' => 'combo',
+            'array' => [2, 4],
+            'size' => 3,
+            'padrao' => $numColunas,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 4),
     ));
 
     $menuRelatorio->set_formLink("?");
-    $menuRelatorio->show();
-
-    # quebra de Página
-    $quebra = 10;
-    $contador = 1;
-
-    # Limita a página
-    $grid = new Grid();
-    $grid->abreColuna(12);
+    $menuRelatorio->show();    
 
     /*
      * Dados Principais
@@ -97,35 +99,55 @@ if ($acesso) {
     $Objetolog = new Intra();
     $data = date("Y-m-d H:i:s");
     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 4);
+    
+    # Limita a página
+    $grid = new Grid("center");    
+
+    if ($numColunas == 4) {
+        $incremento = 2;
+        $quebra = 10;
+        $grid->abreColuna(12);
+        $porcentagem = 25;
+    } else {
+        $incremento = 1;
+        $quebra = 11;
+        $grid->abreColuna(7);
+        $porcentagem = 50;
+    }
+    
+    $contador = 1;
 
     br();
     echo "<table width='100%' id='etiqueta' border='2px'>";
 
-    for ($i = $numInicial; $i <= $numFinal; $i += 2) {
+    for ($i = $numInicial; $i <= $numFinal; $i += $incremento) {
 
         echo "<tr>";
-        echo "<td style = 'width: 25%' align='center'>";
+        echo "<td style = 'width: {$porcentagem}%' align='center'>";
 
         p("{$primeiraLinha}<br/>{$segundaLinhac1}", "psorteioTexto");
         p(str_pad($i, 3, '0', STR_PAD_LEFT), "psorteioNumero");
 
         echo "</td>";
-        echo "<td style = 'width: 25%' align='center'>";
+        echo "<td style = 'width: {$porcentagem}%' align='center'>";
 
         p("{$primeiraLinha}<br/>{$segundaLinhac2}", "psorteioTexto");
         p(str_pad($i, 3, '0', STR_PAD_LEFT), "psorteioNumero");
 
-        echo "</td>";        
-        echo "<td style = 'width: 25%' align='center'>";
-
-        p("{$primeiraLinha}<br/>{$segundaLinhac1}", "psorteioTexto");
-        p(str_pad($i + 1, 3, '0', STR_PAD_LEFT), "psorteioNumero");
-
         echo "</td>";
-        echo "<td style = 'width: 25%' align='center'>";
 
-        p("{$primeiraLinha}<br/>{$segundaLinhac2}", "psorteioTexto");
-        p(str_pad($i + 1, 3, '0', STR_PAD_LEFT), "psorteioNumero");
+        if ($numColunas == 4) {
+            echo "<td style = 'width: 25%' align='center'>";
+
+            p("{$primeiraLinha}<br/>{$segundaLinhac1}", "psorteioTexto");
+            p(str_pad($i + 1, 3, '0', STR_PAD_LEFT), "psorteioNumero");
+
+            echo "</td>";
+            echo "<td style = 'width: 25%' align='center'>";
+
+            p("{$primeiraLinha}<br/>{$segundaLinhac2}", "psorteioTexto");
+            p(str_pad($i + 1, 3, '0', STR_PAD_LEFT), "psorteioNumero");
+        }
 
         echo "</td>";
         echo "</tr>";

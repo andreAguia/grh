@@ -1119,7 +1119,7 @@ class LicencaPremio {
         # Informa o período em anos
         $dias = getNumDias(date_to_php($row['dtInicioPeriodo']), date_to_php($row['dtFimPeriodo']));
         $anos = intval($dias / 365);
-        
+
         # Informa se teve menos que 5 aos de período aquisitivo
         if ($anos < 5) {
             return strval(date_to_php($row['dtInicioPeriodo']) . " - " . date_to_php($row['dtFimPeriodo']) . "<br/><span class='label warning'>Período menor que 5 anos!!</span>");
@@ -1577,6 +1577,50 @@ class LicencaPremio {
                 return null;
             } else {
                 return $row[0];
+            }
+        } else {
+            return null;
+        }
+    }
+
+    ###########################################################
+
+    function get_dataFinalPeriodoAnterior($idPublicacaoPremio) {
+        /*
+         * Informa a data da próxima publicação
+         *
+         */
+
+        # Valor fixo do período aquisitivo (em dias) 365 x 5
+        $valor = 1825;
+
+        if (is_numeric($idPublicacaoPremio)) {
+
+            # Conecta ao Banco de Dados
+            $pessoal = new Pessoal();
+
+            # Pega o idServidor dessa publicação
+            $select1 = "SELECT idServidor FROM tbpublicacaopremio WHERE idPublicacaoPremio = {$idPublicacaoPremio}";
+            $row1 = $pessoal->select($select1, false);
+            $idServidor = $row1[0];
+
+            # Pega as datas do fim de período desse servidor
+            $select2 = "SELECT idPublicacaoPremio, dtFimPeriodo
+                         FROM tbpublicacaopremio 
+                        WHERE idServidor = {$idServidor} 
+                     ORDER BY dtFimPeriodo";
+
+            $row2 = $pessoal->select($select2);
+
+            $anterior = null;
+
+            # Percorre o arquivo
+            foreach ($row2 as $item) {
+                if ($item["idPublicacaoPremio"] == $idPublicacaoPremio) {
+                    return $anterior;
+                } else {
+                    $anterior = date_to_php($item['dtFimPeriodo']);
+                }
             }
         } else {
             return null;

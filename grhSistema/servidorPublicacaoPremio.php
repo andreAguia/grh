@@ -50,7 +50,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Cadastro de Publicações de Licança Prêmio');
+    $objeto->set_nome('Cadastro de Publicações de Licença Prêmio');
 
     # bot?o de voltar da lista
     $objeto->set_voltarLista('servidorLicencaPremio.php');
@@ -72,14 +72,14 @@ if ($acesso) {
                              ORDER BY dtInicioPeriodo desc');
 
     # select do edita
-    $objeto->set_selectEdita('SELECT dtPublicacao,
+    $objeto->set_selectEdita("SELECT dtPublicacao,
                                      dtInicioPeriodo,
                                      dtFimPeriodo,
                                      numDias,
                                      obs,
                                      idServidor
                                 FROM tbpublicacaopremio
-                               WHERE idPublicacaoPremio = ' . $id);
+                               WHERE idPublicacaoPremio = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12) AND !Verifica::acesso($idUsuario, 19)) {
@@ -223,7 +223,7 @@ if ($acesso) {
         case "editar" :
             $objeto->$fase($id);
             break;
-        
+
         case "gravar" :
             $objeto->$fase($id, "servidorPublicacaoPremioExtra.php");
             break;

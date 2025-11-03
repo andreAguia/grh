@@ -54,7 +54,7 @@ class MenuPrincipal {
 
         # Módulos
         #$this->moduloSispatri();           // Sispatri
-        $this->moduloEventos();             // Eventos
+        #$this->moduloEventos();             // Eventos
         $this->moduloSistemas();            // Sistemas
         $this->moduloAreaEspecial();        // Área Especial        
         $this->moduloTabelaAuxiliares();    // Tabelas Auxiliares

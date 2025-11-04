@@ -21,9 +21,7 @@ if (empty($dtTermino)) {
 }
 
 # Verifica se a data Inicial é anterior a data de admissão
-$dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
-$dtAdmissao = date_to_bd($dtAdmissao);
-if ($dtInicial < $dtAdmissao) {
+if (strtotime($dtInicial) < strtotime(date_to_bd($pessoal->get_dtAdmissao($idServidor)))) {
     $erro = 1;
     $msgErro .= 'O servidor não pode pedir Licença ANTES de ser admitido!\n';
 }
@@ -96,4 +94,18 @@ if (empty($id)) {
         $erro = 1;
         $msgErro .= 'A Data inicial da Licença deverá respeitar a Regra da Anuidade!\n';
     }
+}
+
+/*
+ * Verifica se a data inicial da fruição da licença é igual ou posterior a data final do período aquisitivo
+ */
+
+# Pega os dados da publicação dessa licença
+$publicacaoPremio = new PublicacaoPremio();
+$dados = $publicacaoPremio->get_dados($idPublicacaoPremio);
+
+# Pega a data inicial do período escolhido
+if (strtotime($dtInicial) <= strtotime($dados["dtFimPeriodo"])) {
+    $erro = 1;
+    $msgErro .= 'A data de fruição não pode ser anterior ao término do período aquisitivo!\n';
 }

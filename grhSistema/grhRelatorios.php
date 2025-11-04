@@ -396,9 +396,10 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Estatutários');
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Data de Nascimento, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.nascimento.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Data de Admissão, Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.admissao.porLotacao.php');
-            $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos - Por Lotação', '../grhRelatorios/financeiro.porLotacao.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.geral2.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Por Cargo Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.porCargo.php');
-
+            
             $menu->show();
             break;
 

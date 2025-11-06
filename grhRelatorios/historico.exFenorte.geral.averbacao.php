@@ -55,7 +55,7 @@ if ($acesso) {
     $relatorio->set_funcao([null, null, "date_to_php", "date_to_php"]);
 
     $relatorio->set_classe([null, null, null, null, "Averbacao", "Averbacao","Pessoal"]);
-    $relatorio->set_metodo([null, null, null, null, "get_temTempoAverbado", "get_temTempoAverbadoPublico","get_eExClt"]);
+    $relatorio->set_metodo([null, null, null, null, "existe_tempoAverbado", "existe_tempoAverbadoPublico","get_eExClt"]);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(7);

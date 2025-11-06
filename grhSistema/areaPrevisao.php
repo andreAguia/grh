@@ -73,6 +73,13 @@ if ($acesso) {
         $botaoVoltar->set_accessKey('V');
         $menu->add_link($botaoVoltar, "left");
 
+        # Análise de Aposentadoria
+        $botaoCompulsoria = new Link("Análise");
+        $botaoCompulsoria->set_class('button');
+        $botaoCompulsoria->set_title("Análise de aposentadoria");
+        $botaoCompulsoria->set_url("areaAnaliseAposentadoria.php");
+        $menu->add_link($botaoCompulsoria, "right");
+        
         # Controle de entrega do tempo de serviço do Inss
         $botaoCompulsoria = new Link("Entrega da Certidão");
         $botaoCompulsoria->set_class('button');

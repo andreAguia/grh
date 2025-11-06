@@ -273,10 +273,10 @@ class Averbacao {
         }
 
         # Pega os valores
-        $select = 'SELECT SUM(dias) as total
+        $select = "SELECT SUM(dias) as total
                      FROM tbaverbacao
-                    WHERE empresaTipo = 1 AND idServidor = ' . $idServidor . '
-                         ORDER BY total';
+                    WHERE empresaTipo = 1 AND idServidor = {$idServidor}
+                         ORDER BY total";
 
         # Conecta o banco de dados
         $pessoal = new Pessoal();
@@ -353,12 +353,12 @@ class Averbacao {
 ##############################################################################################################################################
 
     /**
-     * Método get_temTempoAverbado
+     * Método existe_tempoAverbado
      * informa Sim / Não se tem tempo averbado
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_temTempoAverbado($idServidor) {
+    public function existe_tempoAverbado($idServidor) {
 
         # Verifica se foi informado o id
         if (empty($idServidor)) {
@@ -375,12 +375,12 @@ class Averbacao {
 ##############################################################################################################################################
 
     /**
-     * Método get_temTempoAverbadoPublico
+     * Método existe_tempoAverbadoPublico
      * informa Sim / Não se tem tempo público averbado
      * 
      * @param	string $idServidor idServidor do servidor
      */
-    public function get_temTempoAverbadoPublico($idServidor) {
+    public function existe_tempoAverbadoPublico($idServidor) {
 
         # Verifica se foi informado o id
         if (empty($idServidor)) {
@@ -455,6 +455,27 @@ class Averbacao {
         }
     }
 
-    ###########################################################
+    ##############################################################################################################################################
+
+    /**
+     * Método exibe_tempoAverbadoTotal
+     * informa o total de dias de tempo averbado total
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function exibe_tempoAverbadoTotal($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        $privado = $this->get_tempoAverbadoPrivado($idServidor);
+        $publico = $this->get_tempoAverbadoPublico($idServidor);
+        
+        return "Público: {$publico} dias<br/>Privado: {$privado} dias";
+    }
+
+##############################################################################################################################################
 
 }

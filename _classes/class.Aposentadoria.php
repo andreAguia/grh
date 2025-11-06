@@ -13,134 +13,6 @@ class Aposentadoria {
      * 
      * @param string $itemBold o item do menu para colocar o bold no menu
      */
-    ##################################################
-
-    public function exibeMenu($itemBold = null) {
-
-        tituloTable("Menu");
-        $menu = new Menu("menuAposentadoria", $itemBold);
-
-        $menu->add_item("titulo", "Servidores Aposentados");
-
-        $menu->add_item("link", "Aposentados por Ano", "areaAposentadoria_aposentadosPorAno.php", "Servidores Aposentados por Ano de Aposentadoria");
-        $menu->add_item("link", "Aposentados por Tipo", "areaAposentadoria_aposentadosPorTipo.php", "Servidores Aposentados por Tipo de Aposentadoria");
-        $menu->add_item("link", "Estatística", "areaAposentadoria_aposentadosEstatistica.php", "Estatística dos Servidores Aposentados");
-
-        $menu->add_item("titulo", "Previsão");
-        $menu->add_item("titulo1", "Regras Permanentes");
-        $menu->add_item("link", "Por Idade e Contribuição", "areaAposentadoria_previsaoPorIdadePorContribuicao.php", "Aposentadoria voluntária por idade e tempo de contribuição");
-        $menu->add_item("link", "Por Idade", "areaAposentadoria_previsaoPorIdade.php", "Aposentadoria voluntária por idade");
-        $menu->add_item("link", "Compulsória", "areaAposentadoria_previsaoCompulsoria.php", "Previsão de aposentadoria compulsória");
-        $menu->add_item("link", "Compulsória por Ano", "areaAposentadoria_previsaoCompulsoriaPorAno.php", "Previsão de aposentadoria compulsória por ano");
-        #$menu->add_item("link", "Configuração Compulsória", "areaAposentadoria.php?fase=configuracaoCompulsoria", "Configuração");
-
-        $menu->add_item("titulo1", "Regras de Transição");
-        $menu->add_item("link", "EC nº 41/2003", "areaAposentadoria_previsaoTransicaoEC41.php", "Regras de transição - EC nº 41/2003");
-        $menu->add_item("link", "EC nº 47/2005", "areaAposentadoria_previsaoTransicaoEC47.php", "Regras de transição - EC nº 47/2005");
-        $menu->show();
-    }
-
-    ##################################################
-
-    public function exibeMenuServidor($itemBold = null) {
-
-        tituloTable("Menu");
-        $menu = new Menu("menuAposentadoria", $itemBold);
-
-        $menu->add_item("titulo", "Dados do Servidor");
-        $menu->add_item("link", "Resumo Geral", "?", "resumo dos dados do servidor");
-        $menu->add_item("link", "Tempo Averbado", "?fase=averbado", "Exibe o tempo averbado com detalhes");
-        $menu->add_item("link", "Vínculos Anteriores", "?fase=vinculos", "Exibe os vínculos anteriores do servidor na Uenf");
-        $menu->add_item("link", "Afastamentos", "?fase=afastamentos", "Exibe todos os afastamentos do servidor");
-
-        $menu->add_item("titulo", "Regras Permanentes");
-        $menu->add_item("link", "Aposentadoria Voluntária", "?fase=permanenteVoluntaria");
-        $menu->add_item("link", "Aposentadoria Compulsória", "?fase=permanenteCompulsoria");
-        $menu->add_item("link", "Incap. Permanente", "?fase=incapacidadePermanente");
-        $menu->add_item("link", "Incap. Permanente - Acid.Trabalho", "?fase=incapacidadeAcidenteAT");
-
-        $menu->add_item("titulo", "Regras de Transição");
-        $menu->add_item("titulo1", "Regra dos Pontos");
-        $menu->add_item("link", "Integralidade e Paridade", "?fase=pontosIntegral");
-        $menu->add_item("link", "Média da Lei Federal nº 10.887/2004", "?fase=pontosMedia");
-        $menu->add_item("titulo1", "Regra do Pedágio");
-        $menu->add_item("link", "Integralidade e Paridade", "?fase=pedagioIntegral");
-        $menu->add_item("link", "Redutor de Idade", "?fase=pedagioRedutor");
-        $menu->add_item("link", "Média da Lei Federal nº 10.887/2004", "?fase=pedagioMedia");
-
-        $menu->add_item("titulo", "Direito Adquirido");
-        $menu->add_item("link", "Art. 40, §1º, III, alínea a", "?fase=idadeContribuicao", "Artigo 40 - Aposentadoria voluntária por idade e tempo de contribuição");
-        $menu->add_item("link", "Art. 40, §1º, III, alínea b", "?fase=idade", "Aposentadoria voluntária por idade");
-        #$menu->add_item("link", "Artigo 2º da EC nº 41/2003", "?fase=41_2", "Regras de transição - Artigo 2º da EC nº 41/2003");
-        $menu->add_item("link", "Artigo 6º da EC nº 41/2003", "?fase=41_6", "Regras de transição - Artigo 6º da EC nº 41/2003");
-        $menu->add_item("link", "Artigo 3º da EC nº 47/2005", "?fase=47_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
-        #$menu->add_item("link", "Artigo 3º da EC nº 41/2003", "?fase=41_3", "Regras de transição - Artigo 3º da EC nº 47/2005");
-
-        $menu->add_item("titulo", "Documentação");
-
-        # Banco de dados
-        $pessoal = new Pessoal();
-
-        # Pega os projetos cadastrados
-        $select = 'SELECT idMenuDocumentos,
-                          categoria,
-                          texto,
-                          title
-                     FROM tbmenudocumentos
-                     WHERE categoria = "Regras de Aposentadoria"
-                  ORDER BY categoria, texto';
-
-        $dados = $pessoal->select($select);
-        $num = $pessoal->count($select);
-
-        # Verifica se tem itens no menu
-        if ($num > 0) {
-            # Percorre o array 
-            foreach ($dados as $valor) {
-
-                if (empty($valor["title"])) {
-                    $title = $valor["texto"];
-                } else {
-                    $title = $valor["title"];
-                }
-
-                # Verifica qual documento
-                $arquivoDocumento = PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . ".pdf";
-                if (file_exists($arquivoDocumento)) {
-                    # Caso seja PDF abre uma janela com o pdf
-                    $menu->add_item('linkWindow', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.pdf', $title);
-                } else {
-                    # Caso seja um .doc, somente faz o download
-                    $menu->add_item('link', $valor["texto"], PASTA_DOCUMENTOS . $valor["idMenuDocumentos"] . '.doc', $title);
-                }
-            }
-        }
-
-        $menu->add_item("linkWindow", "Regras Vigentes a partir de 01/01/2022", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/apos2022/index.htm");
-        $menu->add_item("linkWindow", "Regras Vigentes até 31/12/2021", "https://www.rioprevidencia.rj.gov.br/PortalRP/Servicos/RegrasdeAposentadoria/ate2021/index.htm");
-
-        $menu->show();
-    }
-
-    ############################################################################
-
-    function get_numServidoresAposentados() {
-
-        /**
-         * informa o número de Servidores Ativos
-         * 
-         * @param integer $idPessoa do servidor
-         */
-        $select = 'SELECT idServidor
-                     FROM tbservidor
-                    WHERE situacao = 2
-                    AND (tbservidor.idPerfil = 1 OR tbservidor.idPerfil = 4)';
-
-        $pessoal = new Pessoal();
-        $count = $pessoal->count($select);
-        return $count;
-    }
-
     ############################################################################ 
 
     function exibeAposentadosPorAno($parametroAno = null, $fase = null, $relatório = false) {
@@ -416,243 +288,7 @@ class Aposentadoria {
         }
     }
 
-    #####################################################    
-
-    /**
-     * Método get_tempoServicoUenf
-     * informa o total de dias corridos de tempo de serviço bruto dentro da uenf, 
-     * sem os afastamentos.
-     * 
-     * @param string $idServidor idServidor do servidor
-     * @param string $data até a data especificada. Se estiver em branco estipula a data de hoje
-     */
-    public function get_tempoServicoUenf($idServidor, $data = null) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Data Inicial (data de admissão)
-        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
-
-        # Verifica se o servidor é inativo e pega a data de saída dele
-        if ($pessoal->get_idSituacao($idServidor) == 1) {
-
-            # verifica a data
-            if (empty($data)) {
-                // Data final padrão de ativo é hoje
-                $data = date("d/m/Y");
-            } else {
-                // Verifica se a data final é anterior que a data inicial
-                if (strtotime(date_to_bd($data)) < strtotime(date_to_bd($dtInicial))) {
-                    $data = $dtInicial;
-                }
-            }
-        } else {
-            // Pega a data de Saída
-            $dtSaida = $pessoal->get_dtSaida($idServidor);
-
-            # verifica a data
-            if (empty($data)) {
-                // Data final padrão de inativo é a data de saída
-                $data = $dtSaida;
-            } else {
-                // Verifica se a data final está entre o período do servidor na Uenf
-                // senão tiver muda para a data de saída
-                if (!entre($data, $dtInicial, $dtSaida)) {
-                    $data = $dtSaida;
-                }
-            }
-        }
-
-        # Calcula o número de dias
-        $numdias = getNumDias($dtInicial, $data);
-        return $numdias;
-    }
-
-    ##################################################### 
-
-    /**
-     * Método get_tempoServicoUenfCeletista
-     * informa o total de dias corridos de tempo de serviço celetista dentro da uenf
-     * 
-     * @param string $idServidor idServidor do servidor
-     */
-    public function get_tempoServicoUenfCeletista($idServidor) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-        $concurso = new Concurso();
-
-        # define a data em que houve a transformação em estatutário (menos um dia)
-        $dataEstatutario = "08/09/2003";
-
-        # Data Inicial (data de admissão)
-        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
-
-        # Pega o regime do concurso
-        $regime = $concurso->get_regime($pessoal->get_idConcurso($idServidor));
-
-        # Define a data final do período celetista
-        if ($regime == "CLT") {
-            # Verifica se o servidor é ativo
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtFinal = $dataEstatutario;
-            } else {
-                # Pega a data de saída
-                $dtSaida = $pessoal->get_dtSaida($idServidor);
-
-                # Verifica se foi antes ou depois da transformação
-                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
-                    $dtFinal = $dataEstatutario;
-                } else {
-                    $dtFinal = $dtSaida;
-                }
-            }
-        } else {
-            return 0;
-        }
-
-        return getNumDias($dtInicial, $dtFinal);
-    }
-
-    #####################################################    
-
-    /**
-     * Método get_tempoServicoUenfEstatutario
-     * informa o total de dias corridos de tempo de serviço estatutario dentro da uenf
-     * 
-     * @param string $idServidor idServidor do servidor
-     */
-    public function get_tempoServicoUenfEstatutario($idServidor) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-        $concurso = new Concurso();
-
-        # define a data em que houve a transformação em estatutário
-        $dataEstatutario = "09/09/2003";
-
-        # Data Inicial (data de admissão)
-        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
-
-        # Pega a data de saída
-        $dtSaida = $pessoal->get_dtSaida($idServidor);
-
-        # Pega o regime do concurso
-        $regime = $concurso->get_regime($pessoal->get_idConcurso($idServidor));
-
-        # Define a data final do período celetista
-        if ($regime == "CLT") {
-            # Verifica se o servidor é ativo ou inativo
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtInicial = $dataEstatutario;
-                $dtFinal = date("d/m/Y");
-            } else {
-                # Verifica se foi antes ou depois da transformação
-                if (dataMaior($dataEstatutario, $dtSaida) == $dtSaida) {
-                    $dtInicial = $dataEstatutario;
-                } else {
-                    return 0;
-                }
-            }
-        } else {
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtFinal = date("d/m/Y");
-            } else {
-                $dtFinal = $dtSaida;
-            }
-        }
-
-        return getNumDias($dtInicial, $dtFinal);
-    }
-
-    #####################################################        
-
-    /**
-     * Método get_tempoServicoUenfAntes31_12_21
-     * informa o total de dias corridos de tempo de serviço 
-     * dentro da uenf antes de 31/12/2021
-     * 
-     * @param string $idServidor idServidor do servidor
-     */
-    public function get_tempoServicoUenfAntes31_12_21($idServidor) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Define as datas
-        $dataAlvo = "31/12/2021";
-        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
-
-        # Verifica se a admissão é posterior a data alvo
-        if (dataMenor($dataAlvo, $dtInicial) == $dataAlvo) {
-            return 0;
-        } else {
-            # Verifica se o servidor é inativo e pega a data de saída dele
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtFinal = $dataAlvo;
-            } else {
-                $dtFinal = $pessoal->get_dtSaida($idServidor);
-
-                # Verifica se saiu antes ou depois da data alvo
-                if (dataMenor($dataAlvo, $dtFinal) == $dataAlvo) {
-                    $dtFinal = $dataAlvo;
-                }
-            }
-        }
-
-        # Pega o tempo sem contribuição
-        $tempoRetirar = $this->get_tempoUenfInterrompidoAntes31_12_21($idServidor);
-
-        return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
-    }
-
-    #####################################################        
-
-    /**
-     * Método get_tempoServicoUenfAntesDataAlvo
-     * informa o total de dias corridos de tempo de serviço 
-     * dentro da uenf antes de uma data alvo
-     * 
-     * @param string $idServidor idServidor do servidor
-     */
-    public function get_tempoServicoUenfAntesDataAlvo($idServidor = null, $dataAlvo = null) {
-
-        # Verifica se foi informado os parâmetros
-        if (empty($idServidor) OR empty($dataAlvo)) {
-            return null;
-        }
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Data inicial
-        $dtInicial = $pessoal->get_dtAdmissao($idServidor);
-
-        # Verifica se a admissão é posterior a data alvo
-        if (dataMenor($dataAlvo, $dtInicial) == $dataAlvo) {
-            return 0;
-        } else {
-            # Verifica se o servidor é inativo e pega a data de saída dele
-            if ($pessoal->get_idSituacao($idServidor) == 1) {
-                $dtFinal = $dataAlvo;
-            } else {
-                $dtFinal = $pessoal->get_dtSaida($idServidor);
-
-                # Verifica se saiu antes ou depois da data alvo
-                if (dataMenor($dataAlvo, $dtFinal) == $dataAlvo) {
-                    $dtFinal = $dataAlvo;
-                }
-            }
-        }
-
-        # Pega o tempo sem contribuição
-        $tempoRetirar = $this->get_tempoUenfInterrompidoAntes31_12_21($idServidor);
-
-        return getNumDias($dtInicial, $dtFinal) - $tempoRetirar;
-    }
-
-    #####################################################
+    #####################################################  
 
     /**
      * Método get_dtIngresso
@@ -746,331 +382,6 @@ class Aposentadoria {
 
     #####################################################
 
-    /**
-     * Método get_tempoPublicoIninterrupto
-     * informa em dias o tempo publico ininterrupto
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoPublicoIninterrupto($idServidor) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Pega a data de Ingresso
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-
-        # Pega os dados
-        $select = "SELECT dtInicial,
-                          dias
-                     FROM tbaverbacao
-                    WHERE empresaTipo = 1 AND idServidor = {$idServidor}
-                 ORDER BY dtInicial DESC";
-
-        $result = $pessoal->select($select);
-        $totalDias = $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor);
-
-        # Percorre o arquivo de averbação para pegar os dias digitados (e não calculados)
-        foreach ($result as $periodo) {
-
-            # Se a data inicial do tempo averbado for igual ou maior que a data
-            # de ingresso então acrescenta os dias
-            if (strtotime(date_to_bd($dtIngresso)) <= strtotime($periodo[0])) {
-                $totalDias += $periodo[1];
-            }
-        }
-
-        return $totalDias;
-    }
-
-    #####################################################
-
-    /**
-     * Método get_tempoTotal
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoTotal($idServidor) {
-
-        $averbacao = new Averbacao();
-        $tempoAverbado = $averbacao->get_tempoAverbadoTotal($idServidor);
-        $tempoUenf = $this->get_tempoServicoUenf($idServidor);
-
-        return $tempoAverbado + $tempoUenf;
-    }
-
-    #####################################################
-
-    /**
-     * Método get_tempoTotal
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoTotalAntes31_12_21($idServidor) {
-
-        $averbacao = new Averbacao();
-        $tempoUenf = $this->get_tempoServicoUenfAntes31_12_21($idServidor);
-        $tempoAverbado = $averbacao->getTempoAverbadoAntes31_12_21($idServidor);
-
-        return $tempoUenf + $tempoAverbado;
-    }
-
-    #####################################################
-
-    /**
-     * Método get_tempoTotal
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoTotalAntesDataAlvo($idServidor = null, $dataAlvo = null) {
-
-        # Verifica se foi informado os parâmetros
-        if (empty($idServidor) OR empty($dataAlvo)) {
-            return null;
-        }
-
-        $averbacao = new Averbacao();
-        $tempoUenf = $this->get_tempoServicoUenfAntesDataAlvo($idServidor, $dataAlvo);
-        $tempoAverbado = $averbacao->getTempoAverbadoAntesDataAlvo($idServidor, $dataAlvo);
-
-        return $tempoUenf + $tempoAverbado;
-    }
-
-    #####################################################
-
-    /**
-     * Método get_data20anosPublicos
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_data20anosPublicos($idServidor) {
-
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 20);
-    }
-
-    #####################################################
-
-    /**
-     * Método get_data10anosPublicos
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_data10anosPublicos($idServidor) {
-
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 10);
-    }
-
-    #####################################################
-
-    /**
-     * Método get_data25anosPublicos
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_data25anosPublicos($idServidor) {
-
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 25);
-    }
-
-    #####################################################
-
-    /**
-     * Método get_data30anosPublicos
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_data30anosPublicos($idServidor) {
-
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 30);
-    }
-
-    #####################################################
-
-    /**
-     * Método get_data35anosPublicos
-     * informa em dias o tempo total do servidor
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_data35anosPublicos($idServidor) {
-
-        $dtIngresso = $this->get_dtIngressoParaTempoPublico($idServidor);
-        return day($dtIngresso) . "/" . month($dtIngresso) . "/" . (year($dtIngresso) + 35);
-    }
-
-    #####################################################
-
-    /**
-     * Método get_tempoAfastadoComContribuicao
-     * informa o total de dias de tempo afastado mas com contribuição
-     * 
-     * @param	string $idServidor idServidor do servidor
-     */
-    public function get_tempoAfastadoComContribuicao($idServidor) {
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-
-        # Licença Sem Vencimentos
-        $select2 = "SELECT numDias                           
-                      FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}
-                        AND optouContribuir = 1";
-
-        # Soma
-        return array_sum(array_column($pessoal->select($select2), 'numDias'));
-    }
-
-    #####################################################
-
-    function get_tempoUenfInterrompidoAntes31_12_21($idServidor) {
-
-        # Verifica se foi informado o id
-        if (empty($idServidor)) {
-            return null;
-        }
-
-        # Licença Geral
-        $select = "(SELECT dtInicial,
-                           dtTermino,
-                           numDias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico = 'Sim'
-                   ) UNION (
-                    SELECT dtInicial,
-                           dtTermino,
-                           numDias                           
-                      FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}
-                        AND (optouContribuir = 2 OR optouContribuir is NULL)
-                        ) ORDER BY 1";
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select);
-
-        # Define a variavel de retorno
-        $tempo = 0;
-
-        # Define as datas
-        $dataAlvo = "31/12/2021";
-
-        # Percorre os registros
-        foreach ($row as $itens) {
-            # As datas
-            $dtInicial = date_to_php($itens["dtInicial"]);
-            $dtFinal = date_to_php($itens["dtTermino"]);
-
-            # Verifica se a data Alvo está após o período
-            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
-                $tempo += $itens["numDias"];
-            }
-
-            # Verifica se a data Alvo está dentro  do período
-            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
-                $tempo += getNumDias($dtInicial, $dataAlvo);
-            }
-        }
-
-        return $tempo;
-    }
-
-    #####################################################
-
-    function get_tempoUenfInterrompidoAntesDataAlvo($idServidor = null, $dataAlvo = null) {
-
-        # Verifica se foi informado os parâmetros
-        if (empty($idServidor) OR empty($dataAlvo)) {
-            return null;
-        }
-
-        # Licença Geral
-        $select = "(SELECT dtInicial,
-                           dtTermino,
-                           numDias
-                      FROM tblicenca JOIN tbtipolicenca USING(idTpLicenca)
-                     WHERE idServidor = {$idServidor}
-                       AND tbtipolicenca.tempoServico = 'Sim'
-                   ) UNION (
-                    SELECT dtInicial,
-                           dtTermino,
-                           numDias                           
-                      FROM tblicencasemvencimentos
-                      WHERE idServidor = {$idServidor}
-                        AND (optouContribuir = 2 OR optouContribuir is NULL)
-                        ) ORDER BY 1";
-
-        # Conecta o banco de dados
-        $pessoal = new Pessoal();
-        $row = $pessoal->select($select);
-
-        # Define a variavel de retorno
-        $tempo = 0;
-
-        # Percorre os registros
-        foreach ($row as $itens) {
-            # As datas
-            $dtInicial = date_to_php($itens["dtInicial"]);
-            $dtFinal = date_to_php($itens["dtTermino"]);
-
-            # Verifica se a data Alvo está após o período
-            if (dataMenor($dataAlvo, $dtFinal) == $dtFinal) {
-                $tempo += $itens["numDias"];
-            }
-
-            # Verifica se a data Alvo está dentro  do período
-            if (entre($dataAlvo, $dtInicial, $dtFinal)) {
-                $tempo += getNumDias($dtInicial, $dataAlvo);
-            }
-        }
-
-        return $tempo;
-    }
-
-    ###########################################################
-
-    public function get_dataAposentadoriaCompulsoria($idServidor) {
-
-        /*
-         * Retorna a data da aposentadoria compulsória do servidor
-         */
-
-        # Conecta ao Banco de Dados
-        $pessoal = new Pessoal();
-        $intra = new Intra();
-
-        # Pega a idade par aposentadoria compulsória
-        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
-
-        $select = "SELECT ADDDATE(dtNasc, INTERVAL {$idade} YEAR)                    
-                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                    WHERE idPerfil = 1
-                      AND idServidor = {$idServidor}";
-
-        $result = $pessoal->select($select, false);
-
-        # retorno
-        if (empty($result[0])) {
-            return null;
-        } else {
-            return date_to_php($result[0]);
-        }
-    }
-
-    ###########################################################
-
     public function exibeDadosServidor($idServidor = null, $relatorio = false) {
 
         /*
@@ -1080,6 +391,8 @@ class Aposentadoria {
         # Conecta as Classes
         $pessoal = new Pessoal();
         $averbacao = new Averbacao();
+        $tempoServico = new TempoServico();
+        $afastamentos = new Afastamentos();
 
         # pega os valores
         $dtIngresso = $this->get_dtIngresso($idServidor);
@@ -1105,11 +418,11 @@ class Aposentadoria {
             ["Data de Admissão", $pessoal->get_dtadmissao($idServidor)],
             ["Data de Ingresso<br/><p id='psubtitulo'>para Tempo de Serviço Público</p>", $dtIngressoTempoPublico]
         ];
-        
+
         if ($dtIngressoTempoPublico <> $dtIngresso) {
-            array_push($array,["Data de Ingresso<br/><p id='psubtitulo'>para regra de Aposentadoria<p id='psubtitulo'></p>", $dtIngresso]);
+            array_push($array, ["Data de Ingresso<br/><p id='psubtitulo'>para regra de Aposentadoria<p id='psubtitulo'></p>", $dtIngresso]);
         }
-        
+
 
         # Exibe a tabela
         if ($relatorio) {
@@ -1156,9 +469,9 @@ class Aposentadoria {
          */
 
         $array = [
-            ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenf($idServidor)],
+            ["Cargo Efetivo - Uenf", $tempoServico->get_tempoServicoUenfBruto($idServidor)],
             ["Tempo Averbado", $averbacao->get_tempoAverbadoTotal($idServidor)],
-            ["Afastamento <b>SEM</b> Contribuição", -$this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)]
+            ["Afastamento <b>SEM</b> Contribuição", -$afastamentos->get_tempoAfastamentoSuspendeTempoServicoSemContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1190,7 +503,7 @@ class Aposentadoria {
          */
 
         $array = [
-            ["Cargo Efetivo - Uenf", $this->get_tempoServicoUenfAntes31_12_21($idServidor)],
+            ["Cargo Efetivo - Uenf", $tempoServico->get_tempoServicoUenfAntes31_12_21($idServidor)],
             ["Tempo Averbado", $averbacao->getTempoAverbadoAntes31_12_21($idServidor)]
         ];
 
@@ -1229,8 +542,8 @@ class Aposentadoria {
          */
 
         $array = [
-            ["Uenf Celetista", $this->get_tempoServicoUenfCeletista($idServidor)],
-            ["Uenf Estatutária", $this->get_tempoServicoUenfEstatutario($idServidor)]
+            ["Uenf Celetista", $tempoServico->get_tempoServicoUenfBrutoCeletista($idServidor)],
+            ["Uenf Estatutária", $tempoServico->get_tempoServicoUenfBrutoEstatutario($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1261,8 +574,8 @@ class Aposentadoria {
          */
 
         $array = [
-            ["<b>COM</b> Contribuição", $this->get_periodoSemTempoServicoComTempoContribuicao($idServidor)],
-            ["<b>SEM</b> Contribuição", $this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)]
+            ["<b>COM</b> Contribuição", $afastamentos->get_tempoAfastamentoSuspendeTempoServicoComContribuicao($idServidor)],
+            ["<b>SEM</b> Contribuição", $afastamentos->get_tempoAfastamentoSuspendeTempoServicoSemContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1334,11 +647,11 @@ class Aposentadoria {
          *  Tempo Público
          */
         $array = [
-            //["Tempo Uenf", $this->get_tempoServicoUenf($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],  // Tava retirando os afastamentos 2 vezes
-            ["Tempo Uenf", $this->get_tempoServicoUenf($idServidor)],
+            //["Tempo Uenf", $this->get_tempoServicoUenfBruto($idServidor) - $this->get_tempoAfastadoComContribuicao($idServidor)],  // Tava retirando os afastamentos 2 vezes
+            ["Tempo Uenf", $tempoServico->get_tempoServicoUenfBruto($idServidor)],
             ["Tempo Averbado", $averbacao->get_tempoAverbadoPublico($idServidor)],
-            ["Afastamento <b>SEM</b> Contribuição", -$this->get_periodoSemTempoServicoSemTempoContribuicao($idServidor)],
-            ["Afastamento <b>COM</b> Contribuição", -$this->get_periodoSemTempoServicoComTempoContribuicao($idServidor)]
+            ["Afastamento <b>SEM</b> Contribuição", -$afastamentos->get_tempoAfastamentoSuspendeTempoServicoSemContribuicao($idServidor)],
+            ["Afastamento <b>COM</b> Contribuição", -$afastamentos->get_tempoAfastamentoSuspendeTempoServicoComContribuicao($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1365,7 +678,7 @@ class Aposentadoria {
         $tabela->show();
 
         $array = [
-            ["Tempo Ininterrupto", $this->get_tempoPublicoIninterrupto($idServidor)]
+            ["Tempo Ininterrupto", $tempoServico->get_tempoPublicoIninterrupto($idServidor)]
         ];
 
         # Exibe a tabela
@@ -1632,154 +945,7 @@ class Aposentadoria {
         return $retorno;
     }
 
-    #####################################################  
-
-    public function get_periodoSemTempoServicoSemTempoContribuicao($idServidor = null, $dataPrevista = null) {
-
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Inicia o banco de Dados
-        $pessoal = new Pessoal();
-
-        ######
-        # Licença sem vencimentos
-        $select = "(SELECT dtInicial,
-                          numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
-                     FROM tblicencasemvencimentos
-                    WHERE idServidor = {$idServidor}
-                      AND (optouContribuir = 2 OR optouContribuir is NULL))
-                    UNION
-                    (SELECT dtInicial,
-                            numDias,
-                            ADDDATE(dtInicial,numDias-1) as dtFinal
-                       FROM tblicenca JOIN tbservidor USING (idServidor)
-                                      JOIN tbtipolicenca USING (idTpLicenca)
-                      WHERE idServidor = {$idServidor}
-                        AND tbtipolicenca.tempoServico = 'Sim')
-                 ORDER BY 1";
-
-        $result2 = $pessoal->select($select);
-
-        # Percorre e soma os afastamentos
-        foreach ($result2 as $item) {
-            if (!is_null($dataPrevista)) {
-
-                # Verifica se a data final do afastamento é anterior a data prevista
-                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
-                    $retorno += $item["numDias"];
-                }
-
-                # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
-                }
-            } else {
-                $retorno += $item["numDias"];
-            }
-        }
-
-        # Retorna o valor calculado
-        return $retorno;
-    }
-
-    #####################################################  
-
-    public function get_periodoSemTempoServicoComTempoContribuicao($idServidor = null, $dataPrevista = null) {
-
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Inicia o banco de Dados
-        $pessoal = new Pessoal();
-
-        ######
-        # Licença sem vencimentos
-        $select = "SELECT dtInicial,
-                          numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
-                     FROM tblicencasemvencimentos
-                    WHERE idServidor = {$idServidor}
-                      AND optouContribuir = 1
-                 ORDER BY dtInicial";
-
-        $result2 = $pessoal->select($select);
-
-        # Percorre e soma os afastamentos
-        foreach ($result2 as $item) {
-            if (!is_null($dataPrevista)) {
-
-                # Verifica se a data final do afastamento é anterior a data prevista
-                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
-                    $retorno += $item["numDias"];
-                }
-
-                # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
-                }
-            } else {
-                $retorno += $item["numDias"];
-            }
-        }
-
-        # Retorna o valor calculado
-        return $retorno;
-    }
-
-    #####################################################  
-
-    public function get_periodoSemTempoServico($idServidor = null, $dataPrevista = null) {
-
-        # Inicia a variável de retorno
-        $retorno = 0;
-
-        # Inicia o banco de Dados
-        $pessoal = new Pessoal();
-
-        ######
-        # Licença sem vencimentos
-        $select = "(SELECT dtInicial,
-                          numDias,
-                          ADDDATE(dtInicial,numDias-1) as dtFinal
-                     FROM tblicencasemvencimentos
-                    WHERE idServidor = {$idServidor})
-                    UNION
-                    (SELECT dtInicial,
-                            numDias,
-                            ADDDATE(dtInicial,numDias-1) as dtFinal
-                       FROM tblicenca JOIN tbservidor USING (idServidor)
-                                      JOIN tbtipolicenca USING (idTpLicenca)
-                      WHERE idServidor = {$idServidor}
-                        AND tbtipolicenca.tempoServico = 'Sim')
-                 ORDER BY 1";
-
-        $result2 = $pessoal->select($select);
-
-        # Percorre e soma os afastamentos
-        foreach ($result2 as $item) {
-            if (!is_null($dataPrevista)) {
-
-                # Verifica se a data final do afastamento é anterior a data prevista
-                if (strtotime($item["dtFinal"]) <= strtotime(date_to_bd($dataPrevista))) {
-                    $retorno += $item["numDias"];
-                }
-
-                # Verifica se a data final é posterior a data prevista mas a data inicial é anterior
-                if (entre($dataPrevista, date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]), false)) {
-                    $retorno += getNumDias(date_to_php($item["dtInicial"]), date_to_php($item["dtFinal"]));
-                }
-            } else {
-                $retorno += $item["numDias"];
-            }
-        }
-
-        # Retorna o valor calculado
-        return $retorno;
-    }
-
-    ##################################################### 
+    #####################################################      
 
     /**
      * Método get_tipoAposentadoria
@@ -1891,7 +1057,7 @@ class Aposentadoria {
             }
         }
     }
-    
+
     ###########################################################   
 
     /**
@@ -1931,6 +1097,135 @@ class Aposentadoria {
             }
         }
     }
-    
+
+    ##############################################################################################################################################
+
+    /**
+     * Método exibe_tempoContribuicao
+     * Exibe os tempos de contribuição para serem exibidos na tabela
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function exibe_tempoContribuicao($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            $tempoServico = new TempoServico();
+            
+            # Pega o tempo de contribuição
+            $total = $tempoServico->get_tempoContribuicao($idServidor);
+            
+            # Pega o tempo
+            $ateData = $tempoServico->get_tempoTotalAntes31_12_21($idServidor);
+
+            return "Tempo Geral: {$total} dias<br/>Até 31/12/2021: {$ateData} dias";
+        }
+    }
+
+##############################################################################################################################################
+
+    /**
+     * Método get_data5AnosCargo
+     * Retorna a data em que completa 5 anos no cargo efetivo
+     * CONSIDERANDO os afastamentos 
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_data5AnosCargo($idServidor) {
+
+        # Verifica se foi informado o id
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            # Inicia a classe
+            $pessoal = new Pessoal();
+
+            # Quantos dias são 5 anos (1825 dias)
+            $dias5anos = 365 * 5;
+
+            # Pega a data de Admissão do servidor
+            $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
+
+            # Pega a data com 5 anos de serviço
+            $dataRetorno = addAnos($dtAdmissao, 5, false);
+
+            # Inicia as variaveis
+            $diaTotal = $dias5anos;
+            $diasCompensar = 0;
+
+            # Verifica se teve algum afastamento
+            if ($afastamentos->get_tempoAfastamentoSuspendeTempoServico($idServidor, $dataRetorno) > 0) {
+
+                # Faz o laço
+                do {
+
+                    # Monta a data Final
+                    $dataRetorno = addDias($dtAdmissao, $diaTotal, false);
+
+                    echo "Data de retorno: ", $dataRetorno;
+                    br();
+
+                    # Pega o tempo de afastamento 
+                    $tempoAfastamento = $afastamentos->get_tempoAfastamentoSuspendeTempoServico($idServidor, $dataRetorno);
+
+                    echo "Tempo de Afastamento: ", $tempoAfastamento;
+                    br();
+
+                    # Dias Trabalhados
+                    $diasTrabalhados = $diaTotal - $tempoAfastamento;
+
+                    echo "Dias trabalhados: ", $diasTrabalhados;
+                    br();
+                    echo "Dias 5 anos: ", $dias5anos;
+                    br();
+                    echo "Dias Total: ", $diaTotal;
+                    br();
+
+                    # Dias para compensar
+                    $diasCompensar = $tempoAfastamento;
+                    echo "Dias para compensar: ", $diasCompensar;
+                    br();
+
+                    $diaTotal = $diasTrabalhados + (2 * $tempoAfastamento);
+                    hr();
+                } while ($diasTrabalhados < $dias5anos);
+            }
+
+            return $dataRetorno;
+        }
+    }
+
+    ###########################################################
+
+    public function get_dataAposentadoriaCompulsoria($idServidor) {
+
+        /*
+         * Retorna a data da aposentadoria compulsória do servidor
+         */
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $intra = new Intra();
+
+        # Pega a idade par aposentadoria compulsória
+        $idade = $intra->get_variavel("aposentadoria.compulsoria.idade");
+
+        $select = "SELECT ADDDATE(dtNasc, INTERVAL {$idade} YEAR)                    
+                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                    WHERE idPerfil = 1
+                      AND idServidor = {$idServidor}";
+
+        $result = $pessoal->select($select, false);
+
+        # retorno
+        if (empty($result[0])) {
+            return null;
+        } else {
+            return date_to_php($result[0]);
+        }
+    }
+
     ###########################################################
 }

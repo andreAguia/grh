@@ -6004,31 +6004,6 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_tempoServicoUenf
-     * informa o total de dias corridos de tempo de serviço dentro da uenf
-     * 
-     * @param string $idServidor idServidor do servidor
-     * @param date   $dtFinal    Data até quando vai ser feito o calculo. 
-     */
-    public function get_tempoServicoUenf($idServidor, $dtFinal) {
-
-        # Data de admissão
-        $dtAdmissao = $this->get_dtAdmissao($idServidor);   # Data de entrada na UENF
-        # Define a data inicial
-        $dtInicial = date_to_bd($dtAdmissao);
-
-        # Calcula a diferença em segundos entre as datas
-        $diferenca = strtotime($dtFinal) - strtotime($dtInicial);
-
-        # Calcula a diferença em dias
-        $dias = floor($diferenca / (60 * 60 * 24));
-
-        return $dias;
-    }
-
-    ###########################################################
-
-    /**
      * Método get_totalDiasLicencaAfastamento
      * informa o total de dias de Um afastamento ou licença
      * 

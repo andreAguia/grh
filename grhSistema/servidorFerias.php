@@ -282,11 +282,7 @@ if ($acesso) {
                 ));
                 $tabela->show();
             }
-
-
-
-
-
+            
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 

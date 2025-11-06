@@ -70,8 +70,8 @@ if ($acesso) {
     #$relatorio->set_width([30, 20, 25, 15, 10]);
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_funcao([null, null, "date_to_php", "idade"]);
-    $relatorio->set_classe([null, null, null, null, "Averbacao", "Aposentadoria"]);
-    $relatorio->set_metodo([null, null, null, null, "get_tempoAverbadoTotal", "get_tempoServicoUenf"]);
+    $relatorio->set_classe([null, null, null, null, "Averbacao", "TempoServico"]);
+    $relatorio->set_metodo([null, null, null, null, "get_tempoAverbadoTotal", "get_tempoServicoUenfLiquido"]);
     $relatorio->set_conteudo($result);
 
     $relatorio->show();

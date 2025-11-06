@@ -44,7 +44,7 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
-    $parametroSexo = post('parametroSexo', get_session('parametroSexo'));
+    $parametroSexo = post('parametroSexo', get_session('parametroSexo', "Feminino"));
 
     # Joga os parâmetros para as sessions
     set_session('parametroLotacao', $parametroLotacao);
@@ -228,17 +228,17 @@ if ($acesso) {
             $funcao[] = null;
             $classe[] = "TempoServico";
             $metodo[] = "get_tempoServicoUenfLiquido";
-            
+
             # Monta o select
             $select = "SELECT ";
-            
-            foreach ($sql as $item){
+
+            foreach ($sql as $item) {
                 $select .= "{$item},";
             }
-            
+
             # Retira a ultima vírgula
             $select = substr($select, 0, -1);
-            
+
             # Continua o select
             $select .= " FROM tbservidor JOIN tbpessoa USING (idpessoa)
                                 JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -265,7 +265,6 @@ if ($acesso) {
             $select .= " ORDER BY tbpessoa.sexo, tbpessoa.dtNasc, dtAdmissao";
 
             $result = $pessoal->select($select);
-            
 
             # Monta a tabela
             $tabela = new Tabela();
@@ -280,13 +279,6 @@ if ($acesso) {
 
             $tabela->set_conteudo($result);
             $tabela->show();
-
-//            $tabela->set_label(['Servidor', 'Idade', $texto, 'Data de Ingresso<br/>no Serv.Público', 'Tempo de Contribuição<br/>(em dias)', 'Tempo Averbado<br/>(em dias)', "Data com<br/>5 anos no Cargo Atual", "Data com<br/>10 anos Públicos", "Data com<br/>20 anos Públicos", "Data com<br/>25 anos Públicos", "Data com<br/>30 anos Públicos", "Data com<br/>35 anos Públicos"]);
-//            $tabela->set_align(["left", "center", "center", "center", "left",  "left"]);
-//            $tabela->set_funcao([null, "idade", "date_to_php"]);
-//            $tabela->set_classe(["pessoal", null, null, "Aposentadoria", "Aposentadoria", "Averbacao", "Aposentadoria", "Aposentadoria", "Aposentadoria", "Aposentadoria", "Aposentadoria", "Aposentadoria"]);
-//            $tabela->set_metodo(["get_nomeELotacaoEDtAdmissao", null, null, "get_dtIngressoParaTempoPublico", "exibe_tempoContribuicao", "exibe_tempoAverbadoTotal", "get_data5AnosCargo", "get_data10anosPublicos", "get_data20anosPublicos", "get_data25anosPublicos", "get_data30anosPublicos", "get_data35anosPublicos"]);
-//            
             break;
 
         #######################################            

@@ -45,10 +45,12 @@ if ($acesso) {
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroSexo = post('parametroSexo', get_session('parametroSexo', "Feminino"));
+    $parametroMaiorIgual = post('parametroMaiorIgual', get_session('parametroMaiorIgual', $parametroSexo == "Feminino" ? 62 : 65));
 
     # Joga os parâmetros para as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSexo', $parametroSexo);
+    set_session('parametroMaiorIgual', $parametroMaiorIgual);
 
     # Limita a página
     $grid = new Grid();
@@ -100,10 +102,10 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(6);
+        $controle->set_col(5);
         $form->add_item($controle);
 
-        # Entregou ? 
+        # Parametro Sexo 
         $controle = new Input('parametroSexo', 'combo', 'Sexo:', 1);
         $controle->set_size(30);
         $controle->set_title('Filtra por Sexo');
@@ -114,8 +116,20 @@ if ($acesso) {
         $controle->set_valor($parametroSexo);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(3);
+        $controle->set_col(2);
         $form->add_item($controle);
+
+        # Parametro MaiorIgual 
+        $controle = new Input('parametroMaiorIgual', 'combo', 'Maior Igual a:', 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Idade Maior Igual');
+        $controle->set_valor($parametroMaiorIgual);
+        $controle->set_array(range(18, 75));
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(2);
+        $form->add_item($controle);
+
         $form->show();
     }
 
@@ -182,10 +196,10 @@ if ($acesso) {
             $metodo[] = null;
             # -----------------------------------
             # Idade
-            $sql[] = "DATE_FORMAT(tbpessoa.dtNasc, '%d/%m/%Y')";
+            $sql[] = "TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, CURDATE()) idade";
             $label[] = 'Idade';
             $align[] = "center";
-            $funcao[] = "idade";
+            $funcao[] = null;
             $classe[] = null;
             $metodo[] = null;
             # -----------------------------------            
@@ -244,6 +258,7 @@ if ($acesso) {
                                 JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                 JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                WHERE tbservidor.situacao = 1
+                 AND TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, CURDATE()) >= {$parametroMaiorIgual}
                  AND idPerfil = 1                 
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 

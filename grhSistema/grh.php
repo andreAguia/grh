@@ -80,6 +80,7 @@ if ($acesso) {
     set_session('parametroDias');
     set_session('parametroMarcador');
     set_session('parametroDataAdmissao');
+    set_session('parametroMaiorIgual');
 
     set_session('concursoTipo');
 

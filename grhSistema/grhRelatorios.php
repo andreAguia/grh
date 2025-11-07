@@ -468,6 +468,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Professores', '../grhRelatorios/geral.concursados.inativos.professores.porNome.php');
             $menu->add_item('linkWindow', 'Relatório de Concursados Inativos - Administrativos e Técnicos', '../grhRelatorios/geral.concursados.inativos.admTec.porNome.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutários e Celetistas - Exonerados ou Demitidos', '../grhRelatorios/servidores.estatutarios.celetistas.inativos.porNome.php');
+            $menu->add_item('linkWindow', 'Relatório de Estatutários e Celetistas - Inativos Geral', '../grhRelatorios/servidores.estatutarios.celetistas.inativos.porNome2.php');
             $menu->show();
             break;
 

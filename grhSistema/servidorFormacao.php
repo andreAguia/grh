@@ -234,7 +234,7 @@ if ($acesso) {
             'linha' => 2),
         array('nome' => 'horas',
             'label' => 'Carga Horária:',
-            'tipo' => 'numero',
+            'tipo' => 'texto',
             'size' => 10,
             'col' => 2,
             'title' => 'Carga Horária do Curso.',

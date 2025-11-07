@@ -39,7 +39,7 @@ if ($acesso) {
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
-    $relatorio->set_titulo('Relatório de Servidores Estatutarios');
+    $relatorio->set_titulo('Relatório de Servidores Estatutarios Ativos');
     $relatorio->set_subtitulo("Com Faixa e Nivel do Plano de Cargos");
     $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Cargo', 'Nivel Faixa Padrao']);
     #$relatorio->set_width([10, 90]);

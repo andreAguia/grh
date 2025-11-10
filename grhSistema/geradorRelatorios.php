@@ -305,7 +305,7 @@ if ($acesso) {
     $controle->set_linha(3);
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # Data Edital do Concurso
     $controle = new Input('postConcursoDataEdital', 'simnao', 'Public.Edital:', 1);
     $controle->set_size(5);
@@ -369,17 +369,14 @@ if ($acesso) {
     $controle->set_valor($postObs);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
-    $controle->set_linha(5);
     $form->add_item($controle);
-    
+
     # Nível Faixa Padrão
-    $controle = new Input('postNivelFaixaPadrao', 'simnao', 'Nivel/Faixa/Padrão:', 1);
-    $controle->set_size(5);
-    $controle->set_fieldset('Dados Financeiros');
+    $controle = new Input('postNivelFaixaPadrao', 'simnao', 'Faixa Sal:', 1);
+    $controle->set_size(4);
     $controle->set_title('Nível / Faixa / Padrão do Servidor');
     $controle->set_valor($postNivelFaixaPadrao);
     $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(6);
     $controle->set_col($tamColunas);
     $form->add_item($controle);
 
@@ -387,7 +384,8 @@ if ($acesso) {
     $controle = new Input('postEndereco', 'simnao', 'Endereço:', 1);
     $controle->set_size(5);
     $controle->set_fieldset('Dados Pessoais');
-    $controle->set_title('Endereço do Servidor');
+    $controle->set_title('Endereço do Servidor');    
+    $controle->set_linha(6);
     $controle->set_valor($postEndereco);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
@@ -484,7 +482,7 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(3);
     $form->add_item($controle);
-    
+
     # postTicket
     $controle = new Input('postTicket', 'simnao', 'Ticket:', 1);
     $controle->set_title('Linhas Internas');
@@ -615,12 +613,12 @@ if ($acesso) {
     $controle->set_col(6);
     $controle->set_array($comboPerfil);
     $form->add_item($controle);
-    
-     /*
+
+    /*
      * Data de Admissão
      */
-    
-    
+
+
     # Data de Admissão Sinal
     $controle = new Input('parametroDataAdmissaoSinal', 'combo', 'Data de Admissão', 1);
     $controle->set_size(20);
@@ -629,9 +627,9 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(3);
     $controle->set_col(6);
-    $controle->set_array(['>','>=','<','<=','=']);
+    $controle->set_array(['>', '>=', '<', '<=', '=']);
     $form->add_item($controle);
-    
+
     # Data de Admissão
     $controle = new Input('parametroDataAdmissao', 'data', '-', 1);
     $controle->set_size(20);
@@ -685,7 +683,7 @@ if ($acesso) {
         $method[] = "";
         $function[] = "";
     }
-    
+
     #IdFuncional
     if ($postIdfuncional) {
         $field[] = "idFuncional";
@@ -846,7 +844,7 @@ if ($acesso) {
         $method[] = "get_concurso";
         $function[] = "";
     }
-    
+
     # Dats a Publicação do Edital do Concurso
     if ($postConcursoDataEdital) {
         $field[] = "tbservidor.idServidor";
@@ -896,10 +894,10 @@ if ($acesso) {
         $method[] = "";
         $function[] = "trataNulo";
     }
-    
+
     # Nível Faixa Padrão
     if ($postNivelFaixaPadrao) {
-         $field[] = "tbservidor.idServidor";
+        $field[] = "tbservidor.idServidor";
         $label[] = "Nível Faixa Padrão";
         $align[] = "center";
         $class[] = "Progressao";
@@ -1184,7 +1182,7 @@ if ($acesso) {
         } else {
             $select .= " AND tbperfil.tipo <> 'Outros'";
         }
-        
+
         # Data de admissão
         if (!empty($parametroDataAdmissao)) {
             $select .= " AND tbservidor.dtAdmissao {$parametroDataAdmissaoSinal} '{$parametroDataAdmissao}'";

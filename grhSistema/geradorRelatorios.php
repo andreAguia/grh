@@ -52,6 +52,9 @@ $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
 
+# Dados Financeiros
+$postNivelFaixaPadrao = post('postNivelFaixaPadrao');
+
 # Outros
 $postAssinatura = post('postAssinatura');
 $postLinha = post('postLinha');
@@ -367,6 +370,17 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $controle->set_linha(5);
+    $form->add_item($controle);
+    
+    # Nível Faixa Padrão
+    $controle = new Input('postNivelFaixaPadrao', 'simnao', 'Nivel/Faixa/Padrão:', 1);
+    $controle->set_size(5);
+    $controle->set_fieldset('Dados Financeiros');
+    $controle->set_title('Nível / Faixa / Padrão do Servidor');
+    $controle->set_valor($postNivelFaixaPadrao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(6);
+    $controle->set_col($tamColunas);
     $form->add_item($controle);
 
     # Endereço
@@ -880,6 +894,16 @@ if ($acesso) {
         $align[] = "left";
         $class[] = "";
         $method[] = "";
+        $function[] = "trataNulo";
+    }
+    
+    # Nível Faixa Padrão
+    if ($postNivelFaixaPadrao) {
+         $field[] = "tbservidor.idServidor";
+        $label[] = "Nível Faixa Padrão";
+        $align[] = "center";
+        $class[] = "Progressao";
+        $method[] = "get_FaixaAtual";
         $function[] = "trataNulo";
     }
 

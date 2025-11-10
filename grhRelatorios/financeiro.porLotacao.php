@@ -27,11 +27,12 @@ if ($acesso) {
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao', 66));
     $subTitulo = null;
-    
+
     ######
 
     $select = "SELECT idfuncional,
                       tbpessoa.nome,
+                      tbservidor.dtAdmissao,
                       tbservidor.idServidor,
                       tbservidor.idServidor,
                       concat(IFnull(tblotacao.UADM,''),' - ',IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
@@ -65,14 +66,14 @@ if ($acesso) {
         $lotacaoClasse = new Lotacao();
         $relatorio->set_subtitulo2($subTitulo . " - " . $lotacaoClasse->get_nomeDiretoriaSigla($subTitulo));
     }
-    $relatorio->set_label(['IdFuncional', 'Nome', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
+    $relatorio->set_label(['IdFuncional', 'Nome', 'Admissão', 'Cargo', 'Nivel Faixa Padrao', 'Lotaçao']);
     #$relatorio->set_width([10, 90]);
-    $relatorio->set_align(["center", "left", "left"]);
-    $relatorio->set_classe([null, null, "Pessoal", "Progressao"]);
-    $relatorio->set_metodo([null, null, "get_cargoSimples", "get_FaixaAtual"]);
-    #$relatorio->set_funcao([null, null, "date_to_php"]);
+    $relatorio->set_align(["center", "left", "center", "left"]);
+    $relatorio->set_classe([null, null, null, "Pessoal", "Progressao"]);
+    $relatorio->set_metodo([null, null, null, "get_cargoSimples", "get_FaixaAtual"]);
+    $relatorio->set_funcao([null, null, "date_to_php"]);
     $relatorio->set_conteudo($result);
-    $relatorio->set_numGrupo(4);
+    $relatorio->set_numGrupo(5);
 
     $listaLotacao = $servidor->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
@@ -80,7 +81,7 @@ if ($acesso) {
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-    
+
     array_unshift($listaLotacao, array('todos', 'Todos'));
 
     $relatorio->set_formCampos(array(
@@ -92,7 +93,7 @@ if ($acesso) {
             'padrao' => $lotacao,
             'onChange' => 'formPadrao.submit();',
             'linha' => 1)));
-    
+
     $relatorio->show();
     $page->terminaPagina();
 }

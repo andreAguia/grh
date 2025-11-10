@@ -2500,7 +2500,7 @@ class PrevisaoAposentadoria {
         $this->exibe_tabelaDados(true);
 
         # Exibe afastamentos que interrompem o tempo de serviço
-        $aposentadoria = new Aposentadoria();
+        $afastamentos = new Afastamentos();
         if ($this->afastementosEspecificos AND $afastamentos->get_tempoAfastamentoSuspendeTempoServico($idServidor) > 0) {
             $this->exibe_tabelaAfastamentosSemtempoServico($idServidor, true);
         }

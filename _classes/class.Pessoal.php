@@ -1504,6 +1504,28 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
+     * Método get_idpessoa
+     * fornece o id_pessoa de uma idServidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_idPessoaNome($nome) {
+        $select = "SELECT idPessoa
+                     FROM tbpessoa
+                    WHERE nome = '{$nome}'";
+
+        $id_pessoa = parent::select($select, false);
+
+        if (empty($id_pessoa[0])) {
+            return null;
+        } else {
+            return $id_pessoa[0];
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_idpessoaCPF
      * fornece o id_pessoa de um CPF
      * 
@@ -6075,7 +6097,7 @@ class Pessoal extends Bd {
 
         # Pega o idPessoa desse idServidor
         $idPessoa = $this->get_idPessoa($idServidor);
-        	
+
         # Monta o select		
         $select = "SELECT endereco,
                           bairro,
@@ -6092,9 +6114,9 @@ class Pessoal extends Bd {
 
         if ($numero > 0) {
             $return = plm($row[0]) . " - " .
-                      plm($row[1]) . "<br/> " .
-                      plm($row[2]) . " - " .
-                      strtoupper($row[3]) . " Cep: " . $row[4];
+                    plm($row[1]) . "<br/> " .
+                    plm($row[2]) . " - " .
+                    strtoupper($row[3]) . " Cep: " . $row[4];
         }
 
         return $return;

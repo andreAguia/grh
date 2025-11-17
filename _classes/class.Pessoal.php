@@ -1510,16 +1510,26 @@ class Pessoal extends Bd {
      * @param	string $idServidor idServidor do servidor
      */
     public function get_idPessoaNome($nome) {
-        $select = "SELECT idPessoa
-                     FROM tbpessoa
-                    WHERE nome = '{$nome}'";
 
-        $id_pessoa = parent::select($select, false);
-
-        if (empty($id_pessoa[0])) {
+        # Trata o nome
+        if (empty($nome)) {
             return null;
         } else {
-            return $id_pessoa[0];
+            # retira os acentos
+            $nome = retiraAcento($nome);
+            
+            # Monta select
+            $select = "SELECT idPessoa
+                     FROM tbpessoa
+                    WHERE nome COLLATE utf8mb4_0900_ai_ci like '%{$nome}%'";
+
+            $id_pessoa = parent::select($select, false);
+
+            if (empty($id_pessoa[0])) {
+                return null;
+            } else {
+                return $id_pessoa[0];
+            }
         }
     }
 

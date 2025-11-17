@@ -138,7 +138,7 @@ class Lotacao {
             $row1 = $pessoal->select($select1, false);
             $idServidor = $row1["idServidor"];
 
-            # Agora pega a lotação anterior a esta mudança
+            # Agora pega a lotação Posterior a esta mudança
             $select2 = "SELECT idHistLot,
                                lotacao
                           FROM tbhistlot 
@@ -154,6 +154,47 @@ class Lotacao {
                     return $lotacao;
                 } else {
                     $lotacao = $item["lotacao"];
+                }
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_dataLotacaoPosterior($idHistLot = null) {        /**
+         * Retorna a data inicial da lotação Posterior deste servidor a partir de uma mudança de lotação no histórico 
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idHistLot)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select1 = "SELECT idServidor
+                          FROM tbhistlot
+                         WHERE idHistLot = {$idHistLot}";
+
+            $row1 = $pessoal->select($select1, false);                        
+            $idServidor = $row1["idServidor"];
+
+            # Agora pega a data Posterior a esta mudança
+            $select2 = "SELECT idHistLot,
+                               data
+                          FROM tbhistlot 
+                         WHERE idServidor = {$idServidor}
+                      ORDER BY data DESC";
+            
+            $row2 = $pessoal->select($select2);
+
+            $lotacao = null;
+            foreach ($row2 as $item) {
+
+                if ($item["idHistLot"] == $idHistLot) {
+                    return $lotacao;
+                } else {
+                    $lotacao = date_to_php($item["data"]);
                 }
             }
         }
@@ -234,6 +275,30 @@ class Lotacao {
                     hr();
                 }
             }
+        }
+    }
+
+    ###########################################################
+
+    public function get_historicoLotacao($idServidor = null) {
+        /**
+         * Retorna um array com o histórico de lotação
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Agora pega a lotação anterior a esta mudança
+            $select = "SELECT *
+                         FROM tbhistlot 
+                        WHERE idServidor = {$idServidor}
+                     ORDER BY data";
+
+            $row = $pessoal->select($select);
+            return $row;
         }
     }
 

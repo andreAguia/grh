@@ -26,6 +26,10 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
+    # Pega quem assina
+    $assina = get('assina', post('assina', $intra->get_idServidor($idUsuario)));
+    $especifico = post('especifico');
+
     # Verifica se o perfil permite a declaração
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
     if (($idPerfil == 1) OR ($idPerfil == 4)) {
@@ -45,7 +49,6 @@ if ($acesso) {
         # Monta a Declaração
         $dec = new Declaracao();
         $dec->set_carimboCnpj(true);
-        $dec->set_assinatura(true);
         $dec->set_data(date("d/m/Y"));
 
         if ($idSituacao == 1) {
@@ -56,8 +59,7 @@ if ($acesso) {
             }
 
             $texto .= " é servidor(a) desta Universidade, admitido(a) através de Concurso Público em $dtAdmissao,"
-                    . " para ocupar o cargo de $cargoEfetivo, lotado(a) no(a) $lotacao. "
-                    . "O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.";
+                    . " para ocupar o cargo de $cargoEfetivo, lotado(a) no(a) $lotacao. ";
 
             $dec->set_texto($texto);
         } else {
@@ -74,7 +76,7 @@ if ($acesso) {
 
         if (count($dadosLotacao) > 1) {
 
-            $texto2 = "Declaramos, também, que desde a sua admissão, o servidor atuou nos seguintes setores desta universidade:<br/>";
+            $texto2 = "Declaramos, também, que desde a sua admissão, o(a) servidor(a) atuou nos seguintes setores desta universidade:<br/>";
             #$texto2 .= "<ul>";
 
             foreach ($dadosLotacao as $item) {
@@ -106,6 +108,22 @@ if ($acesso) {
             $dec->set_texto($texto2);
         }
 
+        if (!empty($especifico)) {
+            $dec->set_texto("Informamos abaixo as atribuições específicas do(a) servidor(a) nos setores em que atuou: ");
+            $texto3 = "<ul>";
+
+            # Pega as tarefas
+            $linhas = explode("- ", $especifico);
+            foreach ($linhas as $linha) {
+                if (!empty($linha)) {
+                    $texto3 .= "<li>{$linha}</li>";
+                }
+            }
+            
+            $texto3 .= "</ul>";
+            $dec->set_texto($texto3);
+        }
+
 
         $dec->set_texto("Conforme Lei Estadual 4.800/06 de 29/06/06, publicada DOERJ em 30/06/06"
                 . " e Resolução CONSUNI 005/06 de 08/07/2006, publicada DOERJ em 19/10/2006,"
@@ -126,9 +144,67 @@ if ($acesso) {
         #              . " é portadora do CNPJ nº 04.809.688/0001-06, com sede na Av. Alberto"
         #              . " Lamego, 2.000, Parque Califórnia – Campos dos Goytacazes – RJ, CEP: 28.013-602.");
 
+        $dec->set_texto("O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.");
         $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
 
         $dec->set_rodapeSoUntimaPag(true);
+
+        # Pega o idServidor do gerente GRH
+        $idGerente = $pessoal->get_gerente(66);
+
+        if ($assina == $idGerente) {
+            $nome = $pessoal->get_nome($idGerente);
+            $cargo = $pessoal->get_cargoComissaoDescricao($idGerente);
+            $idFuncional = $pessoal->get_idFuncional($idGerente);
+            $dec->set_assinatura(true);
+        } else {
+            $nome = $pessoal->get_nome($assina);
+
+            if (empty($pessoal->get_cargoComissaoDescricao($assina))) {
+                $cargo = $pessoal->get_cargoSimples($assina);
+            } else {
+                $cargo = $pessoal->get_cargoComissaoDescricao($assina);
+            }
+            $idFuncional = $pessoal->get_idFuncional($assina);
+        }
+
+        $dec->set_origemNome($nome);
+        $dec->set_origemDescricao($cargo);
+        $dec->set_origemIdFuncional($idFuncional);
+
+        $listaServidor = $pessoal->select('SELECT tbservidor.idServidor,
+                                              tbpessoa.nome
+                                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                                         LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                                         LEFT JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                        WHERE situacao = 1
+                                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                                          AND tblotacao.idlotacao = 66
+                                          ORDER BY tbpessoa.nome');
+
+        $dec->set_formCampos(array(
+            array('nome' => 'assina',
+                'label' => 'Assinatura:',
+                'tipo' => 'combo',
+                'array' => $listaServidor,
+                'size' => 30,
+                'padrao' => $assina,
+                'title' => 'Quem assina o documento',
+                'onChange' => 'formPadrao.submit();',
+                'col' => 10,
+                'linha' => 1),
+            array('nome' => 'especifico',
+                'label' => 'Atribuições Específicas: (Inicie as tarefas com -)',
+                'tipo' => 'textarea',
+                'size' => array(80, 6),
+                'padrao' => $especifico,
+                'title' => 'Atribuições Específicas.',
+                'onChange' => 'formPadrao.submit();',
+                'linha' => 2),
+        ));
+
+        $dec->set_formLink("?");
+
         $dec->show();
 
         # Grava o log da visualização do relatório

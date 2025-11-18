@@ -18,7 +18,7 @@ class Declaracao {
     private $origemIdFuncional = null;
     private $rodapeNome = "Gerência de Recursos Humanos - GRH";
     private $rodapeEndereco = "Av. Alberto Lamego, 2000 – Prédio E-1  - Sala 217 -  CEP 28.013-602 -  Campos dos Goytacazes - RJ";
-    private $rodapeTelefone = "(22) 2739-7064";
+    private $rodapeTelefone = "Telefones: (22) 2739-7064  (22) 2748-6008  (22) 2748-6073";
     private $saltoRodape = 3;
     private $saltoAssinatura = 3;
     private $aviso = null;
@@ -120,7 +120,7 @@ class Declaracao {
             $div->abre();
 
             hr();
-            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>Telefone: {$this->rodapeTelefone}", "pCiRodape");
+            p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>{$this->rodapeTelefone}", "pCiRodape");
 
             $div->fecha();
         }

@@ -485,17 +485,20 @@ if ($acesso) {
     $comissao = $pessoal->get_salarioCargoComissao($idServidorPesquisado);          // cargo em comissão
     $gratificacao = $pessoal->get_gratificacao($idServidorPesquisado);              // gratificação especial
     $planoPrevidenciario = $pessoal->get_planoPevidenciario($idServidorPesquisado); // plano previdenciário
+    $nivelSalarial = $pessoal->get_salarioNivelFaixaPadrao($idServidorPesquisado);  // faixa salarial
 
     $total = $salarioBase + $trienio + $comissao + $gratificacao;
-    $conteudo = array(array($salarioBase, $trienio, $comissao, $gratificacao, $total, $planoPrevidenciario));
+    $conteudo = [
+        [$salarioBase, $nivelSalarial, $trienio, $comissao, $gratificacao, $total, $planoPrevidenciario]
+    ];
 
     $relatorio = new Relatorio('relatorioFichaCadastral');
     #$relatorio->set_titulo(null);
     #$relatorio->set_subtitulo($subtitulo);
-    $relatorio->set_label(['Salário Base', 'Triênio', 'Cargo em Comissão', 'Gratificação Especial', 'Total', 'Plano Previdenciário']);
+    $relatorio->set_label(['Salário Base', 'Nível / Faixa / Padrão', 'FaixaTriênio', 'Cargo em Comissão', 'Gratificação Especial', 'Total', 'Plano Previdenciário']);
     #$relatorio->set_width([20, 20, 20, 20, 20]);
     $relatorio->set_align(['center']);
-    $relatorio->set_funcao(['formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda','trataNulo']);
+    $relatorio->set_funcao(['formataMoeda', null, 'formataMoeda', 'formataMoeda', 'formataMoeda', 'formataMoeda', 'trataNulo']);
     $relatorio->set_conteudo($conteudo);
     $relatorio->set_subTotal(false);
     $relatorio->set_totalRegistro(false);
@@ -1401,8 +1404,8 @@ if ($acesso) {
         $relatorio->set_textoMensagemSemRegistro("Não consta nenhum tempo averbado para o servidor");
         $relatorio->show();
     }
-    
-     /*
+
+    /*
      * Observações adicionais de Licença Especial (Prêmio)
      */
 

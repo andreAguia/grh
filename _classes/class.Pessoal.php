@@ -214,7 +214,7 @@ class Pessoal extends Bd {
 
     /**
      * Método get_salarioBase
-     * informa o salario base de uma matrícula
+     * informa o salario base atual de uma matrícula
      * 
      * @param	string $idServidor idServidor do servidor
      */
@@ -236,6 +236,32 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_salarioBase
+     * informa o salario base atual de uma matrícula
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    public function get_salarioNivelFaixaPadrao($idServidor) {
+
+        $select = "SELECT tbclasse.faixa
+                     FROM tbprogressao, tbclasse
+                     WHERE idServidor = {$idServidor}
+                       AND tbprogressao.idClasse = tbclasse.idClasse
+              ORDER BY valor desc";
+
+        $row = parent::select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
 
     /**
      * Método get_salarioTotal

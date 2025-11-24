@@ -193,14 +193,14 @@ if ($acesso) {
                 'onChange' => 'formPadrao.submit();',
                 'col' => 10,
                 'linha' => 1),
-            array('nome' => 'especifico',
-                'label' => 'Atribuições Específicas: (Inicie as tarefas com -)',
-                'tipo' => 'textarea',
-                'size' => array(80, 6),
-                'padrao' => $especifico,
-                'title' => 'Atribuições Específicas.',
-                'onChange' => 'formPadrao.submit();',
-                'linha' => 2),
+//            array('nome' => 'especifico',
+//                'label' => 'Atribuições Específicas: (Inicie as tarefas com -)',
+//                'tipo' => 'textarea',
+//                'size' => array(80, 6),
+//                'padrao' => $especifico,
+//                'title' => 'Atribuições Específicas.',
+//                'onChange' => 'formPadrao.submit();',
+//                'linha' => 2),
         ));
 
         $dec->set_formLink("?");

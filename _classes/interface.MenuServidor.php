@@ -656,9 +656,7 @@ class MenuServidor {
         $menu->add_item('linkWindow', 'Declaração de Inquérito Administrativo', '../grhRelatorios/declaracao.InqueritoAdministrativo.php');
         if ($this->perfil == 1) {
             $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo', '../grhRelatorios/declaracao.AtribuicoesCargo.php');
-            if (Verifica::acesso($this->idUsuario, 1)) {
-                $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo - Detalhado', '../grhRelatorios/declaracao.AtribuicoesCargo2.php');
-            }
+            $menu->add_item('linkWindow', 'Declaração de Atribuições do Cargo - Detalhado', '../grhRelatorios/declaracao.AtribuicoesCargo2.php');
         }
 
         if ($this->situacao == "Ativo") {

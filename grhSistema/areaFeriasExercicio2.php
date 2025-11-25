@@ -474,11 +474,10 @@ if ($acesso) {
             $resultDuplicado = $servidor->select($selectDuplicado);
 
             if (!empty($resultDuplicado)) {
-                
-                calloutAlert("Lançamentos Duplicados!!","Problemas Encontrados!!");
 
                 $tabela = new Tabela();
-                $tabela->set_titulo("Lançamentos Duplicados");
+                $tabela->set_titulo("Lançamentos Duplicados!!");
+                $tabela->set_subtitulo("Lançamentos Duplicados");
                 $tabela->set_label(['Nome', 'Inicio', 'Dias']);
                 $tabela->set_align(["left"]);
                 $tabela->set_funcao([null, "date_to_php"]);

@@ -63,7 +63,8 @@ if ($acesso) {
         array(1, "Em Aberto"),
         array(2, "Vigente"),
         array(3, "Arquivado"),
-        array(4, "Aguardando Publicação")
+        array(4, "Aguardando Publicação"),
+        array(5, "Interrompido")
     );
 
     # Origem

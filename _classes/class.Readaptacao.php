@@ -97,6 +97,14 @@ class Readaptacao {
             case 3:
                 $retorno = "Arquivado";
                 break;
+
+            case 4:
+                $retorno = "Aguardando Publicação";
+                break;
+
+            case 5:
+                $retorno = "Interrompido";
+                break;
         }
 
         return $retorno;
@@ -249,7 +257,7 @@ class Readaptacao {
         } else {
             $retorno = null;
         }
-        
+
         return $retorno;
     }
 
@@ -316,7 +324,6 @@ class Readaptacao {
         # Despachos
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho Para Perícia", '?fase=despachoPerícia&id=' . $idReadaptacao);
         #$menu->add_item('linkWindow', "\u{1F5A8} Despacho: Início da Concessão", '?fase=despachoInicio&id=' . $idReadaptacao);
-
         # Retorno
         if (!vazio($dtInicio)) {
 
@@ -349,10 +356,10 @@ class Readaptacao {
 
         # Guarda o idRedução imediatamente anterior
         $idReadaptacaoAnterior = null;
-        
+
         # Guarda os dados da redução referentes a essa id anterior
         $dadosAnterior = null;
-        
+
         # Verifica se foi informado
         if (empty($idReadaptacao)) {
             alert("É necessário informar o id da readaptacao.");

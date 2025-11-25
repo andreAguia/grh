@@ -293,6 +293,33 @@ if ($acesso) {
 
             # Exibe o Processo de férias
             $ferias->exibeProcesso($pessoal->get_idLotacao($idServidorPesquisado), date("Y"));
+            
+            # Exibe as férias pendentes            
+            $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
+            if (!empty($pendentes)) {
+                $callout = new Callout("warning");
+                $callout->abre();
+                p("Atenção:<br/> {$pendentes}", 'center', 'f14');
+                $callout->fecha();
+            }
+            
+            /*
+             * Informa se existem lançamentos duplicados
+             */
+            $selectDuplicado = "SELECT tbferias.dtInicial,
+                                       tbferias.numDias,
+                                       COUNT(*)
+                                  FROM tbferias
+                                 WHERE idServidor = {$idServidorPesquisado}
+                              GROUP BY tbferias.dtInicial,
+                                       tbferias.numDias
+                                HAVING COUNT(*) > 1";
+
+            $resultDuplicado = $pessoal->select($selectDuplicado);
+
+            if (!empty($resultDuplicado)) {                
+                calloutAlert("Lançamentos Duplicados!!","Problemas Encontrados!!");
+            }
 
             $grid3->fechaColuna();
             $grid3->abreColuna(6);
@@ -337,16 +364,7 @@ if ($acesso) {
             $painel->fecha();
 
             $grid3->fechaColuna();
-            $grid3->fechaGrid();
-
-            # Exibe as férias pendentes            
-            $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
-            if (!empty($pendentes)) {
-                $callout = new Callout("warning");
-                $callout->abre();
-                p("Atenção:<br/> {$pendentes}", 'center', 'f14');
-                $callout->fecha();
-            }
+            $grid3->fechaGrid();            
 
             $objeto->listar();
 

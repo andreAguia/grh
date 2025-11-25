@@ -126,6 +126,26 @@ if ($acesso) {
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
 
+    /*
+     * Informa se existem lançamentos duplicados
+     */
+    $selectDuplicado = "SELECT tbferias.dtInicial,
+                                       tbferias.numDias,
+                                       COUNT(*)
+                                  FROM tbferias
+                                 WHERE idServidor = {$idServidorPesquisado}
+                              GROUP BY tbferias.dtInicial,
+                                       tbferias.numDias
+                                HAVING COUNT(*) > 1";
+
+    $resultDuplicado = $pessoal->select($selectDuplicado);
+
+    $objeto->set_formatacaoCondicional(array(
+        array('coluna' => 2,
+            'valor' => $resultDuplicado,
+            'operador' => 'in_array',
+            'id' => 'inativo')));
+
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');
 
@@ -293,7 +313,7 @@ if ($acesso) {
 
             # Exibe o Processo de férias
             $ferias->exibeProcesso($pessoal->get_idLotacao($idServidorPesquisado), date("Y"));
-            
+
             # Exibe as férias pendentes            
             $pendentes = $ferias->exibeFeriasPendentes($idServidorPesquisado);
             if (!empty($pendentes)) {
@@ -302,23 +322,10 @@ if ($acesso) {
                 p("Atenção:<br/> {$pendentes}", 'center', 'f14');
                 $callout->fecha();
             }
-            
-            /*
-             * Informa se existem lançamentos duplicados
-             */
-            $selectDuplicado = "SELECT tbferias.dtInicial,
-                                       tbferias.numDias,
-                                       COUNT(*)
-                                  FROM tbferias
-                                 WHERE idServidor = {$idServidorPesquisado}
-                              GROUP BY tbferias.dtInicial,
-                                       tbferias.numDias
-                                HAVING COUNT(*) > 1";
 
-            $resultDuplicado = $pessoal->select($selectDuplicado);
-
-            if (!empty($resultDuplicado)) {                
-                calloutAlert("Lançamentos Duplicados!!","Problemas Encontrados!!");
+            # Informa registros duplicados
+            if (!empty($resultDuplicado)) {
+                calloutAlert("Lançamentos Duplicados!!", "Problemas Encontrados!!");
             }
 
             $grid3->fechaColuna();
@@ -364,7 +371,7 @@ if ($acesso) {
             $painel->fecha();
 
             $grid3->fechaColuna();
-            $grid3->fechaGrid();            
+            $grid3->fechaGrid();
 
             $objeto->listar();
 

@@ -83,7 +83,6 @@ if ($acesso) {
 
     # Título
     #titulo("Área de Férias - Por Ano de Fruíção");
-
     ################################################################
     # Formulário de Pesquisa
     $form = new Form('?');
@@ -281,8 +280,7 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
             $tabela->set_titulo("Ano Exercício");
-           #$tabela->show();
-
+            #$tabela->show();
             #######################################
             # Resumo por Mês
             # Conecta com o banco de dados
@@ -349,7 +347,6 @@ if ($acesso) {
             $tabela->set_funcao(["get_nomeMes"]);
             $tabela->set_titulo("Mensal (Data Inicial)");
             #$tabela->show();
-
             #######################################
             # Resumo por status
             # Conecta com o banco de dados
@@ -425,7 +422,6 @@ if ($acesso) {
             $servidor = new Pessoal();
 
             $select = "SELECT tbservidor.idServidor,
-                             tbferias.anoExercicio,
                              tbferias.dtInicial,
                              tbferias.numDias,
                              date_format(ADDDATE(tbferias.dtInicial,tbferias.numDias-1),'%d/%m/%Y') as dtf,
@@ -480,17 +476,17 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: {$parametroAno}");
-            $tabela->set_label(['Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs']);
+            $tabela->set_label(['Nome', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs']);
             $tabela->set_align(["left"]);
-            $tabela->set_funcao([null, null, "date_to_php"]);
-            $tabela->set_classe(["pessoal", null, null, null, null, "pessoal", null, null, "Ferias"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs"]);
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
+            $tabela->set_funcao([null, "date_to_php"]);
+            $tabela->set_classe(["pessoal", null, null, null, "pessoal", null, null, "Ferias"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, "get_feriasPeriodo", null, null, "exibeObs"]);
             $tabela->set_editar('?fase=editaServidorFerias&id=');
             $tabela->set_nomeColunaEditar("Acessar");
             $tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idServidor');
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
 //            # Retira o elementos do array que são diferentes de Sim
 //            if ($parametroProblemas == "Sim") {

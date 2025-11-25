@@ -24,8 +24,7 @@ $campoValor[9] = mb_strtolower($campoValor[9]);
  */
 if ($origem == 2) {
     # Preenche o status de acordo com o resultado
-    switch ($resultado)
-    {
+    switch ($resultado) {
         # Resultado: nulo - Ainda não saiu o resultado
         # Status: 1 - Em aberto
         case null:
@@ -55,6 +54,12 @@ if ($origem == 2) {
         # Status:    3 - Arquivado
         case 2:
             $campoValor[3] = 3;
+            break;
+
+        # Resultado: 3 - Interrompido
+        # Status:    5 - Interrompido
+        case 3:
+            $campoValor[3] = 5;
             break;
     }
 } else {

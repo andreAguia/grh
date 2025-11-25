@@ -140,11 +140,20 @@ if ($acesso) {
 
     $resultDuplicado = $pessoal->select($selectDuplicado);
 
-    $objeto->set_formatacaoCondicional(array(
-        array('coluna' => 2,
-            'valor' => $resultDuplicado,
-            'operador' => 'in_array',
-            'id' => 'inativo')));
+    if (!empty($resultDuplicado)) {
+        
+        $arrayCompara = null;
+        
+        foreach($resultDuplicado as $item){
+             $arrayCompara[] = $item[0];
+        }
+
+        $objeto->set_formatacaoCondicional(array(
+            array('coluna' => 2,
+                'valor' => $arrayCompara,
+                'operador' => 'in_array',
+                'id' => 'inativo')));
+    }
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

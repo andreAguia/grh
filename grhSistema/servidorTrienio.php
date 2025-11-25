@@ -120,6 +120,7 @@ if ($acesso) {
     $objeto->set_width([10, 5, 20, 15, 10, 15, 15]);
     $objeto->set_align(["center"]);
     $objeto->set_funcao(["date_to_php", null, null, null, "date_to_php"]);
+    $objeto->set_subtitulo("Triênio Máximo: 60%");
 
     # Classe do banco de dados
     $objeto->set_classBd('pessoal');

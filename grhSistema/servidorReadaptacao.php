@@ -291,7 +291,7 @@ if ($acesso) {
                 array(2, "Vigente"),
                 array(3, "Arquivado"),
                 array(4, "Aguardando Publicação"),
-                array(5, "Interrompido"),),
+                array(5, "Interrompido")),
             'size' => 2,
             'valor' => 0,
             'col' => 3,

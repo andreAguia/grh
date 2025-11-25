@@ -626,6 +626,14 @@ class ReducaoCargaHoraria {
             case 3:
                 $retorno = "Arquivado";
                 break;
+
+            case 4:
+                $retorno = "Aguardando Publicação";
+                break;
+
+            case 5:
+                $retorno = "Interrompido";
+                break;
         }
 
         return $retorno;

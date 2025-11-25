@@ -148,11 +148,6 @@ if ($acesso) {
             $arrayCompara[] = date_to_php($item[0]);
         }
 
-        if (Verifica::acesso($idUsuario, 1)) {
-            var_dump($resultDuplicado);
-            var_dump($arrayCompara);
-        }
-
         $objeto->set_formatacaoCondicional(array(
             array('coluna' => 2,
                 'valor' => $arrayCompara,

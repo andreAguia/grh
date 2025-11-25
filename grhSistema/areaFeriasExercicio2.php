@@ -481,7 +481,7 @@ if ($acesso) {
                 $tabela->set_align(["left"]);
                 $tabela->set_funcao([null, "date_to_php"]);
                 $tabela->set_classe(["pessoal"]);
-                $tabela->set_metodo(["get_nomeECargoELotacao"]);
+                $tabela->set_metodo(["get_nome"]);
                 $tabela->set_editar('?fase=editaServidorFerias&id=');
                 $tabela->set_nomeColunaEditar("Acessar");
                 $tabela->set_editarBotao("olho.png");

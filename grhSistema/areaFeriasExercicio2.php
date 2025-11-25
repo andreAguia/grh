@@ -479,6 +479,7 @@ if ($acesso) {
                 $tabela->set_titulo("Lançamentos Duplicados!!");
                 $tabela->set_subtitulo("Lançamentos Duplicados");
                 $tabela->set_label(['Nome', 'Inicio', 'Dias']);
+                $tabela->set_width([70, 15, 10]);
                 $tabela->set_align(["left"]);
                 $tabela->set_funcao([null, "date_to_php"]);
                 $tabela->set_classe(["pessoal"]);

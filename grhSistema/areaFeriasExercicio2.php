@@ -475,7 +475,7 @@ if ($acesso) {
 
             if (!empty($resultDuplicado)) {
                 
-                callout("Problemas Encontrados!!","alert");
+                calloutAlert("Lançamentos Duplicados!!","Problemas Encontrados!!");
 
                 $tabela = new Tabela();
                 $tabela->set_titulo("Lançamentos Duplicados");

@@ -148,7 +148,7 @@ if ($acesso) {
             $arrayCompara[] = $item[0];
         }
 
-        if (Verifica::acesso($this->idUsuario, 1)) {
+        if (Verifica::acesso($idUsuario, 1)) {
             var_dump($resultDuplicado);
             var_dump($arrayCompara);
         }

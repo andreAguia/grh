@@ -143,9 +143,14 @@ if ($acesso) {
     if (!empty($resultDuplicado)) {
         
         $arrayCompara = null;
-        
-        foreach($resultDuplicado as $item){
-             $arrayCompara[] = $item[0];
+
+        foreach ($resultDuplicado as $item) {
+            $arrayCompara[] = $item[0];
+        }
+
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            var_dump($resultDuplicado);
+            var_dump($arrayCompara);
         }
 
         $objeto->set_formatacaoCondicional(array(

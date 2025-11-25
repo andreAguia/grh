@@ -421,6 +421,82 @@ if ($acesso) {
             # Conecta com o banco de dados
             $servidor = new Pessoal();
 
+            /*
+             * Informa se existem lançamentos duplicados
+             */
+            $selectDuplicado = "SELECT tbservidor.idServidor,
+                                       tbferias.dtInicial,
+                                       tbferias.numDias,
+                                       COUNT(*)
+                                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             JOIN tbferias ON (tbservidor.idServidor = tbferias.idServidor)
+                                             JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
+                                             LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                             JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                       WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                         AND tbferias.anoExercicio = {$parametroAno}";
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $selectDuplicado .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                } else { # senão é uma diretoria genérica
+                    $selectDuplicado .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                }
+            }
+
+            # cargo
+            if (($parametroCargo <> "*") AND ($parametroCargo <> "")) {
+                if ($parametroCargo == "Professor") {
+                    $selectDuplicado .= ' AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)';
+                } else {
+                    $selectDuplicado .= ' AND (tbtipocargo.cargo = "' . $parametroCargo . '")';
+                }
+            }
+
+            if (($parametroStatus <> "Todos") AND ($parametroStatus <> "")) {
+                $selectDuplicado .= ' AND (tbferias.status = "' . $parametroStatus . '")';
+            }
+
+            # Verifica se tem filtro por perfil
+            if (($parametroPerfil <> "*") AND (!is_null($parametroPerfil))) {
+                $selectDuplicado .= " AND idPerfil = {$parametroPerfil}";
+            }
+
+            $selectDuplicado .= "GROUP BY tbservidor.idServidor,
+                                           tbferias.dtInicial,
+                                           tbferias.numDias
+                                    HAVING COUNT(*) > 1";
+
+            $resultDuplicado = $servidor->select($selectDuplicado);
+
+            if (!empty($resultDuplicado)) {
+
+                $tabela = new Tabela();
+                $tabela->set_titulo("Atenção !! Lançamentos Duplicados");
+                $tabela->set_label(['Nome', 'Inicio', 'Dias']);
+                $tabela->set_align(["left"]);
+                $tabela->set_funcao([null, "date_to_php"]);
+                $tabela->set_classe(["pessoal"]);
+                $tabela->set_metodo(["get_nomeECargoELotacao"]);
+                $tabela->set_editar('?fase=editaServidorFerias&id=');
+                $tabela->set_nomeColunaEditar("Acessar");
+                $tabela->set_editarBotao("olho.png");
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+                $tabela->set_conteudo($resultDuplicado);
+                $tabela->show();
+            }
+
+            /*
+             * Select da tabela
+             */
+
+
             $select = "SELECT tbservidor.idServidor,
                              tbferias.dtInicial,
                              tbferias.numDias,

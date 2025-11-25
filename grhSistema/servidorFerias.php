@@ -62,6 +62,8 @@ if ($acesso) {
     # botão de voltar da lista
     if ($areaFerias == "exercicio") {
         $voltarLista = 'areaFeriasExercicio.php';
+    } elseif ($areaFerias == "exercicio2") {
+        $voltarLista = 'areaFeriasExercicio2.php';
     } elseif ($areaFerias == "fruicao") {
         $voltarLista = 'areaFeriasFruicao.php';
     } elseif ($areaFerias == "importa") {
@@ -282,7 +284,7 @@ if ($acesso) {
                 ));
                 $tabela->show();
             }
-            
+
             $grid2->fechaColuna();
             $grid2->abreColuna(9);
 

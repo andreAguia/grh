@@ -270,6 +270,7 @@ class ListaFerias {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Ano Exercício: " . $this->anoExercicio);
+            $tabela->set_subtitulo("Agrupados pelo Total de Dias");
             $tabela->set_label(["Id", "Servidor", "Lotação", "Admissão", "Dias", "Situação", "Pendências"]);
             $tabela->set_classe([null, "pessoal", "pessoal", null, null, null, "Ferias"]);
 

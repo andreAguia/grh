@@ -86,21 +86,23 @@ if ($acesso) {
 
     ################################################################
     # Formulário de Pesquisa
-    $form = new Form('areaFeriasFruicao.php');
+    $form = new Form('?');
 
     # Cria um array com os anos possíveis
     $anoInicial = 1999;
     $anoAtual = date('Y');
     $anos = arrayPreenche($anoInicial, $anoAtual + 2, "d");
 
-    $controle = new Input('parametroAno', 'combo', 'Fruição:', 1);
+    $controle = new Input('parametroAno', 'combo', 'Ano Exercício:', 1);
     $controle->set_size(8);
-    $controle->set_title('Filtra por Ano em que as férias foi/será fruída');
+    $controle->set_title('Filtra por Ano exercício');
     $controle->set_array($anos);
+    $controle->set_valor(date("Y"));
     $controle->set_valor($parametroAno);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(1);
+    $controle->set_col(2);
+    $controle->set_autofocus(true);
     $form->add_item($controle);
 
     # Lotação    
@@ -119,7 +121,7 @@ if ($acesso) {
     $controle->set_valor($parametroLotacao);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(3);
+    $controle->set_col(4);
     $form->add_item($controle);
 
     # Perfil
@@ -135,29 +137,7 @@ if ($acesso) {
     $controle->set_valor($parametroPerfil);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(2);
-    $form->add_item($controle);
-
-    # Status    
-    $controle = new Input('parametroStatus', 'combo', 'Status:', 1);
-    $controle->set_size(10);
-    $controle->set_title('Filtra por Status');
-    $controle->set_array(["Todos", "solicitada", "fruída", "fruindo"]);
-    $controle->set_valor($parametroStatus);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(2);
-    $form->add_item($controle);
-
-    # Problemas    
-    $controle = new Input('parametroProblemas', 'combo', 'Problemas:', 1);
-    $controle->set_size(10);
-    $controle->set_title('Filtra por Status');
-    $controle->set_array(["Todos", "Sim", "Não"]);
-    $controle->set_valor($parametroProblemas);
-    $controle->set_onChange('formPadrao.submit();');
-    $controle->set_linha(1);
-    $controle->set_col(2);
+    $controle->set_col(3);
     $form->add_item($controle);
 
     # cargos por nivel
@@ -176,7 +156,7 @@ if ($acesso) {
     $controle->set_valor($parametroCargo);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_linha(1);
-    $controle->set_col(2);
+    $controle->set_col(3);
     $form->add_item($controle);
 
     $form->show();
@@ -220,16 +200,15 @@ if ($acesso) {
 
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
-            $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio2.php');
+            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
             $menu->add_item('link', 'por Ano de Exercício Agrupado', 'areaFeriasExercicio.php');
-            $menu->add_item('link', '<b>por Ano de Fruíção</b>', '#');
-            #$menu->add_item('link', 'pendentes', 'areaFeriasPendentes.php');
+            $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
-            $menu->add_item('titulo', 'Relatórios');
-            $menu->add_item('linkWindow', 'Anual Agrupado por Mês', '../grhRelatorios/ferias.fruicao.anual.porMes.php');
-            $menu->add_item('linkWindow', 'Anual Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.anual.porLotacao.php');
-            $menu->add_item('linkWindow', 'Mensal Geral', '../grhRelatorios/ferias.fruicao.mensal.geral.php');
-            $menu->add_item('linkWindow', 'Mensal Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.mensal.porLotacao.php');
+//            $menu->add_item('titulo', 'Relatórios');
+//            $menu->add_item('linkWindow', 'Anual Agrupado por Mês', '../grhRelatorios/ferias.fruicao.anual.porMes.php');
+//            $menu->add_item('linkWindow', 'Anual Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.anual.porLotacao.php');
+//            $menu->add_item('linkWindow', 'Mensal Geral', '../grhRelatorios/ferias.fruicao.mensal.geral.php');
+//            $menu->add_item('linkWindow', 'Mensal Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.mensal.porLotacao.php');
             $menu->show();
 
             $grid3->fechaColuna();
@@ -302,7 +281,7 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
             $tabela->set_titulo("Ano Exercício");
-            $tabela->show();
+           #$tabela->show();
 
             #######################################
             # Resumo por Mês
@@ -369,7 +348,7 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             $tabela->set_funcao(["get_nomeMes"]);
             $tabela->set_titulo("Mensal (Data Inicial)");
-            $tabela->show();
+            #$tabela->show();
 
             #######################################
             # Resumo por status
@@ -432,7 +411,7 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             $tabela->set_funcao(["exibeDescricaoStatus"]);
             $tabela->set_titulo("Status");
-            $tabela->show();
+            #$tabela->show();
 
             $grid3->fechaColuna();
             $grid3->fechaGrid();
@@ -463,7 +442,7 @@ if ($acesso) {
                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                              JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                         AND YEAR(tbferias.dtInicial) = $parametroAno";
+                         AND tbferias.anoExercicio = {$parametroAno}";
 
             # Lotação
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
@@ -495,17 +474,17 @@ if ($acesso) {
                 $select .= " AND idPerfil = {$parametroPerfil}";
             }
 
-            $select .= " ORDER BY tbpessoa.nome, tbferias.anoExercicio, dtInicial";
+            $select .= " ORDER BY tbpessoa.nome, dtInicial";
 
             $result = $servidor->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo("Ano de Fruição: " . $parametroAno . " (Data Inicial)");
-            $tabela->set_label(['Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs', 'Problemas']);
+            $tabela->set_titulo("Ano Exercício: {$parametroAno}");
+            $tabela->set_label(['Nome', 'Exercício', 'Inicio', 'Dias', 'Fim', 'Período', 'Status', 'Situação', 'Obs']);
             $tabela->set_align(["left"]);
-            $tabela->set_funcao([null, null, "date_to_php", null, null, null, null]);
-            $tabela->set_classe(["pessoal", null, null, null, null, "pessoal", null, null, "Ferias", "Ferias"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs", "exibeProblemasSimNao"]);
+            $tabela->set_funcao([null, null, "date_to_php"]);
+            $tabela->set_classe(["pessoal", null, null, null, null, "pessoal", null, null, "Ferias"]);
+            $tabela->set_metodo(["get_nomeECargoELotacao", null, null, null, null, "get_feriasPeriodo", null, null, "exibeObs"]);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
             $tabela->set_editar('?fase=editaServidorFerias&id=');
@@ -513,31 +492,31 @@ if ($acesso) {
             $tabela->set_editarBotao("olho.png");
             $tabela->set_idCampo('idServidor');
 
-            # Retira o elementos do array que são diferentes de Sim
-            if ($parametroProblemas == "Sim") {
-                $ferias = new Ferias();
-                $contador = 0;
-
-                foreach ($result as $item) {
-                    if (!$ferias->temProblemas($item["idFerias"])) {
-                        unset($result[$contador]);
-                    }
-                    $contador++;
-                }
-            }
-
-            # Retira o elementos do array que são diferentes de Não
-            if ($parametroProblemas == "Não") {
-                $ferias = new Ferias();
-                $contador = 0;
-
-                foreach ($result as $item) {
-                    if ($ferias->temProblemas($item["idFerias"])) {
-                        unset($result[$contador]);
-                    }
-                    $contador++;
-                }
-            }
+//            # Retira o elementos do array que são diferentes de Sim
+//            if ($parametroProblemas == "Sim") {
+//                $ferias = new Ferias();
+//                $contador = 0;
+//
+//                foreach ($result as $item) {
+//                    if (!$ferias->temProblemas($item["idFerias"])) {
+//                        unset($result[$contador]);
+//                    }
+//                    $contador++;
+//                }
+//            }
+//
+//            # Retira o elementos do array que são diferentes de Não
+//            if ($parametroProblemas == "Não") {
+//                $ferias = new Ferias();
+//                $contador = 0;
+//
+//                foreach ($result as $item) {
+//                    if ($ferias->temProblemas($item["idFerias"])) {
+//                        unset($result[$contador]);
+//                    }
+//                    $contador++;
+//                }
+//            }
 
             $tabela->set_conteudo($result);
             $tabela->show();
@@ -550,7 +529,7 @@ if ($acesso) {
         # Chama o menu do Servidor que se quer editar
         case "editaServidorFerias" :
             set_session('idServidorPesquisado', $id);
-            set_session('areaFerias', "fruicao");
+            set_session('areaFerias', "exercicio2");
             loadPage('servidorFerias.php');
             break;
 

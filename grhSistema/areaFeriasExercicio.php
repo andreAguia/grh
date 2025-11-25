@@ -104,7 +104,7 @@ if ($acesso) {
     $menu1->show();
 
     # Título
-    titulo("Área de Férias - Por Ano de Exercício");
+    #titulo("Área de Férias - Por Ano de Exercício");
 
     ################################################################
     # Formulário de Pesquisa
@@ -240,7 +240,8 @@ if ($acesso) {
 
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
-            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
+            $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio2.php');
+            $menu->add_item('link', '<b>por Ano de Exercício Agrupado</b>', '#');
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
             $menu->add_item('titulo', 'Relatórios');

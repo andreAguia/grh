@@ -783,7 +783,7 @@ class MenuPrincipal {
 
         $botao = new BotaoGrafico();
         $botao->set_label('Férias');
-        $botao->set_url('areaFeriasExercicio.php?grh=1');
+        $botao->set_url('areaFeriasExercicio2.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'ferias2.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área de Férias');
         $menu->add_item($botao);

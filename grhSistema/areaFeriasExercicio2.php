@@ -200,7 +200,7 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Tipo');
             $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
-            $menu->add_item('link', 'por Ano de Exercício Agrupado', 'areaFeriasExercicio.php');
+            #$menu->add_item('link', 'por Ano de Exercício Agrupado', 'areaFeriasExercicio.php');
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
 //            $menu->add_item('titulo', 'Relatórios');
@@ -219,14 +219,14 @@ if ($acesso) {
             $subTitulo = null;
 
             # Pega os dados
-            $select = "SELECT anoExercicio,
+            $select = "SELECT YEAR(tbferias.dtInicial),
                               count(*) as tot                          
                          FROM tbferias JOIN tbservidor ON (tbservidor.idServidor = tbferias.idServidor)
                                        JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                        LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                        JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                        WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
+                        WHERE tbferias.anoExercicio = {$parametroAno}
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Lotação
@@ -261,7 +261,7 @@ if ($acesso) {
                 $select .= " AND (tbferias.status = '{$parametroStatus}')";
             }
 
-            $select .= " GROUP BY anoExercicio ORDER BY anoExercicio";
+            $select .= " GROUP BY YEAR(tbferias.dtInicial) ORDER BY YEAR(tbferias.dtInicial)";
 
             $resumo = $pessoal->select($select);
 
@@ -274,13 +274,13 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Exercício", "Solicitações"]);
+            $tabela->set_label(["Fruição", "Solicitações"]);
             $tabela->set_totalRegistro(false);
             $tabela->set_rodape("Total de Solicitações: " . $soma);
             $tabela->set_align(["center"]);
             #$tabela->set_funcao(array("exibeDescricaoStatus"));
-            $tabela->set_titulo("Ano Exercício");
-            #$tabela->show();
+            $tabela->set_titulo("Ano de Fruição");
+            $tabela->show();
             #######################################
             # Resumo por Mês
             # Conecta com o banco de dados
@@ -294,7 +294,7 @@ if ($acesso) {
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                        LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                        JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                         WHERE (YEAR(tbferias.dtInicial) = {$parametroAno})
+                          WHERE tbferias.anoExercicio = {$parametroAno}
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Lotação
@@ -360,7 +360,7 @@ if ($acesso) {
                                        JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                        LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                        JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
-                         WHERE (YEAR(tbferias.dtInicial) = $parametroAno)
+                         WHERE tbferias.anoExercicio = {$parametroAno}
                           AND tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Lotação
@@ -408,7 +408,7 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             $tabela->set_funcao(["exibeDescricaoStatus"]);
             $tabela->set_titulo("Status");
-            #$tabela->show();
+            $tabela->show();
 
             $grid3->fechaColuna();
             $grid3->fechaGrid();

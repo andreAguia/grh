@@ -145,7 +145,7 @@ if ($acesso) {
         $arrayCompara = null;
 
         foreach ($resultDuplicado as $item) {
-            $arrayCompara[] = $item[0];
+            $arrayCompara[] = date_to_php($item[0]);
         }
 
         if (Verifica::acesso($idUsuario, 1)) {

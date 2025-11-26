@@ -61,6 +61,10 @@ $postAssinatura = post('postAssinatura');
 $postLinha = post('postLinha');
 $postTicket = post('postTicket');
 
+# Sistema
+$postIdPessoa = post('postIdPessoa');
+$postIdServidor = post('postIdServidor');
+
 # Filtros
 $parametroCargo = post('parametroCargo');
 $parametroCargoComissao = post('parametroCargoComissao');
@@ -525,6 +529,30 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $controle->set_linha(3);
+    $form->add_item($controle);
+    
+     /*
+     * Sistema
+     */
+
+    # Assinatura
+    $controle = new Input('postIdServidor', 'simnao', 'IdServidor:', 1);
+    $controle->set_size(5);
+    $controle->set_linha(4);
+    $controle->set_fieldset('Sistema');
+    $controle->set_title('IdServidor');
+    $controle->set_valor($postIdServidor);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
+    # Borda Interna
+    $controle = new Input('postIdPessoa', 'simnao', 'IdPessoa:', 1);
+    $controle->set_title('IdPessoa');
+    $controle->set_valor($postIdPessoa);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(4);
     $form->add_item($controle);
 
     #################################### Filtro #######################################
@@ -1075,6 +1103,30 @@ if ($acesso) {
         $field[] = "'<br/>_______________________________'";
         $label[] = "Assinatura";
         $ordenacao[] = "";
+        $align[] = "center";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
+    
+    /*
+     * Sistema
+     */
+    
+    # idServidor
+    if ($postIdServidor) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "idServidor";
+        $align[] = "center";
+        $class[] = "";
+        $method[] = "";
+        $function[] = "";
+    }
+    
+    # idPessoa
+    if ($postIdPessoa) {
+       $field[] = "tbservidor.idPessoa";
+        $label[] = "idPessoa";
         $align[] = "center";
         $class[] = "";
         $method[] = "";

@@ -476,7 +476,7 @@ if ($acesso) {
             if (!empty($resultDuplicado)) {
 
                 $tabela = new Tabela();
-                $tabela->set_titulo("Lançamentos Duplicados!!");
+                $tabela->set_titulo("Problemas encontrados!!");
                 $tabela->set_subtitulo("Lançamentos Duplicados");
                 $tabela->set_label(['Nome', 'Inicio', 'Dias']);
                 $tabela->set_width([70, 15, 10]);

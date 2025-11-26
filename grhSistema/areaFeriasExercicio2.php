@@ -488,6 +488,7 @@ if ($acesso) {
                 $tabela->set_nomeColunaEditar("Acessar");
                 $tabela->set_editarBotao("olho.png");
                 $tabela->set_idCampo('idServidor');
+                $tabela->set_rowspan(0);
                 $tabela->set_conteudo($resultDuplicado);
                 $tabela->show();
             }

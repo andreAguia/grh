@@ -51,6 +51,7 @@ $postNaturalidade = post('postNaturalidade');
 $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
+$postTelefone = post('postTelefone');
 
 # Dados Financeiros
 $postNivelFaixaPadrao = post('postNivelFaixaPadrao');
@@ -141,7 +142,7 @@ if ($acesso) {
     $form = new Form('?');
 
     /*
-     * Dados Gerais
+     * Dados Principais
      */
 
     # IdFuncional
@@ -225,6 +226,10 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
+    
+    /*
+     * Junto com o Nome
+     */
 
     # Nome & Cargo
     $controle = new Input('postNomeCargo', 'simnao', 'Cargo', 1);
@@ -284,6 +289,10 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
+    
+    /*
+     * Outros Dados
+     */
 
     # Cargo em Comissao
     $controle = new Input('postComissao', 'simnao', 'Comissão:', 1);
@@ -380,11 +389,15 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $form->add_item($controle);
 
+    /*
+     * Dados Pessoais
+     */
+
     # Endereço
     $controle = new Input('postEndereco', 'simnao', 'Endereço:', 1);
     $controle->set_size(5);
     $controle->set_fieldset('Dados Pessoais');
-    $controle->set_title('Endereço do Servidor');    
+    $controle->set_title('Endereço do Servidor');
     $controle->set_linha(6);
     $controle->set_valor($postEndereco);
     $controle->set_onChange('formPadrao.submit();');
@@ -396,6 +409,7 @@ if ($acesso) {
     $controle->set_size(5);
     $controle->set_title('cpf do Servidor');
     $controle->set_valor($postCpf);
+    $controle->set_linha(6);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
@@ -403,6 +417,7 @@ if ($acesso) {
     # Nome do Pai
     $controle = new Input('postPai', 'simnao', 'Pai:', 1);
     $controle->set_size(5);
+    $controle->set_linha(6);
     $controle->set_title('Nome do pai do Servidor');
     $controle->set_valor($postPai);
     $controle->set_onChange('formPadrao.submit();');
@@ -412,6 +427,7 @@ if ($acesso) {
     # Nome da Mãe
     $controle = new Input('postMae', 'simnao', 'Mãe:', 1);
     $controle->set_size(5);
+    $controle->set_linha(6);
     $controle->set_title('Nome da mãe do Servidor');
     $controle->set_valor($postMae);
     $controle->set_onChange('formPadrao.submit();');
@@ -421,6 +437,7 @@ if ($acesso) {
     # Nacionalidade
     $controle = new Input('postNacionalidade', 'simnao', 'Nacionalidade:', 1);
     $controle->set_size(5);
+    $controle->set_linha(7);
     $controle->set_title('Nacionalidade');
     $controle->set_valor($postNacionalidade);
     $controle->set_onChange('formPadrao.submit();');
@@ -430,6 +447,7 @@ if ($acesso) {
     # Naturalidade
     $controle = new Input('postNaturalidade', 'simnao', 'Naturalidade:', 1);
     $controle->set_size(5);
+    $controle->set_linha(7);
     $controle->set_title('Naturalidade');
     $controle->set_valor($postNaturalidade);
     $controle->set_onChange('formPadrao.submit();');
@@ -439,6 +457,7 @@ if ($acesso) {
     # Data de Nascimento
     $controle = new Input('postDtNascimento', 'simnao', 'Nascimento:', 1);
     $controle->set_size(5);
+    $controle->set_linha(7);
     $controle->set_title('Nascimento do servidor');
     $controle->set_valor($postDtNascimento);
     $controle->set_onChange('formPadrao.submit();');
@@ -448,6 +467,7 @@ if ($acesso) {
     # sexo
     $controle = new Input('postSexo', 'simnao', 'Sexo:', 1);
     $controle->set_size(5);
+    $controle->set_linha(7);
     $controle->set_title('Sexo do servidor');
     $controle->set_valor($postSexo);
     $controle->set_onChange('formPadrao.submit();');
@@ -457,11 +477,26 @@ if ($acesso) {
     # idade
     $controle = new Input('postIdade', 'simnao', 'Idade:', 1);
     $controle->set_size(5);
+    $controle->set_linha(8);
     $controle->set_title('Idade do servidor');
     $controle->set_valor($postIdade);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
+
+    # telefone
+    $controle = new Input('postTelefone', 'simnao', 'Telefone:', 1);
+    $controle->set_size(5);
+    $controle->set_linha(8);
+    $controle->set_title('Telefone do servidor');
+    $controle->set_valor($postTelefone);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    /*
+     * Outros
+     */
 
     # Assinatura
     $controle = new Input('postAssinatura', 'simnao', 'Assinatura:', 1);
@@ -1022,6 +1057,16 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "pessoal";
         $method[] = "get_idade";
+        $function[] = "";
+    }
+    
+    # Telefone
+    if ($postTelefone) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Telefone";
+        $align[] = "center";
+        $class[] = "pessoal";
+        $method[] = "get_telefoneCelular";
         $function[] = "";
     }
 

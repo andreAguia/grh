@@ -466,7 +466,7 @@ if ($acesso) {
                 $selectDuplicado .= " AND idPerfil = {$parametroPerfil}";
             }
 
-            $selectDuplicado .= "GROUP BY tbservidor.idServidor,
+            $selectDuplicado .= " GROUP BY tbservidor.idServidor,
                                            tbferias.dtInicial,
                                            tbferias.numDias
                                     HAVING COUNT(*) > 1";

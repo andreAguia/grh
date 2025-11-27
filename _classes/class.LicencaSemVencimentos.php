@@ -528,6 +528,18 @@ class LicencaSemVencimentos {
         $menu->add_item('linkWindow', "\u{1F5A8} Rioprev - CSP/CRP", '../grhRelatorios/lsv.despacho.rioprev.crp.php?id=' . $idLicencaSemVencimentos, "Despacho ao Rioprev para emissão de CSP/CRP");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho - Servidor Com Débito", '../grhRelatorios/lsv.despacho.debito.php?id=' . $idLicencaSemVencimentos, "Despacho ao Servidor");
 
+        # Pega os dados
+        $dados = $this->get_dados($idLicencaSemVencimentos);
+
+        $dtTermino = date_to_php($dados["dtTermino"]);
+        $hoje = date("d/m/Y");
+        $dias = dataDif($hoje, $dtTermino);
+
+        # Despacho: Aviso 45 Dias
+        if (abs($dias) <= 45) {
+            $menu->add_item('linkWindow', "\u{1F5A8} Despacho - Aviso 45 Dias", "../grhRelatorios/despacho.lsv.aviso45dias.php?id={$idLicencaSemVencimentos}");
+        }
+
         $menu->show();
     }
 
@@ -555,4 +567,25 @@ class LicencaSemVencimentos {
     }
 
 ###########################################################
+
+    function get_numProcesso($id = null) {
+
+        /**
+         * Informe o número do processo de solicitação de redução de carga horária de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (empty($id)) {
+            return null;
+        }
+
+        $pessoal = new Pessoal();
+        $row = $this->get_dados($id);
+
+        # Retorno
+        return $row["processo"];
+    }
+
+    ###########################################################
 }

@@ -68,8 +68,10 @@ if ($acesso) {
             . "quanto antes no processo {$processo}, para que os procedimentos "
             . "administrativos sejam providenciados com a devida antecedência.");
     $despacho->set_texto("Para tanto, segue o link com as orientações:");
-    $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/">'
-            . 'https://uenf.br/dga/grh/gerencia-de-recursos-humanos/reducao-de-carga-horaria/</a>');
+    $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/licenca-sem-vencimentos-opcao-contribuicao/licenca-sem-vencimentos-para-acompanhar-conjuge-companheiroa/">'
+            . 'Licença Sem Vencimentos para Acompanhar Cônjuge/Companheiro(a)</a>');
+    $despacho->set_texto('<a href="https://uenf.br/dga/grh/gerencia-de-recursos-humanos/licencas/licenca-sem-vencimentos-opcao-contribuicao/licenca-sem-vencimentos-para-trato-de-interesse-particular/">'
+            . 'Licença Sem Vencimentos para Trato de Interesses Particulares</a>');
     $despacho->set_texto("<br/>Atenciosamente,");
     $despacho->set_saltoRodape(3);
 

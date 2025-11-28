@@ -723,4 +723,29 @@ class Ferias {
     }
 
     ###########################################################
+
+    public function get_ultimoAnoExercicioFerias($idServidor) {
+
+        /**
+         * retorna o último ano exercicio das férias do servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Trata os parêmetros
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        # Pega array com os dias publicados
+        $select = "SELECT anoExercicio
+                     FROM tbferias
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY anoExercicio DESC LIMIT 1";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno[0];
+    }
+
+    ###########################################################
 }

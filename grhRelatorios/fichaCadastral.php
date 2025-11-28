@@ -26,10 +26,13 @@ $postDependentes = post('dependentes');
 $postFormacao = post('formacao');
 $postLotacao = post('lotacao');
 $postTrienio = post('trienio');
+$postTrienioUltimo = post('trienioUltimo');
 $postFerias = post('ferias');
+$postFeriasUltimo = post('feriasUltimo');
 $postLicenca = post('licenca');
 $postCargo = post('cargo');
 $postProgressao = post('progressao');
+$postProgressaoUltima = post('progressaoUltima');
 $postGratificacao = post('gratificacao');
 $postAverbacao = post('averbacao');
 $postDiaria = post('diaria');
@@ -145,7 +148,7 @@ if ($acesso) {
             'col' => 3,
             'linha' => 1),
         array('nome' => 'trienio',
-            'label' => 'Triênio',
+            'label' => 'Triênio (Hist)',
             'tipo' => 'simnao',
             'size' => 5,
             'title' => 'Exibe o Histórico de Triênio',
@@ -153,12 +156,48 @@ if ($acesso) {
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
+        array('nome' => 'trienioUltimo',
+            'label' => 'Triênio (Atual)',
+            'tipo' => 'simnao',
+            'size' => 5,
+            'title' => 'Exibe o último Triênio',
+            'valor' => $postTrienioUltimo,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
         array('nome' => 'ferias',
-            'label' => 'Férias',
+            'label' => 'Férias (Hist)',
             'tipo' => 'simnao',
             'size' => 1,
             'title' => 'Exibe o Histórico de Férias',
             'valor' => $postFerias,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'feriasUltimo',
+            'label' => 'Férias (Atual)',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe o Último Exercício de Férias',
+            'valor' => $postFeriasUltimo,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'progressao',
+            'label' => 'Progressões (Hist)',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe o Histórico de Progressões',
+            'valor' => $postProgressao,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 3,
+            'linha' => 1),
+        array('nome' => 'progressaoUltima',
+            'label' => 'Progressão (Atual)',
+            'tipo' => 'simnao',
+            'size' => 1,
+            'title' => 'Exibe a Progressões Atual',
+            'valor' => $postProgressaoUltima,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
@@ -168,15 +207,6 @@ if ($acesso) {
             'size' => 1,
             'title' => 'Exibe o Histórico de Licença',
             'valor' => $postLicenca,
-            'onChange' => 'formPadrao.submit();',
-            'col' => 3,
-            'linha' => 1),
-        array('nome' => 'progressao',
-            'label' => 'Progressões',
-            'tipo' => 'simnao',
-            'size' => 1,
-            'title' => 'Exibe o Histórico de Progressões',
-            'valor' => $postProgressao,
             'onChange' => 'formPadrao.submit();',
             'col' => 3,
             'linha' => 1),
@@ -968,6 +998,43 @@ if ($acesso) {
         $relatorio->set_log(false);
         $relatorio->show();
     }
+    
+    /*
+     * Última Progressão (Atual)
+     */
+
+    if ($postProgressaoUltima) {
+        tituloRelatorio('Progressão Atual');
+
+        $select = 'SELECT tbprogressao.dtInicial,
+                         tbtipoprogressao.nome,
+                         CONCAT(tbclasse.faixa," - ",tbclasse.valor) as vv,
+                         tbprogressao.numProcesso,
+                         tbprogressao.dtPublicacao
+                    FROM tbprogressao JOIN tbtipoprogressao ON (tbprogressao.idTpProgressao = tbtipoprogressao.idTpProgressao)
+                                      JOIN tbclasse ON (tbprogressao.idClasse = tbclasse.idClasse)
+                    WHERE idServidor = ' . $idServidorPesquisado . '
+                 ORDER BY tbprogressao.dtInicial desc, vv desc LIMIT 1';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Data Inicial', 'Tipo', 'Valor', 'Processo', 'DOERJ'));
+        #$relatorio->set_width(array(10,25,20,20,10,5));
+        $relatorio->set_funcao(array('date_to_php', null, null, null, 'date_to_php'));
+        $relatorio->set_align(array('center', 'left', 'center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
 
     /*
      * Histórico de Triênio
@@ -1031,6 +1098,41 @@ if ($acesso) {
             $relatorio->set_log(false);
             $relatorio->show();
         }
+    }
+
+    /*
+     * Últmo Triênio
+     */
+
+    if ($postTrienioUltimo) {
+        tituloRelatorio('Triênio Atual');
+
+        $select = "SELECT dtInicial,
+                          percentual,
+                          numProcesso,
+                          dtPublicacao
+                     FROM tbtrienio
+                    WHERE idServidor = {$idServidorPesquisado}
+                    ORDER BY dtInicial desc LIMIT 1";
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Data Inicial', 'Percentual (%)', 'Processo', 'DOERJ'));
+        #$relatorio->set_width(array(20,20,20,20,20));
+        $relatorio->set_funcao(array('date_to_php', null, null, 'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
     }
 
     /*
@@ -1119,6 +1221,47 @@ if ($acesso) {
                      FROM tbferias
                     WHERE idServidor=' . $idServidorPesquisado . '
                     ORDER BY anoExercicio desc,dtInicial desc';
+
+        $result = $pessoal->select($select);
+
+        $relatorio = new Relatorio('relatorioFichaCadastral');
+        #$relatorio->set_titulo(null);
+        #$relatorio->set_subtitulo($subtitulo);
+        $relatorio->set_label(array('Exercício', 'Status', 'Data Inicial', 'Dias', 'Data Final'));
+        #$relatorio->set_width(array(10,10,15,10,15,20,20));
+        $relatorio->set_funcao(array(null, null, 'date_to_php', null, 'date_to_php'));
+        $relatorio->set_align(array('center'));
+        $relatorio->set_conteudo($result);
+        $relatorio->set_subTotal(false);
+        $relatorio->set_totalRegistro(true);
+        $relatorio->set_dataImpressao(false);
+        $relatorio->set_cabecalhoRelatorio(false);
+        $relatorio->set_menuRelatorio(false);
+        #$relatorio->set_linhaNomeColuna(false);
+        $relatorio->set_log(false);
+        $relatorio->show();
+    }
+    
+    /*
+     * Ultimo Exercício de Férias
+     */
+
+    if ($postFeriasUltimo) {
+        tituloRelatorio('Último Exercício de Férias');
+        
+        # Pega o último ano exercicio desse servidor
+        $ferias = new Ferias();
+        $ultimoAno = $ferias->get_ultimoAnoExercicioFerias($idServidorPesquisado);
+
+        $select = "SELECT anoExercicio,
+                          status,
+                          dtInicial,
+                          numDias,
+                          ADDDATE(dtInicial,numDias-1)
+                     FROM tbferias
+                    WHERE idServidor = {$idServidorPesquisado}
+                      AND anoExercicio = '{$ultimoAno}' 
+                    ORDER BY anoExercicio desc,dtInicial desc";
 
         $result = $pessoal->select($select);
 

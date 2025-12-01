@@ -240,7 +240,7 @@ if ($acesso) {
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Menu');
             $menu->add_item('link', '<b>por Ano de Exercício Agrupado</b>', '#');
-            $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio2.php');
+            $menu->add_item('link', 'por Ano de Exercício Separado', 'areaFeriasExercicio2.php');
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
             $menu->add_item('titulo', 'Relatórios');

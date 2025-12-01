@@ -576,6 +576,7 @@ if ($acesso) {
 
     # acrescenta Professor
     array_unshift($result, array('Professor', 'Professores'));
+    array_unshift($result, array('Administrativo', 'Administrativos & Técnicos'));
 
     # acrescenta todos
     array_unshift($result, array(null, 'Todos'));
@@ -1309,6 +1310,8 @@ if ($acesso) {
             } else { # senão é nivel do cargo
                 if ($parametroCargo == "Professor") {
                     $select .= " AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)";
+                } elseif ($parametroCargo == "Administrativo") {
+                    $select .= " AND (tbcargo.idcargo <> 128 AND  tbcargo.idcargo <> 129)";
                 } else {
                     $select .= " AND (tbtipocargo.cargo = '{$parametroCargo}')";
                 }

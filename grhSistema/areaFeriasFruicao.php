@@ -215,11 +215,10 @@ if ($acesso) {
             $classeFerias->exibeProcesso($parametroLotacao, $parametroAno);
 
             ########################################
-            # Menu            
-            tituloTable("Menu");
+            # Menu
 
             $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Tipo');
+            $menu->add_item('titulo', 'Menu');
             $menu->add_item('link', 'por Ano de Exercício', 'areaFeriasExercicio2.php');
             $menu->add_item('link', 'por Ano de Exercício Agrupado', 'areaFeriasExercicio.php');
             $menu->add_item('link', '<b>por Ano de Fruíção</b>', '#');

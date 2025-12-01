@@ -198,15 +198,15 @@ if ($acesso) {
 
             $menu = new Menu("menuProcedimentos");
             $menu->add_item('titulo', 'Menu');
-            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
             $menu->add_item('link', 'por Ano de Exercício Agrupado', 'areaFeriasExercicio.php');
+            $menu->add_item('link', '<b>por Ano de Exercício</b>', '#');
             $menu->add_item('link', 'por Ano de Fruíção', 'areaFeriasFruicao.php');
 
-//            $menu->add_item('titulo', 'Relatórios');
-//            $menu->add_item('linkWindow', 'Anual Agrupado por Mês', '../grhRelatorios/ferias.fruicao.anual.porMes.php');
-//            $menu->add_item('linkWindow', 'Anual Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.anual.porLotacao.php');
-//            $menu->add_item('linkWindow', 'Mensal Geral', '../grhRelatorios/ferias.fruicao.mensal.geral.php');
-//            $menu->add_item('linkWindow', 'Mensal Agrupado por Lotação', '../grhRelatorios/ferias.fruicao.mensal.porLotacao.php');
+            $menu->add_item('titulo', 'Relatórios');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias', '../grhRelatorios/ferias.exercicio.porTotalDias.php');
+            $menu->add_item('linkWindow', 'Agrupado pelo Total de Dias (menor que 30)', '../grhRelatorios/ferias.exercicio.porTotalDias.menor30.php');
+            $menu->add_item('linkWindow', 'Solicitações Agrupadas por Mês', '../grhRelatorios/ferias.exercicio.solicitacoes.php');
+            $menu->add_item('linkWindow', 'Férias Pendentes', '../grhRelatorios/ferias.pendentes.php');
             $menu->show();
 
             $grid3->fechaColuna();

@@ -88,7 +88,7 @@ if ($acesso) {
     $data = date("Y-m-d H:i:s");
     $atividades = 'Visualizou o despacho para a reitoria.';
     $tipoLog = 4;
-    $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", $id, $tipoLog, $idServidorPesquisado);
+    $intra->registraLog($idUsuario, $data, $atividades, "tbreducao", $idServidorPesquisado, $tipoLog, $idServidorPesquisado);
 
     $page->terminaPagina();
 }

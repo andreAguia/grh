@@ -718,7 +718,7 @@ class MenuServidor {
          */
 
         $menu->add_item('titulo', 'Despachos', '#');
-        $menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
+        #$menu->add_item("linkWindow", "Despacho para Abertura de Processo", "?fase=despacho");
         $menu->add_item("linkWindow", "Despacho para Reitoria", "../grhRelatorios/despacho.Reitoria.php");
         $menu->add_item("linkWindow", "Despacho para Publicação de Ato do Reitor", "../grhRelatorios/despacho.Publicacao.php");
         $menu->add_item("linkWindow", "Despacho à Chefia/Servidor para Retirada do Ato", "?fase=despachoChefia");
@@ -751,6 +751,7 @@ class MenuServidor {
 
         $menu->add_item('linkWindow', 'Etiqueta para a Pasta Funcional', "../grhRelatorios/etiqueta.servidor.php");
         $menu->add_item("linkWindow", "Formulário de Saúde", "../grhRelatorios/formularioSaude.php");
+        $menu->add_item("linkWindow", "Histórico Funcional para o Rio Previdência", "../grhRelatorios/rioPrevidenciaHistorico.php");
         #$menu->add_item("linkWindow","Capa da Pasta","../grhRelatorios/capaPasta.php");
         $menu->show();
     }

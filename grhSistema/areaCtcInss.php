@@ -283,6 +283,77 @@ if ($acesso) {
 
             $tabela->set_conteudo($result);
             $tabela->show();
+            
+            # Quen tem tempo averbado e púbico
+            $select = "SELECT distinct tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
+                              tbservidor.idServidor,
+                              tbservidor.idServidor
+                        FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                             JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                                             JOIN tbaverbacao ON (tbservidor.idServidor = tbaverbacao.idServidor)
+                       WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                         AND tbaverbacao.regime = 1
+                         AND tbaverbacao.empresaTipo = 1";
+            
+            # Situação
+            if ($parametroSituacao == "Ativos") {
+                $select .= ' AND situacao = 1';
+                $titulo = "Servidores Estatutários Com Tempo Averbado Público Celetista";
+            } else {
+                $select .= ' AND situacao <> 1 AND (idPerfil = 4 OR idPerfil = 1)';
+                $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+                $titulo = "Servidores Celetistas e/ou Estatutários Inativos Com Tempo Averbado Público Celetista";
+            }
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            # Entregou  
+            if ($parametroEntregou <> "Todos") {
+                if ($parametroEntregou == "Sim") {
+                    $select .= " AND tbservidor.entregouCtc = 's'";
+                } elseif ($parametroEntregou == "Não") {
+                    $select .= " AND tbservidor.entregouCtc = 'n'";
+                } else {
+                    $select .= " AND (tbservidor.entregouCtc is null)";
+                }
+            }
+
+
+            $select .= " ORDER BY tbservidor.entregouCtc desc, tbpessoa.nome";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo($titulo);
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_label(['Id Funcional / Matricula', 'Servidor', 'Lotação', 'Admissão', 'Entregou CTC?']);
+            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_funcao([null, null, null, "date_to_php"]);
+            $tabela->set_classe(["pessoal", "pessoal", "pessoal", null, "Aposentadoria"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoEPerfilESituacao", "get_lotacao", null, "exibeEntregouCtc"]);
+            #$tabela->set_rowspan(0);
+            #$tabela->set_grupoCorColuna(0);
+            $tabela->set_editar('?fase=editaServidor&id=');
+            $tabela->set_nomeColunaEditar("Acessar");
+            $tabela->set_editarBotao("olho.png");
+            $tabela->set_idCampo('idServidor');
+
+            $tabela->set_conteudo($result);
+            $tabela->show();
             break;
 
         #######################################            

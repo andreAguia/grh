@@ -1010,11 +1010,11 @@ class Aposentadoria {
         $pessoal = new Pessoal();
         $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
 
-        # Compara se a adimissão é anterior a data divisora
+        # Compara se a admissão é anterior a data divisora
         if (strtotime(date_to_bd($dtAdmissao)) < strtotime(date_to_bd($dtDivisora))) {
             return true;
         } else {
-            return false;
+            # Verifica se tem tempo averbado 
         }
     }
 

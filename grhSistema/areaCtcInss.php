@@ -25,6 +25,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase', 'aguarde');
+    $aba = get('aba', 1);
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -153,10 +154,24 @@ if ($acesso) {
 
         case "listar" :
 
-            $grid->fechaColuna();
-            $grid->abreColuna(3);
+            # Menu de Abas
+            $tab = new Tab([
+                "Admitidos antes de  {$dataLimite}",
+                "Com Tempo Averbado Público Celetista"
+                    ], $aba);
 
-            #######################################
+            ####################################################
+
+            $tab->abreConteudo();
+
+            /*
+             *  Servidores Admitidos antes de {$dataLimite}
+             */
+
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
+
             # Resumo 
 
             $subtitulo = null;
@@ -211,10 +226,8 @@ if ($acesso) {
             $tabela->set_colunaSomatorio(1);
             $tabela->show();
 
-            #######################################
-
-            $grid->fechaColuna();
-            $grid->abreColuna(9);
+            $grid2->fechaColuna();
+            $grid2->abreColuna(9);
 
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -229,7 +242,7 @@ if ($acesso) {
                                              JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                              AND dtAdmissao < '" . date_to_bd($dataLimite) . "'";
-            
+
             # Situação
             if ($parametroSituacao == "Ativos") {
                 $select .= ' AND situacao = 1';
@@ -283,7 +296,84 @@ if ($acesso) {
 
             $tabela->set_conteudo($result);
             $tabela->show();
-            
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            $tab->fechaConteudo();
+
+            ####################################################
+
+            /*
+             *  Servidores Estatutários Com Tempo Averbado Público Celetista
+             */
+
+            $tab->abreConteudo();
+
+            $grid2 = new Grid();
+            $grid2->abreColuna(3);
+
+            # Resumo
+
+            $subtitulo = null;
+
+            # Pega os dados
+            $select = "SELECT CASE entregouCtc
+                                   WHEN 's' THEN '<span class=\"label success\">Sim</span>'
+                                   WHEN 'n' THEN '<span class=\"label alert\">Não</span>'
+                              ELSE '<span class=\"label warning\">Não Informado</span>'
+                              END,
+                              count(distinct tbservidor.idServidor) as tot                              
+                         FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
+                                             JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                             JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                             LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                             JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                                             JOIN tbaverbacao ON (tbservidor.idServidor = tbaverbacao.idServidor)
+                       WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                         AND tbaverbacao.regime = 1
+                         AND tbaverbacao.empresaTipo = 1";
+
+            # Situação
+            if ($parametroSituacao == "Ativos") {
+                $select .= ' AND situacao = 1';
+            } else {
+                $select .= ' AND situacao <> 1 AND (idPerfil = 4 OR idPerfil = 1)';
+                $select .= ' AND tbpessoa.idPessoa IN (SELECT idPessoa FROM tbservidor WHERE situacao = 1)';
+            }
+
+            # Lotação
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
+                    $subtitulo = $pessoal->get_nomeLotacao($parametroLotacao);
+                } else { # senão é uma diretoria genérica
+                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                    $subtitulo = $parametroLotacao;
+                }
+            }
+
+            $select .= " GROUP BY entregouCtc ORDER BY entregouCtc";
+
+            $resumo = $pessoal->select($select);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($resumo);
+            $tabela->set_label(["Entregou?", "Quantidade"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_align(["center"]);
+            $tabela->set_titulo("Quantidades");
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_colunaSomatorio(1);
+            $tabela->show();
+
+            #######################################
+
+            $grid2->fechaColuna();
+            $grid2->abreColuna(9);
+
             # Quen tem tempo averbado e púbico
             $select = "SELECT distinct tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -300,7 +390,7 @@ if ($acesso) {
                        WHERE tbhistlot.data =(select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                          AND tbaverbacao.regime = 1
                          AND tbaverbacao.empresaTipo = 1";
-            
+
             # Situação
             if ($parametroSituacao == "Ativos") {
                 $select .= ' AND situacao = 1';
@@ -354,9 +444,15 @@ if ($acesso) {
 
             $tabela->set_conteudo($result);
             $tabela->show();
+
+            $grid2->fechaColuna();
+            $grid2->fechaGrid();
+
+            $tab->fechaConteudo();
+            $tab->show();
             break;
 
-        #######################################            
+        ########################################################                    
 
         case "editaServidor" :
 

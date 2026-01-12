@@ -32,13 +32,13 @@ class CalendarioPgto {
             ["Outubro", "05/11"],
             ["Novembro", "03/12"],
             ["13º Salário (2ª Parcela)", "18/12"],
-            ["Dezembro", "06/01/2026"]
+            ["Dezembro", "06/01/2027"]
         ];
 
         # Exemplo mais complexo
         $tabela = new Tabela();
-        $tabela->set_titulo("Calendário de Pagamento");
-        $tabela->set_subtitulo("2025");
+        $tabela->set_titulo("Calendário de Pagamento 2026");
+        #$tabela->set_subtitulo("2026");
         $tabela->set_conteudo($array);
         $tabela->set_label(["Mês de Competência", "Data do Pagamento"]);
         $tabela->set_align(["left", "center"]);

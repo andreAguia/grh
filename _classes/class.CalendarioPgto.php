@@ -19,19 +19,19 @@ class CalendarioPgto {
     public function exibeCalendario($ano = null) {
 
         $array = [
-            ["Janeiro", "05/02"],
-            ["Fevereiro", "06/03"],
-            ["Março", "03/04"],
+            ["Janeiro", "04/02"],
+            ["Fevereiro", "04/03"],
+            ["Março", "06/04"],
             ["Abril", "06/05"],
-            ["Maio", "04/06"],
+            ["Maio", "03/06"],
             ["13º Salário (1ª Parcela)", "30/06"],
             ["Junho", "03/07"],
             ["Julho", "05/08"],
             ["Agosto", "03/09"],
-            ["Setembro", "03/10"],
+            ["Setembro", "05/10"],
             ["Outubro", "05/11"],
             ["Novembro", "03/12"],
-            ["13º Salário (2ª Parcela)", "19/12"],
+            ["13º Salário (2ª Parcela)", "18/12"],
             ["Dezembro", "06/01/2026"]
         ];
 

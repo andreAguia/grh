@@ -14,6 +14,7 @@ include ("_config.php");
 # Limpa as sessões
 set_session('idConcurso');
 set_session('parametroCargo');
+set_session('parametroSituacao');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
@@ -130,8 +131,8 @@ if ($acesso) {
             # Centro
             $centros = [
                 ["*", "Todos"],
-                ["CCH", "CCH"],
                 ["CBB", "CBB"],
+                ["CCH", "CCH"],
                 ["CCT", "CCT"],
                 ["CCTA", "CCTA"],
             ];

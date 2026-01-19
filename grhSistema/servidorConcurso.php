@@ -425,9 +425,11 @@ if ($acesso) {
                     $idVaga = $array[0];
                     $idServidor = $array[1];
 
-                    $vaga = new Vaga();
-                    $servidor = new Pessoal();
-                    $conteudo = $vaga->get_dados($idVaga);
+                    if (!empty($idVaga)) {
+                        $vaga = new Vaga();
+                        $servidor = new Pessoal();
+                        $conteudo = $vaga->get_dados($idVaga);
+                    }
 
                     $painel = new Callout();
                     $painel->abre();
@@ -436,45 +438,67 @@ if ($acesso) {
                     $grid->abreColuna(4);
 
                     titulotable("Vaga");
-                    p($idVaga, "vagaId");
+
+                    if (!empty($idVaga)) {
+                        p($idVaga, "vagaId");
+                    } else {
+                        br();
+                        p("---", "vagaCargo");
+                        br();
+                    }
 
                     $grid->fechaColuna();
                     $grid->abreColuna(4);
 
                     titulotable("Lotação de Origem");
 
-                    $centro = $conteudo["centro"];
-                    $idCargo = $conteudo["idCargo"];
+                    if (!empty($idVaga)) {
 
-                    $labOrigem = $servidor->get_nomeLotacao3($vaga->get_laboratorioOrigem($idVaga));
+                        $centro = $conteudo["centro"];
+                        $idCargo = $conteudo["idCargo"];
 
-                    $cargo = $servidor->get_nomeCargo($idCargo);
-                    $status = $vaga->get_status($idVaga);
+                        $labOrigem = $servidor->get_nomeLotacao3($vaga->get_laboratorioOrigem($idVaga));
 
-                    p($centro, "vagaCentro");
-                    p($cargo, "vagaCargo");
+                        $cargo = $servidor->get_nomeCargo($idCargo);
+                        $status = $vaga->get_status($idVaga);
 
-                    $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
+                        p($centro, "vagaCentro");
+                        p($cargo, "vagaCargo");
 
-                    p("Laboratório de Origem:", "vagaOrigem", null, $title);
-                    p($labOrigem, "vagaCargo", null, $title);
+                        $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
+
+                        p("Laboratório de Origem:", "vagaOrigem", null, $title);
+                        p($labOrigem, "vagaCargo", null, $title);
+                    } else {
+                        br();
+                        p("---", "vagaCargo");
+                        br();
+                    }
 
                     $grid->fechaColuna();
                     $grid->abreColuna(4);
 
-                    if ($status == "Disponível") {
-                        tituloTable("Vaga Disponível");
-                        br();
-                        p("Ninguém ocupa esta vaga atualmente!", "center", "f14");
-                        br();
-                    } else {
-                        tituloTable("Ocupante Atual");
-                        br();
-                        $ocupante = $vaga->get_servidorOcupante($idVaga);
+                    if (!empty($idVaga)) {
 
-                        if ($vaga->get_laboratorioOrigem($idVaga) <> $servidor->get_idLotacao($idServidor)) {
-                            p("Atenção !!<br/>Lotação atual diferente da<br/>Lotação de Origem do Concurso!", "pconcursadoLotacaoDiferente");
+                        if ($status == "Disponível") {
+                            tituloTable("Vaga Disponível");
+                            br();
+                            p("Ninguém ocupa esta vaga atualmente!", "center", "f14");
+                            br();
+                        } else {
+                            tituloTable("Ocupante Atual");
+                            br();
+                            $ocupante = $vaga->get_servidorOcupante($idVaga);
+
+                            if ($vaga->get_laboratorioOrigem($idVaga) <> $servidor->get_idLotacao($idServidor)) {
+                                p("Atenção !!<br/>Lotação atual diferente da<br/>Lotação de Origem do Concurso!", "pconcursadoLotacaoDiferente");
+                            }
                         }
+                    } else {
+                        tituloTable("Status Atual");
+                        br();
+                        p("---", "vagaCargo");
+                        br();
                     }
 
                     $grid->fechaColuna();

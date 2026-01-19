@@ -38,11 +38,15 @@ if ($acesso) {
     }
 
     # Pega os parâmetros
-    $parametroCentro = post('parametroCentro', get_session('parametroCentro', "CCT"));
+    $parametroCentro = post('parametroCentro', get_session('parametroCentro', "CCH"));
     $parametroLab = post('parametroLab', get_session('parametroLab', "*"));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', "Disponível"));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', 128));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
+
+    if ($parametroCentro == "*") {
+        $parametroCentro = "CBB";
+    }
 
     # Joga os parâmetros par as sessions
     set_session('parametroCentro', $parametroCentro);
@@ -107,7 +111,7 @@ if ($acesso) {
             $form = new Form('?');
 
             # Centros Possíveis
-            $centros = array("CCT", "CCTA", "CCH", "CBB");
+            $centros = array("CBB", "CCH", "CCT", "CCTA");
 
             $controle = new Input('parametroCentro', 'combo', 'Centro:', 1);
             $controle->set_size(8);

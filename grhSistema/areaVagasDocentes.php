@@ -280,7 +280,7 @@ if ($acesso) {
                         WHERE (tbpessoa.nome like "%' . $parametroNome . '%"  OR idVaga = "' . $parametroNome . '")
                           AND (tbservidor.idCargo = 128 OR tbservidor.idCargo = 129)
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                     ORDER BY tbpessoa.nome';
+                     ORDER BY tbservidor.dtAdmissao DESC';
 
             $result = $pessoal->select($select);
 

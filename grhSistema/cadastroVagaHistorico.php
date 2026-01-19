@@ -148,10 +148,10 @@ if ($acesso) {
     ###############
     # Pega os dados da combo lotacao
     $selectLotacao = "SELECT idlotacao, 
-                             concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao                       
+                             concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao                       
                         FROM tblotacao 
-                        WHERE tblotacao.DIR = '{$centro}'  
-                        ORDER BY ativo desc, lotacao";
+                        WHERE tblotacao.DIR = 'CBB' OR tblotacao.DIR = 'CCH' OR tblotacao.DIR = 'CCT' OR tblotacao.DIR = 'CCTA' 
+                        ORDER BY DIR, lotacao";
 
     $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(null, null)); # Adiciona o valor de nulo

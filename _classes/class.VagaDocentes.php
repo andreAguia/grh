@@ -41,7 +41,7 @@ class VagaDocentes {
                      FROM tbvaga p LEFT JOIN tbcargo USING (idCargo)
                     WHERE centro = '{$this->centro}' 
                       AND idCargo = {$this->cargo}";
-
+        
         # Laboratório de Origem
         if ($this->laboratorio <> "*") {
             $select .= " AND (SELECT idLotacao FROM tbvagahistorico s JOIN tbconcurso USING(idConcurso) WHERE s.idVaga = p.idVaga ORDER BY tbconcurso.dtPublicacaoEdital LIMIT 1) = {$this->laboratorio}";
@@ -71,13 +71,10 @@ class VagaDocentes {
         }
         
         $tabela->set_conteudo($result);
-
-        $tabela->set_label(array("Vaga", "Situação", "Cargo", "Centro", "Laboratório de Origem", "Último Ocupante", "Obs", "Num. de Concursos", "Problemas", "Editar"));
-        #$tabela->set_width(array(5,10,20,10,30,25));
-        $tabela->set_align(array("center", "center", "center", "center", "center", "left", "left"));
-
-        $tabela->set_classe(array(null, null, null, null, "Pessoal", "Vaga",null,null,"Vaga"));
-        $tabela->set_metodo(array(null, null, null, null, "get_lotacaoGerencia", "get_servidorOcupante",null,null,"temProblema"));
+        $tabela->set_label(["Vaga", "Situação", "Cargo", "Centro", "Laboratório de Origem", "Último Ocupante", "Obs", "Num. de Concursos", "Problemas", "Editar"]);
+        $tabela->set_align(["center", "center", "center", "center", "center", "left", "left"]);
+        $tabela->set_classe([null, null, null, null, "Pessoal", "Vaga",null,null,"Vaga"]);
+        $tabela->set_metodo([null, null, null, null, "get_lotacaoGerencia", "get_servidorOcupante",null,null,"temProblema"]);
 
         $tabela->set_formatacaoCondicional(array(
             array('coluna' => 1,
@@ -100,11 +97,8 @@ class VagaDocentes {
         $botao1->set_imagem(PASTA_FIGURAS . 'olho.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link(array(null, null, null, null, null, null, null, null, null, $botao1));
-
-        #$tabela->set_numeroOrdem(true);            
+        $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao1]);
         $tabela->set_idCampo('idVaga');
-
         $tabela->show();
     }
 

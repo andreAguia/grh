@@ -44,11 +44,6 @@ if ($acesso) {
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', 128));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
 
-    # Filtra caso o parametro venha com valor *
-    if($parametroCentro == "*"){
-        $parametroCentro = "CCT";
-    }
-    
     # Joga os parâmetros par as sessions
     set_session('parametroCentro', $parametroCentro);
     set_session('parametroLab', $parametroLab);
@@ -87,7 +82,7 @@ if ($acesso) {
             $menu->add_link($botaoInserir, "right");
 
             # Por nome
-            $botao = new Link("por Nome", "?fase=porNome");
+            $botao = new Link("por Nome/Vaga", "?fase=porNome");
             $botao->set_class('button');
             $botao->set_title('Pesquisar por Nome do Professor');
             $menu->add_link($botao, "right");
@@ -97,7 +92,6 @@ if ($acesso) {
             $botao->set_class('button');
             $botao->set_title('ResumoGeral');
             $menu->add_link($botao, "right");
-
 
             $menu->show();
 
@@ -140,10 +134,10 @@ if ($acesso) {
             $form->add_item($controle);
 
             # Cargo
-            $cargos = array(
-                array(128, "Professor Associado"),
-                array(129, "Professor Titular"),
-            );
+            $cargos = [
+                [128, "Professor Associado"],
+                [129, "Professor Titular"],
+            ];
 
             $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
             $controle->set_size(8);
@@ -154,8 +148,6 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             $form->add_item($controle);
-
-
 
             # Laboratório
             $result = $pessoal->select("SELECT idlotacao, concat(IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
@@ -249,14 +241,14 @@ if ($acesso) {
 
             $menu->show();
 
-            tituloTable("Pesquisa Docentes por Nome");
+            tituloTable("Pesquisa Docentes por Nome / Vaga");
             br();
 
             $form = new Form('?fase=porNome');
 
-            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
+            $controle = new Input('parametroNome', 'texto', 'Nome Ou Número da Vaga:', 1);
             $controle->set_size(8);
-            $controle->set_title('Filtra por Nome do Professor');
+            $controle->set_title('Filtra por Nome Ou Número da Vaga');
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -281,7 +273,7 @@ if ($acesso) {
                                          LEFT JOIN tbperfil USING (idPerfil)
                                          LEFT JOIN tbvagahistorico USING (idServidor)
                                               JOIN tbvaga USING (idVaga)
-                        WHERE tbpessoa.nome like "%' . $parametroNome . '%" 
+                        WHERE (tbpessoa.nome like "%' . $parametroNome . '%"  OR idVaga = "' . $parametroNome . '")
                           AND (tbservidor.idCargo = 128 OR tbservidor.idCargo = 129)
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                      ORDER BY tbpessoa.nome';

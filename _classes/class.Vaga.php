@@ -1166,7 +1166,7 @@ class Vaga {
                 $dataPublicacao = null;
 
                 # Pega a data do concurso
-                if (!vazio($rr[0])) {
+                if (!empty($rr[0])) {
                     $dadosConcurso = $concurso->get_dados($rr[0]);
                     $dataPublicacao = date_to_php($dadosConcurso["dtPublicacaoEdital"]);
 

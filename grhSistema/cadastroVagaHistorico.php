@@ -71,8 +71,8 @@ if ($acesso) {
                                       idServidor,
                                       tbvagahistorico.obs,
                                       idVagaHistorico
-                                 FROM tbvagahistorico JOIN tbconcurso USING (idConcurso)
-                                                      JOIN tblotacao USING (idLotacao)
+                                 FROM tbvagahistorico LEFT JOIN tbconcurso USING (idConcurso)
+                                                      LEFT JOIN tblotacao USING (idLotacao)
                                 WHERE idVaga = {$idVaga} ORDER BY tbconcurso.dtPublicacaoEdital desc");
 
     # select do edita
@@ -91,7 +91,7 @@ if ($acesso) {
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 
-    $objeto->set_botaoIncluirNome("Incluir concurso nessa vaga");
+    $objeto->set_botaoIncluirNome("Incluir concurso / candidato nessa vaga");
 
     # Esconde o botão iniciar para usar um diferente na rotina de listar
     $objeto->set_botaoIncluir(false);
@@ -306,9 +306,9 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Incluir
-            $botaoVoltar = new Link("Incluir Concurso", "?fase=editar");
+            $botaoVoltar = new Link("Incluir Concurso / Candidato", "?fase=editar");
             $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Inclui um concurso nessa vaga.');
+            $botaoVoltar->set_title('Inclui um concurso / Candidato nessa vaga nessa vaga.');
             $menu1->add_link($botaoVoltar, "right");
             # Retirada a limitação de inclusão somente quando vaga estivesse disponível
             # a pedido de ana terezinha

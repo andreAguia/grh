@@ -82,7 +82,7 @@ if ($acesso) {
             $menu->add_link($botaoInserir, "right");
 
             # Por nome
-            $botao = new Link("por Nome/Vaga", "?fase=porNome");
+            $botao = new Link("por Nome / Vaga", "?fase=porNome");
             $botao->set_class('button');
             $botao->set_title('Pesquisar por Nome do Professor');
             $menu->add_link($botao, "right");

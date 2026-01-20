@@ -56,18 +56,20 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo
-
-    if (empty($parametroCentro)) {
-        $objeto->set_nome("Vagas de Docentes");
-    } else {
-        $objeto->set_nome("Vagas de Docentes do $parametroCentro");
+    if (!empty($id)) {
+        $nome = "Editar Vaga {$id}";    
+    }else{
+        $nome = "Nova Vaga";
     }
+    
+    # Nome do Modelo
+    $objeto->set_nome($nome);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT centro,
+    $objeto->set_selectEdita("SELECT centro,
                                      idCargo
                                 FROM tbvaga
-                               WHERE idVaga = ' . $id);
+                               WHERE idVaga = {$id}");
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
@@ -97,7 +99,7 @@ if ($acesso) {
         array('linha' => 1,
             'col' => 2,
             'nome' => 'centro',
-            'label' => 'Centro:',
+            'label' => 'Centro de Origem:',
             'tipo' => 'combo',
             'array' => array(null, "CCT", "CCTA", "CCH", "CBB"),
             'required' => true,

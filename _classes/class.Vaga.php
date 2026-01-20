@@ -603,7 +603,7 @@ class Vaga {
         $centro = $conteudo["centro"];
         $idCargo = $conteudo["idCargo"];
 
-            $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
+        $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
 
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);
@@ -613,6 +613,8 @@ class Vaga {
 
         $title = "O primeiro laboratório da vaga, para o qual a vaga foi criada,";
 
+        br();
+        hr("grosso");
         p("Laboratório de Origem:", "vagaOrigem", null, $title);
         p($labOrigem, "vagaCargo", null, $title);
 
@@ -656,7 +658,7 @@ class Vaga {
 
         $conteudo = $this->get_dados($idVaga);
         $centro = $conteudo["centro"];
-        $labOrigem = $servidor->get_nomeLotacao3($this->get_laboratorioOrigem($idVaga));
+        $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
         $idCargo = $conteudo["idCargo"];
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = "Vaga {$this->get_status($idVaga)}";

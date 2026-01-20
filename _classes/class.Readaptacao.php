@@ -307,12 +307,6 @@ class Readaptacao {
             $nomeBotaoInicio = "CI Início n° " . $ciInicio;
         }
 
-        # Nome do botão de 90 Dias
-        $nomeBotao90 = "CI 45 Dias";
-        if (!is_null($ci90)) {
-            $nomeBotao90 = "CI 45 Dias n° " . $ci90;
-        }
-
         $menu = new Menu("menuBeneficios");
 
         # Despachos
@@ -323,11 +317,6 @@ class Readaptacao {
 
             # Ci Início
             $menu->add_item('link', "\u{1F5A8} " . $nomeBotaoInicio, '?fase=ciInicioForm&id=' . $idReadaptacao);
-
-            # Ci 90 dias
-            if (($dias >= 0) AND ($dias <= 90)) {
-                $menu->add_item('link', "\u{1F5A8} " . $nomeBotao90, '?fase=ci90Form&id=' . $idReadaptacao);
-            }
 
             # Despacho: Aviso de Término   
             $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Aviso de Término", '?fase=despachoTermino&id=' . $idReadaptacao);

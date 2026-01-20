@@ -34,7 +34,7 @@ if ($acesso) {
     $idCargo = $conteudo["idCargo"];
     $cargo = $pessoal->get_nomeCargo($idCargo);
 
-    $labOrigem = $pessoal->get_nomeLotacao3($vaga->get_laboratorioOrigem($idVaga));
+    $labOrigem = $pessoal->get_nomeLotacao2($vaga->get_laboratorioOrigem($idVaga));
 
     $status = $vaga->get_status($idVaga);
 
@@ -62,7 +62,7 @@ if ($acesso) {
     $relatorio->set_metodo([null, null, null, "get_Nome"]);
 
     $relatorio->set_titulo("Histórico de Concursos<br/>Vaga {$idVaga}");
-    $relatorio->set_subtitulo("{$centro} - {$cargo}<br/>Origem: {$labOrigem}<br/>Vaga {$status}");
+    $relatorio->set_subtitulo("{$centro} - {$cargo}<br/>Lab de Origem:<br/>{$labOrigem}<br/>Vaga {$status}");
 
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_numeroOrdemTipo('d');

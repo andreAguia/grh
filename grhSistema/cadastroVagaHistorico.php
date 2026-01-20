@@ -310,6 +310,7 @@ if ($acesso) {
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Inclui um concurso / Candidato nessa vaga nessa vaga.');
             $menu1->add_link($botaoVoltar, "right");
+            
             # Retirada a limitação de inclusão somente quando vaga estivesse disponível
             # a pedido de ana terezinha
 //            if ($statusVaga == "Disponível") {

@@ -565,12 +565,15 @@ class Vaga {
         # Conecta com o banco de dados
         $servidor = new Pessoal();
 
+        # Pega os dados da vaga
+        $conteudo = $this->get_dados($idVaga);
+
         $grid = new Grid();
 
-        # Número da Vaga
+        /*
+         * Número da Vaga
+         */
         $grid->abreColuna(4);
-
-        $conteudo = $this->get_dados($idVaga);
 
         $painel = new Callout("secondary");
         $painel->abre();
@@ -582,12 +585,15 @@ class Vaga {
         $painel->fecha();
         $grid->fechaColuna();
 
-        # Dados da Vaga
+        /*
+         *  Dados da Vaga
+         */
         $grid->abreColuna(4);
 
         $painel = new Callout("primary");
         $painel->abre();
 
+        # Botão Editar
         $btnEditar = new Link("Editar", "cadastroVagas.php?fase=editar&id=$idVaga");
         $btnEditar->set_class('button tiny secondary');
         $btnEditar->set_id('editarVaga');
@@ -597,7 +603,7 @@ class Vaga {
         $centro = $conteudo["centro"];
         $idCargo = $conteudo["idCargo"];
 
-        $labOrigem = $servidor->get_nomeLotacao3($this->get_laboratorioOrigem($idVaga));
+        $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
 
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);

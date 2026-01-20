@@ -87,9 +87,9 @@ class Vaga {
         $ocupadoTitular = $this->get_numVagasCargoDiretoriaDisponiveis(129, $centro);
         $ocupadoAssociado = $this->get_numVagasCargoDiretoriaDisponiveis(128, $centro);
 
-        $resultado[] = array("Professor Titular", $ocupadoTitular);
-        $resultado[] = array("Professor Associado", $ocupadoAssociado);
-        $resultado[] = array("Total", $ocupadoAssociado + $ocupadoTitular);
+        $resultado[] = ["Professor Titular", $ocupadoTitular];
+        $resultado[] = ["Professor Associado", $ocupadoAssociado];
+        $resultado[] = ["Total", $ocupadoAssociado + $ocupadoTitular];
 
         $titulo = "Vagas Disponíveis";
 
@@ -603,7 +603,7 @@ class Vaga {
         $centro = $conteudo["centro"];
         $idCargo = $conteudo["idCargo"];
 
-        $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
+            $labOrigem = $servidor->get_nomeLotacao2($this->get_laboratorioOrigem($idVaga));
 
         $cargo = $servidor->get_nomeCargo($idCargo);
         $status = $this->get_status($idVaga);

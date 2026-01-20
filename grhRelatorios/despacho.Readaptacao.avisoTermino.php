@@ -65,15 +65,16 @@ if ($acesso) {
         $despacho->set_texto("Comunicamos o <b>ENCERRAMENTO da concessão da Readaptação</b> do(a) servidor(a) "
                 . "<b>{$pessoal->get_nome($idServidorPesquisado)}</b>, ID {$pessoal->get_idFuncional($idServidorPesquisado)}, "
                 . "em {$dtTermino}, conforme publicado no DOERJ de {$dtPublicacao}.");
-
-        $despacho->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos"
-                . " sua manifestação o quanto antes, através de processo eletrônico no"
-                . " sistema SEI, para que os procedimentos administrativos sejam"
-                . " providenciados com a devida antecedência.");
+        
     } else {
         $despacho->set_texto("Comunicamos que faltam <b>{$dias} dias</b> para o <b>ENCERRAMENTO da concessão da Readaptação</b> do(a) servidor(a) "
                 . "<b>{$pessoal->get_nome($idServidorPesquisado)}</b>, ID {$pessoal->get_idFuncional($idServidorPesquisado)}, "
                 . "em {$dtTermino}, conforme publicado no DOERJ de {$dtPublicacao}.");
+        
+        $despacho->set_texto("Caso haja interesse em renovar o referido benefício, solicitamos"
+                . " sua manifestação o quanto antes, através de processo eletrônico no"
+                . " sistema SEI, para que os procedimentos administrativos sejam"
+                . " providenciados com a devida antecedência.");
     }
     
     $despacho->set_texto("Atenciosamente,");

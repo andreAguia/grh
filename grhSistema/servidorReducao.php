@@ -867,7 +867,7 @@ if ($acesso) {
             $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
 
             # Título
-            tituloTable("Despacho: Aviso de Término");
+            tituloTable("Despacho: Aviso de Término",null,"Redução de Carga Horária");
             br();
 
             # Pega os dados da combo assinatura

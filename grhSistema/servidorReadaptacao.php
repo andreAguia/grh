@@ -927,9 +927,99 @@ if ($acesso) {
             break;
 
         ################################################################### 
-        # Ci Término
+        # Despacho: Aviso de Término
 
-        case "ciTerminoForm" :
+        case "despachoTermino" :
+            
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            # idServidor do chefe
+            $idChefiaImediataDestino = $pessoal->get_chefiaImediata($idServidorPesquisado);
+
+            # Nome do chefe
+            $nomeGerenteDestino = $pessoal->get_nome($idChefiaImediataDestino);
+
+            # Descrição do cargo
+            $gerenciaImediataDescricao = $pessoal->get_chefiaImediataDescricao($idServidorPesquisado);
+
+            # Título
+            tituloTable("Despacho: Aviso de Término",null,"Readaptação");
+            br();
+
+            # Pega os dados da combo assinatura
+            $select = 'SELECT idServidor,
+                              tbpessoa.nome
+                         FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                         JOIN tbhistlot USING (idServidor)
+                                         JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                          AND tbhistlot.lotacao = 66
+                          AND situacao = 1
+                     ORDER BY tbpessoa.nome asc';
+
+            $lista = $pessoal->select($select);
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/despacho.Readaptacao.avisoTermino.php?id={$id}");
+
+            # Assinatura
+            $controle = new Input('postAssinatura', 'combo', 'Assinado por:', 1);
+            $controle->set_size(10);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $controle->set_array($lista);
+            $controle->set_valor($intra->get_idServidor($idUsuario));
+            $controle->set_autofocus(true);
+            $controle->set_required(true);
+            $controle->set_title('O nome do servidor da GRH que assina o despacho.');
+            $form->add_item($controle);
+
+            # Chefia
+            $controle = new Input('chefia', 'texto', 'Chefia Imediata do Servidor Solicitante:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($nomeGerenteDestino);
+            $controle->set_required(true);
+            $controle->set_title('O nome da chefia imediata.');
+            $form->add_item($controle);
+
+            # Cargo
+            $controle = new Input('cargo', 'texto', 'Cargo da Chefia:', 1);
+            $controle->set_size(200);
+            $controle->set_linha(2);
+            $controle->set_col(12);
+            $controle->set_valor($gerenciaImediataDescricao);
+            $controle->set_required(true);
+            $controle->set_title('O Cargo em comissão da chefia.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        ###################################################################
+            
+            case "jujuba" :
+            
+            
+            
+            
+            
+            
+            
 
             # Voltar
             botaoVoltar("?");
@@ -964,7 +1054,7 @@ if ($acesso) {
             $painel->abre();
 
             # Monta o formulário para confirmação dos dados necessários a emissão da CI
-            $form = new Form('?fase=ciTerminoFormValida&id=' . $id);
+            $form = new Form("../grhRelatorios/despacho.Readaptacao.avisoTermino.php?id={$id}");
 
             # numCi
             $controle = new Input('numCiTermino', 'texto', 'Ci n°:', 1);

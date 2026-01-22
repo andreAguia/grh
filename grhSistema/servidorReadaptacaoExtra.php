@@ -80,6 +80,13 @@ if ($origem == 2) {
             $campoValor[3] = 2; // Vigente
         }
     }
+
+    # Resultado: 3 - Interrompido
+    # Status:    5 - Interrompido
+    if ($resultado == 3) {
+        $campoValor[3] = 5;
+        $campoValor[4] = 3;
+    }
 }
 
 

@@ -66,26 +66,28 @@ if ($origem == 2) {
     /*
      *  origem EX-ofício
      */
-    # Verifica se já está cadastrada a data de início e o período
-    if ((is_null($dtInicio)) OR (is_null($periodo))) {
-        $campoValor[3] = 1;
-        $campoValor[4] = null;
-    } else {
-        $dtTermino = addMeses($dtInicio, $periodo);
-        $campoValor[4] = 1;
-        # Verifica se a data de término já passou
-        if (jaPassou($dtTermino)) {
-            $campoValor[3] = 3; // Arquivado
-        } else {
-            $campoValor[3] = 2; // Vigente
-        }
-    }
 
+    # Primeiro verifica se o resultado é interrompido
     # Resultado: 3 - Interrompido
-    # Status:    5 - Interrompido
+    # Status:    3 - Arquivado
     if ($resultado == 3) {
-        $campoValor[3] = 5;
-        $campoValor[4] = 3;
+        $campoValor[3] = 3; // Status -> 3 - Arquivado
+    } else {
+        # Senão for interrompido faz o resto
+        # Verifica se já está cadastrada a data de início e o período
+        if ((is_null($dtInicio)) OR (is_null($periodo))) {
+            $campoValor[3] = 1;
+            $campoValor[4] = null;
+        } else {
+            $dtTermino = addMeses($dtInicio, $periodo);
+            $campoValor[4] = 1;
+            # Verifica se a data de término já passou
+            if (jaPassou($dtTermino)) {
+                $campoValor[3] = 3; // Arquivado
+            } else {
+                $campoValor[3] = 2; // Vigente
+            }
+        }
     }
 }
 

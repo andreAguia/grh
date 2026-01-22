@@ -415,7 +415,7 @@ class Readaptacao {
         $sql = 'UPDATE tbreadaptacao SET status = 2
                  WHERE origem = 2
                    AND resultado = 1
-                   AND DATE_ADD(dtInicio, INTERVAL periodo MONTH) > CURDATE()';
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
 
         $pessoal->update($sql);
 
@@ -425,7 +425,7 @@ class Readaptacao {
         $sql = 'UPDATE tbreadaptacao SET status = 3
                  WHERE origem = 2
                    AND resultado = 1
-                   AND DATE_ADD(dtInicio, INTERVAL periodo MONTH) < CURDATE()';
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);
 
@@ -453,7 +453,7 @@ class Readaptacao {
          */
         $sql = 'UPDATE tbreadaptacao SET status = 2
                  WHERE origem = 1
-                   AND DATE_ADD(dtInicio, INTERVAL periodo MONTH) > CURDATE()';
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
 
         $pessoal->update($sql);
 
@@ -462,7 +462,7 @@ class Readaptacao {
          */
         $sql = 'UPDATE tbreadaptacao SET status = 3
                  WHERE origem = 1
-                   AND DATE_ADD(dtInicio, INTERVAL periodo MONTH) < CURDATE()';
+                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);
     }

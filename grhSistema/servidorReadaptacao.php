@@ -167,15 +167,15 @@ if ($acesso) {
     $objeto->set_voltarLista('servidorMenu.php');
 
     # select da lista
-    $objeto->set_selectLista('SELECT CASE origem
-                                         WHEN 1 THEN "Ex-Ofício"
-                                         WHEN 2 THEN "Solicitada"
-                                         ELSE "--"
+    $objeto->set_selectLista("SELECT CASE origem
+                                         WHEN 1 THEN 'Ex-Ofício'
+                                         WHEN 2 THEN 'Solicitada'
+                                         ELSE '--'
                                      END,
                                      CASE tipo
-                                         WHEN 1 THEN "Inicial"
-                                         WHEN 2 THEN "Renovação"
-                                         ELSE "--"
+                                         WHEN 1 THEN 'Inicial'
+                                         WHEN 2 THEN 'Renovação'
+                                         ELSE '--'
                                      END,
                                      idReadaptacao,
                                      processo,
@@ -185,8 +185,8 @@ if ($acesso) {
                                      idReadaptacao,                                   
                                      idReadaptacao
                                 FROM tbreadaptacao
-                               WHERE idServidor = ' . $idServidorPesquisado . '
-                            ORDER BY status, dtInicio desc');
+                               WHERE idServidor = {$idServidorPesquisado}
+                            ORDER BY status, dtInicio desc");
 
     # select do edita
     $objeto->set_selectEdita("SELECT origem,
@@ -296,7 +296,7 @@ if ($acesso) {
             'valor' => 0,
             'col' => 3,
             'disabled' => true,
-            'title' => 'Se a solicitação foi arquivada ou não.',
+            'title' => 'O status da readaptação.',
             'linha' => 1),
         array('nome' => 'resultado',
             'fieldset' => 'Resultado:',

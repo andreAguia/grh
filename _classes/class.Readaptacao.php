@@ -399,6 +399,8 @@ class Readaptacao {
          */
         # Conecta
         $pessoal = new Pessoal();
+        
+        ### SOLICITADA
 
         /*
          * origem = 2(solicitado) e resultado: null -> status: 1 (Em aberto)
@@ -437,6 +439,8 @@ class Readaptacao {
                    AND resultado = 2';
 
         $pessoal->update($sql);
+        
+        ### EX-OFÌCIO
 
         /*
          * origem = 1(ex-oficio) e Se data de inicio e período é null -> status: 1 (Em aberto)
@@ -444,6 +448,7 @@ class Readaptacao {
         $sql = 'UPDATE tbreadaptacao SET status = 1
                  WHERE origem = 1
                    AND dtInicio is NULL
+                   AND status <> 3
                    AND periodo is NULL';
 
         $pessoal->update($sql);
@@ -453,6 +458,7 @@ class Readaptacao {
          */
         $sql = 'UPDATE tbreadaptacao SET status = 2
                  WHERE origem = 1
+                   AND status <> 3
                    AND ADDDATE(dtInicio,INTERVAL periodo MONTH) > CURDATE()';
 
         $pessoal->update($sql);
@@ -462,7 +468,8 @@ class Readaptacao {
          */
         $sql = 'UPDATE tbreadaptacao SET status = 3
                  WHERE origem = 1
-                   AND ADDDATE(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
+                   AND status <> 3
+                   AND DATE_ADD(dtInicio,INTERVAL periodo MONTH) < CURDATE()';
 
         $pessoal->update($sql);
     }

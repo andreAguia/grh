@@ -43,6 +43,7 @@ if ($acesso) {
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', "Disponível"));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo', 128));
     $parametroNome = post('parametroNome', get_session('parametroNome'));
+    $parametroVaga = post('parametroVaga', get_session('parametroVaga'));
 
     if ($parametroCentro == "*") {
         $parametroCentro = "CBB";
@@ -54,6 +55,7 @@ if ($acesso) {
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroNome', $parametroNome);
+    set_session('parametroVaga', $parametroVaga);
 
     # Começa uma nova página
     $page = new Page();
@@ -67,6 +69,9 @@ if ($acesso) {
 
     switch ($fase) {
         case "":
+            # Zera a origem
+            set_session('origem');
+            
             /*
              * Menu
              */
@@ -86,9 +91,15 @@ if ($acesso) {
             $menu->add_link($botaoInserir, "right");
 
             # Por nome
-            $botao = new Link("por Nome / Vaga", "?fase=porNome");
+            $botao = new Link("por Nome", "?fase=porNome");
             $botao->set_class('button');
             $botao->set_title('Pesquisar por Nome do Professor');
+            $menu->add_link($botao, "right");
+
+            # Por vaga
+            $botao = new Link("por Vaga", "?fase=porVaga");
+            $botao->set_class('button');
+            $botao->set_title('Pesquisar por Vaga do Professor');
             $menu->add_link($botao, "right");
 
             # Dados Gerais
@@ -245,9 +256,6 @@ if ($acesso) {
 
             $menu->show();
 
-            tituloTable("Pesquisa Docentes por Nome / Vaga");
-            br();
-
             $form = new Form('?fase=porNome');
 
             $controle = new Input('parametroNome', 'texto', 'Nome Ou Número da Vaga:', 1);
@@ -262,14 +270,14 @@ if ($acesso) {
 
             $form->show();
 
-            $select = 'SELECT tbservidor.idFuncional,
+            $select = 'SELECT tbvaga.idVaga,
+                              tbservidor.idFuncional,
                               tbpessoa.nome,
                               tbservidor.idServidor,
                               concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao,
                               tbperfil.nome,
                               tbservidor.dtAdmissao,
-                              tbservidor.dtDemissao,
-                              tbvaga.idVaga,
+                              tbservidor.dtDemissao,                              
                               tbvaga.idVaga
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
@@ -285,28 +293,75 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Docentes Encontrados');
-            $tabela->set_label(array('IdFuncional', 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Vaga', 'Editar'));
-            #$tabela->set_width(array(10,30,30,0,10,10,10));
-            $tabela->set_align(array("center", "left", "left", "left"));
-            $tabela->set_funcao(array(null, null, null, null, null, "date_to_php", "date_to_php"));
+            $tabela->set_titulo('Cadastro de Vagas');
+            $tabela->set_subtitulo('Por Nome de Servidor');
+            $tabela->set_label(["Vaga", "IdFuncional", 'Nome', 'Cargo', 'Lotação', 'Perfil', 'Admissão', 'Saída', 'Editar']);
+            $tabela->set_align(["center", "center", "left", "left", "left"]);
+            $tabela->set_funcao(["ressaltaVaga", null, null, null, null, null, "date_to_php", "date_to_php"]);
 
-            $tabela->set_classe(array(null, null, "pessoal"));
-            $tabela->set_metodo(array(null, null, "get_Cargo"));
+            $tabela->set_classe([null, null, null, "pessoal"]);
+            $tabela->set_metodo([null, null, null, "get_Cargo"]);
 
             # Botão de Editar concursos
             $botao1 = new BotaoGrafico();
             $botao1->set_label('');
             $botao1->set_title('Editar o Concurso');
-            $botao1->set_url("?fase=editarConcurso&id=");
+            $botao1->set_url("?fase=editarNome&id=");
             $botao1->set_imagem(PASTA_FIGURAS . 'olho.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link(array(null, null, null, null, null, null, null, null, $botao1));
+            $tabela->set_link([null, null, null, null, null, null, null, null, $botao1]);
             $tabela->set_idCampo('idVaga');
 
             $tabela->set_conteudo($result);
             $tabela->show();
+            break;
+
+        case "editarNome" :
+            set_session('idVaga', $id);
+            set_session('origem', "areaVagasDocentes.php?fase=porNome");            
+            loadPage("cadastroVagaHistorico.php");
+            break;
+
+        case "porVaga":
+
+            # Menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botao = new Link("Voltar", "?");
+            $botao->set_class('button');
+            $botao->set_title('Voltar a página anterior');
+            $botao->set_accessKey('V');
+            $menu->add_link($botao, "left");
+
+            $menu->show();
+
+            $form = new Form("?fase=editarVaga");
+
+            $controle = new Input('parametroVaga', 'texto', 'Número da Vaga:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Nome Ou Número da Vaga');
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_autofocus(true);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+
+            tituloTable('Cadastro de Vagas', null, 'Pelo Número da Vaga');
+            $callout = new Callout();
+            $callout->abre();
+            p("Nenhum registro encontrado", 'f14', 'center');
+            $callout->fecha();
+            br();
+            break;
+
+        case "editarVaga" :
+            set_session('idVaga', $parametroVaga);
+            set_session('origem', "areaVagasDocentes.php?fase=porVaga");  
+            loadPage("cadastroVagaHistorico.php");
             break;
     }
 

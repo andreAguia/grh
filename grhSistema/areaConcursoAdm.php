@@ -145,7 +145,8 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_titulo("Concursos para Servidores Administrativos & Técnicos");
+            $tabela->set_titulo("Concursos");
+            $tabela->set_subtitulo("Servidores Administrativos & Técnicos");
             $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Total", "Acessar"]);
             $tabela->set_colspanLabel([null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);

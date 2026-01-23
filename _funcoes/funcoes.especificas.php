@@ -149,7 +149,7 @@ function exibeDescricaoStatus($status) {
         case "solicitada" :
             $texto = "Férias solicitadas pelo Servidor";
             break;
-        
+
         case "fruindo" :
             $texto = "Férias que o servidor está fruindo nesse momento.";
             break;
@@ -1556,6 +1556,25 @@ function exibeAfastamentoAtual($idServidor = null) {
     $verifica->verifica();
 
     return $verifica->getDetalhe() . "<br/>" . $verifica->getPeriodo();
+}
+
+##########################################################
+/**
+ * Função que formata o número de uma vaga de concurso
+ * 
+ */
+
+function ressaltaVaga($texto) {
+
+    $retorno = null;
+
+    if (empty($texto)) {
+        return null;
+    } else {
+        p($texto, "azul");
+    }
+
+    return $retorno;
 }
 
 ###########################################################

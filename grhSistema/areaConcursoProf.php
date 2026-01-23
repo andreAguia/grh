@@ -95,7 +95,7 @@ if ($acesso) {
             $menu1->add_link($botaoRel, "right");
 
             # Vagas
-            $botaoVoltar = new Link("Vagas", "areaVagasDocentes.php");
+            $botaoVoltar = new Link("Cadastro de Vagas", "areaVagasDocentes.php");
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Exibe as vagas dos concursos');
             $menu1->add_link($botaoVoltar, "right");
@@ -188,7 +188,8 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_titulo("Concursos para Servidores Professores");
+            $tabela->set_titulo("Concursos");
+            $tabela->set_subtitulo("Servidores Professores");
             $tabela->set_label(["id", "Ano Base", "Publicação <br/>do Edital", "Regime", "Tipo", "Executor", "Plano de Cargos", "Centros", "Servidores Ativos", "Ver", "Servidores Inativos", "Ver", "Total", "Acessar"]);
             $tabela->set_colspanLabel([null, null, null, null, null, null, null, null, 2, null, 2]);
             $tabela->set_align(["center"]);

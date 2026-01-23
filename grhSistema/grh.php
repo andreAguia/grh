@@ -228,6 +228,13 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
+            
+            ################################################################################
+            /*
+             *  Rotinas de controle 
+             *  que são executadas 
+             *  uma vez ao dia
+             */
 
             /*
              *  Faz as alterações de férias
@@ -287,6 +294,8 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $qdade . ' registros sincronizados da tbvagahistorico com idservidor.', null, null, 6);
             }
+            
+            ################################################################################
 
             /*
              * Faz o backup 3 vezes ao dia
@@ -336,7 +345,7 @@ if ($acesso) {
                 }
             }
 
-            ########
+            ################################################################################
             # monta o menu principal
             $menu = new MenuPrincipal($idUsuario, $mesCalendario, $anoCalendario);
 

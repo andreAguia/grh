@@ -35,6 +35,7 @@ if ($acesso) {
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
     $idVaga = get_session('idVaga');
+    $origem = get_session('origem','areaVagasDocentes.php');
 
     # Pega o status da vaga
     $statusVaga = $vaga->get_status($idVaga);
@@ -61,8 +62,8 @@ if ($acesso) {
     # Nome do Modelo
     $objeto->set_nome("Concursos Desta Vaga");
 
-    # Botão de voltar da lista
-    $objeto->set_voltarLista('areaVagasDocentes.php');
+    # Botão de voltar da lista    
+    $objeto->set_voltarLista($origem);
 
     # select da lista
     $objeto->set_selectLista("SELECT concat(tbconcurso.anoBase,' - Edital: ',DATE_FORMAT(tbconcurso.dtPublicacaoEdital,'%d/%m/%Y')) as concurso,
@@ -289,7 +290,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $botaoVoltar = new Link("Voltar", "areaVagasDocentes.php");
+            $botaoVoltar = new Link("Voltar", $origem);
             $botaoVoltar->set_class('button');
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');

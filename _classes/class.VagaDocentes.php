@@ -25,7 +25,7 @@ class VagaDocentes {
 
     public function show() {
 
-# Conecta ao Banco de Dados        
+        # Conecta ao Banco de Dados        
         $pessoal = new Pessoal();
 
         $select = "SELECT idVaga,
@@ -75,6 +75,7 @@ class VagaDocentes {
         $tabela->set_align(["center", "center", "center", "center", "center", "left", "left"]);
         $tabela->set_classe([null, null, null, null, "Pessoal", "Vaga",null,null,"Vaga"]);
         $tabela->set_metodo([null, null, null, null, "get_lotacaoGerencia", "get_servidorOcupante",null,null,"temProblema"]);
+        $tabela->set_funcao(["ressaltaVaga"]);
 
         $tabela->set_formatacaoCondicional(array(
             array('coluna' => 1,

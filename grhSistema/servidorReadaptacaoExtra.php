@@ -57,9 +57,9 @@ if ($origem == 2) {
             break;
 
         # Resultado: 3 - Interrompido
-        # Status:    5 - Interrompido
+        # Status:    3 - Arquivado
         case 3:
-            $campoValor[3] = 5;
+            $campoValor[3] = 3;
             break;
     }
 } else {

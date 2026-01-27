@@ -22,6 +22,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase');
+    $aba = get('aba', 1);
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -83,7 +84,7 @@ if ($acesso) {
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
-            loadPage('?fase=exibeLista');
+            loadPage("?fase=exibeLista&aba={$aba}");
             break;
 
 ################################################################
@@ -338,7 +339,7 @@ if ($acesso) {
             # Menu de Abas
             $tab = new Tab([
                 "COM Petec",
-                "SEM Petec"]);
+                "SEM Petec"], $aba);
 
             ##############
             /*
@@ -362,7 +363,7 @@ if ($acesso) {
             }
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');
+            $tabela->set_editar('?fase=editaServidor&aba=1');
             $tabela->show();
 
             $tab->fechaConteudo();
@@ -416,7 +417,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, '?fase=editaServidor&id=', 'Acessa o servidor');
+            $botao = new Link(null, '?fase=editaServidor&aba=2&id=', 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -439,7 +440,7 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', 'areaPetec.php');
+            set_session('origem', "areaPetec.php?aba={$aba}");
 
             # Carrega a página específica
             loadPage('servidorFormacao.php');

@@ -336,4 +336,148 @@ class Formacao {
     }
 
 ###########################################################
+
+    function somatorioHoras4($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador
+         * Recebe na forma de array para ser usada na classe de tabelas
+         */
+        # Separa as variaveis
+        $idMarcador = 4;
+        $horas = 20;
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+            # Passa o idservidor para idPessoa
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Select
+            $select = "SELECT SUM(horas)
+                         FROM tbformacao
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result = $pessoal->select($select, false);
+            if(empty($result[0])){
+                $hInfo = 0;
+            }else{
+                $hInfo = $result[0];
+            }
+            
+            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
+            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
+            hr("geral1");
+
+            $resultado = ($result[0] - $horas);
+
+            if ($resultado >= 0) {
+                p("Resultado: {$resultado}h", "pHoraOk");
+                label("OK", "success");
+            } else {
+                $resultado = abs($resultado);
+                p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHoras5($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador
+         * Recebe na forma de array para ser usada na classe de tabelas
+         */
+        # Separa as variaveis
+        $idMarcador = 5;
+        $horas = 10;
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+            # Passa o idservidor para idPessoa
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Select
+            $select = "SELECT SUM(horas)
+                         FROM tbformacao
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result = $pessoal->select($select, false);
+            if(empty($result[0])){
+                $hInfo = 0;
+            }else{
+                $hInfo = $result[0];
+            }
+            
+            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
+            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
+            hr("geral1");
+
+            $resultado = ($result[0] - $horas);
+
+            if ($resultado >= 0) {
+                p("Resultado: {$resultado}h", "pHoraOk");
+                label("OK", "success");
+            } else {
+                $resultado = abs($resultado);
+                p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHoras6($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador
+         * Recebe na forma de array para ser usada na classe de tabelas
+         */
+        # Separa as variaveis
+        $idMarcador = 6;
+        $horas = 20;
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+            # Passa o idservidor para idPessoa
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Select
+            $select = "SELECT SUM(horas)
+                         FROM tbformacao
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result = $pessoal->select($select, false);
+            if(empty($result[0])){
+                $hInfo = 0;
+            }else{
+                $hInfo = $result[0];
+            }
+            
+            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
+            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
+            hr("geral1");
+
+            $resultado = ($result[0] - $horas);
+
+            if ($resultado >= 0) {
+                p("Resultado: {$resultado}h", "pHoraOk");
+                label("OK", "success");
+            } else {
+                $resultado = abs($resultado);
+                p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+        }
+    }
+
+    ###########################################################
 }

@@ -332,6 +332,44 @@ tr#inativo td{
 }
 
 /*******************************************
+ * Petec
+ *******************************************/
+
+p#pHorasInformadas{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    color: green;
+    text-align: center;
+}
+
+p#pHorasExigidas{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+    color: red;
+    text-align: center;
+}
+
+p#pHorasFaltam{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
+p#pHoraOk{
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    color: green;
+    text-align: center;
+    font-weight: bold;
+}
+
+/*******************************************
  * Cadastro de Concurso
  *******************************************/
 
@@ -341,7 +379,6 @@ p#pconcursadoAtivo{
     font-size: 14px;
     color: green;
     font-weight: bold;
-
 }
 
 p#pconcursadoNaoAtivo{
@@ -1383,7 +1420,7 @@ p#pnomeEtiqueta3{
     font-size: 16px;
     color: #000;
     padding: 0px;
-    margin: 0px;    
+    margin: 0px;
     margin-top: -6px;
     line-height: 15px;
 }

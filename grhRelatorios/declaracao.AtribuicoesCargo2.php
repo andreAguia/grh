@@ -147,7 +147,7 @@ if ($acesso) {
         if ($idSituacao == 1) {
             $dec->set_texto("O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.");
         } else {
-            $dec->set_texto("O(A) servidor(a) em tela cumpriu a carga horária de 40 horas semanais.");
+            $dec->set_texto("O(A) servidor(a) em tela cumpria a carga horária de 40 horas semanais.");
         }
         $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
 

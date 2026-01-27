@@ -374,7 +374,7 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                p("Resultado: {$resultado}h", "pHoraOk");
+                #p("Resultado: {$resultado}h", "pHoraOk");
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);
@@ -422,7 +422,7 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                p("Resultado: {$resultado}h", "pHoraOk");
+                #p("Resultado: {$resultado}h", "pHoraOk");
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);
@@ -470,7 +470,7 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                p("Resultado: {$resultado}h", "pHoraOk");
+                #p("Resultado: {$resultado}h", "pHoraOk");
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);

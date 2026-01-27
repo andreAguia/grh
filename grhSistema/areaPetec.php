@@ -256,57 +256,6 @@ if ($acesso) {
             # Dados
             $abaRetorno = 2;
             
-            # Monta o select
-            $select = "SELECT tbservidor.idServidor,
-                              tbescolaridade.escolaridade,
-                              idFormacao,
-                              idFormacao,
-                              idFormacao
-                         FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
-                                              JOIN tbservidor USING (idPessoa)
-                                              JOIN tbescolaridade USING (idEscolaridade)
-                                              JOIN tbhistlot USING (idServidor)
-                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                        AND situacao = 1";
-
-            if ($parametroMarcador <> "Todos") {
-
-                $select .= " AND ("
-                        . "tbformacao.marcador1 = 4 OR "
-                        . "tbformacao.marcador2 = 4 OR "
-                        . "tbformacao.marcador3 = 4 OR "
-                        . "tbformacao.marcador4 = 4)";
-            }
-
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
-            }
-
-            $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
-
-            $result = $pessoal->select($select);
-
-            $tabela = new Tabela();
-            $tabela->set_titulo('Servidores COM PETEC');
-            $tabela->set_label(["Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
-            $tabela->set_conteudo($result);
-            $tabela->set_align(["left", "center", "center", "left"]);
-            $tabela->set_classe(["pessoal", null, "Formacao", "Formacao", "Formacao"]);
-            $tabela->set_metodo(["get_nomeECargoELotacaoEPerfilESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
-
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
-            $tabela->show();
-
             ## Sem Petec
 
             $novoArray = array();
@@ -358,18 +307,8 @@ if ($acesso) {
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
-
-            $tab->fechaConteudo();
-
-            ##############
-            /*
-             * Petec - Portaria 473/25
-             */
-
-            $tab->abreConteudo();
             
-            # Dados
-            $abaRetorno = 3;
+            ### Com Petec
             
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
@@ -388,10 +327,10 @@ if ($acesso) {
             if ($parametroMarcador <> "Todos") {
 
                 $select .= " AND ("
-                        . "tbformacao.marcador1 = 5 OR "
-                        . "tbformacao.marcador2 = 5 OR "
-                        . "tbformacao.marcador3 = 5 OR "
-                        . "tbformacao.marcador4 = 5)";
+                        . "tbformacao.marcador1 = 4 OR "
+                        . "tbformacao.marcador2 = 4 OR "
+                        . "tbformacao.marcador3 = 4 OR "
+                        . "tbformacao.marcador4 = 4)";
             }
 
             # Verifica se tem filtro por lotação
@@ -422,7 +361,20 @@ if ($acesso) {
             $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
             $tabela->show();
 
-            ## Sem Petec
+            $tab->fechaConteudo();
+
+            ##############
+            /*
+             * Petec - Portaria 473/25
+             */
+
+            $tab->abreConteudo();
+            
+            # Dados
+            $abaRetorno = 3;            
+            
+
+            ### Sem Petec
 
             $novoArray = array();
 
@@ -474,6 +426,58 @@ if ($acesso) {
             $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
 
+            ### Com PETEC
+            
+            # Monta o select
+            $select = "SELECT tbservidor.idServidor,
+                              tbescolaridade.escolaridade,
+                              idFormacao,
+                              idFormacao,
+                              idFormacao
+                         FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbservidor USING (idPessoa)
+                                              JOIN tbescolaridade USING (idEscolaridade)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND situacao = 1";
+
+            if ($parametroMarcador <> "Todos") {
+
+                $select .= " AND ("
+                        . "tbformacao.marcador1 = 5 OR "
+                        . "tbformacao.marcador2 = 5 OR "
+                        . "tbformacao.marcador3 = 5 OR "
+                        . "tbformacao.marcador4 = 5)";
+            }
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
+
+            $result = $pessoal->select($select);
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores COM PETEC');
+            $tabela->set_label(["Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
+            $tabela->set_conteudo($result);
+            $tabela->set_align(["left", "center", "center", "left"]);
+            $tabela->set_classe(["pessoal", null, "Formacao", "Formacao", "Formacao"]);
+            $tabela->set_metodo(["get_nomeECargoELotacaoEPerfilESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_idCampo('idServidor');
+            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
+            $tabela->show();
             $tab->fechaConteudo();
 
             ##############
@@ -485,6 +489,60 @@ if ($acesso) {
             
             # Dados
             $abaRetorno = 4;
+            
+            
+
+            ## Sem Petec
+
+            $novoArray = array();
+
+            $select2 = "SELECT tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND situacao = 1";
+
+            # Verifica se tem filtro por lotação
+            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($parametroLotacao)) {
+                    $select2 .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select2 .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            $select2 .= " ORDER BY tbpessoa.nome";
+            $result2 = $pessoal->select($select2);
+
+            # Percorre o array
+            foreach ($result2 as $item) {
+                if (!$formacao->temPetec($item["idServidor"], 6)) {
+                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
+                }
+            }
+
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores SEM PETEC');
+            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
+            $tabela->set_conteudo($novoArray);
+            $tabela->set_align(["center", "left", "left", "center", "left"]);
+            $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
+
+            if ($parametroSituacao == 1) {
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+            }
+
+            # Botão Editar
+            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->show();
 
             ## Com Petec
 
@@ -538,58 +596,6 @@ if ($acesso) {
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
-            $tabela->show();
-
-            ## Sem Petec
-
-            $novoArray = array();
-
-            $select2 = "SELECT tbservidor.idServidor
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                              JOIN tbhistlot USING (idServidor)
-                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                        AND situacao = 1";
-
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select2 .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select2 .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
-            }
-
-            $select2 .= " ORDER BY tbpessoa.nome";
-            $result2 = $pessoal->select($select2);
-
-            # Percorre o array
-            foreach ($result2 as $item) {
-                if (!$formacao->temPetec($item["idServidor"], 6)) {
-                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
-                }
-            }
-
-            $tabela = new Tabela();
-            $tabela->set_titulo('Servidores SEM PETEC');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
-            $tabela->set_conteudo($novoArray);
-            $tabela->set_align(["center", "left", "left", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
-
-            if ($parametroSituacao == 1) {
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
-            }
-
-            # Botão Editar
-            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
-            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-            # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
 
             $tab->fechaConteudo();

@@ -111,7 +111,7 @@ if ($acesso) {
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_target("_blank");
             $botaoRel->set_imagem($imagem);
-            $menu1->add_link($botaoRel, "right");
+            #$menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
@@ -125,71 +125,21 @@ if ($acesso) {
             $form = new Form('?');
 
             /*
-             * Ano de Termino
+             *  Marcador
              */
+            # Pega os dados da datalist marcador
+            $arrayMarcador = $formacao->get_arrayMarcadores();
 
-            $controle = new Input('parametroAno', 'combo', 'Ano Término:', 1);
-            $controle->set_size(8);
-            $controle->set_title('Filtra por Ano exercício');
-            $controle->set_array(arrayPreenche(2025, date('Y'), "c"));
-            $controle->set_valor($parametroAno);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_autofocus(true);
-            $form->add_item($controle);
-
-            /*
-             *  Nivel do Cargo    
-             */
-            $controle = new Input('parametroNivel', 'combo', 'Cargo do Servidor:', 1);
-            $controle->set_size(20);
-            $controle->set_title('Nível do Cargo');
-            $controle->set_valor($parametroNivel);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            $controle->set_array(["Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"]);
-            $controle->set_autofocus(true);
-            #$form->add_item($controle);
-
-            /*
-             *  Perfil
-             */
-            $result = $pessoal->select('SELECT idperfil,
-                                       nome,
-                                       tipo
-                                  FROM tbperfil
-                                 WHERE tipo <> "Outros"  
-                              ORDER BY tipo, nome');
-
-            array_unshift($result, array('Todos', 'Todos'));
-
-            $controle = new Input('parametroPerfil', 'combo', 'Perfil do Servidor:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Perfil');
-            $controle->set_array($result);
-            $controle->set_optgroup(true);
-            $controle->set_valor($parametroPerfil);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            #$form->add_item($controle);
-            # Situação
-            $result = $pessoal->select('SELECT idsituacao, situacao
-                                          FROM tbsituacao                                
-                                      ORDER BY 1');
-            array_unshift($result, array('Todos', 'Todos'));
-
-            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle = new Input('parametroMarcador', 'combo', 'Marcador:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Situação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroSituacao);
+            $controle->set_array($arrayMarcador);
+            $controle->set_valor($parametroMarcador);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
-            #$form->add_item($controle);
+            $controle->set_col(4);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
 
             /*
              *  Lotação
@@ -209,7 +159,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(9);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             /*
@@ -259,7 +209,6 @@ if ($acesso) {
 
             ##############
             # Faz os Selects com os cálculos
-            $parametroMarcador = 4;
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -281,8 +230,6 @@ if ($acesso) {
             if ($parametroInstituicao <> "Todos") {
                 $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
             }
-
-            $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
 
             if ($parametroMarcador <> "Todos") {
 
@@ -397,7 +344,7 @@ if ($acesso) {
 
             # Percorre o array
             foreach ($result2 as $item) {
-                if (!$formacao->temPetec($item["idServidor"], $parametroAno)) {
+                if (!$formacao->temPetec($item["idServidor"], $parametroMarcador)) {
                     $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
             }

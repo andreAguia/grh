@@ -247,31 +247,23 @@ class Formacao {
 
     ###########################################################
 
-    function temPetec($idServidor, $ano) {
+    function temPetec($idServidor, $idMarcador) {
         /**
          * Fornece um array com os marcadores
          */
-        # id do Marcador
-        $idMarcador = 4;    // Petec
         
         # Verifica se tem id
-        if (empty($idServidor)) {
+        if (empty($idServidor) OR empty($idMarcador)) {
             return false;
         } else {
             # Passa o idservidor para idPessoa
             $pessoal = new Pessoal();
             $idPessoa = $pessoal->get_idPessoa($idServidor);
 
-            # Verifica o Ano
-            if (empty($ano)) {
-                $ano = date(Y);
-            }
-
             # Select
             $select = "SELECT *
                          FROM tbformacao
-                        WHERE anoTerm = '{$ano}' 
-                          AND (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
                           AND idPessoa = {$idPessoa}";
 
             $result = $pessoal->select($select);

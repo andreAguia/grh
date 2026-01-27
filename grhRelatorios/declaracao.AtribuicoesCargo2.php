@@ -119,7 +119,7 @@ if ($acesso) {
                     $texto3 .= "<li>{$linha}</li>";
                 }
             }
-            
+
             $texto3 .= "</ul>";
             $dec->set_texto($texto3);
         }
@@ -144,7 +144,11 @@ if ($acesso) {
         #              . " é portadora do CNPJ nº 04.809.688/0001-06, com sede na Av. Alberto"
         #              . " Lamego, 2.000, Parque Califórnia – Campos dos Goytacazes – RJ, CEP: 28.013-602.");
 
-        $dec->set_texto("O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.");
+        if ($idSituacao == 1) {
+            $dec->set_texto("O(A) servidor(a) em tela cumpre a carga horária de 40 horas semanais.");
+        } else {
+            $dec->set_texto("O(A) servidor(a) em tela cumpriu a carga horária de 40 horas semanais.");
+        }
         $dec->set_texto("Sendo expressão da verdade, subscrevemo-nos.");
 
         $dec->set_rodapeSoUntimaPag(true);

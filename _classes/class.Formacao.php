@@ -30,20 +30,25 @@ class Formacao {
         /**
          * Fornece Detalhes do curso
          */
-        # Pega os dados
-        $dados = $this->get_dados($id);
+        # Verifica se tem id
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
 
-        # Trata carga horária
-        if (!empty($dados['horas'])) {
-            $dados['horas'] .= " horas";
+            # Trata carga horária
+            if (!empty($dados['horas'])) {
+                $dados['horas'] .= " horas";
+            }
+
+            pLista(
+                    $dados['habilitacao'],
+                    $dados['instEnsino'],
+                    $dados['anoTerm'],
+                    $dados['horas']
+            );
         }
-
-        pLista(
-                $dados['habilitacao'],
-                $dados['instEnsino'],
-                $dados['anoTerm'],
-                $dados['horas']
-        );
     }
 
     ###########################################################
@@ -156,19 +161,25 @@ class Formacao {
          * 
          * @syntax $formacao->exibeCertificado($idFormacao);
          */
-        # Monta o arquivo
-        $arquivo = PASTA_CERTIFICADO . $idFormacao . ".pdf";
-
-        # Verifica se ele existe
-        if (file_exists($arquivo)) {
-
-            # Monta o link
-            $link = new Link(null, $arquivo, "Exibe o certificado / diploma do curso");
-            $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
-            $link->set_target("_blank");
-            $link->show();
+        # Verifica se tem id
+        if (empty($idFormacao)) {
+            return null;
         } else {
-            label("Sem<br/>Comprovação", "alert");
+
+            # Monta o arquivo
+            $arquivo = PASTA_CERTIFICADO . $idFormacao . ".pdf";
+
+            # Verifica se ele existe
+            if (file_exists($arquivo)) {
+
+                # Monta o link
+                $link = new Link(null, $arquivo, "Exibe o certificado / diploma do curso");
+                $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+                $link->set_target("_blank");
+                $link->show();
+            } else {
+                label("Sem<br/>Comprovação", "alert");
+            }
         }
     }
 
@@ -179,27 +190,32 @@ class Formacao {
         /**
          * Fornece Detalhes do curso
          */
-        # Pega os dados
-        $dados = $this->get_dados($id);
+        # Verifica se tem id
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
 
-        # Marcador 1
-        if (!empty($dados['marcador1'])) {
-            p($this->get_marcador($dados['marcador1']), "pNota");
-        }
+            # Marcador 1
+            if (!empty($dados['marcador1'])) {
+                p($this->get_marcador($dados['marcador1']), "pNota");
+            }
 
-        # Marcador 2
-        if (!empty($dados['marcador2'])) {
-            p($this->get_marcador($dados['marcador2']), "pNota");
-        }
+            # Marcador 2
+            if (!empty($dados['marcador2'])) {
+                p($this->get_marcador($dados['marcador2']), "pNota");
+            }
 
-        # Marcador 3
-        if (!empty($dados['marcador3'])) {
-            p($this->get_marcador($dados['marcador3']), "pNota");
-        }
+            # Marcador 3
+            if (!empty($dados['marcador3'])) {
+                p($this->get_marcador($dados['marcador3']), "pNota");
+            }
 
-        # Marcador 4
-        if (!empty($dados['marcador4'])) {
-            p($this->get_marcador($dados['marcador4']), "pNota");
+            # Marcador 4
+            if (!empty($dados['marcador4'])) {
+                p($this->get_marcador($dados['marcador4']), "pNota");
+            }
         }
     }
 
@@ -225,6 +241,46 @@ class Formacao {
         foreach ($arrayMarcadores as $item) {
             if ($item[0] == $id) {
                 return $item[1];
+            }
+        }
+    }
+
+    ###########################################################
+
+    function temPetec($idServidor, $ano) {
+        /**
+         * Fornece um array com os marcadores
+         */
+        # id do Marcador
+        $idMarcador = 4;    // Petec
+        
+        # Verifica se tem id
+        if (empty($idServidor)) {
+            return false;
+        } else {
+            # Passa o idservidor para idPessoa
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # Verifica o Ano
+            if (empty($ano)) {
+                $ano = date(Y);
+            }
+
+            # Select
+            $select = "SELECT *
+                         FROM tbformacao
+                        WHERE anoTerm = '{$ano}' 
+                          AND (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result = $pessoal->select($select);
+            $quantidade = $pessoal->count($select);
+
+            if ($quantidade == 0) {
+                return false;
+            } else {
+                return true;
             }
         }
     }

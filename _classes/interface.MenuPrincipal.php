@@ -271,7 +271,7 @@ class MenuPrincipal {
     ######################################################################################################################
 
     /**
-     * Método moduloSispatri
+     * Método moduloDiaRh
      */
     private function moduloDiaRh() {
 
@@ -300,7 +300,7 @@ class MenuPrincipal {
     ######################################################################################################################
 
     /**
-     * Método moduloSispatri
+     * Método moduloNiverUenf
      */
     private function moduloNiverUenf() {
 
@@ -885,6 +885,13 @@ class MenuPrincipal {
         $botao->set_url('areaFormacao.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Formação Escolar dos Servidores');
+        $menu->add_item($botao);
+        
+        $botao = new BotaoGrafico();
+        $botao->set_label('PETEC');
+        $botao->set_url('areaPetec.php?grh=1');
+        $botao->set_imagem(PASTA_FIGURAS . 'petec.png', $tamanhoImage, $tamanhoImage);
+        $botao->set_title('Controle do Petec');
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();

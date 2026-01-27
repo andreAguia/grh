@@ -262,7 +262,6 @@ class Pessoal extends Bd {
 
     ###########################################################
 
-
     /**
      * Método get_salarioTotal
      * informa o salario total de uma matrícula
@@ -662,17 +661,31 @@ class Pessoal extends Bd {
      * @param	integer $idLotacao  id da lotação
      */
     public function get_numServidoresAtivosLotacao($idLotacao) {
-        $select = 'SELECT tbservidor.idServidor
+
+        # Verifica se tem id
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+
+            # Faz o select
+            $select = "SELECT tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                                               JOIN tbperfil USING (idPerfil)
                           WHERE tbservidor.situacao = 1
-                            AND tbperfil.tipo <> "Outros" 
-                            AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                            AND tbhistlot.lotacao = ' . $idLotacao;
+                            AND tbperfil.tipo <> 'Outros' 
+                            AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-        $numero = parent::count($select);
-        return $numero;
+            # Verifica se o que veio é numérico
+            if (is_numeric($idLotacao)) {
+                $select .= " AND (tblotacao.idlotacao = {$idLotacao})";
+            } else { # senão é uma diretoria genérica
+                $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
+            }
+            
+            $numero = parent::count($select);
+            return $numero;
+        }
     }
 
     ######################################################################################
@@ -1543,7 +1556,7 @@ class Pessoal extends Bd {
         } else {
             # retira os acentos
             $nome = retiraAcento($nome);
-            
+
             # Monta select
             $select = "SELECT idPessoa
                      FROM tbpessoa

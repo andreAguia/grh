@@ -171,14 +171,18 @@ if ($acesso) {
                 "Petec - Portaria 481/25"
                     ], $aba);
 
-            ##############
+            #######################################################
 
             /*
              * Geral
              */
 
             $tab->abreConteudo();
+            
+            # Dados
+            $abaRetorno = 1;
 
+            # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -233,7 +237,7 @@ if ($acesso) {
             $tabela->set_bordaInterna(true);
 
             # Botão Editar
-            $botao = new Link(null, '?fase=editaServidor&aba=1&id=', 'Acessa o servidor');
+            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -242,13 +246,17 @@ if ($acesso) {
 
             $tab->fechaConteudo();
 
-            ##############
+            #######################################################
             /*
              * Petec - Portaria 418/25
              */
 
             $tab->abreConteudo();
-
+            
+            # Dados
+            $abaRetorno = 2;
+            
+            # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
                               idFormacao,
@@ -296,7 +304,7 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor&aba=2');
+            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
             $tabela->show();
 
             ## Sem Petec
@@ -344,7 +352,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, '?fase=editaServidor&aba=3&id=', 'Acessa o servidor');
+            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -355,11 +363,15 @@ if ($acesso) {
 
             ##############
             /*
-             * COM Petec - Portaria 473/25"
+             * Petec - Portaria 473/25
              */
 
             $tab->abreConteudo();
-
+            
+            # Dados
+            $abaRetorno = 3;
+            
+            # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
                               idFormacao,
@@ -407,7 +419,7 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor&aba=2');
+            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
             $tabela->show();
 
             ## Sem Petec
@@ -455,7 +467,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, '?fase=editaServidor&aba=3&id=', 'Acessa o servidor');
+            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -470,9 +482,13 @@ if ($acesso) {
              */
 
             $tab->abreConteudo();
+            
+            # Dados
+            $abaRetorno = 4;
 
             ## Com Petec
 
+            # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
                               idFormacao,
@@ -521,7 +537,7 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor&aba=2');
+            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
             $tabela->show();
 
             ## Sem Petec
@@ -569,7 +585,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, '?fase=editaServidor&aba=3&id=', 'Acessa o servidor');
+            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			

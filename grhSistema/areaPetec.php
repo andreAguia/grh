@@ -142,7 +142,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(8);
+            $controle->set_col(12);
             $form->add_item($controle);
 
             $form->show();

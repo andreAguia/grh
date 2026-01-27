@@ -251,7 +251,6 @@ class Formacao {
         /**
          * Fornece um array com os marcadores
          */
-        
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
             return false;
@@ -278,4 +277,58 @@ class Formacao {
     }
 
     ###########################################################
+
+    function exibeQuadroPetec() {
+        /**
+         * Exibe um quadro com as regras das portarias
+         */
+        # Monta o array
+        $array = [
+            ["Portaria 418/25", 20, "12/02/2026", 74],
+            ["Portaria 473/25", 10, "10/03/2026", 75],
+            ["Portaria 481/25", 20, "30/06/2026", 76],
+        ];
+
+        $tabela = new Tabela();
+        $tabela->set_conteudo($array);
+        $tabela->set_titulo(null);
+        $tabela->set_label(["Portaria", "Horas", "Prazo", "Pdf"]);
+        $tabela->set_width([40, 20, 30, 10]);
+        $tabela->set_align(["center", "center"]);
+        
+        $tabela->set_classe([null, null, null, "formacao"]);
+        $tabela->set_metodo([null, null, null, "exibePdfPetec"]);
+        
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+    ##############################################################
+
+    public function exibePdfPetec($id = null) {
+                
+        # Verifica se o id foi informado
+        if (empty($id)) {
+            return "---";
+        } else {
+
+            # Monta o arquivo
+            $arquivo = PASTA_DOCUMENTOS . "{$id}.pdf";
+
+            # Verifica se ele existe
+            if (file_exists($arquivo)) {
+
+                $botao = new BotaoGrafico();
+                $botao->set_url($arquivo);
+                $botao->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+                $botao->set_title("Exibe o Pdf");
+                $botao->set_target("_blank");
+                $botao->show();
+            } else {
+                return "---";
+            }
+        }
+    }
+
+###########################################################
 }

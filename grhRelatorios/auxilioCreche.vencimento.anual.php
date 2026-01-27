@@ -24,7 +24,6 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Pega os parâmetros dos relatórios
-    #$relatorioMes = post('mes',date('m'));
     $relatorioAno = post('ano', date('Y'));
 
     ######

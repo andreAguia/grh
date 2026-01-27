@@ -119,7 +119,7 @@ if ($acesso) {
 
             ##############
 
-            $grid->abreColuna(9);
+            $grid->abreColuna(8);
 
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -209,23 +209,10 @@ if ($acesso) {
 
             ##############
             
-            $grid->abreColuna(3);
+            $grid->abreColuna(4);
 
-            $array = [
-                ["Portaria 418/25", 20, "12/02/2026"],
-                ["Portaria 473/25", 10, "10/03/2026"],
-                ["Portaria 481/25", 20, "30/06/2026"],
-            ];
-
-            $tabela = new Tabela();
-            $tabela->set_conteudo($array);
-            $tabela->set_titulo(null);
-            $tabela->set_label(["Portaria", "Horas", "Prazo"]);
-            $tabela->set_width([40, 20, 40]);
-            $tabela->set_align(["center", "center"]);
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
+            $formacao->exibeQuadroPetec();
+            
             $grid->fechaColuna();
 
             ##############

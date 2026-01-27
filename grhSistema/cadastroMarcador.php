@@ -63,7 +63,13 @@ if ($acesso) {
     # select da lista
     $objeto->set_selectLista("SELECT idFormacaoMarcador,
                                      marcador,
-                                     obs
+                                     obs,
+                                     (SELECT COUNT(idFormacao) 
+                                        FROM tbformacao 
+                                       WHERE marcador1 = idFormacaoMarcador 
+                                          OR marcador2 = idFormacaoMarcador 
+                                          OR marcador3 = idFormacaoMarcador 
+                                          OR marcador4 = idFormacaoMarcador)
                                 FROM tbformacaomarcador
                                WHERE marcador LIKE '%{$parametro}%'
                              ORDER BY 1 asc");
@@ -90,8 +96,8 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(["Id", "Marcador", "Obs"]);
-    $objeto->set_width([5, 30, 50]);
+    $objeto->set_label(["Id", "Marcador", "Obs", "Certificados"]);
+    $objeto->set_width([5, 30, 40, 10]);
     $objeto->set_align(["center", "left", "left"]);
 
     # Classe do banco de dados

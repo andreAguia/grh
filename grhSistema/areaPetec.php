@@ -44,7 +44,7 @@ if ($acesso) {
     $parametroCurso = post('parametroCurso', get_session('parametroCurso', 'Todos'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
-    $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
+    $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 4));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroEscopo = post('parametroEscopo', get_session('parametroEscopo', 1));
 
@@ -208,7 +208,42 @@ if ($acesso) {
             $grid->fechaColuna();
 
             ##############
-            # Faz os Selects com os cálculos
+            
+            $grid->abreColuna(3);
+
+            $array = [
+                ["Portaria 418/25", 20, "12/02/2026"],
+                ["Portaria 473/25", 10, "10/03/2026"],
+                ["Portaria 481/25", 20, "30/06/2026"],
+            ];
+
+            $tabela = new Tabela();
+            $tabela->set_conteudo($array);
+            $tabela->set_titulo(null);
+            $tabela->set_label(["Portaria", "Horas", "Prazo"]);
+            $tabela->set_width([40, 20, 40]);
+            $tabela->set_align(["center", "center"]);
+            $tabela->set_totalRegistro(false);
+            $tabela->show();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12);
+
+            # Menu de Abas
+            $tab = new Tab([
+                "COM Petec",
+                "SEM Petec"], $aba);
+
+            ##############
+            /*
+             * COM PECTEC
+             */
+
+            $tab->abreConteudo();
+            
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -253,47 +288,6 @@ if ($acesso) {
 
             $result = $pessoal->select($select);
 
-            # Altera o select para mostrar o número de servidores e não o de certificados
-            $numero = $pessoal->count($select);
-
-            # Exibe a tabela com o resumo
-            $grid->abreColuna(3);
-
-            # Pega o total de servidores desta lotação
-            $total = $pessoal->get_numServidoresAtivos($parametroLotacao);
-
-            $array = [
-                ["COM PETEC", $numero],
-                ["SEM PETEC", $total - $numero],
-            ];
-
-            $tabela = new Tabela();
-            $tabela->set_conteudo($array);
-            $tabela->set_titulo(null);
-            $tabela->set_label(["Situação", " Quantidade"]);
-            $tabela->set_width([80, 20]);
-            $tabela->set_align(["left", "center"]);
-            $tabela->set_colunaSomatorio(1);
-            $tabela->set_totalRegistro(false);
-            $tabela->show();
-
-            $grid->fechaColuna();
-
-            ##############
-
-            $grid->abreColuna(12);
-
-            # Menu de Abas
-            $tab = new Tab([
-                "COM Petec",
-                "SEM Petec"], $aba);
-
-            ##############
-            /*
-             * COM PECTEC
-             */
-
-            $tab->abreConteudo();
 
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores COM PETEC');

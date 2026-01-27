@@ -128,7 +128,6 @@ if ($acesso) {
             #$menu->add_item('linkWindow','Relatório de Estatutários que Atingiram Idade para Aposentadoria','../grhRelatorios/servidoresComIdadeParaAposentar.php');
             #$menu->add_item('linkWindow','Relatório Geral de Servidores Aposentados - Com Email e Telefone','../grhRelatorios/geralServidoresAposentados.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios - com Abono Permanencia Deferido', '../grhRelatorios/abonoPermanencia.geral.deferido.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios - com Abono Permanencia Deferido - Ordenado por Processo', '../grhRelatorios/abonoPermanencia.geral.deferido.porProcesso.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Estatutarios - com Abono Permanencia Indeferido', '../grhRelatorios/abonoPermanencia.geral.indeferido.php');
 
             $menu->show();

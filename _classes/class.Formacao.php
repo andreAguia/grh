@@ -293,7 +293,7 @@ class Formacao {
         $tabela->set_conteudo($array);
         $tabela->set_titulo(null);
         $tabela->set_label(["Portaria", "Horas", "Prazo", "Pdf"]);
-        $tabela->set_width([40, 20, 30, 10]);
+        $tabela->set_width([30, 20, 30, 20]);
         $tabela->set_align(["center", "center"]);
         
         $tabela->set_classe([null, null, null, "formacao"]);

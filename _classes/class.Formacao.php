@@ -221,12 +221,17 @@ class Formacao {
 
     ###########################################################
 
-    function get_arrayMarcadores() {
+    function get_arrayMarcadores($pesquisa = null) {
         /**
          * Fornece um array com os marcadores
          */
         $pessoal = new Pessoal();
-        $array = $pessoal->select("SELECT * FROM tbformacaomarcador");
+
+        if (empty($pesquisa)) {
+            $array = $pessoal->select("SELECT * FROM tbformacaomarcador");
+        } else {
+            $array = $pessoal->select("SELECT * FROM tbformacaomarcador WHERE marcador LIKE '%{$pesquisa}%'");
+        }
         return $array;
     }
 
@@ -234,7 +239,7 @@ class Formacao {
 
     function get_marcador($id = null) {
         /**
-         * Fornece um array com os marcadores
+         * Informa o marcador de um idMarcador
          */
         $arrayMarcadores = $this->get_arrayMarcadores();
 
@@ -249,7 +254,7 @@ class Formacao {
 
     function temPetec($idServidor, $idMarcador) {
         /**
-         * Fornece um array com os marcadores
+         * Informa se o servidor tem o marcador
          */
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
@@ -295,10 +300,10 @@ class Formacao {
         $tabela->set_label(["Portaria", "Horas", "Prazo", "Pdf"]);
         $tabela->set_width([30, 20, 30, 20]);
         $tabela->set_align(["center", "center"]);
-        
+
         $tabela->set_classe([null, null, null, "formacao"]);
         $tabela->set_metodo([null, null, null, "exibePdfPetec"]);
-        
+
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
@@ -306,7 +311,7 @@ class Formacao {
     ##############################################################
 
     public function exibePdfPetec($id = null) {
-                
+
         # Verifica se o id foi informado
         if (empty($id)) {
             return "---";

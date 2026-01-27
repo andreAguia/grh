@@ -128,7 +128,8 @@ if ($acesso) {
              *  Marcador
              */
             # Pega os dados da datalist marcador
-            $arrayMarcador = $formacao->get_arrayMarcadores();
+            $arrayMarcador = $formacao->get_arrayMarcadores("Petec");
+            #array_unshift($arrayMarcador, ["Todos", "Todos"]);
 
             $controle = new Input('parametroMarcador', 'combo', 'Marcador:', 1);
             $controle->set_size(30);
@@ -208,11 +209,11 @@ if ($acesso) {
             $grid->fechaColuna();
 
             ##############
-            
+
             $grid->abreColuna(4);
 
             $formacao->exibeQuadroPetec();
-            
+
             $grid->fechaColuna();
 
             ##############
@@ -230,7 +231,7 @@ if ($acesso) {
              */
 
             $tab->abreConteudo();
-            
+
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -274,7 +275,6 @@ if ($acesso) {
             $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
 
             $result = $pessoal->select($select);
-
 
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores COM PETEC');
@@ -333,7 +333,7 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores SEM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil","Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
             $tabela->set_align(["center", "left", "left", "center", "left"]);
             $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);

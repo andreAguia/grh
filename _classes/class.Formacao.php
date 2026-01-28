@@ -375,6 +375,7 @@ class Formacao {
 
             if ($resultado >= 0) {
                 #p("Resultado: {$resultado}h", "pHoraOk");
+                br();
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);
@@ -423,6 +424,7 @@ class Formacao {
 
             if ($resultado >= 0) {
                 #p("Resultado: {$resultado}h", "pHoraOk");
+                br();
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);
@@ -471,6 +473,7 @@ class Formacao {
 
             if ($resultado >= 0) {
                 #p("Resultado: {$resultado}h", "pHoraOk");
+                br();
                 label("OK", "success");
             } else {
                 $resultado = abs($resultado);
@@ -485,8 +488,6 @@ class Formacao {
         /**
          * Exibe uma tela com os dados do Petec
          */
-        
-        
         tituloTable("Dados Petec");
         $painel2 = new Callout();
         $painel2->set_title('Painel com tipo primary');
@@ -541,7 +542,7 @@ class Formacao {
 
         $grid1->fechaColuna();
         $grid1->fechaGrid();
-        
+
         $painel2->fecha();
     }
 

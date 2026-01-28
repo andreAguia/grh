@@ -485,13 +485,15 @@ class Formacao {
         /**
          * Exibe uma tela com os dados do Petec
          */
-        # Limita a tela
-        $grid1 = new Grid();
-        $grid1->abreColuna(12);
+        
         
         tituloTable("Dados Petec");
-        
-        $grid1->fechaColuna();
+        $painel2 = new Callout();
+        $painel2->set_title('Painel com tipo primary');
+        $painel2->abre();
+
+        # Limita a tela
+        $grid1 = new Grid();
         $grid1->abreColuna(5);
 
         # Exibe a tabela da regras
@@ -506,7 +508,7 @@ class Formacao {
                           tbservidor.idServidor
                      FROM tbservidor 
                     WHERE idServidor = {$idServidor}";
-       
+
         $pessoal = new Pessoal();
         $result2 = $pessoal->select($select);
 
@@ -539,6 +541,8 @@ class Formacao {
 
         $grid1->fechaColuna();
         $grid1->fechaGrid();
+        
+        $painel2->fecha();
     }
 
     ###########################################################

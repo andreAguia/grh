@@ -534,6 +534,7 @@ class Formacao {
 
         $tabela->set_classe($classe);
         $tabela->set_metodo($metodo);
+        $tabela->set_totalRegistro(false);
         $tabela->show();
 
         $grid1->fechaColuna();

@@ -78,8 +78,8 @@ if ($acesso) {
 
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeDadosPetec"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado]);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro da Formação Escolar do Servidor');
@@ -155,7 +155,7 @@ if ($acesso) {
 
     $objeto->set_classe([null, null, "Formacao", null, null, null, "Formacao"]);
     $objeto->set_metodo([null, null, "exibeMarcador", null, null, null, "exibeCertificado"]);
-    
+
     $objeto->set_colunaSomatorio(5);
 
     $objeto->set_rowspan(0);
@@ -226,7 +226,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'datalist' => $instEnsino,
             'size' => 250,
-            'plm' => true,            
+            'plm' => true,
             'trim' => true,
             'col' => 7,
             'required' => true,

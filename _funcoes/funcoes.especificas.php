@@ -1577,4 +1577,16 @@ function ressaltaVaga($texto) {
     return $retorno;
 }
 
+##########################################################
+/**
+ * Função que exibe tela do petec
+ * 
+ */
+
+function exibeDadosPetec($idServidor) {
+
+   $formacao = new Formacao();
+   $formacao->exibeDadosPetec($idServidor);
+}
+
 ###########################################################

@@ -361,12 +361,12 @@ class Formacao {
                           AND idPessoa = {$idPessoa}";
 
             $result = $pessoal->select($select, false);
-            if(empty($result[0])){
+            if (empty($result[0])) {
                 $hInfo = 0;
-            }else{
+            } else {
                 $hInfo = $result[0];
             }
-            
+
             p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
             p("Horas Exigidas: {$horas}h", "pHorasExigidas");
             hr("geral1");
@@ -409,12 +409,12 @@ class Formacao {
                           AND idPessoa = {$idPessoa}";
 
             $result = $pessoal->select($select, false);
-            if(empty($result[0])){
+            if (empty($result[0])) {
                 $hInfo = 0;
-            }else{
+            } else {
                 $hInfo = $result[0];
             }
-            
+
             p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
             p("Horas Exigidas: {$horas}h", "pHorasExigidas");
             hr("geral1");
@@ -457,12 +457,12 @@ class Formacao {
                           AND idPessoa = {$idPessoa}";
 
             $result = $pessoal->select($select, false);
-            if(empty($result[0])){
+            if (empty($result[0])) {
                 $hInfo = 0;
-            }else{
+            } else {
                 $hInfo = $result[0];
             }
-            
+
             p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
             p("Horas Exigidas: {$horas}h", "pHorasExigidas");
             hr("geral1");
@@ -477,6 +477,67 @@ class Formacao {
                 p("Faltam: {$resultado}h", "pHorasFaltam");
             }
         }
+    }
+
+    ###########################################################
+
+    function exibeDadosPetec($idServidor) {
+        /**
+         * Exibe uma tela com os dados do Petec
+         */
+        # Limita a tela
+        $grid1 = new Grid();
+        $grid1->abreColuna(12);
+        
+        tituloTable("Dados Petec");
+        
+        $grid1->fechaColuna();
+        $grid1->abreColuna(5);
+
+        # Exibe a tabela da regras
+        $this->exibeQuadroPetec();
+
+        $grid1->fechaColuna();
+        $grid1->abreColuna(7);
+
+        # Exibe a tabela do servidor
+        $select = "SELECT tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor 
+                    WHERE idServidor = {$idServidor}";
+       
+        $pessoal = new Pessoal();
+        $result2 = $pessoal->select($select);
+
+        # Define as colunas
+        $label = array();
+        $align = array();
+        $classe = array();
+        $metodo = array();
+
+        $petec = $this->get_arrayMarcadores("Petec");
+
+        foreach ($petec as $item) {
+            $label[] = $item[1];
+            $align[] = "center";
+            $classe[] = "Formacao";
+            $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
+        }
+
+        $tabela = new Tabela();
+        #$tabela->set_titulo("Análise Geral");
+        $tabela->set_conteudo($result2);
+
+        $tabela->set_label($label);
+        $tabela->set_align($align);
+
+        $tabela->set_classe($classe);
+        $tabela->set_metodo($metodo);
+        $tabela->show();
+
+        $grid1->fechaColuna();
+        $grid1->fechaGrid();
     }
 
     ###########################################################

@@ -84,43 +84,7 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-
-    # Geral
-    $botao1 = new Link("Geral", "?fase=geral");
-    if ($fase == "geral") {
-        $botao1->set_class('button');
-    } else {
-        $botao1->set_class('hollow button');
-    }
-    $menu1->add_link($botao1, "right");
-
-    # Portaria 418/25
-    $botao1 = new Link("Portaria 418/25", "?fase=418");
-    if ($fase == "418") {
-        $botao1->set_class('button');
-    } else {
-        $botao1->set_class('hollow button');
-    }
-    $menu1->add_link($botao1, "right");
-
-    # Portaria 473/25
-    $botao1 = new Link("Portaria 473/25", "?fase=473");
-    if ($fase == "473") {
-        $botao1->set_class('button');
-    } else {
-        $botao1->set_class('hollow button');
-    }
-    $menu1->add_link($botao1, "right");
-
-    # Portaria 481/25
-    $botao1 = new Link("Portaria 481/25", "?fase=481");
-    if ($fase == "481") {
-        $botao1->set_class('button');
-    } else {
-        $botao1->set_class('hollow button');
-    }
-    $menu1->add_link($botao1, "right");
-
+    
     # Relatórios
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -152,7 +116,7 @@ if ($acesso) {
                                           ORDER BY 2');
     array_unshift($result, array("Todos", 'Todas'));
 
-    $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
+    $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
     $controle->set_size(30);
     $controle->set_title('Filtra por Lotação');
     $controle->set_array($result);
@@ -163,8 +127,50 @@ if ($acesso) {
     $form->add_item($controle);
 
     $form->show();   
-    
+    br();
 
+     # Cria um menu2
+    $menu2 = new MenuBar();
+
+    # Geral
+    $botao1 = new Link("Geral", "?fase=geral");
+    if ($fase == "geral") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu2->add_link($botao1, "left");
+
+    # Portaria 418/25
+    $botao1 = new Link("Portaria 418/25", "?fase=418");
+    if ($fase == "418") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu2->add_link($botao1, "left");
+
+    # Portaria 473/25
+    $botao1 = new Link("Portaria 473/25", "?fase=473");
+    if ($fase == "473") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu2->add_link($botao1, "left");
+
+    # Portaria 481/25
+    $botao1 = new Link("Portaria 481/25", "?fase=481");
+    if ($fase == "481") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu2->add_link($botao1, "left");
+
+    $menu2->show();
+
+    
     $grid->fechaColuna();
 
     ##############
@@ -181,7 +187,7 @@ if ($acesso) {
     ##############
 
     $grid->abreColuna(12);
-
+        
     switch ($fase) {
 
         #######################################################

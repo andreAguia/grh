@@ -21,8 +21,8 @@ if ($acesso) {
     $formacao = new Formacao();
 
     # Verifica a fase do programa
-    $fase = get('fase');
-    $aba = get('aba', 1);
+    $fase = get('fase', "geral");
+    $portaria = get('portaria', "geral");
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
@@ -71,114 +71,126 @@ if ($acesso) {
 
 ################################################################
 
-    switch ($fase) {
-        case "" :
-            br(4);
-            aguarde();
-            br();
+    $grid = new Grid();
+    $grid->abreColuna(12);
+    br();
 
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
+    # Cria um menu
+    $menu1 = new MenuBar();
 
-            loadPage("?fase=exibeLista&aba={$aba}");
-            break;
+    # Voltar
+    $botaoVoltar = new Link("Voltar", "grh.php");
+    $botaoVoltar->set_class('button');
+    $botaoVoltar->set_title('Voltar a página anterior');
+    $botaoVoltar->set_accessKey('V');
+    $menu1->add_link($botaoVoltar, "left");
 
-################################################################
+    # Geral
+    $botao1 = new Link("Geral", "?fase=geral");
+    if ($fase == "geral") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu1->add_link($botao1, "right");
 
-        case "exibeLista" :
-            $grid = new Grid();
-            $grid->abreColuna(12);
-            br();
+    # Portaria 418/25
+    $botao1 = new Link("Portaria 418/25", "?fase=418");
+    if ($fase == "418") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu1->add_link($botao1, "right");
 
-            # Cria um menu
-            $menu1 = new MenuBar();
+    # Portaria 473/25
+    $botao1 = new Link("Portaria 473/25", "?fase=473");
+    if ($fase == "473") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu1->add_link($botao1, "right");
 
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
+    # Portaria 481/25
+    $botao1 = new Link("Portaria 481/25", "?fase=481");
+    if ($fase == "481") {
+        $botao1->set_class('button');
+    } else {
+        $botao1->set_class('hollow button');
+    }
+    $menu1->add_link($botao1, "right");
 
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("?fase=relatorio");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel, "right");
+    # Relatórios
+    $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+    $botaoRel = new Button();
+    $botaoRel->set_title("Relatório dessa pesquisa");
+    $botaoRel->set_url("?fase=relatorio");
+    $botaoRel->set_target("_blank");
+    $botaoRel->set_imagem($imagem);
+    #$menu1->add_link($botaoRel, "right");
 
-            $menu1->show();
+    $menu1->show();
 
-            $grid->fechaColuna();
+    $grid->fechaColuna();
 
-            ##############
+    ##############
 
-            $grid->abreColuna(8);
+    $grid->abreColuna(8);
 
-            # Formulário de Pesquisa
-            $form = new Form('?');
+    # Formulário de Pesquisa
+    $form = new Form("?fase={$fase}");
 
-            /*
-             *  Lotação
-             */
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+    /*
+     *  Lotação
+     */
+    $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                               FROM tblotacao
                                              WHERE ativo) UNION (SELECT distinct DIR, DIR
                                               FROM tblotacao
                                              WHERE ativo)
                                           ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
+    array_unshift($result, array("Todos", 'Todas'));
 
-            $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroLotacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(12);
-            $form->add_item($controle);
+    $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
+    $controle->set_size(30);
+    $controle->set_title('Filtra por Lotação');
+    $controle->set_array($result);
+    $controle->set_valor($parametroLotacao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_linha(1);
+    $controle->set_col(12);
+    $form->add_item($controle);
 
-            $form->show();
+    $form->show();
 
-            $grid->fechaColuna();
+    $grid->fechaColuna();
 
-            ##############
+    ##############
 
-            $grid->abreColuna(4);
+    $grid->abreColuna(4);
 
-            $formacao->exibeQuadroPetec();
+    $formacao->exibeQuadroPetec();
 
-            $grid->fechaColuna();
+    $grid->fechaColuna();
 
-            ##############
+    # Link para editar o servidor
+    $linkservidor = "?fase=editaServidor&portaria={$fase}";
 
-            $grid->abreColuna(12);
+    ##############
 
-            # Menu de Abas
-            $petec = $formacao->get_arrayMarcadores("Petec");
+    $grid->abreColuna(12);
 
-            $tab = new Tab([
-                "Geral",
-                "Petec - Portaria 418/25",
-                "Petec - Portaria 473/25",
-                "Petec - Portaria 481/25"
-                    ], $aba);
+    switch ($fase) {
 
-            #######################################################
+        #######################################################
 
-            /*
-             * Geral
-             */
+        /*
+         * Geral
+         */
 
-            $tab->abreConteudo();
-            
+        case "geral" :
+
             # Dados
             $abaRetorno = 1;
 
@@ -237,25 +249,25 @@ if ($acesso) {
             $tabela->set_bordaInterna(true);
 
             # Botão Editar
-            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
+            $botao = new Link(null, "{$linkservidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, $botao]);
             $tabela->show();
 
-            $tab->fechaConteudo();
+            break;
 
-            #######################################################
-            /*
-             * Petec - Portaria 418/25
-             */
+        #######################################################
+        /*
+         * Petec - Portaria 418/25
+         */
 
-            $tab->abreConteudo();
-            
+        case "418" :
+
             # Dados
             $abaRetorno = 2;
-            
+
             ## Sem Petec
 
             $novoArray = array();
@@ -301,15 +313,14 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
+            $botao = new Link(null, "{$linkservidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
-            
+
             ### Com Petec
-            
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -358,21 +369,20 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
+            $tabela->set_editar($linkservidor);
             $tabela->show();
 
-            $tab->fechaConteudo();
+            break;
 
-            ##############
-            /*
-             * Petec - Portaria 473/25
-             */
+        ##############
+        /*
+         * Petec - Portaria 473/25
+         */
 
-            $tab->abreConteudo();
-            
+        case "473" :
+
             # Dados
-            $abaRetorno = 3;            
-            
+            $abaRetorno = 3;
 
             ### Sem Petec
 
@@ -419,7 +429,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
+            $botao = new Link(null, "{$linkservidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -427,7 +437,6 @@ if ($acesso) {
             $tabela->show();
 
             ### Com PETEC
-            
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -476,21 +485,20 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
+            $tabela->set_editar($linkservidor);
             $tabela->show();
-            $tab->fechaConteudo();
 
-            ##############
-            /*
-             * Petec - Portaria 481/25
-             */
+            break;
 
-            $tab->abreConteudo();
-            
+        ##############
+        /*
+         * Petec - Portaria 481/25
+         */
+
+        case "481":
+
             # Dados
             $abaRetorno = 4;
-            
-            
 
             ## Sem Petec
 
@@ -537,7 +545,7 @@ if ($acesso) {
             }
 
             # Botão Editar
-            $botao = new Link(null, "?fase=editaServidor&aba={$abaRetorno}&id=", 'Acessa o servidor');
+            $botao = new Link(null, "{$linkservidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
@@ -545,7 +553,6 @@ if ($acesso) {
             $tabela->show();
 
             ## Com Petec
-
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbescolaridade.escolaridade,
@@ -595,13 +602,9 @@ if ($acesso) {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
-            $tabela->set_editar("?fase=editaServidor&aba={$abaRetorno}");
+            $tabela->set_editar($linkservidor);
             $tabela->show();
 
-            $tab->fechaConteudo();
-            
-            $grid->fechaColuna();
-            $grid->fechaGrid();
             break;
 
         ################################################################
@@ -614,7 +617,7 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', "areaPetec.php?aba={$aba}");
+            set_session('origem', "areaPetec.php?fase={$portaria}");
 
             # Carrega a página específica
             loadPage('servidorFormacao.php');
@@ -709,6 +712,8 @@ if ($acesso) {
             $relatorio->show();
             break;
     }
+    $grid->fechaColuna();
+    $grid->fechaGrid();
 
     $page->terminaPagina();
 } else {

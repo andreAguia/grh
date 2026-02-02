@@ -162,7 +162,8 @@ if ($acesso) {
     $controle->set_col(12);
     $form->add_item($controle);
 
-    $form->show();
+    $form->show();   
+    
 
     $grid->fechaColuna();
 
@@ -298,9 +299,9 @@ if ($acesso) {
                 }
             }
 
-            $tabela = new Tabela();
-            $tabela->set_titulo('Servidores SEM PETEC');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
+            $tabela = new Tabela();            
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores SEM PETEC');
             $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
             $tabela->set_align(["center", "left", "left", "center", "left"]);
@@ -358,7 +359,8 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores COM PETEC');
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores COM PETEC');
             $tabela->set_label(["Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "center", "center", "left"]);
@@ -415,7 +417,8 @@ if ($acesso) {
             }
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores SEM PETEC');
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores SEM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
@@ -474,7 +477,8 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores COM PETEC');
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores COM PETEC');
             $tabela->set_label(["Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["left", "center", "center", "left"]);
@@ -531,7 +535,8 @@ if ($acesso) {
             }
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores SEM PETEC');
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores SEM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
@@ -590,7 +595,8 @@ if ($acesso) {
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
-            $tabela->set_titulo('Servidores COM PETEC');
+            $tabela->set_titulo("Portaria {$fase}/25");
+            $tabela->set_subtitulo('Servidores COM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
             $tabela->set_label(["Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
             $tabela->set_conteudo($result);

@@ -1584,7 +1584,7 @@ class Pessoal extends Bd {
         $select = "SELECT idPessoa
                      FROM tbdocumentacao
                     WHERE cpf = '{$cpf}'";
-
+        
         $idPessoa = parent::select($select, false);
 
         if (empty($idPessoa[0])) {

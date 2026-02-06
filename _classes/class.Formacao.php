@@ -296,7 +296,7 @@ class Formacao {
 
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
-        $tabela->set_titulo(null);
+        $tabela->set_titulo("Portarias");
         $tabela->set_label(["Portaria", "Horas", "Prazo", "Pdf"]);
         $tabela->set_width([30, 20, 30, 20]);
         $tabela->set_align(["center", "center"]);
@@ -305,6 +305,121 @@ class Formacao {
         $tabela->set_metodo([null, null, null, "exibePdfPetec"]);
 
         $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+    ###########################################################
+
+    function exibeQuadroInscritos($lotacao = null) {
+        /**
+         * Exibe um quadro com as regras das portarias
+         */
+        # Conecta ao banco de dados
+        $pessoal = new Pessoal();
+
+        # Label da Lotação
+        if (is_numeric($lotacao)) {
+            $labelLotação = $pessoal->get_nomeLotacao2($lotacao);
+        } else { # senão é uma diretoria genérica
+            $labelLotação = $parametroLotacao;
+        }
+
+        # Monta o array
+        # Petec1 - Inscritos
+        $select1 = 'SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                       AND petec1 = "s"
+                       AND tbperfil.tipo <> "Outros"';
+
+        # Verifica se tem filtro por lotação
+        if ($lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($lotacao)) {
+                $select1 .= " AND (tblotacao.idlotacao = {$lotacao})";
+            } else { # senão é uma diretoria genérica
+                $select1 .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+
+        $row1 = $pessoal->select($select1, false);
+
+        # Petec1 - Não Inscritos
+        $select2 = 'SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                           AND (petec1 is null OR petec1 != "s")
+                           AND tbperfil.tipo <> "Outros"';
+
+        # Verifica se tem filtro por lotação
+        if ($lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($lotacao)) {
+                $select2 .= " AND (tblotacao.idlotacao = {$lotacao})";
+            } else { # senão é uma diretoria genérica
+                $select2 .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+
+        $row2 = $pessoal->select($select2, false);
+
+        # Petec2 - Inscritos
+        $select3 = 'SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                           AND petec2 = "s"
+                           AND tbperfil.tipo <> "Outros"';
+
+        # Verifica se tem filtro por lotação
+        if ($lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($lotacao)) {
+                $select3 .= " AND (tblotacao.idlotacao = {$lotacao})";
+            } else { # senão é uma diretoria genérica
+                $select3 .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+
+        $row3 = $pessoal->select($select3, false);
+
+        # Petec2 - Não Inscritos
+        $select4 = 'SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                           AND (petec2 is null OR petec2 != "s")
+                           AND tbperfil.tipo <> "Outros"';
+
+        # Verifica se tem filtro por lotação
+        if ($lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($lotacao)) {
+                $select4 .= " AND (tblotacao.idlotacao = {$lotacao})";
+            } else { # senão é uma diretoria genérica
+                $select4 .= " AND (tblotacao.DIR = '{$lotacao}')";
+            }
+        }
+        $row4 = $pessoal->select($select4, false);
+
+        # Tabela
+        $tabela = new Tabela();
+        $tabela->set_conteudo([
+            ["Inscritos", $row1[0], $row3[0]],
+            ["NÃO Inscritos", $row2[0], $row4[0]],
+        ]);
+        $tabela->set_titulo("Servidores Ativos");
+        $tabela->set_subtitulo($labelLotação);
+        $tabela->set_label(["Servidores", "Quantidade", "Quantidade"]);
+        $tabela->set_align(["left", "center", "center"]);
+        $tabela->set_totalRegistro(false);
+        $tabela->set_colunaSomatorio([1, 2]);
         $tabela->show();
     }
 
@@ -374,12 +489,15 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                #p("Resultado: {$resultado}h", "pHoraOk");
-                br();
-                label("OK", "success");
+                p("Total: {$resultado}h", "pHoraOk");
             } else {
                 $resultado = abs($resultado);
                 p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+
+            # Verifica se está inscrito para esse Petec
+            if (!$this->petec1($idServidor)) {
+                label("Servidor Não Inscrito", "warning");
             }
         }
     }
@@ -388,8 +506,8 @@ class Formacao {
 
     function somatorioHoras5($idServidor) {
         /**
-         * Informa o somatorio de horas de um marcador
-         * Recebe na forma de array para ser usada na classe de tabelas
+         * Informa o somatorio de horas de um marcador 
+         * Petec - Portaria 473/25
          */
         # Separa as variaveis
         $idMarcador = 5;
@@ -423,12 +541,15 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                #p("Resultado: {$resultado}h", "pHoraOk");
-                br();
-                label("OK", "success");
+                p("Total: {$resultado}h", "pHoraOk");
             } else {
                 $resultado = abs($resultado);
                 p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+
+            # Verifica se está inscrito para esse Petec
+            if (!$this->petec1($idServidor)) {
+                label("Servidor Não Inscrito", "warning");
             }
         }
     }
@@ -437,8 +558,8 @@ class Formacao {
 
     function somatorioHoras6($idServidor) {
         /**
-         * Informa o somatorio de horas de um marcador
-         * Recebe na forma de array para ser usada na classe de tabelas
+         * Informa o somatorio de horas de um marcador 
+         * Petec - Portaria 481/25
          */
         # Separa as variaveis
         $idMarcador = 6;
@@ -472,12 +593,15 @@ class Formacao {
             $resultado = ($result[0] - $horas);
 
             if ($resultado >= 0) {
-                #p("Resultado: {$resultado}h", "pHoraOk");
-                br();
-                label("OK", "success");
+                p("Total: {$resultado}h", "pHoraOk");
             } else {
                 $resultado = abs($resultado);
                 p("Faltam: {$resultado}h", "pHorasFaltam");
+            }
+
+            # Verifica se está inscrito para esse Petec
+            if (!$this->petec1($idServidor)) {
+                label("Servidor Não Inscrito", "warning");
             }
         }
     }
@@ -490,7 +614,6 @@ class Formacao {
          */
         tituloTable("Dados Petec");
         $painel2 = new Callout();
-        $painel2->set_title('Painel com tipo primary');
         $painel2->abre();
 
         # Limita a tela
@@ -540,10 +663,83 @@ class Formacao {
         $tabela->set_totalRegistro(false);
         $tabela->show();
 
+        # Editar
+        $menu2 = new MenuBar();
+        $botao1 = new Link("Editar Inscrição Petec", "servidorPetec.php");
+        $botao1->set_class('button');
+        $menu2->add_link($botao1, "right");
+        $menu2->show();
+
         $grid1->fechaColuna();
         $grid1->fechaGrid();
 
         $painel2->fecha();
+    }
+
+    ###########################################################
+
+    function petec1($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec1
+         */
+        $select = "SELECT petec1
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if ($row[0] == "s") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    function exibeIncricaoPetec1($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec1
+         */
+        if ($this->petec1($idServidor)) {
+            p("Inscrito", "pHoraOk");
+        } else {
+            p("Não Inscrito", "pHorasFaltam");
+        }
+    }
+
+    ###########################################################
+
+    function petec2($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec2
+         */
+        $select = "SELECT petec2
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if ($row[0] == "s") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    function exibeIncricaoPetec2($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec2
+         */
+        if ($this->petec2($idServidor)) {
+            p("Inscrito", "pHoraOk");
+        } else {
+            p("Não Inscrito", "pHorasFaltam");
+        }
     }
 
     ###########################################################

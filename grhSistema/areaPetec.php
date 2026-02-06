@@ -28,7 +28,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de formação";
+        $atividade = "Visualizou a área de Petec";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -60,6 +60,13 @@ if ($acesso) {
     set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroEscopo', $parametroEscopo);
 
+    # Label da Lotação
+    if (is_numeric($parametroLotacao)) {
+        $labelLotação = $pessoal->get_nomeLotacao2($parametroLotacao);
+    } else { # senão é uma diretoria genérica
+        $labelLotação = $parametroLotacao;
+    }
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -84,7 +91,13 @@ if ($acesso) {
     $botaoVoltar->set_title('Voltar a página anterior');
     $botaoVoltar->set_accessKey('V');
     $menu1->add_link($botaoVoltar, "left");
-    
+
+    # Importar
+    $botaoImportar = new Link("Importar", "importaPetec.php");
+    $botaoImportar->set_class('button');
+    $botaoImportar->set_title('Faz a importação do petec');
+    $menu1->add_link($botaoImportar, "right");
+
     # Relatórios
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -100,7 +113,28 @@ if ($acesso) {
 
     ##############
 
-    $grid->abreColuna(8);
+    $grid->abreColuna(12);
+
+    # Link para editar o servidor
+    $linkservidor = "?fase=editaServidor&portaria={$fase}";
+
+    ##############
+
+    $grid->fechaColuna();
+    $grid->abreColuna(6);
+
+    $formacao->exibeQuadroInscritos($parametroLotacao);
+
+    $grid->fechaColuna();
+    $grid->abreColuna(6);
+
+    $formacao->exibeQuadroPetec();
+
+    $grid->fechaColuna();
+
+    ##############
+
+    $grid->abreColuna(6);
 
     # Formulário de Pesquisa
     $form = new Form("?fase={$fase}");
@@ -116,7 +150,7 @@ if ($acesso) {
                                           ORDER BY 2');
     array_unshift($result, array("Todos", 'Todas'));
 
-    $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+    $controle = new Input('parametroLotacao', 'combo');
     $controle->set_size(30);
     $controle->set_title('Filtra por Lotação');
     $controle->set_array($result);
@@ -126,10 +160,14 @@ if ($acesso) {
     $controle->set_col(12);
     $form->add_item($controle);
 
-    $form->show();   
-    br();
+    $form->show();
+    $grid->fechaColuna();
 
-     # Cria um menu2
+    ##############
+
+    $grid->abreColuna(6);
+
+    # Cria um menu2
     $menu2 = new MenuBar();
 
     # Geral
@@ -139,7 +177,7 @@ if ($acesso) {
     } else {
         $botao1->set_class('hollow button');
     }
-    $menu2->add_link($botao1, "left");
+    $menu2->add_link($botao1, "right");
 
     # Portaria 418/25
     $botao1 = new Link("Portaria 418/25", "?fase=418");
@@ -148,7 +186,7 @@ if ($acesso) {
     } else {
         $botao1->set_class('hollow button');
     }
-    $menu2->add_link($botao1, "left");
+    $menu2->add_link($botao1, "right");
 
     # Portaria 473/25
     $botao1 = new Link("Portaria 473/25", "?fase=473");
@@ -157,7 +195,7 @@ if ($acesso) {
     } else {
         $botao1->set_class('hollow button');
     }
-    $menu2->add_link($botao1, "left");
+    $menu2->add_link($botao1, "right");
 
     # Portaria 481/25
     $botao1 = new Link("Portaria 481/25", "?fase=481");
@@ -166,28 +204,16 @@ if ($acesso) {
     } else {
         $botao1->set_class('hollow button');
     }
-    $menu2->add_link($botao1, "left");
+    $menu2->add_link($botao1, "right");
 
     $menu2->show();
 
-    
     $grid->fechaColuna();
-
-    ##############
-
-    $grid->abreColuna(4);
-
-    $formacao->exibeQuadroPetec();
-
-    $grid->fechaColuna();
-
-    # Link para editar o servidor
-    $linkservidor = "?fase=editaServidor&portaria={$fase}";
 
     ##############
 
     $grid->abreColuna(12);
-        
+
     switch ($fase) {
 
         #######################################################
@@ -246,6 +272,7 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Análise Geral");
+            $tabela->set_subtitulo($labelLotação);
             $tabela->set_conteudo($result2);
 
             $tabela->set_label($label);
@@ -271,9 +298,6 @@ if ($acesso) {
          */
 
         case "418" :
-
-            # Dados
-            $abaRetorno = 2;
 
             ## Sem Petec
 
@@ -301,18 +325,18 @@ if ($acesso) {
             # Percorre o array
             foreach ($result2 as $item) {
                 if (!$formacao->temPetec($item["idServidor"], 4)) {
-                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
+                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
             }
 
-            $tabela = new Tabela();            
+            $tabela = new Tabela();
             $tabela->set_titulo("Portaria {$fase}/25");
             $tabela->set_subtitulo('Servidores SEM PETEC');
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
-            $tabela->set_align(["center", "left", "left", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
+            $tabela->set_align(["center", "center", "left", "left", "center", "left"]);
+            $tabela->set_classe(['pessoal', "Formacao", "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricaoPetec1", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
 
             if ($parametroSituacao == 1) {
                 $tabela->set_rowspan(0);
@@ -324,7 +348,7 @@ if ($acesso) {
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
             $tabela->show();
 
             ### Com Petec
@@ -389,9 +413,6 @@ if ($acesso) {
 
         case "473" :
 
-            # Dados
-            $abaRetorno = 3;
-
             ### Sem Petec
 
             $novoArray = array();
@@ -418,7 +439,7 @@ if ($acesso) {
             # Percorre o array
             foreach ($result2 as $item) {
                 if (!$formacao->temPetec($item["idServidor"], 5)) {
-                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
+                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
             }
 
@@ -426,11 +447,11 @@ if ($acesso) {
             $tabela->set_titulo("Portaria {$fase}/25");
             $tabela->set_subtitulo('Servidores SEM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
-            $tabela->set_align(["center", "left", "left", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
+            $tabela->set_align(["center", "center", "left", "left", "center", "left"]);
+            $tabela->set_classe(['pessoal', "Formacao", "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricaoPetec1", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
 
             if ($parametroSituacao == 1) {
                 $tabela->set_rowspan(0);
@@ -442,7 +463,7 @@ if ($acesso) {
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
             $tabela->show();
 
             ### Com PETEC
@@ -507,9 +528,6 @@ if ($acesso) {
 
         case "481":
 
-            # Dados
-            $abaRetorno = 4;
-
             ## Sem Petec
 
             $novoArray = array();
@@ -536,7 +554,7 @@ if ($acesso) {
             # Percorre o array
             foreach ($result2 as $item) {
                 if (!$formacao->temPetec($item["idServidor"], 6)) {
-                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
+                    $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
             }
 
@@ -544,12 +562,11 @@ if ($acesso) {
             $tabela->set_titulo("Portaria {$fase}/25");
             $tabela->set_subtitulo('Servidores SEM PETEC');
             #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Cargo", "Lotação", "Perfil", "Editar"]);
             $tabela->set_conteudo($novoArray);
-            $tabela->set_align(["center", "left", "left", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", "pessoal", "pessoal", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
-
+            $tabela->set_align(["center", "center", "left", "left", "center", "left"]);
+            $tabela->set_classe(['pessoal', "Formacao", "pessoal", "pessoal", "pessoal", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricaoPetec2", "get_nome", "get_cargo", "get_lotacao", "get_perfil"]);
             if ($parametroSituacao == 1) {
                 $tabela->set_rowspan(0);
                 $tabela->set_grupoCorColuna(0);
@@ -560,7 +577,7 @@ if ($acesso) {
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
             $tabela->show();
 
             ## Com Petec

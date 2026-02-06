@@ -39,9 +39,10 @@ if ($acesso) {
     # Pega o idPessoa
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
-    $selectFormacao = "SELECT escolaridade,
+    $selectFormacao = "SELECT anoTerm,
+                              escolaridade,
+                              idFormacao,
                               CONCAT(habilitacao,'<br/>', instEnsino),
-                              anoTerm,
                               horas,
                               idFormacao,
                               idFormacao,
@@ -66,9 +67,12 @@ if ($acesso) {
     $relatorio->set_menuRelatorio(false);
     $relatorio->set_subTotal(true);
     $relatorio->set_totalRegistro(false);
-    $relatorio->set_label(["Nível do Curso", "Curso / Instituição", "Ano de Término", "Carga Horária"]);
-    $relatorio->set_width([15, 50, 15, 15]);
-    $relatorio->set_align(["center", "left"]);
+    $relatorio->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso / Instituição", "Carga Horária"]);
+    $relatorio->set_width([10, 15, 20, 45, 10]);
+    $relatorio->set_align(["center", "center", "center", "left"]);
+    $relatorio->set_classe([null, null, "Formacao"]);
+    $relatorio->set_metodo([null, null, "exibeMarcador"]);
+
     $relatorio->set_conteudo($result);
     $relatorio->set_botaoVoltar(false);
     $relatorio->set_bordaInterna(true);

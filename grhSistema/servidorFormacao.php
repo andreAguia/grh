@@ -295,13 +295,24 @@ if ($acesso) {
             'size' => 6,
             'title' => 'idPessoa',
             'linha' => 5)));
+
+    # Edita inscrição
+    $botao1 = new Link("Editar Inscrição Petec", "servidorPetec.php");
+    $botao1->set_class('success button');
+
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
     $botaoRel->set_imagem($imagem);
     $botaoRel->set_title("Imprimir Relatório de Formação");
     $botaoRel->set_onClick("window.open('../grhRelatorios/servidorFormacao.php','_blank','menubar=no,scrollbars=yes,location=no,directories=no,status=no,width=750,height=600');");
-    $objeto->set_botaoListarExtra(array($botaoRel));
+
+    # A princípio somente administradores cadastram a inscrição
+    if (Verifica::acesso($idUsuario, 1)) {
+        $objeto->set_botaoListarExtra(array($botaoRel, $botao1));
+    } else {
+        $objeto->set_botaoListarExtra(array($botaoRel));
+    }
 
     # Log
     $objeto->set_idUsuario($idUsuario);
@@ -359,4 +370,4 @@ if ($acesso) {
     $page->terminaPagina();
 } else {
     loadPage("../../areaServidor/sistema/login.php");
-}
+}    

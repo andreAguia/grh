@@ -18,6 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
+    $petec = new Petec();
 
     # Verifica a fase do programa
     $fase = get('fase', 'inicial');
@@ -74,30 +75,29 @@ if ($acesso) {
             $linkVoltar->set_accessKey('V');
             $menu1->add_link($linkVoltar, "left");
 
+            # 
+            # Verifica se tem dados na tabela
+            $numReg = $petec->get_numRegistrosTabelaUpload();
+
             # Faz Upload
-            $linkUpload = new Link("Faz Upload de um novo arquivo", "?fase=upload");
-            $linkUpload->set_class('button');
-            $menu1->add_link($linkUpload, "right");
+            if ($numReg == 0) {
+                $linkUpload = new Link("Faz Upload de arquivo CSV", "?fase=upload");
+                $linkUpload->set_class('button');
+                $menu1->add_link($linkUpload, "right");
+            }
 
-            $select = "SELECT idPetecImporta,
-                          idServidor,
-                          petec,
-                          nome,
-                          cpf,
-                          obs,
-                          erro
-                     FROM tbpetecimporta
-                     WHERE erro IS NOT NULL 
-                     ORDER BY obs";
-
-            $pessoal = new Pessoal();
-            $result2 = $pessoal->select($select);
-            $contador1 = $pessoal->count($select);
+            # Apaga
+            if ($numReg > 0) {
+                $linkApaga = new Link("Apaga o Arquivo CSV", "?fase=apagaTabela");
+                $linkApaga->set_class('alert button');
+                $linkApaga->set_confirma('Deseja mesmo apagar a tabela da memória?');
+                $menu1->add_link($linkApaga, "right");
+            }
 
             # Importar
-            if ($contador1 == 0) {
-                $botaoImportar = new Link("Grava no banco de dados", "?fase=gravaBd");
-                $botaoImportar->set_class('button');
+            if ($numReg > 0 AND $petec->get_numRegistrosTabelaUploadComErro() == 0) {
+                $botaoImportar = new Link("Gravar no banco de dados", "?fase=escolhePetec");
+                $botaoImportar->set_class('button warning');
                 $botaoImportar->set_title('Faz a importação do petec');
                 $menu1->add_link($botaoImportar, "right");
             }
@@ -113,7 +113,6 @@ if ($acesso) {
             ### Com Erros
             $select = "SELECT idPetecImporta,
                           idServidor,
-                          petec,
                           nome,
                           cpf,
                           obs,
@@ -131,8 +130,8 @@ if ($acesso) {
             $tabela->set_subtitulo("Registros Com Erros");
             $tabela->set_conteudo($result2);
 
-            $tabela->set_label(["id", "idServidor", "Petec", "Nome", "Cpf", "Obs", "Erro"]);
-            $tabela->set_align(["center", "center", "center", "left", "center", "left", "left"]);
+            $tabela->set_label(["id", "idServidor", "Nome", "Cpf", "Obs", "Erro"]);
+            $tabela->set_align(["center", "center", "left", "center", "left", "left"]);
 
             $tabela->set_editar('?fase=editaRegistro');
             $tabela->set_idCampo('idPetecImporta');
@@ -144,7 +143,6 @@ if ($acesso) {
             ### Sem Erros
             $select = "SELECT idPetecImporta,
                           idServidor,
-                          petec,
                           nome,
                           cpf,
                           obs
@@ -161,8 +159,9 @@ if ($acesso) {
             $tabela->set_subtitulo("Registros Sem Erros");
             $tabela->set_conteudo($result2);
 
-            $tabela->set_label(["id", "idServidor", "Petec", "Nome", "Cpf", "Obs"]);
-            $tabela->set_align(["center", "center", "center", "left", "center", "left"]);
+            $tabela->set_label(["id", "idServidor", "Nome", "Cpf", "Obs"]);
+            $tabela->set_align(["center", "center", "left", "center", "left"]);
+            $tabela->set_width([10, 10, 30, 15, 35]);
             $tabela->show();
 
             $grid->fechaColuna();
@@ -181,6 +180,13 @@ if ($acesso) {
             $tabela2->set_label(["Informação", "Quantidade"]);
             $tabela2->set_align(["center", "center"]);
             $tabela2->show();
+
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Tabela de Servidores');
+            $menu->add_item('link', 'Apagar Dados Petec 1', "?fase=apagaPetec1", null, null, null, 'Deseja mesmo apagar o dados do PETEC 1 da tabela de Servidores ?');
+            $menu->add_item('link', 'Apagar Dados Petec 2', "?fase=apagaPetec2", null, null, null, 'Deseja mesmo apagar o dados do PETEC 2 da tabela de Servidores ?');
+
+            $menu->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -264,7 +270,7 @@ if ($acesso) {
                     # Volta para o menu
                     loadPage("?fase=importar0");
                 } else {
-                    loadPage("?fase=importar");
+                    loadPage("?fase=upload");
                 }
             }
             $grid->fechaGrid();
@@ -295,18 +301,7 @@ if ($acesso) {
             br(5);
             aguarde("Liberando Espaço na Memória");
 
-            # Apaga a tabela 
-            $select = 'SELECT idPetecImporta
-                         FROM tbpetecimporta';
-
-            $row = $pessoal->select($select);
-
-            $pessoal->set_tabela("tbpetecimporta");
-            $pessoal->set_idCampo("idPetecImporta");
-
-            foreach ($row as $tt) {
-                $pessoal->excluir($tt[0]);
-            }
+            $petec->apagaTabela();
 
             loadPage("?fase=importar2");
             break;
@@ -336,9 +331,8 @@ if ($acesso) {
             $arquivo = "../_temp/petec.csv";
 
             # Altere o divisor de acordo com o arquivo
-            #$divisor = ";";
-            $divisor = get_arquivoDivisor($arquivo);
-
+            $divisor = ";";
+            
             # Flags
             $certos = 0;
             $linhas = 0;
@@ -351,21 +345,31 @@ if ($acesso) {
                 # Campos
                 $campos = array(
                     "idServidor",
-                    "petec",
                     "nome",
                     "cpf",
                     "obs",
                     "erro"
                 );
 
+                # Inicia o contador de linhas
+                $contadorLinhas = 0;
+
                 # Percorre o arquivo e guarda os dados em um array
                 foreach ($lines as $linha) {
+
+                    # Incrementa a linha
+                    $contadorLinhas++;
 
                     # Separa os valores
                     $colunas = explode($divisor, $linha);
 
                     # Verifica se é cabeçalho
-                    if ($colunas[0] <> '﻿Carimbo de data/hora') {
+                    if ($contadorLinhas == 1) {
+                        # Define as colunas
+                        $colunaIdfuncional = 0;
+                        $colunaNome = array_search('Nome:', $colunas);
+                        $colunaCpf = array_search('CPF:', $colunas);
+                    } else {
 
                         # Verifica se é cabeçalho ou dado
                         if (isset($colunas[$colunaCpf]) AND isset($colunas[$colunaNome])) {
@@ -373,7 +377,6 @@ if ($acesso) {
                             # Trata os valores
                             $cpf = soNumeros($colunas[$colunaCpf]);
                             $nome = $colunas[$colunaNome];
-                            $petec = "petec1";
 
                             # Campos em branco
                             $obs = null;
@@ -385,7 +388,6 @@ if ($acesso) {
 
                                 $valor = array(
                                     $idServidor,
-                                    $petec,
                                     retiraAspas($nome),
                                     formatCnpjCpf($cpf),
                                     $obs,
@@ -398,11 +400,6 @@ if ($acesso) {
                                 echo "Cpf não numérico!";
                             }
                         }
-                    } else {
-                        # Define as colunas
-                        $colunaIdfuncional = 0;
-                        $colunaNome = array_search('Nome:', $colunas);
-                        $colunaCpf = array_search('CPF:', $colunas);
                     }
                 }
             }
@@ -436,12 +433,10 @@ if ($acesso) {
             # Inicia a variável de erro
             $erro = 0;
             $importado = 0;
-            $petec = "petec1";
 
             # Monta o Select
             $select = "SELECT idPetecImporta,
                           idServidor,
-                          petec,
                           nome,
                           cpf,
                           obs,
@@ -462,7 +457,7 @@ if ($acesso) {
 
                 if (empty($idPessoa)) {
                     $obs = null;
-                    $erroMsg = "ERRO - CPF nã\o Encontrado";
+                    $erroMsg = "ERRO - CPF não Encontrado";
                     $erro++;
                 } else {
                     $obs = "OK - Encontrado -> {$pessoal->get_nome($idServidor)}";
@@ -472,7 +467,6 @@ if ($acesso) {
                 # Campos
                 $campos = array(
                     "idServidor",
-                    "petec",
                     "nome",
                     "cpf",
                     "obs",
@@ -481,7 +475,6 @@ if ($acesso) {
 
                 $valor = array(
                     $idServidor,
-                    $petec,
                     retiraAspas($nome),
                     formatCnpjCpf($cpf),
                     $obs,
@@ -516,6 +509,9 @@ if ($acesso) {
             titulotable("Editar Registro do Arquivo CSV");
             br();
 
+            $grid = new Grid();
+            $grid->abreColuna(6);
+
             # Pega os dados
             $select = "SELECT nome,
                               cpf,
@@ -539,7 +535,7 @@ if ($acesso) {
             $controle = new Input('nome', 'texto', 'Nome:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
-            $controle->set_col(6);
+            $controle->set_col(12);
             $controle->set_autofocus(true);
             $controle->set_title('A idfuncional do Servidor');
             $controle->set_valor($result['nome']);
@@ -548,11 +544,11 @@ if ($acesso) {
             # cpf
             $controle = new Input('cpf', 'texto', 'Cpf:', 1);
             $controle->set_size(20);
-            $controle->set_linha(2);
+            $controle->set_linha(6);
             $controle->set_col(6);
             $controle->set_valor($result['cpf']);
             $form->add_item($controle);
-            
+
             # idPetecImporta
             $controle = new Input('idPetecImporta', 'hidden', 'idPetecImporta:', 1);
             $controle->set_size(20);
@@ -568,10 +564,51 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(6);
+
+            # Exibe uma tabela para ajudar a achar o servidor
+
+            $select = "SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbdocumentacao.cpf
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbdocumentacao USING (idPessoa)
+                       WHERE situacao = 1";
+
+            # Verifica se tem espaços
+            if (strpos($result['nome'], ' ') !== false) {
+                # Separa as palavras
+                $palavras = explode(' ', $result['nome']);
+
+                # Percorre as palavras
+                foreach ($palavras as $item) {
+                    $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
+                }
+            } else {
+                $select .= " AND (";
+                $select .= "tbpessoa.nome LIKE '%{$result['nome']}%')";
+            }
+
+            $select .= " Order BY tbpessoa.nome";
+            $conteudo = $pessoal->select($select, true);
+
+            # Exemplo mais complexo
+            $tabela = new Tabela();
+            $tabela->set_titulo("Verifique se não Seria o CPF abaixo:");
+            $tabela->set_conteudo($conteudo);
+            $tabela->set_label(["Id Funcional", "Nome", "CPF"]);
+            $tabela->set_width([20, 60, 20]);
+            $tabela->set_align(["center", "left", "center"]);
+            $tabela->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
 
         #################################################  
-            
+
         case "validaRegistro" :
 
             # Cria um menu
@@ -627,6 +664,189 @@ if ($acesso) {
             break;
 
         #################################################  
+
+        case "escolhePetec" :
+
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+
+            br(10);
+            tituloTable("Escolha para qual Petec se destina essa importação");
+            $painel = new Callout();
+            $painel->abre();
+            br();
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Petec 1
+            $linkPetec1 = new Link("Incrição para<br/>Portarias 418/25 e 473/25", "?fase=gravaBdPetec1Aviso");
+            $linkPetec1->set_class('button');
+            $menu1->add_link($linkPetec1, "left");
+
+            # Petec 2
+            $linkPetec2 = new Link("Incrição para<br/>Portaria 481/25", "?fase=gravaBdPetec2Aviso");
+            $linkPetec2->set_class('button');
+            $menu1->add_link($linkPetec2, "right");
+
+            $menu1->show();
+
+            $painel->fecha();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec1Aviso" :
+
+            br(5);
+            aguarde("Gravando ...");
+
+            loadPage("?fase=gravaBdPetec1");
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec1" :
+
+            $select = "SELECT idServidor
+                         FROM tbpetecimporta
+                        WHERE erro IS NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec1"], ['s'], $tt[0], "tbservidor", "idServidor");
+            }
+
+            loadPage("?");
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec2Aviso" :
+
+            br(5);
+            aguarde("Gravando ...");
+
+            loadPage("?fase=gravaBdPetec2");
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec2" :
+
+            $select = "SELECT idServidor
+                         FROM tbpetecimporta
+                        WHERE erro IS NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec2"], ['s'], $tt[0], "tbservidor", "idServidor");
+            }
+
+            loadPage("?");
+            break;
+
+        #################################################
+
+        /*
+         * Exclui a tabela csv que porventura esteja cadastrado
+         */
+
+        case "apagaTabela" :
+
+            br(5);
+            aguarde("Apagando ...");
+
+            loadPage("?fase=apagaTabela2");
+            break;
+
+        #################################################      
+
+        case "apagaTabela2" :
+
+            $petec->apagaTabela();
+
+            loadPage("?");
+            break;
+
+        #################################################
+
+        /*
+         * Exclui os dados de Petec da tabela de servidores
+         */
+
+        case "apagaPetec1" :
+
+            br(5);
+            aguarde("Apagando ...");
+
+            loadPage("?fase=apagaPetec1DeFato");
+            break;
+
+        #################################################      
+
+        case "apagaPetec1DeFato" :
+
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                         WHERE petec1 IS NOT NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec1"], [null], $tt[0], "tbservidor", "idServidor");
+            }
+
+            loadPage("?");
+            break;
+
+        #################################################
+
+        /*
+         * Exclui os dados de Petec da tabela de servidores
+         */
+
+        case "apagaPetec2" :
+
+            br(5);
+            aguarde("Apagando ...");
+
+            loadPage("?fase=apagaPetec2DeFato");
+            break;
+
+        #################################################      
+
+        case "apagaPetec2DeFato" :
+
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                         WHERE petec2 IS NOT NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec2"], [null], $tt[0], "tbservidor", "idServidor");
+            }
+
+            loadPage("?");
+            break;
     }
 
     $grid1->fechaColuna();

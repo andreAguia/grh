@@ -1585,8 +1585,8 @@ function ressaltaVaga($texto) {
 
 function exibeDadosPetec($idServidor) {
 
-   $formacao = new Formacao();
-   $formacao->exibeDadosPetec($idServidor);
+   $petec = new Petec();
+   $petec->exibeDadosPetec($idServidor);
 }
 
 ###########################################################

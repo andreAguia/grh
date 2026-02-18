@@ -463,7 +463,6 @@ if ($acesso) {
             $relatorio->set_width([0, 50, 35, 15]);
             $relatorio->set_subTotal(false);
             $relatorio->set_totalRegistro(false);
-            $relatorio->set_rodape("");
             $relatorio->set_logServidor($idServidorPesquisado);
             $relatorio->set_logDetalhe("Visualizou relatório de previsão geral de aposentadoria");
             $relatorio->set_mensagemGeral($mensagemRelatorio);

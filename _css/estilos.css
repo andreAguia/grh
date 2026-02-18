@@ -354,7 +354,17 @@ p#pHorasExigidas{
 p#pHorasFaltam{
     padding: 0px;
     margin: 0px;
-    font-size: 14px;
+    font-size: 12px;
+    color: red;
+    text-align: center;
+    font-weight: bold;
+}
+
+p#pServNInscrito{
+    padding: 0px;
+    margin: 0px;
+    margin-top: 10px;
+    font-size: 12px;
     color: red;
     text-align: center;
     font-weight: bold;
@@ -363,7 +373,7 @@ p#pHorasFaltam{
 p#pHoraOk{
     padding: 0px;
     margin: 0px;
-    font-size: 14px;
+    font-size: 12px;
     color: green;
     text-align: center;
     font-weight: bold;

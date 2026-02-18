@@ -84,6 +84,8 @@ if ($acesso) {
 
     set_session('concursoTipo');
 
+    set_session('parametroInscricao');
+
     set_session('parametroMotivo');
     set_session('parametroIdade');
     set_session('parametroTempoCargo');
@@ -228,7 +230,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->fechaGrid();
-            
+
             ################################################################################
             /*
              *  Rotinas de controle 
@@ -294,7 +296,7 @@ if ($acesso) {
                 # registra o log
                 $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $qdade . ' registros sincronizados da tbvagahistorico com idservidor.', null, null, 6);
             }
-            
+
             ################################################################################
 
             /*
@@ -321,23 +323,23 @@ if ($acesso) {
                 } else {
                     # Backup do Almoço
                     if ($horaAtual > 12 AND $horaBackup < 12) {
-                        
+
                         # Realiza backup
                         $processo = new Processo();
                         $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
                     }
-                    
+
                     # Backup do Fim do Dia
                     if ($horaAtual > 17 AND $horaBackup < 17) {
-                        
+
                         # Realiza backup
                         $processo = new Processo();
                         $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");
                     }
-                    
+
                     # Backup raro da noite
                     if ($horaAtual > 20 AND $horaBackup < 20) {
-                        
+
                         # Realiza backup
                         $processo = new Processo();
                         $processo->run("php /var/www/html/areaServidor/sistema/backup.php 1 $idUsuario");

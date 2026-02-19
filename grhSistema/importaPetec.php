@@ -301,7 +301,7 @@ if ($acesso) {
             br(5);
             aguarde("Liberando Espaço na Memória");
 
-            $petec->apagaTabela();
+            $petec->apagaTabelaCsv();
 
             loadPage("?fase=importar2");
             break;
@@ -787,7 +787,7 @@ if ($acesso) {
 
         case "apagaTabela2" :
 
-            $petec->apagaTabela();
+            $petec->apagaTabelaCsv();
             
             # Registra log
             $Objetolog = new Intra();

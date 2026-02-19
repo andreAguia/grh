@@ -1,11 +1,43 @@
 <?php
 
 class Petec {
+    # Preenche as variáveis com os dados do Petec
+    ###########################################################
+
+    function get_arrayPetec($idMarcador = null) {
+
+        # Gera um array com os dados do Petec
+        # Seguindo a seguinte ordem
+        # 0 - Portaria
+        # 1 - Data do Certificado
+        # 2 - Horas Exigidas
+        # 3 - Data limite de Entrega
+        # 4 - Nome do arquivo pdf da portaria
+        # Verifica se foi preenchido
+        if (is_null($idMarcador)) {
+            return null;
+        } else {
+            switch ($idMarcador) {
+                case 4 :
+                    return ["418/25", "21/07/2025", 20, "10/03/2026", 74];
+                    break;
+
+                case 5 :
+                    return ["473/25", "15/12/2025", 10, "10/03/2026", 75];
+                    break;
+
+                case 6 :
+                    return ["481/25", "18/12/2025", 20, "30/06/2026", 76];
+                    break;
+            }
+        }
+    }
+
     ###########################################################
 
     function temPetec($idServidor, $idMarcador) {
         /**
-         * Informa se o servidor tem o marcador
+         * Informa se o servidor tem certificados com esse marcador
          */
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
@@ -38,12 +70,14 @@ class Petec {
         /**
          * Exibe um quadro com as regras das portarias
          */
+        # Pega os ids dos marcadores Petec
+        $formacao = new Formacao();
+        $idMarcadoresPetec = $formacao->get_arrayMarcadores("Petec");
+
         # Monta o array
-        $array = [
-            ["418/25", "21/07/2025", 20, "10/03/2026", 74],
-            ["473/25", "15/12/2025", 10, "10/03/2026", 75],
-            ["481/25", "18/12/2025", 20, "30/06/2026", 76],
-        ];
+        foreach ($idMarcadoresPetec as $item) {
+            $array[] = $this->get_arrayPetec($item[0]);
+        }
 
         $tabela = new Tabela();
         $tabela->set_conteudo($array);
@@ -492,7 +526,7 @@ class Petec {
 
     ###########################################################
 
-    function apagaTabela() {
+    function apagaTabelaCsv() {
 
         # Apaga a tabela 
         $select = 'SELECT idPetecImporta FROM tbpetecimporta';
@@ -507,38 +541,38 @@ class Petec {
             $pessoal->excluir($tt[0]);
         }
     }
-    
+
     ###########################################################
 
     /*
      * Retorna o número de registros da tabela temporária do upload
      */
-    
+
     function get_numRegistrosTabelaUpload() {
-        
+
 
         $select = "SELECT idPetecImporta FROM tbpetecimporta";
 
-            $pessoal = new Pessoal();
-            return $pessoal->count($select);
+        $pessoal = new Pessoal();
+        return $pessoal->count($select);
     }
-    
+
     ###########################################################
 
     /*
      * Retorna o número de registros da tabela temporária do upload
      */
-    
+
     function get_numRegistrosTabelaUploadComErro() {
-        
+
 
         $select = "SELECT idPetecImporta "
                 . "  FROM tbpetecimporta "
                 . " WHERE erro IS NOT NULL";
 
-            $pessoal = new Pessoal();
-            return $pessoal->count($select);
+        $pessoal = new Pessoal();
+        return $pessoal->count($select);
     }
-    
+
     ###########################################################
 }

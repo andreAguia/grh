@@ -25,15 +25,6 @@ if ($acesso) {
     $fase = get('fase', "geral");
     $portaria = get('portaria', "geral");
 
-    # Verifica se veio menu grh e registra o acesso no log
-    $grh = get('grh', false);
-    if ($grh) {
-        # Grava no log a atividade
-        $atividade = "Visualizou a área de Petec";
-        $data = date("Y-m-d H:i:s");
-        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-    }
-
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
 
@@ -52,6 +43,23 @@ if ($acesso) {
         $labelLotação = $pessoal->get_nomeLotacao2($parametroLotacao);
     } else { # senão é uma diretoria genérica
         $labelLotação = $parametroLotacao;
+    }
+
+    # Verifica se veio menu grh e registra o acesso no log
+    $grh = get('grh', false);
+    if ($grh) {
+        # Grava no log a atividade
+        $atividade = "Visualizou a área de Petec";
+        $data = date("Y-m-d H:i:s");
+        $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+    } else {
+        if ($fase == "geral" OR $fase == "481" OR $fase == "473" OR $fase == "418") {
+
+            # Grava no log a atividade
+            $atividade = "Pesquisou na área de Petec<br/>Lotação: {$labelLotação}<br/>Inscrição: {$parametroInscricao}<br/>Portaria: {$fase}";
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+        }
     }
 
     # Começa uma nova página
@@ -319,7 +327,7 @@ if ($acesso) {
             }
 
             $select2 .= " ORDER BY tbpessoa.nome";
-            
+
             $result2 = $pessoal->select($select2);
 
             # Percorre o array
@@ -445,7 +453,7 @@ if ($acesso) {
                     $select2 .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
-            
+
             # Inscrição
             if ($parametroInscricao <> "Todos") {
                 if ($parametroInscricao == "Inscritos") {
@@ -582,7 +590,7 @@ if ($acesso) {
                     $select2 .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
-            
+
             # Inscrição
             if ($parametroInscricao <> "Todos") {
                 if ($parametroInscricao == "Inscritos") {
@@ -657,7 +665,7 @@ if ($acesso) {
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
             }
-            
+
             # Inscrição
             if ($parametroInscricao <> "Todos") {
                 if ($parametroInscricao == "Inscritos") {
@@ -744,7 +752,7 @@ if ($acesso) {
             }
 
             $select .= ' ORDER BY tbpessoa.nome, tbformacao.anoTerm';
-            
+
             # Monta o Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo('Relatório Geral de Formação Servidores');

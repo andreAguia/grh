@@ -264,7 +264,7 @@ if ($acesso) {
                     # Registra log
                     $Objetolog = new Intra();
                     $data = date("Y-m-d H:i:s");
-                    $atividade = "Importou o arquivo csv de férias do SigRh temporáriamente para memória";
+                    $atividade = "Importou o arquivo csv do Petec";
                     $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
                     # Volta para o menu
@@ -332,7 +332,7 @@ if ($acesso) {
 
             # Altere o divisor de acordo com o arquivo
             $divisor = ";";
-            
+
             # Flags
             $certos = 0;
             $linhas = 0;
@@ -724,6 +724,12 @@ if ($acesso) {
                 $pessoal->gravar(["petec1"], ['s'], $tt[0], "tbservidor", "idServidor");
             }
 
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Importou o arquivo csv do Petec 1 para o banco de dados";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
             loadPage("?");
             break;
 
@@ -753,6 +759,12 @@ if ($acesso) {
                 # Grava
                 $pessoal->gravar(["petec2"], ['s'], $tt[0], "tbservidor", "idServidor");
             }
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Importou o arquivo csv do Petec 2 para o banco de dados";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
             loadPage("?");
             break;
@@ -776,6 +788,12 @@ if ($acesso) {
         case "apagaTabela2" :
 
             $petec->apagaTabela();
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Excluiu o arquivo csv do Petec";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3);
 
             loadPage("?");
             break;
@@ -810,6 +828,12 @@ if ($acesso) {
                 # Grava
                 $pessoal->gravar(["petec1"], [null], $tt[0], "tbservidor", "idServidor");
             }
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Excluiu os dados do Petec 1 da tabela de servidores";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
             loadPage("?");
             break;
@@ -844,6 +868,12 @@ if ($acesso) {
                 # Grava
                 $pessoal->gravar(["petec2"], [null], $tt[0], "tbservidor", "idServidor");
             }
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Excluiu os dados do Petec 2 da tabela de servidores";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
             loadPage("?");
             break;

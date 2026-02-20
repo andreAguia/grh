@@ -90,7 +90,7 @@ class Petec {
             #$tabela->set_dataImpressao(false);
 
             $tabela->set_titulo("Dados das Portarias");
-            $tabela->set_label(["Portaria", "Certificados a Partir de:", "Horas", "Prazo de Entrega"]);
+            $tabela->set_label(["Portaria", "Cursos Iniciados a Partir de:", "Horas", "Prazo de Entrega"]);
             $tabela->set_width([15, 15, 15, 15, 15]);
             $tabela->set_align(["center", "center"]);
         } else {

@@ -490,13 +490,6 @@ if ($acesso) {
                 $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
                 $relatorio->show();
             }
-
-            hr();
-
-            ################################################
-            # Tabela das portarias
-
-            $petec->exibeQuadroPortariasPetec(true);
             break;
 
         ################################################################

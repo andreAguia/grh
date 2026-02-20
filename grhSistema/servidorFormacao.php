@@ -116,7 +116,7 @@ if ($acesso) {
                               OR horas LIKE '%{$parametro}%')";
     }
 
-    $selectFormacao .= " ORDER BY anoTerm desc, instEnsino, habilitacao";
+    $selectFormacao .= " ORDER BY anoTerm desc, A.marcador desc, B.marcador desc, C.marcador desc, D.marcador desc";
 
     $objeto->set_selectLista($selectFormacao);
 

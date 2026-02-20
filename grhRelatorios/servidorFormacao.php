@@ -76,6 +76,8 @@ if ($acesso) {
     $relatorio->set_align(["center", "center", "center", "left"]);
     $relatorio->set_classe([null, null, "Formacao"]);
     $relatorio->set_metodo([null, null, "exibeMarcador"]);
+    
+    $relatorio->set_numGrupo(0);
 
     $relatorio->set_conteudo($result);
     $relatorio->set_botaoVoltar(false);

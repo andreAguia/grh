@@ -69,7 +69,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento") {
+    if ($fase <> "upload" AND $fase <> "uploadTerminado" AND $fase <> "apagaDocumento" AND $fase <> "relatorioPetec") {
         AreaServidor::cabecalho();
     }
 
@@ -344,8 +344,8 @@ if ($acesso) {
         case "editar" :
             $objeto->$fase($id);
             break;
-            
-         case "gravar" :
+
+        case "gravar" :
             $objeto->gravar($id, "servidorFormacaoExtra.php");
             break;
 
@@ -365,6 +365,138 @@ if ($acesso) {
 
             # Exclui o registro
             $objeto->excluir($id);
+            break;
+
+        case "relatorioPetec":
+            # Pega os dados das portarias
+            $petec = new Petec();
+
+            $formacao = new Formacao();
+            $arrayMarcadores = $formacao->get_arrayMarcadores("Petec");
+
+            # Começa uma nova página
+            $page = new Page();
+            $page->set_title("relatório do Petec");
+            $page->iniciaPagina();
+
+            # Pega o parâmetro (se tiver)
+            $parametro = retiraAspas(get_session('sessionParametro'));
+
+            if (!empty($parametro)) {
+                $subTitulo = "Filtro: {$parametro}";
+            }
+
+            ######
+            # Dados do Servidor
+            Grh::listaDadosServidorRelatorio($idServidorPesquisado, 'Relatório do Petec');
+            br();
+
+            ################################################
+            # Resumo dos certificados entregues
+            $select = "SELECT tbservidor.idServidor,
+                          tbservidor.idServidor,
+                          tbservidor.idServidor
+                     FROM tbservidor 
+                    WHERE idServidor = {$idServidorPesquisado}";
+
+            $pessoal = new Pessoal();
+            $result2 = $pessoal->select($select);
+
+            # Define as colunas
+            $label = array();
+            $align = array();
+            $classe = array();
+            $metodo = array();
+
+            foreach ($arrayMarcadores as $item) {
+                $label[] = $item[1];
+                $align[] = "center";
+                $classe[] = "Petec";
+                $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
+            }
+
+            $tabela = new Relatorio();
+            $tabela->set_subtitulo("Totalização dos Certificados Entregues");
+            $tabela->set_conteudo($result2);
+
+            $tabela->set_label($label);
+            $tabela->set_align($align);
+
+            $tabela->set_classe($classe);
+            $tabela->set_metodo($metodo);
+            $tabela->set_totalRegistro(false);
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+
+            $tabela->set_bordaInterna(false);
+            $tabela->set_exibeLinhaFinal(false);
+            $tabela->set_dataImpressao(false);
+
+            $tabela->show();
+            
+            hr();
+            p("Detalhamento dos Certificados Entregues", "pRelatorioTitulo");
+            
+            # Pega o idPessoa
+            $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
+
+            foreach ($arrayMarcadores as $item) {
+
+                # Pega os dados do Petec
+                $arrayPetec = $petec->get_arrayPetec($item[0]);
+
+                p("Portaria " . $arrayPetec[0], "pRelatorioSubtitulo");
+
+                $selectFormacao = "SELECT anoTerm,
+                              escolaridade,
+                              idFormacao,
+                              CONCAT(habilitacao,'<br/>', instEnsino),
+                              horas,
+                              idFormacao,
+                              idFormacao,
+                              idFormacao
+                        FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
+                                         LEFT JOIN tbformacaomarcador A ON (marcador1 = A.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador B ON (marcador2 = B.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador C ON (marcador3 = C.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador D ON (marcador4 = D.idFormacaoMarcador) 
+                        WHERE idPessoa={$idPessoa} 
+                          AND (A.marcador LIKE '%{$arrayPetec[0]}%'
+                              OR B.marcador LIKE '%{$arrayPetec[0]}%'
+                              OR C.marcador LIKE '%{$arrayPetec[0]}%'
+                              OR D.marcador LIKE '%{$arrayPetec[0]}%')
+                         ORDER BY anoTerm desc, A.marcador desc, B.marcador desc, C.marcador desc, D.marcador desc";
+
+                $result = $pessoal->select($selectFormacao);
+
+                $relatorio = new Relatorio();
+                $relatorio->set_cabecalhoRelatorio(false);
+                $relatorio->set_menuRelatorio(false);
+                $relatorio->set_subTotal(true);
+                $relatorio->set_totalRegistro(false);
+                $relatorio->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso / Instituição", "Carga Horária"]);
+                $relatorio->set_width([10, 15, 20, 45, 10]);
+                $relatorio->set_align(["center", "center", "center", "left"]);
+                $relatorio->set_classe([null, null, "Formacao"]);
+                $relatorio->set_metodo([null, null, "exibeMarcador"]);
+                $relatorio->set_colunaSomatorio(4);
+
+                $relatorio->set_conteudo($result);
+                $relatorio->set_botaoVoltar(false);
+                $relatorio->set_bordaInterna(false);
+                $relatorio->set_exibeLinhaFinal(false);
+                $relatorio->set_dataImpressao(false);
+                $relatorio->set_logServidor($idServidorPesquisado);
+                $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
+                $relatorio->show();
+            }
+
+            hr();
+
+            ################################################
+            # Tabela das portarias
+
+            $petec->exibeQuadroPortariasPetec(true);
             break;
 
         ################################################################

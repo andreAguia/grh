@@ -47,7 +47,11 @@ if ($acesso) {
                               idFormacao,
                               idFormacao,
                               idFormacao
-                         FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
+                        FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
+                                         LEFT JOIN tbformacaomarcador A ON (marcador1 = A.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador B ON (marcador2 = B.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador C ON (marcador3 = C.idFormacaoMarcador) 
+                                         LEFT JOIN tbformacaomarcador D ON (marcador4 = D.idFormacaoMarcador) 
                         WHERE idPessoa={$idPessoa}";
 
     if (!empty($parametro)) {
@@ -58,7 +62,7 @@ if ($acesso) {
                               OR horas LIKE '%{$parametro}%')";
     }
 
-    $selectFormacao .= " ORDER BY anoTerm desc";
+    $selectFormacao .= " ORDER BY anoTerm desc, A.marcador desc, B.marcador desc, C.marcador desc, D.marcador desc";
 
     $result = $pessoal->select($selectFormacao);
 

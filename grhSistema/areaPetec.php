@@ -220,9 +220,6 @@ if ($acesso) {
 
         case "geral" :
 
-            # Dados
-            $abaRetorno = 1;
-
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,

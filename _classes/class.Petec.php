@@ -86,10 +86,10 @@ class Petec {
             $tabela->set_menuRelatorio(false);
 
             $tabela->set_bordaInterna(false);
-            #$tabela->set_exibeLinhaFinal(false);
-            #$tabela->set_dataImpressao(false);
+            $tabela->set_exibeLinhaFinal(false);
+            $tabela->set_dataImpressao(false);
 
-            $tabela->set_titulo("Dados das Portarias");
+            $tabela->set_subtitulo("Dados das Portarias");
             $tabela->set_label(["Portaria", "Cursos Iniciados a Partir de:", "Horas", "Prazo de Entrega"]);
             $tabela->set_width([15, 15, 15, 15, 15]);
             $tabela->set_align(["center", "center"]);

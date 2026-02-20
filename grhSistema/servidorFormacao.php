@@ -433,6 +433,9 @@ if ($acesso) {
             $tabela->set_dataImpressao(false);
 
             $tabela->show();
+            br();
+            
+            $petec->exibeQuadroPortariasPetec(true);
             
             hr();
             p("Detalhamento dos Certificados Entregues", "pRelatorioTitulo");
@@ -489,7 +492,7 @@ if ($acesso) {
                 $relatorio->set_logServidor($idServidorPesquisado);
                 $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
                 $relatorio->show();
-            }
+            }           
             break;
 
         ################################################################

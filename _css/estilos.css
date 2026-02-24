@@ -379,6 +379,20 @@ p#pHoraOk{
     font-weight: bold;
 }
 
+p#pPetecLabel{
+    padding: 0px;
+    margin: 0px;
+    font-size: 11px;
+    text-align: center;
+}
+
+p#pPetecInfo{
+    padding-bottom: 4px;
+    padding-top: 0px;
+    margin: 0px;
+    font-size: 14px;
+    text-align: center;
+}
 /*******************************************
  * Cadastro de Concurso
  *******************************************/

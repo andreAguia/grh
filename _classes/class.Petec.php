@@ -77,7 +77,7 @@ class Petec {
         # Monta o array
         foreach ($idMarcadoresPetec as $item) {
             $array[] = $this->get_arrayPetec($item[0]);
-        }
+        }              
 
         if ($relatorio) {
             $tabela = new Relatorio();
@@ -262,45 +262,54 @@ class Petec {
          */
         # Separa as variaveis
         $idMarcador = 4;
-        $horas = 20;
+        $horasExigidas = 20;
+        $inscrito = $this->petec1($idServidor);
 
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
             return 0;
         } else {
-            # Passa o idservidor para idPessoa
-            $pessoal = new Pessoal();
-            $idPessoa = $pessoal->get_idPessoa($idServidor);
 
-            # Select
-            $select = "SELECT SUM(horas)
-                         FROM tbformacao
-                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
-                          AND idPessoa = {$idPessoa}";
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
 
-            $result = $pessoal->select($select, false);
-            if (empty($result[0])) {
-                $hInfo = 0;
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
             } else {
-                $hInfo = $result[0];
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
             }
 
-            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
-            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
-            hr("geral1");
+            # Informa as horas
+            p("Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
+            br();
 
-            $resultado = ($result[0] - $horas);
-
-            if ($resultado >= 0) {
-                p("Situação OK", "pHoraOk");
-            } else {
-                $resultado = abs($resultado);
-                p("Faltam: {$resultado}h", "pHorasFaltam");
-            }
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
 
             # Verifica se está inscrito para esse Petec
-            if (!$this->petec1($idServidor)) {
-                p("Servidor Não Inscrito", "pServNInscrito");
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
             }
         }
     }
@@ -314,45 +323,54 @@ class Petec {
          */
         # Separa as variaveis
         $idMarcador = 5;
-        $horas = 10;
+        $horasExigidas = 10;
+        $inscrito = $this->petec1($idServidor);
 
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
             return 0;
         } else {
-            # Passa o idservidor para idPessoa
-            $pessoal = new Pessoal();
-            $idPessoa = $pessoal->get_idPessoa($idServidor);
 
-            # Select
-            $select = "SELECT SUM(horas)
-                         FROM tbformacao
-                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
-                          AND idPessoa = {$idPessoa}";
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
 
-            $result = $pessoal->select($select, false);
-            if (empty($result[0])) {
-                $hInfo = 0;
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
             } else {
-                $hInfo = $result[0];
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
             }
 
-            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
-            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
-            hr("geral1");
+            # Informa as horas
+            p("Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
+            br();
 
-            $resultado = ($result[0] - $horas);
-
-            if ($resultado >= 0) {
-                p("Situação OK", "pHoraOk");
-            } else {
-                $resultado = abs($resultado);
-                p("Faltam: {$resultado}h", "pHorasFaltam");
-            }
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
 
             # Verifica se está inscrito para esse Petec
-            if (!$this->petec1($idServidor)) {
-                p("Servidor Não Inscrito", "pServNInscrito");
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
             }
         }
     }
@@ -366,45 +384,54 @@ class Petec {
          */
         # Separa as variaveis
         $idMarcador = 6;
-        $horas = 20;
+        $horasExigidas = 20;
+        $inscrito = $this->petec2($idServidor);
 
         # Verifica se tem id
         if (empty($idServidor) OR empty($idMarcador)) {
             return 0;
         } else {
-            # Passa o idservidor para idPessoa
-            $pessoal = new Pessoal();
-            $idPessoa = $pessoal->get_idPessoa($idServidor);
 
-            # Select
-            $select = "SELECT SUM(horas)
-                         FROM tbformacao
-                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
-                          AND idPessoa = {$idPessoa}";
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
 
-            $result = $pessoal->select($select, false);
-            if (empty($result[0])) {
-                $hInfo = 0;
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
             } else {
-                $hInfo = $result[0];
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
             }
 
-            p("Horas Informadas: {$hInfo}h", "pHorasInformadas");
-            p("Horas Exigidas: {$horas}h", "pHorasExigidas");
-            hr("geral1");
+            # Informa as horas
+            p("Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
+            br();
 
-            $resultado = ($result[0] - $horas);
-
-            if ($resultado >= 0) {
-                p("Situação OK", "pHoraOk");
-            } else {
-                $resultado = abs($resultado);
-                p("Faltam: {$resultado}h", "pHorasFaltam");
-            }
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
 
             # Verifica se está inscrito para esse Petec
-            if (!$this->petec2($idServidor)) {
-                p("Servidor Não Inscrito", "pServNInscrito");
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
             }
         }
     }
@@ -489,11 +516,20 @@ class Petec {
         $grid1 = new Grid();
         $grid1->abreColuna(5);
 
-        # Exibe a tabela da regras
+        /*
+         * Exibe a tabela da regras da Portaria
+         */
         $this->exibeQuadroPortariasPetec();
 
         $grid1->fechaColuna();
+        
+        ################################
+        
         $grid1->abreColuna(7);
+        
+        /*
+         * Exibe os dados dos certificados entregues
+         */
 
         tituloTable("Dados dos Certificados Entregues");
 
@@ -603,6 +639,25 @@ class Petec {
 
         $pessoal = new Pessoal();
         return $pessoal->count($select);
+    }
+
+    ###########################################################
+
+    /*
+     * Retorna o número de registros da tabela temporária do upload
+     */
+
+    function exibeDadosPortaria($idMarcador) {
+        
+        # Exibe os dados da Portaria
+        $dados = $this->get_arrayPetec($idMarcador);
+        hr();
+        p("Cursos a Partir de:", "pPetecLabel");
+        p($dados[1], "pPetecInfo");
+        p("Minimo de Horas:", "pPetecLabel");
+        p($dados[2], "pPetecInfo");
+        p("Prazo de Entrega:", "pPetecLabel");
+        p($dados[3], "pPetecInfo");
     }
 
     ###########################################################

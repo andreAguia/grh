@@ -93,7 +93,7 @@ if ($acesso) {
                               idFormacao,
                               habilitacao,                              
                               instEnsino,
-                              horas,
+                              idFormacao,
                               idFormacao,
                               idFormacao,
                               idFormacao
@@ -121,10 +121,11 @@ if ($acesso) {
     $objeto->set_selectLista($selectFormacao);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT idEscolaridade,
+    $objeto->set_selectEdita("SELECT idEscolaridade,
                                      habilitacao,
                                      instEnsino,                                     
                                      horas,
+                                     minutos,
                                      anoTerm,
                                      marcador1,
                                      marcador2,
@@ -133,7 +134,7 @@ if ($acesso) {
                                      obs,
                                      idPessoa
                                 FROM tbformacao
-                               WHERE idFormacao = ' . $id);
+                               WHERE idFormacao = {$id}");
 
     # Habilita o modo leitura para usuario de regra 12
     if (Verifica::acesso($idUsuario, 12)) {
@@ -147,14 +148,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso", "Instituição", "Horas", "Ver"]);
-    #$objeto->set_width([10, 25, 10, 35, 5, 5, 5]);
+    $objeto->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso", "Instituição", "Carga Horária", "Ver"]);
+    $objeto->set_width([5, 10, 10, 30, 20, 10, 5]);
     $objeto->set_align(["center", "center", "center", "left", "left"]);
 
     #$objeto->set_funcao([null, null, null, null, null, "trataNulo"]);
 
-    $objeto->set_classe([null, null, "Formacao", null, null, null, "Formacao"]);
-    $objeto->set_metodo([null, null, "exibeMarcador", null, null, null, "exibeCertificado"]);
+    $objeto->set_classe([null, null, "Formacao", null, null, "Formacao", "Formacao"]);
+    $objeto->set_metodo([null, null, "exibeMarcador", null, null, "exibeHora", "exibeCertificado"]);
 
     #$objeto->set_colunaSomatorio(5);
 
@@ -228,16 +229,24 @@ if ($acesso) {
             'size' => 250,
             'plm' => true,
             'trim' => true,
-            'col' => 7,
+            'col' => 6,
             'required' => true,
             'title' => 'Nome da Instituição de Ensino.',
             'linha' => 2),
         array('nome' => 'horas',
-            'label' => 'Carga Horária:',
+            'label' => 'Horas:',
             'tipo' => 'texto',
             'size' => 10,
-            'col' => 2,
-            'title' => 'Carga Horária do Curso.',
+            'col' => 1,
+            'title' => 'Horas de curso.',
+            'linha' => 2),
+        array('nome' => 'minutos',
+            'label' => 'Minutos:',
+            'tipo' => 'numero',
+            'padrao' => 0,
+            'size' => 10,
+            'col' => 1,
+            'title' => 'minutos.',
             'linha' => 2),
         array('nome' => 'anoTerm',
             'label' => 'Ano de Término:',
@@ -434,12 +443,12 @@ if ($acesso) {
 
             $tabela->show();
             br();
-            
+
             $petec->exibeQuadroPortariasPetec(true);
-            
+
             hr();
             p("Detalhamento dos Certificados Entregues", "pRelatorioTitulo");
-            
+
             # Pega o idPessoa
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
@@ -492,7 +501,7 @@ if ($acesso) {
                 $relatorio->set_logServidor($idServidorPesquisado);
                 $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
                 $relatorio->show();
-            }           
+            }
             break;
 
         ################################################################

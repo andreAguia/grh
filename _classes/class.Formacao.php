@@ -250,5 +250,83 @@ class Formacao {
         }
     }
 
-    
+    ###########################################################
+
+    function exibeHora($id) {
+
+        /**
+         * Exibe a hora com minutos
+         */
+        # Verifica se tem id
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($id);
+
+            if (empty($dados["minutos"])) {
+                return "{$dados["horas"]} h";
+            } else {
+                return "{$dados["horas"]} h e {$dados["minutos"]} m";
+            }
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHoras($idServidor = null, $idMarcador = null) {
+        /**
+         * Informa o somatorio de horas de um marcador
+         * Retorna na forma de array para ser usada na classe de tabelas
+         */
+        # Inicia as variaveis
+        $horasInformadas = 0;
+        $minutosInformados = 0;
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+            # Passa o idservidor para idPessoa
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+
+            # soma as horas
+            $select = "SELECT SUM(horas)
+                         FROM tbformacao
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result = $pessoal->select($select, false);
+            
+            # Pega a soma de horas
+            if (empty($result[0])) {
+                $horasInformadas = 0;
+            } else {
+                $horasInformadas = $result[0];
+            }
+
+            # soma os minutos
+            $select2 = "SELECT SUM(minutos)
+                         FROM tbformacao
+                        WHERE (marcador1 = {$idMarcador} OR marcador2 = {$idMarcador} OR marcador3 = {$idMarcador} OR marcador4 = {$idMarcador})  
+                          AND idPessoa = {$idPessoa}";
+
+            $result2 = $pessoal->select($select2, false);
+
+            # Verifica se os minutos passaram de 60
+            if ($result2[0] > 60) {
+                $horasExcedentes = $result2[0] / 60;
+                $horasInformadas += $horasExcedentes;
+                $minutosInformados = $result2[0] - ($horasExcedentes * 60);
+            }else{
+                $minutosInformados = $result2[0];
+            }
+
+            # Retorno
+            return [$horasInformadas, $minutosInformados];
+        }
+    }
+
+    ###########################################################
 }

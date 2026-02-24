@@ -315,8 +315,8 @@ class Formacao {
             $result2 = $pessoal->select($select2, false);
 
             # Verifica se os minutos passaram de 60
-            if ($result2[0] > 60) {
-                $horasExcedentes = $result2[0] / 60;
+            if ($result2[0] >= 60) {
+                $horasExcedentes = intval($result2[0] / 60);
                 $horasInformadas += $horasExcedentes;
                 $minutosInformados = $result2[0] - ($horasExcedentes * 60);
             }else{

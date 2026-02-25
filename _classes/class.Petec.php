@@ -66,7 +66,7 @@ class Petec {
 
     ###########################################################
 
-    function exibeQuadroPortariasPetec($relatorio = false) {
+    function exibeQuadroPortariasPetec() {
         /**
          * Exibe um quadro com as regras das portarias
          */
@@ -76,34 +76,23 @@ class Petec {
 
         # Monta o array
         foreach ($idMarcadoresPetec as $item) {
-            $array[] = $this->get_arrayPetec($item[0]);
-        }              
-
-        if ($relatorio) {
-            $tabela = new Relatorio();
-            $tabela->set_totalRegistro(false);
-            $tabela->set_cabecalhoRelatorio(false);
-            $tabela->set_menuRelatorio(false);
-
-            $tabela->set_bordaInterna(false);
-            $tabela->set_exibeLinhaFinal(false);
-            $tabela->set_dataImpressao(false);
-
-            $tabela->set_subtitulo("Dados das Portarias");
-            $tabela->set_label(["Portaria", "Cursos Iniciados a Partir de:", "Horas", "Prazo de Entrega"]);
-            $tabela->set_width([15, 15, 15, 15, 15]);
-            $tabela->set_align(["center", "center"]);
-        } else {
-            $tabela = new Tabela();
-
-            $tabela->set_titulo("Dados das Portarias");
-            $tabela->set_label(["Portaria", "Cursos Iniciados a Partir de:", "Horas", "Prazo de Entrega", "Pdf"]);
-            $tabela->set_width([15, 15, 15, 15, 15]);
-            $tabela->set_align(["center", "center"]);
-
-            $tabela->set_classe([null, null, null, null, "petec"]);
-            $tabela->set_metodo([null, null, null, null, "exibePdfPetec"]);
+            
+            # Pega os dados dessa portaria
+            $dados = $this->get_arrayPetec($item[0]);
+            
+            # Monta o array
+            $array[] = [$dados[0], $item[0], $dados[4]];
         }
+        $tabela = new Tabela();
+
+        $tabela->set_titulo("Dados das Portarias");
+        $tabela->set_label(["Portaria", "Dados", "Pdf"]);
+        $tabela->set_width([20, 60, 20]);
+        $tabela->set_align(["center", "center"]);
+
+        $tabela->set_classe([null, "petec", "petec"]);
+        $tabela->set_metodo([null, "exibeDadosPortaria", "exibePdfPetec"]);
+
         $tabela->set_conteudo($array);
 
         $tabela->set_totalRegistro(false);
@@ -286,9 +275,8 @@ class Petec {
             }
 
             # Informa as horas
-            p("Informadas: {$horasExibicao}", "pHorasInformadas");
-            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
-            br();
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
 
             # Calcula o que falta (se falta)
             $resultado = ($horasInformadas - $horasExigidas);
@@ -347,9 +335,8 @@ class Petec {
             }
 
             # Informa as horas
-            p("Informadas: {$horasExibicao}", "pHorasInformadas");
-            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
-            br();
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
 
             # Calcula o que falta (se falta)
             $resultado = ($horasInformadas - $horasExigidas);
@@ -408,9 +395,8 @@ class Petec {
             }
 
             # Informa as horas
-            p("Informadas: {$horasExibicao}", "pHorasInformadas");
-            p("Exigidas: {$horasExigidas} h", "pHorasExigidas");
-            br();
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
 
             # Calcula o que falta (se falta)
             $resultado = ($horasInformadas - $horasExigidas);
@@ -433,6 +419,195 @@ class Petec {
                     }
                 }
             }
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHorasCompleto4($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador
+         * Recebe na forma de array para ser usada na classe de tabelas
+         */
+        # Separa as variaveis
+        $idMarcador = 4;
+        $horasExigidas = 20;
+        $inscrito = $this->petec1($idServidor);
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
+
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
+            } else {
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
+            }
+
+            # Informa as horas
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
+
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
+
+            # Verifica se está inscrito para esse Petec
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
+            }
+
+            # Exibe os dados da Portaria
+            $this->exibeDadosPortaria($idMarcador);
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHorasCompleto5($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador 
+         * Petec - Portaria 473/25
+         */
+        # Separa as variaveis
+        $idMarcador = 5;
+        $horasExigidas = 10;
+        $inscrito = $this->petec1($idServidor);
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
+
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
+            } else {
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
+            }
+
+            # Informa as horas
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
+
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
+
+            # Verifica se está inscrito para esse Petec
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
+            }
+
+            # Exibe os dados da Portaria
+            $this->exibeDadosPortaria($idMarcador);
+        }
+    }
+
+    ###########################################################
+
+    function somatorioHorasCompleto6($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador 
+         * Petec - Portaria 481/25
+         */
+        # Separa as variaveis
+        $idMarcador = 6;
+        $horasExigidas = 20;
+        $inscrito = $this->petec2($idServidor);
+
+        # Verifica se tem id
+        if (empty($idServidor) OR empty($idMarcador)) {
+            return 0;
+        } else {
+
+            # Pega as horas
+            $formacao = new Formacao();
+            $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
+
+            # Pega os valores
+            $horasInformadas = $dados[0];
+            $minutosInformados = $dados[1];
+
+            # Formata para exibição
+            if (empty($minutosInformados)) {
+                $horasExibicao = "{$horasInformadas} h";
+            } else {
+                $horasExibicao = "{$horasInformadas} h e {$minutosInformados} m";
+            }
+
+            # Informa as horas
+            p("Horas Informadas: {$horasExibicao}", "pHorasInformadas");
+            p("Horas Exigidas: {$horasExigidas} h", "pHorasExigidas");
+
+            # Calcula o que falta (se falta)
+            $resultado = ($horasInformadas - $horasExigidas);
+
+            # Verifica se está inscrito para esse Petec
+            if (!$inscrito) {
+                p("Servidor Não Inscrito", "pHorasFaltam");
+            } else {
+                # Se for inscrito exibe a situação
+                if ($resultado >= 0) {
+                    p("Situação OK", "pHoraOk");
+                } else {
+                    $resultado = abs($resultado);
+                    if (empty($minutosInformados)) {
+                        p("Faltam: {$resultado}h", "pHorasFaltam");
+                    } else {
+                        $resultado--;
+                        $minutos = 60 - $minutosInformados;
+                        p("Faltam: {$resultado}h e {$minutos} m", "pHorasFaltam");
+                    }
+                }
+            }
+
+            # Exibe os dados da Portaria
+            $this->exibeDadosPortaria($idMarcador);
         }
     }
 
@@ -505,28 +680,7 @@ class Petec {
     ###########################################################
 
     function exibeDadosPetec($idServidor) {
-        /**
-         * Exibe uma tela com os dados do Petec
-         */
-        tituloTable("Dados Petec");
-        $painel2 = new Callout();
-        $painel2->abre();
 
-        # Limita a tela
-        $grid1 = new Grid();
-        $grid1->abreColuna(5);
-
-        /*
-         * Exibe a tabela da regras da Portaria
-         */
-        $this->exibeQuadroPortariasPetec();
-
-        $grid1->fechaColuna();
-        
-        ################################
-        
-        $grid1->abreColuna(7);
-        
         /*
          * Exibe os dados dos certificados entregues
          */
@@ -556,7 +710,7 @@ class Petec {
             $label[] = $item[1];
             $align[] = "center";
             $classe[] = "Petec";
-            $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
+            $metodo[] = "somatorioHorasCompleto{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
         }
 
         $tabela = new Tabela();
@@ -584,11 +738,6 @@ class Petec {
         $menu1->add_link($botaoRel, "right");
 
         $menu1->show();
-
-        $grid1->fechaColuna();
-        $grid1->fechaGrid();
-
-        $painel2->fecha();
     }
 
     ###########################################################
@@ -648,16 +797,16 @@ class Petec {
      */
 
     function exibeDadosPortaria($idMarcador) {
-        
+
         # Exibe os dados da Portaria
         $dados = $this->get_arrayPetec($idMarcador);
-        hr();
-        p("Cursos a Partir de:", "pPetecLabel");
-        p($dados[1], "pPetecInfo");
-        p("Minimo de Horas:", "pPetecLabel");
-        p($dados[2], "pPetecInfo");
-        p("Prazo de Entrega:", "pPetecLabel");
-        p($dados[3], "pPetecInfo");
+
+        p("Prazo de Entrega: {$dados[3]}", "pPetecLabel");
+        #p($dados[3], "pPetecInfo");
+        p("Minimo de Horas: {$dados[2]}", "pPetecLabel");
+        #p($dados[2], "pPetecInfo");
+        p("Cursos a Partir de: {$dados[1]}", "pPetecLabel");
+        #p($dados[1], "pPetecInfo");
     }
 
     ###########################################################

@@ -251,7 +251,7 @@ if ($acesso) {
             $align[] = "left";
             $classe[] = "Pessoal";
             $metodo[] = "get_nomeECargoELotacaoEPerfilESituacao";
-            #$width[] = 28;
+            $width[] = 30;
 
             $petecArray = $formacao->get_arrayMarcadores("Petec");
 
@@ -260,7 +260,7 @@ if ($acesso) {
                 $align[] = "center";
                 $classe[] = "Petec";
                 $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-                #$width[] = 24;
+                $width[] = 20;
             }
 
             $label[] = "Editar";
@@ -272,7 +272,7 @@ if ($acesso) {
 
             $tabela->set_label($label);
             $tabela->set_align($align);
-            #$tabela->set_width($width);
+            $tabela->set_width($width);
 
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);

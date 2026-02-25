@@ -353,7 +353,7 @@ p#pHorasExigidas{
 
 p#pHorasFaltam{
     padding: 0px;
-    margin: 0px;
+    margin: 10px;
     font-size: 12px;
     color: red;
     text-align: center;
@@ -372,7 +372,7 @@ p#pServNInscrito{
 
 p#pHoraOk{
     padding: 0px;
-    margin: 0px;
+    margin: 10px;
     font-size: 12px;
     color: green;
     text-align: center;

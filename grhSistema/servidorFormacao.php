@@ -382,6 +382,10 @@ if ($acesso) {
 
             $formacao = new Formacao();
             $arrayMarcadores = $formacao->get_arrayMarcadores("Petec");
+            $contadorMarcadores = count($arrayMarcadores);
+
+            # Contador para o hr
+            $contador = 0;
 
             # Começa uma nova página
             $page = new Page();
@@ -421,11 +425,11 @@ if ($acesso) {
                 $label[] = $item[1];
                 $align[] = "center";
                 $classe[] = "Petec";
-                $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
+                $metodo[] = "somatorioHorasCompleto{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
             }
 
             $tabela = new Relatorio();
-            $tabela->set_subtitulo("Totalização dos Certificados Entregues");
+            #$tabela->set_subtitulo("Totalização dos Certificados Entregues");
             $tabela->set_conteudo($result2);
 
             $tabela->set_label($label);
@@ -444,20 +448,18 @@ if ($acesso) {
             $tabela->show();
             br();
 
-            $petec->exibeQuadroPortariasPetec(true);
-
-            hr();
-            p("Detalhamento dos Certificados Entregues", "pRelatorioTitulo");
-
             # Pega o idPessoa
             $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
 
             foreach ($arrayMarcadores as $item) {
 
+                # Incrementa o contador
+                $contador++;
+
                 # Pega os dados do Petec
                 $arrayPetec = $petec->get_arrayPetec($item[0]);
 
-                p("Portaria " . $arrayPetec[0], "pRelatorioSubtitulo");
+                p("Certificados Entregues - Portaria " . $arrayPetec[0], "pRelatorioSubtitulo");
 
                 $selectFormacao = "SELECT anoTerm,
                               escolaridade,
@@ -482,6 +484,7 @@ if ($acesso) {
                 $result = $pessoal->select($selectFormacao);
 
                 $relatorio = new Relatorio();
+                $tabela->set_subtitulo("Detalhamento dos Certificados Entregues");
                 $relatorio->set_cabecalhoRelatorio(false);
                 $relatorio->set_menuRelatorio(false);
                 $relatorio->set_subTotal(true);
@@ -501,6 +504,10 @@ if ($acesso) {
                 $relatorio->set_logServidor($idServidorPesquisado);
                 $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
                 $relatorio->show();
+
+                if ($contador < $contadorMarcadores) {
+                    hr();
+                }
             }
             break;
 

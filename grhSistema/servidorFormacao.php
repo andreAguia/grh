@@ -433,24 +433,25 @@ if ($acesso) {
                 $metodo[] = "somatorioHorasCompleto{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
             }
 
-            $tabela = new Relatorio();
+            $relatorio = new Relatorio();
             #$tabela->set_subtitulo("Totalização dos Certificados Entregues");
-            $tabela->set_conteudo($result2);
+            $relatorio->set_conteudo($result2);
 
-            $tabela->set_label($label);
-            $tabela->set_align($align);
+            $relatorio->set_label($label);
+            $relatorio->set_align($align);
 
-            $tabela->set_classe($classe);
-            $tabela->set_metodo($metodo);
-            $tabela->set_totalRegistro(false);
-            $tabela->set_cabecalhoRelatorio(false);
-            $tabela->set_menuRelatorio(false);
+            $relatorio->set_classe($classe);
+            $relatorio->set_metodo($metodo);
+            $relatorio->set_totalRegistro(false);
+            $relatorio->set_cabecalhoRelatorio(false);
+            $relatorio->set_menuRelatorio(false);
 
-            $tabela->set_bordaInterna(false);
-            $tabela->set_exibeLinhaFinal(false);
-            $tabela->set_dataImpressao(false);
+            $relatorio->set_bordaInterna(false);
+            $relatorio->set_exibeLinhaFinal(false);
+            $relatorio->set_dataImpressao(false);
+            $relatorio->set_log(false);
 
-            $tabela->show();
+            $relatorio->show();
             br();
 
             # Pega o idPessoa
@@ -489,7 +490,7 @@ if ($acesso) {
                 $result = $pessoal->select($selectFormacao);
 
                 $relatorio = new Relatorio();
-                $tabela->set_subtitulo("Detalhamento dos Certificados Entregues");
+
                 $relatorio->set_cabecalhoRelatorio(false);
                 $relatorio->set_menuRelatorio(false);
                 $relatorio->set_subTotal(true);
@@ -505,13 +506,18 @@ if ($acesso) {
                 $relatorio->set_botaoVoltar(false);
                 $relatorio->set_bordaInterna(false);
                 $relatorio->set_exibeLinhaFinal(false);
-                $relatorio->set_dataImpressao(false);
                 $relatorio->set_logServidor($idServidorPesquisado);
-                $relatorio->set_logDetalhe("Visualizou o Relatório da Lista de Contatos");
-                $relatorio->show();
 
                 if ($contador < $contadorMarcadores) {
+                    
+                    $relatorio->set_dataImpressao(false);
+                    $relatorio->set_log(false);
+                    $relatorio->show();
                     hr();
+                } else {
+                    $relatorio->set_logDetalhe("Visualizou o Relatório do Petec");
+                    $relatorio->set_dataImpressao(true);
+                    $relatorio->show();
                 }
             }
             break;

@@ -76,10 +76,10 @@ class Petec {
 
         # Monta o array
         foreach ($idMarcadoresPetec as $item) {
-            
+
             # Pega os dados dessa portaria
             $dados = $this->get_arrayPetec($item[0]);
-            
+
             # Monta o array
             $array[] = [$dados[0], $item[0], $dados[4]];
         }
@@ -724,20 +724,6 @@ class Petec {
         $tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(false);
         $tabela->show();
-
-        # Cria um menu
-        $menu1 = new MenuBar();
-
-        # Relatórios
-        $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-        $botaoRel = new Button();
-        $botaoRel->set_title("Relatório do Petec");
-        $botaoRel->set_url("?fase=relatorioPetec");
-        $botaoRel->set_target("_blank");
-        $botaoRel->set_imagem($imagem);
-        $menu1->add_link($botaoRel, "right");
-
-        $menu1->show();
     }
 
     ###########################################################

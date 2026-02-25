@@ -309,6 +309,11 @@ if ($acesso) {
     $botao1 = new Link("Editar Inscrição Petec", "servidorPetec.php");
     $botao1->set_class('success button');
 
+    # Relatórios Petec
+    $botaoPetec = new Link("Relatório do Petec", "?fase=relatorioPetec");
+    $botaoPetec->set_class('button');
+    $botaoPetec->set_target("_blank");
+
     # Relatório
     $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
     $botaoRel = new Button();
@@ -318,9 +323,9 @@ if ($acesso) {
 
     # A princípio somente administradores cadastram a inscrição
     if (Verifica::acesso($idUsuario, 1)) {
-        $objeto->set_botaoListarExtra(array($botaoRel, $botao1));
+        $objeto->set_botaoListarExtra(array($botaoRel, $botao1, $botaoPetec));
     } else {
-        $objeto->set_botaoListarExtra(array($botaoRel));
+        $objeto->set_botaoListarExtra(array($botaoRel, $botaoPetec));
     }
 
     # Log

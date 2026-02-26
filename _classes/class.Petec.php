@@ -66,7 +66,7 @@ class Petec {
 
     ###########################################################
 
-    function exibeQuadroPortariasPetec() {
+    function exibeQuadroPortariasPetec($soPdf = false) {
         /**
          * Exibe um quadro com as regras das portarias
          */
@@ -81,20 +81,33 @@ class Petec {
             $dados = $this->get_arrayPetec($item[0]);
 
             # Monta o array
-            $array[] = [$dados[0], $item[0], $dados[4]];
+            if ($soPdf) {
+                $array[] = [$dados[0], $dados[4]];
+            } else {
+                $array[] = [$dados[0], $item[0], $dados[4]];
+            }
         }
         $tabela = new Tabela();
 
-        $tabela->set_titulo("Dados das Portarias PETEC");
-        $tabela->set_label(["Portaria", "Dados", "Pdf"]);
-        $tabela->set_width([20, 60, 20]);
-        $tabela->set_align(["center", "center"]);
+        if ($soPdf) {
+            $tabela->set_titulo("PDFs das Portarias PETEC");
+            $tabela->set_label(["Portaria", "Pdf"]);
+            $tabela->set_width([50, 50]);
+            $tabela->set_align(["center", "center"]);
 
-        $tabela->set_classe([null, "petec", "petec"]);
-        $tabela->set_metodo([null, "exibeDadosPortaria", "exibePdfPetec"]);
+            $tabela->set_classe([null, "petec"]);
+            $tabela->set_metodo([null, "exibePdfPetec"]);
+        } else {
+            $tabela->set_titulo("Dados das Portarias PETEC");
+            $tabela->set_label(["Portaria", "Dados", "Pdf"]);
+            $tabela->set_width([20, 60, 20]);
+            $tabela->set_align(["center", "center"]);
+
+            $tabela->set_classe([null, "petec", "petec"]);
+            $tabela->set_metodo([null, "exibeDadosPortaria", "exibePdfPetec"]);
+        }
 
         $tabela->set_conteudo($array);
-
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
@@ -683,12 +696,16 @@ class Petec {
 
         # Limita a Tela 
         $grid = new Grid();
-        $grid->abreColuna(4);
+        $grid->abreColuna(3);
+        
+        /*
+         * Exibe os pdf das portarias
+         */
 
-        $this->exibeQuadroPortariasPetec();
+        $this->exibeQuadroPortariasPetec(true);
 
         $grid->fechaColuna();
-        $grid->abreColuna(8);
+        $grid->abreColuna(9);
 
         /*
          * Exibe os dados dos certificados entregues

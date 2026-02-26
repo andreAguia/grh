@@ -681,11 +681,20 @@ class Petec {
 
     function exibeDadosPetec($idServidor) {
 
+        # Limita a Tela 
+        $grid = new Grid();
+        $grid->abreColuna(4);
+
+        $this->exibeQuadroPortariasPetec();
+
+        $grid->fechaColuna();
+        $grid->abreColuna(8);
+
         /*
          * Exibe os dados dos certificados entregues
          */
 
-        tituloTable("Dados dos Certificados Entregues");
+        tituloTable("Dados dos Certificados PETEC Entregues");
 
         # Exibe a tabela do servidor
         $select = "SELECT tbservidor.idServidor,
@@ -724,6 +733,9 @@ class Petec {
         $tabela->set_metodo($metodo);
         $tabela->set_totalRegistro(false);
         $tabela->show();
+
+        $grid->fechaColuna();
+        $grid->fechaGrid();
     }
 
     ###########################################################

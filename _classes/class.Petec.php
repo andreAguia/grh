@@ -85,7 +85,7 @@ class Petec {
         }
         $tabela = new Tabela();
 
-        $tabela->set_titulo("Dados das Portarias");
+        $tabela->set_titulo("Dados das Portarias PETEC");
         $tabela->set_label(["Portaria", "Dados", "Pdf"]);
         $tabela->set_width([20, 60, 20]);
         $tabela->set_align(["center", "center"]);

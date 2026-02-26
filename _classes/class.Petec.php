@@ -818,7 +818,7 @@ class Petec {
 
         p("Prazo de Entrega: {$dados[3]}", "pPetecLabel");
         #p($dados[3], "pPetecInfo");
-        p("Minimo de Horas: {$dados[2]}", "pPetecLabel");
+        p("Mínimo de Horas: {$dados[2]}", "pPetecLabel");
         #p($dados[2], "pPetecInfo");
         p("Cursos a Partir de: {$dados[1]}", "pPetecLabel");
         #p($dados[1], "pPetecInfo");

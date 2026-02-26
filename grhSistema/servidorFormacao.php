@@ -96,6 +96,7 @@ if ($acesso) {
                               idFormacao,
                               idFormacao,
                               idFormacao,
+                              idFormacao,
                               idFormacao
                          FROM tbformacao LEFT JOIN tbescolaridade USING (idEscolaridade)
                                          LEFT JOIN tbformacaomarcador A ON (marcador1 = A.idFormacaoMarcador) 
@@ -148,14 +149,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso", "Instituição", "Carga Horária", "Ver"]);
-    $objeto->set_width([5, 10, 10, 30, 20, 10, 5]);
+    $objeto->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso", "Instituição", "Carga Horária", "Obs", "Ver"]);
+    $objeto->set_width([5, 10, 10, 25, 20, 10, 5, 5]);
     $objeto->set_align(["center", "center", "center", "left", "left"]);
 
     #$objeto->set_funcao([null, null, null, null, null, "trataNulo"]);
 
-    $objeto->set_classe([null, null, "Formacao", null, null, "Formacao", "Formacao"]);
-    $objeto->set_metodo([null, null, "exibeMarcador", null, null, "exibeHora", "exibeCertificado"]);
+    $objeto->set_classe([null, null, "Formacao", null, null, "Formacao", "Formacao", "Formacao"]);
+    $objeto->set_metodo([null, null, "exibeMarcador", null, null, "exibeHora", "exibeObs", "exibeCertificado"]);
 
     #$objeto->set_colunaSomatorio(5);
 
@@ -509,7 +510,7 @@ if ($acesso) {
                 $relatorio->set_logServidor($idServidorPesquisado);
 
                 if ($contador < $contadorMarcadores) {
-                    
+
                     $relatorio->set_dataImpressao(false);
                     $relatorio->set_log(false);
                     $relatorio->show();

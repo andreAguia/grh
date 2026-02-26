@@ -329,4 +329,30 @@ class Formacao {
     }
 
     ###########################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select
+        $select = "SELECT obs
+                     FROM tbformacao
+                    WHERE idFormacao = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Pega a obs
+        if (empty($row["obs"])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $row["obs"]);
+        }
+    }
+
+###########################################################
+
 }

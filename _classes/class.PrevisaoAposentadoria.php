@@ -818,7 +818,6 @@ class PrevisaoAposentadoria {
         # Tempo Uenf Bruto de Hoje 
         $this->servidorTempoUenfBruto = $tempoServico->get_tempoServicoUenfBruto($this->idServidor);
         #$this->servidorTempoUenfLiquido = $aposentadoria->get_tempoServicoUenfLiquido($this->idServidor);
-
         # Data de ingresso
         $this->servidorDataIngresso = $aposentadoria->get_dtIngresso($this->idServidor);
 
@@ -1317,7 +1316,12 @@ class PrevisaoAposentadoria {
 
     ###########################################################
 
+    /*
+     *  Exibe a tabela de dados
+     */
+
     public function exibe_tabelaDados($relatorio = false) {
+
 
         # Verifica se tem pontos
         if (!empty($this->pontosHomem)) {
@@ -1335,10 +1339,9 @@ class PrevisaoAposentadoria {
         }
 
         /*
-         *  Tabela
+         * Idade (todos tem)
          */
 
-        # Idade (todos tem)
         $array = [
             ["Idade",
                 $this->idadeDescricao,
@@ -1349,7 +1352,9 @@ class PrevisaoAposentadoria {
                 null],
         ];
 
-        # Data de Ingresso (se tiver)      
+        /*
+         *  Data de Ingresso (se tiver)      
+         */
         if (!is_null($this->dtIngresso)) {
             array_unshift($array,
                     ["Data de Ingresso",
@@ -1361,7 +1366,9 @@ class PrevisaoAposentadoria {
                         $this->dtIngressoObs]);
         }
 
-        # Data de Ingresso A partir (se tiver)      
+        /*
+         *  Data de Ingresso A partir (se tiver)      
+         */
         if (!empty($this->dtIngressoApartir)) {
             array_unshift($array,
                     ["Data de Ingresso",
@@ -1373,7 +1380,9 @@ class PrevisaoAposentadoria {
                         null]);
         }
 
-        # Tempo de carreira (se tiver)
+        /*
+         *  Tempo de carreira (se tiver)
+         */
         if (!is_null($this->carreira)) {
             array_push($array,
                     ["Carreira",
@@ -1385,7 +1394,9 @@ class PrevisaoAposentadoria {
                         $this->obsCarreira]);
         }
 
-        # Tempo de Contribuição (se tiver)
+        /*
+         *  Tempo de Contribuição (se tiver)
+         */
         if (!is_null($this->contribuicaoHomem)) {
             array_push($array,
                     ["Contribuição",
@@ -1397,18 +1408,23 @@ class PrevisaoAposentadoria {
                         $this->obsContribuicao]);
         }
 
-        # Pontos (se tiver)
+        /*
+         *  Pontos (se tiver)
+         */
         if (!is_null($this->pontosHomem)) {
-            array_push($array, ["Pontuação",
-                "Idade + Tempo de Serviço",
-                "{$pontosRegra} pontos<br/>({$anoEscolhido})",
-                "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicaoDescontado / 365) . ")",
-                trataNulo($this->dataCriterioPontos),
-                $this->analisePontos,
-                null]);
+            array_push($array,
+                    ["Pontuação",
+                        "Idade + Tempo de Serviço",
+                        "{$pontosRegra} pontos<br/>({$anoEscolhido})",
+                        "{$this->servidorPontos} pontos<br/>({$this->servidorIdade} + " . intval($this->servidorTempoContribuicaoDescontado / 365) . ")",
+                        trataNulo($this->dataCriterioPontos),
+                        $this->analisePontos,
+                        null]);
         }
 
-        # Pedágio (se tiver)
+        /*
+         * Pedágio (se tiver)
+         */
         if (!is_null($this->pedagio)) {
             # Trata a informação
             if ($this->servidorPedagio > 0) {
@@ -1417,62 +1433,75 @@ class PrevisaoAposentadoria {
                 $textoPedagio = "Sobravam " . abs($this->servidorPedagio) . "  dias em " . addDias($this->pedagioData, 1, false);
             }
 
-            array_push($array, ["Pedágio",
-                $this->pedagioDescricao,
-                "{$this->pedagio} %",
-                $textoPedagio,
-                $this->dataCriterioPedagio,
-                $this->analisePedagio,
-                null]);
+            array_push($array,
+                    ["Pedágio",
+                        $this->pedagioDescricao,
+                        "{$this->pedagio} %",
+                        $textoPedagio,
+                        $this->dataCriterioPedagio,
+                        $this->analisePedagio,
+                        null]);
         }
 
-        # Tempo Público (se tiver)
+        /*
+         *  Tempo Público (se tiver)
+         */
         if (!is_null($this->servicoPublico)) {
-            array_push($array, ["Serviço Público",
-                $this->tempoPublicoDescicao,
-                "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)",
-                "{$this->servidorTempoPublico} dias",
-                $this->dataCriterioTempoServicoPublico,
-                $this->analisePublico,
-                $this->obsServicoPublico]);
+            array_push($array,
+                    ["Serviço Público",
+                        $this->tempoPublicoDescicao,
+                        "{$this->servicoPublico} anos<br/>(" . ($this->servicoPublico * 365) . " dias)",
+                        "{$this->servidorTempoPublico} dias",
+                        $this->dataCriterioTempoServicoPublico,
+                        $this->analisePublico,
+                        $this->obsServicoPublico]);
         }
 
-        # Cargo Efetivo (se tiver)
+        /*
+         *  Cargo Efetivo (se tiver)
+         */
         if (!is_null($this->cargoEfetivo)) {
-            
-            array_push($array, ["Cargo Efetivo",
-                $this->tempoCargoDescicao,
-                "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)",
-                "{$this->servidorTempoUenfBruto} dias",
-                $this->dataCriterioTempoCargo,
-                $this->analiseCargoEfetivo,
-                $this->obsTempoCargo]);
+
+            array_push($array,
+                    ["Cargo Efetivo",
+                        $this->tempoCargoDescicao,
+                        "{$this->cargoEfetivo} anos<br/>(" . ($this->cargoEfetivo * 365) . " dias)",
+                        "{$this->servidorTempoUenfBruto} dias",
+                        $this->dataCriterioTempoCargo,
+                        $this->analiseCargoEfetivo,
+                        $this->obsTempoCargo]);
         }
 
         # Data Limite
         if (!is_null($this->dtRequesitosCumpridos)) {
-            array_push($array, ["Data Limite",
-                $this->dtRequesitosCumpridosDescicao,
-                $this->dtRequesitosCumpridos,
-                $this->dataDireitoAposentadoria,
-                "---",
-                $this->analiseDtRequesitosCumpridos,
-                null]);
+            array_push($array,
+                    ["Data Limite",
+                        $this->dtRequesitosCumpridosDescicao,
+                        $this->dtRequesitosCumpridos,
+                        $this->dataDireitoAposentadoria,
+                        "---",
+                        $this->analiseDtRequesitosCumpridos,
+                        null]);
         }
 
-        # Aposentadoria Compulsória
+        /*
+         *  Aposentadoria Compulsória
+         */
         if ($this->verificaCompulsoria) {
             # Faz a análise
-            array_push($array, ["Aposentadoria Compulsória",
-                $this->compulsoriaDescricao,
-                "{$this->dataCompulsoria}<br/>(Compulsória)",
-                $this->dataDireitoAposentadoria,
-                "---",
-                $this->analiseCompulsoria,
-                null]);
+            array_push($array,
+                    ["Aposentadoria Compulsória",
+                        $this->compulsoriaDescricao,
+                        "{$this->dataCompulsoria}<br/>(Compulsória)",
+                        $this->dataDireitoAposentadoria,
+                        "---",
+                        $this->analiseCompulsoria,
+                        null]);
         }
 
-        # Exibe a tabela
+        /*
+         *  Exibe a tabela
+         */
         if ($relatorio) {
             tituloRelatorio("Dados");
             $tabela = new Relatorio();

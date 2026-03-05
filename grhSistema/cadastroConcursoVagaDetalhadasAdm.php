@@ -57,7 +57,7 @@ if ($acesso) {
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT CONCAT(cargo,' - ', nome),
+    $objeto->set_selectLista("SELECT CONCAT(cargo,'<br/>', nome),
                                      cargoConcurso,
                                      tbconcursovagadetalhada.vagas,
                                      cotas,

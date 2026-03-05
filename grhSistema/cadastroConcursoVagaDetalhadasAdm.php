@@ -57,8 +57,7 @@ if ($acesso) {
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT cargo,
-                                     nome,
+    $objeto->set_selectLista("SELECT CONCAT(cargo,' - ', nome),
                                      cargoConcurso,
                                      tbconcursovagadetalhada.vagas,
                                      cotas,
@@ -86,9 +85,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cargo", "Função", "Nome do Cargo Listagem", "Vagas", "Cota"]);
-    $objeto->set_width([25, 20, 35, 5, 10]);
-    $objeto->set_align(["left", "left", "left"]);
+    $objeto->set_label(["Cargo - Função no Sistema", "Nome do Cargo na Listagem", "Vagas", "Cota"]);
+    $objeto->set_width([30, 50, 10, 10]);
+    $objeto->set_align(["left", "left"]);
     #$objeto->set_classe([null, null, null, "Concurso", "Concurso"]);
     #$objeto->set_metodo([null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"]);
     #$objeto->set_colunaSomatorio([1, 2, 3, 4]);

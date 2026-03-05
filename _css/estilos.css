@@ -427,6 +427,14 @@ p#pconcursadoLotacaoDiferente{
     margin-top: 10px;
 }
 
+tr#naVaga td{
+    background-color: #a7bf8e;
+}
+
+tr#reserva td{
+    background-color: #b9b9b9;
+}
+
 /*******************************************
  * Cadastro de Progressão de Servidor
  *******************************************/

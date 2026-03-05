@@ -152,9 +152,10 @@ if ($acesso) {
             $tabela->set_align(["center"]);
             $tabela->set_width([5, 8, 10, 10, 10, 10, 17, 5, 5, 5, 5, 5]);
 
-            if (Verifica::acesso($idUsuario, [1, 2])) {
-                $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 11, "==");
-            }
+//            if (Verifica::acesso($idUsuario, [1, 2])) {
+//                $tabela->set_excluirCondicional('cadastroConcurso.php?fase=excluir', 0, 11, "==");
+//            } 
+// Retirada temporariamente
 
             $tabela->set_funcao([null, null, 'date_to_php']);
             $tabela->set_classe([null, null, null, null, null, null, null, "Concurso", null, "Concurso", null, "Concurso"]);

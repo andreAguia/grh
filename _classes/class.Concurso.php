@@ -1022,7 +1022,8 @@ class Concurso {
             $itensMenu = [
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao"],
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
-                ["Vagas", "cadastroConcursoVagaAdm.php", $vagas],
+                ["Vagas Gerais", "cadastroConcursoVagaAdm.php", $vagas],
+                ["Vagas Detalhadas", "cadastroConcursoVagaDetalhadasAdm.php"],
                 ["Provas", "cadastroConcursoProvas.php", $provas],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
@@ -1602,4 +1603,36 @@ class Concurso {
 
         return $pessoal->count($select);
     }
+
+    #####################################################################################
+
+    /**
+     * Método get_numVagasConcurso
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_numVagasDetalhadasConcursoAdm($cargoConcurso) {
+
+        # Verifica o parêmetro
+        if (empty($cargoConcurso)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT vagas
+                      FROM tbconcursovagadetalhada
+                     WHERE cargoConcurso = '{$cargoConcurso}'";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (isset($row[0])) {
+            return $row[0];
+        } else {
+            return null;
+        }
+    }
+
+    #####################################################################################
 }

@@ -51,32 +51,33 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Vagas Gerais');
+    $objeto->set_nome('Vagas Detalhadas');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
     $objeto->set_selectLista("SELECT cargo,
-                                     vagasNovas,
-                                     vagasReposicao,
-                                     idConcursoVaga,
-                                     CONCAT(idConcurso,'&',idTipoCargo),
-                                     CONCAT(idConcurso,'&',idTipoCargo),
-                                     idConcurso
-                                 FROM tbconcursovaga JOIN tbtipocargo USING (idTipoCargo)
+                                     nome,
+                                     cargoConcurso,
+                                     tbconcursovagadetalhada.vagas,
+                                     cotas,
+                                     idConcursoVagaDetalhada
+                                 FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                                                              JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE idConcurso = {$idConcurso}
                              ORDER BY 1");
 
     # select do edita
-    $objeto->set_selectEdita("SELECT idTipoCargo,
-                                     vagasNovas,
-                                     vagasReposicao,
+    $objeto->set_selectEdita("SELECT idCargo,
+                                     cargoConcurso,
+                                     vagas,
+                                     cotas,
                                      obs,
                                      idConcurso,
                                      idConcurso
-                                FROM tbconcursovaga
-                              WHERE idConcursoVaga = {$id}");
+                                FROM tbconcursovagadetalhada
+                              WHERE idConcursoVagaDetalhada = {$id}");
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -85,56 +86,70 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cargo", "Vagas Novas", "Vagas de Reposição", "Total", "Servidores Ativos"]);
-    $objeto->set_width([30, 14, 14, 14, 14]);
-    $objeto->set_align(["left"]);
-    $objeto->set_classe([null, null, null, "Concurso", "Concurso"]);
-    $objeto->set_metodo([null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"]);
-    $objeto->set_colunaSomatorio([1, 2, 3, 4]);
+    $objeto->set_label(["Cargo", "Função", "Nome do Cargo Listagem", "Vagas", "Cota"]);
+    $objeto->set_width([25, 20, 35, 5, 10]);
+    $objeto->set_align(["left", "left", "left"]);
+    #$objeto->set_classe([null, null, null, "Concurso", "Concurso"]);
+    #$objeto->set_metodo([null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"]);
+    #$objeto->set_colunaSomatorio([1, 2, 3, 4]);
     $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
 
     # Nome da tabela
-    $objeto->set_tabela('tbconcursovaga');
+    $objeto->set_tabela('tbconcursovagadetalhada');
 
     # Nome do campo id
-    $objeto->set_idCampo('idConcursoVaga');
+    $objeto->set_idCampo('idConcursoVagaDetalhada');
 
-    # Pega os dados da combo de Estado
-    $result3 = $pessoal->select('SELECT idTipoCargo,
-                                        cargo
-                                  FROM tbtipocargo
-                                  WHERE tipo = "Adm/Tec"
-                              ORDER BY idTipoCargo');
+    # Pega os dados da combo de Cargo
+    $result3 = $pessoal->select("SELECT idCargo,
+                                        CONCAT(tbtipocargo.cargo,' - ',nome)
+                                  FROM tbcargo JOIN tbtipocargo USING (idTipoCargo)
+                                  WHERE tipo = 'Adm/Tec'
+                              ORDER BY tbtipocargo.cargo, nome");
     array_push($result3, array(null, null));
+
+    # Pega os dados da combo de Cargo da Listagem
+    $result4 = $pessoal->select("SELECT DISTINCT cargo,
+                                        cargo
+                                  FROM tbcandidato
+                              ORDER BY cargo");
+    array_push($result4, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
         array('linha' => 1,
-            'nome' => 'idTipoCargo',
+            'nome' => 'idCargo',
             'title' => 'Cargo',
             'label' => 'Cargo:',
             'tipo' => 'combo',
             'autofocus' => true,
             'required' => true,
             'array' => $result3,
-            'col' => 4,
-            'size' => 5),
-        array('linha' => 1,
-            'nome' => 'vagasNovas',
-            'label' => 'Vagas Novas:',
-            'tipo' => 'numero',
-            'col' => 3,
-            'size' => 5),
-        array('linha' => 1,
-            'nome' => 'vagasReposicao',
-            'label' => 'Vagas Reposição:',
-            'tipo' => 'numero',
-            'col' => 3,
+            'col' => 12,
             'size' => 5),
         array('linha' => 2,
+            'nome' => 'cargoConcurso',
+            'label' => 'Nomenclatura do Cargo na Listagem do Concurso:',
+            'tipo' => 'combo',
+            'array' => $result4,
+            'col' => 12,
+            'size' => 250),
+        array('linha' => 3,
+            'nome' => 'vagas',
+            'label' => 'Vagas:',
+            'tipo' => 'texto',
+            'col' => 3,
+            'size' => 5),
+        array('linha' => 3,
+            'nome' => 'cotas',
+            'label' => 'Cotas:',
+            'tipo' => 'texto',
+            'col' => 3,
+            'size' => 5),
+        array('linha' => 4,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
@@ -168,7 +183,7 @@ if ($acesso) {
                 $concurso->exibeDadosConcurso($idConcurso, true);
 
                 # menu
-                $concurso->exibeMenu($idConcurso, "Vagas Gerais");
+                $concurso->exibeMenu($idConcurso, "Vagas Detalhadas");
 
                 $grid->fechaColuna();
                 $grid->abreColuna(9);

@@ -45,8 +45,10 @@ if ($acesso) {
         $concurso = new Concurso($idConcurso);
 
         $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '*'));
+        $parametroNome = post('parametroNome', get_session('parametroNome'));
 
         set_session('parametroCargoCandidato', $parametroCargoCandidato);
+        set_session('parametroNome', $parametroNome);
     }
 
     # Começa uma nova página
@@ -176,6 +178,14 @@ if ($acesso) {
             # Formulário
             $form = new Form('?');
 
+            $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
+            $controle->set_size(50);
+            $controle->set_title('Filtra por Nome');
+            $controle->set_valor($parametroNome);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            #$form->add_item($controle);
             # cargos por nivel
             $result = $pessoal->select('SELECT DISTINCT cargo,
                                                cargo
@@ -188,54 +198,196 @@ if ($acesso) {
             $controle = new Input('parametroCargoCandidato', 'combo', 'Cargo:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Cargo');
+            $controle->set_autofocus(true);
             $controle->set_array($result);
             $controle->set_valor($parametroCargoCandidato);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_autofocus(true);
             $controle->set_linha(1);
             $controle->set_col(12);
             $form->add_item($controle);
 
             $form->show();
 
-            # Monta o select
-            $select = "SELECT inscricao,
+            # Rotina quando se seleciona um cargo
+            if ($parametroCargoCandidato <> "*") {
+                $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($parametroCargoCandidato);
+
+                /*
+                 * Quando se tem número de vagas cadastrados
+                 */
+                if (!empty($numeroVagas)) {
+
+                    /*
+                     * Candidatos na Vaga
+                     */
+                    # Monta o select
+                    $select = "(SELECT 'Vaga',
+                              inscricao,
                               nome,
-                              cpf,
-                              cargo,
+                              cargo,                              
                               CONVERT(notaFinal, DECIMAL(10,2))
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
-            # cargo
-            if ($parametroCargoCandidato <> "*") {
-                $select .= " AND cargo = '{$parametroCargoCandidato}'";
-            }
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
 
-            $select .= " ORDER BY cargo, 5 desc";
+                    # cargo
+                    if ($parametroCargoCandidato <> "*") {
+                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
 
-            # Pega os dados
-            $row = $pessoal->select($select);
+                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}) UNION ";
 
-            # tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Cadastro de Candidatos Aprovados");
-            if ($parametroCargoCandidato <> "*") {
-                $tabela->set_subtitulo($parametroCargoCandidato);
+                    /*
+                     * Candidatos no Cadastro de reserva
+                     */
+
+                    # Monta o select
+                    $select .= "(SELECT 'Reserva',
+                              inscricao,
+                              nome,
+                              cargo,                              
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
+
+                    # cargo
+                    if ($parametroCargoCandidato <> "*") {
+                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
+
+                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
+                    # Pega os dados
+                    $row = $pessoal->select($select);
+
+                    # tabela
+                    $tabela = new Tabela();
+                    $tabela->set_titulo("Cadastro de Candidatos Aprovados");
+                    if ($parametroCargoCandidato <> "*") {
+
+                        if (empty($numeroVagas)) {
+                            $tabela->set_subtitulo("{$parametroCargoCandidato}");
+                        } else {
+                            $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
+                        }
+                    } else {
+                        $tabela->set_subtitulo("Todos os Cargos");
+                    }
+                    $tabela->set_conteudo($row);
+                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cargo", "Nota Final"]);
+                    $tabela->set_width([10, 10, 20, 45, 15]);
+                    $tabela->set_align(["center", "center", "left", "left", "center"]);
+                    $tabela->set_numeroOrdem(true);
+                    $tabela->set_funcao([null, null, "plm", "plm"]);
+
+                    $tabela->set_rowspan(0);
+                    $tabela->set_grupoCorColuna(0);
+
+                    $tabela->set_formatacaoCondicional(array(
+                        array('coluna' => 0,
+                            'valor' => 'Vaga',
+                            'operador' => '=',
+                            'id' => "naVaga"),
+                        array('coluna' => 0,
+                            'valor' => 'Reserva',
+                            'operador' => '=',
+                            'id' => "reserva")));
+
+                    $tabela->show();
+
+                    ####################################################################################
+                } else {
+                    /*
+                     * Quando não tem número de vagas cadastradas
+                     */
+                    # Monta o select
+                    $select = "SELECT inscricao,
+                              nome,
+                              cargo,                              
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
+
+                    # cargo
+                    if ($parametroCargoCandidato <> "*") {
+                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
+
+                    $select .= " ORDER BY 4 ";
+
+                    # Pega os dados
+                    $row = $pessoal->select($select);
+
+                    # tabela
+                    $tabela = new Tabela();
+                    $tabela->set_titulo("Cadastro de Candidatos Aprovados");
+                    if ($parametroCargoCandidato <> "*") {
+
+                        if (empty($numeroVagas)) {
+                            $tabela->set_subtitulo("{$parametroCargoCandidato}");
+                        } else {
+                            $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
+                        }
+                    } else {
+                        $tabela->set_subtitulo("Todos os Cargos");
+                    }
+                    $tabela->set_conteudo($row);
+                    $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Nota Final"]);
+                    $tabela->set_width([10, 30, 45, 15]);
+                    $tabela->set_align(["center", "lrft", "left", "center"]);
+                    $tabela->set_numeroOrdem(true);
+                    $tabela->set_funcao([null, "plm", "plm"]);
+                    $tabela->show();
+                }
             } else {
+                # Rotina para todos os cargos
+                $numeroVagas = null;
+
+                # Monta o select
+                $select = "SELECT inscricao,
+                              nome,
+                              cargo,                              
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                # nome
+                if (!is_null($parametroNome)) {
+                    $select .= " AND nome LIKE '%{$parametroNome}%'";
+                }
+
+                $select .= " ORDER BY 4 desc";
+
+                # Pega os dados
+                $row = $pessoal->select($select);
+
+                # tabela
+                $tabela = new Tabela();
+                $tabela->set_titulo("Cadastro de Candidatos Aprovados");
                 $tabela->set_subtitulo("Todos os Cargos");
+                $tabela->set_conteudo($row);
+                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Nota Final"]);
+                $tabela->set_width([10, 30, 50, 10]);
+                $tabela->set_align(["center", "left", "left"]);
+                $tabela->set_numeroOrdem(true);
+                $tabela->set_funcao([null, "plm", "plm"]);
+                $tabela->show();
             }
-            $tabela->set_conteudo($row);
-            $tabela->set_label(["Inscrição", "Nome", "Cpf", "Cargo", "Nota Final"]);
-            #$tabela->set_width([15, 5, 5, 20, 15, 18, 18]);
-            $tabela->set_align(["center", "left", "center", "left"]);
-            $tabela->set_numeroOrdem(true);
 
-//            $tabela->set_classe([null, "Concurso", null, "pessoal", "Concurso", "Concurso", "Concurso", "Concurso"]);
-//            $tabela->set_metodo([null, "exibeClassificacaoServidor", null, "get_nomeELotacaoESituacaoEAdmissao", "exibePublicacoesServidor", "exibeOcupanteAnterior", "exibeOcupantePosterior", "exibeObs"]);
-//            $tabela->set_funcao([null, null, "trataNulo"]);
 
-            $tabela->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();

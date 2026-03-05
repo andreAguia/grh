@@ -211,6 +211,8 @@ if ($acesso) {
             # Rotina quando se seleciona um cargo
             if ($parametroCargoCandidato <> "*") {
                 $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($parametroCargoCandidato);
+                $cadastroReserva = 3 * $numeroVagas;
+                $foraCadastro = $numeroVagas + $cadastroReserva;
 
                 /*
                  * Quando se tem número de vagas cadastrados
@@ -264,7 +266,33 @@ if ($acesso) {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
 
-                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
+                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
+
+                    /*
+                     * Candidatos FORA no Cadastro de reserva
+                     */
+
+                    # Monta o select
+                    $select .= "(SELECT '---',
+                              inscricao,
+                              nome,
+                              cargo,                              
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
+
+                    # cargo
+                    if ($parametroCargoCandidato <> "*") {
+                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
+
+                    $select .= " ORDER BY 5 DESC LIMIT {$foraCadastro}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
+                    ##########
                     # Pega os dados
                     $row = $pessoal->select($select);
 

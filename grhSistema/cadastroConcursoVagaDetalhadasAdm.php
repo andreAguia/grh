@@ -147,7 +147,7 @@ if ($acesso) {
             'label' => 'Cotas:',
             'tipo' => 'texto',
             'col' => 3,
-            'size' => 5),
+            'size' => 50),
         array('linha' => 4,
             'nome' => 'obs',
             'label' => 'Observação:',

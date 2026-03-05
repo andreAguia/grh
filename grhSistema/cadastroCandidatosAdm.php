@@ -248,7 +248,7 @@ if ($acesso) {
                      */
 
                     # Monta o select
-                    $select .= "(SELECT 'Reserva',
+                    $select .= "(SELECT 'Cadastro de Reserva',
                               inscricao,
                               nome,
                               cargo,                              
@@ -325,7 +325,7 @@ if ($acesso) {
                             'operador' => '=',
                             'id' => "naVaga"),
                         array('coluna' => 0,
-                            'valor' => 'Reserva',
+                            'valor' => 'Cadastro de Reserva',
                             'operador' => '=',
                             'id' => "reserva")));
 

@@ -574,7 +574,7 @@ if ($acesso) {
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
-            
+
             /*
              *  Horas Insuficientes
              */
@@ -758,7 +758,7 @@ if ($acesso) {
 
             # Percorre o array
             foreach ($result2 as $item) {
-                 $somatorioHoras = $petec->get_somatorioArredondadoHoras6($item["idServidor"]);
+                $somatorioHoras = $petec->get_somatorioArredondadoHoras6($item["idServidor"]);
                 if ($somatorioHoras == 0) {
                     $novoArray[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
@@ -783,7 +783,7 @@ if ($acesso) {
 
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, $botao]);
-            $tabela->show();           
+            $tabela->show();
 
             /*
              *  Horas Insuficientes
@@ -824,10 +824,9 @@ if ($acesso) {
 
             # Percorre o array
             foreach ($result2 as $item) {
-                 $somatorioHoras = $petec->get_somatorioArredondadoHoras6($item["idServidor"]);
+                $somatorioHoras = $petec->get_somatorioArredondadoHoras6($item["idServidor"]);
                 if ($somatorioHoras > 0 AND $somatorioHoras < $totalHoras) {
-                        $novoArray2[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
-                    }
+                    $novoArray2[] = [$item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"], $item["idServidor"]];
                 }
             }
 
@@ -933,7 +932,7 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorFormacao.php');
-            break;  
+            break;
 
         ################################################################
         # Relatório

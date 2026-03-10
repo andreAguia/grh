@@ -676,6 +676,28 @@ class Petec {
 
     /*
      * Retorna o número de registros da tabela temporária do upload
+     */
+
+    function exibeDadosPortaria2($idMarcador) {
+
+        # Exibe os dados da Portaria
+        $dados = $this->get_arrayPetec($idMarcador);
+
+        tituloTable("Portaria Petec {$dados[0]}");
+        $painel = new Callout();
+        $painel->abre();
+
+        p("Prazo de Entrega: {$dados[3]}", "pPetecInfo");
+        p("Mínimo de Horas: {$dados[2]}", "pPetecInfo");
+        p("Cursos a Partir de: {$dados[1]}", "pPetecInfo");
+
+        $painel->fecha();
+    }
+
+    ###########################################################
+
+    /*
+     * Retorna o número de registros da tabela temporária do upload
      * 
      * @param $texto string null o idMarcador e o idservidor separados por ;
      *

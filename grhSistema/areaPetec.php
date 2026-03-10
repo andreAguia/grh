@@ -305,8 +305,8 @@ if ($acesso) {
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeQuadroQuantidades();
 
-            # Quadro das Portarias
-            $petec->exibeQuadroPortariasPetec();
+            # Dados da Portaria
+            $petec->exibeDadosPortaria2($idMarcador);
 
             $grid->fechaColuna();
 
@@ -344,8 +344,8 @@ if ($acesso) {
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeQuadroQuantidades();
 
-            # Quadro das Portarias
-            $petec->exibeQuadroPortariasPetec();
+            # Dados da Portaria
+            $petec->exibeDadosPortaria2($idMarcador);
 
             $grid->fechaColuna();
 
@@ -384,8 +384,8 @@ if ($acesso) {
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeQuadroQuantidades();
 
-            # Quadro das Portarias
-            $petec->exibeQuadroPortariasPetec();
+            # Dados da Portaria
+            $petec->exibeDadosPortaria2($idMarcador);
 
             $grid->fechaColuna();
 

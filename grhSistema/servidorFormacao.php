@@ -431,7 +431,7 @@ if ($acesso) {
                 $label[] = $item[1];
                 $align[] = "center";
                 $classe[] = "Petec";
-                $metodo[] = "somatorioHorasCompleto{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
+                $metodo[] = "somatorioHorasPortaria{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
             }
 
             $relatorio = new Relatorio();

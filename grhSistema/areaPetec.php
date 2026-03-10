@@ -193,24 +193,8 @@ if ($acesso) {
 
         $grid->fechaColuna();
 
-        ##############
-
-        $grid->abreColuna(12, 12, 4);
-
         # Link para editar o servidor
         $linkservidor = "?fase=editaServidor&portaria={$fase}";
-
-        # Quadro de Inscritos
-        $petec->exibeQuadroInscritosPetec($parametroLotacao);
-
-        # Quadro das Portarias
-        $petec->exibeQuadroPortariasPetec();
-
-        $grid->fechaColuna();
-
-        ##############
-
-        $grid->abreColuna(12, 12, 8);
     }
 
     switch ($fase) {
@@ -222,6 +206,20 @@ if ($acesso) {
          */
 
         case "geral" :
+
+            $grid->abreColuna(12, 12, 4);
+
+            # Quadro de Inscritos
+            $petec->exibeQuadroInscritosPetec($parametroLotacao);
+
+            # Quadro das Portarias
+            $petec->exibeQuadroPortariasPetec();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12, 12, 8);
 
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
@@ -301,8 +299,22 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 4;
 
-            # Título            
+            $grid->abreColuna(12, 12, 4);
+
+            # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
+            $listaPetec->exibeQuadroQuantidades();
+
+            # Quadro das Portarias
+            $petec->exibeQuadroPortariasPetec();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12, 12, 8);
+
+            # Título
             $listaPetec->exibeTituloGeral();
             br();
 
@@ -326,8 +338,22 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 5;
 
-            # Título            
+            $grid->abreColuna(12, 12, 4);
+
+            # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
+            $listaPetec->exibeQuadroQuantidades();
+
+            # Quadro das Portarias
+            $petec->exibeQuadroPortariasPetec();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12, 12, 8);
+
+            # Título
             $listaPetec->exibeTituloGeral();
             br();
 
@@ -352,8 +378,22 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 6;
 
-            # Título            
+            $grid->abreColuna(12, 12, 4);
+
+            # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
+            $listaPetec->exibeQuadroQuantidades();
+
+            # Quadro das Portarias
+            $petec->exibeQuadroPortariasPetec();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12, 12, 8);
+
+            # Título
             $listaPetec->exibeTituloGeral();
             br();
 

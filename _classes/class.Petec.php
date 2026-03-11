@@ -36,7 +36,7 @@ class Petec {
                         10,
                         "10/03/2026",
                         75,
-                        "Dezemdro de 2025 e Janeiro de 2026",
+                        "Dezembro de 2025 e Janeiro de 2026",
                         "R$ 3.000,00"
                     ];
                     break;

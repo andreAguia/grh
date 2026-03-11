@@ -122,6 +122,7 @@ class ListaPetec {
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
+                    $item["idServidor"],
                     $item["idServidor"]];
             }
         }
@@ -177,6 +178,7 @@ class ListaPetec {
             $somatorioHoras = $petec->$nomeMetodo($item["idServidor"]);
             if ($somatorioHoras > 0 AND $somatorioHoras < $this->horas) {
                 $novoArray[] = [
+                    $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
@@ -242,6 +244,7 @@ class ListaPetec {
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
+                    $item["idServidor"],
                     $item["idServidor"]];
             }
         }
@@ -254,13 +257,13 @@ class ListaPetec {
     public function exibeTituloGeral() {
 
         # Exibe o título
-        tituloTable("Portaria Petec {$this->portaria}<br/>{$this->nomeLotacao}", null, "{$this->horas} horas");
+        tituloTable("Portaria Petec {$this->portaria}", null, $this->nomeLotacao);
     }
 
     ##############################################################
 
     public function exibeNaoEntregaram() {
-        
+
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {
@@ -268,8 +271,8 @@ class ListaPetec {
             } else {
                 $subtitulo = "Servidores NÃO Inscritos";
             }
-        }else{
-            $subtitulo = "Servidores Inscritoe e Não Inscritos";
+        } else {
+            $subtitulo = "Servidores Inscritos e Não Inscritos";
         }
 
         if ($this->relatorio) {
@@ -277,34 +280,34 @@ class ListaPetec {
             $tabela->set_titulo("Portaria Petec {$this->portaria}");
             $tabela->set_tituloLinha2($this->nomeLotacao);
             $tabela->set_tituloLinha3('Servidores em Situação Irregular');
-            $tabela->set_subtitulo("Servidores Que NÃO Entregaram Certificados<br/>({$this->horas} Horas)");
-            #$tabela->set_totalRegistro(false);
+            $tabela->set_subtitulo("Servidores Que NÃO Entregaram Certificados");
+
             $tabela->set_bordaInterna(true);
             $tabela->set_dataImpressao(false);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Perfil", "Total<br/>de Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Que NÃO Entregaram Certificados');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Perfil", "Total<br/>de Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
         }
 
-        $tabela->set_width([15, 15, 50, 10, 10, 10]);
+        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
         $tabela->set_conteudo($this->get_arrayNaoEntregaram());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoELotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
 
         if (!$this->relatorio) {
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
+//            $tabela->set_rowspan(0);
+//            $tabela->set_grupoCorColuna(0);
         }
 
         # Botão Editar
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
@@ -312,7 +315,7 @@ class ListaPetec {
     ##############################################################
 
     public function horasInsuficientes() {
-        
+
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {
@@ -320,8 +323,8 @@ class ListaPetec {
             } else {
                 $subtitulo = "Servidores NÃO Inscritos";
             }
-        }else{
-            $subtitulo = "Servidores Inscritoe e Não Inscritos";
+        } else {
+            $subtitulo = "Servidores Inscritos e Não Inscritos";
         }
 
 
@@ -339,30 +342,30 @@ class ListaPetec {
             $tabela->set_menuRelatorio(false);
             $tabela->set_log(false);
             $tabela->set_bordaInterna(true);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Perfil", "Total<br/>de Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Com Horas Insuficientes');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Perfil", "Total<br/>de Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
         }
 
-        $tabela->set_width([15, 15, 50, 10, 10, 10]);
+        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
         $tabela->set_conteudo($this->get_arrayHorasInsuficientes());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoELotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
 
         if (!$this->relatorio) {
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
+//            $tabela->set_rowspan(0);
+//            $tabela->set_grupoCorColuna(0);
         }
 
         # Botão Editar
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
@@ -370,7 +373,7 @@ class ListaPetec {
     ##############################################################
 
     public function situacaoRegular() {
-        
+
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {
@@ -378,29 +381,29 @@ class ListaPetec {
             } else {
                 $subtitulo = "Servidores NÃO Inscritos";
             }
-        }else{
-            $subtitulo = "Servidores Inscritoe e Não Inscritos";
+        } else {
+            $subtitulo = "Servidores Inscritos e Não Inscritos";
         }
 
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Em Situação Regular');
         $tabela->set_subtitulo($subtitulo);
-        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Perfil", "Total<br/>de Horas", "Editar"]);
-        $tabela->set_width([15, 15, 50, 10, 10, 10]);
+        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
+        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
         $tabela->set_conteudo($this->get_arraySituacaoRegula());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoELotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
 
-        $tabela->set_rowspan(0);
-        $tabela->set_grupoCorColuna(0);
+//        $tabela->set_rowspan(0);
+//        $tabela->set_grupoCorColuna(0);
 
         # Botão Editar
         $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, $botao]);
         $tabela->show();
     }
 
@@ -409,14 +412,14 @@ class ListaPetec {
     public function exibeQuadroQuantidades() {
 
         $arrayTabela = [
-            ["Servidores Que NÃO Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
-            ["Servidores Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())],
-            ["Servidores Em Situação Regular", count($this->get_arraySituacaoRegula())]
+            ["Que NÃO Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
+            ["Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())],
+            ["Em Situação Regular", count($this->get_arraySituacaoRegula())]
         ];
 
         $tabela = new Tabela();
-        $tabela->set_titulo("Resumo<br/>{$this->nomeLotacao}");
-        
+        $tabela->set_titulo("Resumo");
+        #$tabela->set_titulo("Resumo<br/>{$this->nomeLotacao}");
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {
@@ -424,12 +427,12 @@ class ListaPetec {
             } else {
                 $subtitulo = "Servidores NÃO Inscritos";
             }
-        }else{
-            $subtitulo = "Servidores Inscritoe e Não Inscritos";
+        } else {
+            $subtitulo = "Servidores Inscritos e Não Inscritos";
         }
-        
-        $tabela->set_subtitulo($subtitulo);
-        $tabela->set_label(["Situação", "Quantidade"]);
+
+        #$tabela->set_subtitulo($subtitulo);
+        $tabela->set_label(["Servidores", "Quantidade"]);
         $tabela->set_width([70, 30]);
         $tabela->set_conteudo($arrayTabela);
         $tabela->set_align(["left"]);

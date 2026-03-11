@@ -707,7 +707,7 @@ class Petec {
         # Exibe os dados da Portaria
         $dados = $this->get_arrayPetec($idMarcador);
 
-        tituloTable("Portaria Petec {$dados[0]}");
+        #tituloTable("Portaria Petec {$dados[0]}");
         $painel = new Callout();
         $painel->abre();
 

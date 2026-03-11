@@ -30,12 +30,14 @@ if ($acesso) {
 
     # Pega os parâmetros
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
-    $parametroInscricao = post('parametroInscricao', get_session('parametroInscricao', "Todos"));
+    $parametroInscricao = post('parametroInscricao', get_session('parametroInscricao', "Inscritos"));
+    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Pendentes'));
     $parametroMarcador = get('parametroMarcador', get_session('parametroMarcador', 4));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroInscricao', $parametroInscricao);
+    set_session('parametroSituacao', $parametroSituacao);
     set_session('parametroMarcador', $parametroMarcador);
 
     # Label da Lotação
@@ -69,7 +71,7 @@ if ($acesso) {
         $page->set_title("Petec");
     }
     $page->iniciaPagina();
-    
+
     $grid = new Grid();
     $grid->abreColuna(12);
 
@@ -143,7 +145,9 @@ if ($acesso) {
         $botaoRel->set_imagem($imagem);
 
         if ($fase <> "geral") {
-            $menu1->add_link($botaoRel, "right");
+            if ($parametroSituacao == "Pendentes") {
+                $menu1->add_link($botaoRel, "right");
+            }
         }
 
         $menu1->show();
@@ -170,7 +174,7 @@ if ($acesso) {
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
         if ($fase <> "geral") {
-            $controle->set_col(8);
+            $controle->set_col(6);
         } else {
             $controle->set_col(12);
         }
@@ -182,20 +186,35 @@ if ($acesso) {
 
         $controle = new Input('parametroInscricao', 'combo', "Inscrição", 1);
         $controle->set_size(30);
-        $controle->set_title('Filtra por Lotação');
+        $controle->set_title('Filtra por Inscrição');
         $controle->set_array(["Todos", "Inscritos", "NÃO Inscritos"]);
         $controle->set_valor($parametroInscricao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        $controle->set_col(4);
+        $controle->set_col(3);
+
+        if ($fase <> "geral") {
+            $form->add_item($controle);
+        }
+
+        /*
+         *  Situação
+         */
+
+        $controle = new Input('parametroSituacao', 'combo', "Situação", 1);
+        $controle->set_size(30);
+        $controle->set_title('Filtra por Situação');
+        $controle->set_array(["Pendentes", "Regulares"]);
+        $controle->set_valor($parametroSituacao);
+        $controle->set_onChange('formPadrao.submit();');
+        $controle->set_linha(1);
+        $controle->set_col(3);
 
         if ($fase <> "geral") {
             $form->add_item($controle);
         }
 
         $form->show();
-
-        $grid->fechaColuna();
 
         # Link para editar o servidor
         $linkservidor = "?fase=editaServidor&portaria={$fase}";
@@ -211,7 +230,9 @@ if ($acesso) {
 
         case "geral" :
 
-            $grid->abreColuna(12, 12, 4);
+            $grid->fechaColuna();
+
+            $grid->abreColuna(12, 12, 3);
 
             # Quadro de Inscritos
             $petec->exibeQuadroInscritosPetec($parametroLotacao);
@@ -223,7 +244,7 @@ if ($acesso) {
 
             ##############
 
-            $grid->abreColuna(12, 12, 8);
+            $grid->abreColuna(12, 12, 9);
 
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
@@ -303,33 +324,36 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 4;
 
-            $grid->abreColuna(12, 12, 4);
-
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
-            $listaPetec->exibeQuadroQuantidades();
+            $listaPetec->exibeTituloGeral();
+            br();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
             $petec->exibeDadosPortaria2($idMarcador);
+            $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();
 
             ##############
 
-            $grid->abreColuna(12, 12, 8);
+            $grid->abreColuna(12, 12, 9);
 
-            # Título
-            $listaPetec->exibeTituloGeral();
-            br();
+            if ($parametroSituacao == "Pendentes") {
 
-            # Não Entregaram Certificado            
-            $listaPetec->exibeNaoEntregaram();
+                # Não Entregaram Certificado    
+                $listaPetec->exibeNaoEntregaram();
 
-            # Horas Insuficientes
-            $listaPetec->horasInsuficientes();
+                # Horas Insuficientes
+                $listaPetec->horasInsuficientes();
+            } else {
 
-            # Situação Regular
-            $listaPetec->situacaoRegular();
+                # Situação Regular
+                $listaPetec->situacaoRegular();
+            }
             break;
 
         ##############################################################################################################
@@ -342,33 +366,36 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 5;
 
-            $grid->abreColuna(12, 12, 4);
-
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
-            $listaPetec->exibeQuadroQuantidades();
+            $listaPetec->exibeTituloGeral();
+            br();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
             $petec->exibeDadosPortaria2($idMarcador);
+            $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();
 
             ##############
 
-            $grid->abreColuna(12, 12, 8);
+            $grid->abreColuna(12, 12, 9);
 
-            # Título
-            $listaPetec->exibeTituloGeral();
-            br();
+            if ($parametroSituacao == "Pendentes") {
 
-            # Não Entregaram Certificado            
-            $listaPetec->exibeNaoEntregaram();
+                # Não Entregaram Certificado    
+                $listaPetec->exibeNaoEntregaram();
 
-            # Horas Insuficientes
-            $listaPetec->horasInsuficientes();
+                # Horas Insuficientes
+                $listaPetec->horasInsuficientes();
+            } else {
 
-            # Situação Regular
-            $listaPetec->situacaoRegular();
+                # Situação Regular
+                $listaPetec->situacaoRegular();
+            }
             break;
 
         ##############################################################################################################
@@ -382,33 +409,36 @@ if ($acesso) {
             # Define o idMarcador
             $idMarcador = 6;
 
-            $grid->abreColuna(12, 12, 4);
-
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
-            $listaPetec->exibeQuadroQuantidades();
+            $listaPetec->exibeTituloGeral();
+            br();
+
+            $grid->fechaColuna();
+            $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
             $petec->exibeDadosPortaria2($idMarcador);
+            $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();
 
             ##############
 
-            $grid->abreColuna(12, 12, 8);
+            $grid->abreColuna(12, 12, 9);
 
-            # Título
-            $listaPetec->exibeTituloGeral();
-            br();
+            if ($parametroSituacao == "Pendentes") {
 
-            # Não Entregaram Certificado            
-            $listaPetec->exibeNaoEntregaram();
+                # Não Entregaram Certificado    
+                $listaPetec->exibeNaoEntregaram();
 
-            # Horas Insuficientes
-            $listaPetec->horasInsuficientes();
+                # Horas Insuficientes
+                $listaPetec->horasInsuficientes();
+            } else {
 
-            # Situação Regular
-            $listaPetec->situacaoRegular();
+                # Situação Regular
+                $listaPetec->situacaoRegular();
+            }
             break;
 
         ##############################################################################################################

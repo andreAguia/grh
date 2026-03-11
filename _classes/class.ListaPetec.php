@@ -62,9 +62,9 @@ class ListaPetec {
         if ($this->lotacao <> "Todos") {
             if (is_numeric($this->lotacao)) {
                 $pessoal = new Pessoal();
-                $this->nomeLocacao = $pessoal->get_nomeLotacao($this->lotacao);
+                $this->nomeLotacao = $pessoal->get_nomeLotacao($this->lotacao);
             } else {
-                $this->nomeLocacao = $this->lotacao;
+                $this->nomeLotacao = $this->lotacao;
             }
         }
     }
@@ -254,7 +254,7 @@ class ListaPetec {
     public function exibeTituloGeral() {
 
         # Exibe o título
-        tituloTable("Portaria Petec {$this->portaria}<br/>{$this->nomeLocacao}", null, "{$this->horas} horas");
+        tituloTable("Portaria Petec {$this->portaria}<br/>{$this->nomeLotacao}", null, "{$this->horas} horas");
     }
 
     ##############################################################
@@ -275,7 +275,7 @@ class ListaPetec {
         if ($this->relatorio) {
             $tabela = new Relatorio();
             $tabela->set_titulo("Portaria Petec {$this->portaria}");
-            $tabela->set_tituloLinha2($this->nomeLocacao);
+            $tabela->set_tituloLinha2($this->nomeLotacao);
             $tabela->set_tituloLinha3('Servidores em Situação Irregular');
             $tabela->set_subtitulo("Servidores Que NÃO Entregaram Certificados<br/>({$this->horas} Horas)");
             #$tabela->set_totalRegistro(false);
@@ -415,7 +415,7 @@ class ListaPetec {
         ];
 
         $tabela = new Tabela();
-        $tabela->set_titulo("Resumo<br/>{$this->nomeLocacao}");
+        $tabela->set_titulo("Resumo<br/>{$this->nomeLotacao}");
         
         # Inscrição
         if ($this->inscricao <> "Todos") {

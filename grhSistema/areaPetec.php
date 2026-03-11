@@ -64,8 +64,12 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    $page->iniciaPagina();
 
+    if ($fase == "relatorio") {
+        $page->set_title("Petec");
+    }
+    $page->iniciaPagina();
+    
     $grid = new Grid();
     $grid->abreColuna(12);
 

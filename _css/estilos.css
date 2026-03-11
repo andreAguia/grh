@@ -386,6 +386,14 @@ p#pPetecLabel{
     text-align: center;
 }
 
+p#pPetecLabel2{
+    padding: 0px;    
+    margin: 0px;
+    margin-top: 2px;
+    font-size: 10px;
+    text-align: center;
+}
+
 p#pPetecInfo{
     padding-bottom: 4px;
     padding-top: 0px;

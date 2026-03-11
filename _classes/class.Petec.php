@@ -18,15 +18,39 @@ class Petec {
         } else {
             switch ($idMarcador) {
                 case 4 :
-                    return ["418/25", "21/07/2025", 20, "10/03/2026", 74];
+                    return [
+                        "418/25",
+                        "21/07/2025",
+                        20,
+                        "10/03/2026",
+                        74,
+                        "Agosto, Setembro, Outubro e Novembro de 2025",
+                        "R$ 3.000,00"
+                    ];
                     break;
 
                 case 5 :
-                    return ["473/25", "15/12/2025", 10, "10/03/2026", 75];
+                    return [
+                        "473/25",
+                        "15/12/2025",
+                        10,
+                        "10/03/2026",
+                        75,
+                        "Dezemdro de 2025 e Janeiro de 2026",
+                        "R$ 3.000,00"
+                    ];
                     break;
 
                 case 6 :
-                    return ["481/25", "18/12/2025", 20, "30/06/2026", 76];
+                    return [
+                        "481/25",
+                        "18/12/2025",
+                        20,
+                        "30/06/2026",
+                        76,
+                        "Fevereiro, Março, Abril e Maio de 2026",
+                        "R$ 3.000,00"
+                    ];
                     break;
             }
         }
@@ -687,9 +711,16 @@ class Petec {
         $painel = new Callout();
         $painel->abre();
 
-        p("Prazo de Entrega: {$dados[3]}", "pPetecInfo");
-        p("Mínimo de Horas: {$dados[2]}", "pPetecInfo");
-        p("Cursos a Partir de: {$dados[1]}", "pPetecInfo");
+        p("Prazo de Entrega:", "pPetecLabel2");
+        p($dados[3], "pPetecInfo");
+        p("Mínimo de Horas:", "pPetecLabel2");
+        p($dados[2], "pPetecInfo");
+        p("Cursos a Partir de:", "pPetecLabel2");
+        p($dados[1], "pPetecInfo");
+        p("Pgto para os meses de:", "pPetecLabel2");
+        p($dados[5], "pPetecInfo");
+        p("Valor:", "pPetecLabel2");
+        p($dados[6], "pPetecInfo");
 
         $painel->fecha();
     }

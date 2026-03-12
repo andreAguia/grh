@@ -257,7 +257,38 @@ class ListaPetec {
     public function exibeTituloGeral() {
 
         # Exibe o título
-        tituloTable("Portaria Petec {$this->portaria}", null, $this->nomeLotacao);
+        #tituloTable("Portaria Petec {$this->portaria}", null, $this->nomeLotacao);
+
+        $petec = new Petec();
+        $dados = $petec->get_arrayPetec($this->idMarcador);
+
+        $arraydeFato = [[
+        $dados[2], // Horas Exigidas
+        $dados[3], // Data Limite da Entrega
+        $dados[1], // Data do Certificado
+        $dados[5], // Meses
+        $dados[6], // Valor            
+        $dados[4], // Pdf            
+        ]];
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Portaria Petec {$this->portaria}");
+        $tabela->set_subtitulo($this->nomeLotacao);
+        $tabela->set_conteudo($arraydeFato);
+        $tabela->set_label(["Horas Exigidas", "Entregar até", "Curso iniciado a partir de", "Meses de PGTO", "Valor", "Pdf"]);
+        $tabela->set_totalRegistro(false);
+
+        $tabela->set_classe([null, null, null, null, null, "Petec"]);
+        $tabela->set_metodo([null, null, null, null, null, "exibePdfPetec"]);
+
+        $formatacaoCondicional = array(
+            array('coluna' => 0,
+                'valor' => $dados[2],
+                'operador' => '=',
+                'id' => 'listaDados'));
+
+        $tabela->set_formatacaoCondicional($formatacaoCondicional);
+        $tabela->show();
     }
 
     ##############################################################
@@ -397,7 +428,6 @@ class ListaPetec {
 
 //        $tabela->set_rowspan(0);
 //        $tabela->set_grupoCorColuna(0);
-
         # Botão Editar
         $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
@@ -412,7 +442,7 @@ class ListaPetec {
     public function exibeQuadroQuantidades() {
 
         $arrayTabela = [
-            ["Que NÃO Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
+            ["Não Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
             ["Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())],
             ["Em Situação Regular", count($this->get_arraySituacaoRegula())]
         ];

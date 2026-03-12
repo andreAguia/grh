@@ -333,7 +333,7 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
-            $petec->exibeDadosPortaria2($idMarcador);
+            #$petec->exibeDadosPortaria2($idMarcador);
             $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();
@@ -375,7 +375,7 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
-            $petec->exibeDadosPortaria2($idMarcador);
+            #$petec->exibeDadosPortaria2($idMarcador);
             $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();
@@ -418,7 +418,7 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
-            $petec->exibeDadosPortaria2($idMarcador);
+            #$petec->exibeDadosPortaria2($idMarcador);
             $listaPetec->exibeQuadroQuantidades();
 
             $grid->fechaColuna();

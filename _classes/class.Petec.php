@@ -518,6 +518,20 @@ class Petec {
         return $dados[0];
     }
 
+     ###########################################################
+
+    function get_somatorioArredondadoMinutos4($idServidor) {
+        /**
+         * Retorna o somatorio de minutos do marcador 4
+         * Petec - Portaria 418/25
+         */
+        $formacao = new Formacao();
+        $dados = $formacao->somatorioHoras($idServidor, 4);
+        
+        # Retorna somente as horas
+        return trataNulo($dados[1]);
+    }
+
     ###########################################################
 
     function get_somatorioArredondadoHoras5($idServidor) {
@@ -534,6 +548,20 @@ class Petec {
 
     ###########################################################
 
+    function get_somatorioArredondadoMinutos5($idServidor) {
+        /**
+         * Retorna o somatorio de minutos do marcador 5
+         * Petec - Portaria 418/25
+         */
+        $formacao = new Formacao();
+        $dados = $formacao->somatorioHoras($idServidor, 5);
+        
+        # Retorna somente as horas
+        return trataNulo($dados[1]);
+    }
+
+    ###########################################################
+
     function get_somatorioArredondadoHoras6($idServidor) {
         /**
          * Retorna o somatorio de horas do marcador 6
@@ -544,6 +572,20 @@ class Petec {
 
         # Retorna somente as horas
         return $dados[0];
+    }
+
+    ###########################################################
+
+    function get_somatorioArredondadoMinutos6($idServidor) {
+        /**
+         * Retorna o somatorio de minutos do marcador 6
+         * Petec - Portaria 418/25
+         */
+        $formacao = new Formacao();
+        $dados = $formacao->somatorioHoras($idServidor, 6);
+        
+        # Retorna somente as horas
+        return trataNulo($dados[1]);
     }
 
     ###########################################################

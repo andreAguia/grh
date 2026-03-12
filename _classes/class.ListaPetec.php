@@ -123,6 +123,7 @@ class ListaPetec {
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
+                    $item["idServidor"],
                     $item["idServidor"]];
             }
         }
@@ -184,6 +185,7 @@ class ListaPetec {
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
+                    $item["idServidor"],
                     $item["idServidor"]];
             }
         }
@@ -193,7 +195,7 @@ class ListaPetec {
 
     ##############################################################
 
-    public function get_arraySituacaoRegula() {
+    public function get_arraySituacaoRegular() {
 
         $novoArray = array();
 
@@ -239,6 +241,7 @@ class ListaPetec {
             $somatorioHoras = $petec->$nomeMetodo($item["idServidor"]);
             if ($somatorioHoras >= $this->horas) {
                 $novoArray[] = [
+                    $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
                     $item["idServidor"],
@@ -315,19 +318,19 @@ class ListaPetec {
 
             $tabela->set_bordaInterna(true);
             $tabela->set_dataImpressao(false);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Que NÃO Entregaram Certificados');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
         }
 
-        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
+        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
         $tabela->set_conteudo($this->get_arrayNaoEntregaram());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -338,7 +341,7 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
@@ -373,19 +376,19 @@ class ListaPetec {
             $tabela->set_menuRelatorio(false);
             $tabela->set_log(false);
             $tabela->set_bordaInterna(true);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Com Horas Insuficientes');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
         }
 
-        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
+        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
         $tabela->set_conteudo($this->get_arrayHorasInsuficientes());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -396,7 +399,7 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
@@ -419,12 +422,12 @@ class ListaPetec {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Em Situação Regular');
         $tabela->set_subtitulo($subtitulo);
-        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Total<br/>de Horas", "Editar"]);
-        $tabela->set_width([10, 10, 35, 25, 10, 10, 10]);
-        $tabela->set_conteudo($this->get_arraySituacaoRegula());
+        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
+        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
+        $tabela->set_conteudo($this->get_arraySituacaoRegular());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
 
 //        $tabela->set_rowspan(0);
 //        $tabela->set_grupoCorColuna(0);
@@ -433,7 +436,7 @@ class ListaPetec {
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, null, $botao]);
         $tabela->show();
     }
 
@@ -444,7 +447,7 @@ class ListaPetec {
         $arrayTabela = [
             ["Não Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
             ["Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())],
-            ["Em Situação Regular", count($this->get_arraySituacaoRegula())]
+            ["Em Situação Regular", count($this->get_arraySituacaoRegular())]
         ];
 
         $tabela = new Tabela();

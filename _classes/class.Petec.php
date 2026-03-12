@@ -12,6 +12,8 @@ class Petec {
         # 2 - Horas Exigidas
         # 3 - Data limite de Entrega
         # 4 - Nome do arquivo pdf da portaria
+        # 5 - Meses
+        # 6 - Valor
         # Verifica se foi preenchido
         if (is_null($idMarcador)) {
             return null;
@@ -179,6 +181,54 @@ class Petec {
             $tabela->set_classe([null, "petec", "petec"]);
             $tabela->set_metodo([null, "exibeDadosPortaria", "exibePdfPetec"]);
         }
+
+        $tabela->set_conteudo($array);
+        $tabela->set_totalRegistro(false);
+        $tabela->show();
+    }
+
+###########################################################
+
+    function exibeQuadroPortariasPetec2() {
+        /**
+         * Exibe um quadro com as regras das portarias
+         */
+        # Pega os ids dos marcadores Petec
+        $formacao = new Formacao();
+        $idMarcadoresPetec = $formacao->get_arrayMarcadores("Petec");
+
+        # Monta o array
+        foreach ($idMarcadoresPetec as $item) {
+
+            # 0 - Portaria
+            # 1 - Data do Certificado
+            # 2 - Horas Exigidas
+            # 3 - Data limite de Entrega
+            # 4 - Nome do arquivo pdf da portaria
+            # 5 - Meses
+            # 6 - Valor
+            # Pega os dados dessa portaria
+            $dados = $this->get_arrayPetec($item[0]);
+
+            # Monta o array
+            $array[] = [
+                $dados[0], // Portaria
+                $dados[2], // Horas
+                $dados[3], // Entregar até
+                $dados[1], // Curso iniciado em
+                $dados[5], // Meses de pgto
+                $dados[6], // Meses de pgto
+                $dados[4], // Pdf
+            ];
+        }
+        $tabela = new Tabela();
+        $tabela->set_titulo("Dados das Portarias PETEC");
+        $tabela->set_label(["Portaria", "Horas", "Entregar até", "Curso Iniciado após", "Pago em", "Valor", "pdf"]);
+        #$tabela->set_width([20, 60, 20]);
+        #$tabela->set_align(["center", "center"]);
+
+        $tabela->set_classe([null, null, null, null, null, null, "petec"]);
+        $tabela->set_metodo([null, null, null, null, null, null, "exibePdfPetec"]);
 
         $tabela->set_conteudo($array);
         $tabela->set_totalRegistro(false);

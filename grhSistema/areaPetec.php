@@ -237,14 +237,14 @@ if ($acesso) {
             # Quadro de Inscritos
             $petec->exibeQuadroInscritosPetec($parametroLotacao);
 
-            # Quadro das Portarias
-            $petec->exibeQuadroPortariasPetec();
-
             $grid->fechaColuna();
 
             ##############
 
             $grid->abreColuna(12, 12, 9);
+
+            # Quadro das Portarias
+            $petec->exibeQuadroPortariasPetec2();
 
             # Monta o select
             $select = "SELECT tbservidor.idServidor,

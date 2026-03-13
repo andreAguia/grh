@@ -230,7 +230,7 @@ class Formacao {
         if (empty($pesquisa)) {
             $array = $pessoal->select("SELECT * FROM tbformacaomarcador");
         } else {
-            $array = $pessoal->select("SELECT * FROM tbformacaomarcador WHERE marcador LIKE '%{$pesquisa}%' ORDER BY marcador DESC");
+            $array = $pessoal->select("SELECT * FROM tbformacaomarcador WHERE marcador LIKE '%{$pesquisa}%'");
         }
         return $array;
     }

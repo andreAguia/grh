@@ -344,11 +344,11 @@ if ($acesso) {
                 $listaPetec->exibeNaoEntregaram();
 
                 # Horas Insuficientes
-                $listaPetec->horasInsuficientes();
+                $listaPetec->exibeHorasInsuficientes();
             } else {
 
                 # Situação Regular
-                $listaPetec->situacaoRegular();
+                $listaPetec->exibeSituacaoRegular();
             }
             break;
 
@@ -386,11 +386,11 @@ if ($acesso) {
                 $listaPetec->exibeNaoEntregaram();
 
                 # Horas Insuficientes
-                $listaPetec->horasInsuficientes();
+                $listaPetec->exibeHorasInsuficientes();
             } else {
 
                 # Situação Regular
-                $listaPetec->situacaoRegular();
+                $listaPetec->exibeSituacaoRegular();
             }
             break;
 
@@ -429,11 +429,11 @@ if ($acesso) {
                 $listaPetec->exibeNaoEntregaram();
 
                 # Horas Insuficientes
-                $listaPetec->horasInsuficientes();
+                $listaPetec->exibeHorasInsuficientes();
             } else {
 
                 # Situação Regular
-                $listaPetec->situacaoRegular();
+                $listaPetec->exibeSituacaoRegular();
             }
             break;
 
@@ -479,7 +479,7 @@ if ($acesso) {
             $listaPetec->exibeNaoEntregaram();
 
             # Horas Insuficientes
-            $listaPetec->horasInsuficientes();
+            $listaPetec->exibeHorasInsuficientes();
             break;
     }
     $grid->fechaColuna();

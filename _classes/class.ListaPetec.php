@@ -75,8 +75,9 @@ class ListaPetec {
 
         $novoArray = array();
 
-        # Inicia a Classe
+        # Inicia as Classes
         $pessoal = new Pessoal();
+        $formacao = new Formacao();
 
         $select2 = "SELECT tbservidor.idServidor,
                            tbpessoa.nome
@@ -109,22 +110,22 @@ class ListaPetec {
         $select2 .= " ORDER BY tbpessoa.nome";
         $result2 = $pessoal->select($select2);
 
-        # Percorre o array
-        $nomeMetodo = "get_somatorioArredondadoHoras{$this->idMarcador}";
-
-        $petec = new Petec();
         foreach ($result2 as $item) {
-            $somatorioHoras = $petec->$nomeMetodo($item["idServidor"]);
-            if ($somatorioHoras == 0) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Os não entregues o somatório é zero
+            if ($somatorioHoras[0] == 0) {
                 $novoArray[] = [
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"]];
+                    $item["idServidor"], // Matricula
+                    $item["idServidor"], // Inscrito
+                    $item["idServidor"], // Nome do Servidor e Cargo
+                    $item["idServidor"], // Lotação
+                    $item["idServidor"], // Perfil
+                    $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
+                    $item["idServidor"]  // Botão Editar
+                ];
             }
         }
 
@@ -137,8 +138,9 @@ class ListaPetec {
 
         $novoArray = array();
 
-        # Inicia a Classe
+        # Inicia as Classes
         $pessoal = new Pessoal();
+        $formacao = new Formacao();
 
         $select2 = "SELECT tbservidor.idServidor,
                                tbpessoa.nome
@@ -171,22 +173,22 @@ class ListaPetec {
         $select2 .= " ORDER BY tbpessoa.nome";
         $result2 = $pessoal->select($select2);
 
-        # Percorre o array
-        $nomeMetodo = "get_somatorioArredondadoHoras{$this->idMarcador}";
-
-        $petec = new Petec();
         foreach ($result2 as $item) {
-            $somatorioHoras = $petec->$nomeMetodo($item["idServidor"]);
-            if ($somatorioHoras > 0 AND $somatorioHoras < $this->horas) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Horas Insuficientes são de 0 às horas exigidas na Portaria
+            if ($somatorioHoras[0] > 0 AND $somatorioHoras[0] < $this->horas) {
                 $novoArray[] = [
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"]];
+                    $item["idServidor"], // Matricula
+                    $item["idServidor"], // Inscrito
+                    $item["idServidor"], // Nome do Servidor e Cargo
+                    $item["idServidor"], // Lotação
+                    $item["idServidor"], // Perfil
+                    $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
+                    $item["idServidor"]  // Botão Editar
+                ];
             }
         }
 
@@ -199,8 +201,9 @@ class ListaPetec {
 
         $novoArray = array();
 
-        # Inicia a Classe
+        # Inicia as Classes
         $pessoal = new Pessoal();
+        $formacao = new Formacao();
 
         $select2 = "SELECT tbservidor.idServidor,
                                tbpessoa.nome
@@ -233,22 +236,22 @@ class ListaPetec {
         $select2 .= " ORDER BY tbpessoa.nome";
         $result2 = $pessoal->select($select2);
 
-        # Percorre o array
-        $nomeMetodo = "get_somatorioArredondadoHoras{$this->idMarcador}";
-
-        $petec = new Petec();
         foreach ($result2 as $item) {
-            $somatorioHoras = $petec->$nomeMetodo($item["idServidor"]);
-            if ($somatorioHoras >= $this->horas) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Situação regular é igual ou maior que as horas da portaria
+            if ($somatorioHoras[0] >= $this->horas) {
                 $novoArray[] = [
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"],
-                    $item["idServidor"]];
+                    $item["idServidor"], // Matricula
+                    $item["idServidor"], // Inscrito
+                    $item["idServidor"], // Nome do Servidor e Cargo
+                    $item["idServidor"], // Lotação
+                    $item["idServidor"], // Perfil
+                    $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
+                    $item["idServidor"]  // Botão Editar
+                ];
             }
         }
 
@@ -318,19 +321,19 @@ class ListaPetec {
 
             $tabela->set_bordaInterna(true);
             $tabela->set_dataImpressao(false);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Que NÃO Entregaram Certificados');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Editar"]);
         }
 
-        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
+        $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
         $tabela->set_conteudo($this->get_arrayNaoEntregaram());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -341,14 +344,14 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
 
     ##############################################################
 
-    public function horasInsuficientes() {
+    public function exibeHorasInsuficientes() {
 
         # Inscrição
         if ($this->inscricao <> "Todos") {
@@ -376,19 +379,19 @@ class ListaPetec {
             $tabela->set_menuRelatorio(false);
             $tabela->set_log(false);
             $tabela->set_bordaInterna(true);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Com Horas Insuficientes');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Editar"]);
         }
 
-        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
+        $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
         $tabela->set_conteudo($this->get_arrayHorasInsuficientes());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -399,14 +402,14 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
 
     ##############################################################
 
-    public function situacaoRegular() {
+    public function exibeSituacaoRegular() {
 
         # Inscrição
         if ($this->inscricao <> "Todos") {
@@ -422,12 +425,12 @@ class ListaPetec {
         $tabela = new Tabela();
         $tabela->set_titulo('Servidores Em Situação Regular');
         $tabela->set_subtitulo($subtitulo);
-        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Minutos", "Editar"]);
-        $tabela->set_width([10, 10, 30, 25, 10, 5, 5, 5]);
+        $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Editar"]);
+        $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
         $tabela->set_conteudo($this->get_arraySituacaoRegular());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "Petec", "Petec"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_somatorioArredondadoHoras{$this->idMarcador}", "get_somatorioArredondadoMinutos{$this->idMarcador}"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil"]);
 
 //        $tabela->set_rowspan(0);
 //        $tabela->set_grupoCorColuna(0);
@@ -436,7 +439,7 @@ class ListaPetec {
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, $botao]);
         $tabela->show();
     }
 

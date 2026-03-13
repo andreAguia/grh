@@ -230,7 +230,7 @@ class Formacao {
         if (empty($pesquisa)) {
             $array = $pessoal->select("SELECT * FROM tbformacaomarcador");
         } else {
-            $array = $pessoal->select("SELECT * FROM tbformacaomarcador WHERE marcador LIKE '%{$pesquisa}%'");
+            $array = $pessoal->select("SELECT * FROM tbformacaomarcador WHERE marcador LIKE '%{$pesquisa}%' ORDER BY marcador DESC");
         }
         return $array;
     }
@@ -252,17 +252,17 @@ class Formacao {
 
     ###########################################################
 
-    function exibeHora($id) {
+    function exibeHora($idFormacao) {
 
         /**
          * Exibe a hora com minutos
          */
         # Verifica se tem id
-        if (empty($id)) {
+        if (empty($idFormacao)) {
             return null;
         } else {
             # Pega os dados
-            $dados = $this->get_dados($id);
+            $dados = $this->get_dados($idFormacao);
 
             if (empty($dados["minutos"])) {
                 return "{$dados["horas"]} h";
@@ -298,7 +298,7 @@ class Formacao {
                           AND idPessoa = {$idPessoa}";
 
             $result = $pessoal->select($select, false);
-            
+
             # Pega a soma de horas
             if (empty($result[0])) {
                 $horasInformadas = 0;
@@ -319,7 +319,7 @@ class Formacao {
                 $horasExcedentes = intval($result2[0] / 60);
                 $horasInformadas += $horasExcedentes;
                 $minutosInformados = $result2[0] - ($horasExcedentes * 60);
-            }else{
+            } else {
                 $minutosInformados = $result2[0];
             }
 
@@ -353,6 +353,28 @@ class Formacao {
         }
     }
 
-###########################################################
+    ###########################################################
 
+    public function exibeSomatorioHorasMinutos($idServidor = null, $idMarcador = null) {
+
+        # Verifica se veio os ids
+        if (empty($idServidor)) {
+            return null;
+        }
+
+        if (empty($idMarcador)) {
+            return null;
+        }
+
+        $somatorio = $this->somatorioHoras($idServidor, $idMarcador);
+
+        # Formata para exibição
+        if (empty($somatorio[1])) {
+            return "{$somatorio[0]} h";
+        } else {
+            return "{$somatorio[0]} h e {$somatorio[1]} m";
+        }
+    }
+
+    ###########################################################
 }

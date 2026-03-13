@@ -66,6 +66,12 @@ if ($acesso) {
                                 });
                             });');
     }
+
+
+
+    if ($fase == "relatorioPetec") {
+        $page->set_title("Petec");
+    }
     $page->iniciaPagina();
 
     # Cabeçalho da Página
@@ -472,7 +478,6 @@ if ($acesso) {
                               escolaridade,
                               idFormacao,
                               CONCAT(habilitacao,'<br/>', instEnsino),
-                              horas,
                               idFormacao,
                               idFormacao,
                               idFormacao
@@ -499,9 +504,9 @@ if ($acesso) {
                 $relatorio->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso / Instituição", "Carga Horária"]);
                 $relatorio->set_width([10, 15, 20, 45, 10]);
                 $relatorio->set_align(["center", "center", "center", "left"]);
-                $relatorio->set_classe([null, null, "Formacao"]);
-                $relatorio->set_metodo([null, null, "exibeMarcador"]);
-                $relatorio->set_colunaSomatorio(4);
+                $relatorio->set_classe([null, null, "Formacao", null, "Formacao"]);
+                $relatorio->set_metodo([null, null, "exibeMarcador", null, "exibeHora"]);
+                #$relatorio->set_colunaSomatorio(4);
 
                 $relatorio->set_conteudo($result);
                 $relatorio->set_botaoVoltar(false);

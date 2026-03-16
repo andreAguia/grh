@@ -56,7 +56,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio1" AND $fase <> "relatorio2") {
         AreaServidor::cabecalho();
     }
 
@@ -149,9 +149,7 @@ if ($acesso) {
             $botaoRel->set_target("_blank");
             $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_imagem($imagem2);
-            if ($parametroCargoCandidato <> "*") {
-                $menu1->add_link($botaoRel, "right");
-            }
+            #$menu1->add_link($botaoRel, "right");
 
             $menu1->show();
 
@@ -170,6 +168,14 @@ if ($acesso) {
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            # Relatórios
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Relatórios de Candidatos');
+            $menu->add_item('linkWindow', 'Na Vaga Com CPF / E-mail / Tel', '?fase=relatorio1');
+            $menu->add_item('linkWindow', 'Na Vaga Com Pontuação', '?fase=relatorio2');
+
+            $menu->show();
 
             $grid->fechaColuna();
 
@@ -430,7 +436,7 @@ if ($acesso) {
 
         ################################################################
 
-        case "relatorio":
+        case "relatorio1":
 
             $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($parametroCargoCandidato);
             $cadastroReserva = 3 * $numeroVagas;
@@ -483,7 +489,120 @@ if ($acesso) {
 
             $tabela->show();
             break;
-        ################################################################    
+        ################################################################
+
+        case "relatorio2":
+
+            /*
+             * Candidatos na Vaga
+             */
+
+            # Verifica o Cargo
+            if ($parametroCargoCandidato <> "*") {
+                $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($parametroCargoCandidato);
+                $cadastroReserva = 3 * $numeroVagas;
+                $foraCadastro = $numeroVagas + $cadastroReserva;
+
+                # Monta o select
+                $select = "SELECT inscricao,
+                              nome,
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                # nome
+                if (!is_null($parametroNome)) {
+                    $select .= " AND nome LIKE '%{$parametroNome}%'";
+                }
+
+                # cargo
+                if ($parametroCargoCandidato <> "*") {
+                    $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                }
+
+                $select .= " ORDER BY 3 DESC LIMIT {$numeroVagas} ";
+            } else {
+                /*
+                 *  Todos os cargos
+                 */
+                # Pega os cargos
+                $result = $pessoal->select('SELECT DISTINCT cargo
+                                              FROM tbcandidato
+                                          ORDER BY cargo');
+                $numCargos = count($result);
+                $select = "(";
+
+                foreach ($result as $item) {
+
+                    $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($item["cargo"]);
+                    $cadastroReserva = 3 * $numeroVagas;
+                    $foraCadastro = $numeroVagas + $cadastroReserva;
+
+                    br();
+                    echo $numCargos;
+
+                    # Monta o select
+                    $select .= "SELECT inscricao,
+                                       nome,
+                                       CONVERT(notaFinal, DECIMAL(10,2)),
+                                       CONCAT(cargo,'<br/>{$numeroVagas} Vagas')
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
+
+                    # cargo
+                    $select .= " AND cargo = '{$item["cargo"]}'";
+
+                    $select .= " ORDER BY 3 DESC LIMIT {$numeroVagas}";
+                    $numCargos--;
+
+                    if ($numCargos > 0) {
+                        $select .= ") UNION (";
+                    } else {
+                        $select .= ")";
+                    }
+                }
+            }
+
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Relatorio();
+            $tabela->set_titulo("Cadastro de Candidatos Aprovados");
+
+            if ($parametroCargoCandidato == "*") {
+                $tabela->set_conteudo($row);
+                $tabela->set_label(["Inscrição", "Candidato", "Pontuação", "Cargo"]);
+                #$tabela->set_width([10, 20, 55, 15]);
+                $tabela->set_align(["center", "left", "center"]);
+                $tabela->set_numeroOrdem(true);
+                $tabela->set_funcao([null, "plm"]);
+                $tabela->set_numGrupo(3);
+            } else {
+                if (empty($numeroVagas)) {
+                    $tabela->set_subtitulo("{$parametroCargoCandidato}");
+                } else {
+                    $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
+                }
+
+                $tabela->set_conteudo($row);
+                $tabela->set_label(["Inscrição", "Candidato", "Pontuação"]);
+                #$tabela->set_width([10, 20, 55, 15]);
+                $tabela->set_align(["center", "left", "center"]);
+                $tabela->set_numeroOrdem(true);
+                $tabela->set_funcao([null, "plm"]);
+            }
+
+
+
+            $tabela->show();
+
+            break;
+        ################################################################      
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

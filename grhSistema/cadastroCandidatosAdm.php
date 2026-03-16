@@ -145,11 +145,13 @@ if ($acesso) {
             # Relatório
             $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
             $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_title("Relatório dos Candidatos no número de vagas");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorioClassificacao");
+            $botaoRel->set_url("?fase=relatorio");
             $botaoRel->set_imagem($imagem2);
-            #$menu1->add_link($botaoRel, "right");
+            if ($parametroCargoCandidato <> "*") {
+                $menu1->add_link($botaoRel, "right");
+            }
 
             $menu1->show();
 
@@ -427,6 +429,61 @@ if ($acesso) {
             break;
 
         ################################################################
+
+        case "relatorio":
+
+            $numeroVagas = $concurso->get_numVagasDetalhadasConcursoAdm($parametroCargoCandidato);
+            $cadastroReserva = 3 * $numeroVagas;
+            $foraCadastro = $numeroVagas + $cadastroReserva;
+
+            /*
+             * Candidatos na Vaga
+             */
+            # Monta o select
+            $select = "SELECT inscricao,
+                              nome,
+                              cpf,
+                              email,
+                              celular,
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+            # nome
+            if (!is_null($parametroNome)) {
+                $select .= " AND nome LIKE '%{$parametroNome}%'";
+            }
+
+            # cargo
+            if ($parametroCargoCandidato <> "*") {
+                $select .= " AND cargo = '{$parametroCargoCandidato}'";
+            }
+
+            $select .= " ORDER BY 6 DESC LIMIT {$numeroVagas}";
+
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Relatorio();
+            $tabela->set_titulo("Cadastro de Candidatos Aprovados");
+
+            if (empty($numeroVagas)) {
+                $tabela->set_subtitulo("{$parametroCargoCandidato}");
+            } else {
+                $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
+            }
+
+
+            $tabela->set_conteudo($row);
+            $tabela->set_label(["Inscrição", "Candidato", "CPF", "E-mail", "Telefone"]);
+            #$tabela->set_width([10, 20, 55, 15]);
+            $tabela->set_align(["center", "left", "center", "left"]);
+            $tabela->set_numeroOrdem(true);
+            $tabela->set_funcao([null, "plm"]);
+
+            $tabela->show();
+            break;
+        ################################################################    
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

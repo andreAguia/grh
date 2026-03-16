@@ -230,6 +230,9 @@ class Petec {
         $tabela->set_classe([null, null, null, null, null, null, "petec"]);
         $tabela->set_metodo([null, null, null, null, null, null, "exibePdfPetec"]);
 
+        $tabela->set_rowspan(0);
+        $tabela->set_grupoCorColuna(0);
+
         $tabela->set_conteudo($array);
         $tabela->set_totalRegistro(false);
         $tabela->show();

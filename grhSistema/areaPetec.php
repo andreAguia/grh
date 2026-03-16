@@ -90,7 +90,7 @@ if ($acesso) {
 
         # Geral
         $botao1 = new Link("Geral", "?fase=geral");
-        if ($fase == "geral") {
+        if ($fase == "geral2") {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -98,8 +98,8 @@ if ($acesso) {
         $menu1->add_link($botao1, "right");
 
         # Portaria 418/25
-        $botao1 = new Link("Portaria 418/25", "?fase=418");
-        if ($fase == "418") {
+        $botao1 = new Link("Portaria 418/25", "?fase=exibeLista&parametroMarcador=4");
+        if ($fase == "exibeLista" AND $parametroMarcador == "4") {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -107,8 +107,8 @@ if ($acesso) {
         $menu1->add_link($botao1, "right");
 
         # Portaria 473/25
-        $botao1 = new Link("Portaria 473/25", "?fase=473");
-        if ($fase == "473") {
+        $botao1 = new Link("Portaria 473/25", "?fase=exibeLista&parametroMarcador=5");
+        if ($fase == "exibeLista" AND $parametroMarcador == "5") {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -116,8 +116,8 @@ if ($acesso) {
         $menu1->add_link($botao1, "right");
 
         # Portaria 481/25
-        $botao1 = new Link("Portaria 481/25", "?fase=481");
-        if ($fase == "481") {
+        $botao1 = new Link("Portaria 481/25", "?fase=exibeLista&parametroMarcador=6");
+        if ($fase == "exibeLista" AND $parametroMarcador == "6") {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -141,7 +141,7 @@ if ($acesso) {
         $botaoRel->set_imagem($imagem);
 
         if ($fase <> "geral") {
-            if ($parametroSituacao == "Pendentes") {
+            if ($parametroSituacao == "Pendentes" AND $parametroInscricao == "Inscritos") {
                 $menu1->add_link($botaoRel, "right");
             }
         }
@@ -226,6 +226,24 @@ if ($acesso) {
 
         case "geral" :
 
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=geral2');
+            break;
+
+        ################################################################
+
+        case "geral2" :
+
             $grid->fechaColuna();
 
             $grid->abreColuna(12, 12, 3);
@@ -309,104 +327,16 @@ if ($acesso) {
             $tabela->show();
 
             break;
-
+            
         ##############################################################################################################
         /*
-         * Petec - Portaria 418/25
+         * Exibe a lista
          */
 
-        case "418" :
-
-            # Define o idMarcador
-            $idMarcador = 4;
+        case "exibeLista" :
 
             # Quadro de Quantidades
-            $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
-            $listaPetec->exibeTituloGeral();
-            br();
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 12, 3);
-
-            # Dados da Portaria
-            #$petec->exibeDadosPortaria2($idMarcador);
-            $listaPetec->exibeQuadroQuantidades();
-
-            $grid->fechaColuna();
-
-            ##############
-
-            $grid->abreColuna(12, 12, 9);
-
-            if ($parametroSituacao == "Pendentes") {
-
-                # Não Entregaram Certificado    
-                $listaPetec->exibeNaoEntregaram();
-
-                # Horas Insuficientes
-                $listaPetec->exibeHorasInsuficientes();
-            } else {
-
-                # Situação Regular
-                $listaPetec->exibeSituacaoRegular();
-            }
-            break;
-
-        ##############################################################################################################
-        /*
-         * Petec - Portaria 473/25
-         */
-
-        case "473" :
-
-            # Define o idMarcador
-            $idMarcador = 5;
-
-            # Quadro de Quantidades
-            $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
-            $listaPetec->exibeTituloGeral();
-            br();
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12, 12, 3);
-
-            # Dados da Portaria
-            #$petec->exibeDadosPortaria2($idMarcador);
-            $listaPetec->exibeQuadroQuantidades();
-
-            $grid->fechaColuna();
-
-            ##############
-
-            $grid->abreColuna(12, 12, 9);
-
-            if ($parametroSituacao == "Pendentes") {
-
-                # Não Entregaram Certificado    
-                $listaPetec->exibeNaoEntregaram();
-
-                # Horas Insuficientes
-                $listaPetec->exibeHorasInsuficientes();
-            } else {
-
-                # Situação Regular
-                $listaPetec->exibeSituacaoRegular();
-            }
-            break;
-
-        ##############################################################################################################
-
-        /*
-         * Petec - Portaria 481/25
-         */
-
-        case "481":
-
-            # Define o idMarcador
-            $idMarcador = 6;
-
-            # Quadro de Quantidades
-            $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeTituloGeral();
             br();
 
@@ -456,22 +386,7 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
-
-            # Tradutor (depois eu melhoro isso)
-            switch ($parametroMarcador) {
-                case "418" :
-                    $idMarcador = 4;
-                    break;
-
-                case "473" :
-                    $idMarcador = 5;
-                    break;
-
-                case "481":
-                    $idMarcador = 6;
-                    break;
-            }
-
+            
             # Título            
             $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, null, true);
 

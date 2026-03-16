@@ -538,9 +538,6 @@ if ($acesso) {
                     $cadastroReserva = 3 * $numeroVagas;
                     $foraCadastro = $numeroVagas + $cadastroReserva;
 
-                    br();
-                    echo $numCargos;
-
                     # Monta o select
                     $select .= "SELECT inscricao,
                                        nome,

@@ -75,7 +75,6 @@ if ($acesso) {
     # Cabeçalho da Página
     if ($fase <> "relatorio") {
         AreaServidor::cabecalho();
-
         br();
 
         # Cria um menu
@@ -361,7 +360,6 @@ if ($acesso) {
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeTituloGeral();
-            br();
 
             $grid->fechaColuna();
             $grid->abreColuna(12, 12, 3);

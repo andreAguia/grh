@@ -404,9 +404,6 @@ if ($acesso) {
                 set_session('origem', "areaPetec.php?fase=exibeLista");
             }
 
-
-            
-
             # Carrega a página específica
             loadPage('servidorFormacao.php');
             break;

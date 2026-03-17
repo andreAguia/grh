@@ -32,6 +32,9 @@ if ($acesso) {
     # Pega a fase
     $fase = get('fase', 'aguardaLista');
 
+    # pega o id (se tiver)
+    $id = soNumeros(get('id'));
+
     # Pega o idConcurso
     $idConcurso = get_session("idConcurso");
 
@@ -195,10 +198,11 @@ if ($acesso) {
             $controle->set_col(4);
             #$form->add_item($controle);
             # cargos por nivel
-            $result = $pessoal->select('SELECT DISTINCT cargo,
+            $result = $pessoal->select("SELECT DISTINCT cargo,
                                                cargo
                                           FROM tbcandidato
-                                       ORDER BY cargo');
+                                          WHERE idConcurso = {$idConcurso}
+                                       ORDER BY cargo");
 
             # acrescenta todos
             array_unshift($result, ['*', '-- Todos --']);
@@ -235,7 +239,8 @@ if ($acesso) {
                               inscricao,
                               nome,
                               cargo,                              
-                              CONVERT(notaFinal, DECIMAL(10,2))
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
@@ -260,7 +265,8 @@ if ($acesso) {
                               inscricao,
                               nome,
                               cargo,                              
-                              CONVERT(notaFinal, DECIMAL(10,2))
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
@@ -285,7 +291,8 @@ if ($acesso) {
                               inscricao,
                               nome,
                               cargo,                              
-                              CONVERT(notaFinal, DECIMAL(10,2))
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
@@ -318,11 +325,18 @@ if ($acesso) {
                         $tabela->set_subtitulo("Todos os Cargos");
                     }
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cargo", "Nota Final"]);
+                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cargo", "Nota Final", "Editar"]);
                     $tabela->set_width([10, 10, 20, 45, 15]);
                     $tabela->set_align(["center", "center", "left", "left", "center"]);
                     $tabela->set_numeroOrdem(true);
                     $tabela->set_funcao([null, null, "plm", "plm"]);
+
+                    # Botão Editar
+                    $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+                    $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+                    # Coloca o objeto link na tabela			
+                    $tabela->set_link([null, null, null, null, null, $botao]);
 
                     $tabela->set_rowspan(0);
                     $tabela->set_grupoCorColuna(0);
@@ -669,6 +683,22 @@ if ($acesso) {
                 }
             }
             break;
+        ##############################################################################################################
+
+        case "editaCandidato" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idCandidatoPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', "cadastroCandidatoAdm.php");
+
+            # Carrega a página específica
+            loadPage('cadastroCandidatoAdmEdita.php');
+            break;
+
         ################################################################      
     }
     $grid->fechaColuna();

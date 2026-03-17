@@ -32,7 +32,7 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroInscricao = post('parametroInscricao', get_session('parametroInscricao', "Inscritos"));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 'Pendentes'));
-    $parametroMarcador = get('parametroMarcador', get_session('parametroMarcador', 4));
+    $parametroMarcador = get('parametroMarcador', get_session('parametroMarcador', 0));
 
     # Joga os parâmetros par as sessions
     set_session('parametroLotacao', $parametroLotacao);
@@ -89,8 +89,8 @@ if ($acesso) {
         $menu1->add_link($botaoVoltar, "left");
 
         # Geral
-        $botao1 = new Link("Geral", "?fase=geral");
-        if ($fase == "geral2") {
+        $botao1 = new Link("Geral", "?fase=geral&parametroMarcador=0");
+        if ($parametroMarcador == 0) {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -99,7 +99,7 @@ if ($acesso) {
 
         # Portaria 418/25
         $botao1 = new Link("Portaria 418/25", "?fase=exibeLista&parametroMarcador=4");
-        if ($fase == "exibeLista" AND $parametroMarcador == "4") {
+        if ($parametroMarcador == "4") {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -108,7 +108,7 @@ if ($acesso) {
 
         # Portaria 473/25
         $botao1 = new Link("Portaria 473/25", "?fase=exibeLista&parametroMarcador=5");
-        if ($fase == "exibeLista" AND $parametroMarcador == "5") {
+        if ($parametroMarcador == 5) {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -117,7 +117,7 @@ if ($acesso) {
 
         # Portaria 481/25
         $botao1 = new Link("Portaria 481/25", "?fase=exibeLista&parametroMarcador=6");
-        if ($fase == "exibeLista" AND $parametroMarcador == "6") {
+        if ($parametroMarcador == 6) {
             $botao1->set_class('button');
         } else {
             $botao1->set_class('hollow button');
@@ -136,7 +136,7 @@ if ($acesso) {
         $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
         $botaoRel = new Button();
         $botaoRel->set_title("Relatório dos servidores em situação irregular");
-        $botaoRel->set_url("?fase=relatorio&parametroMarcador={$fase}");
+        $botaoRel->set_url("?fase=relatorio&parametroMarcador={$parametroMarcador}");
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem);
 
@@ -149,7 +149,11 @@ if ($acesso) {
         $menu1->show();
 
         # Formulário de Pesquisa
-        $form = new Form("?fase={$fase}");
+        if ($parametroMarcador == 0) {
+            $form = new Form("?fase=geral");
+        } else {
+            $form = new Form("?fase=exibeLista");
+        }
 
         /*
          *  Lotação
@@ -327,13 +331,32 @@ if ($acesso) {
             $tabela->show();
 
             break;
-            
+
         ##############################################################################################################
         /*
          * Exibe a lista
          */
 
         case "exibeLista" :
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=exibeLista2');
+            break;
+
+        ################################################################
+
+        case "exibeLista2" :
+
 
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
@@ -377,7 +400,14 @@ if ($acesso) {
             set_session('idServidorPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', "areaPetec.php?fase={$portaria}");
+            if ($parametroMarcador == 0) {
+                set_session('origem', "areaPetec.php?fase=geral");
+            } else {
+                set_session('origem', "areaPetec.php?fase=exibeLista");
+            }
+
+
+            
 
             # Carrega a página específica
             loadPage('servidorFormacao.php');
@@ -386,9 +416,9 @@ if ($acesso) {
         ################################################################
         # Relatório
         case "relatorio" :
-            
+
             # Título            
-            $listaPetec = new ListaPetec($idMarcador, $parametroLotacao, $parametroInscricao, null, true);
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
 
             # Não Entregaram Certificado            
             $listaPetec->exibeNaoEntregaram();

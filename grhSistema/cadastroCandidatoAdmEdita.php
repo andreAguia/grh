@@ -53,6 +53,7 @@ if ($acesso) {
 
     # select do edita
     $selectEdita = "SELECT idfuncional,
+                           cotas, 
                            inscricao,
                            nome,
                            dtNascimento,
@@ -118,6 +119,15 @@ if ($acesso) {
             'size' => 15,
             'col' => 3,
             'title' => 'IdFuncional Quando já possui.'),
+        array(
+            'linha' => 1,
+            'nome' => 'cotas',
+            'label' => 'Cota:',
+            'tipo' => 'combo',
+            'array' => array(null, "NI", "PCD", "HIPO"),
+            'title' => 'Cargo',
+            'col' => 3,
+            'size' => 5),
         array(
             'linha' => 2,
             'nome' => 'inscricao',

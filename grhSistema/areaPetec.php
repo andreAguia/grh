@@ -140,7 +140,7 @@ if ($acesso) {
         $botaoRel->set_imagem($imagem);
 
         if ($fase <> "geral") {
-            if ($parametroSituacao == "Pendentes" AND $parametroInscricao == "Inscritos") {
+            if ($parametroSituacao == "Pendentes") {
                 $menu1->add_link($botaoRel, "right");
             }
         }

@@ -172,7 +172,7 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        if ($fase <> "geral") {
+        if ($fase <> "geral" AND $fase <> "geral2") {
             $controle->set_col(6);
         } else {
             $controle->set_col(12);
@@ -192,7 +192,7 @@ if ($acesso) {
         $controle->set_linha(1);
         $controle->set_col(3);
 
-        if ($fase <> "geral") {
+        if ($fase <> "geral" AND $fase <> "geral2") {
             $form->add_item($controle);
         }
 
@@ -209,7 +209,7 @@ if ($acesso) {
         $controle->set_linha(1);
         $controle->set_col(3);
 
-        if ($fase <> "geral") {
+        if ($fase <> "geral" AND $fase <> "geral2") {
             $form->add_item($controle);
         }
 

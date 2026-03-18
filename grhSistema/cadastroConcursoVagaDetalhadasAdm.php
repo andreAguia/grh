@@ -57,7 +57,7 @@ if ($acesso) {
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT cargoConcurso,
+    $objeto->set_selectLista("SELECT REPLACE(REPLACE(cargoConcurso, '-', '<br/>'), '–', '<br/>'),
                                      CONCAT(cargo,'<br/>', nome),                                     
                                      tbconcursovagadetalhada.vagas,
                                      tbconcursovagadetalhada.vagasPcd,
@@ -90,11 +90,9 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Nome do Cargo No Concurso", "Cargo Efetivo", "Vagas AC", "Vagas PCD", "Vagas Ni", "Vagas Hipo"]);
-    $objeto->set_width([35, 40, 5, 5, 5, 5]);
+    $objeto->set_width([40, 35, 8, 8, 8, 8]);
     $objeto->set_align(["left", "left"]);
-    #$objeto->set_classe([null, null, null, "Concurso", "Concurso"]);
-    #$objeto->set_metodo([null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"]);
-    #$objeto->set_colunaSomatorio([1, 2, 3, 4]);
+    $objeto->set_colunaSomatorio([2, 3, 4,5]);    
     $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados

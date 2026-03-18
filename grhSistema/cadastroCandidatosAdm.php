@@ -199,7 +199,7 @@ if ($acesso) {
             $controle->set_linha(1);
             $controle->set_col(4);
             #$form->add_item($controle);
-            # cargos por nivel
+            # Cargo
             $result = $pessoal->select("SELECT DISTINCT cargo,
                                                cargo
                                           FROM tbcandidato
@@ -233,7 +233,9 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(3);
-            $form->add_item($controle);
+            if ($parametroCargoCandidato <> "*") {
+                $form->add_item($controle);
+            }
 
             $form->show();
 
@@ -263,7 +265,7 @@ if ($acesso) {
                         break;
                 }
 
-                $cadastroReserva = 3 * $numeroVagas;
+                $cadastroReserva = 5 * $numeroVagas;
                 $foraCadastro = $numeroVagas + $cadastroReserva;
 
                 /*
@@ -408,15 +410,42 @@ if ($acesso) {
                     # Pega os dados
                     $row = $pessoal->select($select);
 
+                    # Titulo
+                    titulotable("Cadastro de Candidatos Aprovados");
+
                     # tabela
                     $tabela = new Tabela();
-                    $tabela->set_titulo("Cadastro de Candidatos Aprovados");
+                    $tabela->set_titulo($parametroCargoCandidato);
                     if ($parametroCargoCandidato <> "*") {
 
+                        # Pega o número de vagas de acordo com a cota
+                        switch ($parametroCota) {
+                            // Ampla Concorrência
+                            case "AC":
+                                $subtitulo = "Ampla Concorrência";
+                                break;
+
+                            // Pcd
+                            case "PCD":
+                                $subtitulo = "PCD";
+                                break;
+
+                            // Negros e Índios
+                            case "Ni":
+                                $subtitulo = "Negros e Índios";
+                                break;
+
+                            // Hipossuficiente Econômico
+                            case "Hipo":
+                                $subtitulo = "Hipossuficiente Econômico";
+                                break;
+                        }
+
+
                         if (empty($numeroVagas)) {
-                            $tabela->set_subtitulo("{$parametroCargoCandidato}");
+                            $tabela->set_subtitulo($parametroCargoCandidato);
                         } else {
-                            $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
+                            $tabela->set_subtitulo("{$subtitulo} - {$numeroVagas} Vagas");
                         }
                     } else {
                         $tabela->set_subtitulo("Todos os Cargos");
@@ -448,6 +477,7 @@ if ($acesso) {
                             'operador' => '=',
                             'id' => "reserva")));
 
+                    $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
                     $tabela->show();
 
                     ####################################################################################

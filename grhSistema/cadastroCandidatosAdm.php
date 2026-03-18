@@ -281,7 +281,12 @@ if ($acesso) {
                               inscricao,
                               nome,
                               dtNascimento,
-                              cotas,                             
+                              CASE
+                                WHEN cotas = 'Ni' THEN 'Negros e Índios'
+                                WHEN cotas = 'PCD' THEN 'PCD'
+                                WHEN cotas = 'Hipo' THEN 'Hipossuficiente Econômico'
+                                ELSE ''
+                               END AS cotas,                             
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
                          FROM tbcandidato
@@ -327,7 +332,12 @@ if ($acesso) {
                               inscricao,
                               nome,
                               dtNascimento,
-                              cotas,
+                              CASE
+                                WHEN cotas = 'Ni' THEN 'Negros e Índios'
+                                WHEN cotas = 'PCD' THEN 'PCD'
+                                WHEN cotas = 'Hipo' THEN 'Hipossuficiente Econômico'
+                                ELSE ''
+                               END AS cotas,    
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
                          FROM tbcandidato
@@ -373,7 +383,12 @@ if ($acesso) {
                               inscricao,
                               nome,
                               dtNascimento,
-                              cotas,                              
+                              CASE
+                                WHEN cotas = 'Ni' THEN 'Negros e Índios'
+                                WHEN cotas = 'PCD' THEN 'PCD'
+                                WHEN cotas = 'Hipo' THEN 'Hipossuficiente Econômico'
+                                ELSE ''
+                               END AS cotas,                                 
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
                          FROM tbcandidato

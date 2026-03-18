@@ -280,6 +280,7 @@ if ($acesso) {
                     $select = "(SELECT 'Vaga',
                               inscricao,
                               nome,
+                              dtNascimento,
                               cotas,                             
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
@@ -315,7 +316,7 @@ if ($acesso) {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
 
-                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}) UNION ";
+                    $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$numeroVagas}) UNION ";
 
                     /*
                      * Candidatos no Cadastro de reserva
@@ -325,6 +326,7 @@ if ($acesso) {
                     $select .= "(SELECT 'Cadastro de Reserva',
                               inscricao,
                               nome,
+                              dtNascimento,
                               cotas,
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
@@ -360,7 +362,7 @@ if ($acesso) {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
 
-                    $select .= " ORDER BY 5 DESC LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
+                    $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
 
                     /*
                      * Candidatos FORA no Cadastro de reserva
@@ -370,6 +372,7 @@ if ($acesso) {
                     $select .= "(SELECT '---',
                               inscricao,
                               nome,
+                              dtNascimento,
                               cotas,                              
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
@@ -405,7 +408,7 @@ if ($acesso) {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
 
-                    $select .= " ORDER BY 5 DESC LIMIT {$foraCadastro}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
+                    $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$foraCadastro}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
                     ##########
                     # Pega os dados
                     $row = $pessoal->select($select);
@@ -451,18 +454,18 @@ if ($acesso) {
                         $tabela->set_subtitulo("Todos os Cargos");
                     }
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cota", "Nota Final", "Editar"]);
-                    $tabela->set_width([10, 10, 40, 10, 15]);
+                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
+                    $tabela->set_width([10, 10, 30, 10, 10, 15]);
                     $tabela->set_align(["center", "center", "left", "center"]);
                     $tabela->set_numeroOrdem(true);
-                    $tabela->set_funcao([null, null, "plm",]);
+                    $tabela->set_funcao([null, null, "plm", "date_to_php"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                     $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, $botao]);
+                    $tabela->set_link([null, null, null, null, null, null, $botao]);
 
                     $tabela->set_rowspan(0);
                     $tabela->set_grupoCorColuna(0);

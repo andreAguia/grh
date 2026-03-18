@@ -124,7 +124,12 @@ if ($acesso) {
             'nome' => 'cotas',
             'label' => 'Cota:',
             'tipo' => 'combo',
-            'array' => array(null, "NI", "PCD", "HIPO"),
+            'array' => [
+                [null, "Ampla Concorrência"],
+                ["PCD", "PCD"],
+                ["Ni", "Negros e Índios"],
+                ["Hipo", "Hipossuficiente Econômico"]
+            ],
             'title' => 'Cargo',
             'col' => 3,
             'size' => 5),

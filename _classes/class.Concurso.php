@@ -314,7 +314,7 @@ class Concurso {
     /**
      * Método get_numVagasConcurso
      * 
-     * Informa o numero de vagas por concurso
+     * Informa o numero de vagas planejadas por concurso
      */
     public function get_numVagasConcurso($idConcurso) {
 
@@ -1611,17 +1611,123 @@ class Concurso {
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasDetalhadasConcursoAdm($cargoConcurso) {
+    public function get_numVagasAcAprovadas($idConcurso = null, $cargoConcurso = null) {
 
         # Verifica o parêmetro
         if (empty($cargoConcurso)) {
             return null;
         }
 
+        if (empty($idConcurso)) {
+            return null;
+        }
+
         # Monta o select
         $select = "SELECT vagas
                       FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}'";
+                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (isset($row[0])) {
+            return $row[0];
+        } else {
+            return null;
+        }
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_numVagasConcurso
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_numVagasPcdAprovadas($idConcurso = null, $cargoConcurso = null) {
+
+        # Verifica o parêmetro
+        if (empty($cargoConcurso)) {
+            return null;
+        }
+
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT vagasPcd
+                      FROM tbconcursovagadetalhada
+                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (isset($row[0])) {
+            return $row[0];
+        } else {
+            return null;
+        }
+    }
+
+     #####################################################################################
+
+    /**
+     * Método get_numVagasConcurso
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_numVagasNiAprovadas($idConcurso = null, $cargoConcurso = null) {
+
+        # Verifica o parêmetro
+        if (empty($cargoConcurso)) {
+            return null;
+        }
+
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT vagasNi
+                      FROM tbconcursovagadetalhada
+                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (isset($row[0])) {
+            return $row[0];
+        } else {
+            return null;
+        }
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_numVagasConcurso
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_numVagasHipoAprovadas($idConcurso = null, $cargoConcurso = null) {
+
+        # Verifica o parêmetro
+        if (empty($cargoConcurso)) {
+            return null;
+        }
+
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Monta o select
+        $select = "SELECT vagasHipo
+                      FROM tbconcursovagadetalhada
+                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
 
         # Pega os dados
         $pessoal = new Pessoal();

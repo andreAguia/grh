@@ -57,22 +57,25 @@ if ($acesso) {
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT cargo,
-                                     nome,
-                                     cargoConcurso,
+    $objeto->set_selectLista("SELECT cargoConcurso,
+                                     CONCAT(cargo,'<br/>', nome),                                     
                                      tbconcursovagadetalhada.vagas,
-                                     cotas,
+                                     tbconcursovagadetalhada.vagasPcd,
+                                     tbconcursovagadetalhada.vagasNi,
+                                     tbconcursovagadetalhada.vagasHipo,
                                      idConcursoVagaDetalhada
                                  FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
                                                               JOIN tbtipocargo USING (idTipoCargo)
                                 WHERE idConcurso = {$idConcurso}
-                             ORDER BY 1");
+                             ORDER BY cargoConcurso");
 
     # select do edita
     $objeto->set_selectEdita("SELECT idCargo,
                                      cargoConcurso,
                                      vagas,
-                                     cotas,
+                                     vagasPcd,
+                                     vagasNi,
+                                     vagasHipo,
                                      obs,
                                      idConcurso,
                                      idConcurso
@@ -86,9 +89,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cargo", "Função", "Nome do Cargo Listagem", "Vagas", "Cota"]);
-    $objeto->set_width([25, 20, 35, 5, 10]);
-    $objeto->set_align(["left", "left", "left"]);
+    $objeto->set_label(["Nome do Cargo No Concurso", "Cargo Efetivo", "Vagas AC", "Vagas PCD", "Vagas Ni", "Vagas Hipo"]);
+    $objeto->set_width([35, 40, 5, 5, 5, 5]);
+    $objeto->set_align(["left", "left"]);
     #$objeto->set_classe([null, null, null, "Concurso", "Concurso"]);
     #$objeto->set_metodo([null, null, null, "get_totalVagasConcurso", "get_numServidoresAtivosConcursoCargo"]);
     #$objeto->set_colunaSomatorio([1, 2, 3, 4]);
@@ -120,7 +123,8 @@ if ($acesso) {
 
     # Campos para o formulario
     $objeto->set_campos(array(
-        array('linha' => 1,
+        array(
+            'linha' => 1,
             'nome' => 'idCargo',
             'title' => 'Cargo',
             'label' => 'Cargo:',
@@ -130,23 +134,39 @@ if ($acesso) {
             'array' => $result3,
             'col' => 12,
             'size' => 5),
-        array('linha' => 2,
+        array(
+            'linha' => 2,
             'nome' => 'cargoConcurso',
             'label' => 'Nomenclatura do Cargo na Listagem do Concurso:',
             'tipo' => 'combo',
             'array' => $result4,
             'col' => 12,
             'size' => 250),
-        array('linha' => 3,
+        array(
+            'linha' => 3,
             'nome' => 'vagas',
-            'label' => 'Vagas:',
-            'tipo' => 'texto',
+            'label' => 'Vagas Ampla Concorrência:',
+            'tipo' => 'numero',
+            'col' => 3,
+            'size' => 5),
+        array(
+            'linha' => 3,
+            'nome' => 'vagasPcd',
+            'label' => 'Vagas Pcd:',
+            'tipo' => 'numero',
+            'col' => 3,
+            'size' => 5),
+        array(
+            'linha' => 3,
+            'nome' => 'vagasNi',
+            'label' => 'Vagas Negros e Indios:',
+            'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
         array('linha' => 3,
-            'nome' => 'cotas',
-            'label' => 'Cotas:',
-            'tipo' => 'texto',
+            'nome' => 'vagasHipo',
+            'label' => 'Vagas Hipossuficiente Econômico:',
+            'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
         array('linha' => 4,

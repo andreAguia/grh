@@ -57,8 +57,7 @@ if ($acesso) {
     $objeto->set_voltarLista('areaConcursoAdm.php');
 
     # select da lista
-    $objeto->set_selectLista("SELECT REPLACE(REPLACE(cargoConcurso, '-', '<br/>'), '–', '<br/>'),
-                                     CONCAT(cargo,'<br/>', nome),                                     
+    $objeto->set_selectLista("SELECT CONCAT(REPLACE(cargoConcurso, '–', '-'), '<br/>', CONCAT(cargo,' - ', nome)),                                     
                                      tbconcursovagadetalhada.vagas,
                                      tbconcursovagadetalhada.vagasPcd,
                                      tbconcursovagadetalhada.vagasNi,
@@ -89,10 +88,10 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nome do Cargo No Concurso", "Cargo Efetivo", "Vagas AC", "Vagas PCD", "Vagas Ni", "Vagas Hipo"]);
-    $objeto->set_width([40, 35, 8, 8, 8, 8]);
-    $objeto->set_align(["left", "left"]);
-    $objeto->set_colunaSomatorio([2, 3, 4,5]);    
+    $objeto->set_label(["Cargo", "Vagas AC", "Vagas PCD", "Vagas Ni", "Vagas Hipo"]);
+    $objeto->set_width([60, 8, 8, 8, 8]);
+    $objeto->set_align(["left"]);
+    $objeto->set_colunaSomatorio([1, 2, 3, 4]);
     $objeto->set_totalRegistro(false);
 
     # Classe do banco de dados

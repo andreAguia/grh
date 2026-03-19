@@ -135,8 +135,8 @@ if ($acesso) {
             'linha' => 2,
             'nome' => 'cargoConcurso',
             'label' => 'Nomenclatura do Cargo na Listagem do Concurso:',
-            'tipo' => 'combo',
-            'array' => $result4,
+            'tipo' => 'texto',
+            'datalist' => $result4,
             'col' => 12,
             'size' => 250),
         array(

@@ -437,7 +437,7 @@ if ($acesso) {
                     $tabela->set_titulo($parametroCargoCandidato);
                     if ($parametroCargoCandidato <> "*") {
 
-                        # Pega o número de vagas de acordo com a cota
+                        # Subtitulo
                         switch ($parametroCota) {
                             // Ampla Concorrência
                             case "AC":
@@ -501,55 +501,111 @@ if ($acesso) {
 
                     ####################################################################################
                 } else {
+                    /*
+                     * Quando não tem número de vagas cadastradas
+                     */
+                    # Monta o select
+                    $select = "SELECT  '---',
+                              inscricao,
+                              nome,
+                              dtNascimento,
+                              CASE
+                                WHEN cotas = 'Ni' THEN 'Negros e Índios'
+                                WHEN cotas = 'PCD' THEN 'PCD'
+                                WHEN cotas = 'Hipo' THEN 'Hipossuficiente Econômico'
+                                ELSE ''
+                               END AS cotas,                                 
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
 
-                    br(5);
-                    p("Não há vagas cadastradas !", "f14", "center");
-//                    /*
-//                     * Quando não tem número de vagas cadastradas
-//                     */
-//                    # Monta o select
-//                    $select = "SELECT inscricao,
-//                              nome,
-//                              cargo,                              
-//                              CONVERT(notaFinal, DECIMAL(10,2))
-//                         FROM tbcandidato
-//                        WHERE idConcurso = {$idConcurso}";
-//
-//                    # nome
-//                    if (!is_null($parametroNome)) {
-//                        $select .= " AND nome LIKE '%{$parametroNome}%'";
-//                    }
-//
-//                    # cargo
-//                    if ($parametroCargoCandidato <> "*") {
-//                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-//                    }
-//
-//                    $select .= " ORDER BY 4 ";
-//
-//                    # Pega os dados
-//                    $row = $pessoal->select($select);
-//
-//                    # tabela
-//                    $tabela = new Tabela();
-//                    $tabela->set_titulo("Cadastro de Candidatos Aprovados");
-//                    if ($parametroCargoCandidato <> "*") {
-//
-//                        if (empty($numeroVagas)) {
-//                            $tabela->set_subtitulo("{$parametroCargoCandidato}");
-//                        } else {
-//                            $tabela->set_subtitulo("{$parametroCargoCandidato}<br/>{$numeroVagas} Vagas");
-//                        }
-//                    } else {
-//                        $tabela->set_subtitulo("Todos os Cargos");
-//                    }
-//                    $tabela->set_conteudo($row);
-//                    $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Nota Final"]);
-//                    $tabela->set_width([10, 30, 45, 15]);
-//                    $tabela->set_align(["center", "lrft", "left", "center"]);
-//                    $tabela->set_numeroOrdem(true);
-//                    $tabela->set_funcao([null, "plm", "plm"]);
-//                    $tabela->show();
+                    # Pega o candidato de acordo com a cota
+                    switch ($parametroCota) {
+
+                        // Pcd
+                        case "PCD":
+                            $select .= " AND cotas = 'PCD'";
+                            break;
+
+                        // Negros e Índios
+                        case "Ni":
+                            $select .= " AND cotas = 'Ni'";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $select .= " AND cotas = 'Hipo'";
+                            break;
+                    }
+
+                    # nome
+                    if (!is_null($parametroNome)) {
+                        $select .= " AND nome LIKE '%{$parametroNome}%'";
+                    }
+
+                    # cargo
+                    if ($parametroCargoCandidato <> "*") {
+                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
+
+                    $select .= " ORDER BY 6 DESC, dtNascimento";
+
+                    # Pega os dados
+                    $row = $pessoal->select($select);
+
+                    # Titulo
+                    titulotable("Cadastro de Candidatos Aprovados");
+
+                    # tabela
+                    $tabela = new Tabela();
+                    $tabela->set_titulo($parametroCargoCandidato);
+                    if ($parametroCargoCandidato <> "*") {
+
+                        # Subtitulo
+                        switch ($parametroCota) {
+                            // Ampla Concorrência
+                            case "AC":
+                                $subtitulo = "Ampla Concorrência";
+                                break;
+
+                            // Pcd
+                            case "PCD":
+                                $subtitulo = "PCD";
+                                break;
+
+                            // Negros e Índios
+                            case "Ni":
+                                $subtitulo = "Negros e Índios";
+                                break;
+
+                            // Hipossuficiente Econômico
+                            case "Hipo":
+                                $subtitulo = "Hipossuficiente Econômico";
+                                break;
+                        }
+
+                        $tabela->set_subtitulo("{$subtitulo} - SEM Vagas");
+                    } else {
+                        $tabela->set_subtitulo("Todos os Cargos");
+                    }
+                    $tabela->set_conteudo($row);
+                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
+                    $tabela->set_width([10, 10, 30, 10, 10, 15]);
+                    $tabela->set_align(["center", "center", "left", "center"]);
+                    $tabela->set_numeroOrdem(true);
+                    $tabela->set_funcao([null, null, "plm", "date_to_php"]);
+
+                    # Botão Editar
+                    $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+                    $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+                    # Coloca o objeto link na tabela			
+                    $tabela->set_link([null, null, null, null, null, null, $botao]);
+
+                    $tabela->set_rowspan(0);
+                    $tabela->set_grupoCorColuna(0);
+                    $tabela->show();
                 }
             } else {
                 # Rotina para todos os cargos

@@ -88,7 +88,7 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cargo", "Vagas AC", "Vagas PCD", "Vagas Ni", "Vagas Hipo"]);
+    $objeto->set_label(["Cargo", "Vagas AC", "Vagas PCD (5%)", "Vagas Ni (20%)", "Vagas Hipo (10%)"]);
     $objeto->set_width([60, 8, 8, 8, 8]);
     $objeto->set_align(["left"]);
     $objeto->set_colunaSomatorio([1, 2, 3, 4]);

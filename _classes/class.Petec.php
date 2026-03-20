@@ -580,7 +580,7 @@ class Petec {
         # Limita a Tela 
         $grid = new Grid();
         $grid->abreColuna(3);
-        
+
         $pessoal = new Pessoal();
 
         /*
@@ -590,47 +590,21 @@ class Petec {
         $this->exibeQuadroPortariasPetec(true);
 
         $grid->fechaColuna();
-        
-        /*
-         * Exibe os contatos
-         */
-        
-        $grid->abreColuna(3);
 
-        # Pega os telefones
-        $telefones = $pessoal->get_telefones($idServidor);
-
-        # Pega os Emails
-        $emailPessoal = $pessoal->get_emailPessoal($idServidor);
-        $emailUenf = $pessoal->get_emailUenf($idServidor);
-        $emailOutro = $pessoal->get_emailOutro($idServidor);
-        $emails = null;
-
-        # junta os Emails
-        if (!vazio($emailOutro)) {
-            $emails .= "$emailOutro<br/>";
-        }
-
-        if (!vazio($emailPessoal)) {
-            $emails .= "$emailPessoal<br/>";
-        }
-
-        if (!vazio($emailUenf)) {
-            $emails .= "$emailUenf<br/>";
-        }
-
-        #$emails = trataNulo($emails);
-
-        tituloTable("Contatos:");
-        br();
-
-        #p("Telefone(s)","center","f12");
-        p($telefones, "center", "f14");
-        #p("E-mail(s)","center","f12");
-        p($emails, "center", "f14");
-
-        $grid->fechaColuna();
-        $grid->abreColuna(6);
+//        /*
+//         * Exibe os contatos
+//         */
+//
+//        $grid->abreColuna(2);
+//
+//        tituloTable("Email:");
+//        br();
+//
+//        
+//        p($pessoal->get_emailUenf($idServidor), "center", "f14");
+//
+//        $grid->fechaColuna();
+        $grid->abreColuna(9);
 
         /*
          * Exibe os dados dos certificados entregues

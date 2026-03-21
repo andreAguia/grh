@@ -59,7 +59,7 @@ if ($acesso) {
         set_session('parametroNome', $parametroNome);
         set_session('parametroCota', $parametroCota);
     }
-    
+
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -244,45 +244,57 @@ if ($acesso) {
 
             $form->show();
 
-            # Rotina quando se seleciona um cargo
+            /*
+             * Rotina quando se seleciona um cargo
+             */
             if ($parametroCargoCandidato <> "*") {
 
-                # Pega o número de vagas de acordo com a cota
+                # Define os dados de acordo com as cotas
                 switch ($parametroCota) {
                     // Ampla Concorrência
                     case "AC":
                         $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $parametroCargoCandidato);
+                        $campo = "classifAc";
+                        $subtitulo = "Ampla Concorrência";
                         break;
 
                     // Pcd
                     case "PCD":
                         $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $parametroCargoCandidato);
+                        $campo = "classifPdc";
+                        $subtitulo = "PCD";
                         break;
 
                     // Negros e Índios
                     case "Ni":
                         $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $parametroCargoCandidato);
+                        $campo = "classifNi";
+                        $subtitulo = "Negros e Índios";
                         break;
 
                     // Hipossuficiente Econômico
                     case "Hipo":
                         $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $parametroCargoCandidato);
+                        $campo = "classifHipo";
+                        $subtitulo = "Hipossuficiente Econômico";
                         break;
                 }
 
+                # Define as variáveis de número de vagas
                 $cadastroReserva = 5 * $numeroVagas;
                 $foraCadastro = $numeroVagas + $cadastroReserva;
-                
+
                 /*
                  * Quando se tem número de vagas cadastrados
                  */
                 if (!empty($numeroVagas)) {
 
                     /*
-                     * Candidatos na Vaga
+                     * Candidatos Aprovado no número de Vagas
                      */
                     # Monta o select
-                    $select = "(SELECT 'Vaga',
+                    $select = "(SELECT {$campo},
+                              'Vaga',
                               inscricao,
                               nome,
                               dtNascimento,
@@ -292,23 +304,9 @@ if ($acesso) {
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
-                    # Pega o candidato de acordo com a cota
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " AND classifPcd IS NOT NULL";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " AND classifNi IS NOT NULL";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " AND classifHipo IS NOT NULL";
-                            break;
+                    # Cota
+                    if ($parametroCota <> "AC") {
+                        $select .= " AND {$campo} IS NOT NULL";
                     }
 
                     # nome
@@ -320,37 +318,17 @@ if ($acesso) {
                     if ($parametroCargoCandidato <> "*") {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
-                    
-                    # Ordena de acorto do as cotas
-                    switch ($parametroCota) {
 
-                        // Pcd
-                        case "PCD":
-                            $select .= " ORDER BY classifPcd LIMIT {$numeroVagas}) UNION ";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " ORDER BY classifNi LIMIT {$numeroVagas}) UNION ";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " ORDER BY classifHipo LIMIT LIMIT {$numeroVagas}) UNION ";
-                            break;
-                        
-                        // Padrão - Ampla Concorrência
-                        default:
-                           $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$numeroVagas}) UNION ";
-                            break;
-                    }
+                    # Ordenação
+                    $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}) UNION ";
 
                     /*
                      * Candidatos no Cadastro de reserva
                      */
 
                     # Monta o select
-                    $select .= "(SELECT 'Cadastro de Reserva',
+                    $select .= "(SELECT {$campo},
+                              'Cadastro de Reserva',
                               inscricao,
                               nome,
                               dtNascimento,
@@ -361,22 +339,8 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                     # Pega o candidato de acordo com a cota
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " AND classifPcd IS NOT NULL";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " AND classifNi IS NOT NULL";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " AND classifHipo IS NOT NULL";
-                            break;
+                    if ($parametroCota <> "AC") {
+                        $select .= " AND {$campo} IS NOT NULL";
                     }
 
                     # nome
@@ -388,38 +352,18 @@ if ($acesso) {
                     if ($parametroCargoCandidato <> "*") {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
-                    
-                    
+
+
                     # Ordena de acorto do as cotas
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " ORDER BY classifPcd LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " ORDER BY classifNi LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " ORDER BY classifHipo LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
-                            break;
-                        
-                        // Padrão - Ampla Concorrência
-                        default:
-                            $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
-                            break;
-                    }
+                    $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
 
                     /*
                      * Candidatos FORA no Cadastro de reserva
                      */
 
                     # Monta o select
-                    $select .= "(SELECT '---',
+                    $select .= "(SELECT {$campo},
+                              '---',
                               inscricao,
                               nome,
                               dtNascimento,
@@ -430,22 +374,8 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                     # Pega o candidato de acordo com a cota
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " AND classifPcd IS NOT NULL";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " AND classifNi IS NOT NULL";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " AND classifHipo IS NOT NULL";
-                            break;
+                    if ($parametroCota <> "AC") {
+                        $select .= " AND {$campo} IS NOT NULL";
                     }
 
                     # nome
@@ -457,32 +387,12 @@ if ($acesso) {
                     if ($parametroCargoCandidato <> "*") {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
-                    
+
                     # Ordena de acorto do as cotas
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " ORDER BY classifPcd LIMIT {$foraCadastro}, 10000)";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " ORDER BY classifNi LIMIT {$foraCadastro}, 10000)";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " ORDER BY classifHipo LIMIT {$foraCadastro}, 10000)";
-                            break;
-                        
-                        // Padrão - Ampla Concorrência
-                        default:
-                            $select .= " ORDER BY 6 DESC, dtNascimento LIMIT {$foraCadastro}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
-                            break;
-                    }
+                    $select .= " ORDER BY {$campo} LIMIT {$foraCadastro}, 10000)"; // Gambiarra para pegar os registroa a partir das vagas até o fim
                     
-                    ##########
+                    echo $select;
+
                     # Pega os dados
                     $row = $pessoal->select($select);
 
@@ -492,66 +402,32 @@ if ($acesso) {
                     # tabela
                     $tabela = new Tabela();
                     $tabela->set_titulo($parametroCargoCandidato);
-                    if ($parametroCargoCandidato <> "*") {
-
-                        # Subtitulo
-                        switch ($parametroCota) {
-                            // Ampla Concorrência
-                            case "AC":
-                                $subtitulo = "Ampla Concorrência";
-                                break;
-
-                            // Pcd
-                            case "PCD":
-                                $subtitulo = "PCD";
-                                break;
-
-                            // Negros e Índios
-                            case "Ni":
-                                $subtitulo = "Negros e Índios";
-                                break;
-
-                            // Hipossuficiente Econômico
-                            case "Hipo":
-                                $subtitulo = "Hipossuficiente Econômico";
-                                break;
-                        }
-
-
-                        if (empty($numeroVagas)) {
-                            $tabela->set_subtitulo($parametroCargoCandidato);
-                        } else {
-                            $tabela->set_subtitulo("{$subtitulo} - {$numeroVagas} Vagas");
-                        }
-                    } else {
-                        $tabela->set_subtitulo("Todos os Cargos");
-                    }
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
-                    $tabela->set_width([10, 10, 30, 10, 10, 15]);
-                    $tabela->set_align(["center", "center", "left", "center"]);
-                    $tabela->set_numeroOrdem(true);
-                    $tabela->set_funcao([null, null, "plm", "date_to_php"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
+                    $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
+                    $tabela->set_align(["center", "center", "center", "left", "center"]);
+                    #$tabela->set_numeroOrdem(true);
+                    $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
 
-                    $tabela->set_classe([null, null, null, null, "Candidato"]);
-                    $tabela->set_metodo([null, null, null, null, "exibeCotas"]);
+                    $tabela->set_classe([null, null, null, null, null, "Candidato"]);
+                    $tabela->set_metodo([null, null, null, null, null, "exibeCotas"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                     $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, $botao]);
+                    $tabela->set_link([null, null, null, null, null, null, null, $botao]);
 
-                    $tabela->set_rowspan(0);
-                    $tabela->set_grupoCorColuna(0);
+                    $tabela->set_rowspan(1);
+                    $tabela->set_grupoCorColuna(1);
 
                     $tabela->set_formatacaoCondicional(array(
-                        array('coluna' => 0,
+                        array('coluna' => 1,
                             'valor' => 'Vaga',
                             'operador' => '=',
                             'id' => "naVaga"),
-                        array('coluna' => 0,
+                        array('coluna' => 1,
                             'valor' => 'Cadastro de Reserva',
                             'operador' => '=',
                             'id' => "reserva")));
@@ -565,7 +441,8 @@ if ($acesso) {
                      * Quando não tem número de vagas cadastradas
                      */
                     # Monta o select
-                    $select = "SELECT  '---',
+                    $select = "SELECT  {$campo},
+                              '---',
                               inscricao,
                               nome,
                               dtNascimento,
@@ -576,22 +453,8 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                     # Pega o candidato de acordo com a cota
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " AND classifPcd IS NOT NULL";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " AND classifNi IS NOT NULL";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " AND classifHipo IS NOT NULL";
-                            break;
+                    if ($parametroCota <> "AC") {
+                        $select .= " AND {$campo} IS NOT NULL";
                     }
 
                     # nome
@@ -603,31 +466,10 @@ if ($acesso) {
                     if ($parametroCargoCandidato <> "*") {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
                     }
-                    
+
                     # Ordena de acorto do as cotas
-                    switch ($parametroCota) {
-
-                        // Pcd
-                        case "PCD":
-                            $select .= " ORDER BY classifPcd";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $select .= " ORDER BY classifNi";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $select .= " ORDER BY classifHipo";
-                            break;
-                        
-                        // Padrão - Ampla Concorrência
-                        default:
-                            $select .= " ORDER BY 6 DESC, dtNascimento";
-                            break;
-                    }
-
+                    $select .= " ORDER BY {$campo}";
+                    
                     # Pega os dados
                     $row = $pessoal->select($select);
 
@@ -672,7 +514,7 @@ if ($acesso) {
                     $tabela->set_align(["center", "center", "left", "center"]);
                     $tabela->set_numeroOrdem(true);
                     $tabela->set_funcao([null, null, "plm", "date_to_php"]);
-                    
+
                     $tabela->set_classe([null, null, null, null, "Candidato"]);
                     $tabela->set_metodo([null, null, null, null, "exibeCotas"]);
 
@@ -688,7 +530,11 @@ if ($acesso) {
                     $tabela->show();
                 }
             } else {
-                # Rotina para todos os cargos
+
+                /*
+                 *  Rotina para todos os cargos
+                 */
+
                 $numeroVagas = null;
 
                 # Monta o select
@@ -704,7 +550,7 @@ if ($acesso) {
                     $select .= " AND nome LIKE '%{$parametroNome}%'";
                 }
 
-                $select .= " ORDER BY 4 DESC, dtNascimento";
+                $select .= " ORDER BY nome";
 
                 # Pega os dados
                 $row = $pessoal->select($select);
@@ -717,7 +563,6 @@ if ($acesso) {
                 $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Nota Final"]);
                 $tabela->set_width([10, 30, 50, 10]);
                 $tabela->set_align(["center", "left", "left"]);
-                $tabela->set_numeroOrdem(true);
                 $tabela->set_funcao([null, "plm", "plm"]);
                 $tabela->show();
             }
@@ -730,12 +575,12 @@ if ($acesso) {
             $atividade = "Visualizou o cadastro de candidatos do cargo {$parametroCargoCandidato}";
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
-            
+
         ################################################################
-            
-            /*
-             * Relatórios
-             */
+
+        /*
+         * Relatórios
+         */
 
         ################################################################
 

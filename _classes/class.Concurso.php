@@ -1624,8 +1624,8 @@ class Concurso {
 
         # Monta o select
         $select = "SELECT vagas
-                      FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+                     FROM tbconcursovagadetalhada
+                    WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
 
         # Pega os dados
         $pessoal = new Pessoal();

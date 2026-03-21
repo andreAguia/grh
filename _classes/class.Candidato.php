@@ -89,6 +89,8 @@ class Candidato {
          * 
          * @syntax Candidato->exibeCotas($id);
          */
+        
+        //arthur tava aqui <(O-O<) <(O-O)> (>O-O)> filho do andre :DDDD
                 
         if (empty($id)) {
             return null;
@@ -111,7 +113,7 @@ class Candidato {
                 if($marcador){
                     $return .= "<br/>";
                 }
-                $return .= "Negros e Índios";
+                $return .= "NI";
             }
             
             # Hipossuficiente Econômic
@@ -119,7 +121,7 @@ class Candidato {
                 if($marcador){
                    $return .= "<br/>";
                 }
-                $return .= "Hipossuficiente Econômic";
+                $return .= "HIPO";
             }
             
             return $return;

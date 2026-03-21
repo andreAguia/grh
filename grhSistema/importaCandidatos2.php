@@ -91,12 +91,13 @@ if ($acesso) {
             }
 
             ### Com Erros 
-            $select = "SELECT classif,
-                              inscricao,
-                              nome,
-                              erro
-                         FROM tbcandidatoimporta
-                        WHERE erro IS NOT NULL 
+            $select = "SELECT idCandidatoImporta,
+                          idConcurso,
+                          nome,
+                          cpf,
+                          erro
+                     FROM tbcandidatoimporta
+                     WHERE erro IS NOT NULL 
                      ORDER BY nome";
 
             $pessoal = new Pessoal();
@@ -118,11 +119,12 @@ if ($acesso) {
             $tabela->set_subtitulo("Registros Com Erros");
             $tabela->set_conteudo($result1);
 
-            $tabela->set_label(["Classificação", "Inscrição", "Nome", "Erro"]);
-            $tabela->set_align(["center", "center", "left", "left"]);
+            $tabela->set_label(["id", "Concurso", "Nome", "Cpf", "Erro"]);
+            $tabela->set_align(["center", "center", "left", "center", "left"]);
 
-//            $tabela->set_classe([null, "Concurso"]);
-//            $tabela->set_metodo([null, "get_nomeConcurso"]);
+            $tabela->set_classe([null, "Concurso"]);
+            $tabela->set_metodo([null, "get_nomeConcurso"]);
+
 //            $tabela->set_editar('?fase=editaRegistro');
 //            $tabela->set_idCampo('idCandidatoImporta');
 //
@@ -131,12 +133,15 @@ if ($acesso) {
             $tabela->show();
 
             ### Sem Erros 
-            $select = "SELECT classif,
-                              inscricao,
-                              nome
-                         FROM tbcandidatoimporta
-                        WHERE erro IS NULL
-                     ORDER BY classif";
+            $select = "SELECT idCandidatoImporta,
+                    idConcurso,
+                    nome,
+                    cpf,
+                    cargo,
+                    notaFinal
+                    FROM tbcandidatoimporta
+                    WHERE erro IS NULL
+                    ORDER BY cargo, notaFinal desc, nome";
 
             $pessoal = new Pessoal();
             $result2 = $pessoal->select($select);
@@ -147,11 +152,12 @@ if ($acesso) {
             $tabela->set_subtitulo("Registros SEM Erros");
             $tabela->set_conteudo($result2);
 
-            $tabela->set_label(["#", "Inscrição", "Nome",]);
-            $tabela->set_align([ "center", "center", "left"]);
+            $tabela->set_label(["id", "Concurso", "Nome", "Cpf", "Cargo", "Nota"]);
+            $tabela->set_align(["center", "center", "left", "center", "left"]);
 
-//            $tabela->set_classe([null, "Concurso"]);
-//            $tabela->set_metodo([null, "get_nomeConcurso"]);
+            $tabela->set_classe([null, "Concurso"]);
+            $tabela->set_metodo([null, "get_nomeConcurso"]);
+
 //            $tabela->set_editar('?fase=editaRegistro');
 //            $tabela->set_idCampo('idCandidatoImporta');
 //
@@ -314,9 +320,27 @@ if ($acesso) {
 
                 # Campos
                 $campos = array(
-                    "nome",
+                    "idConcurso",
                     "inscricao",
-                    "classif",
+                    "nome",
+                    "identidade",
+                    "cpf",
+                    "dtNascimento",
+                    "cargo",
+                    "tipoDeficiecia",
+                    "notaFinal",
+                    "resultado",
+                    "endereco",
+                    "num",
+                    "complemento",
+                    "bairro",
+                    "cep",
+                    "cidade",
+                    "estado",
+                    "email",
+                    "telefone",
+                    "celular",
+                    "nomeMae",
                     "erro"
                 );
 
@@ -341,12 +365,39 @@ if ($acesso) {
                         # Pois é a do cabeçalho
                     } else {
 
+                        $cpf = formatCnpjCpf($colunas[3]);
+
+                        if (validaCpf($cpf)) {
+                            $erro = null;
+                        } else {
+                            $erro = "CPF INVÁLIDO";
+                            ;
+                        }
+
                         # Monta o array de gravação de acordo com a ordem da planilha
                         $valor = array(
+                            $idConcurso,
                             $colunas[0],
                             $colunas[1],
                             $colunas[2],
-                            null
+                            $cpf,
+                            date_to_bd($colunas[4]),
+                            $colunas[5],
+                            $colunas[9],
+                            $colunas[10],
+                            $colunas[11],
+                            $colunas[12],
+                            $colunas[13],
+                            $colunas[14],
+                            $colunas[15],
+                            $colunas[16],
+                            $colunas[17],
+                            $colunas[18],
+                            $colunas[19],
+                            $colunas[20],
+                            $colunas[21],
+                            $colunas[23],
+                            $erro
                         );
 
                         # Grava
@@ -465,35 +516,6 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $atividade = "Importou o arquivo csv de candidatos para o banco de dados";
             $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
-
-            loadPage("?");
-            break;
-
-        #################################################
-
-        /*
-         * Exclui a tabela csv que porventura esteja cadastrado
-         */
-
-        case "apagaTabela" :
-
-            br(5);
-            aguarde("Apagando ...");
-
-            loadPage("?fase=apagaTabela2");
-            break;
-
-        #################################################      
-
-        case "apagaTabela2" :
-
-            $candidato->apagaTabelaCsv();
-            
-            # Registra log
-            $Objetolog = new Intra();
-            $data = date("Y-m-d H:i:s");
-            $atividade = "Excluiu o arquivo csv dos candidatos";
-            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 3);
 
             loadPage("?");
             break;

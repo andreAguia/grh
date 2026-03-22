@@ -549,12 +549,9 @@ if ($acesso) {
                     # Pega os dados
                     $row = $pessoal->select($select);
 
-                    # Titulo
-                    titulotable("Cadastro de Candidatos Aprovados");
-
                     # tabela
                     $tabela = new Tabela();
-                    $tabela->set_titulo($parametroCargoCandidato);
+                    $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
                     $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);

@@ -304,9 +304,6 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            
-            $candidato = new Candidato();
-            $candidato->exibeTabelaVagasCargo($parametroCargoCandidato);
 
             ###################################################################
 
@@ -314,6 +311,9 @@ if ($acesso) {
              * Rotina quando se seleciona um cargo
              */
             if ($parametroCargoCandidato <> "*") {
+
+                $candidato = new Candidato();
+                $candidato->exibeTabelaVagasCargo($parametroCargoCandidato);
 
                 /*
                  * Quando se tem número de vagas cadastrados

@@ -90,22 +90,25 @@ if ($acesso) {
                 $menu1->add_link($linkApaga, "right");
             }
 
-            ### Com Erros 
-            $select = "SELECT classif,
-                              inscricao,
-                              nome,
-                              erro
-                         FROM tbcandidatoimporta
-                        WHERE erro IS NOT NULL 
-                     ORDER BY nome";
+
+            # Monta o select
+            $select = "SELECT tbcandidato.classifAc,
+                              tbcandidato.inscricao,
+                              tbcandidato.nome,
+                              tbcandidatoimporta.nome,
+                              tbcandidato.idCandidato,
+                              tbcandidatoimporta.idCandidato
+                         FROM tbcandidato JOIN tbcandidatoimporta USING (inscricao)
+                         
+                     ORDER BY classif";
 
             $pessoal = new Pessoal();
-            $result1 = $pessoal->select($select);
-            $contador1 = $pessoal->count($select);
+            $result2 = $pessoal->select($select);
+            $contador2 = $pessoal->count($select);
 
-            # Importar
-            if ($contador1 == 0) {
-                $botaoImportar = new Link("Gravar no banco de dados", "?fase=gravaBdPetec1Aviso");
+            # Importar - somente se tiver arquivo na memória
+            if ($contador2 > 0) {
+                $botaoImportar = new Link("Gravar no banco de dados", "?fase=gravaBdPetec1Inicio");
                 $botaoImportar->set_class('button warning');
                 $botaoImportar->set_title('Faz a importação dos Candidatos');
                 $menu1->add_link($botaoImportar, "right");
@@ -115,43 +118,14 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo("Arquivo CSV");
-            $tabela->set_subtitulo("Registros Com Erros");
-            $tabela->set_conteudo($result1);
-
-            $tabela->set_label(["Classificação", "Inscrição", "Nome", "Erro"]);
-            $tabela->set_align(["center", "center", "left", "left"]);
-
-//            $tabela->set_classe([null, "Concurso"]);
-//            $tabela->set_metodo([null, "get_nomeConcurso"]);
-//            $tabela->set_editar('?fase=editaRegistro');
-//            $tabela->set_idCampo('idCandidatoImporta');
-//
-//            $tabela->set_excluir('?fase=excluiRegistro&id=');
-//            $tabela->set_idCampo('idCandidatoImporta');
-            $tabela->show();
-
-            ### Sem Erros 
-            $select = "SELECT classif,
-                              inscricao,
-                              nome
-                         FROM tbcandidatoimporta
-                        WHERE erro IS NULL
-                     ORDER BY classif";
-
-            $pessoal = new Pessoal();
-            $result2 = $pessoal->select($select);
-            $contador2 = $pessoal->count($select);
-
-            $tabela = new Tabela();
-            $tabela->set_titulo("Arquivo CSV");
             $tabela->set_subtitulo("Registros SEM Erros");
             $tabela->set_conteudo($result2);
 
-            $tabela->set_label(["#", "Inscrição", "Nome",]);
-            $tabela->set_align([ "center", "center", "left"]);
+            $tabela->set_label(["#", "Inscrição", "Nome", "Busca pelo nº de Inscrição", "IdCandidato BD", "IdCandidato CSV"]);
+            $tabela->set_align(["center", "center", "left", "left"]);
 
-//            $tabela->set_classe([null, "Concurso"]);
-//            $tabela->set_metodo([null, "get_nomeConcurso"]);
+//            $tabela->set_classe([null, null, null, "Candidato"]);
+//            $tabela->set_metodo([null, null, null, "get_candidato"]);
 //            $tabela->set_editar('?fase=editaRegistro');
 //            $tabela->set_idCampo('idCandidatoImporta');
 //
@@ -317,7 +291,7 @@ if ($acesso) {
                     "nome",
                     "inscricao",
                     "classif",
-                    "erro"
+                    "idCandidato"
                 );
 
                 # Inicia o contador de linhas
@@ -346,7 +320,7 @@ if ($acesso) {
                             $colunas[0],
                             $colunas[1],
                             $colunas[2],
-                            null
+                            $candidato->get_idCandidato($colunas[1])
                         );
 
                         # Grava
@@ -387,6 +361,54 @@ if ($acesso) {
 
         ################################################# 
 
+        case "gravaBdPetec1Inicio" :
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $linkVoltar = new Link("Voltar", "?fase=exibeTabela");
+            $linkVoltar->set_class('button');
+            $linkVoltar->set_title('Voltar para página anterior');
+            $linkVoltar->set_accessKey('V');
+            $menu1->add_link($linkVoltar, "left");
+
+            $menu1->show();
+
+            br(5);
+            p("Informe Para Qual COTA será importado");
+
+            # Formulário
+            $form = new Form('?fase=gravaBdPetec1');
+
+            # Cotas
+            $controle = new Input('parametroCota', 'combo', 'Cota:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cota');
+            $controle->set_array([
+                ["classifAc", "Ampla Concorrência"],
+                ["classifPcd", "PCD"],
+                ["classifNi", "Negros e Índios"],
+                ["classifHipo", "Hipossuficiente Econômico"]
+            ]);
+
+            $controle->set_linha(1);
+            $controle->set_col(5);
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('submit', 'submit');
+            $controle->set_valor('Gravar no Banco de Dados');
+            $controle->set_linha(3);
+            $controle->set_tabIndex(3);
+            $controle->set_accessKey('E');
+            $form->add_item($controle);
+
+            $form->show();
+            break;
+
+        #################################################   
+
         case "gravaBdPetec1Aviso" :
 
             br(5);
@@ -399,9 +421,10 @@ if ($acesso) {
 
         case "gravaBdPetec1" :
 
+            $parametroCota = post("parametroCota");
+
             $select = "SELECT * 
-                         FROM tbcandidatoimporta
-                        WHERE erro IS NULL";
+                         FROM tbcandidatoimporta";
 
             $pessoal = new Pessoal();
             $row = $pessoal->select($select);
@@ -409,55 +432,15 @@ if ($acesso) {
             foreach ($row as $tt) {
 
                 $campos = array(
-                    "idConcurso",
-                    "inscricao",
-                    "nome",
-                    "identidade",
-                    "cpf",
-                    "dtNascimento",
-                    "cargo",
-                    "tipoDeficiecia",
-                    "notaFinal",
-                    "resultado",
-                    "endereco",
-                    "num",
-                    "complemento",
-                    "bairro",
-                    "cep",
-                    "cidade",
-                    "estado",
-                    "email",
-                    "telefone",
-                    "celular",
-                    "nomeMae"
+                    $parametroCota
                 );
 
                 $valor = array(
-                    $idConcurso,
-                    $tt["inscricao"],
-                    $tt["nome"],
-                    $tt["identidade"],
-                    $tt["cpf"],
-                    $tt["dtNascimento"],
-                    $tt["cargo"],
-                    $tt["tipoDeficiecia"],
-                    $tt["notaFinal"],
-                    $tt["resultado"],
-                    $tt["endereco"],
-                    $tt["num"],
-                    $tt["complemento"],
-                    $tt["bairro"],
-                    $tt["cep"],
-                    $tt["cidade"],
-                    $tt["estado"],
-                    $tt["email"],
-                    $tt["telefone"],
-                    $tt["celular"],
-                    $tt["nomeMae"]
+                    $tt["classif"]
                 );
 
                 # Grava
-                $pessoal->gravar($campos, $valor, null, "tbcandidato", "idCandidato");
+                $pessoal->gravar($campos, $valor, $tt["idCandidato"], "tbcandidato", "idCandidato");
             }
 
             # Registra log
@@ -488,7 +471,7 @@ if ($acesso) {
         case "apagaTabela2" :
 
             $candidato->apagaTabelaCsv();
-            
+
             # Registra log
             $Objetolog = new Intra();
             $data = date("Y-m-d H:i:s");

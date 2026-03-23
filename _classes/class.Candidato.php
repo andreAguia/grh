@@ -312,13 +312,16 @@ class Candidato {
             $tabela->set_label(["Cargo", "Ampla Concorrência<br/> Vg | Ap.", "", "PCD<br/><br/> Vg | Ap.", "", "Negros e Índios<br/> Vg | Ap.", "", "Hipossuficiente Econômico<br/> Vg | Ap.", ""]);
             $tabela->set_colspanLabel([null, 2, null, 2, null, 2, null, 2]);
             $tabela->set_width([60, 5, 5, 5, 5, 5, 5, 5, 5]);
-            $tabela->set_funcao(["plm", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, null, "Candidato", null, "Candidato", null, "Candidato", null, "Candidato"]);
             $tabela->set_metodo([null, null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
 
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
+
+            $tabela->set_colunaSomatorio([1,3,5,7]);
+
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
@@ -351,10 +354,10 @@ class Candidato {
             $tabela->set_label(["Ampla Concorrência<br/> Vagas | Aprov.", "", "PCD<br/> Vagas | Aprov.", "", "Negros e Índios<br/> Vagas | Aprov.", "", "Hipossuficiente Econômico<br/> Vagas | Aprov.", ""]);
             $tabela->set_colspanLabel([2, null, 2, null, 2, null, 2]);
             $tabela->set_width([12, 12, 12, 12, 12, 12, 12, 12]);
-            $tabela->set_funcao(["trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo", "trataNulo"]);
+            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, "Candidato", null, "Candidato", null, "Candidato", null, "Candidato"]);
-            $tabela->set_metodo([ null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
+            $tabela->set_metodo([null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
 
             $tabela->set_totalRegistro(false);
             $tabela->set_rowspan(0);

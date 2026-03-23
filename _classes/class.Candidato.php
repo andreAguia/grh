@@ -204,7 +204,7 @@ class Candidato {
         }
     }
 
-    ###########################################################
+    ###########################################################    
 
     public function get_numCandidatoPcd($cargo = null) {
         /**
@@ -281,6 +281,114 @@ class Candidato {
 
     ###########################################################
 
+    public function get_numCandidatoAcNaVaga($cargo = null) {
+        /**
+         * retorna o número de candidatos na vaga
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        if (empty($cargo)) {
+            return null;
+        } else {
+            # Pega o número de vagas do Concurso
+            $concurso = new Concurso();
+            $numVagas = $concurso->get_numVagasAcAprovadas(96, $cargo);
+
+            # Pega os candidatos aprovados
+            $numCandidatos = $this->get_numCandidatoAc($cargo);
+
+            # Analisa os dados
+            if ($numCandidatos >= $numVagas) {
+                return intval($numVagas);
+            } else {
+                return intval($numCandidatos);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_numCandidatoPcdNaVaga($cargo = null) {
+        /**
+         * retorna o número de candidatos na vaga
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        if (empty($cargo)) {
+            return null;
+        } else {
+            # Pega o número de vagas do Concurso
+            $concurso = new Concurso();
+            $numVagas = $concurso->get_numVagasPcdAprovadas(96, $cargo);
+
+            # Pega os candidatos aprovados
+            $numCandidatos = $this->get_numCandidatoPcd($cargo);
+
+            # Analisa os dados
+            if ($numCandidatos >= $numVagas) {
+                return intval($numVagas);
+            } else {
+                return intval($numCandidatos);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_numCandidatoNiNaVaga($cargo = null) {
+        /**
+         * retorna o número de candidatos na vaga
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        if (empty($cargo)) {
+            return null;
+        } else {
+            # Pega o número de vagas do Concurso
+            $concurso = new Concurso();
+            $numVagas = $concurso->get_numVagasNiAprovadas(96, $cargo);
+
+            # Pega os candidatos aprovados
+            $numCandidatos = $this->get_numCandidatoNi($cargo);
+
+            # Analisa os dados
+            if ($numCandidatos >= $numVagas) {
+                return intval($numVagas);
+            } else {
+                return intval($numCandidatos);
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_numCandidatoHipoNaVaga($cargo = null) {
+        /**
+         * retorna o número de candidatos na vaga
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        if (empty($cargo)) {
+            return null;
+        } else {
+            # Pega o número de vagas do Concurso
+            $concurso = new Concurso();
+            $numVagas = $concurso->get_numVagasHipoAprovadas(96, $cargo);
+
+            # Pega os candidatos aprovados
+            $numCandidatos = $this->get_numCandidatoHipo($cargo);
+
+            # Analisa os dados
+            if ($numCandidatos >= $numVagas) {
+                return intval($numVagas);
+            } else {
+                return intval($numCandidatos);
+            }
+        }
+    }
+
+    ###########################################################
+
     public function exibeTabelaVagasCargo($cargo = null) {
         /**
          * exibe uma tabela com as vagas de um determinado cargo
@@ -311,12 +419,20 @@ class Candidato {
             $select = "SELECT cargoConcurso,
                               vagas,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasPcd,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasNi,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasHipo,
-                              cargoConcurso
+                              cargoConcurso,
+                              cargoConcurso,
+                              ''
                      FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
                      WHERE tbcargo.idTipoCargo = 4
                  ORDER BY cargoConcurso";
@@ -329,19 +445,19 @@ class Candidato {
             $tabela->set_titulo("Tabela de Vagas");
             $tabela->set_subtitulo("Nível Médio");
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "PCD", "", "Negros e Índios", "", "Hipossuficiente Econômico", ""]);
-            $tabela->set_label2(["", "Vagas", "Aprov.", "Vagas", "Aprov.", "Vagas", "Aprov.", "Vagas", "Aprov."]);
-            $tabela->set_colspanLabel([null, 2, null, 2, null, 2, null, 2]);
-            $tabela->set_width([60, 5, 5, 5, 5, 5, 5, 5, 5]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
+            $tabela->set_label2(["", "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
+            $tabela->set_colspanLabel([null, 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
+            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", null, "Candidato", null, "Candidato", null, "Candidato"]);
-            $tabela->set_metodo([null, null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
+            $tabela->set_classe([null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
 
-            $tabela->set_colunaSomatorio([1, 3, 5, 7]);
+            $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -360,11 +476,18 @@ class Candidato {
             $select = "SELECT cargoConcurso,
                               vagas,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasPcd,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasNi,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasHipo,
+                              cargoConcurso,
                               cargoConcurso
                      FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
                      WHERE tbcargo.idTipoCargo = 3
@@ -378,19 +501,19 @@ class Candidato {
             $tabela->set_titulo("Tabela de Vagas");
             $tabela->set_subtitulo("Nível Superior");
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "PCD", "", "Negros e Índios", "", "Hipossuficiente Econômico", ""]);
-            $tabela->set_label2(["", "Vagas", "Aprov.", "Vagas", "Aprov.", "Vagas", "Aprov.", "Vagas", "Aprov."]);
-            $tabela->set_colspanLabel([null, 2, null, 2, null, 2, null, 2]);
-            $tabela->set_width([60, 5, 5, 5, 5, 5, 5, 5, 5]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
+            $tabela->set_label2(["", "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
+            $tabela->set_colspanLabel([null, 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
+            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", null, "Candidato", null, "Candidato", null, "Candidato"]);
-            $tabela->set_metodo([null, null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
+            $tabela->set_classe([null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
 
-            $tabela->set_colunaSomatorio([1, 3, 5, 7]);
+            $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

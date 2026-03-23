@@ -718,9 +718,13 @@ if ($acesso) {
                 $relatorio->set_funcao([null, null, "plm"]);
                 $relatorio->show();
             } else {
+                #################################################################
+
                 /*
                  *  Todos os cargos
                  */
+
+
                 # Pega os cargos
                 $result = $pessoal->select('SELECT DISTINCT cargoConcurso
                                               FROM tbconcursovagadetalhada
@@ -774,14 +778,20 @@ if ($acesso) {
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
-                        $select = "SELECT {$campo},
-                              inscricao,
+                        if ($primeiro) {
+                            $select = "(SELECT {$campo},";
+                            $primeiro = false;
+                        } else {
+                            $select .= ") UNION (SELECT {$campo},";
+                        }
+
+                        $select .= " inscricao,
                               nome,
                               cpf,
                               email,
                               celular,
-                              CONCAT(cargo,'<br/>{$numeroVagas} Vagas'),
-                              CONVERT(notaFinal, DECIMAL(10,2))
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              CONCAT(cargo,'<br/>{$numeroVagas} Vagas')
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
 
@@ -800,39 +810,22 @@ if ($acesso) {
 
                         # Ordenação
                         $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
-
-                        $row = $pessoal->select($select);
-                        if (count($row) <> 0) {
-
-                            # Relatório
-                            $relatorio = new Relatorio();
-
-                            if ($primeiro) {
-                                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-                                $relatorio->set_subtitulo($subtitulo);
-                                $primeiro = false;
-                                $relatorio->set_dataImpressao(false);
-                            } else {
-
-                                $relatorio->set_dataImpressao(false);
-                                $relatorio->set_cabecalhoRelatorio(false);
-                                $relatorio->set_menuRelatorio(false);
-                                $relatorio->set_log(false);
-                            }
-
-                            $relatorio->set_totalRegistro(false);
-                            $relatorio->set_conteudo($row);
-                            $relatorio->set_label(["#", "Inscrição", "Candidato", "CPF", "E-mail", "Telefone", "Cargo"]);
-                            $relatorio->set_align(["center", "center", "left", "center", "left"]);
-                            $relatorio->set_funcao([null, null, "plm", null, null, null, "plm"]);
-                            $relatorio->set_numGrupo(6);
-
-                            if ($numeroVagas > 0) {
-                                $relatorio->show();
-                            }
-                        }
                     }
                 }
+
+                $select .= ")";
+                $row = $pessoal->select($select);
+
+                # Relatório
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_subtitulo($subtitulo);
+                $relatorio->set_conteudo($row);
+                $relatorio->set_label(["#", "Inscrição", "Candidato", "CPF", "E-mail", "Telefone", "Cargo"]);
+                $relatorio->set_align(["center", "center", "left", "center", "left"]);
+                $relatorio->set_funcao([null, null, "plm", null, null, null, "plm"]);
+                $relatorio->set_numGrupo(7);
+                $relatorio->show();
             }
             break;
         ################################################################     
@@ -895,9 +888,13 @@ if ($acesso) {
                 $relatorio->set_funcao([null, null, "plm", null, null, "date_to_php"]);
                 $relatorio->show();
             } else {
+               #################################################################
+
                 /*
                  *  Todos os cargos
                  */
+                
+                
                 # Pega os cargos
                 $result = $pessoal->select('SELECT DISTINCT cargoConcurso
                                               FROM tbconcursovagadetalhada
@@ -951,8 +948,14 @@ if ($acesso) {
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
-                        $select = "SELECT {$campo},
-                              inscricao,
+                        if ($primeiro) {
+                            $select = "(SELECT {$campo},";
+                            $primeiro = false;
+                        } else {
+                            $select .= ") UNION (SELECT {$campo},";
+                        }
+
+                        $select .= " inscricao,
                               nome,
                               CONCAT(cargo,'<br/>{$numeroVagas} Vagas'),
                               cpf,
@@ -975,40 +978,29 @@ if ($acesso) {
                         # cargo
                         $select .= " AND cargo = '{$item["cargoConcurso"]}'";
 
+                        # Ordenação
                         $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
+                        
+                        }
+                }
 
-                        $row = $pessoal->select($select);
-                        if (count($row) <> 0) {
+                $select .= ")";
+                $row = $pessoal->select($select);
 
-                            # tabela
-                            $relatorio = new Relatorio();
-
-                            if ($primeiro) {
-                                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-                                $relatorio->set_subtitulo($subtitulo);
-                                $primeiro = false;
-                                $relatorio->set_dataImpressao(false);
-                            } else {
-                                $relatorio->set_dataImpressao(false);
-                                $relatorio->set_cabecalhoRelatorio(false);
-                                $relatorio->set_menuRelatorio(false);
-                                $relatorio->set_log(false);
-                            }
-
-                            $relatorio->set_totalRegistro(false);
-                            $relatorio->set_conteudo($row);
+                # Relatório
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_subtitulo($subtitulo);
+                $relatorio->set_conteudo($row);
                             $relatorio->set_label(["#", "Inscrição", "Candidato", "Cargo", "CPF", "Identidade", "Nascimento", "Pontuação"]);
                             $relatorio->set_align(["center", "center", "left", "left"]);
                             $relatorio->set_funcao([null, null, "plm", "plm", null, null, "date_to_php"]);
                             $relatorio->set_numGrupo(3);
-
-                            $relatorio->show();
-                        }
-                    }
-                }
+                $relatorio->show();
             }
             break;
-        ################################################################     
+            
+        ################################################################  
 
         case "relatorio3":
 
@@ -1065,9 +1057,13 @@ if ($acesso) {
                 $relatorio->set_funcao([null, null, "plm"]);
                 $relatorio->show();
             } else {
+                #################################################################
+
                 /*
                  *  Todos os cargos
                  */
+                
+                
                 # Pega os cargos
                 $result = $pessoal->select('SELECT DISTINCT cargoConcurso
                                               FROM tbconcursovagadetalhada
@@ -1121,8 +1117,14 @@ if ($acesso) {
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
-                        $select = "SELECT {$campo},
-                                       inscricao,
+                        if ($primeiro) {
+                            $select = "(SELECT {$campo},";
+                            $primeiro = false;
+                        } else {
+                            $select .= ") UNION (SELECT {$campo},";
+                        }
+
+                        $select .= " inscricao,
                                        nome,
                                        CONVERT(notaFinal, DECIMAL(10,2)),
                                        CONCAT(cargo,'<br/>{$numeroVagas} Vagas')
@@ -1142,43 +1144,29 @@ if ($acesso) {
                         # cargo
                         $select .= " AND cargo = '{$item["cargoConcurso"]}'";
 
+                        # Ordenação
                         $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
+                        
+                    }
+                }
 
-                        $row = $pessoal->select($select);
-                        if (count($row) <> 0) {
+                $select .= ")";
+                $row = $pessoal->select($select);
 
-                            # tabela
-                            $relatorio = new Relatorio();
-
-                            if ($primeiro) {
-                                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-                                $primeiro = false;
-                                $relatorio->set_dataImpressao(false);
-                            } else {
-                                $relatorio->set_dataImpressao(false);
-                                $relatorio->set_cabecalhoRelatorio(false);
-                                $relatorio->set_menuRelatorio(false);
-                                #$relatorio->set_linhaNomeColuna(false);
-                                $relatorio->set_log(false);
-                            }
-
-                            $relatorio->set_totalRegistro(false);
-                            $relatorio->set_conteudo($row);
-                            $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação", "Cargo"]);
+                # Relatório
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_subtitulo($subtitulo);
+                $relatorio->set_conteudo($row);
+                $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação", "Cargo"]);
                             $relatorio->set_align(["center", "center", "left", "center"]);
                             $relatorio->set_funcao([null, null, "plm"]);
                             $relatorio->set_numGrupo(4);
-
-                            if ($numeroVagas > 0) {
-                                $relatorio->show();
-                            }
-                        }
-                    }
-                }
+                $relatorio->show();
             }
             break;
-        ##############################################################################################################
-
+            
+        ################################################################ 
         case "editaCandidato" :
             br(8);
             aguarde();

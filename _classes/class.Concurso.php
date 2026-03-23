@@ -1611,7 +1611,7 @@ class Concurso {
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasAcAprovadas($idConcurso = null, $cargoConcurso = null) {
+    public function get_numVagasAcAprovadas($idConcurso = null, $cargoConcurso = null, $idTipoCargo = null) {
 
         # Verifica o parêmetro
         if (empty($cargoConcurso)) {
@@ -1623,9 +1623,16 @@ class Concurso {
         }
 
         # Monta o select
-        $select = "SELECT vagas
+        if (empty($idTipoCargo)) {
+            $select = "SELECT vagas
                      FROM tbconcursovagadetalhada
                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+        } else {
+            $select = "SELECT SUN(vagas)
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                    WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+        }
+
 
         # Pega os dados
         $pessoal = new Pessoal();
@@ -1672,7 +1679,7 @@ class Concurso {
         }
     }
 
-     #####################################################################################
+    #####################################################################################
 
     /**
      * Método get_numVagasConcurso

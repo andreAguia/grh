@@ -14,6 +14,9 @@ include ("_config.php");
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
 
+# Cadastro de reserva
+$cadReserva = 5;
+
 if ($acesso) {
 
     # Conecta ao Banco de Dados
@@ -91,7 +94,7 @@ if ($acesso) {
                 $subtitulo .= " - SEM Vagas";
             }
         } else {
-            $cadastroReserva = 5 * $numeroVagas;
+            $cadastroReserva = $cadReserva * $numeroVagas;
             $foraCadastro = $numeroVagas + $cadastroReserva;
             $subtitulo .= " - {$numeroVagas} Vaga(s)";
         }
@@ -113,7 +116,7 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio1" AND $fase <> "relatorio2" AND $fase <> "relatorio3") {
+    if ($fase <> "relatorio1" AND $fase <> "relatorio2" AND $fase <> "relatorio3" AND $fase <> "relatorio4") {
         AreaServidor::cabecalho();
     }
 
@@ -240,9 +243,13 @@ if ($acesso) {
             if (empty($parametroNome)) {
                 $menu = new Menu("menuProcedimentos");
                 $menu->add_item('titulo', 'Relatórios de Candidatos');
-                $menu->add_item('linkWindow', 'Na Vaga Com CPF / E-mail / Tel', '?fase=relatorio1');
-                $menu->add_item('linkWindow', 'Na Vaga Com CPF / Ident e Nascimento', '?fase=relatorio2');
-                $menu->add_item('linkWindow', 'Na Vaga Com Pontuação', '?fase=relatorio3');
+                $menu->add_item('titulo1', 'Candidatos na Vaga');
+                $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
+                $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
+                $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
+
+                $menu->add_item('titulo1', 'Todos os Candidatos');
+                $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
                 $menu->show();
             }
 
@@ -774,7 +781,7 @@ if ($acesso) {
                         $cadastroReserva = 0;
                         $foraCadastro = 0;
                     } else {
-                        $cadastroReserva = 3 * $numeroVagas;
+                        $cadastroReserva = $cadReserva * $numeroVagas;
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
@@ -888,13 +895,13 @@ if ($acesso) {
                 $relatorio->set_funcao([null, null, "plm", null, null, "date_to_php"]);
                 $relatorio->show();
             } else {
-               #################################################################
+                #################################################################
 
                 /*
                  *  Todos os cargos
                  */
-                
-                
+
+
                 # Pega os cargos
                 $result = $pessoal->select('SELECT DISTINCT cargoConcurso
                                               FROM tbconcursovagadetalhada
@@ -944,7 +951,7 @@ if ($acesso) {
                         $cadastroReserva = 0;
                         $foraCadastro = 0;
                     } else {
-                        $cadastroReserva = 3 * $numeroVagas;
+                        $cadastroReserva = $cadReserva * $numeroVagas;
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
@@ -980,8 +987,7 @@ if ($acesso) {
 
                         # Ordenação
                         $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
-                        
-                        }
+                    }
                 }
 
                 $select .= ")";
@@ -992,14 +998,14 @@ if ($acesso) {
                 $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
-                            $relatorio->set_label(["#", "Inscrição", "Candidato", "Cargo", "CPF", "Identidade", "Nascimento", "Pontuação"]);
-                            $relatorio->set_align(["center", "center", "left", "left"]);
-                            $relatorio->set_funcao([null, null, "plm", "plm", null, null, "date_to_php"]);
-                            $relatorio->set_numGrupo(3);
+                $relatorio->set_label(["#", "Inscrição", "Candidato", "Cargo", "CPF", "Identidade", "Nascimento", "Pontuação"]);
+                $relatorio->set_align(["center", "center", "left", "left"]);
+                $relatorio->set_funcao([null, null, "plm", "plm", null, null, "date_to_php"]);
+                $relatorio->set_numGrupo(3);
                 $relatorio->show();
             }
             break;
-            
+
         ################################################################  
 
         case "relatorio3":
@@ -1062,8 +1068,8 @@ if ($acesso) {
                 /*
                  *  Todos os cargos
                  */
-                
-                
+
+
                 # Pega os cargos
                 $result = $pessoal->select('SELECT DISTINCT cargoConcurso
                                               FROM tbconcursovagadetalhada
@@ -1113,7 +1119,7 @@ if ($acesso) {
                         $cadastroReserva = 0;
                         $foraCadastro = 0;
                     } else {
-                        $cadastroReserva = 3 * $numeroVagas;
+                        $cadastroReserva = $cadReserva * $numeroVagas;
                         $foraCadastro = $numeroVagas + $cadastroReserva;
 
                         # Monta o select
@@ -1146,7 +1152,6 @@ if ($acesso) {
 
                         # Ordenação
                         $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
-                        
                     }
                 }
 
@@ -1159,14 +1164,110 @@ if ($acesso) {
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação", "Cargo"]);
-                            $relatorio->set_align(["center", "center", "left", "center"]);
-                            $relatorio->set_funcao([null, null, "plm"]);
-                            $relatorio->set_numGrupo(4);
+                $relatorio->set_align(["center", "center", "left", "center"]);
+                $relatorio->set_funcao([null, null, "plm"]);
+                $relatorio->set_numGrupo(4);
                 $relatorio->show();
             }
             break;
-            
-        ################################################################ 
+
+        ################################################################  
+
+        case "relatorio4":
+
+            /*
+             *  Candidatos de um cargo
+             */
+            if ($parametroCargoCandidato <> "*") {
+
+                # Monta o select
+                $select = "SELECT {$campo},
+                              inscricao,
+                              nome,
+                              dtNascimento,
+                              CONVERT(notaFinal, DECIMAL(10,2))
+                         FROM tbcandidato
+                        WHERE idConcurso = {$idConcurso}";
+
+                # Pega o candidato de acordo com a cota
+                if ($parametroCota <> "AC") {
+                    $select .= " AND {$campo} IS NOT NULL";
+                }
+
+                # nome
+                if (!is_null($parametroNome)) {
+                    $select .= " AND nome LIKE '%{$parametroNome}%'";
+                }
+
+                # cargo
+                if ($parametroCargoCandidato <> "*") {
+                    $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                }
+
+                # Ordenação
+                $select .= " ORDER BY {$campo}";
+
+                $row = $pessoal->select($select);
+                
+                # tabela
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
+                $relatorio->set_subtitulo($subtitulo);
+                $relatorio->set_conteudo($row);
+                $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação"]);
+                $relatorio->set_align(["center", "center", "left"]);
+                $relatorio->set_funcao([null, null, "plm", "date_to_php"]);
+                $relatorio->show();
+            } else {
+                #################################################################
+
+                /*
+                 *  Todos os cargos
+                 */
+
+                # Monta o select
+
+                $select = "SELECT {$campo},
+                                  inscricao,
+                                  nome,
+                                  CONVERT(notaFinal, DECIMAL(10,2)),
+                                  cargo
+                             FROM tbcandidato
+                            WHERE idConcurso = {$idConcurso}";
+
+                # Pega o candidato de acordo com a cota
+                if ($parametroCota <> "AC") {
+                    $select .= " AND {$campo} IS NOT NULL";
+                }
+
+                # nome
+                if (!is_null($parametroNome)) {
+                    $select .= " AND nome LIKE '%{$parametroNome}%'";
+                }
+
+                # cargo
+                $select .= " AND cargo = '{$parametroCargoCandidato}'";
+
+                # Ordenação
+                $select .= " ORDER BY {$campo}";
+
+                $row = $pessoal->select($select);
+
+                # Relatório
+                $relatorio = new Relatorio();
+                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_subtitulo($subtitulo);
+                $relatorio->set_conteudo($row);
+                $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação", "Cargo"]);
+                $relatorio->set_align(["center", "center", "left"]);
+                $relatorio->set_funcao([null, null, "plm", "date_to_php"]);
+                $relatorio->set_numGrupo(4);
+                $relatorio->show();
+            }
+            break;
+
+        ################################################################  
         case "editaCandidato" :
             br(8);
             aguarde();

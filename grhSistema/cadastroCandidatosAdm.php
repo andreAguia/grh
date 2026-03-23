@@ -91,7 +91,7 @@ if ($acesso) {
                 $subtitulo .= " - SEM Vagas";
             }
         } else {
-            $cadastroReserva = 3 * $numeroVagas;
+            $cadastroReserva = 5 * $numeroVagas;
             $foraCadastro = $numeroVagas + $cadastroReserva;
             $subtitulo .= " - {$numeroVagas} Vaga(s)";
         }

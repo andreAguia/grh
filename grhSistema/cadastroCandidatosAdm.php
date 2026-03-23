@@ -1231,6 +1231,7 @@ if ($acesso) {
                 $select = "SELECT {$campo},
                                   inscricao,
                                   nome,
+                                  dtNascimento,
                                   CONVERT(notaFinal, DECIMAL(10,2)),
                                   cargo
                              FROM tbcandidato
@@ -1246,11 +1247,8 @@ if ($acesso) {
                     $select .= " AND nome LIKE '%{$parametroNome}%'";
                 }
 
-                # cargo
-                $select .= " AND cargo = '{$parametroCargoCandidato}'";
-
                 # Ordenação
-                $select .= " ORDER BY {$campo}";
+                $select .= " ORDER BY cargo, {$campo}";
 
                 $row = $pessoal->select($select);
 
@@ -1261,8 +1259,8 @@ if ($acesso) {
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação", "Cargo"]);
                 $relatorio->set_align(["center", "center", "left"]);
-                $relatorio->set_funcao([null, null, "plm", "date_to_php"]);
-                $relatorio->set_numGrupo(4);
+                $relatorio->set_funcao([null, null, "plm", "date_to_php", null, "plm"]);
+                $relatorio->set_numGrupo(5);
                 $relatorio->show();
             }
             break;

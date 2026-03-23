@@ -572,11 +572,18 @@ class Candidato {
             # Pega os dados
             $select = "SELECT vagas,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasPcd,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasNi,
                               cargoConcurso,
+                              cargoConcurso,
+                              '',
                               vagasHipo,
+                              cargoConcurso,
                               cargoConcurso
                      FROM tbconcursovagadetalhada";
 
@@ -593,15 +600,16 @@ class Candidato {
             $tabela = new Tabela();
             $tabela->set_titulo(plm($cargo));
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Ampla Concorrência<br/> Vagas | Aprov.", "", "PCD<br/> Vagas | Aprov.", "", "Negros e Índios<br/> Vagas | Aprov.", "", "Hipossuficiente Econômico<br/> Vagas | Aprov.", ""]);
-            $tabela->set_colspanLabel([2, null, 2, null, 2, null, 2]);
-            $tabela->set_width([12, 12, 12, 12, 12, 12, 12, 12]);
-            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            
+            $tabela->set_label(["Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
+            $tabela->set_label2(["Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
+            $tabela->set_colspanLabel([ 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
+            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
+            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, "Candidato", null, "Candidato", null, "Candidato", null, "Candidato"]);
-            $tabela->set_metodo([null, "get_numCandidatoAc", null, "get_numCandidatoPcd", null, "get_numCandidatoNi", null, "get_numCandidatoHipo"]);
+            $tabela->set_classe([ null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([ null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
-            $tabela->set_totalRegistro(false);
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 

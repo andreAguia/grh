@@ -281,108 +281,243 @@ class Candidato {
 
     ###########################################################
 
-    public function get_numCandidatoAcNaVaga($cargo = null) {
+    public function get_numCandidatoAcNaVaga($cargo = null, $idTipoCargo = null) {
         /**
          * retorna o número de candidatos na vaga
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        if (empty($cargo)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         } else {
-            # Pega o número de vagas do Concurso
-            $concurso = new Concurso();
-            $numVagas = $concurso->get_numVagasAcAprovadas(96, $cargo);
+            if (empty($idTipoCargo)) {
+                # Pega o número de vagas do Concurso
+                $concurso = new Concurso();
+                $numVagas = $concurso->get_numVagasAcAprovadas(96, $cargo);
 
-            # Pega os candidatos aprovados
-            $numCandidatos = $this->get_numCandidatoAc($cargo);
+                # Pega os candidatos aprovados
+                $numCandidatos = $this->get_numCandidatoAc($cargo);
 
-            # Analisa os dados
-            if ($numCandidatos >= $numVagas) {
-                return intval($numVagas);
+                # Analisa os dados
+                if ($numCandidatos >= $numVagas) {
+                    return intval($numVagas);
+                } else {
+                    return intval($numCandidatos);
+                }
             } else {
-                return intval($numCandidatos);
+                # Pega os cargos deste nível
+                $select = "SELECT cargoConcurso
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE tbcargo.idTipoCargo = {$idTipoCargo}";
+
+                # Pega os dados
+                $pessoal = new Pessoal();
+                $row = $pessoal->select($select);
+
+                # Inicia a variável de soma
+                $soma = 0;
+
+                # Percorre o array
+                foreach ($row as $item) {
+                    $soma += $this->get_numCandidatoAcNaVaga($item[0]);
+                }
+
+                return $soma;
             }
         }
     }
 
     ###########################################################
 
-    public function get_numCandidatoPcdNaVaga($cargo = null) {
+    public function get_numCandidatoPcdNaVaga($cargo = null, $idTipoCargo = null) {
         /**
          * retorna o número de candidatos na vaga
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        if (empty($cargo)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         } else {
-            # Pega o número de vagas do Concurso
-            $concurso = new Concurso();
-            $numVagas = $concurso->get_numVagasPcdAprovadas(96, $cargo);
+            if (empty($idTipoCargo)) {
+                # Pega o número de vagas do Concurso
+                $concurso = new Concurso();
+                $numVagas = $concurso->get_numVagasPcdAprovadas(96, $cargo);
 
-            # Pega os candidatos aprovados
-            $numCandidatos = $this->get_numCandidatoPcd($cargo);
+                # Pega os candidatos aprovados
+                $numCandidatos = $this->get_numCandidatoPcd($cargo);
 
-            # Analisa os dados
-            if ($numCandidatos >= $numVagas) {
-                return intval($numVagas);
+                # Analisa os dados
+                if ($numCandidatos >= $numVagas) {
+                    return intval($numVagas);
+                } else {
+                    return intval($numCandidatos);
+                }
             } else {
-                return intval($numCandidatos);
+                # Pega os cargos deste nível
+                $select = "SELECT cargoConcurso
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE tbcargo.idTipoCargo = {$idTipoCargo}";
+
+                # Pega os dados
+                $pessoal = new Pessoal();
+                $row = $pessoal->select($select);
+
+                # Inicia a variável de soma
+                $soma = 0;
+
+                # Percorre o array
+                foreach ($row as $item) {
+                    $soma += $this->get_numCandidatoPcdNaVaga($item[0]);
+                }
+
+                return $soma;
             }
         }
     }
 
     ###########################################################
 
-    public function get_numCandidatoNiNaVaga($cargo = null) {
+    public function get_numCandidatoNiNaVaga($cargo = null, $idTipoCargo = null) {
         /**
          * retorna o número de candidatos na vaga
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        if (empty($cargo)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         } else {
-            # Pega o número de vagas do Concurso
-            $concurso = new Concurso();
-            $numVagas = $concurso->get_numVagasNiAprovadas(96, $cargo);
+            if (empty($idTipoCargo)) {
+                # Pega o número de vagas do Concurso
+                $concurso = new Concurso();
+                $numVagas = $concurso->get_numVagasNiAprovadas(96, $cargo);
 
-            # Pega os candidatos aprovados
-            $numCandidatos = $this->get_numCandidatoNi($cargo);
+                # Pega os candidatos aprovados
+                $numCandidatos = $this->get_numCandidatoNi($cargo);
 
-            # Analisa os dados
-            if ($numCandidatos >= $numVagas) {
-                return intval($numVagas);
+                # Analisa os dados
+                if ($numCandidatos >= $numVagas) {
+                    return intval($numVagas);
+                } else {
+                    return intval($numCandidatos);
+                }
             } else {
-                return intval($numCandidatos);
+                # Pega os cargos deste nível
+                $select = "SELECT cargoConcurso
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE tbcargo.idTipoCargo = {$idTipoCargo}";
+
+                # Pega os dados
+                $pessoal = new Pessoal();
+                $row = $pessoal->select($select);
+
+                # Inicia a variável de soma
+                $soma = 0;
+
+                # Percorre o array
+                foreach ($row as $item) {
+                    $soma += $this->get_numCandidatoNiNaVaga($item[0]);
+                }
+
+                return $soma;
             }
         }
     }
 
     ###########################################################
 
-    public function get_numCandidatoHipoNaVaga($cargo = null) {
+    public function get_numCandidatoHipoNaVaga($cargo = null, $idTipoCargo = null) {
         /**
          * retorna o número de candidatos na vaga
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        if (empty($cargo)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         } else {
-            # Pega o número de vagas do Concurso
-            $concurso = new Concurso();
-            $numVagas = $concurso->get_numVagasHipoAprovadas(96, $cargo);
+            if (empty($idTipoCargo)) {
+                # Pega o número de vagas do Concurso
+                $concurso = new Concurso();
+                $numVagas = $concurso->get_numVagasHipoAprovadas(96, $cargo);
 
-            # Pega os candidatos aprovados
-            $numCandidatos = $this->get_numCandidatoHipo($cargo);
+                # Pega os candidatos aprovados
+                $numCandidatos = $this->get_numCandidatoHipo($cargo);
 
-            # Analisa os dados
-            if ($numCandidatos >= $numVagas) {
-                return intval($numVagas);
+                # Analisa os dados
+                if ($numCandidatos >= $numVagas) {
+                    return intval($numVagas);
+                } else {
+                    return intval($numCandidatos);
+                }
             } else {
-                return intval($numCandidatos);
+                # Pega os cargos deste nível
+                $select = "SELECT cargoConcurso
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE tbcargo.idTipoCargo = {$idTipoCargo}";
+
+                # Pega os dados
+                $pessoal = new Pessoal();
+                $row = $pessoal->select($select);
+
+                # Inicia a variável de soma
+                $soma = 0;
+
+                # Percorre o array
+                foreach ($row as $item) {
+                    $soma += $this->get_numCandidatoHipoNaVaga($item[0]);
+                }
+
+                return $soma;
+            }
+        }
+    }
+
+    ###########################################################
+
+    public function get_numCandidatoNaVagaTotal($cargo = null, $idTipoCargo = null) {
+        /**
+         * retorna o número de candidatos na vaga
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        if (empty($cargo) AND empty($idTipoCargo)) {
+            return null;
+        } else {
+            if (empty($idTipoCargo)) {
+                # Pega o número de vagas do Concurso
+                $concurso = new Concurso();
+                $numVagas = $concurso->get_numVagasAprovadasTotal(96, $cargo);
+
+                # Pega os candidatos aprovados
+                $numCandidatos = $this->get_numCandidatoHipo($cargo);
+
+                # Analisa os dados
+                if ($numCandidatos >= $numVagas) {
+                    return intval($numVagas);
+                } else {
+                    return intval($numCandidatos);
+                }
+            } else {
+                # Pega os cargos deste nível
+                $select = "SELECT cargoConcurso
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE tbcargo.idTipoCargo = {$idTipoCargo}";
+
+                # Pega os dados
+                $pessoal = new Pessoal();
+                $row = $pessoal->select($select);
+
+                # Inicia a variável de soma
+                $soma = 0;
+
+                # Percorre o array
+                foreach ($row as $item) {
+                    $soma += $this->get_numCandidatoAcNaVaga($item[0]);
+                    $soma += $this->get_numCandidatoPcdNaVaga($item[0]);
+                    $soma += $this->get_numCandidatoNiNaVaga($item[0]);
+                    $soma += $this->get_numCandidatoHipoNaVaga($item[0]);
+                }
+
+                return $soma;
             }
         }
     }
@@ -404,10 +539,93 @@ class Candidato {
 
             # Menu de Abas
             $tab = new Tab([
+                "Resumo Geral",
                 "Nível Médio",
-                "Nível Superior",
-                "Resumo Geral"
+                "Nível Superior"
             ]);
+
+            /*
+             * Geral
+             */
+
+            $tab->abreConteudo();
+
+            # Vagas do Concurso
+            # Inicias as Classes
+            $concurso = new Concurso();
+
+            # Monta o array
+            $array = [
+                ["Nível Médio",
+                    $concurso->get_numVagasAcAprovadas(96, null, 4),
+                    $concurso->get_numVagasPcdAprovadas(96, null, 4),
+                    $concurso->get_numVagasNiAprovadas(96, null, 4),
+                    $concurso->get_numVagasHipoAprovadas(96, null, 4),
+                    $concurso->get_numVagasAprovadasTotal(96, null, 4),
+                ],
+                ["Nível Superior",
+                    $concurso->get_numVagasAcAprovadas(96, null, 3),
+                    $concurso->get_numVagasPcdAprovadas(96, null, 3),
+                    $concurso->get_numVagasNiAprovadas(96, null, 3),
+                    $concurso->get_numVagasHipoAprovadas(96, null, 3),
+                    $concurso->get_numVagasAprovadasTotal(96, null, 3),
+                ],
+            ];
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas do Concurso");
+            $tabela->set_conteudo($array);
+            $tabela->set_label(["Nível do Cargo", "Ampla Concorrência", "Pcd", "Negros e Índios", "Hipossuficiente Econômico", "Total"]);
+            $tabela->set_width([20, 15, 15, 15, 15, 15]);
+            $tabela->set_align(["left"]);
+            $tabela->set_totalRegistro(false);
+
+            $tabela->set_colunaSomatorio([1, 2, 3, 4, 5]);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            br();
+
+            # Candidato nas Vagas
+            # Monta o array
+            $array = [
+                ["Nível Médio",
+                    $this->get_numCandidatoAcNaVaga(null, 4),
+                    $this->get_numCandidatoPcdNaVaga(null, 4),
+                    $this->get_numCandidatoNiNaVaga(null, 4),
+                    $this->get_numCandidatoHipoNaVaga(null, 4),
+                    $this->get_numCandidatoNaVagaTotal(null, 4),
+                ],
+                ["Nível Superior",
+                    $this->get_numCandidatoAcNaVaga(null, 3),
+                    $this->get_numCandidatoPcdNaVaga(null, 3),
+                    $this->get_numCandidatoNiNaVaga(null, 3),
+                    $this->get_numCandidatoHipoNaVaga(null, 3),
+                    $this->get_numCandidatoNaVagaTotal(null, 3),
+                ],
+            ];
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Vagas Preenchidas");
+            $tabela->set_conteudo($array);
+            $tabela->set_label(["Nível do Cargo", "Ampla Concorrência", "Pcd", "Negros e Índios", "Hipossuficiente Econômico", "Total"]);
+            $tabela->set_width([20, 15, 15, 15, 15, 15]);
+            $tabela->set_align(["left"]);
+            $tabela->set_totalRegistro(false);
+
+            $tabela->set_colunaSomatorio([1, 2, 3, 4, 5]);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $tab->fechaConteudo();
 
             /*
              * Nível médio
@@ -521,47 +739,6 @@ class Candidato {
             $tabela->show();
 
             $tab->fechaConteudo();
-
-            /*
-             * Geral
-             */
-
-            $tab->abreConteudo();
-
-            br(10);
-            p("Em Desenvolvimento. Aguarde!!", "center", "f14");
-            br(10);
-
-//            # Pega os dados
-//            $concurso = new Concurso();
-//            $numVagasCargoMedioAV = $concurso->get_numVagasAcAprovadas(96, null, 4);
-//
-//            $array = [
-//                ["Cargos de Nível Médio", $numVagasCargoMedioAV],
-//                ["Cargos de Nível Superior"],
-//            ];
-//
-//            # tabela
-//            $tabela = new Tabela();
-//            $tabela->set_titulo("Tabela de Vagas");
-//            $tabela->set_subtitulo("Resumo Geral");
-//            $tabela->set_conteudo($array);
-//            $tabela->set_label(["Cargos", "Ampla Concorrência<br/> Vg | Ap.", "", "PCD<br/><br/> Vg | Ap.", "", "Negros e Índios<br/> Vg | Ap.", "", "Hipossuficiente Econômico<br/> Vg | Ap.", ""]);
-//            $tabela->set_colspanLabel([null, 2, null, 2, null, 2, null, 2]);
-//            $tabela->set_width([60, 5, 5, 5, 5, 5, 5, 5, 5]);
-//            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
-//
-//            $tabela->set_align(["left"]);
-//            $tabela->set_totalRegistro(false);
-//
-//            $tabela->set_colunaSomatorio([1, 3, 5, 7]);
-//
-//            $tabela->set_rowspan(0);
-//            $tabela->set_grupoCorColuna(0);
-//
-//            $tabela->show();
-
-            $tab->fechaConteudo();
             $tab->show();
         } else {
 
@@ -600,15 +777,15 @@ class Candidato {
             $tabela = new Tabela();
             $tabela->set_titulo(plm($cargo));
             $tabela->set_conteudo($row);
-            
+
             $tabela->set_label(["Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
             $tabela->set_label2(["Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
-            $tabela->set_colspanLabel([ 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
+            $tabela->set_colspanLabel([3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
             #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
             $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([ null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
-            $tabela->set_metodo([ null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
+            $tabela->set_classe([null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

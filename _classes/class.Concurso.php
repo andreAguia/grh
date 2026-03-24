@@ -1607,14 +1607,14 @@ class Concurso {
     #####################################################################################
 
     /**
-     * Método get_numVagasConcurso
+     * Método get_numVagasAcAprovadas
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasAcAprovadas($idConcurso = null, $cargoConcurso = null, $idTipoCargo = null) {
+    public function get_numVagasAcAprovadas($idConcurso = null, $cargo = null, $idTipoCargo = null) {
 
         # Verifica o parêmetro
-        if (empty($cargoConcurso)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         }
 
@@ -1626,13 +1626,12 @@ class Concurso {
         if (empty($idTipoCargo)) {
             $select = "SELECT vagas
                      FROM tbconcursovagadetalhada
-                    WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+                    WHERE cargoConcurso = '{$cargo}' AND idConcurso = {$idConcurso}";
         } else {
-            $select = "SELECT SUN(vagas)
+            $select = "SELECT SUM(vagas)
                      FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
-                    WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+                    WHERE idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
         }
-
 
         # Pega os dados
         $pessoal = new Pessoal();
@@ -1648,14 +1647,14 @@ class Concurso {
     #####################################################################################
 
     /**
-     * Método get_numVagasConcurso
+     * Método get_numVagasPcdAprovadas
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasPcdAprovadas($idConcurso = null, $cargoConcurso = null) {
+    public function get_numVagasPcdAprovadas($idConcurso = null, $cargo = null, $idTipoCargo = null) {
 
         # Verifica o parêmetro
-        if (empty($cargoConcurso)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         }
 
@@ -1664,9 +1663,15 @@ class Concurso {
         }
 
         # Monta o select
-        $select = "SELECT vagasPcd
-                      FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+        if (empty($idTipoCargo)) {
+            $select = "SELECT vagasPcd
+                     FROM tbconcursovagadetalhada
+                    WHERE cargoConcurso = '{$cargo}' AND idConcurso = {$idConcurso}";
+        } else {
+            $select = "SELECT SUM(vagasPcd)
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                    WHERE idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+        }
 
         # Pega os dados
         $pessoal = new Pessoal();
@@ -1682,14 +1687,14 @@ class Concurso {
     #####################################################################################
 
     /**
-     * Método get_numVagasConcurso
+     * Método get_numVagasNiAprovadas
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasNiAprovadas($idConcurso = null, $cargoConcurso = null) {
+    public function get_numVagasNiAprovadas($idConcurso = null, $cargo = null, $idTipoCargo = null) {
 
         # Verifica o parêmetro
-        if (empty($cargoConcurso)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         }
 
@@ -1698,9 +1703,15 @@ class Concurso {
         }
 
         # Monta o select
-        $select = "SELECT vagasNi
-                      FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+        if (empty($idTipoCargo)) {
+            $select = "SELECT vagasNi
+                     FROM tbconcursovagadetalhada
+                    WHERE cargoConcurso = '{$cargo}' AND idConcurso = {$idConcurso}";
+        } else {
+            $select = "SELECT SUM(vagasNi)
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                    WHERE idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+        }
 
         # Pega os dados
         $pessoal = new Pessoal();
@@ -1716,14 +1727,14 @@ class Concurso {
     #####################################################################################
 
     /**
-     * Método get_numVagasConcurso
+     * Método get_numVagasHipoAprovadas
      * 
      * Informa o numero de vagas por concurso
      */
-    public function get_numVagasHipoAprovadas($idConcurso = null, $cargoConcurso = null) {
+    public function get_numVagasHipoAprovadas($idConcurso = null, $cargo = null, $idTipoCargo = null) {
 
         # Verifica o parêmetro
-        if (empty($cargoConcurso)) {
+        if (empty($cargo) AND empty($idTipoCargo)) {
             return null;
         }
 
@@ -1732,9 +1743,55 @@ class Concurso {
         }
 
         # Monta o select
-        $select = "SELECT vagasHipo
-                      FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}' AND idConcurso = {$idConcurso}";
+        if (empty($idTipoCargo)) {
+            $select = "SELECT vagasHipo
+                     FROM tbconcursovagadetalhada
+                    WHERE cargoConcurso = '{$cargo}' AND idConcurso = {$idConcurso}";
+        } else {
+            $select = "SELECT SUM(vagasHipo)
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                    WHERE idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+        }
+
+        # Pega os dados
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if (isset($row[0])) {
+            return $row[0];
+        } else {
+            return null;
+        }
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_numVagasAprovadasTotal
+     * 
+     * Informa o numero de vagas por concurso
+     */
+    public function get_numVagasAprovadasTotal($idConcurso = null, $cargo = null, $idTipoCargo = null) {
+
+        # Verifica o parêmetro
+        if (empty($cargo) AND empty($idTipoCargo)) {
+            return null;
+        }
+
+        if (empty($idConcurso)) {
+            return null;
+        }
+
+        # Monta o select
+        if (empty($idTipoCargo)) {
+            $select = "SELECT vagas + vagasPcd + vagasNi + vagasHipo
+                         FROM tbconcursovagadetalhada
+                        WHERE cargoConcurso = '{$cargo}' AND idConcurso = {$idConcurso}";
+        } else {
+            $select = "SELECT SUM(vagas) + SUM(vagasPcd) + SUM(vagasNi) + SUM(vagasHipo)
+                         FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                        WHERE idConcurso = {$idConcurso} AND idTipoCargo = {$idTipoCargo}";
+        }
 
         # Pega os dados
         $pessoal = new Pessoal();

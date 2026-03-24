@@ -673,7 +673,7 @@ class Candidato {
             $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_align(["left"]);
-            $tabela->set_totalRegistro(false);
+            #$tabela->set_totalRegistro(false);
 
             $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
 
@@ -729,7 +729,7 @@ class Candidato {
             $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_align(["left"]);
-            $tabela->set_totalRegistro(false);
+            #$tabela->set_totalRegistro(false);
 
             $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
 
@@ -789,6 +789,7 @@ class Candidato {
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
+            $tabela->set_totalRegistro(false);
 
             $tabela->show();
         }

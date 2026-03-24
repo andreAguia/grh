@@ -612,6 +612,7 @@ class Candidato {
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
+            $tabela->set_totalRegistro(false);
 
             $tabela->show();
         }

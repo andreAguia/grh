@@ -338,16 +338,16 @@ if ($acesso) {
                      * Candidatos Aprovado no número de Vagas
                      */
                     # Monta o select
-                    $select = "(SELECT {$campo},
-                              'Vaga',
+                    $select = "SELECT {$campo},
+                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'Cadastro de Reserva','---')),
                               inscricao,
                               nome,
                               dtNascimento,
                               idCandidato,                          
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                        WHERE tbcandidato.idConcurso = {$idConcurso}";
 
                     # Cota
                     if ($parametroCota <> "AC") {
@@ -377,101 +377,7 @@ if ($acesso) {
                     }
 
                     # Ordenação
-                    $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}) UNION ";
-
-                    /*
-                     * Candidatos no Cadastro de reserva
-                     */
-
-                    # Monta o select
-                    $select .= "(SELECT {$campo},
-                              'Cadastro de Reserva',
-                              inscricao,
-                              nome,
-                              dtNascimento,
-                              idCandidato,      
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
-
-                    # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "AC") {
-                        $select .= " AND {$campo} IS NOT NULL";
-                    }
-
-                    # nome
-                    if (!is_null($parametroNome)) {
-
-                        # Verifica se tem espaços
-                        if (strpos($parametroNome, ' ') !== false) {
-                            # Separa as palavras
-                            $palavras = explode(' ', $parametroNome);
-
-                            # Percorre as palavras
-                            foreach ($palavras as $item) {
-                                $select .= ' AND (nome LIKE "%' . $item . '%")';
-                            }
-                        } else {
-                            $select .= " AND nome LIKE '%{$parametroNome}%'";
-                        }
-                    }
-
-                    # cargo
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                    }
-
-
-                    # Ordena de acorto do as cotas
-                    $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}, {$cadastroReserva}) UNION ";
-
-                    /*
-                     * Candidatos FORA no Cadastro de reserva
-                     */
-
-                    # Monta o select
-                    $select .= "(SELECT {$campo},
-                              '---',
-                              inscricao,
-                              nome,
-                              dtNascimento,
-                              idCandidato,                                     
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
-
-                    # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "AC") {
-                        $select .= " AND {$campo} IS NOT NULL";
-                    }
-
-                    # nome
-                    if (!is_null($parametroNome)) {
-
-                        # Verifica se tem espaços
-                        if (strpos($parametroNome, ' ') !== false) {
-                            # Separa as palavras
-                            $palavras = explode(' ', $parametroNome);
-
-                            # Percorre as palavras
-                            foreach ($palavras as $item) {
-                                $select .= ' AND (nome LIKE "%' . $item . '%")';
-                            }
-                        } else {
-                            $select .= " AND nome LIKE '%{$parametroNome}%'";
-                        }
-                    }
-
-                    # cargo
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                    }
-
-                    # Ordena de acorto do as cotas
-                    // Gambiarra para pegar os registroa a partir das vagas até o fim
-                    $select .= " ORDER BY {$campo} LIMIT {$foraCadastro}, 10000)";
+                    $select .= " ORDER BY {$campo}";
 
                     # Pega os dados
                     $row = $pessoal->select($select);
@@ -594,7 +500,7 @@ if ($acesso) {
                  */
 
                 # Monta o select
-                $select = "SELECT if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'<span class=\'label success\'>Vaga</label>',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva},'<span class=\'label warning\'>Reserva</label>','---')),
+                $select = "SELECT if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'<span class=\'label success\'>Vaga</label>',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'<span class=\'label warning\'>Reserva</label>','---')),
                                   inscricao,
                                   nome,
                                   cargo,

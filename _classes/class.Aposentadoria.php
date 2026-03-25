@@ -989,6 +989,8 @@ class Aposentadoria {
             $pessoal = new Pessoal();
             if (!$pessoal->get_entregouCtc($idServidor)) {
                 callout("Servidor não entregou o CTC INSS", "alert");
+            }else{
+                callout("Servidor entregou o CTC INSS", "success");
             }
         }
     }

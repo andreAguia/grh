@@ -624,6 +624,10 @@ class Candidato {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->show();
+            
+            ### Candidatos Repetidos
+            
+            
 
             $tab->fechaConteudo();
 

@@ -596,8 +596,9 @@ if ($acesso) {
                               email,
                               celular,
                               CONVERT(notaFinal, DECIMAL(10,2))
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}";
 
                 # Pega o candidato de acordo com a cota
                 if ($parametroCota <> "AC") {

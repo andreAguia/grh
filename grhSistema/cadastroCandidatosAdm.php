@@ -598,6 +598,7 @@ if ($acesso) {
                                   inscricao,
                                   nome,
                                   cargo,
+                                  tbconcursovagadetalhada.{$campoVaga},
                                   classifAc,                              
                                   classifPcd,
                                   classifNi,
@@ -639,20 +640,20 @@ if ($acesso) {
                 $tabela->set_titulo("Cadastro de Candidatos Aprovados");
                 $tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($row);
-                $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cargo", "AC", "PCD", "NI", "HIPO", "Nota Final", "Editar"]);
-                $tabela->set_width([10, 10, 20, 30, 5, 5, 5, 5, 5, 5, 5]);
+                $tabela->set_label(["Situação", "Inscrição", "Candidato", "Cargo", "Vagas", "AC", "PCD", "NI", "HIPO", "Nota Final", "Editar"]);
+                $tabela->set_width([10, 10, 20, 20, 5, 5, 5, 5, 5, 5, 5, 5]);
                 $tabela->set_align(["center", "center", "left", "left"]);
                 $tabela->set_funcao([null, null, "plm", "plm"]);
 
                 $tabela->set_rowspan(3);
                 $tabela->set_grupoCorColuna(3);
-                
+
                 # Botão Editar
                 $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                 $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                 # Coloca o objeto link na tabela			
-                $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+                $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
                 $tabela->show();
             }
 

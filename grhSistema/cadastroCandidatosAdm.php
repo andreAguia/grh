@@ -629,7 +629,7 @@ if ($acesso) {
 
                 # tabela
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
@@ -737,7 +737,7 @@ if ($acesso) {
 
                 # Relatório
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "CPF", "E-mail", "Telefone", "Cargo"]);
@@ -798,7 +798,7 @@ if ($acesso) {
 
                 # tabela
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
@@ -906,7 +906,7 @@ if ($acesso) {
 
                 # Relatório
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Cargo", "CPF", "Identidade", "Nascimento"]);
@@ -965,7 +965,7 @@ if ($acesso) {
 
                 # tabela
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
@@ -1071,7 +1071,7 @@ if ($acesso) {
 
                 # Relatório
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação", "Cargo"]);
@@ -1122,7 +1122,7 @@ if ($acesso) {
 
                 # tabela
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
@@ -1165,7 +1165,7 @@ if ($acesso) {
 
                 # Relatório
                 $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação", "Cargo"]);

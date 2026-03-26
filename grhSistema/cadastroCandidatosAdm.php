@@ -257,11 +257,11 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
-//                $menu->add_item('titulo1', 'Todas as Cotas');
-//                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
-//
-//                $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
-//                $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
+                $menu->add_item('titulo1', 'Todas as Cotas');
+                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
+
+                $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
+                $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
                 $menu->show();
             }
 
@@ -1240,23 +1240,22 @@ if ($acesso) {
                                       nome,
                                       cpf,
                                       cargo
-                                 FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                                 WHERE tbcandidato.idConcurso = {$idConcurso}
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
-                                  AND '{$item["cargoConcurso"]}' = cargo
+                                  AND cargo = '{$item["cargoConcurso"]}'
                              ORDER BY {$campo}";
 
-                    $row = $pessoal->select($select);
-
-                    echo $item["cargoConcurso"], " - ", $cota[0], " - ", $campo, " - ",count($row),"<br/>";
-                    
                     # Passa para o array
-                    $arrayTabela += $row;
+                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
                 }
-                
-                hr("padrao");
             }
 
+            # Ordena por nome
+            usort($arrayTabela, function ($a, $b) {
+                return strcmp($a['nome'], $b['nome']);
+            });
+            
             # Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Cadastro de Candidatos Aprovados");

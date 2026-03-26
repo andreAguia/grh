@@ -279,13 +279,12 @@ class Candidato {
                          FROM tbcandidato
                         WHERE cargo = '{$cargo}'
                           AND classifHipo IS NOT NULL";
-
         }
-            $pessoal = new Pessoal();
-            $row = $pessoal->select($select, false);
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
 
-            # Retorno
-            return $row[0];
+        # Retorno
+        return $row[0];
     }
 
     ###########################################################
@@ -587,20 +586,6 @@ class Candidato {
                     $this->get_numCandidatoHipo(),
                     $this->get_numCandidatoHipoNaVaga(null, 3) + $this->get_numCandidatoHipoNaVaga(null, 4),
                 ],
-//                ["Nível Médio",
-//                    $concurso->get_numVagasAcAprovadas(96, null, 4),
-//                    $concurso->get_numVagasPcdAprovadas(96, null, 4),
-//                    $concurso->get_numVagasNiAprovadas(96, null, 4),
-//                    $concurso->get_numVagasHipoAprovadas(96, null, 4),
-//                    $concurso->get_numVagasAprovadasTotal(96, null, 4),
-//                ],
-//                ["Nível Superior",
-//                    $concurso->get_numVagasAcAprovadas(96, null, 3),
-//                    $concurso->get_numVagasPcdAprovadas(96, null, 3),
-//                    $concurso->get_numVagasNiAprovadas(96, null, 3),
-//                    $concurso->get_numVagasHipoAprovadas(96, null, 3),
-//                    $concurso->get_numVagasAprovadasTotal(96, null, 3),
-//                ],
             ];
 
             # tabela
@@ -612,7 +597,7 @@ class Candidato {
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
 
-            $tabela->set_colunaSomatorio([1, 2, 3, 4, 5]);
+            $tabela->set_colunaSomatorio([1, 3]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

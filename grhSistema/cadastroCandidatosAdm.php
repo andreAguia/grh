@@ -52,12 +52,12 @@ if ($acesso) {
 
         $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '*'));
         $parametroNome = post('parametroNome', get_session('parametroNome'));
-        $parametroCota = post('parametroCota', get_session('parametroCota', 'AC'));
+        $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
 
         # Define os dados de acordo com as cotas
         switch ($parametroCota) {
             // Ampla Concorrência
-            case "AC":
+            case "Ac":
                 $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $parametroCargoCandidato);
                 $campo = "classifAc";
                 $campoVaga = "vagas";
@@ -65,7 +65,7 @@ if ($acesso) {
                 break;
 
             // Pcd
-            case "PCD":
+            case "Pcd":
                 $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $parametroCargoCandidato);
                 $campo = "classifPcd";
                 $campoVaga = "vagasPcd";
@@ -123,6 +123,11 @@ if ($acesso) {
     if ($fase <> "relatorio1" AND $fase <> "relatorio2" AND $fase <> "relatorio3" AND $fase <> "relatorio4" AND $fase <> "relatorio5") {
         AreaServidor::cabecalho();
     }
+
+    # Define array de Cotas
+    $concurso2025 = new ConcursoAdm2025();
+    $arrayCotas = $concurso2025->get_arrayCotas();
+    #$idConcurso - $concurso2025->get_idConcurso();
 
     $grid = new Grid();
     $grid->abreColuna(12);
@@ -252,8 +257,8 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
-//                $menu->add_item('titulo1', 'Todas as Cotas');
-//                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
+                $menu->add_item('titulo1', 'Todas as Cotas');
+                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
 
                 $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
                 $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
@@ -305,12 +310,7 @@ if ($acesso) {
             $controle = new Input('parametroCota', 'combo', 'Cota:', 1);
             $controle->set_size(30);
             $controle->set_title('Filtra por Cota');
-            $controle->set_array([
-                ["AC", "Ampla Concorrência"],
-                ["PCD", "PCD"],
-                ["Ni", "Negros e Índios"],
-                ["Hipo", "Hipossuficiente Econômico"],
-            ]);
+            $controle->set_array($arrayCotas);
             $controle->set_valor($parametroCota);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -350,7 +350,7 @@ if ($acesso) {
                         WHERE tbcandidato.idConcurso = {$idConcurso}";
 
                     # Cota
-                    if ($parametroCota <> "AC") {
+                    if ($parametroCota <> "Ac") {
                         $select .= " AND {$campo} IS NOT NULL";
                     }
 
@@ -437,7 +437,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                     # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "AC") {
+                    if ($parametroCota <> "Ac") {
                         $select .= " AND {$campo} IS NOT NULL";
                     }
 
@@ -515,7 +515,7 @@ if ($acesso) {
                             WHERE tbcandidato.idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -601,7 +601,7 @@ if ($acesso) {
                           AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -662,14 +662,14 @@ if ($acesso) {
                     # Define os dados de acordo com as cotas
                     switch ($parametroCota) {
                         // Ampla Concorrência
-                        case "AC":
+                        case "Ac":
                             $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifAc";
                             $subtitulo = "Ampla Concorrência";
                             break;
 
                         // Pcd
-                        case "PCD":
+                        case "Pcd":
                             $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifPcd";
                             $subtitulo = "Cota: PCD";
@@ -717,7 +717,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                         # Pega o candidato de acordo com a cota
-                        if ($parametroCota <> "AC") {
+                        if ($parametroCota <> "Ac") {
                             $select .= " AND {$campo} IS NOT NULL";
                         }
 
@@ -770,7 +770,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -831,14 +831,14 @@ if ($acesso) {
                     # Define os dados de acordo com as cotas
                     switch ($parametroCota) {
                         // Ampla Concorrência
-                        case "AC":
+                        case "Ac":
                             $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifAc";
                             $subtitulo = "Ampla Concorrência";
                             break;
 
                         // Pcd
-                        case "PCD":
+                        case "Pcd":
                             $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifPcd";
                             $subtitulo = "Cota: PCD";
@@ -886,7 +886,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                         # Pega o candidato de acordo com a cota
-                        if ($parametroCota <> "AC") {
+                        if ($parametroCota <> "Ac") {
                             $select .= " AND {$campo} IS NOT NULL";
                         }
 
@@ -937,7 +937,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -998,14 +998,14 @@ if ($acesso) {
                     # Define os dados de acordo com as cotas
                     switch ($parametroCota) {
                         // Ampla Concorrência
-                        case "AC":
+                        case "Ac":
                             $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifAc";
                             $subtitulo = "Ampla Concorrência";
                             break;
 
                         // Pcd
-                        case "PCD":
+                        case "Pcd":
                             $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifPcd";
                             $subtitulo = "Cota: PCD";
@@ -1051,7 +1051,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                         # Pega o candidato de acordo com a cota
-                        if ($parametroCota <> "AC") {
+                        if ($parametroCota <> "Ac") {
                             $select .= " AND {$campo} IS NOT NULL";
                         }
 
@@ -1103,7 +1103,7 @@ if ($acesso) {
                         WHERE idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -1151,7 +1151,7 @@ if ($acesso) {
                             WHERE idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "AC") {
+                if ($parametroCota <> "Ac") {
                     $select .= " AND {$campo} IS NOT NULL";
                 }
 
@@ -1182,174 +1182,92 @@ if ($acesso) {
 
         case "relatorio5":
 
-            /*
-             *  Candidatos de um cargo
-             */
-            if ($parametroCargoCandidato <> "*") {
 
-                # Define array de Cotas
-                $arrayCotas = ["AC", "PCD", "Ni", "Hipo"];
+            /*
+             *  Todos os Candidatod de Todos os cargos
+             */
+
+            # Define o array da tabela
+            $arrayTabela = [];
+
+            # Pega os cargos
+            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+                                          FROM tbconcursovagadetalhada
+                                      ORDER BY cargoConcurso');
+
+            # Percorre os cargos
+            foreach ($result as $item) {
 
                 foreach ($arrayCotas as $cota) {
 
-                    # Monta o select
-                    $select = "SELECT nome,
-                                      cpf
-                             FROM tbcandidato 
-                            WHERE idConcurso = {$idConcurso}
-                             AND ";
+                    switch ($cota[0]) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifAc";
+                            $campoVaga = "vagas";
+                            $subtitulo = "Ampla Concorrência";
+                            break;
 
-                    # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "AC") {
-                        $select .= " AND {$campo} IS NOT NULL";
+                        // Pcd
+                        case "Pcd":
+                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifPcd";
+                            $campoVaga = "vagasPcd";
+                            $subtitulo = "Cota: PCD";
+                            break;
+
+                        // Negros e Índios
+                        case "Ni":
+                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifNi";
+                            $campoVaga = "vagasNi";
+                            $subtitulo = "Cota: Negros e Índios";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifHipo";
+                            $campoVaga = "vagasHipo";
+                            $subtitulo = "Cota: Hipossuficiente Econômico";
+                            break;
                     }
 
-                    # nome
-                    if (!is_null($parametroNome)) {
-                        $select .= " AND nome LIKE '%{$parametroNome}%'";
-                    }
+                    # Pega os candidaatos desse cargo e dessa cota
+                    $select = "SELECT {$campo},
+                                      inscricao,
+                                      nome,
+                                      cpf,
+                                      cargo
+                                 FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                WHERE tbcandidato.idConcurso = {$idConcurso}
+                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+                                  AND '{$item["cargoConcurso"]}' = cargo
+                             ORDER BY {$campo}";
 
-                    # cargo
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                    }
+                    $row = $pessoal->select($select);
 
-                    # Ordenação
-                    if (empty($numeroVagas)) {
-                        $select .= " ORDER BY {$campo}";
-                    } else {
-                        $select .= " ORDER BY {$campo} LIMIT {$numeroVagas}";
-                    }
+                    echo $item["cargoConcurso"], " - ", $cota[0], " - ", $campo, " - ",count($row),"<br/>";
+                    
+                    # Passa para o array
+                    $arrayTabela += $row;
                 }
-
-                $select .= ") ORDER BY 1";
-
-                $row = $pessoal->select($select);
-
-                # Esvazia o array quando não tem vagas
-                if (empty($numeroVagas)) {
-                    $row = array();
-                }
-
-                # tabela
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-                $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
-                $relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_conteudo($row);
-                $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação"]);
-                $relatorio->set_align(["center", "center", "left", "center"]);
-                $relatorio->set_funcao([null, null, "plm"]);
-                $relatorio->show();
-            } else {
-                #################################################################
-
-                /*
-                 *  Todos os cargos
-                 */
-
-
-                # Pega os cargos
-                $result = $pessoal->select('SELECT DISTINCT cargoConcurso
-                                              FROM tbconcursovagadetalhada
-                                           ORDER BY cargoConcurso');
-
-                $primeiro = true;
-
-                foreach ($result as $item) {
-
-                    # Define array de Cotas
-                    $arrayCotas = ["AC", "PCD", "Ni", "Hipo"];
-
-                    foreach ($arrayCotas as $cota) {
-                        switch ($cota) {
-                            // Ampla Concorrência
-                            case "AC":
-                                $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
-                                $campo = "classifAc";
-                                $campoVaga = "vagas";
-                                $subtitulo = "Ampla Concorrência";
-                                break;
-
-                            // Pcd
-                            case "PCD":
-                                $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
-                                $campo = "classifPcd";
-                                $campoVaga = "vagasPcd";
-                                $subtitulo = "Cota: PCD";
-                                break;
-
-                            // Negros e Índios
-                            case "Ni":
-                                $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
-                                $campo = "classifNi";
-                                $campoVaga = "vagasNi";
-                                $subtitulo = "Cota: Negros e Índios";
-                                break;
-
-                            // Hipossuficiente Econômico
-                            case "Hipo":
-                                $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
-                                $campo = "classifHipo";
-                                $campoVaga = "vagasHipo";
-                                $subtitulo = "Cota: Hipossuficiente Econômico";
-                                break;
-                        }
-
-                        # Define o cadastro de reserva, quando se tem o número de vagas
-                        if (empty($numeroVagas)) {
-                            $numeroVagas = 0;
-                            $cadastroReserva = 0;
-                            $foraCadastro = 0;
-                        } else {
-                            $cadastroReserva = $cadReserva * $numeroVagas;
-                            $foraCadastro = $numeroVagas + $cadastroReserva;
-
-                            # Monta o select
-                            if ($primeiro) {
-                                $select = "(SELECT nome, cpf, cargo";
-                                $primeiro = false;
-                            } else {
-                                $select .= ") UNION (SELECT nome, cpf, cargo";
-                            }
-
-                            $select .= " FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                                        WHERE tbcandidato.idConcurso = {$idConcurso}
-                                          AND {$campo} <= {$campoVaga}";
-
-                            # Pega o candidato de acordo com a cota
-                            if ($parametroCota <> "AC") {
-                                $select .= " AND {$campo} IS NOT NULL";
-                            }
-
-                            # nome
-                            if (!is_null($parametroNome)) {
-                                $select .= " AND nome LIKE '%{$parametroNome}%'";
-                            }
-
-                            # cargo
-                            $select .= " AND cargo = '{$item["cargoConcurso"]}'";
-
-                            # Ordenação
-                            $select .= " ORDER BY cargo, {$campo}";
-                        }
-                    }
-                }
-
-                $select .= ") ORDER BY 3";
-                $row = $pessoal->select($select);
-
-                # Relatório
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-                #$relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_conteudo($row);
-                $relatorio->set_label(["Nome", "Cpf"]);
-                $relatorio->set_align(["left"]);
-                $relatorio->set_funcao(["plm"]);
-                $relatorio->set_numGrupo(2);
-                $relatorio->show();
+                
+                hr("padrao");
             }
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($arrayTabela);
+            $relatorio->set_label(["#", "Inscrição", "Nome", "Cpf", "Cargo"]);
+            $relatorio->set_align(["center", "center", "left", "center", "left"]);
+            $relatorio->set_funcao([null, null, "plm", null, "plm"]);
+            #$relatorio->set_numGrupo(2);
+            $relatorio->show();
+
             break;
 
         ################################################################    

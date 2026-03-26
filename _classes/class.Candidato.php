@@ -540,8 +540,10 @@ class Candidato {
             # Menu de Abas
             $tab = new Tab([
                 "Resumo Geral",
-                "Nível Médio",
-                "Nível Superior"
+                "Ampla Concorrência",
+                "Pcd",
+                "Negros e Índios",
+                "Hipossuficiente Econômico"
             ]);
 
             /*
@@ -624,39 +626,32 @@ class Candidato {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->show();
-            
+
             ### Candidatos Repetidos
-            
-            
+
+
 
             $tab->fechaConteudo();
 
             /*
-             * Nível médio
+             * Ampla Concorrêcia
              */
 
             $tab->abreConteudo();
-
+            
+            $titulo = "Ampla Concorrência";
+            
+            # Totais
+            $arrayTotais = [
+                [$titulo,  ]
+            ];
+            
             # Pega os dados
             $select = "SELECT cargoConcurso,
                               vagas,
                               cargoConcurso,
-                              cargoConcurso,
-                              '',
-                              vagasPcd,
-                              cargoConcurso,
-                              cargoConcurso,
-                              '',
-                              vagasNi,
-                              cargoConcurso,
-                              cargoConcurso,
-                              '',
-                              vagasHipo,
-                              cargoConcurso,
-                              cargoConcurso,
-                              ''
+                              cargoConcurso
                      FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
-                     WHERE tbcargo.idTipoCargo = 4
                  ORDER BY cargoConcurso";
 
             $pessoal = new Pessoal();
@@ -664,22 +659,19 @@ class Candidato {
 
             # tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Tabela de Vagas");
-            $tabela->set_subtitulo("Nível Médio");
+            $tabela->set_titulo($titulo);
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
-            $tabela->set_label2(["", "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
-            $tabela->set_colspanLabel([null, 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
-            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
+            $tabela->set_width([40, 10, 10, 10, 10]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
-            $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
+            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga"]);
 
             $tabela->set_align(["left"]);
             #$tabela->set_totalRegistro(false);
 
-            $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
+            $tabela->set_colunaSomatorio([1, 2, 3]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -687,32 +679,19 @@ class Candidato {
             $tabela->show();
 
             $tab->fechaConteudo();
-
-            /*
-             * Nível Superior
+            
+             /*
+             * Pcd
              */
 
             $tab->abreConteudo();
-
+            
             # Pega os dados
             $select = "SELECT cargoConcurso,
-                              vagas,
-                              cargoConcurso,
-                              cargoConcurso,
-                              '',
                               vagasPcd,
-                              cargoConcurso,
-                              cargoConcurso,
-                              '',
-                              vagasNi,
-                              cargoConcurso,
-                              cargoConcurso,
-                              '',
-                              vagasHipo,
                               cargoConcurso,
                               cargoConcurso
                      FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
-                     WHERE tbcargo.idTipoCargo = 3
                  ORDER BY cargoConcurso";
 
             $pessoal = new Pessoal();
@@ -720,22 +699,99 @@ class Candidato {
 
             # tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Tabela de Vagas");
-            $tabela->set_subtitulo("Nível Superior");
+            $tabela->set_titulo("Pcd");
             $tabela->set_conteudo($row);
-            $tabela->set_label(["Cargo", "Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
-            $tabela->set_label2(["", "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
-            $tabela->set_colspanLabel([null, 3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
-            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
+            $tabela->set_width([40, 10, 10, 10, 10]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
-            $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
+            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga"]);
 
             $tabela->set_align(["left"]);
             #$tabela->set_totalRegistro(false);
 
-            $tabela->set_colunaSomatorio([1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15]);
+            $tabela->set_colunaSomatorio([1, 2, 3]);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $tab->fechaConteudo();
+            
+             /*
+             * Negros e Índios
+             */
+
+            $tab->abreConteudo();
+            
+            # Pega os dados
+            $select = "SELECT cargoConcurso,
+                              vagasNi,
+                              cargoConcurso,
+                              cargoConcurso
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                 ORDER BY cargoConcurso";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Negros e Índios");
+            $tabela->set_conteudo($row);
+            $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
+            $tabela->set_width([40, 10, 10, 10, 10]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+
+            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga"]);
+
+            $tabela->set_align(["left"]);
+            #$tabela->set_totalRegistro(false);
+
+            $tabela->set_colunaSomatorio([1, 2, 3]);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $tab->fechaConteudo();
+            
+             /*
+             * Hipossuficiente Econômico
+             */
+
+            $tab->abreConteudo();
+            
+            # Pega os dados
+            $select = "SELECT cargoConcurso,
+                              vagasHipo,
+                              cargoConcurso,
+                              cargoConcurso
+                     FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
+                 ORDER BY cargoConcurso";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Hipossuficiente Econômico");
+            $tabela->set_conteudo($row);
+            $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
+            $tabela->set_width([40, 10, 10, 10, 10]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+
+            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
+
+            $tabela->set_align(["left"]);
+            #$tabela->set_totalRegistro(false);
+
+            $tabela->set_colunaSomatorio([1, 2, 3]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
@@ -754,15 +810,12 @@ class Candidato {
             $select = "SELECT vagas,
                               cargoConcurso,
                               cargoConcurso,
-                              '',
                               vagasPcd,
                               cargoConcurso,
                               cargoConcurso,
-                              '',
                               vagasNi,
                               cargoConcurso,
                               cargoConcurso,
-                              '',
                               vagasHipo,
                               cargoConcurso,
                               cargoConcurso
@@ -782,14 +835,14 @@ class Candidato {
             $tabela->set_titulo(plm($cargo));
             $tabela->set_conteudo($row);
 
-            $tabela->set_label(["Ampla Concorrência", "", "", '', "PCD", "", "", '', "Negros e Índios", "", "", '', "Hipossuficiente Econômico", "", ""]);
-            $tabela->set_label2(["Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga", '', "Vagas", "Aprov.", "Na Vaga"]);
-            $tabela->set_colspanLabel([3, null, null, null, 3, null, null, null, 3, null, null, null, 3, null, null, null]);
-            #$tabela->set_width([37, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5, 1, 5, 5, 5]);
-            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero", "", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
+            $tabela->set_label(["Ampla Concorrência", "", "", "PCD", "", "", "Negros e Índios", "", "", "Hipossuficiente Econômico", "", ""]);
+            $tabela->set_label2(["Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga"]);
+            $tabela->set_colspanLabel([3, null, null, 3, null, null, 3, null, null, 3, null, null]);
+            #$tabela->set_width([37, 5, 5, 5,  5, 5, 5,  5, 5, 5,  5, 5, 5]);
+            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato", null, null, "Candidato", "Candidato"]);
-            $tabela->set_metodo([null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
+            $tabela->set_classe([null, "Candidato", "Candidato", null, "Candidato", "Candidato", null, "Candidato", "Candidato", null, "Candidato", "Candidato"]);
+            $tabela->set_metodo([null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

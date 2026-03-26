@@ -189,19 +189,20 @@ class Candidato {
          * @syntax Candidato->exibeCotas($id);
          */
         if (empty($cargo)) {
-            return null;
+            $select = "SELECT count(idCandidato) 
+                         FROM tbcandidato";
         } else {
             # Pega os dados
             $select = "SELECT count(idCandidato) 
                          FROM tbcandidato
                         WHERE cargo = '{$cargo}'";
-
-            $pessoal = new Pessoal();
-            $row = $pessoal->select($select, false);
-
-            # Retorno
-            return $row[0];
         }
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        return $row[0];
     }
 
     ###########################################################    
@@ -213,20 +214,22 @@ class Candidato {
          * @syntax Candidato->exibeCotas($id);
          */
         if (empty($cargo)) {
-            return null;
+            # Pega os dados
+            $select = "SELECT count(idCandidato) 
+                         FROM tbcandidato
+                        WHERE classifPcd IS NOT NULL";
         } else {
             # Pega os dados
             $select = "SELECT count(idCandidato) 
                          FROM tbcandidato
                         WHERE cargo = '{$cargo}'
                           AND classifPcd IS NOT NULL";
-
-            $pessoal = new Pessoal();
-            $row = $pessoal->select($select, false);
-
-            # Retorno
-            return $row[0];
         }
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        return $row[0];
     }
 
     ###########################################################
@@ -238,20 +241,23 @@ class Candidato {
          * @syntax Candidato->exibeCotas($id);
          */
         if (empty($cargo)) {
-            return null;
+            # Pega os dados
+            $select = "SELECT count(idCandidato) 
+                         FROM tbcandidato
+                        WHERE classifNi IS NOT NULL";
         } else {
             # Pega os dados
             $select = "SELECT count(idCandidato) 
                          FROM tbcandidato
                         WHERE cargo = '{$cargo}'
                           AND classifNi IS NOT NULL";
-
-            $pessoal = new Pessoal();
-            $row = $pessoal->select($select, false);
-
-            # Retorno
-            return $row[0];
         }
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        # Retorno
+        return $row[0];
     }
 
     ###########################################################
@@ -263,7 +269,10 @@ class Candidato {
          * @syntax Candidato->exibeCotas($id);
          */
         if (empty($cargo)) {
-            return null;
+            # Pega os dados
+            $select = "SELECT count(idCandidato) 
+                         FROM tbcandidato
+                        WHERE classifHipo IS NOT NULL";
         } else {
             # Pega os dados
             $select = "SELECT count(idCandidato) 
@@ -271,12 +280,12 @@ class Candidato {
                         WHERE cargo = '{$cargo}'
                           AND classifHipo IS NOT NULL";
 
+        }
             $pessoal = new Pessoal();
             $row = $pessoal->select($select, false);
 
             # Retorno
             return $row[0];
-        }
     }
 
     ###########################################################
@@ -558,27 +567,47 @@ class Candidato {
 
             # Monta o array
             $array = [
-                ["Nível Médio",
-                    $concurso->get_numVagasAcAprovadas(96, null, 4),
-                    $concurso->get_numVagasPcdAprovadas(96, null, 4),
-                    $concurso->get_numVagasNiAprovadas(96, null, 4),
-                    $concurso->get_numVagasHipoAprovadas(96, null, 4),
-                    $concurso->get_numVagasAprovadasTotal(96, null, 4),
+                ["Ampla Concorrência",
+                    $concurso->get_numVagasAcAprovadas(96, null, 3) + $concurso->get_numVagasAcAprovadas(96, null, 4),
+                    $this->get_numCandidatoAc(),
+                    $this->get_numCandidatoAcNaVaga(null, 3) + $this->get_numCandidatoAcNaVaga(null, 4),
                 ],
-                ["Nível Superior",
-                    $concurso->get_numVagasAcAprovadas(96, null, 3),
-                    $concurso->get_numVagasPcdAprovadas(96, null, 3),
-                    $concurso->get_numVagasNiAprovadas(96, null, 3),
-                    $concurso->get_numVagasHipoAprovadas(96, null, 3),
-                    $concurso->get_numVagasAprovadasTotal(96, null, 3),
+                ["Pcd",
+                    $concurso->get_numVagasPcdAprovadas(96, null, 3) + $concurso->get_numVagasPcdAprovadas(96, null, 4),
+                    $this->get_numCandidatoPcd(),
+                    $this->get_numCandidatoPcdNaVaga(null, 3) + $this->get_numCandidatoPcdNaVaga(null, 4),
                 ],
+                ["Negros e Índios",
+                    $concurso->get_numVagasNiAprovadas(96, null, 3) + $concurso->get_numVagasNiAprovadas(96, null, 4),
+                    $this->get_numCandidatoNi(),
+                    $this->get_numCandidatoNiNaVaga(null, 3) + $this->get_numCandidatoNiNaVaga(null, 4),
+                ],
+                ["Hipossuficiente Econômico",
+                    $concurso->get_numVagasHipoAprovadas(96, null, 3) + $concurso->get_numVagasHipoAprovadas(96, null, 4),
+                    $this->get_numCandidatoHipo(),
+                    $this->get_numCandidatoHipoNaVaga(null, 3) + $this->get_numCandidatoHipoNaVaga(null, 4),
+                ],
+//                ["Nível Médio",
+//                    $concurso->get_numVagasAcAprovadas(96, null, 4),
+//                    $concurso->get_numVagasPcdAprovadas(96, null, 4),
+//                    $concurso->get_numVagasNiAprovadas(96, null, 4),
+//                    $concurso->get_numVagasHipoAprovadas(96, null, 4),
+//                    $concurso->get_numVagasAprovadasTotal(96, null, 4),
+//                ],
+//                ["Nível Superior",
+//                    $concurso->get_numVagasAcAprovadas(96, null, 3),
+//                    $concurso->get_numVagasPcdAprovadas(96, null, 3),
+//                    $concurso->get_numVagasNiAprovadas(96, null, 3),
+//                    $concurso->get_numVagasHipoAprovadas(96, null, 3),
+//                    $concurso->get_numVagasAprovadasTotal(96, null, 3),
+//                ],
             ];
 
             # tabela
             $tabela = new Tabela();
             $tabela->set_titulo("Vagas do Concurso");
             $tabela->set_conteudo($array);
-            $tabela->set_label(["Nível do Cargo", "Ampla Concorrência", "Pcd", "Negros e Índios", "Hipossuficiente Econômico", "Total"]);
+            $tabela->set_label(["Cotas", "Vagas", "Candidatos Aprovados", "Vagas Preenchidas"]);
             $tabela->set_width([20, 15, 15, 15, 15, 15]);
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
@@ -638,14 +667,14 @@ class Candidato {
              */
 
             $tab->abreConteudo();
-            
+
             $titulo = "Ampla Concorrência";
-            
+
             # Totais
             $arrayTotais = [
-                [$titulo,  ]
+                [$titulo,]
             ];
-            
+
             # Pega os dados
             $select = "SELECT cargoConcurso,
                               vagas,
@@ -663,7 +692,7 @@ class Candidato {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_width([40, 10, 10, 10, 10]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, null, "Candidato", "Candidato"]);
             $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga"]);
@@ -679,13 +708,13 @@ class Candidato {
             $tabela->show();
 
             $tab->fechaConteudo();
-            
-             /*
+
+            /*
              * Pcd
              */
 
             $tab->abreConteudo();
-            
+
             # Pega os dados
             $select = "SELECT cargoConcurso,
                               vagasPcd,
@@ -703,7 +732,7 @@ class Candidato {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_width([40, 10, 10, 10, 10]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, null, "Candidato", "Candidato"]);
             $tabela->set_metodo([null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga"]);
@@ -719,13 +748,13 @@ class Candidato {
             $tabela->show();
 
             $tab->fechaConteudo();
-            
-             /*
+
+            /*
              * Negros e Índios
              */
 
             $tab->abreConteudo();
-            
+
             # Pega os dados
             $select = "SELECT cargoConcurso,
                               vagasNi,
@@ -743,7 +772,7 @@ class Candidato {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_width([40, 10, 10, 10, 10]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, null, "Candidato", "Candidato"]);
             $tabela->set_metodo([null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga"]);
@@ -759,13 +788,13 @@ class Candidato {
             $tabela->show();
 
             $tab->fechaConteudo();
-            
-             /*
+
+            /*
              * Hipossuficiente Econômico
              */
 
             $tab->abreConteudo();
-            
+
             # Pega os dados
             $select = "SELECT cargoConcurso,
                               vagasHipo,
@@ -783,7 +812,7 @@ class Candidato {
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_width([40, 10, 10, 10, 10]);
-            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero" ]);
+            $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
             $tabela->set_classe([null, null, "Candidato", "Candidato"]);
             $tabela->set_metodo([null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);

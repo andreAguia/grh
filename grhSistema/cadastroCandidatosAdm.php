@@ -257,11 +257,11 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
-                $menu->add_item('titulo1', 'Todas as Cotas');
-                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
-
-                $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
-                $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
+//                $menu->add_item('titulo1', 'Todas as Cotas');
+//                $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
+//
+//                $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
+//                $menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
                 $menu->show();
             }
 

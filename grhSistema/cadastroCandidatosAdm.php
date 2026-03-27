@@ -258,8 +258,12 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
                 $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
+                $menu->add_item('linkWindow', 'Nome, CPF, CI e Cargo - Para a Preícia', '?fase=relatorio4');
                 $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
-                #$menu->add_item('linkWindow', 'Com Data de Nascimento', '?fase=relatorio4');
+
+                $menu->add_item('titulo1', 'Análise dos Candidatos');
+                $menu->add_item('linkWindow', 'Candidatos Duplicados', '?fase=relatorio6');
+
                 $menu->show();
             }
 
@@ -1075,7 +1079,7 @@ if ($acesso) {
                 $relatorio->set_subtitulo($subtitulo);
                 $relatorio->set_conteudo($row);
                 $relatorio->set_label(["#", "Inscrição", "Candidato", "Pontuação", "Cargo"]);
-                $relatorio->set_align(["center", "center", "left", "center"]);
+                $relatorio->set_align(["center", "center", "left"]);
                 $relatorio->set_funcao([null, null, "plm"]);
                 $relatorio->set_numGrupo(4);
                 $relatorio->show();
@@ -1087,93 +1091,90 @@ if ($acesso) {
         case "relatorio4":
 
             /*
-             *  Candidatos de um cargo
+             *  Todos os Candidatod de Todos os cargos
+             * Com Nome, CPF, CI e Cargo
              */
-            if ($parametroCargoCandidato <> "*") {
 
-                # Monta o select
-                $select = "SELECT {$campo},
-                              inscricao,
-                              nome,
-                              dtNascimento,
-                              CONVERT(notaFinal, DECIMAL(10,2))
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+            # Define o array da tabela
+            $arrayTabela = [];
 
-                # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "Ac") {
-                    $select .= " AND {$campo} IS NOT NULL";
+            # Pega os cargos
+            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+                                          FROM tbconcursovagadetalhada
+                                      ORDER BY cargoConcurso');
+
+            # Percorre os cargos
+            foreach ($result as $item) {
+
+                foreach ($arrayCotas as $cota) {
+
+                    switch ($cota[0]) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifAc";
+                            $campoVaga = "vagas";
+                            $subtitulo = "Ampla Concorrência";
+                            break;
+
+                        // Pcd
+                        case "Pcd":
+                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifPcd";
+                            $campoVaga = "vagasPcd";
+                            $subtitulo = "Cota: PCD";
+                            break;
+
+                        // Negros e Índios
+                        case "Ni":
+                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifNi";
+                            $campoVaga = "vagasNi";
+                            $subtitulo = "Cota: Negros e Índios";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifHipo";
+                            $campoVaga = "vagasHipo";
+                            $subtitulo = "Cota: Hipossuficiente Econômico";
+                            break;
+                    }
+
+                    # Pega os candidaatos desse cargo e dessa cota
+                    $select = "SELECT inscricao,
+                                      nome,
+                                      cpf,
+                                      identidade,
+                                      cargo
+                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                WHERE tbcandidato.idConcurso = {$idConcurso}
+                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+                                  AND cargo = '{$item["cargoConcurso"]}'
+                             ORDER BY {$campo}";
+
+                    # Passa para o array
+                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
                 }
-
-                # nome
-                if (!is_null($parametroNome)) {
-                    $select .= " AND nome LIKE '%{$parametroNome}%'";
-                }
-
-                # cargo
-                if ($parametroCargoCandidato <> "*") {
-                    $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                }
-
-                # Ordenação
-                $select .= " ORDER BY {$campo}";
-
-                $row = $pessoal->select($select);
-
-                # tabela
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
-                $relatorio->set_tituloLinha2(plm($parametroCargoCandidato));
-                $relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_conteudo($row);
-                $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação"]);
-                $relatorio->set_align(["center", "center", "left"]);
-                $relatorio->set_funcao([null, null, "plm", "date_to_php"]);
-                $relatorio->show();
-            } else {
-                #################################################################
-
-                /*
-                 *  Todos os cargos
-                 */
-
-                # Monta o select
-
-                $select = "SELECT {$campo},
-                                  inscricao,
-                                  nome,
-                                  dtNascimento,
-                                  CONVERT(notaFinal, DECIMAL(10,2)),
-                                  cargo
-                             FROM tbcandidato
-                            WHERE idConcurso = {$idConcurso}";
-
-                # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "Ac") {
-                    $select .= " AND {$campo} IS NOT NULL";
-                }
-
-                # nome
-                if (!is_null($parametroNome)) {
-                    $select .= " AND nome LIKE '%{$parametroNome}%'";
-                }
-
-                # Ordenação
-                $select .= " ORDER BY cargo, {$campo}";
-
-                $row = $pessoal->select($select);
-
-                # Relatório
-                $relatorio = new Relatorio();
-                $relatorio->set_titulo("Relatório de Candidatos Aprovados");
-                $relatorio->set_subtitulo($subtitulo);
-                $relatorio->set_conteudo($row);
-                $relatorio->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Pontuação", "Cargo"]);
-                $relatorio->set_align(["center", "center", "left"]);
-                $relatorio->set_funcao([null, null, "plm", "date_to_php", null, "plm"]);
-                $relatorio->set_numGrupo(5);
-                $relatorio->show();
             }
+
+            # Ordena por nome
+            usort($arrayTabela, function ($a, $b) {
+                return strcmp($a['nome'], $b['nome']);
+            });
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($arrayTabela);
+            $relatorio->set_label(["Inscrição", "Nome", "Cpf", "CI", "Cargo"]);
+            $relatorio->set_align(["center", "left", "center", "center", "left"]);
+            $relatorio->set_funcao([null, "plm", null, null, "plm"]);
+            #$relatorio->set_numGrupo(2);
+            $relatorio->show();
+
             break;
 
         ################################################################  
@@ -1258,8 +1259,8 @@ if ($acesso) {
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($arrayTabela);
             $relatorio->set_label(["Inscrição", "Nome", "Cpf"]);
-            $relatorio->set_align(["center", "left", "center", "left"]);
-            $relatorio->set_funcao([null, "plm", null, "plm"]);
+            $relatorio->set_align(["center", "left"]);
+            $relatorio->set_funcao([null, "plm"]);
             #$relatorio->set_numGrupo(2);
             $relatorio->show();
 
@@ -1276,6 +1277,7 @@ if ($acesso) {
 
             # Define o array da tabela
             $arrayTabela = [];
+            $resultadoFinal = [];
 
             # Pega os cargos
             $result = $pessoal->select('SELECT DISTINCT cargoConcurso
@@ -1321,11 +1323,10 @@ if ($acesso) {
                             break;
                     }
 
-                    # Pega os candidaatos desse cargo e dessa cota
-                    $select = "SELECT {$campo},
-                                      inscricao,
+                    # Pega os candidatos desse cargo e dessa cota
+                    $select = "SELECT inscricao,
                                       nome,
-                                      cpf,
+                                      idCandidato,
                                       cargo
                                  FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                                 WHERE tbcandidato.idConcurso = {$idConcurso}
@@ -1343,110 +1344,32 @@ if ($acesso) {
                 return strcmp($a['nome'], $b['nome']);
             });
 
-            # Relatório
-            $relatorio = new Relatorio();
-            $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
-            #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_conteudo($arrayTabela);
-            $relatorio->set_label(["#", "Inscrição", "Nome", "Cpf", "Cargo"]);
-            $relatorio->set_align(["center", "center", "left", "center", "left"]);
-            $relatorio->set_funcao([null, null, "plm", null, "plm"]);
-            #$relatorio->set_numGrupo(2);
-            $relatorio->show();
+            // 1. Extrai a coluna de nome e conta quantas vezes cada um aparece
+            $nomes = array_column($arrayTabela, 'nome');
+            $contagem = array_count_values($nomes);
 
-            break;
-
-        ################################################################  
-
-        case "relatorio7":
-
-
-            /*
-             *  Todos os Candidatod de Todos os cargos
-             */
-
-            # Define o array da tabela
-            $arrayTabela = [];
-
-            # Pega os cargos
-            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
-                                          FROM tbconcursovagadetalhada
-                                      ORDER BY cargoConcurso');
-
-            # Percorre os cargos
-            foreach ($result as $item) {
-
-                foreach ($arrayCotas as $cota) {
-
-                    switch ($cota[0]) {
-                        // Ampla Concorrência
-                        case "Ac":
-                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
-                            $campo = "classifAc";
-                            $campoVaga = "vagas";
-                            $subtitulo = "Ampla Concorrência";
-                            break;
-
-                        // Pcd
-                        case "Pcd":
-                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
-                            $campo = "classifPcd";
-                            $campoVaga = "vagasPcd";
-                            $subtitulo = "Cota: PCD";
-                            break;
-
-                        // Negros e Índios
-                        case "Ni":
-                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
-                            $campo = "classifNi";
-                            $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
-                            break;
-
-                        // Hipossuficiente Econômico
-                        case "Hipo":
-                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
-                            $campo = "classifHipo";
-                            $campoVaga = "vagasHipo";
-                            $subtitulo = "Cota: Hipossuficiente Econômico";
-                            break;
-                    }
-
-                    # Pega os candidaatos desse cargo e dessa cota
-                    $select = "SELECT {$campo},
-                                      inscricao,
-                                      nome,
-                                      cpf,
-                                      cargo
-                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                                WHERE tbcandidato.idConcurso = {$idConcurso}
-                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
-                                  AND cargo = '{$item["cargoConcurso"]}'
-                             ORDER BY {$campo}";
-
-                    # Passa para o array
-                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
-                }
-            }
-
-            # Ordena por nome
-            usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['nome'], $b['nome']);
+            // 2. Filtra o array mantendo apenas os registros cujo nome aparece > 1 vez
+            $duplicados = array_filter($arrayTabela, function ($arrayTabela) use ($contagem) {
+                return $contagem[$arrayTabela['nome']] > 1;
             });
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Cadastro de Candidatos Aprovados");
+            $relatorio->set_titulo("Relatório de Candidatos Duplicados");
             #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_conteudo($arrayTabela);
-            $relatorio->set_label(["#", "Inscrição", "Nome", "Cpf", "Cargo"]);
-            $relatorio->set_align(["center", "center", "left", "center", "left"]);
-            $relatorio->set_funcao([null, null, "plm", null, "plm"]);
+            $relatorio->set_conteudo($duplicados);
+            $relatorio->set_label(["Inscrição", "Nome", "Cotas", "Cargo"]);
+            $relatorio->set_align(["center", "left", "center", "left"]);
+            $relatorio->set_funcao([null, "plm", null, "plm"]);
+
+            $relatorio->set_classe([null, null, "Candidato"]);
+            $relatorio->set_metodo([null, null, "exibeCotas"]);
+
             #$relatorio->set_numGrupo(2);
             $relatorio->show();
-
             break;
 
+        ################################################################    
         ################################################################             
         case "editaCandidato" :
             br(8);

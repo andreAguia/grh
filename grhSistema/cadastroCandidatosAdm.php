@@ -1097,6 +1097,7 @@ if ($acesso) {
 
             # Define o array da tabela
             $arrayTabela = [];
+            $resultadoFinal = [];
 
             # Pega os cargos
             $result = $pessoal->select('SELECT DISTINCT cargoConcurso
@@ -1164,11 +1165,21 @@ if ($acesso) {
                 return strcmp($a['nome'], $b['nome']);
             });
 
+            $anterior = null;
+            # Retira as duplicatas
+            foreach ($arrayTabela as $item) {
+                # Verifica se é diferente ao anterior
+                if ($item['nome'] <> $anterior) {
+                    $anterior = $item['nome'];
+                    $resultadoFinal[] = $item;
+                }
+            }
+
             # Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Relatório de Candidatos Aprovados");
             #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_conteudo($arrayTabela);
+            $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "Cpf", "CI", "Cargo"]);
             $relatorio->set_align(["center", "left", "center", "center", "left"]);
             $relatorio->set_funcao([null, "plm", null, null, "plm"]);
@@ -1188,6 +1199,7 @@ if ($acesso) {
 
             # Define o array da tabela
             $arrayTabela = [];
+            $resultadoFinal = [];
 
             # Pega os cargos
             $result = $pessoal->select('SELECT DISTINCT cargoConcurso
@@ -1252,12 +1264,22 @@ if ($acesso) {
             usort($arrayTabela, function ($a, $b) {
                 return strcmp($a['nome'], $b['nome']);
             });
+            
+            $anterior = null;
+            # Retira as duplicatas
+            foreach ($arrayTabela as $item) {
+                # Verifica se é diferente ao anterior
+                if ($item['nome'] <> $anterior) {
+                    $anterior = $item['nome'];
+                    $resultadoFinal[] = $item;
+                }
+            }
 
             # Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Relatório de Candidatos Aprovados");
             #$relatorio->set_subtitulo($subtitulo);
-            $relatorio->set_conteudo($arrayTabela);
+            $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "Cpf"]);
             $relatorio->set_align(["center", "left"]);
             $relatorio->set_funcao([null, "plm"]);

@@ -258,7 +258,7 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
                 $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
-                $menu->add_item('linkWindow', 'Nome, CPF, CI e Cargo - Para a Preícia', '?fase=relatorio4');
+                $menu->add_item('linkWindow', 'Nome, CPF, CI e Cargo - Para a Perícia', '?fase=relatorio4');
                 $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
 
                 $menu->add_item('titulo1', 'Análise dos Candidatos');

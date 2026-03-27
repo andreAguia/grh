@@ -1356,8 +1356,11 @@ if ($acesso) {
                     # Pega os candidatos desse cargo e dessa cota
                     $select = "SELECT inscricao,
                                       nome,
-                                      idCandidato,
-                                      cargo
+                                      cargo,
+                                      classifAc,
+                                      classifPcd,
+                                      classifNi,
+                                      classifHipo
                                  FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                                 WHERE tbcandidato.idConcurso = {$idConcurso}
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
@@ -1388,14 +1391,14 @@ if ($acesso) {
             $relatorio->set_titulo("Relatório de Candidatos Duplicados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($duplicados);
-            $relatorio->set_label(["Inscrição", "Nome", "Cotas", "Cargo"]);
-            $relatorio->set_align(["center", "left", "center", "left"]);
-            $relatorio->set_funcao([null, "plm", null, "plm"]);
+            $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Ac", "Pcd", "Ni", "Hipo"]);
+            $relatorio->set_align(["center", "left", "left"]);
+            $relatorio->set_funcao([null, "plm", "plm"]);
 
-            $relatorio->set_classe([null, null, "Candidato"]);
-            $relatorio->set_metodo([null, null, "exibeCotas"]);
+//            $relatorio->set_classe([null, null, "Candidato"]);
+//            $relatorio->set_metodo([null, null, "exibeCotas"]);
 
-            #$relatorio->set_numGrupo(2);
+            $relatorio->set_numGrupo(1);
             $relatorio->show();
             break;
 

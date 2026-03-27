@@ -120,7 +120,14 @@ if ($acesso) {
     $page->iniciaPagina();
 
     # Cabeçalho da Página
-    if ($fase <> "relatorio1" AND $fase <> "relatorio2" AND $fase <> "relatorio3" AND $fase <> "relatorio4" AND $fase <> "relatorio5") {
+    if ($fase <> "relatorio1"
+            AND $fase <> "relatorio2"
+            AND $fase <> "relatorio3"
+            AND $fase <> "relatorio4"
+            AND $fase <> "relatorio5"
+            AND $fase <> "relatorio6"
+            AND $fase <> "relatorio7"
+            . "") {
         AreaServidor::cabecalho();
     }
 
@@ -263,6 +270,7 @@ if ($acesso) {
 
                 $menu->add_item('titulo1', 'Análise dos Candidatos');
                 $menu->add_item('linkWindow', 'Candidatos Duplicados', '?fase=relatorio6');
+                $menu->add_item('linkWindow', 'Candidatos Que São Servidores da Uenf', '?fase=relatorio7');
 
                 $menu->show();
             }
@@ -1264,7 +1272,7 @@ if ($acesso) {
             usort($arrayTabela, function ($a, $b) {
                 return strcmp($a['nome'], $b['nome']);
             });
-            
+
             $anterior = null;
             # Retira as duplicatas
             foreach ($arrayTabela as $item) {
@@ -1391,8 +1399,112 @@ if ($acesso) {
             $relatorio->show();
             break;
 
-        ################################################################    
-        ################################################################             
+        ################################################################  
+
+        case "relatorio7":
+
+
+            /*
+             *  Todos os Candidatod de Todos os cargos
+             */
+
+            br(10);
+            p("Em Desenvolvimento", "f16", "center");
+
+//            # Define o array da tabela
+//            $arrayTabela = [];
+//            $resultadoFinal = [];
+//
+//            # Pega os cargos
+//            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+//                                          FROM tbconcursovagadetalhada
+//                                      ORDER BY cargoConcurso');
+//
+//            # Percorre os cargos
+//            foreach ($result as $item) {
+//
+//                foreach ($arrayCotas as $cota) {
+//
+//                    switch ($cota[0]) {
+//                        // Ampla Concorrência
+//                        case "Ac":
+//                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+//                            $campo = "classifAc";
+//                            $campoVaga = "vagas";
+//                            $subtitulo = "Ampla Concorrência";
+//                            break;
+//
+//                        // Pcd
+//                        case "Pcd":
+//                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+//                            $campo = "classifPcd";
+//                            $campoVaga = "vagasPcd";
+//                            $subtitulo = "Cota: PCD";
+//                            break;
+//
+//                        // Negros e Índios
+//                        case "Ni":
+//                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+//                            $campo = "classifNi";
+//                            $campoVaga = "vagasNi";
+//                            $subtitulo = "Cota: Negros e Índios";
+//                            break;
+//
+//                        // Hipossuficiente Econômico
+//                        case "Hipo":
+//                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+//                            $campo = "classifHipo";
+//                            $campoVaga = "vagasHipo";
+//                            $subtitulo = "Cota: Hipossuficiente Econômico";
+//                            break;
+//                    }
+//
+//                    # Pega os candidatos desse cargo e dessa cota
+//                    $select = "SELECT inscricao,
+//                                      nome,
+//                                      cargo                                      
+//                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+//                                WHERE tbcandidato.idConcurso = {$idConcurso}
+//                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+//                                  AND cargo = '{$item["cargoConcurso"]}'
+//                             ORDER BY {$campo}";
+//
+//                    # Passa para o array
+//                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
+//                }
+//            }
+//
+//            # Ordena por nome
+//            usort($arrayTabela, function ($a, $b) {
+//                return strcmp($a['nome'], $b['nome']);
+//            });
+//
+//            // 1. Extrai a coluna de nome e conta quantas vezes cada um aparece
+//            $nomes = array_column($arrayTabela, 'nome');
+//            $contagem = array_count_values($nomes);
+//
+//            // 2. Filtra o array mantendo apenas os registros cujo nome aparece > 1 vez
+//            $duplicados = array_filter($arrayTabela, function ($arrayTabela) use ($contagem) {
+//                return $contagem[$arrayTabela['nome']] > 1;
+//            });
+//
+//            # Relatório
+//            $relatorio = new Relatorio();
+//            $relatorio->set_titulo("Relatório de Candidatos Duplicados");
+//            #$relatorio->set_subtitulo($subtitulo);
+//            $relatorio->set_conteudo($duplicados);
+//            $relatorio->set_label(["Inscrição", "Nome", "Cargo"]);
+//            $relatorio->set_align(["center", "left", "left"]);
+//            $relatorio->set_funcao([null, "plm", "plm"]);
+//
+//            #$relatorio->set_classe([null, null, "Candidato"]);
+//            #$relatorio->set_metodo([null, null, "exibeCotas"]);
+//
+//            #$relatorio->set_numGrupo(2);
+//            $relatorio->show();
+            break;
+
+        ################################################################                 
         case "editaCandidato" :
             br(8);
             aguarde();

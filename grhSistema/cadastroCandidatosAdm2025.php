@@ -1516,10 +1516,10 @@ if ($acesso) {
             set_session('idCandidatoPesquisado', $id);
 
             # Informa a origem
-            set_session('origem', "cadastroCandidatoAdm.php");
+            set_session('origem', "cadastroCandidatosAdm2025.php");
 
             # Carrega a página específica
-            loadPage('cadastroCandidatoAdmEdita.php');
+            loadPage('cadastroCandidatosAdm2025Edita.php');
             break;
 
         ##############################################################################################################

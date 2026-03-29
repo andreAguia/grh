@@ -538,6 +538,10 @@ class Candidato {
          * 
          * @syntax Candidato->exibeCotas($id);
          */
+        
+        tituloTable("Vagas do Edital do Concurso");
+        br();
+        
         # Verifica se tem o cargo
         if (empty($cargo)) {
 

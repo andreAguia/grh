@@ -1020,15 +1020,15 @@ class Concurso {
         # Monta o array
         if ($tipo == 1) {   // Administrativo
             $itensMenu = [
-                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao"],
+                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos",null, "Processo Seletivo"],
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
-                ["Vagas Gerais", "cadastroConcursoVagaAdm.php", $vagas],
-                ["Vagas Detalhadas", "cadastroConcursoVagaDetalhadasAdm.php"],
+                ["Vagas Calculadas", "cadastroConcursoVagaAdm.php", $vagas],
+                ["Vagas do Edital", "cadastroConcursoAdm.php?fase=aguardaVagasEdital"],
                 ["Provas", "cadastroConcursoProvas.php", $provas],
+                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null,"Servidorers Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
-                ["Candidatos", "cadastroCandidatosAdm.php?fase=aguardaLista"],
             ];
         } else {            // Professor
             $itensMenu = [
@@ -1046,7 +1046,18 @@ class Concurso {
         $menu = new Menu("menuProcedimentos");
         $menu->add_item('titulo', 'Menu');
 
+        $subMebu = null;
+
         foreach ($itensMenu as $item) {
+
+            # SubMenu
+            if (isset($item[3])) {
+                if ($item[3] <> $subMebu) {
+                    $subMebu = $item[3];
+
+                    $menu->add_item('titulo1', $item[3]);
+                }
+            }
 
             # Verifica se tem ressaltado
             if ($item[0] == $ressaltado) {

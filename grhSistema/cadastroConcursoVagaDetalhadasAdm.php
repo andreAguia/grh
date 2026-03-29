@@ -51,7 +51,7 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Vagas Detalhadas');
+    $objeto->set_nome('Vagas Publicadas no Edital');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('areaConcursoAdm.php');
@@ -200,7 +200,7 @@ if ($acesso) {
                 $concurso->exibeDadosConcurso($idConcurso, true);
 
                 # menu
-                $concurso->exibeMenu($idConcurso, "Vagas Detalhadas");
+                $concurso->exibeMenu($idConcurso, "Vagas do Edital");
 
                 $grid->fechaColuna();
                 $grid->abreColuna(9);

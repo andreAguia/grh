@@ -53,6 +53,7 @@ if ($acesso) {
 
     # select do edita
     $selectEdita = "SELECT idfuncional,
+                           idLotacao, 
                            classifAc, 
                            classifPcd,
                            classifNi,
@@ -89,8 +90,8 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('cadastroCandidatosAdm.php');
-    $objeto->set_voltarForm('cadastroCandidatosAdm.php');
+    $objeto->set_linkListar('cadastroCandidatosAdm2025.php');
+    $objeto->set_voltarForm('cadastroCandidatosAdm2025.php');
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);
@@ -104,12 +105,21 @@ if ($acesso) {
     # Nome do campo id
     $objeto->set_idCampo('idCandidato');
 
-    # Pega os dados da combo cargo
+    # Pega os dados da combo cargo do concurso
     $cargo = $pessoal->select('SELECT DISTINCT cargo, cargo
                                  FROM tbcandidato
                              ORDER BY cargo');
 
     array_unshift($cargo, [null, null]);
+    
+    # Pega os dados da combo lotacao
+    $selectLotacao = 'SELECT idlotacao, 
+                             concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")),
+                             tblotacao.DIR 
+                        FROM tblotacao ORDER BY ativo desc, 2';
+
+    $result = $pessoal->select($selectLotacao);
+    array_unshift($result, array(null, null));
 
     # Campos para o formulario
     $campos = array(
@@ -122,6 +132,15 @@ if ($acesso) {
             'size' => 15,
             'col' => 3,
             'title' => 'IdFuncional Quando já possui.'),
+         array('nome' => 'idLotacao',
+            'label' => 'Previsão de Lotacão:',
+            'tipo' => 'combo',
+            'optgroup' => true,
+            'array' => $result,
+            'size' => 20,
+            'col' => 9,
+            'title' => 'Em qual setor o candidato poderá ser lotado',
+            'linha' => 1),
         array(
             'linha' => 2,
             'nome' => 'classifAc',

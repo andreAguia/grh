@@ -112,7 +112,8 @@ if ($acesso) {
     array_unshift($result, array(null, null));
 
     # Campos para o formulario
-    $objeto->set_campos(array(array('nome' => 'data',
+    $objeto->set_campos(array(
+        array('nome' => 'data',
             'label' => 'Data:',
             'tipo' => 'data',
             'size' => 20,

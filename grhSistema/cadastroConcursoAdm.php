@@ -72,6 +72,10 @@ if ($acesso) {
 ################################################################
 
     switch ($fase) {
+
+        /*
+         * Classificação de Servidores
+         */
         case "":
         case "aguardaClassificacao" :
 
@@ -89,7 +93,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
 
             $grid->abreColuna(3);
 
@@ -104,7 +108,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
 
             $grid->abreColuna(9);
 
@@ -125,8 +129,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-        ################################################################
 
         case "classificacao" :
 
@@ -153,7 +155,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
 
             $grid->abreColuna(3);
@@ -169,7 +171,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
 
             $grid->abreColuna(9);
 
@@ -307,8 +309,6 @@ if ($acesso) {
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
 
-        ################################################################
-
         case "editaServidor" :
             br(8);
             aguarde();
@@ -324,6 +324,10 @@ if ($acesso) {
             break;
 
         ################################################################
+
+        /*
+         * Servidores Ativos
+         */
 
         case "aguardaListaServidoresAtivos" :
 
@@ -341,7 +345,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
 
             $grid->abreColuna(3);
@@ -357,7 +361,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
 
             $grid->abreColuna(9);
 
@@ -378,8 +382,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-        ################################################################
 
         case "listaServidoresAtivos" :
 
@@ -415,7 +417,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
             $grid->abreColuna(3);
 
@@ -430,7 +432,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
 
             $grid->abreColuna(9);
 
@@ -484,6 +486,10 @@ if ($acesso) {
 
         ################################################################
 
+        /*
+         * Servidores Inativos
+         */
+
         case "aguardaListaServidoresInativos" :
 
             # Cria um menu
@@ -500,7 +506,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
 
             $grid->abreColuna(3);
@@ -516,7 +522,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
 
             $grid->abreColuna(9);
 
@@ -537,8 +543,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-        ################################################################
 
         case "listaServidoresInativos" :
 
@@ -574,7 +578,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
             # Menu
 
             $grid->abreColuna(3);
@@ -590,7 +594,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
 
             $grid->abreColuna(9);
 
@@ -646,6 +650,10 @@ if ($acesso) {
 
         ################################################################
 
+        /*
+         * Todos os Servidores
+         */
+
         case "aguardaListaServidoresTodos" :
 
             # Cria um menu
@@ -662,7 +670,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
 
             $grid->abreColuna(3);
@@ -678,7 +686,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################3
+            ######################3
 
             $grid->abreColuna(9);
 
@@ -699,8 +707,6 @@ if ($acesso) {
             $grid->fechaColuna();
             $grid->fechaGrid();
             break;
-
-        ################################################################
 
         case "listaServidoresTodos" :
 
@@ -736,7 +742,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
             # Menu
             $grid->abreColuna(3);
 
@@ -751,7 +757,7 @@ if ($acesso) {
 
             $grid->fechaColuna();
 
-            #######################################################
+            ######################
 
             $grid->abreColuna(9);
 
@@ -804,6 +810,209 @@ if ($acesso) {
             break;
 
         ################################################################
+        /*
+         * Vagas do Edital
+         */
+
+        case "aguardaVagasEdital" :
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Vagas do Edital");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################3
+
+            $grid->abreColuna(9);
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=vagasEdital');
+            break;
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        case "vagasEdital" :
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos');
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioTodos");
+            $botaoRel->set_imagem($imagem2);
+            #$menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Vagas do Edital");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################
+
+            $grid->abreColuna(9);
+
+            # Verifica o Concurso
+            if ($idConcurso == 96) {
+                br();
+                $candidato = new Candidato();
+                $candidato->exibeTabelaVagasCargo();
+            } else {
+                mensagem("Não Há registros para esse Concurso","Vagas do Edital Concurso");
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou as Vagas do Edital do Concurso " . $concurso->get_nomeConcurso($idConcurso);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+
+        ################################################################
+        /*
+         * Candidatos
+         */
+
+        case "candidatos" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioTodos");
+            $botaoRel->set_imagem($imagem2);
+            #$menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Candidatos");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################
+
+            $grid->abreColuna(9);
+
+            # Verifica o Concurso
+            if ($idConcurso == 96) {
+                loadPage("cadastroCandidatosAdm2025.php?fase=aguardaLista");
+            } else {
+                mensagem("Não há registros para esse Concurso","Cadastro de Candidatos");
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou as Vagas do Edital do Concurso " . $concurso->get_nomeConcurso($idConcurso);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+
+        ################################################################
+        /*
+         * Relatórios
+         */
 
 
         case "relatorioAtivos" :
@@ -924,7 +1133,6 @@ if ($acesso) {
 //            $relatorio->set_grupoCorColuna(0);
 
             $relatorio->show();
-
             break;
 
         ################################################################

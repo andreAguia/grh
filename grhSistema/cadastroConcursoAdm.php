@@ -926,7 +926,7 @@ if ($acesso) {
                 $candidato = new Candidato();
                 $candidato->exibeTabelaVagasCargo();
             } else {
-                mensagem("Não Há registros para esse Concurso","Vagas do Edital Concurso");
+                mensagem(null, "Vagas do Edital Concurso");
             }
 
             $grid->fechaColuna();
@@ -997,7 +997,7 @@ if ($acesso) {
             if ($idConcurso == 96) {
                 loadPage("cadastroCandidatosAdm2025.php?fase=aguardaLista");
             } else {
-                mensagem("Não há registros para esse Concurso","Cadastro de Candidatos");
+                mensagem(null, "Cadastro de Candidatos");
             }
 
             $grid->fechaColuna();

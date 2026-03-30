@@ -40,6 +40,7 @@ $postEmailUenf = post('postEmailUenf');
 $postLotacaoOrigem = post('postLotacaoOrigem');
 $postNumVinculos = post('postNumVinculos');
 $postObs = post('postObs');
+$postOrgaoOrigem = post('postOrgaoOrigem');
 
 # Dados Pessoasi
 $postEndereco = post('postEndereco');
@@ -389,6 +390,15 @@ if ($acesso) {
     $controle->set_size(4);
     $controle->set_title('Nível / Faixa / Padrão do Servidor');
     $controle->set_valor($postNivelFaixaPadrao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # Órgão de Origem de um Cadido
+    $controle = new Input('postOrgaoOrigem', 'simnao', 'Órgão Origem:', 1);
+    $controle->set_size(4);
+    $controle->set_title("Órgão de Origem");
+    $controle->set_valor($postOrgaoOrigem);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
@@ -966,6 +976,16 @@ if ($acesso) {
         $align[] = "center";
         $class[] = "Progressao";
         $method[] = "get_FaixaAtual";
+        $function[] = "trataNulo";
+    }
+    
+    # Órgão de Origem
+    if ($postOrgaoOrigem) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Órgão de Origem";
+        $align[] = "center";
+        $class[] = "Cedido";
+        $method[] = "get_orgaoOrigem";
         $function[] = "trataNulo";
     }
 

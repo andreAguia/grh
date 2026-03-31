@@ -65,6 +65,7 @@ if ($acesso) {
                 . " portanto, não possui vantagens remuneratórias de outros vínculos que não sejam da própria Uenf.");
     }
     $dec->set_saltoAssinatura(2);
+    $dec->set_linhaAssinatura(false);
 
     # De quem assina
     #$dec->set_origemNome($nomeServidor);

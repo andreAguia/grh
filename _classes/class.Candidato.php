@@ -539,8 +539,8 @@ class Candidato {
          * @syntax Candidato->exibeCotas($id);
          */
         
-        tituloTable("Vagas do Edital do Concurso");
-        br();
+//        tituloTable("Vagas do Edital do Concurso");
+//        br();
         
         # Verifica se tem o cargo
         if (empty($cargo)) {
@@ -867,6 +867,55 @@ class Candidato {
             $tabela->set_totalRegistro(false);
 
             $tabela->show();
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacao
+     * fornece o nome, cargo e lotacao de um candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeECargoELotacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+            
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+            
+            pLista(
+                    plm($dados["nome"]),
+                    plm($dados["cargo"]),
+                    $pessoal->get_nomeLotacao($dados["idLotacao"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacao
+     * fornece o nome, cargo e lotacao de um candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeELotacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+            
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+            
+            pLista(
+                    plm($dados["nome"]),
+                    $pessoal->get_nomeLotacao($dados["idLotacao"])
+            );
         }
     }
 

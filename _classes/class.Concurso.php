@@ -1016,11 +1016,13 @@ class Concurso {
         $publicacao = $concurso->get_numPublicacaoConcurso($idConcurso);
         $tipo = $concurso->get_tipo($idConcurso);
         $provas = $concursoProva->get_numeroProvas($idConcurso);
+        $numCandidatos = $this->get_numCandidatos($idConcurso);
+        
 
         # Monta o array
         if ($tipo == 1) {   // Administrativo
             $itensMenu = [
-                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos",null, "Processo Seletivo"],
+                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos",$numCandidatos, "Processo Seletivo"],
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
                 ["Vagas Calculadas", "cadastroConcursoVagaAdm.php", $vagas],
                 ["Vagas do Edital", "cadastroConcursoAdm.php?fase=aguardaVagasEdital"],
@@ -1812,6 +1814,29 @@ class Concurso {
             return $row[0];
         } else {
             return null;
+        }
+    }
+
+    #####################################################################################
+
+    /**
+     * Método get_numCandidatos
+     * 
+     * Informa o numero de candidatos de um concurso
+     */
+    public function get_numCandidatos($idConcurso = null) {
+
+        # Verifica se veio o id do concurso
+        if (empty($idConcurso)) {
+            return null;
+        }else{
+            # Verifica se é o concurso 2025 - id 96
+            if($idConcurso == 96){
+                $candidatos  = new Candidato();
+                return $candidatos->get_numCandidatoAc();
+            }else{
+                return null;
+            }
         }
     }
 

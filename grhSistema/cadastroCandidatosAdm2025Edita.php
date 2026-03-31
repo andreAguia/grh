@@ -114,9 +114,11 @@ if ($acesso) {
     
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
-                             concat(IFnull(tblotacao.UADM,"")," - ",IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")),
+                             concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")),
                              tblotacao.DIR 
-                        FROM tblotacao ORDER BY ativo desc, 2';
+                        FROM tblotacao 
+                        WHERE ativo = 1
+                        ORDER BY ativo desc, 2';
 
     $result = $pessoal->select($selectLotacao);
     array_unshift($result, array(null, null));

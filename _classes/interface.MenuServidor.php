@@ -666,7 +666,8 @@ class MenuServidor {
             if ($this->perfil == 1) {
                 $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
             }
-        }
+        }        
+        
 
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
@@ -692,6 +693,13 @@ class MenuServidor {
         if ($this->perfil == 5) {
             $menu->add_item('linkWindow', 'Declaração para o INSS', '../grhRelatorios/declaracao.inss.contratoNulo.php');
         }
+        
+        /*
+         * Declarações Da Aposentadoria
+         */
+        
+        $menu->add_item('titulo', 'Declarações da Aposentadoria', '#');
+        $menu->add_item('linkWindow', 'Declaração Simples ao INSS', '../grhRelatorios/declaracao.inss.simples.php');
 
         /*
          * Declarações Do Servidor

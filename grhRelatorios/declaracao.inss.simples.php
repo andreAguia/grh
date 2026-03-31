@@ -22,12 +22,12 @@ if ($acesso) {
     $pessoal = new Pessoal();
 
     # Servidor
-    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
+    $nomeServidor = mb_strtoupper($pessoal->get_nome($idServidorPesquisado), 'UTF-8');
     $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
     $matricula = $pessoal->get_matricula($idServidorPesquisado);
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargoCompleto($idServidorPesquisado);
+    $cargoEfetivo = $pessoal->get_cargo($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
     $pis = $pessoal->get_Pis($idPessoa);
@@ -55,14 +55,14 @@ if ($acesso) {
             . " que a Universidade Estadual do Norte Fluminense Darcy Ribeiro, está inscrita no CNPJ nº 04.809.688/0001-06,"
             . " com sede na Av. Alberto Lamego 2000 - Parque California, Campos dos Goytacazes - RJ, CEP 28013-602.");
 
-    $dec->set_texto("Declaramos, ainda, que o Sr.<b>" . strtoupper($nomeServidor) . "</b>, ID funcional nº {$idFuncional},"
-            . " inscrito no PIS/PASEP sob o nº {$pis} e CPF nº {$cpf}, é servidor(a) desta Universidade, por aprovação em concurso público,"
+    $dec->set_texto("Declaramos, ainda, que o(a) Sr(a). <b>{$nomeServidor}</b>, ID funcional nº {$idFuncional},"
+            . " inscrito(a) no PIS/PASEP sob o nº {$pis} e CPF nº {$cpf}, é servidor(a) desta Universidade, por aprovação em concurso público,"
             . " desde {$dtAdmin}, sob o regime estatutário e desconto previdenciário em favor do Rioprevidência, no cargo de {$cargoEfetivo}.");
 
     # Quando não se tem tempo averbado
     if ($tempoAverbado == 0) {
-        $dec->set_texto("Informamos, ainda, que o servidor não averbou qualquer período de serviço prestado a entidade vinculadasao RGPS nesta Instituição e,"
-                . " portanto, não possui vantagens remuneratórias de outros vínculos que não sejamda própria Uenf.");
+        $dec->set_texto("Informamos, ainda, que o(a) servidor(a) não averbou qualquer período de serviço prestado a entidade vinculadas ao RGPS nesta Instituição e,"
+                . " portanto, não possui vantagens remuneratórias de outros vínculos que não sejam da própria Uenf.");
     }
     $dec->set_saltoAssinatura(2);
 

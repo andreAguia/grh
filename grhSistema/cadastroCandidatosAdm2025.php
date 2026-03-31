@@ -263,7 +263,7 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
                 $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
-                $menu->add_item('linkWindow', 'Com Locação', '?fase=relatorio8');
+                $menu->add_item('linkWindow', 'Com Lotação', '?fase=relatorio8');
 
                 $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
                 $menu->add_item('linkWindow', 'Nome, CPF, CI e Cargo - Para a Perícia', '?fase=relatorio4');

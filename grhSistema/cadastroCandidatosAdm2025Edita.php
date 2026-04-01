@@ -130,7 +130,7 @@ if ($acesso) {
             'nome' => 'idfuncional',
             'label' => 'Id Funcional:',
             'tipo' => 'texto',
-            //'autofocus' => true,
+            'autofocus' => true,
             'size' => 15,
             'col' => 3,
             'title' => 'IdFuncional Quando já possui.'),
@@ -148,7 +148,6 @@ if ($acesso) {
             'nome' => 'classifAc',
             'label' => 'Classificação Ampla Concorrência:',
             'tipo' => 'numero',
-            'autofocus' => true,
             'col' => 3,
             'size' => 5),
         array(

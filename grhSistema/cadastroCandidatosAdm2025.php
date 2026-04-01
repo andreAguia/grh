@@ -1700,7 +1700,7 @@ if ($acesso) {
             set_session('origem', "cadastroCandidatosAdm2025.php");
 
             # Carrega a página específica
-            loadPage('cadastroCandidatosAdm2025Edita.php');
+            loadPage('cadastroCandidatosAdm2025EditaProva.php');
             break;
 
         ##############################################################################################################

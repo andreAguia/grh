@@ -127,6 +127,7 @@ if ($acesso) {
             AND $fase <> "relatorio5"
             AND $fase <> "relatorio6"
             AND $fase <> "relatorio7"
+            AND $fase <> "relatorio8"
             . "") {
         AreaServidor::cabecalho();
     }
@@ -1665,7 +1666,7 @@ if ($acesso) {
                 $select .= ")";
                 $row = $pessoal->select($select);
 
-                # Ordena por nome
+                # Ordena por lotacao
                 usort($row, function ($a, $b) {
                     return strcmp($a['lotacao'], $b['lotacao']);
                 });

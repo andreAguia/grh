@@ -49,21 +49,17 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Dados do Candidato');
+    $objeto->set_nome('Dados da Prova');
 
     # select do edita
-    $selectEdita = "SELECT idfuncional,
+    $selectEdita = "SELECT inscricao,
+                           nome,
+                           idfuncional,
                            idLotacao, 
                            classifAc, 
                            classifPcd,
                            classifNi,
                            classifHipo,
-                           inscricao,
-                           nome,
-                           dtNascimento,
-                           cpf,
-                           identidade,                           
-                           nomeMae,
                            cargo,
                            tipoDeficiencia,
                            notaFinal,
@@ -117,6 +113,22 @@ if ($acesso) {
     $objeto->set_campos(array(
         array(
             'linha' => 1,
+            'nome' => 'inscricao',
+            'label' => 'Inscrição:',
+            'tipo' => 'texto',
+            'size' => 30,
+            'col' => 3,
+            'title' => 'Inscrição do Candidato.'),
+        array(
+            'linha' => 1,
+            'nome' => 'nome',
+            'label' => 'Nome:',
+            'tipo' => 'texto',
+            'title' => 'Nome do Candidato',
+            'col' => 9,
+            'size' => 200),
+        array(
+            'linha' => 2,
             'nome' => 'idfuncional',
             'label' => 'Id Funcional:',
             'tipo' => 'texto',
@@ -132,83 +144,35 @@ if ($acesso) {
             'size' => 20,
             'col' => 9,
             'title' => 'Em qual setor o candidato poderá ser lotado',
-            'linha' => 1),
+            'linha' => 2),
         array(
-            'linha' => 2,
+            'linha' => 3,
             'nome' => 'classifAc',
             'label' => 'Classificação Ampla Concorrência:',
             'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
         array(
-            'linha' => 2,
+            'linha' => 3,
             'nome' => 'classifPcd',
             'label' => 'Classificação PCD:',
             'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
         array(
-            'linha' => 2,
+            'linha' => 3,
             'nome' => 'classifNi',
             'label' => 'Classificação Negros e Indios:',
             'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
         array(
-            'linha' => 2,
+            'linha' => 3,
             'nome' => 'classifHipo',
             'label' => 'Classificação Hipo:',
             'tipo' => 'numero',
             'col' => 3,
             'size' => 5),
-        array(
-            'linha' => 2,
-            'nome' => 'inscricao',
-            'label' => 'Inscrição:',
-            'tipo' => 'texto',
-            'size' => 30,
-            'col' => 3,
-            'title' => 'Inscrição do Candidato.'),
-        array(
-            'linha' => 2,
-            'nome' => 'nome',
-            'label' => 'Nome:',
-            'tipo' => 'texto',
-            'title' => 'Nome do Candidato',
-            'col' => 6,
-            'size' => 200),
-        array(
-            'linha' => 2,
-            'nome' => 'dtNascimento',
-            'label' => 'Data de Nascimento:',
-            'tipo' => 'data',
-            'size' => 20,
-            'col' => 3,
-            'title' => 'Data de Nascimento.'),
-        array(
-            'linha' => 3,
-            'col' => 3,
-            'nome' => 'cpf',
-            'label' => 'CPF:',
-            'tipo' => 'cpf',
-            'required' => true,
-            'title' => 'CPF do servidor',
-            'size' => 20),
-        array(
-            'linha' => 3,
-            'nome' => 'identidade',
-            'label' => 'Identidade:',
-            'tipo' => 'texto',
-            'title' => 'Identidade do Candidato',
-            'col' => 3,
-            'size' => 50),
-        array(
-            'linha' => 3,
-            'nome' => 'nomeMae',
-            'label' => 'Nome da Mãe:',
-            'tipo' => 'texto',
-            'col' => 6,
-            'size' => 200),
         array(
             'linha' => 4,
             'nome' => 'cargo',
@@ -241,11 +205,14 @@ if ($acesso) {
             'size' => 30)
     ));
     
-    # Dados Pessoais
-    $botao = new Link("Dados Pessoais", "cadastroCandidatosAdm2025EditaPessoais.php");
-    $botao->set_class('button');
+    # Botões
+    $botao1 = new Link("Dados da Prova", "cadastroCandidatosAdm2025EditaProva.php");
+    $botao1->set_class('hollow button');
 
-    $objeto->set_botaoEditarExtra([$botao]);
+    $botao2 = new Link("Dados Pessoais", "cadastroCandidatosAdm2025EditaPessoais.php");
+    $botao2->set_class('button');
+
+    $objeto->set_botaoEditarExtra([$botao2]);
 
     # Log
     $objeto->set_idUsuario($idUsuario);

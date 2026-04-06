@@ -200,7 +200,7 @@ if ($acesso) {
                 $concurso->exibeDadosConcurso($idConcurso, true);
 
                 # menu
-                $concurso->exibeMenu($idConcurso, "Vagas do Edital");
+                $concurso->exibeMenu($idConcurso, "Vagas Edital Detalhadas");
 
                 $grid->fechaColuna();
                 $grid->abreColuna(9);

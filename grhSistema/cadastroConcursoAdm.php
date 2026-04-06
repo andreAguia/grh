@@ -839,7 +839,7 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso, "Vagas do Edital");
+            $concurso->exibeMenu($idConcurso, "Vagas Edital");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
@@ -909,7 +909,7 @@ if ($acesso) {
             $concurso->exibeDadosConcurso($idConcurso, true);
 
             # menu
-            $concurso->exibeMenu($idConcurso, "Vagas do Edital");
+            $concurso->exibeMenu($idConcurso, "Vagas Edital");
 
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);

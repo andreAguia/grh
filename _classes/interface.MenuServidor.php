@@ -666,12 +666,15 @@ class MenuServidor {
             if ($this->perfil == 1) {
                 $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
             }
-        }        
-        
+        }                
 
+        // Somente estatutários, celetistas e cedidos
+        if ($this->perfil == 1 OR $this->perfil == 2 OR $this->perfil == 4) {
+            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
+        }
+        
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
-            $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício - Com Salário', '../grhRelatorios/declaracao.vinculoEmpregaticioComSalario.php');
         }
 

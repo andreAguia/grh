@@ -48,12 +48,12 @@ if ($acesso) {
     if (!empty($idFuncional)) {
         $texto .= " ID funcional nº {$idFuncional},";
     }
-    
+
     # a matricula(se tiver)
     if (!empty($matricula)) {
         $texto .= " matrícula nº {$matricula},";
     }
-    
+
     # Altera parte do texto de acordo com o sexo (gênero) do servidor
     if ($sexo == "Masculino") {
         $texto1 = "cedido";
@@ -75,7 +75,7 @@ if ($acesso) {
     }
 
     # Estatutário
-    if ($idPerfil == 1) {
+    if ($idPerfil == 1 OR $idPerfil == 4) {
         if ($idSituacao == 1) {
             $texto .= " é {$texto2} desta Universidade, {$texto3} em {$dtAdmin}, através de Concurso Público, para o cargo de {$cargoEfetivo}.";
         } else {
@@ -104,11 +104,11 @@ if ($acesso) {
 
                 case 9 : // Demissão por justa causa
                 case 10 : // Demissão
-                    $texto .= ", quando foi demitido.";
+                    $texto .= ", quando foi demitido(a).";
                     break;
 
                 case 14 : // Exonerado
-                    $texto .= ", quando foi exonerado.";
+                    $texto .= ", quando foi exonerado(a).";
                     break;
 
                 default :

@@ -28,7 +28,7 @@ class MenuPrincipal {
         $this->moduloServidores();
         $this->moduloAreaConcursos();
         $this->moduloDocumentos();
-        
+
         #$this->moduloAreaPandemia();
         #$this->moduloPlanoCargos();
         #$this->moduloSei();
@@ -53,7 +53,7 @@ class MenuPrincipal {
         }
 
         # Módulos
-        #$this->moduloSispatri();           // Sispatri
+        $this->moduloSispatri();           // Sispatri
         #$this->moduloEventos();             // Eventos
         $this->moduloSistemas();            // Sistemas
         $this->moduloAreaEspecial();        // Área Especial        
@@ -235,11 +235,13 @@ class MenuPrincipal {
      * Método moduloSispatri
      */
     private function moduloSispatri() {
+        
+        Titulo("Sispatri 2026");
 
         $botao = new BotaoGrafico();
         $botao->set_label();
         $botao->set_url("https://www.rj.gov.br/servico/acessar-sispatri-declaracao-patrimonial-2023169");
-        $botao->set_imagem(PASTA_FIGURAS . 'Sispatri2025.jpg', '100%', '100%');
+        $botao->set_imagem(PASTA_FIGURAS . 'sispatri2026.png', '100%', '100%');
         $botao->set_title('Sistema de Registros de Bens dos Agentes Públicos');
         $botao->set_target("_blank");
         $botao->show();
@@ -886,7 +888,7 @@ class MenuPrincipal {
         $botao->set_imagem(PASTA_FIGURAS . 'diploma.jpg', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Formação Escolar dos Servidores');
         $menu->add_item($botao);
-        
+
         $botao = new BotaoGrafico();
         $botao->set_label('PETEC');
         $botao->set_url('areaPetec.php?grh=1');

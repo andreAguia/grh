@@ -270,10 +270,6 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Nome, CPF, CI e Cargo - Para a Perícia', '?fase=relatorio4');
                 $menu->add_item('linkWindow', 'Nome e CPF - Para o Restaurante', '?fase=relatorio5');
 
-                $menu->add_item('titulo1', 'Análise dos Candidatos');
-                $menu->add_item('linkWindow', 'Candidatos Duplicados', '?fase=relatorio6');
-                $menu->add_item('linkWindow', 'Candidatos Que São Servidores da Uenf', '?fase=relatorio7');
-
                 $menu->show();
             }
 
@@ -586,6 +582,297 @@ if ($acesso) {
             break;
 
         ################################################################
+
+        /*
+         * Candidatos Duplicados
+         */
+
+        case "duplicados":
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Candidatos Duplicados");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio6");
+            $botaoRel->set_imagem($imagem2);
+            $menu1->add_link($botaoRel, "right");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            ###################################################################                       
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Duplicados");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+            $grid->fechaColuna();
+
+            ###################################################################
+            # Campos de Pesquisa
+            $grid->abreColuna(9);
+            
+
+            # Define o array da tabela
+            $arrayTabela = [];
+            $resultadoFinal = [];
+
+            # Pega os cargos
+            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+                                          FROM tbconcursovagadetalhada
+                                      ORDER BY cargoConcurso');
+
+            # Percorre os cargos
+            foreach ($result as $item) {
+
+                foreach ($arrayCotas as $cota) {
+
+                    switch ($cota[0]) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifAc";
+                            $campoVaga = "vagas";
+                            $subtitulo = "Ampla Concorrência";
+                            break;
+
+                        // Pcd
+                        case "Pcd":
+                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifPcd";
+                            $campoVaga = "vagasPcd";
+                            $subtitulo = "Cota: PCD";
+                            break;
+
+                        // Negros e Índios
+                        case "Ni":
+                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifNi";
+                            $campoVaga = "vagasNi";
+                            $subtitulo = "Cota: Negros e Índios";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifHipo";
+                            $campoVaga = "vagasHipo";
+                            $subtitulo = "Cota: Hipossuficiente Econômico";
+                            break;
+                    }
+
+                    # Pega os candidatos desse cargo e dessa cota
+                    $select = "SELECT inscricao,
+                                      nome,
+                                      cargo,
+                                      classifAc,
+                                      classifPcd,
+                                      classifNi,
+                                      classifHipo
+                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                WHERE tbcandidato.idConcurso = {$idConcurso}
+                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+                                  AND cargo = '{$item["cargoConcurso"]}'
+                             ORDER BY {$campo}";
+
+                    # Passa para o array
+                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
+                }
+            }
+
+            # Ordena por nome
+            usort($arrayTabela, function ($a, $b) {
+                return strcmp($a['nome'], $b['nome']);
+            });
+
+            // 1. Extrai a coluna de nome e conta quantas vezes cada um aparece
+            $nomes = array_column($arrayTabela, 'nome');
+            $contagem = array_count_values($nomes);
+
+            // 2. Filtra o array mantendo apenas os registros cujo nome aparece > 1 vez
+            $duplicados = array_filter($arrayTabela, function ($arrayTabela) use ($contagem) {
+                return $contagem[$arrayTabela['nome']] > 1;
+            });
+
+            # Relatório
+            $relatorio = new Tabela();
+            $relatorio->set_titulo("Relatório de Candidatos Duplicados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($duplicados);
+            $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Ac", "Pcd", "Ni", "Hipo"]);
+            $relatorio->set_align(["center", "left", "left"]);
+            $relatorio->set_funcao([null, "plm", "plm"]);
+
+//            $relatorio->set_classe([null, null, "Candidato"]);
+//            $relatorio->set_metodo([null, null, "exibeCotas"]);
+
+            $relatorio->set_rowspan(1);
+            $relatorio->set_grupoCorColuna(1);
+            $relatorio->show();
+            break;
+
+        ################################################################
+
+        /*
+         * Candidatos Duplicados
+         */
+
+        case "pericia":
+            
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Candidatos Duplicados");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorio4");
+            $botaoRel->set_imagem($imagem2);
+            $menu1->add_link($botaoRel, "right");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            ###################################################################                       
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Na Vaga - Nome, CPF e Cargo");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+            $grid->fechaColuna();
+
+            ###################################################################
+            # Campos de Pesquisa
+            $grid->abreColuna(9);
+            
+            # Define o array da tabela
+            $arrayTabela = [];
+            $resultadoFinal = [];
+
+            # Pega os cargos
+            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+                                          FROM tbconcursovagadetalhada
+                                      ORDER BY cargoConcurso');
+
+            # Percorre os cargos
+            foreach ($result as $item) {
+
+                foreach ($arrayCotas as $cota) {
+
+                    switch ($cota[0]) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifAc";
+                            $campoVaga = "vagas";
+                            $subtitulo = "Ampla Concorrência";
+                            break;
+
+                        // Pcd
+                        case "Pcd":
+                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifPcd";
+                            $campoVaga = "vagasPcd";
+                            $subtitulo = "Cota: PCD";
+                            break;
+
+                        // Negros e Índios
+                        case "Ni":
+                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifNi";
+                            $campoVaga = "vagasNi";
+                            $subtitulo = "Cota: Negros e Índios";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifHipo";
+                            $campoVaga = "vagasHipo";
+                            $subtitulo = "Cota: Hipossuficiente Econômico";
+                            break;
+                    }
+
+                    # Pega os candidaatos desse cargo e dessa cota
+                    $select = "SELECT inscricao,
+                                      nome,
+                                      cpf,
+                                      identidade,
+                                      cargo
+                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                WHERE tbcandidato.idConcurso = {$idConcurso}
+                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+                                  AND cargo = '{$item["cargoConcurso"]}'
+                             ORDER BY {$campo}";
+
+                    # Passa para o array
+                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
+                }
+            }
+
+            # Ordena por nome
+            usort($arrayTabela, function ($a, $b) {
+                return strcmp($a['nome'], $b['nome']);
+            });
+
+            $anterior = null;
+            # Retira as duplicatas
+            foreach ($arrayTabela as $item) {
+                # Verifica se é diferente ao anterior
+                if ($item['nome'] <> $anterior) {
+                    $anterior = $item['nome'];
+                    $resultadoFinal[] = $item;
+                }
+            }
+
+            # Relatório
+            $relatorio = new Tabela();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($resultadoFinal);
+            $relatorio->set_label(["Inscrição", "Nome", "Cpf", "CI", "Cargo"]);
+            $relatorio->set_align(["center", "left", "center", "center", "left"]);
+            $relatorio->set_funcao([null, "plm", null, null, "plm"]);
+            #$relatorio->set_numGrupo(2);
+            $relatorio->show();
+
+            break;
+
+        ################################################################      
+
 
         /*
          * Relatórios

@@ -1008,6 +1008,78 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
+            
+         ################################################################
+        /*
+         * Candidatos Duplicados
+         */
+
+        case "duplicados" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioTodos");
+            $botaoRel->set_imagem($imagem2);
+            #$menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Duplicados");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################
+
+            $grid->abreColuna(9);
+
+            # Verifica o Concurso
+            if ($idConcurso == 96) {
+                loadPage("cadastroCandidatosAdm2025.php?fase=duplicados");
+            } else {
+                mensagem(null, "Cadastro de Candidatos");
+            }
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou as Vagas do Edital do Concurso " . $concurso->get_nomeConcurso($idConcurso);
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+    
 
         ################################################################
         /*

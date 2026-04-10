@@ -1017,18 +1017,20 @@ class Concurso {
         $tipo = $concurso->get_tipo($idConcurso);
         $provas = $concursoProva->get_numeroProvas($idConcurso);
         $numCandidatos = $this->get_numCandidatos($idConcurso);
-        
 
         # Monta o array
         if ($tipo == 1) {   // Administrativo
             $itensMenu = [
-                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos",$numCandidatos, "Processo Seletivo"],
-                ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],
+                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos", $numCandidatos, "Candidatos"],
+                ["Duplicados", "cadastroConcursoAdm.php?fase=duplicados"],
+                
+                ["Publicações", "cadastroConcursoPublicacao.php", $publicacao, "Processo Seletivo"],
                 ["Vagas Calculadas", "cadastroConcursoVagaAdm.php", $vagas],
                 ["Vagas Edital", "cadastroConcursoAdm.php?fase=aguardaVagasEdital"],
                 ["Vagas Edital Detalhadas", "cadastroConcursoVagaDetalhadasAdm.php"],
                 ["Provas", "cadastroConcursoProvas.php", $provas],
-                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null,"Servidorers Empossados"],
+                
+                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidorers Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
@@ -1830,12 +1832,12 @@ class Concurso {
         # Verifica se veio o id do concurso
         if (empty($idConcurso)) {
             return null;
-        }else{
+        } else {
             # Verifica se é o concurso 2025 - id 96
-            if($idConcurso == 96){
-                $candidatos  = new Candidato();
+            if ($idConcurso == 96) {
+                $candidatos = new Candidato();
                 return $candidatos->get_numCandidatoAc();
-            }else{
+            } else {
                 return null;
             }
         }

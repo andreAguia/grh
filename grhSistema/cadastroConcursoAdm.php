@@ -29,11 +29,16 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
 
-    # Pega a fase
-    $fase = get('fase', 'aguardaClassificacao');
-
     # Pega o idConcurso
     $idConcurso = get_session("idConcurso");
+
+    # Pega a fase
+    if ($idConcurso == 96) {
+        $fase = get('fase', 'candidatos');
+    } else {
+        $fase = get('fase', 'aguardaClassificacao');
+    }
+
 
     # Volta quando não temos o idconcurso
     if (empty($idConcurso)) {
@@ -1008,8 +1013,8 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
-            
-         ################################################################
+
+        ################################################################
         /*
          * Candidatos Duplicados
          */
@@ -1079,7 +1084,6 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
-    
 
         ################################################################
         /*

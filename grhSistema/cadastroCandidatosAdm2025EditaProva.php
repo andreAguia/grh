@@ -61,9 +61,11 @@ if ($acesso) {
                            classifNi,
                            classifHipo,
                            cargo,
+                           desistiu,
                            tipoDeficiencia,
                            notaFinal,
-                           resultado                
+                           resultado,
+                           obs
                       FROM tbcandidato
                      WHERE idCandidato = {$idCandidatoPesquisado}";
 
@@ -180,8 +182,16 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $cargo,
             'title' => 'Cargo',
-            'col' => 12,
+            'col' => 11,
             'size' => 200),
+        array(
+            'linha' => 4,
+            'nome' => 'desistiu',
+            'label' => 'Desistiu?',
+            'tipo' => 'simnao',
+            'title' => 'Desistiu da Vaga?',
+            'col' => 1,
+            'size' => 5),
         array(
             'linha' => 4,
             'nome' => 'tipoDeficiencia',
@@ -202,9 +212,15 @@ if ($acesso) {
             'label' => 'Resultado:',
             'tipo' => 'texto',
             'col' => 4,
-            'size' => 30)
+            'size' => 30),
+        array(
+            'linha' => 5,
+            'nome' => 'obs',
+            'label' => 'Observação:',
+            'tipo' => 'textarea',
+            'size' => array(80, 5))
     ));
-    
+
     # Botões
     $botao1 = new Link("Dados da Prova", "cadastroCandidatosAdm2025EditaProva.php");
     $botao1->set_class('hollow button');

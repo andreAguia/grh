@@ -28,8 +28,26 @@ class ConcursoAdm2025 {
         /**
          * informa o idConcurso 
          */
-        
         return 96;
+    }
+
+    ###########################################################
+
+    function get_obsCargo($cargoConcurso = null) {
+        /**
+         * Informa a obs do cargo
+         */
+        if (empty($cargoConcurso)) {
+            return null;
+        } else {
+            $select = "SELECT obs 
+                     FROM tbconcursovagadetalhada
+                     WHERE cargoConcurso = '{$cargoConcurso}'";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+            return $row["obs"];
+        }
     }
 
     ###########################################################

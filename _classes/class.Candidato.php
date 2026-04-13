@@ -109,7 +109,7 @@ class Candidato {
 
             # Negros e Índios
             if (!empty($dados["classifNi"])) {
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
@@ -120,7 +120,7 @@ class Candidato {
 
             # Hipossuficiente Econômic
             if (!empty($dados["classifHipo"])) {
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
@@ -542,10 +542,8 @@ class Candidato {
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        
 //        tituloTable("Vagas do Edital do Concurso");
 //        br();
-        
         # Verifica se tem o cargo
         if (empty($cargo)) {
 
@@ -648,10 +646,6 @@ class Candidato {
             $tabela->set_grupoCorColuna(0);
 
             $tabela->show();
-
-            ### Candidatos Repetidos
-
-
 
             $tab->fechaConteudo();
 
@@ -828,6 +822,9 @@ class Candidato {
              * Somente um cargo
              */
 
+            $classeConcursoAdm2025 = new ConcursoAdm2025();
+            $obs = $classeConcursoAdm2025->get_obsCargo($cargo);
+            
             # Pega os dados
             $select = "SELECT vagas,
                               cargoConcurso,
@@ -840,7 +837,8 @@ class Candidato {
                               cargoConcurso,
                               vagasHipo,
                               cargoConcurso,
-                              cargoConcurso
+                              cargoConcurso,
+                              obs
                      FROM tbconcursovagadetalhada";
 
             if (!empty($cargo)) {
@@ -868,6 +866,8 @@ class Candidato {
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
+
+            $tabela->set_mensagemPosTabela($obs);
             $tabela->set_totalRegistro(false);
 
             $tabela->show();
@@ -886,11 +886,11 @@ class Candidato {
         if (empty($idCandidato)) {
             return null;
         } else {
-            
+
             # Pega os Dados
             $dados = $this->get_dados($idCandidato);
             $pessoal = new Pessoal();
-            
+
             pLista(
                     plm($dados["nome"]),
                     plm($dados["cargo"]),
@@ -911,11 +911,11 @@ class Candidato {
         if (empty($idCandidato)) {
             return null;
         } else {
-            
+
             # Pega os Dados
             $dados = $this->get_dados($idCandidato);
             $pessoal = new Pessoal();
-            
+
             pLista(
                     plm($dados["nome"]),
                     $pessoal->get_nomeLotacao($dados["idLotacao"])

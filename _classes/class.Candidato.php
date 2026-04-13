@@ -103,25 +103,29 @@ class Candidato {
 
             # PCD
             if (!empty($dados["classifPcd"])) {
-                $return .= "PCD";
+                $return .= "PCD - {$dados["classifPcd"]}";
                 $marcador = true;
             }
 
             # Negros e Índios
             if (!empty($dados["classifNi"])) {
+                
+                # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
                 }
                 $marcador = true;
-                $return .= "NI";
+                $return .= "NI - {$dados["classifNi"]}";
             }
 
             # Hipossuficiente Econômic
             if (!empty($dados["classifHipo"])) {
+                
+                # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
                 }
-                $return .= "HIPO";
+                $return .= "HIPO - {$dados["classifHipo"]}";
             }
 
             return $return;

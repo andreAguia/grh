@@ -352,7 +352,8 @@ if ($acesso) {
                               inscricao,
                               idCandidato,
                               dtNascimento,
-                              idCandidato,                          
+                              idCandidato,
+                              classifAc,
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
@@ -396,8 +397,8 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
-                    $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Ampla Concorrência", "Nota Final", "Editar"]);
+                    $tabela->set_width([5, 10, 10, 30, 10, 10, 10, 10]);
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
 
@@ -409,7 +410,7 @@ if ($acesso) {
                     $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+                    $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
 
                     $tabela->set_rowspan(1);
                     $tabela->set_grupoCorColuna(1);
@@ -718,7 +719,7 @@ if ($acesso) {
             $tabela->set_label(["Inscrição", "Nome", "Cargo", "Ac", "Pcd", "Ni", "Hipo", "Editar"]);
             $tabela->set_align(["center", "left", "left"]);
             $tabela->set_funcao([null, "plm", "plm"]);
-            
+
             # Botão Editar
             $botao = new Link(null, "?fase=editaCandidatoDuplicado&id=", 'Acessa os dados do Candidato');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);

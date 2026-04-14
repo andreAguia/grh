@@ -16,7 +16,7 @@ class ConcursoAdm2025 {
         $array = [
             ["Ac", "Ampla Concorrência"],
             ["Pcd", "PCD"],
-            ["Ni", "Negros e Índios"],
+            ["Ni", "Negros e Indígenas"],
             ["Hipo", "Hipossuficiente Econômico"],
         ];
         return $array;

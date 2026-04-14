@@ -72,12 +72,12 @@ if ($acesso) {
                 $subtitulo = "Cota: PCD";
                 break;
 
-            // Negros e Índios
+            // Negros e Indígenas
             case "Ni":
                 $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $parametroCargoCandidato);
                 $campo = "classifNi";
                 $campoVaga = "vagasNi";
-                $subtitulo = "Cota: Negros e Índios";
+                $subtitulo = "Cota: Negros e Indígenas";
                 break;
 
             // Hipossuficiente Econômico
@@ -660,12 +660,12 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
                             $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -833,11 +833,11 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1002,11 +1002,11 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1169,11 +1169,11 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1282,12 +1282,12 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
                             $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1384,12 +1384,12 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
                             $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1484,12 +1484,12 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
                             $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1593,12 +1593,12 @@ if ($acesso) {
 //                            $subtitulo = "Cota: PCD";
 //                            break;
 //
-//                        // Negros e Índios
+//                        // Negros e Indígenas
 //                        case "Ni":
 //                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
 //                            $campo = "classifNi";
 //                            $campoVaga = "vagasNi";
-//                            $subtitulo = "Cota: Negros e Índios";
+//                            $subtitulo = "Cota: Negros e Indígenas";
 //                            break;
 //
 //                        // Hipossuficiente Econômico
@@ -1751,11 +1751,11 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico
@@ -1874,12 +1874,12 @@ if ($acesso) {
                             $subtitulo = "Cota: PCD";
                             break;
 
-                        // Negros e Índios
+                        // Negros e Indígenas
                         case "Ni":
                             $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
                             $campo = "classifNi";
                             $campoVaga = "vagasNi";
-                            $subtitulo = "Cota: Negros e Índios";
+                            $subtitulo = "Cota: Negros e Indígenas";
                             break;
 
                         // Hipossuficiente Econômico

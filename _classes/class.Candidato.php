@@ -107,7 +107,7 @@ class Candidato {
                 $marcador = true;
             }
 
-            # Negros e Índios
+            # Negros e Indígenas
             if (!empty($dados["classifNi"])) {
 
                 # Salta linha se necessário
@@ -556,7 +556,7 @@ class Candidato {
                 "Resumo Geral",
                 "Ampla Concorrência",
                 "Pcd",
-                "Negros e Índios",
+                "Negros e Indígenas",
                 "Hipossuficiente Econômico"
             ]);
 
@@ -582,7 +582,7 @@ class Candidato {
                     $this->get_numCandidatoPcd(),
                     $this->get_numCandidatoPcdNaVaga(null, 3) + $this->get_numCandidatoPcdNaVaga(null, 4),
                 ],
-                ["Negros e Índios",
+                ["Negros e Indígenas",
                     $concurso->get_numVagasNiAprovadas(96, null, 3) + $concurso->get_numVagasNiAprovadas(96, null, 4),
                     $this->get_numCandidatoNi(),
                     $this->get_numCandidatoNiNaVaga(null, 3) + $this->get_numCandidatoNiNaVaga(null, 4),
@@ -635,7 +635,7 @@ class Candidato {
             $tabela = new Tabela();
             $tabela->set_titulo("Vagas Preenchidas");
             $tabela->set_conteudo($array);
-            $tabela->set_label(["Nível do Cargo", "Ampla Concorrência", "Pcd", "Negros e Índios", "Hipossuficiente Econômico", "Total"]);
+            $tabela->set_label(["Nível do Cargo", "Ampla Concorrência", "Pcd", "Negros e Indígenas", "Hipossuficiente Econômico", "Total"]);
             $tabela->set_width([20, 15, 15, 15, 15, 15]);
             $tabela->set_align(["left"]);
             $tabela->set_totalRegistro(false);
@@ -737,7 +737,7 @@ class Candidato {
             $tab->fechaConteudo();
 
             /*
-             * Negros e Índios
+             * Negros e Indígenas
              */
 
             $tab->abreConteudo();
@@ -755,7 +755,7 @@ class Candidato {
 
             # tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Negros e Índios");
+            $tabela->set_titulo("Negros e Indígenas");
             $tabela->set_conteudo($row);
             $tabela->set_label(["Cargo", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_width([40, 10, 10, 10, 10]);
@@ -855,7 +855,7 @@ class Candidato {
             $tabela->set_titulo(plm($cargo));
             $tabela->set_conteudo($row);
 
-            $tabela->set_label(["Ampla Concorrência", "", "", "PCD", "", "", "Negros e Índios", "", "", "Hipossuficiente Econômico", "", ""]);
+            $tabela->set_label(["Ampla Concorrência", "", "", "PCD", "", "", "Negros e Indígenas", "", "", "Hipossuficiente Econômico", "", ""]);
             $tabela->set_label2(["Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_colspanLabel([3, null, null, 3, null, null, 3, null, null, 3, null, null]);
             #$tabela->set_width([37, 5, 5, 5,  5, 5, 5,  5, 5, 5,  5, 5, 5]);

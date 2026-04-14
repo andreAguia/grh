@@ -388,7 +388,7 @@ if ($acesso) {
             $controle->set_array([
                 ["classifAc", "Ampla Concorrência"],
                 ["classifPcd", "PCD"],
-                ["classifNi", "Negros e Índios"],
+                ["classifNi", "Negros e Indígenas"],
                 ["classifHipo", "Hipossuficiente Econômico"]
             ]);
 

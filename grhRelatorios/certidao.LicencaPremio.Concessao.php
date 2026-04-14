@@ -818,7 +818,7 @@ if ($acesso) {
                 $dec->set_texto("(&nbsp;&nbsp;&nbsp;) Concessão&nbsp;&nbsp;&nbsp;( x ) Recontagem&nbsp;&nbsp;&nbsp;(&nbsp;&nbsp;&nbsp;) Indeferimento");
             }
             $dec->set_texto("<hr/>");
-            $dec->set_texto("Fundamento: Art. 129 do decreto2479/79, combinado coma Lei 1054/86");
+            $dec->set_texto("Fundamento: Art. 129 do Decreto 2479/79, combinado coma Lei 1054/86");
             $dec->set_texto("<hr/>");
             $dec->set_texto("Sr. Gerente de Recursos Humanos,");
 

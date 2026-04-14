@@ -41,12 +41,75 @@ class ConcursoAdm2025 {
             return null;
         } else {
             $select = "SELECT obs 
-                     FROM tbconcursovagadetalhada
-                     WHERE cargoConcurso = '{$cargoConcurso}'";
+                         FROM tbconcursovagadetalhada
+                        WHERE cargoConcurso = '{$cargoConcurso}'";
 
             $pessoal = new Pessoal();
             $row = $pessoal->select($select, false);
             return $row["obs"];
+        }
+    }
+
+    ###########################################################
+
+    function get_situacaoClassifVaga($classif = null, $cota = "Ac", $cargoConcurso = null) {
+        /**
+         * Informa se a classificação informada, da cota informada para o cargo informado está em que situação
+         * 
+         * Retorna: VA - Quando está na vaga
+         *          CR - Cadastro de Reserva
+         *          Null - Quando está fora do cadastro de Reserva
+         */
+        # Define o id do concurso
+        $idConcurso = $this->get_idConcurso();
+
+        # Verifica se veio a classificação
+        if (empty($classif)) {
+            return null;
+        }
+
+        # Verifica se veio a cota
+        if (empty($cota)) {
+            return null;
+        }
+
+        # Verifica se veio o cargo
+        if (empty($cargoConcurso)) {
+            return null;
+        }
+
+        # Acessa a classe de concurso
+        $concursoClasse = new Concurso();
+
+        # Pega o número de vagas
+        if ($cota == "Ac") {
+            $numVagas = $concursoClasse->get_numVagasAcAprovadas($idConcurso, $cargoConcurso);
+        }
+
+        if ($cota == "Pcd") {
+            $numVagas = $concursoClasse->get_numVagasPcdAprovadas($idConcurso, $cargoConcurso);
+        }
+
+        if ($cota == "Ni") {
+            $numVagas = $concursoClasse->get_numVagasNiAprovadas($idConcurso, $cargoConcurso);
+        }
+
+        if ($cota == "Hipo") {
+            $numVagas = $concursoClasse->get_numVagasHipoAprovadas($idConcurso, $cargoConcurso);
+        }
+
+        # Calcula o cadastro de reserva
+        $cr = (5 * $numVagas) + $numVagas;
+
+        # Compara com a classificação
+        if ($classif <= $numVagas) {
+            return "V";
+            #return " <span class='label success' title='Dentro do Número de Vagas'>V</span>";
+        }
+
+        if ($classif > $numVagas AND $classif <= $cr) {
+            return "R";
+            #return " <span class='label warning' title='No Cadastro de Reserva'>R</span>";
         }
     }
 

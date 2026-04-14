@@ -96,6 +96,10 @@ class Candidato {
         } else {
             # Pega os Dados
             $dados = $this->get_dados($id);
+            $cargo = $dados["cargo"];
+
+            # Inicia a classe do concursoAdm
+            $concursoAdm = new ConcursoAdm2025();
 
             # Inicia as variáveis
             $return = null;
@@ -103,29 +107,61 @@ class Candidato {
 
             # PCD
             if (!empty($dados["classifPcd"])) {
-                $return .= "PCD - {$dados["classifPcd"]}";
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
+                } else {
+                    $return .= "Pcd - {$dados["classifPcd"]}";
+                }
+
                 $marcador = true;
             }
 
             # Negros e Indígenas
             if (!empty($dados["classifNi"])) {
 
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifNi"], "Ni", $cargo);
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
                 }
                 $marcador = true;
-                $return .= "NI - {$dados["classifNi"]}";
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
+                } else {
+                    $return .= "Ni - {$dados["classifNi"]}";
+                }
             }
 
             # Hipossuficiente Econômic
             if (!empty($dados["classifHipo"])) {
 
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifHipo"], "Hipo", $cargo);
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/>";
                 }
-                $return .= "HIPO - {$dados["classifHipo"]}";
+                $marcador = true;
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
+                } else {
+                    $return .= "Hipo - {$dados["classifHipo"]}";
+                }
             }
 
             return $return;
@@ -824,7 +860,7 @@ class Candidato {
 
             $classeConcursoAdm2025 = new ConcursoAdm2025();
             $obs = $classeConcursoAdm2025->get_obsCargo($cargo);
-            
+
             # Pega os dados
             $select = "SELECT vagas,
                               cargoConcurso,

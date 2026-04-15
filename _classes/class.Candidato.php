@@ -106,21 +106,21 @@ class Candidato {
             $marcador = false;
 
             # AC
-            if (!empty($dados["classifAc"])) {
-
-                # Pega a situação desta vaga
-                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
-
-                if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
-                } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
-                } else {
-                    $return .= "Ac - {$dados["classifPcd"]}";
-                }
-
-                $marcador = true;
-            }
+//            if (!empty($dados["classifAc"])) {
+//
+//                # Pega a situação desta vaga
+//                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
+//
+//                if ($situacaoVaga == "V") {
+//                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+//                } elseif ($situacaoVaga == "R") {
+//                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+//                } else {
+//                    $return .= "Ac - {$dados["classifPcd"]}";
+//                }
+//
+//                $marcador = true;
+//            }
 
             # PCD
             if (!empty($dados["classifPcd"])) {

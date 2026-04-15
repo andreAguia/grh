@@ -2016,7 +2016,7 @@ if ($acesso) {
 
             # Ordena por nome
             usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['nome'], $b['nome']);
+                return strcmp($a['cargo'], $b['cargo']);
             });
 
             $anterior = null;
@@ -2041,7 +2041,7 @@ if ($acesso) {
             $relatorio->set_classe([null, null, "Candidato"]);
             $relatorio->set_metodo([null, null, "exibeCotasRelatorio"]);
 
-            #$relatorio->set_numGrupo(2);
+            $relatorio->set_numGrupo(0);
             $relatorio->show();
 
             break;

@@ -100,9 +100,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Admin e Tecnicos', '../grhRelatorios/estatutarios.cedidos.admin.php');
             $menu->add_item('linkWindow', 'Profesores', '../grhRelatorios/estatutarios.cedidos.professores.php');
             $menu->add_item('titulo1', 'Histórico Ativos');
-            $menu->add_item('linkWindow', 'por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.ativos.historico.php');
+            $menu->add_item('linkWindow', 'por Ano de Início', '../grhRelatorios/estatutarios.cedidos.ativos.historico.php');
             $menu->add_item('titulo1', 'Histórico Todos');
-            $menu->add_item('linkWindow', 'por Ano da Cessão', '../grhRelatorios/estatutarios.cedidos.historico.php');
+            $menu->add_item('linkWindow', 'por Ano de Início', '../grhRelatorios/estatutarios.cedidos.historico.php');
+            $menu->add_item('linkWindow', 'por Ano de Término', '../grhRelatorios/estatutarios.cedidos.historico.termino.php');
             $menu->show();
 
             $grid->fechaColuna();

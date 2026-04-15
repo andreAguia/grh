@@ -105,11 +105,34 @@ class Candidato {
             $return = null;
             $marcador = false;
 
+            # AC
+            if (!empty($dados["classifAc"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+                } else {
+                    $return .= "Ac - {$dados["classifPcd"]}";
+                }
+
+                $marcador = true;
+            }
+
             # PCD
             if (!empty($dados["classifPcd"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
+
+                # Salta linha se necessário
+                if ($marcador) {
+                    $return .= "<br/>";
+                }
+                $marcador = true;
 
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
@@ -160,6 +183,77 @@ class Candidato {
                 } elseif ($situacaoVaga == "R") {
                     $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
                 } else {
+                    $return .= "Hipo - {$dados["classifHipo"]}";
+                }
+            }
+
+            return $return;
+        }
+    }
+
+    ###########################################################
+
+    public function exibeCotasRelatorio($id = null) {
+        /**
+         * Exibe as cotas desse candidato para uso na tabela
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        //arthur tava aqui <(O-O<) <(O-O)> (>O-O)> filho do andre :DDDD
+
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os Dados
+            $dados = $this->get_dados($id);
+            $cargo = $dados["cargo"];
+
+            # Inicia a classe do concursoAdm
+            $concursoAdm = new ConcursoAdm2025();
+
+            # Inicia as variáveis
+            $return = null;
+
+            # AC
+            if (!empty($dados["classifAc"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "AC - {$dados["classifAc"]}";
+                }
+            }
+
+            # PCD
+            if (!empty($dados["classifPcd"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "Pcd - {$dados["classifPcd"]}";
+                }
+            }
+
+            # Negros e Indígenas
+            if (!empty($dados["classifNi"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifNi"], "Ni", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "Ni - {$dados["classifNi"]}";
+                }
+            }
+
+            # Hipossuficiente Econômic
+            if (!empty($dados["classifHipo"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifHipo"], "Hipo", $cargo);
+
+                if ($situacaoVaga == "V") {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
             }

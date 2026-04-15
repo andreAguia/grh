@@ -1303,6 +1303,7 @@ if ($acesso) {
                     # Pega os candidaatos desse cargo e dessa cota
                     $select = "SELECT inscricao,
                                       nome,
+                                      dtNascimento,
                                       cpf,
                                       identidade,
                                       cargo
@@ -1337,9 +1338,9 @@ if ($acesso) {
             $relatorio->set_titulo("Relatório de Candidatos Aprovados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($resultadoFinal);
-            $relatorio->set_label(["Inscrição", "Nome", "Cpf", "CI", "Cargo"]);
-            $relatorio->set_align(["center", "left", "center", "center", "left"]);
-            $relatorio->set_funcao([null, "plm", null, null, "plm"]);
+            $relatorio->set_label(["Inscrição", "Nome", "Nascimento", "Cpf", "CI", "Cargo"]);
+            $relatorio->set_align(["center", "left", "center", "center", "center", "left"]);
+            $relatorio->set_funcao([null, "plm", "date_to_php", null, null, "plm"]);
             #$relatorio->set_numGrupo(2);
             $relatorio->show();
 

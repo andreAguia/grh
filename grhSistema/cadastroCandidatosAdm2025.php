@@ -555,7 +555,7 @@ if ($acesso) {
                 $tabela->set_titulo("Cadastro de Candidatos Aprovados");
                 #$tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($row);
-                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Situação", "Nota Final", "Obs", "Editar"]);
+                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Classificação do Candidato", "Nota Final", "Obs", "Editar"]);
                 $tabela->set_width([10, 20, 30, 10, 10, 10, 5, 5]);
                 $tabela->set_align(["center", "left", "left"]);
 

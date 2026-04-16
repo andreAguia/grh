@@ -193,6 +193,117 @@ class Candidato {
 
     ###########################################################
 
+    public function exibeClassific($id = null) {
+        /**
+         * Exibe a classificação geral desse candidato
+         * 
+         * @syntax Candidato->exibeCotas($id);
+         */
+        //arthur tava aqui <(O-O<) <(O-O)> (>O-O)> filho do andre :DDDD
+
+        if (empty($id)) {
+            return null;
+        } else {
+            # Pega os Dados
+            $dados = $this->get_dados($id);
+            $cargo = $dados["cargo"];
+
+            # Inicia a classe do concursoAdm
+            $concursoAdm = new ConcursoAdm2025();
+
+            # Inicia as variáveis
+            $return = null;
+            $marcador = false;
+
+            # AC
+            if (!empty($dados["classifAc"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+                } else {
+                    $return .= "Ac - {$dados["classifAc"]}";
+                }
+
+                $marcador = true;
+            }
+
+            # PCD
+            if (!empty($dados["classifPcd"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
+
+                # Salta linha se necessário
+                if ($marcador) {
+                    $return .= "<br/><hr id='geral1'/>";
+                }
+                $marcador = true;
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
+                } else {
+                    $return .= "Pcd - {$dados["classifPcd"]}";
+                }
+
+                $marcador = true;
+            }
+
+            # Negros e Indígenas
+            if (!empty($dados["classifNi"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifNi"], "Ni", $cargo);
+
+                # Salta linha se necessário
+                if ($marcador) {
+                    $return .= "<br/><hr id='geral1'/>";
+                }
+                $marcador = true;
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
+                } else {
+                    $return .= "Ni - {$dados["classifNi"]}";
+                }
+            }
+
+            # Hipossuficiente Econômic
+            if (!empty($dados["classifHipo"])) {
+
+                # Pega a situação desta vaga
+                $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifHipo"], "Hipo", $cargo);
+
+                # Salta linha se necessário
+                if ($marcador) {
+                    $return .= "<br/><hr id='geral1'/>";
+                }
+                $marcador = true;
+
+                if ($situacaoVaga == "V") {
+                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
+                } elseif ($situacaoVaga == "R") {
+                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
+                } else {
+                    $return .= "Hipo - {$dados["classifHipo"]}";
+                }
+            }
+
+            return $return;
+        }
+    }
+
+    ###########################################################
+
+
     public function exibeCotasRelatorio($id = null) {
         /**
          * Exibe as cotas desse candidato para uso na tabela

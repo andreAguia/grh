@@ -114,4 +114,49 @@ class ConcursoAdm2025 {
     }
 
     ###########################################################
+
+    function get_vagasGeral($cargoConcurso = null) {
+        /**
+         * Informa a obs do cargo
+         */
+        if (empty($cargoConcurso)) {
+            return null;
+        } else {
+            # Cria o select
+            $select = "SELECT * 
+                         FROM tbconcursovagadetalhada
+                        WHERE cargoConcurso = '{$cargoConcurso}'";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+
+            # Define a variavel de retorno
+            $retorno = null;
+
+            # Verifica as vagas AC
+            $retorno .= "AC - {$row['vagas']}";
+
+            # Verifica as vagas PCD
+            if (!empty($row['vagasPcd'])) {
+                $retorno .= "<br/><hr id='geral'/>";
+                $retorno .= "Pcd - {$row['vagasPcd']}";
+            }
+
+            # Verifica as vagas Ni
+            if (!empty($row['vagasNi'])) {
+                $retorno .= "<br/><hr id='geral'/>";
+                $retorno .= "Ni - {$row['vagasNi']}";
+            }
+
+            # Verifica as vagas Hipo
+            if (!empty($row['vagasHipo'])) {
+                $retorno .= "<br/><hr id='geral'/>";
+                $retorno .= "Hipo - {$row['vagasHipo']}";
+            }
+
+            return $retorno;
+        }
+    }
+
+    ###########################################################
 }

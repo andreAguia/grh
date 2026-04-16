@@ -325,7 +325,9 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_col(5);
-            $form->add_item($controle);
+            if ($parametroCargoCandidato <> "*") {
+                $form->add_item($controle);
+            }
 
             $form->show();
 
@@ -511,17 +513,14 @@ if ($acesso) {
                  */
 
                 # Monta o select
-                $select = "SELECT if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'<span class=\'label success\'>Vaga</label>',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'<span class=\'label warning\'>Reserva</label>','---')),
-                                  inscricao,
+                $select = "SELECT inscricao,
+                                  nome,
+                                  cargo,
+                                  cargo,
                                   idCandidato,
-                                  tbconcursovagadetalhada.{$campoVaga},
-                                  classifAc,                              
-                                  classifPcd,
-                                  classifNi,
-                                  classifHipo,
                                   CONVERT(notaFinal, DECIMAL(10,2)),
                                   idCandidato
-                             FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                             FROM tbcandidato
                             WHERE tbcandidato.idConcurso = {$idConcurso}";
 
                 # Pega o candidato de acordo com a cota
@@ -546,7 +545,7 @@ if ($acesso) {
                     }
                 }
 
-                $select .= " ORDER BY cargo, {$campo}";
+                $select .= " ORDER BY nome";
 
                 # Pega os dados
                 $row = $pessoal->select($select);
@@ -556,19 +555,20 @@ if ($acesso) {
                 $tabela->set_titulo("Cadastro de Candidatos Aprovados");
                 $tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($row);
-                $tabela->set_label(["Situação", "Inscrição", "Candidato", "Vagas", "AC", "PCD", "NI", "HIPO", "Nota Final", "Editar"]);
-                $tabela->set_width([10, 10, 40, 5, 5, 5, 5, 5, 5, 5, 5]);
-                $tabela->set_align(["center", "center", "left"]);
-                #$tabela->set_funcao([null, null, "plm", "plm"]);
+                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Situação", "Nota Final", "Editar"]);
+                $tabela->set_width([10, 20, 35, 10, 10, 10, 5]);
+                $tabela->set_align(["center", "left", "left"]);
 
-                $tabela->set_classe([null, null, "Candidato"]);
-                $tabela->set_metodo([null, null, "get_nomeECargoELotacao"]);
+                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "Candidato"]);
+                $tabela->set_metodo([null, null, null, "get_vagasGeral", "exibeClassific"]);
+                $tabela->set_funcao([null, "plm", "plm"]);
 
                 # Botão Editar
                 $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                 $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-                $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+                $tabela->set_link([null, null, null, null, null, null, $botao]);
 
+                $tabela->set_bordaInterna(true);
                 $tabela->show();
             }
 

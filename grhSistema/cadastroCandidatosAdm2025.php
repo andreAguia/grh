@@ -489,7 +489,7 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Obs", "Editar"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação na Cota", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);

@@ -1165,4 +1165,29 @@ class Candidato {
     }
 
     ###########################################################
+
+    public function exibeObs($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT obs
+                     FROM tbcandidato
+                    WHERE idCandidato = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Pega a obs
+        if (empty($row["obs"])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $row["obs"]);
+        }
+    }
+
+###########################################################
 }

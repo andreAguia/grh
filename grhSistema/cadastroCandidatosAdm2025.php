@@ -358,6 +358,7 @@ if ($acesso) {
                               idCandidato,
                               classifAc,
                               CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato,
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                         WHERE tbcandidato.idConcurso = {$idConcurso}";
@@ -400,20 +401,20 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Ampla Concorrência", "Nota Final", "Editar"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Ampla Concorrência", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([5, 10, 10, 30, 10, 10, 10, 10]);
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
 
-                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato"]);
-                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas"]);
+                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato", null, null, "Candidato"]);
+                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, null, "exibeObs"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                     $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
+                    $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
 
                     $tabela->set_rowspan(1);
                     $tabela->set_grupoCorColuna(1);
@@ -445,6 +446,7 @@ if ($acesso) {
                               dtNascimento,
                               idCandidato,                                    
                               CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato,
                               idCandidato
                          FROM tbcandidato
                         WHERE idConcurso = {$idConcurso}";
@@ -487,20 +489,20 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Editar"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Cota", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);
 
-                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato"]);
-                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas"]);
+                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato", null, "Candidato"]);
+                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, "exibeObs"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                     $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
                     # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+                    $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
 
                     $tabela->set_rowspan(0);
                     $tabela->set_grupoCorColuna(0);
@@ -519,14 +521,10 @@ if ($acesso) {
                                   cargo,
                                   idCandidato,
                                   CONVERT(notaFinal, DECIMAL(10,2)),
+                                  idCandidato,
                                   idCandidato
                              FROM tbcandidato
-                            WHERE tbcandidato.idConcurso = {$idConcurso}";
-
-                # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "Ac") {
-                    $select .= " AND {$campo} IS NOT NULL";
-                }
+                           WHERE tbcandidato.idConcurso = {$idConcurso}";
 
                 # nome
                 if (!is_null($parametroNome)) {
@@ -546,6 +544,8 @@ if ($acesso) {
                 }
 
                 $select .= " ORDER BY nome";
+                
+                #echo $select;
 
                 # Pega os dados
                 $row = $pessoal->select($select);
@@ -553,20 +553,20 @@ if ($acesso) {
                 # tabela
                 $tabela = new Tabela();
                 $tabela->set_titulo("Cadastro de Candidatos Aprovados");
-                $tabela->set_subtitulo($subtitulo);
+                #$tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($row);
-                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Situação", "Nota Final", "Editar"]);
-                $tabela->set_width([10, 20, 35, 10, 10, 10, 5]);
+                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Situação", "Nota Final", "Obs", "Editar"]);
+                $tabela->set_width([10, 20, 30, 10, 10, 10, 5, 5]);
                 $tabela->set_align(["center", "left", "left"]);
 
-                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "Candidato"]);
-                $tabela->set_metodo([null, null, null, "get_vagasGeral", "exibeClassific"]);
+                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "Candidato", null, "Candidato"]);
+                $tabela->set_metodo([null, null, null, "get_vagasGeral", "exibeClassific", null, "exibeObs"]);
                 $tabela->set_funcao([null, "plm", "plm"]);
 
                 # Botão Editar
                 $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                 $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-                $tabela->set_link([null, null, null, null, null, null, $botao]);
+                $tabela->set_link([null, null, null, null, null, null, null, $botao]);
 
                 $tabela->set_bordaInterna(true);
                 $tabela->show();

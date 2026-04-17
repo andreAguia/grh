@@ -1835,7 +1835,7 @@ class Concurso {
         } else {
             # Verifica se é o concurso 2025 - id 96
             if ($idConcurso == 96) {
-                $candidatos = new Candidato();
+                $candidatos = new CandidatoAdm2025();
                 return $candidatos->get_numCandidatoAc();
             } else {
                 return null;

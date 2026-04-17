@@ -128,6 +128,8 @@ if ($acesso) {
             AND $fase <> "relatorio6"
             AND $fase <> "relatorio7"
             AND $fase <> "relatorio8"
+            AND $fase <> "relatorio9"
+            AND $fase <> "relatorio10"
             . "") {
         AreaServidor::cabecalho();
     }
@@ -338,7 +340,7 @@ if ($acesso) {
              */
             if ($parametroCargoCandidato <> "*") {
 
-                $candidato = new Candidato();
+                $candidato = new CandidatoAdm2025();
                 $candidato->exibeTabelaVagasCargo($parametroCargoCandidato);
 
                 /*
@@ -406,7 +408,7 @@ if ($acesso) {
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
 
-                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato", null, null, "Candidato"]);
+                    $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
                     $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, null, "exibeObs"]);
 
                     # Botão Editar
@@ -494,7 +496,7 @@ if ($acesso) {
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);
 
-                    $tabela->set_classe([null, null, null, "Candidato", null, "Candidato", null, "Candidato"]);
+                    $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025"]);
                     $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, "exibeObs"]);
 
                     # Botão Editar
@@ -559,7 +561,7 @@ if ($acesso) {
                 $tabela->set_width([10, 20, 30, 10, 10, 10, 5, 5]);
                 $tabela->set_align(["center", "left", "left"]);
 
-                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "Candidato", null, "Candidato"]);
+                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025"]);
                 $tabela->set_metodo([null, null, null, "get_vagasGeral", "exibeClassific", null, "exibeObs"]);
                 $tabela->set_funcao([null, "plm", "plm"]);
 
@@ -1935,7 +1937,7 @@ if ($acesso) {
             $relatorio->set_align(["center", "left", "center", "center", "center", "left"]);
             $relatorio->set_funcao([null, "plm", "date_to_php"]);
 
-            $relatorio->set_classe([null, null, null, "Candidato"]);
+            $relatorio->set_classe([null, null, null, "CandidatoAdm2025"]);
             $relatorio->set_metodo([null, null, null, "exibeCotas"]);
 
             #$relatorio->set_numGrupo(2);
@@ -2039,7 +2041,7 @@ if ($acesso) {
             $relatorio->set_align(["left", "left"]);
             $relatorio->set_funcao(["plm", "plm"]);
 
-            $relatorio->set_classe([null, null, "Candidato"]);
+            $relatorio->set_classe([null, null, "CandidatoAdm2025"]);
             $relatorio->set_metodo([null, null, "exibeCotasRelatorio"]);
 
             $relatorio->set_numGrupo(0);
@@ -2082,7 +2084,7 @@ if ($acesso) {
         case "exibeVagas" :
 
             br();
-            $candidato = new Candidato();
+            $candidato = new CandidatoAdm2025();
             $candidato->exibeTabelaVagasCargo();
             break;
 

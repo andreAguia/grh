@@ -18,7 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $intra = new Intra();
     $pessoal = new Pessoal();
-    $candidato = new Candidato();
+    $candidato = new CandidatoAdm2025();
 
     # Verifica a fase do programa
     $fase = get('fase', 'inicial');

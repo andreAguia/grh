@@ -75,6 +75,7 @@ if ($acesso) {
             $controle->set_col(3);
             $controle->set_title('O perfil do Servidor.');
             $controle->set_array($perfil);
+            $controle->set_valor(1);
             $controle->set_onChange('exibeEscondeCampos();');
             $form->add_item($controle);
 
@@ -198,27 +199,54 @@ if ($acesso) {
             $cpf = get_session('sessionCpf');
             $perfil = get_session('sessionPerfil');
 
-            # Verifica se o CPF já está cadastrado
+            # Inicia as variáveis do formulário
+            $nome = null;
+            $dtNasc = null;
+            $sexo = null;
+            $idCargo = null;
+            $idLotacao = null;
+
+            # Verifica se o CPF já está cadastrado no cadastro de Servidores
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             # Inicia flag de perfil ativo
             $temAtivo = false;
 
-            # Verifica se já tem alguém com esse cpf
+            # Verifica se já tem algum servidor com esse cpf
             if (!empty($idPessoa)) {
                 # Pega os dados da pessoa (caso ja esteja cadastrado)
                 $nome = $pessoal->get_nomeidPessoa($idPessoa);
                 $dtNasc = date_to_bd($pessoal->get_dataNascimentoIdPessoa($idPessoa));
                 $sexo = $pessoal->get_sexoidPessoa($idPessoa);
+                $textoMensagem = "servidor";
 
                 # Verifica se tem vínculo ativo
                 if (!is_null($pessoal->get_idPessoaAtiva($idPessoa))) {
                     $temAtivo = true;
                 }
-            } else {
-                $nome = null;
-                $dtNasc = null;
-                $sexo = null;
+            }
+
+            # Verifica se já tem algum candidato com esse cpf
+            if ($perfil == 1) {
+
+                # Inicia a classe de candidatos
+                $candidatoClasse = new CandidatoAdm2025();
+                $idCandidato = $candidatoClasse->get_idCandidatoCPF($cpf);
+
+                # Verifica se já tem algum candidato com esse cpf
+                if (!empty($idCandidato)) {
+
+                    # Pega os dados desse candidato
+                    $dados = $candidatoClasse->get_dados($idCandidato);
+
+                    # Pega os dados da pessoa (caso ja esteja cadastrado)
+                    $nome = plm($dados["nome"]);
+                    $dtNasc = $dados["dtNascimento"];
+                    $cargo = $dados["cargo"];
+                    $idCargo = $candidatoClasse->get_idCargoCargoConcurso($cargo);
+                    $idLotacao = $dados["idLotacao"];
+                    $textoMensagem = "candidato";
+                }
             }
 
             # Botão voltar
@@ -231,12 +259,12 @@ if ($acesso) {
 
             # Mensagem
             if (is_null($nome)) {
-                $mensagem = 'O CPF ' . $cpf . ' não está cadastrado no sistema, dessa forma um novo servidor será incluído.';
+                $mensagem = "O CPF {$cpf} não está cadastrado no sistema, dessa forma um novo servidor será incluído.";
             } else {
                 if ($temAtivo) {
-                    $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor ATIVO: ' . $nome . '.<br/>Somente será permitido a inclusão de um vínculo INATIVO.<br/>Entre com os outros dados.';
+                    $mensagem = "O CPF {$cpf} já está cadastrado para o(a) servidor(a) ATIVO: {$nome}.<br/>Somente será permitido a inclusão de um vínculo INATIVO.<br/>Entre com os outros dados.";
                 } else {
-                    $mensagem = 'O CPF ' . $cpf . ' já está cadastrado para o servidor: ' . $nome . '.<br/>Entre com os outros dados.';
+                    $mensagem = "O CPF {$cpf} já está cadastrado para o(a) {$textoMensagem}(a): {$nome}.<br/>Entre com os outros dados.";
                 }
             }
 
@@ -335,6 +363,11 @@ if ($acesso) {
             $controle->set_required(true);
             $controle->set_title('A Lotação do Servidor.');
             $controle->set_array($lotacao);
+            if (!is_null($idLotacao)) {
+                $controle->set_valor($idLotacao);
+                $controle->set_readonly(true);
+                $controle->set_disabled(true);
+            }
             $form->add_item($controle);
 
             # Data de Admissão
@@ -406,8 +439,17 @@ if ($acesso) {
             $controle->set_title('O Cargo do Servidor.');
             $controle->set_col(6);
             $controle->set_array($cargo);
+
+            # Coloca Requerido para estaturários
             if ($perfil == 1) {
                 $controle->set_required(true);
+            }
+
+            # Coloca o cargo para quando for candidato
+            if (!empty($idCargo)) {
+                $controle->set_valor($idCargo);
+                $controle->set_readonly(true);
+                $controle->set_disabled(true);
             }
             $form->add_item($controle);
 
@@ -455,6 +497,46 @@ if ($acesso) {
             $controle->set_accessKey('E');
             $form->add_item($controle);
 
+            /*
+             * Coloca os campo hidden Quando for candidato
+             */
+            
+            # cargo
+            if (!empty($idCargo)) {
+
+                $controle = new Input('cargo', 'hidden', 'Cargo:', 1);
+                $controle->set_size(20);
+                $controle->set_linha(5);
+                $controle->set_title('O Cargo do Servidor.');
+                $controle->set_col(6);
+                $controle->set_array($cargo);
+                $controle->set_valor($idCargo);
+
+                # Coloca Requerido para estaturários
+                if ($perfil == 1) {
+                    $controle->set_required(true);
+                }
+                $form->add_item($controle);
+            }
+
+            # lotação
+            if (!empty($idLotacao)) {
+                $controle = new Input('lotacao', 'hidden', 'Lotação Inicial:', 1);
+                $controle->set_size(20);
+                $controle->set_linha(3);
+                $controle->set_col(6);
+                $controle->set_array($lotacao);
+                $controle->set_valor($idLotacao);
+                $form->add_item($controle);
+            }
+            
+            # Dados dos Candidatos
+            if (!empty($idCandidato)) {
+                
+                
+            }
+            
+
             $form->show();
 
             $callout->fecha();
@@ -487,9 +569,11 @@ if ($acesso) {
             $situacao = post('situacao');
             $orgaoOrigem = post('orgaoOrigem');
             $matExterna = post('matExterna');
+            
+            
 
             $classe = null;
-            $idPessoa = $pessoal->get_idPessoaCPF($cpf);            
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
 
             # Inicia flag de perfil ativo
             $temAtivo = false;

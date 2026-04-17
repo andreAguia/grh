@@ -1,6 +1,6 @@
 <?php
 
-class Candidato {
+class CandidatoAdm2025 {
     ##############################################################
 
     public function get_dados($id = null) {
@@ -121,7 +121,6 @@ class Candidato {
 //
 //                $marcador = true;
 //            }
-
             # PCD
             if (!empty($dados["classifPcd"])) {
 
@@ -302,7 +301,6 @@ class Candidato {
     }
 
     ###########################################################
-
 
     public function exibeCotasRelatorio($id = null) {
         /**
@@ -1102,7 +1100,7 @@ class Candidato {
             #$tabela->set_width([37, 5, 5, 5,  5, 5, 5,  5, 5, 5,  5, 5, 5]);
             $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, "Candidato", "Candidato", null, "Candidato", "Candidato", null, "Candidato", "Candidato", null, "Candidato", "Candidato"]);
+            $tabela->set_classe([null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_rowspan(0);
@@ -1190,4 +1188,58 @@ class Candidato {
     }
 
 ###########################################################
+
+    /**
+     * Método get_idCandidatoCPF
+     * fornece o id_pessoa de um CPF
+     * 
+     * @param	string $cpf cpf do servidor
+     */
+    public function get_idCandidatoCPF($cpf) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select com os dados do candidato
+        $select = "SELECT idCandidato
+                     FROM tbcandidato 
+                    WHERE cpf = '{$cpf}'";
+
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_idCargoCargoConcurso
+     * fornece o idCargo do sistema de um cargoConcurso do concurso 2025
+     * 
+     * @param	string $cargoConcurso O cargo do concurso
+     */
+    public function get_idCargoCargoConcurso($cargoConcurso) {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select com os dados do candidato
+        $select = "SELECT idCargo
+                     FROM tbconcursovagadetalhada 
+                    WHERE cargoConcurso = '{$cargoConcurso}'";
+
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+    ###########################################################
 }

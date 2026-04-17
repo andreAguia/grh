@@ -928,7 +928,7 @@ if ($acesso) {
             # Verifica o Concurso
             if ($idConcurso == 96) {
                 br();
-                $candidato = new Candidato();
+                $candidato = new CandidatoAdm2025();
                 $candidato->exibeTabelaVagasCargo();
             } else {
                 mensagem(null, "Vagas do Edital Concurso");

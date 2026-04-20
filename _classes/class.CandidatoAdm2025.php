@@ -920,7 +920,7 @@ class CandidatoAdm2025 {
             $tabela->set_width([40, 10, 10, 10, 10]);
             $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_classe([null, null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga"]);
 
             $tabela->set_align(["left"]);
@@ -960,7 +960,7 @@ class CandidatoAdm2025 {
             $tabela->set_width([40, 10, 10, 10, 10]);
             $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_classe([null, null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga"]);
 
             $tabela->set_align(["left"]);
@@ -1000,7 +1000,7 @@ class CandidatoAdm2025 {
             $tabela->set_width([40, 10, 10, 10, 10]);
             $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_classe([null, null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga"]);
 
             $tabela->set_align(["left"]);
@@ -1040,7 +1040,7 @@ class CandidatoAdm2025 {
             $tabela->set_width([40, 10, 10, 10, 10]);
             $tabela->set_funcao(["plm", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
-            $tabela->set_classe([null, null, "Candidato", "Candidato"]);
+            $tabela->set_classe([null, null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
             $tabela->set_align(["left"]);
@@ -1141,6 +1141,29 @@ class CandidatoAdm2025 {
     ###########################################################
 
     /**
+     * Método get_nomeEInscrição
+     * fornece o nome e inscrição do Candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeEInscricao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+
+            pLista(
+                    plm($dados["nome"]),
+                    plm($dados["inscricao"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_nomeECargoELotacao
      * fornece o nome, cargo e lotacao de um candidato
      * 
@@ -1158,6 +1181,60 @@ class CandidatoAdm2025 {
             pLista(
                     plm($dados["nome"]),
                     $pessoal->get_nomeLotacao($dados["idLotacao"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacaoEAtivo
+     * fornece o nome, cargo e lotacao de um candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeECargoELotacaoESituacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+            
+            # Define as variávels de retorno
+            $retorno = null;
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+            
+            # Verifica se tem alguem com esse cpf
+            $idPessoa = $pessoal->get_idPessoaCPF($dados["cpf"]);            
+            
+            if(!empty($idPessoa)){
+                # Pega o idServidor
+                $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+                
+                # Pega o perfil
+                $perfil = $pessoal->get_perfil($idServidor);
+                
+                # Pega o idFuncional
+                $idFuncional = $pessoal->get_idFuncional($idServidor);
+                
+                # Verifica se é ativo
+                $situacao = $pessoal->get_situacao($idServidor);
+                
+                # Retorno
+                if(empty($idFuncional)){
+                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}</b>";
+                }else{
+                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>ID Funcional: {$idFuncional}</b>";
+                }
+            }   
+
+            # Retorna
+            pLista(
+                    plm($dados["nome"]),
+                    $pessoal->get_nomeLotacao($dados["idLotacao"]),
+                    null,
+                    $retorno
             );
         }
     }

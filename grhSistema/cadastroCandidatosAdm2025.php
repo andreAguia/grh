@@ -348,91 +348,11 @@ if ($acesso) {
                  */
                 if (!empty($numeroVagas)) {
 
-                    /*
-                     * Candidatos Aprovado no número de Vagas
-                     */
-                    # Monta o select
-                    $select = "SELECT {$campo},
-                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'Cadastro de Reserva','---')),
-                              inscricao,
-                              idCandidato,
-                              dtNascimento,
-                              idCandidato,
-                              classifAc,
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato,
-                              idCandidato
-                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                        WHERE tbcandidato.idConcurso = {$idConcurso}";
-
-                    # Cota
-                    if ($parametroCota <> "Ac") {
-                        $select .= " AND {$campo} IS NOT NULL";
+                    if (Verifica::acesso($idUsuario, 1)) {      // Excluir somente admin
+                        $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, true);
+                    } else {
+                        $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, false);
                     }
-
-                    # nome
-                    if (!is_null($parametroNome)) {
-
-                        # Verifica se tem espaços
-                        if (strpos($parametroNome, ' ') !== false) {
-                            # Separa as palavras
-                            $palavras = explode(' ', $parametroNome);
-
-                            # Percorre as palavras
-                            foreach ($palavras as $item) {
-                                $select .= ' AND (nome LIKE "%' . $item . '%")';
-                            }
-                        } else {
-                            $select .= " AND nome LIKE '%{$parametroNome}%'";
-                        }
-                    }
-
-                    # cargo
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                    }
-
-                    # Ordenação
-                    $select .= " ORDER BY {$campo}";
-
-                    # Pega os dados
-                    $row = $pessoal->select($select);
-
-                    # tabela
-                    $tabela = new Tabela();
-                    $tabela->set_titulo("Candidatos Aprovados");
-                    $tabela->set_subtitulo($subtitulo);
-                    $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação na Cota", "Classificação em Ampla Concorrência", "Nota Final", "Obs", "Editar"]);
-                    $tabela->set_width([5, 10, 10, 30, 10, 10, 10, 10]);
-                    $tabela->set_align(["center", "center", "center", "left", "center"]);
-                    $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
-
-                    $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
-                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, null, "exibeObs"]);
-
-                    # Botão Editar
-                    $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-                    $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-                    # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
-
-                    $tabela->set_rowspan(1);
-                    $tabela->set_grupoCorColuna(1);
-
-                    $tabela->set_formatacaoCondicional(array(
-                        array('coluna' => 1,
-                            'valor' => 'Vaga',
-                            'operador' => '=',
-                            'id' => "naVaga"),
-                        array('coluna' => 1,
-                            'valor' => 'Cadastro de Reserva',
-                            'operador' => '=',
-                            'id' => "reserva")));
-
-                    $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
-                    $tabela->show();
 
                     ####################################################################################
                 } else {
@@ -546,9 +466,8 @@ if ($acesso) {
                 }
 
                 $select .= " ORDER BY nome";
-                
-                #echo $select;
 
+                #echo $select;
                 # Pega os dados
                 $row = $pessoal->select($select);
 
@@ -759,6 +678,7 @@ if ($acesso) {
                               CONVERT(notaFinal, DECIMAL(10,2))
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                         WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)  
                           AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}";
 
                 # Pega o candidato de acordo com a cota
@@ -875,7 +795,8 @@ if ($acesso) {
                               celular,
                               CONCAT(cargo,'<br/>{$numeroVagas} Vagas')
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                         # Pega o candidato de acordo com a cota
                         if ($parametroCota <> "Ac") {
@@ -928,7 +849,8 @@ if ($acesso) {
                               dtNascimento,
                               CONVERT(notaFinal, DECIMAL(10,2))
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                 # Pega o candidato de acordo com a cota
                 if ($parametroCota <> "Ac") {
@@ -1044,7 +966,8 @@ if ($acesso) {
                               identidade,
                               dtNascimento
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                         # Pega o candidato de acordo com a cota
                         if ($parametroCota <> "Ac") {
@@ -1095,7 +1018,8 @@ if ($acesso) {
                               nome,
                               CONVERT(notaFinal, DECIMAL(10,2))
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                 # Pega o candidato de acordo com a cota
                 if ($parametroCota <> "Ac") {
@@ -1209,7 +1133,8 @@ if ($acesso) {
                                        CONVERT(notaFinal, DECIMAL(10,2)),
                                        CONCAT(cargo,'<br/>{$numeroVagas} Vagas')
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                         # Pega o candidato de acordo com a cota
                         if ($parametroCota <> "Ac") {
@@ -1313,6 +1238,7 @@ if ($acesso) {
                                 WHERE tbcandidato.idConcurso = {$idConcurso}
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
+                                  AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
                              ORDER BY {$campo}";
 
                     # Passa para o array
@@ -1413,6 +1339,7 @@ if ($acesso) {
                                 WHERE tbcandidato.idConcurso = {$idConcurso}
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
+                                  AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
                              ORDER BY {$campo}";
 
                     # Passa para o array
@@ -1674,7 +1601,8 @@ if ($acesso) {
                               nome,
                               idLotacao
                          FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                 # Pega o candidato de acordo com a cota
                 if ($parametroCota <> "Ac") {
@@ -1792,7 +1720,8 @@ if ($acesso) {
                               cargo,
                               concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao
                          FROM tbcandidato LEFT JOIN tblotacao USING(idLotacao)
-                        WHERE idConcurso = {$idConcurso}";
+                        WHERE idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)";
 
                         # Pega o candidato de acordo com a cota
                         if ($parametroCota <> "Ac") {
@@ -1842,9 +1771,8 @@ if ($acesso) {
 
         case "relatorio9":
 
-
             /*
-             *  Todos os Candidatod de Todos os cargos
+             *  Todos os Candidats de Todos os cargos
              */
 
             # Define o array da tabela
@@ -2088,7 +2016,14 @@ if ($acesso) {
             $candidato->exibeTabelaVagasCargo();
             break;
 
-        ################################################################      
+        ################################################################
+
+        case "exibeCandidatosCargo" :
+
+
+            break;
+
+        ################################################################        
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

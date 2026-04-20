@@ -117,7 +117,7 @@ class ConcursoAdm2025 {
 
     function get_vagasGeral($cargoConcurso = null) {
         /**
-         * Informa a obs do cargo
+         * Informa as vagas gerais
          */
         if (empty($cargoConcurso)) {
             return null;
@@ -159,4 +159,156 @@ class ConcursoAdm2025 {
     }
 
     ###########################################################
+
+    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $exibeErros = false) {
+        /*
+         * Exibe os candidatos em um cargo específico
+         */
+
+        # Classes
+        $concurso = new Concurso();
+        $pessoal = new Pessoal();
+
+        # Pega o idConcurso
+        $idConcurso = $this->get_idConcurso();
+
+        # Cadastro de reserva
+        $cadReserva = 5;
+
+        # Define os dados de acordo com as cotas
+        switch ($cota) {
+            // Ampla Concorrência
+            case "Ac":
+                $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $cargoConcurso);
+                $campo = "classifAc";
+                $campoVaga = "vagas";
+                $subtitulo = "Ampla Concorrência";
+                break;
+
+            // Pcd
+            case "Pcd":
+                $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $cargoConcurso);
+                $campo = "classifPcd";
+                $campoVaga = "vagasPcd";
+                $subtitulo = "Cota: PCD";
+                break;
+
+            // Negros e Indígenas
+            case "Ni":
+                $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $cargoConcurso);
+                $campo = "classifNi";
+                $campoVaga = "vagasNi";
+                $subtitulo = "Cota: Negros e Indígenas";
+                break;
+
+            // Hipossuficiente Econômico
+            case "Hipo":
+                $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $cargoConcurso);
+                $campo = "classifHipo";
+                $campoVaga = "vagasHipo";
+                $subtitulo = "Cota: Hipossuficiente Econômico";
+                break;
+        }
+
+        # Define o cadastro de reserva, quando se tem o número de vagas
+        if (empty($numeroVagas)) {
+            $numeroVagas = null;
+            $cadastroReserva = null;
+            $foraCadastro = null;
+            if ($cargoConcurso <> "*") {
+                $subtitulo .= " - SEM Vagas";
+            }
+        } else {
+            $cadastroReserva = $cadReserva * $numeroVagas;
+            $foraCadastro = $numeroVagas + $cadastroReserva;
+            $subtitulo .= " - {$numeroVagas} Vaga(s)";
+        }
+
+
+        # Monta o select
+        $select = "SELECT {$campo},
+                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'Cadastro de Reserva','---')),
+                              inscricao,
+                              idCandidato,
+                              dtNascimento,
+                              idCandidato,
+                              classifAc,
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato,
+                              idCandidato
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                          AND cargo = '{$cargoConcurso}'";
+
+        # Cota
+        if ($cota <> "Ac") {
+            $select .= " AND {$campo} IS NOT NULL";
+        }
+
+        # Ordenação
+        $select .= " ORDER BY {$campo}";
+
+        # Pega os dados
+        $row = $pessoal->select($select);
+
+        # Verifica se tem erro na classificação
+        if ($exibeErros) {
+            $inicio = 0;
+            $problemas = 0;
+
+            # Cria um laço
+            foreach ($row as $key => $linha) {
+                # incrementa o início
+                $inicio++;
+
+                # Verifica se classificação é igual ao início
+                if ($linha[$campo] <> $inicio) {
+                    $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]}</span>";
+                    $problemas++;
+                }
+            }
+
+            # Informa se houve problemas
+            if ($problemas > 0) {
+                callout("{$problemas} Problemas encontrados na classificação deste cargo");
+            }
+        }
+
+        # tabela
+        $tabela = new Tabela();
+        $tabela->set_titulo("Candidatos Aprovados");
+        $tabela->set_subtitulo($subtitulo);
+        $tabela->set_conteudo($row);
+        $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação na Cota", "Classificação em Ampla Concorrência", "Nota Final", "Obs", "Editar"]);
+        $tabela->set_width([5, 10, 10, 30, 10, 10, 10, 10]);
+        $tabela->set_align(["center", "center", "center", "left", "center"]);
+        $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
+
+        $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
+        $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeCotas", null, null, "exibeObs"]);
+
+        # Botão Editar
+        $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+        $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+        # Coloca o objeto link na tabela			
+        $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+
+        $tabela->set_rowspan(1);
+        $tabela->set_grupoCorColuna(1);
+
+        $tabela->set_formatacaoCondicional(array(
+            array('coluna' => 1,
+                'valor' => 'Vaga',
+                'operador' => '=',
+                'id' => "naVaga"),
+            array('coluna' => 1,
+                'valor' => 'Cadastro de Reserva',
+                'operador' => '=',
+                'id' => "reserva")));
+
+        $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
+        $tabela->show();
+    }
 }

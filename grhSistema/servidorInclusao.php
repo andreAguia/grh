@@ -205,6 +205,10 @@ if ($acesso) {
             $sexo = null;
             $idCargo = null;
             $idLotacao = null;
+            
+            /*
+             * Verifica no Cadastro de Servidores
+             */
 
             # Verifica se o CPF já está cadastrado no cadastro de Servidores
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
@@ -226,14 +230,19 @@ if ($acesso) {
                 }
             }
 
-            # Verifica se já tem algum candidato com esse cpf
+            /*
+             * Verifica no Cadastro de Candidatos do Concurso de 2025
+             */
+            # Concursados somente estatutário
             if ($perfil == 1) {
 
                 # Inicia a classe de candidatos
                 $candidatoClasse = new CandidatoAdm2025();
+                
+                # Verifica se já tem algum candidato com esse cpf
                 $idCandidato = $candidatoClasse->get_idCandidatoCPF($cpf);
 
-                # Verifica se já tem algum candidato com esse cpf
+                # Se tiver...
                 if (!empty($idCandidato)) {
 
                     # Pega os dados desse candidato
@@ -569,8 +578,6 @@ if ($acesso) {
             $situacao = post('situacao');
             $orgaoOrigem = post('orgaoOrigem');
             $matExterna = post('matExterna');
-            
-            
 
             $classe = null;
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);

@@ -231,11 +231,11 @@ if ($acesso) {
             'label' => 'Data de Nascimento:',
             'tipo' => 'data',
             'size' => 20,
-            'col' => 3,
+            'col' => 4,
             'title' => 'Data de Nascimento.'),
         array(
             'linha' => 6,
-            'col' => 3,
+            'col' => 4,
             'nome' => 'cpf',
             'label' => 'CPF:',
             'tipo' => 'cpf',
@@ -248,7 +248,7 @@ if ($acesso) {
             'label' => 'Identidade:',
             'tipo' => 'texto',
             'title' => 'Identidade do Candidato',
-            'col' => 3,
+            'col' => 4,
             'size' => 50),
         array(
             'linha' => 3,

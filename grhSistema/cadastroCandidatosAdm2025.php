@@ -417,7 +417,7 @@ if ($acesso) {
                     $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);
 
                     $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-                    $tabela->set_metodo([null, null, null, "get_nomeELotacao", null, "exibeCotas", null, "exibeObs"]);
+                    $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeCotas", null, "exibeObs"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
@@ -438,7 +438,7 @@ if ($acesso) {
 
                 # Monta o select
                 $select = "SELECT inscricao,
-                                  nome,
+                                  idCandidato,
                                   cargo,
                                   cargo,
                                   idCandidato,
@@ -480,8 +480,8 @@ if ($acesso) {
                 $tabela->set_width([10, 20, 30, 10, 10, 10, 5, 5]);
                 $tabela->set_align(["center", "left", "left"]);
 
-                $tabela->set_classe([null, null, null, "ConcursoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-                $tabela->set_metodo([null, null, null, "get_vagasGeral", "exibeClassific", null, "exibeObs"]);
+                $tabela->set_classe([null, "CandidatoAdm2025", null, "ConcursoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025"]);
+                $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "get_vagasGeral", "exibeClassific", null, "exibeObs"]);
                 $tabela->set_funcao([null, "plm", "plm"]);
 
                 # Botão Editar

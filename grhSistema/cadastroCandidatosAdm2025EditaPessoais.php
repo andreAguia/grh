@@ -241,7 +241,7 @@ if ($acesso) {
     $objeto->set_botaoVoltarForm(false);
 
     # Botões
-    $botao1 = new Link("Dados da Prova", "cadastroCandidatosAdm2025EditaProva.php");
+    $botao1 = new Link("Dados da Prova", "cadastroCandidatosAdm2025Edita.php");
     $botao1->set_class('button');
 
     $botao2 = new Link("Dados Pessoais");

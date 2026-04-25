@@ -1989,7 +1989,7 @@ if ($acesso) {
             set_session('origem', "cadastroCandidatosAdm2025.php");
 
             # Carrega a página específica
-            loadPage('cadastroCandidatosAdm2025EditaProva.php');
+            loadPage('cadastroCandidatosAdm2025Edita.php');
             break;
 
         ################################################################                    
@@ -2004,7 +2004,7 @@ if ($acesso) {
             set_session('origem', "cadastroCandidatosAdm2025.php?fase=duplicados");
 
             # Carrega a página específica
-            loadPage('cadastroCandidatosAdm2025EditaProva.php');
+            loadPage('cadastroCandidatosAdm2025Edita.php');
             break;
 
         ################################################################

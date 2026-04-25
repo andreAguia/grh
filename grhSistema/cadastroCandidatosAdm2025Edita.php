@@ -196,7 +196,7 @@ if ($acesso) {
             'tipo' => 'combo',
             'array' => $cargo,
             'title' => 'Cargo',
-            'col' => 11,
+            'col' => 12,
             'size' => 200),
         array(
             'linha' => 4,

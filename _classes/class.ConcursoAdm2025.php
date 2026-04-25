@@ -264,8 +264,13 @@ class ConcursoAdm2025 {
 
                 # Verifica se classificação é igual ao início
                 if ($linha[$campo] <> $inicio) {
-                    $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]}</span>";
+                    $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]} - {$inicio}</span>";
                     $problemas++;
+
+                    # acerta a listagem
+                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio}
+                             WHERE idCandidato = {$linha['idCandidato']}";
+                    $pessoal->update($sql);                   
                 }
             }
 

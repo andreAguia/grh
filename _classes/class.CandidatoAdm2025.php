@@ -1197,37 +1197,37 @@ class CandidatoAdm2025 {
         if (empty($idCandidato)) {
             return null;
         } else {
-            
+
             # Define as variávels de retorno
             $retorno = null;
 
             # Pega os Dados
             $dados = $this->get_dados($idCandidato);
             $pessoal = new Pessoal();
-            
+
             # Verifica se tem alguem com esse cpf
-            $idPessoa = $pessoal->get_idPessoaCPF($dados["cpf"]);            
-            
-            if(!empty($idPessoa)){
+            $idPessoa = $pessoal->get_idPessoaCPF($dados["cpf"]);
+
+            if (!empty($idPessoa)) {
                 # Pega o idServidor
                 $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
-                
+
                 # Pega o perfil
                 $perfil = $pessoal->get_perfil($idServidor);
-                
+
                 # Pega o idFuncional
                 $idFuncional = $pessoal->get_idFuncional($idServidor);
-                
+
                 # Verifica se é ativo
                 $situacao = $pessoal->get_situacao($idServidor);
-                
+
                 # Retorno
-                if(empty($idFuncional)){
+                if (empty($idFuncional)) {
                     $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}</b>";
-                }else{
+                } else {
                     $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>ID Funcional: {$idFuncional}</b>";
                 }
-            }   
+            }
 
             # Retorna
             pLista(
@@ -1264,7 +1264,33 @@ class CandidatoAdm2025 {
         }
     }
 
-###########################################################
+    ###########################################################
+
+    public function exibeNumOficio($id) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT numOficio, 
+                          anoOficio
+                     FROM tbcandidato
+                    WHERE idCandidato = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Pega a obs
+        if (empty($row["numOficio"])) {
+            return "---";
+        } else {
+            return str_pad($row["numOficio"], 3, "0", STR_PAD_LEFT) . " / {$row['anoOficio']}";
+        }
+    }
+
+    ###########################################################
 
     /**
      * Método get_idCandidatoCPF
@@ -1315,6 +1341,40 @@ class CandidatoAdm2025 {
             return null;
         } else {
             return $row[0];
+        }
+    }
+
+    ##########################################################
+
+    /**
+     * Método get_numOficio
+     * fornece o número de ofício à perícia para o exame adimissional
+     * 
+     * @param	string $ano o ano do ofício
+     */
+    public function get_numOficio($ano = null) {
+
+        # Trata o ano
+        if (empty($ano)) {
+            $ano = date("Y");
+        }
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Monta o select com os dados do candidato
+        $select = "SELECT numOficio
+                     FROM tbcandidato
+                    WHERE anoOficio = '{$ano}'
+                    ORDER BY numOficio DESC
+                    LIMIT 1";
+
+        $row = $pessoal->select($select, false);
+
+        if (empty($row[0])) {
+            return "001";
+        } else {
+            return str_pad($row[0] + 1, 3, "0", STR_PAD_LEFT);
         }
     }
 

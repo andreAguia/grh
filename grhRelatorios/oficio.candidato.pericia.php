@@ -25,8 +25,6 @@ if ($acesso) {
     $idCandidatoPesquisado = get_session("idCandidatoPesquisado");
 
     # Pega os dados digitados
-    $numero = post("numero");
-    $ano = post("ano");
     $data = date_to_php(post("data"));
     $hora = post("hora");
 
@@ -39,8 +37,17 @@ if ($acesso) {
     $candidatoClasse = new CandidatoAdm2025();
     $dados = $candidatoClasse->get_dados($idCandidatoPesquisado);
 
+    # Pega o Número do Ofício
+    if (empty($dados["numOficio"])) {
+        $numero = $candidatoClasse->get_numOficio(date("Y"));
+        $ano = date("Y");
+    }else{
+        $numero = $dados["numOficio"];
+        $ano = $dados["anoOficio"];
+    }
+
     # Monta o Ofício
-    $oficio = new Oficio("{$numero} / {$ano}");
+    $oficio = new Oficio(str_pad($numero, 3, "0", STR_PAD_LEFT) . " / {$ano}");
 
     # Destino Nome
     $oficio->set_destinoNome("Ao");
@@ -69,6 +76,11 @@ if ($acesso) {
 
     $oficio->temRodape(false);
     $oficio->show();
+
+    # Grava o número do Oficio
+    $sql = "UPDATE tbcandidato SET numOficio = {$numero},anoOficio = {$ano}                                 
+             WHERE idCandidato = {$idCandidatoPesquisado}";
+    $pessoal->update($sql);
 
     # Grava o log da visualização do relatório
     $data = date("Y-m-d H:i:s");

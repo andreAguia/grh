@@ -232,8 +232,8 @@ class ConcursoAdm2025 {
                               idCandidato,
                               dtNascimento,
                               idCandidato,
-                              classifAc,
                               CONVERT(notaFinal, DECIMAL(10,2)),
+                              idCandidato,
                               idCandidato,
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
@@ -287,13 +287,13 @@ class ConcursoAdm2025 {
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação na Cota", "Classificação em Ampla Concorrência", "Nota Final", "Obs", "Editar"]);
+        $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação", "Nota Final", "Ofício", "Obs", "Editar"]);
         $tabela->set_width([5, 10, 10, 30, 10, 10, 10, 10]);
         $tabela->set_align(["center", "center", "center", "left", "center"]);
         $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php"]);
 
-        $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
-        $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeCotas", null, null, "exibeObs"]);
+        $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, "exibeNumOficio", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');

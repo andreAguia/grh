@@ -371,38 +371,16 @@ if ($acesso) {
             # Título
             tituloTable("Ofício: Encaminhamento do Candidato à Perícia");
             br();
-            
 
             # Monta o formulário
             $form = new Form("../grhRelatorios/oficio.candidato.pericia.php");
-
-            # Número do Ofício
-            $controle = new Input('numero', 'texto', 'Número do Ofício:', 1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_col(4);
-            $controle->set_valor();
-            $controle->set_required(true);
-            $controle->set_autofocus(true);
-            $controle->set_title('O número do Ofício.');
-            $form->add_item($controle);
-            
-            # Ano do Ofício
-            $controle = new Input('ano', 'texto', 'Ano:', 1);
-            $controle->set_size(20);
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $controle->set_valor(date("Y"));
-            $controle->set_required(true);
-            $controle->set_title('O ano do Ofício.');
-            $form->add_item($controle);
             
             # Data do Exame
             $controle = new Input('data', 'date', 'Data do Exame:', 1);
             $controle->set_size(20);
             $controle->set_linha(2);
             $controle->set_col(4);
-            $controle->set_valor();
+            $controle->set_autofocus(true);            
             $controle->set_required(true);
             $controle->set_title('A data do exame.');
             $form->add_item($controle);

@@ -266,7 +266,9 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
                 $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
                 $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
-                $menu->add_item('linkWindow', 'Com Lotação', '?fase=relatorio8');
+
+                $menu->add_item('titulo1', 'Candidatos com Lotação Definida');
+                $menu->add_item('linkWindow', 'Agrupados por Lotação', '?fase=relatorio10');
 
                 $menu->add_item('titulo1', 'Todos os Candidatos Aprovados');
                 $menu->add_item('linkWindow', 'Para a Perícia', '?fase=relatorio4');
@@ -1873,9 +1875,9 @@ if ($acesso) {
 
             break;
 
-        ################################################################  
+        ################################################################ 
 
-        case "relatorio10":
+        case "relatorio9":
 
 
             /*
@@ -1977,7 +1979,49 @@ if ($acesso) {
 
             break;
 
-        ################################################################                    
+        ################################################################      
+
+        case "relatorio10":
+
+            /*
+             *  Todos os Candidatos com Lotação
+             */
+
+            # Pega os candidaatos desse cargo e dessa cota
+            $select = "SELECT inscricao,
+                              tbcandidato.nome,
+                              cargo,
+                              idCandidato,
+                              concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) as lotacao
+                         FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                          LEFT JOIN tblotacao USING(idLotacao)
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND tbcandidato.idLotacao IS NOT Null  
+                     ORDER BY lotacao, tbcandidato.nome";
+
+            # Passa para o array
+            $row = $pessoal->select($select);
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_subtitulo("Com Lotação Definida");
+            $relatorio->set_conteudo($row);
+            $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Classificação","Lotação"]);
+            $relatorio->set_align(["center", "left", "left", "center"]);
+            $relatorio->set_funcao([null, "plm", "plm"]);
+            $relatorio->set_bordaInterna(true);
+
+            $relatorio->set_classe([null, null, null, "CandidatoAdm2025"]);
+            $relatorio->set_metodo([null, null, null, "exibeClassific"]);
+            $relatorio->set_numGrupo(4);
+
+            #$relatorio->set_numGrupo(2);
+            $relatorio->show();
+
+            break;
+
+        ################################################################                   
         case "editaCandidato" :
             br(8);
             aguarde();

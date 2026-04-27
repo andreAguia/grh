@@ -113,7 +113,7 @@ if ($acesso) {
                              ORDER BY cargo');
 
     array_unshift($cargo, [null, null]);
-    
+
     # Pega os dados da combo lotacao
     $selectLotacao = 'SELECT idlotacao, 
                              concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")),
@@ -148,7 +148,7 @@ if ($acesso) {
             'linha' => 2,
             'nome' => 'idfuncional',
             'label' => 'Id Funcional:',
-            'tipo' => 'texto',            
+            'tipo' => 'texto',
             'size' => 15,
             'col' => 3,
             'title' => 'IdFuncional Quando já possui.'),
@@ -336,6 +336,14 @@ if ($acesso) {
             'size' => 5),
     ));
 
+    # Botão de Upload
+    $botao = new Button("Ofício Perícia");
+    $botao->set_url("?fase=oficioPericia");
+    $botao->set_title("Ofício de encaminhamento do candidato à perícia");
+    $botao->set_target("_blank");
+
+    $objeto->set_botaoEditarExtra([$botao]);
+
     # Log
     $objeto->set_idUsuario($idUsuario);
     ################################################################
@@ -348,6 +356,77 @@ if ($acesso) {
 
         case "gravar" :
             $objeto->gravar($idCandidatoPesquisado);
+            break;
+
+        ################################################################   
+        
+        # Ofício: Encaminhamento do Candidato à Perícia
+        case "oficioPericia" :
+
+            # Limita a tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+            br();
+            
+            # Título
+            tituloTable("Ofício: Encaminhamento do Candidato à Perícia");
+            br();
+            
+
+            # Monta o formulário
+            $form = new Form("../grhRelatorios/oficio.candidato.pericia.php");
+
+            # Número do Ofício
+            $controle = new Input('oficio', 'texto', 'Número do Ofício:', 1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_valor();
+            $controle->set_required(true);
+            $controle->set_title('O número do Ofício.');
+            $form->add_item($controle);
+            
+            # Ano do Ofício
+            $controle = new Input('ano', 'texto', 'Ano:', 1);
+            $controle->set_size(20);
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_valor(date("Y"));
+            $controle->set_required(true);
+            $controle->set_title('O ano do Ofício.');
+            $form->add_item($controle);
+            
+            # Data do Exame
+            $controle = new Input('data', 'date', 'Data do Exame:', 1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_col(4);
+            $controle->set_valor();
+            $controle->set_required(true);
+            $controle->set_title('A data do exame.');
+            $form->add_item($controle);
+            
+            # Hora do Exame
+            $controle = new Input('hora', 'hora', 'Hora do Exame:', 1);
+            $controle->set_size(20);
+            $controle->set_linha(2);
+            $controle->set_col(3);
+            $controle->set_valor();
+            $controle->set_required(true);
+            $controle->set_title('A hora do exame.');
+            $form->add_item($controle);
+
+            # submit
+            $controle = new Input('salvar', 'submit');
+            $controle->set_valor('Imprimir');
+            $controle->set_linha(5);
+            $controle->set_col(2);
+            $form->add_item($controle);
+
+            $form->show();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
             break;
     }
     $page->terminaPagina();

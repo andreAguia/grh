@@ -44,9 +44,9 @@ class Oficio {
 
     ###########################################################
 
-    public function __construct($numero, $data, $assunto) {
+    public function __construct($numero, $data = null, $assunto = null) {
         /**
-         * Inicia a Ci e preenche oas variáveis com valores padrão
+         * Inicia o ofício e preenche oas variáveis com valores padrão
          */
         # Conecta ao banco de dados
         $pessoal = new Pessoal();
@@ -81,6 +81,26 @@ class Oficio {
          * 
          */
         $this->texto[] = $texto;
+    }
+
+    ###########################################################
+
+    public function set_destinoNome($destinoNome) {
+        /**
+         * Inclui um objeto Input ao formulário
+         * 
+         */
+        $this->destinoNome[] = $destinoNome;
+    }
+
+    ###########################################################
+
+    public function set_destinoSetor($destinoSetor) {
+        /**
+         * Inclui um objeto Input ao formulário
+         * 
+         */
+        $this->destinoSetor[] = $destinoSetor;
     }
 
     ###########################################################
@@ -157,7 +177,7 @@ class Oficio {
         $div = new Div('rodape');
         $div->abre();
 
-        hr();        
+        hr();
         p("<b>{$this->rodapeNome}</b><br/>{$this->rodapeEndereco}<br/>{$this->rodapeTelefone}", "pCiRodape");
 
         $div->fecha();
@@ -231,10 +251,20 @@ class Oficio {
         $grid->fechaColuna();
         $grid->fechaGrid();
 
-        # Destino e Assunto
-        p($this->destinoNome, 'pCiDePara1');
-        p($this->destinoSetor, 'pCiDePara1');
-        p("Assunto: " . $this->assunto, 'pCiDePara1');
+        # Destino Nome
+        foreach ($this->destinoNome as $destinoNomeCi) {
+            p($destinoNomeCi, 'pCiDePara1');
+        }
+
+        # Destino Setor
+        foreach ($this->destinoSetor as $destinoSetoCi) {
+            p($destinoSetoCi, 'pCiDePara1');
+        }
+
+        # Assunto
+        if (!empty($this->assunto)) {
+            p("Assunto: " . $this->assunto, 'pCiDePara1');
+        }
         br();
 
         # Prezado
@@ -334,5 +364,4 @@ class Oficio {
             $this->rodape();
         }
     }
-
 }

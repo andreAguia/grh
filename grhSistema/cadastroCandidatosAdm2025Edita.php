@@ -377,12 +377,13 @@ if ($acesso) {
             $form = new Form("../grhRelatorios/oficio.candidato.pericia.php");
 
             # Número do Ofício
-            $controle = new Input('oficio', 'texto', 'Número do Ofício:', 1);
+            $controle = new Input('numero', 'texto', 'Número do Ofício:', 1);
             $controle->set_size(20);
             $controle->set_linha(1);
             $controle->set_col(4);
             $controle->set_valor();
             $controle->set_required(true);
+            $controle->set_autofocus(true);
             $controle->set_title('O número do Ofício.');
             $form->add_item($controle);
             

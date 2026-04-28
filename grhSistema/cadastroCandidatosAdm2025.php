@@ -272,8 +272,8 @@ if ($acesso) {
                 $menu->add_item('linkWindow', 'Agrupados por Lotação', '?fase=relatorio10');
 
                 $menu->add_item('titulo', 'Aprovados de Todos os Cargos');
-                $menu->add_item('linkWindow', 'Para a Perícia', '?fase=relatorio4');
-                $menu->add_item('linkWindow', 'Para o Restaurante', '?fase=relatorio5');
+                $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
+                $menu->add_item('linkWindow', 'Para Restaurante', '?fase=relatorio5');
                 $menu->add_item('linkWindow', 'Para Publicação', '?fase=relatorio7');
                 $menu->add_item('linkWindow', 'Para Recepção', '?fase=relatorio8');
 
@@ -1251,7 +1251,7 @@ if ($acesso) {
 
             # Ordena por nome
             usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['nome'], $b['nome']);
+                return strcoll(retiraAcento($a['nome']), retiraAcento($b['nome']));
             });
 
             $anterior = null;
@@ -1350,9 +1350,13 @@ if ($acesso) {
                 }
             }
 
+//            # Ordena por nome
+//            usort($arrayTabela, function ($a, $b) {
+//                return strcmp($a['nome'], $b['nome']);
+//            });
             # Ordena por nome
             usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['nome'], $b['nome']);
+                return strcoll(retiraAcento($a['nome']), retiraAcento($b['nome']));
             });
 
             $anterior = null;
@@ -1456,7 +1460,7 @@ if ($acesso) {
 
             # Ordena por nome
             usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['nome'], $b['nome']);
+                return strcoll(retiraAcento($a['nome']), retiraAcento($b['nome']));
             });
 
             // 1. Extrai a coluna de nome e conta quantas vezes cada um aparece
@@ -1557,7 +1561,7 @@ if ($acesso) {
 
             # Ordena por nome
             usort($arrayTabela, function ($a, $b) {
-                return strcmp($a['cargo'], $b['cargo']);
+                return strcoll(retiraAcento($a['nome']), retiraAcento($b['nome']));
             });
 
             $anterior = null;
@@ -1587,7 +1591,112 @@ if ($acesso) {
             break;
 
         ################################################################  
-            
+
+        case "relatorio8":
+
+            /*
+             *  Todos os Candidatod de Todos os cargos
+             */
+
+            # Define o array da tabela
+            $arrayTabela = [];
+            $resultadoFinal = [];
+
+            # Pega os cargos
+            $result = $pessoal->select('SELECT DISTINCT cargoConcurso
+                                          FROM tbconcursovagadetalhada
+                                      ORDER BY cargoConcurso');
+
+            # Percorre os cargos
+            foreach ($result as $item) {
+
+                foreach ($arrayCotas as $cota) {
+
+                    switch ($cota[0]) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifAc";
+                            $campoVaga = "vagas";
+                            $subtitulo = "Ampla Concorrência";
+                            break;
+
+                        // Pcd
+                        case "Pcd":
+                            $numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifPcd";
+                            $campoVaga = "vagasPcd";
+                            $subtitulo = "Cota: PCD";
+                            break;
+
+                        // Negros e Indígenas
+                        case "Ni":
+                            $numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifNi";
+                            $campoVaga = "vagasNi";
+                            $subtitulo = "Cota: Negros e Indígenas";
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                            $campo = "classifHipo";
+                            $campoVaga = "vagasHipo";
+                            $subtitulo = "Cota: Hipossuficiente Econômico";
+                            break;
+                    }
+
+                    # Pega os candidaatos desse cargo e dessa cota
+                    $select = "SELECT inscricao,
+                                      nome,
+                                      '<br/>____________________________',
+                                      '<br/>____________________________'
+                                 FROM tbcandidato LEFT JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                WHERE tbcandidato.idConcurso = {$idConcurso}
+                                  AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
+                                  AND cargo = '{$item["cargoConcurso"]}'
+                                  AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                             ORDER BY {$campo}";
+
+                    # Passa para o array
+                    $arrayTabela = array_merge($arrayTabela, $pessoal->select($select));
+                }
+            }
+
+//            # Ordena por nome
+//            usort($arrayTabela, function ($a, $b) {
+//                return strcmp($a['nome'], $b['nome']);
+//            });
+            # Ordena por nome
+            usort($arrayTabela, function ($a, $b) {
+                return strcoll(retiraAcento($a['nome']), retiraAcento($b['nome']));
+            });
+
+            $anterior = null;
+            # Retira as duplicatas
+            foreach ($arrayTabela as $item) {
+                # Verifica se é diferente ao anterior
+                if ($item['nome'] <> $anterior) {
+                    $anterior = $item['nome'];
+                    $resultadoFinal[] = $item;
+                }
+            }
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($resultadoFinal);
+            $relatorio->set_label(["Inscrição", "Nome", "Manhã", "Tarde"]);
+            $relatorio->set_align(["center", "left"]);
+            $relatorio->set_funcao([null, "plm"]);
+            #$relatorio->set_numGrupo(2);
+            $relatorio->show();
+
+            break;
+
+        ################################################################    
+
         case "editaCandidato" :
             br(8);
             aguarde();

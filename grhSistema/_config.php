@@ -130,7 +130,7 @@ $idServidorPesquisado = get_session('idServidorPesquisado');
 
 # Define o horário
 date_default_timezone_set("America/Sao_Paulo");
-setlocale(LC_ALL, 'pt_BR');
+setlocale(LC_ALL, 'pt_BR.UTF-8');
 setlocale(LC_CTYPE, 'pt_BR');
 
 /**

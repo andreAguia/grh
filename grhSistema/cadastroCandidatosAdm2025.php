@@ -350,7 +350,7 @@ if ($acesso) {
                  */
                 if (!empty($numeroVagas)) {
 
-                    if (Verifica::acesso($idUsuario, 1)) {      // Excluir somente admin
+                    if (Verifica::acesso($idUsuario, 1)) {      // somente admin
                         $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, true);
                     } else {
                         $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, false);
@@ -413,13 +413,13 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação na Cota", "Nota Final", "Obs", "Editar"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
                     $tabela->set_align(["center", "center", "center", "left", "center"]);
                     $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);
 
                     $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-                    $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeCotas", null, "exibeObs"]);
+                    $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, "exibeObs"]);
 
                     # Botão Editar
                     $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');

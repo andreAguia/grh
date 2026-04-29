@@ -81,6 +81,7 @@ if ($acesso) {
     set_session('parametroMarcador');
     set_session('parametroDataAdmissao');
     set_session('parametroMaiorIgual');
+    set_session('parametroCargoCandidato');
 
     set_session('concursoTipo');
 

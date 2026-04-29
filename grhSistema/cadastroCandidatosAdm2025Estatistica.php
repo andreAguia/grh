@@ -63,7 +63,7 @@ if ($acesso) {
     $menu1 = new MenuBar();
 
     # Voltar
-    $linkVoltar = new Link("Voltar", "cadastroCandidatosAdm2025.php");
+    $linkVoltar = new Link("Voltar",  "areaConcursoAdm.php");
     $linkVoltar->set_class('button');
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
@@ -175,7 +175,7 @@ if ($acesso) {
             $tabela->set_align(["left", "center"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
             $tabela->set_linkTituloTitle("Exibe detalhes");
-            $tabela->set_mensagemPosTabela("Foi retirado um candidato ca contagem pois está com a data de nascimento errada. (menos de um ano de idade)");
+            $tabela->set_mensagemPosTabela("Foi retirado um candidato da contagem pois está com a data de nascimento errada. (menos de um ano de idade)");
             $tabela->show();
 
             $grid2->fechaColuna();

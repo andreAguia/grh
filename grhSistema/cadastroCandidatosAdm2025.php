@@ -50,7 +50,7 @@ if ($acesso) {
         $idServidorPesquisado = get('idServidorPesquisado');
         $concurso = new Concurso($idConcurso);
 
-        $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '301 - Técnico Profissional De Nível Médio – Agrícola E Agropecuária'));
+        $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '*'));
         $parametroNome = post('parametroNome', get_session('parametroNome'));
         $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
 

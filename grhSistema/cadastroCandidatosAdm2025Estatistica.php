@@ -131,7 +131,7 @@ if ($acesso) {
         br();
 
         $itens = array(
-            array('Por Idade', 'idade'),
+            array('Todos os Candidatos', 'idade'),
 //            array('Por Perfil', 'perfil'),
 //            array('Por Cargo - Geral', 'cargo'),
 //            array('Por Cargo - Adm/Tec', 'cargoAdm'),

@@ -1022,7 +1022,7 @@ class Concurso {
         if ($tipo == 1) {   // Administrativo
             $itensMenu = [
                 ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos", $numCandidatos, "Candidatos"],
-                ["Estatística", "cadastroCandidatosAdm2025Estatistica.php"],
+                ["Estatística", "cadastroConcursoAdm.php?fase=estatistica"],
                 ["Duplicados", "cadastroConcursoAdm.php?fase=duplicados"],
                 
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao, "Processo Seletivo"],

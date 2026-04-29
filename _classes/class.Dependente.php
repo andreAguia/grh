@@ -162,4 +162,36 @@ class Dependente {
     }
 
     ###########################################################
+
+    public function exibeCertidao($id) {
+        /**
+         * Exibe um link para exibir o pdf da certidão
+         * 
+         * @param $id integer null O id
+         * 
+         * @syntax $formacao->exibeCertidao($id);
+         */
+        # Verifica se tem id
+        if (empty($id)) {
+            return null;
+        } else {
+
+            # Monta o arquivo
+            $arquivo = PASTA_CERTIDAO . $id . ".pdf";
+
+            # Verifica se ele existe
+            if (file_exists($arquivo)) {
+
+                # Monta o link
+                $link = new Link(null, $arquivo, "Exibe a certidão de nascimento");
+                $link->set_imagem(PASTA_FIGURAS . 'doc.png', 20, 20);
+                $link->set_target("_blank");
+                $link->show();
+            } else {
+               return "---";
+            }
+        }
+    }
+
+###########################################################
 }

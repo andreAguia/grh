@@ -117,7 +117,8 @@ if ($acesso) {
                                         WHEN 'M' THEN 'Masculino'
                                      end,
                                      dtNasc,
-                                     TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),                                     
+                                     TIMESTAMPDIFF(YEAR,dtNasc,CURDATE()),
+                                     idDependente,
                                      dependente,
                                      idDependente,
                                      idDependente
@@ -156,14 +157,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Dependente<br/>no IR", "Aux. Educação", ""]);
-    $objeto->set_colspanLabel([null, null, null, null, null, null, 2]);
-    $objeto->set_align(["left", "center", "center", "center", "center", "center", "left"]);
-    $objeto->set_width([25, 10, 10, 10, 5, 10, 20, 5]);
+    $objeto->set_label(["Nome", "Parentesco", "Sexo", "Nascimento", "Idade", "Certidão", "Dependente<br/>no IR", "Aux. Educação", ""]);
+    $objeto->set_colspanLabel([null, null, null, null, null, null, null, 2]);
+    $objeto->set_align(["left", "center", "center", "center", "center", "center", "center", "left"]);
+    $objeto->set_width([20, 10, 10, 10, 5, 5, 10, 20, 5]);
 
     $objeto->set_funcao([null, null, null, "date_to_php"]);
-    $objeto->set_classe(["Dependente", null, null, null, null, null, "AuxilioEducacao", "AuxilioEducacao"]);
-    $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, null, "exibeSituacao", "exibeBotaoControle"]);
+    $objeto->set_classe(["Dependente", null, null, null, null, "Dependente", null, "AuxilioEducacao", "AuxilioEducacao"]);
+    $objeto->set_metodo(["exibeNomeCpf", null, null, null, null, "exibeCertidao", null, "exibeSituacao", "exibeBotaoControle"]);
 
     $objeto->set_numeroOrdem(true);
     $objeto->set_rowspan(0);
@@ -177,7 +178,7 @@ if ($acesso) {
 
     # Nome do campo id
     $objeto->set_idCampo('idDependente');
-    
+
     # Pega os dados da combo parentesco
     $parentesco = new Pessoal();
     $result = $parentesco->select('SELECT idParentesco, 
@@ -191,7 +192,7 @@ if ($acesso) {
         # Pega a idade máxima
         $auxilio = new AuxilioEducacao();
         $idadeLimite = $auxilio->get_idadeFinalLei();
-        
+
         if ($aux->tinhaDireitoDataHistorica($id)) {
             $readonly = false;
             $helptext = null;
@@ -343,6 +344,24 @@ if ($acesso) {
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);
+
+    # Dados da rotina de Upload
+    $pasta = PASTA_CERTIDAO;
+    $nome = "Certidão";
+    $tabela = "tbdependente";
+    $extensoes = ["pdf"];
+
+    # Botão de Upload
+    if (!empty($id)) {
+
+        # Botão de Upload
+        $botao = new Button("Upload {$nome}");
+        $botao->set_url("servidorDependentesUpload.php?fase=upload&id={$id}");
+        $botao->set_title("Faz o Upload do {$nome}");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
 
     ################################################################
 

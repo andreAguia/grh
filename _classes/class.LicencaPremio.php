@@ -491,7 +491,7 @@ class LicencaPremio {
                 $tabela->set_grupoCorColuna(0);
                 $tabela->show();
             } else {
-                titulotable("Processo de Contagem");
+                titulotable("Processo de Contagem",null,"Processo Interno da GRH");
                 $painel = new Callout();
                 $painel->abre();
                 p(trataNulo($this->get_numProcessoContagem($idServidor)), "f20", "center");

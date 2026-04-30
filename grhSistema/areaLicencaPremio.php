@@ -75,7 +75,7 @@ if ($acesso) {
             loadPage('?fase=exibeLista');
             break;
 
-    ################################################################
+        ################################################################
 
         case "exibeLista" :
             $grid = new Grid();
@@ -185,9 +185,8 @@ if ($acesso) {
             $form->add_item($controle);
 
             $form->show();
-            
-            ################################################################
 
+            ################################################################
             # Pega o time inicial
             $time_start = microtime(true);
 
@@ -196,6 +195,7 @@ if ($acesso) {
 
             # Pega os dados
             $select = "SELECT tbservidor.idServidor, 
+                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -229,7 +229,7 @@ if ($acesso) {
                         $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
                     }
                 }
-                
+
                 if (is_numeric($parametroNomeMat)) {
                     $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
                                  OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
@@ -271,12 +271,12 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Id / Matrícula", "Servidor",  "Processo de<br/>Contagem", "Admissão", "Número de Dias<br/>Publ. | Fruídos | Disp.", "Número de Publicações<br/>Reais | Possíveis | Faltantes"]);
+            $tabela->set_label(["Id / Matrícula", "Servidor", "Processo de Contagem<br/>(Interno)", "Processo de Fruição<br/>(Último)", "Admissão", "Número de Dias<br/>Publ. | Fruídos | Disp.", "Número de Publicações<br/>Reais | Possíveis | Faltantes"]);
             $tabela->set_align(["center", "left"]);
             #$tabela->set_width([5, 25, 8, 13, 18, 18, 8]);
-            $tabela->set_funcao([null, null, null, null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
-            $tabela->set_classe(["pessoal",  "pessoal", "LicencaPremio", "pessoal"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao",  "get_numProcessoContagem", "get_dtAdmissao"]);
+            $tabela->set_funcao([null, null, null, null, null, "exibeDiasLicencaPremio", "exibeNumPublicacoesLicencaPremio"]);
+            $tabela->set_classe(["pessoal", "pessoal", "LicencaPremio", "LicencaPremio", "pessoal"]);
+            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacao", "get_numProcessoContagem", "get_ultimoNumProcessoFruicaoIdServidor", "get_dtAdmissao"]);
             $tabela->set_titulo("Licença Prêmio");
 
             if (!is_null($parametroNomeMat)) {

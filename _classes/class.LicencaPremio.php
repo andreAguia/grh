@@ -287,6 +287,37 @@ class LicencaPremio {
 
     ###########################################################
 
+    function get_ultimoNumProcessoFruicaoIdServidor($idServidor) {
+
+        /**
+         * Informe o último número do processo de Fruicao da licença prêmio de um servidor
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (is_numeric($idServidor)) {
+
+            # Pega os dias publicados
+            $select = "SELECT processo
+                         FROM tblicencapremio
+                        WHERE idServidor = {$idServidor}
+                        ORDER BY dtInicial DESC";
+
+            $retorno = $pessoal->select($select, false);
+
+            # Retorno
+            if (empty($retorno[0])) {
+                return "---";
+            } else {
+                return $retorno[0];
+            }
+        } else {
+            return "---";
+        }
+    }
+
+    ###########################################################
+
     function get_numPublicacoes($idServidor) {
 
         /**
@@ -491,7 +522,7 @@ class LicencaPremio {
                 $tabela->set_grupoCorColuna(0);
                 $tabela->show();
             } else {
-                titulotable("Processo de Contagem",null,"Processo Interno da GRH");
+                titulotable("Processo de Contagem", null, "Processo Interno da GRH");
                 $painel = new Callout();
                 $painel->abre();
                 p(trataNulo($this->get_numProcessoContagem($idServidor)), "f20", "center");

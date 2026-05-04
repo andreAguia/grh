@@ -420,6 +420,7 @@ if ($acesso) {
             # Resumo dos certificados entregues
             $select = "SELECT tbservidor.idServidor,
                           tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor 
                     WHERE idServidor = {$idServidorPesquisado}";

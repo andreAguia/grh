@@ -122,6 +122,15 @@ if ($acesso) {
             $botao1->set_class('hollow button');
         }
         $menu1->add_link($botao1, "right");
+        
+        # Portaria 518/26
+        $botao1 = new Link("Portaria 518/26", "?fase=exibeLista&parametroMarcador=8");
+        if ($parametroMarcador == 8) {
+            $botao1->set_class('button');
+        } else {
+            $botao1->set_class('hollow button');
+        }
+        $menu1->add_link($botao1, "right");
 
         # Importar
         $botaoImportar = new Link("Importar", "importaPetec.php");
@@ -294,7 +303,7 @@ if ($acesso) {
             $align[] = "left";
             $classe[] = "Pessoal";
             $metodo[] = "get_nomeECargoELotacaoEPerfilESituacao";
-            $width[] = 30;
+            $width[] = 25;
 
             $petecArray = $formacao->get_arrayMarcadores("Petec");
 
@@ -303,7 +312,7 @@ if ($acesso) {
                 $align[] = "center";
                 $classe[] = "Petec";
                 $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-                $width[] = 20;
+                $width[] = 15;
             }
 
             $label[] = "Editar";
@@ -326,7 +335,7 @@ if ($acesso) {
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
 
             break;

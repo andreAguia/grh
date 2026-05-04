@@ -53,6 +53,17 @@ class Petec {
                         "Fevereiro, Março, Abril e Maio de 2026",
                         "R$ 3.000,00"
                     ];
+
+                case 8 :
+                    return [
+                        "518/26",
+                        "29/04/2026",
+                        20,
+                        "18/12/2026",
+                        88,
+                        "Junho, Julho, Agosto, Setembro, Outubro, Novembro e Dezembro de 2026",
+                        "R$ 3.000,00"
+                    ];
                     break;
             }
         }
@@ -125,6 +136,25 @@ class Petec {
         if ($idMarcador == 6) {
 
             $select = "SELECT petec2
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
+
+            if ($row[0] == "s") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        
+        /**
+         * Verifica se o servidor está inscrito no petec3
+         */
+        if ($idMarcador == 8) {
+
+            $select = "SELECT petec3
                      FROM tbservidor
                     WHERE idServidor = {$idServidor}";
 
@@ -479,6 +509,16 @@ class Petec {
 
     ###########################################################
 
+    function somatorioHoras8($idServidor) {
+        /**
+         * Informa o somatorio de horas do marcador 6
+         * Petec - Portaria 518/26
+         */
+        $this->somatorioHorasPetec($idServidor, 8);
+    }
+
+    ###########################################################
+
     function somatorioHorasPortaria4($idServidor) {
         /**
          * Informa o somatorio de horas do marcador 4
@@ -505,6 +545,16 @@ class Petec {
          * Petec - Portaria 481/25
          */
         $this->somatorioHorasPetec($idServidor, 6, true);
+    }
+
+    ###########################################################
+
+    function somatorioHorasPortaria8($idServidor) {
+        /**
+         * Informa o somatorio de horas de um marcador 
+         * Petec - Portaria 518/26
+         */
+        $this->somatorioHorasPetec($idServidor, 8, true);
     }
 
     ###########################################################
@@ -575,6 +625,39 @@ class Petec {
 
     ###########################################################
 
+    function petec3($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec2
+         */
+        $select = "SELECT petec3
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+
+        if ($row[0] == "s") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    function exibeIncricaoPetec3($idServidor) {
+        /**
+         * Verifica se o servidor está inscrito no petec3
+         */
+        if ($this->petec3($idServidor)) {
+            p("Inscrito", "pHoraOk");
+        } else {
+            p("Não Inscrito", "pHorasFaltam");
+        }
+    }
+
+    ###########################################################
+
     function exibeDadosPetec($idServidor) {
 
         # Limita a Tela 
@@ -614,6 +697,7 @@ class Petec {
 
         # Exibe a tabela do servidor
         $select = "SELECT tbservidor.idServidor,
+                          tbservidor.idServidor,
                           tbservidor.idServidor,
                           tbservidor.idServidor
                      FROM tbservidor 

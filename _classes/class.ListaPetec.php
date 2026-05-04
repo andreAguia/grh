@@ -51,8 +51,14 @@ class ListaPetec {
         # Do nome do campo na tabela
         if ($this->idMarcador == 4 OR $this->idMarcador == 5) {
             $this->nomeCampo = "petec1";
-        } else {
+        }
+
+        if ($this->idMarcador == 6) {
             $this->nomeCampo = "petec2";
+        }
+
+        if ($this->idMarcador == 8) {
+            $this->nomeCampo = "petec3";
         }
 
         # Forma do resultado

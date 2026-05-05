@@ -303,7 +303,7 @@ if ($acesso) {
             $align[] = "left";
             $classe[] = "Pessoal";
             $metodo[] = "get_nomeECargoELotacaoEPerfilESituacao";
-            $width[] = 25;
+            $width[] = 27;
 
             $petecArray = $formacao->get_arrayMarcadores("Petec");
 
@@ -312,7 +312,7 @@ if ($acesso) {
                 $align[] = "center";
                 $classe[] = "Petec";
                 $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-                $width[] = 15;
+                $width[] = 17;
             }
 
             $label[] = "Editar";
@@ -337,7 +337,6 @@ if ($acesso) {
             # Coloca o objeto link na tabela			
             $tabela->set_link([null, null, null, null, null, $botao]);
             $tabela->show();
-
             break;
 
         ##############################################################################################################

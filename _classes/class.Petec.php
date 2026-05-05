@@ -148,7 +148,7 @@ class Petec {
                 return false;
             }
         }
-        
+
         /**
          * Verifica se o servidor está inscrito no petec3
          */
@@ -254,7 +254,7 @@ class Petec {
         $tabela = new Tabela();
         $tabela->set_titulo("Dados das Portarias PETEC");
         $tabela->set_label(["Portaria", "Horas", "Entregar até", "Curso Iniciado após", "Pago em", "Valor", "pdf"]);
-        #$tabela->set_width([20, 60, 20]);
+        $tabela->set_width([8, 8, 12, 12, 30, 12, 5]);
         #$tabela->set_align(["center", "center"]);
 
         $tabela->set_classe([null, null, null, null, null, null, "petec"]);
@@ -284,101 +284,22 @@ class Petec {
             $labelLotação = $lotacao;
         }
 
-        # Monta o array
-        # Petec1 - Inscritos
-        $select1 = 'SELECT count(idServidor)
-                      FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                      JOIN tbhistlot USING (idServidor)
-                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND situacao = 1
-                       AND petec1 = "s"
-                       AND tbperfil.tipo <> "Outros"';
-
-        # Verifica se tem filtro por lotação
-        if ($lotacao <> "Todos") {  // senão verifica o da classe
-            if (is_numeric($lotacao)) {
-                $select1 .= " AND (tblotacao.idlotacao = {$lotacao})";
-            } else { # senão é uma diretoria genérica
-                $select1 .= " AND (tblotacao.DIR = '{$lotacao}')";
-            }
-        }
-
-        $row1 = $pessoal->select($select1, false);
-
-        # Petec1 - Não Inscritos
-        $select2 = 'SELECT count(idServidor)
-                      FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                      JOIN tbhistlot USING (idServidor)
-                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND situacao = 1
-                           AND (petec1 is null OR petec1 != "s")
-                           AND tbperfil.tipo <> "Outros"';
-
-        # Verifica se tem filtro por lotação
-        if ($lotacao <> "Todos") {  // senão verifica o da classe
-            if (is_numeric($lotacao)) {
-                $select2 .= " AND (tblotacao.idlotacao = {$lotacao})";
-            } else { # senão é uma diretoria genérica
-                $select2 .= " AND (tblotacao.DIR = '{$lotacao}')";
-            }
-        }
-
-        $row2 = $pessoal->select($select2, false);
-
-        # Petec2 - Inscritos
-        $select3 = 'SELECT count(idServidor)
-                      FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                      JOIN tbhistlot USING (idServidor)
-                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND situacao = 1
-                           AND petec2 = "s"
-                           AND tbperfil.tipo <> "Outros"';
-
-        # Verifica se tem filtro por lotação
-        if ($lotacao <> "Todos") {  // senão verifica o da classe
-            if (is_numeric($lotacao)) {
-                $select3 .= " AND (tblotacao.idlotacao = {$lotacao})";
-            } else { # senão é uma diretoria genérica
-                $select3 .= " AND (tblotacao.DIR = '{$lotacao}')";
-            }
-        }
-
-        $row3 = $pessoal->select($select3, false);
-
-        # Petec2 - Não Inscritos
-        $select4 = 'SELECT count(idServidor)
-                      FROM tbservidor JOIN tbperfil USING (idPerfil)
-                                      JOIN tbhistlot USING (idServidor)
-                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
-                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                       AND situacao = 1
-                           AND (petec2 is null OR petec2 != "s")
-                           AND tbperfil.tipo <> "Outros"';
-
-        # Verifica se tem filtro por lotação
-        if ($lotacao <> "Todos") {  // senão verifica o da classe
-            if (is_numeric($lotacao)) {
-                $select4 .= " AND (tblotacao.idlotacao = {$lotacao})";
-            } else { # senão é uma diretoria genérica
-                $select4 .= " AND (tblotacao.DIR = '{$lotacao}')";
-            }
-        }
-        $row4 = $pessoal->select($select4, false);
 
         # Tabela
         $tabela = new Tabela();
         $tabela->set_conteudo([
-            ["Inscritos", $row1[0], $row3[0]],
-            ["NÃO Inscritos", $row2[0], $row4[0]],
+            ["418/25 e 473/25", $this->get_numInscritos(1,$lotacao), $this->get_numNaoInscritos(1,$lotacao)],
+            ["481/25", $this->get_numInscritos(2,$lotacao), $this->get_numNaoInscritos(2,$lotacao)],
+            ["518/26", $this->get_numInscritos(3,$lotacao), $this->get_numNaoInscritos(3,$lotacao)],
         ]);
         $tabela->set_titulo("Inscrição de Servidores");
         $tabela->set_subtitulo($labelLotação);
-        $tabela->set_label(["Servidores", "Portarias<br/>418/25 e 473/25", "Portaria<br/>481/25"]);
+        $tabela->set_label(["Portarias", "Inscritos", null]);
+        $tabela->set_colspanLabel([null, 2]);
+        $tabela->set_label2([null, "Sim", "Não"]);
+        #$tabela->set_label(["Servidores", "Portarias<br/>418/25 e 473/25", "Portaria<br/>481/25"]);
         $tabela->set_align(["left", "center", "center"]);
-        $tabela->set_width([33, 33, 33]);
+        $tabela->set_width([40, 30, 30]);
         $tabela->set_totalRegistro(false);
         $tabela->set_colunaSomatorio([1, 2]);
         $tabela->show();
@@ -911,6 +832,82 @@ class Petec {
                     $contador++;
                 }
             }
+        }
+    }
+
+    ###########################################################
+
+    /*
+     * Retorna o número de servidores inscritos em um petec e uma lotação
+     */
+
+    function get_numInscritos($petec = null, $lotacao = null) {
+
+        # Verifica se foi informada a petec
+        if (empty($petec)) {
+            return null;
+        } else {
+            # Petec - Inscritos
+            $select1 = "SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                       AND petec{$petec} = 's'
+                       AND tbperfil.tipo <> 'Outros'";
+
+            # Verifica se tem filtro por lotação
+            if ($lotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($lotacao)) {
+                    $select1 .= " AND (tblotacao.idlotacao = {$lotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select1 .= " AND (tblotacao.DIR = '{$lotacao}')";
+                }
+            }
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select1, false);
+
+            return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /*
+     * Retorna o número de servidores não inscritos em um petec e uma lotação
+     */
+
+    function get_numNaoInscritos($petec = null, $lotacao = null) {
+
+        # Verifica se foi informada a petec
+        if (empty($petec)) {
+            return null;
+        } else {
+            # Petec - Inscritos
+            $select1 = "SELECT count(idServidor)
+                      FROM tbservidor JOIN tbperfil USING (idPerfil)
+                                      JOIN tbhistlot USING (idServidor)
+                                      JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                     WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                       AND situacao = 1
+                       AND (petec{$petec} is null OR petec{$petec} != 's')
+                       AND tbperfil.tipo <> 'Outros'";
+
+            # Verifica se tem filtro por lotação
+            if ($lotacao <> "Todos") {  // senão verifica o da classe
+                if (is_numeric($lotacao)) {
+                    $select1 .= " AND (tblotacao.idlotacao = {$lotacao})";
+                } else { # senão é uma diretoria genérica
+                    $select1 .= " AND (tblotacao.DIR = '{$lotacao}')";
+                }
+            }
+            
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select1, false);
+
+            return $row[0];
         }
     }
 

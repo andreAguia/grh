@@ -43,12 +43,16 @@ if ($acesso) {
     $parametroEmail = post('parametroEmail', retiraAspas(get_session('parametroEmail')));
     $parametroTipo = post('parametroTipo', retiraAspas(get_session('parametroTipo', "Todos")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil',1));
+    $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
     set_session('parametroEmail', $parametroEmail);
     set_session('parametroTipo', $parametroTipo);
     set_session('parametroLotacao', $parametroLotacao);
+    set_session('parametroPerfil', $parametroPerfil);
+    set_session('parametroCargo', $parametroCargo);
 
     # Relatório
     $selectRelatorio = get_session("selectRelatorio");
@@ -125,7 +129,9 @@ if ($acesso) {
             # Formulário de Pesquisa
             $form = new Form('?');
 
-            # Nome    
+            /*
+             *  Nome    
+             */
             $controle = new Input('parametroNome', 'texto', 'Nome:', 1);
             $controle->set_size(30);
             $controle->set_title('Pesquisa');
@@ -135,8 +141,10 @@ if ($acesso) {
             $controle->set_col(3);
             $controle->set_autofocus(true);
             $form->add_item($controle);
-            
-            # Email    
+
+            /*
+             * Email    
+             */
             $controle = new Input('parametroEmail', 'texto', 'Email:', 1);
             $controle->set_size(30);
             $controle->set_title('Pesquisa');
@@ -147,7 +155,45 @@ if ($acesso) {
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
-            # Lotação
+            /*
+             * Tipo
+             */
+
+            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('E-mail Institucional');
+            $controle->set_array(["Todos", "Com E-mail Institucional", "Sem E-mail Institucional"]);
+            $controle->set_valor($parametroTipo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $form->add_item($controle);
+
+            /*
+             * Perfil
+             */
+
+            # Pega os dados
+            $comboPerfil = $pessoal->select('SELECT idPerfil, nome
+                                         FROM tbperfil
+                                     ORDER BY idPerfil');
+
+            array_unshift($comboPerfil, array(null, "Todos"));
+
+            # Perfil
+            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(20);
+            $controle->set_title('Situação');
+            $controle->set_valor($parametroPerfil);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
+            $controle->set_array($comboPerfil);
+            $form->add_item($controle);
+
+            /*
+             * Lotação
+             */
             $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
                                                       FROM tblotacao
                                                      WHERE ativo) UNION (SELECT distinct DIR, DIR
@@ -162,18 +208,41 @@ if ($acesso) {
             $controle->set_array($result);
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_linha(2);
+            $controle->set_col(6);
             $form->add_item($controle);
 
-            $controle = new Input('parametroTipo', 'combo', 'Tipo:', 1);
+            /*
+             * Cargos
+             */
+            $result1 = $pessoal->select('SELECT tbcargo.idCargo,
+                                                concat(tbtipocargo.cargo," - ",tbarea.area," - ",tbcargo.nome) as cargo
+                                           FROM tbcargo LEFT JOIN tbtipocargo USING (idTipoCargo)
+                                                        LEFT JOIN tbarea USING (idArea)
+                                       ORDER BY 2');
+
+            # cargos por nivel
+            $result2 = $pessoal->select('SELECT cargo,cargo FROM tbtipocargo WHERE cargo <> "Professor Associado" AND cargo <> "Professor Titular" ORDER BY 2');
+
+            # junta os dois
+            $result = array_merge($result2, $result1);
+
+            # acrescenta Professor
+            array_unshift($result, array('Professor', 'Professores'));
+            array_unshift($result, array('Administrativo', 'Administrativos & Técnicos'));
+
+            # acrescenta todos
+            array_unshift($result, array(null, 'Todos'));
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo - Área - Função:', 1);
             $controle->set_size(30);
-            $controle->set_title('E-mail Institucional');
-            $controle->set_array(["Todos", "Com E-mail Institucional", "Sem E-mail Institucional"]);
-            $controle->set_valor($parametroTipo);
+            $controle->set_title('Filtra por Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroCargo);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_fieldset("Informe o Filtro:");
+            $controle->set_linha(2);
+            $controle->set_col(6);
             $form->add_item($controle);
 
             $form->show();
@@ -190,6 +259,8 @@ if ($acesso) {
                               emailUenf                              
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbperfil USING (idPerfil)
+                                              LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                              LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -212,7 +283,7 @@ if ($acesso) {
                     $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
                 }
             }
-            
+
             # E-mail
             if (!is_null($parametroEmail)) {
 
@@ -235,6 +306,28 @@ if ($acesso) {
 
             if ($parametroTipo == "Sem E-mail Institucional") {
                 $select .= " AND (emailUenf IS NULL OR emailUenf = '')";
+            }
+
+            # Cargo
+            if (!empty($parametroCargo)) {
+                if (is_numeric($parametroCargo)) {
+                    $select .= " AND (tbcargo.idcargo = {$parametroCargo})";
+                } else { # senão é nivel do cargo
+                    if ($parametroCargo == "Professor") {
+                        $select .= " AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)";
+                    } elseif ($parametroCargo == "Administrativo") {
+                        $select .= " AND (tbcargo.idcargo <> 128 AND  tbcargo.idcargo <> 129)";
+                    } else {
+                        $select .= " AND (tbtipocargo.cargo = '{$parametroCargo}')";
+                    }
+                }
+            }
+
+            # Perfil
+            if (!empty($parametroPerfil)) {
+                $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
+            } else {
+                $select .= " AND tbperfil.tipo <> 'Outros'";
             }
 
             $select .= " ORDER BY tbpessoa.nome asc";
@@ -335,7 +428,7 @@ if ($acesso) {
             # quando se deseja enviar e-mails para todos os
             # servidores da listagem
             # Pega os dados
-            
+
             $select = "SELECT tbpessoa.emailUenf
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)

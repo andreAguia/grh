@@ -301,7 +301,7 @@ class Petec {
         $tabela->set_align(["left", "center", "center"]);
         $tabela->set_width([40, 30, 30]);
         $tabela->set_totalRegistro(false);
-        $tabela->set_colunaSomatorio([1, 2]);
+        #$tabela->set_colunaSomatorio([1, 2]);
         $tabela->show();
     }
 

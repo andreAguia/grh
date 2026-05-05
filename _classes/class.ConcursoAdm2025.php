@@ -342,7 +342,7 @@ class ConcursoAdm2025 {
         $tabela->set_conteudo($row);
         $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Ofício", "Obs", "Editar"]);
         $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 10, 5, 5]);
-        $tabela->set_align(["center", "center", "center", "left", "center"]);
+        $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "center", "center", "left"]);
         $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade"]);
 
         $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);

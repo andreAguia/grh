@@ -43,7 +43,7 @@ if ($acesso) {
     $parametroEmail = post('parametroEmail', retiraAspas(get_session('parametroEmail')));
     $parametroTipo = post('parametroTipo', retiraAspas(get_session('parametroTipo', "Todos")));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
-    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil',1));
+    $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
 
     # Joga os parâmetros par as sessions    
@@ -431,6 +431,8 @@ if ($acesso) {
 
             $select = "SELECT tbpessoa.emailUenf
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)       
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                          WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
@@ -443,6 +445,28 @@ if ($acesso) {
                 } else { # senão é uma diretoria genérica
                     $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
                 }
+            }
+
+            # Cargo
+            if (!empty($parametroCargo)) {
+                if (is_numeric($parametroCargo)) {
+                    $select .= " AND (tbcargo.idcargo = {$parametroCargo})";
+                } else { # senão é nivel do cargo
+                    if ($parametroCargo == "Professor") {
+                        $select .= " AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)";
+                    } elseif ($parametroCargo == "Administrativo") {
+                        $select .= " AND (tbcargo.idcargo <> 128 AND  tbcargo.idcargo <> 129)";
+                    } else {
+                        $select .= " AND (tbtipocargo.cargo = '{$parametroCargo}')";
+                    }
+                }
+            }
+
+            # Perfil
+            if (!empty($parametroPerfil)) {
+                $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
+            } else {
+                $select .= " AND tbperfil.tipo <> 'Outros'";
             }
 
             $select .= " ORDER BY tbpessoa.nome";

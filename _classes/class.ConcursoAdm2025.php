@@ -224,6 +224,59 @@ class ConcursoAdm2025 {
             $subtitulo .= " - {$numeroVagas} Vaga(s)";
         }
 
+        # Monta o select dos desistentes
+        $selectDes = "SELECT {$campo},
+                              'Desistiu',
+                              inscricao,
+                              idCandidato,
+                              dtNascimento,
+                              DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
+                              CONVERT(notaFinal, DECIMAL(10,2)),
+                              tbcandidato.obs,
+                              idCandidato
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND ({$campo} = 0 OR {$campo} IS NULL)
+                          AND cargo = '{$cargoConcurso}'";
+
+        # Cota
+        if ($cota <> "Ac") {
+            $selectDes .= " AND {$campo} IS NOT NULL";
+        }
+
+        # Ordenação
+        $selectDes .= " ORDER BY {$campo}";
+
+        # Pega os dados
+        $rowDes = $pessoal->select($selectDes);
+        $numDes = $pessoal->count($selectDes);
+
+        # Verifica se houve alguma desistência
+        if ($numDes > 0) {
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_conteudo($rowDes);
+            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Nota Final", "Obs", "Editar"]);
+            $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 25, 5]);
+            $tabela->set_align(["center", "center", "center", "left", "center"]);
+            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade"]);
+
+            $tabela->set_classe([null, null, null, "CandidatoAdm2025"]);
+            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao"]);
+
+            # Botão Editar
+            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
+
+            $tabela->set_rowspan(1);
+            $tabela->set_grupoCorColuna(1);
+            $tabela->show();
+        }
 
         # Monta o select
         $select = "SELECT {$campo},
@@ -268,11 +321,11 @@ class ConcursoAdm2025 {
                     $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]} - {$inicio}</span>";
                     $problemas++;
 
-                    # acerta a listagem - Retirei opis ja resolveu
-                    # Caso apareça algum outro erro eu reativo
-                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio}
-                             WHERE idCandidato = {$linha['idCandidato']}";
-                    $pessoal->update($sql);
+//                    # acerta a listagem - Retirei opis ja resolveu
+//                    # Caso apareça algum outro erro eu reativo
+//                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio}
+//                             WHERE idCandidato = {$linha['idCandidato']}";
+//                    $pessoal->update($sql);
                 }
             }
 

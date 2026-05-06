@@ -205,7 +205,7 @@ if ($acesso) {
             $sexo = null;
             $idCargo = null;
             $idLotacao = null;
-            
+
             /*
              * Verifica no Cadastro de Servidores
              */
@@ -238,7 +238,7 @@ if ($acesso) {
 
                 # Inicia a classe de candidatos
                 $candidatoClasse = new CandidatoAdm2025();
-                
+
                 # Verifica se já tem algum candidato com esse cpf
                 $idCandidato = $candidatoClasse->get_idCandidatoCPF($cpf);
 
@@ -509,7 +509,7 @@ if ($acesso) {
             /*
              * Coloca os campo hidden Quando for candidato
              */
-            
+
             # cargo
             if (!empty($idCargo)) {
 
@@ -538,13 +538,12 @@ if ($acesso) {
                 $controle->set_valor($idLotacao);
                 $form->add_item($controle);
             }
-            
+
             # Dados dos Candidatos
             if (!empty($idCandidato)) {
                 
-                
             }
-            
+
 
             $form->show();
 
@@ -659,9 +658,11 @@ if ($acesso) {
             }
 
             # Verifica se servidor tem mais de 18 anos
-            if (idade(date_to_php($dtNasc)) < 18) {
-                $msgErro .= 'Você não pode cadastrar servidor menor de 18 anos.!\n';
-                $erro = 1;
+            if ($perfil <> 8 AND $perfil <> 7) { // Permite se for estagiário ou bolsista
+                if (idade(date_to_php($dtNasc)) < 18) {
+                    $msgErro .= 'Você não pode cadastrar servidor menor de 18 anos.!\n';
+                    $erro = 1;
+                }
             }
 
             # Verifica se o Cargo foi digitado

@@ -231,6 +231,7 @@ class ConcursoAdm2025 {
                               idCandidato,
                               dtNascimento,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
+                              idCandidato,
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               tbcandidato.obs,
                               idCandidato
@@ -258,20 +259,20 @@ class ConcursoAdm2025 {
             $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
             $tabela->set_subtitulo($subtitulo);
             $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Nota Final", "Obs", "Editar"]);
-            $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 25, 5]);
-            $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "left"]);
+            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
+            $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 25, 5]);
+            $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "center", "left"]);
             $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade"]);
 
-            $tabela->set_classe([null, null, null, "CandidatoAdm2025"]);
-            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao"]);
+            $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
+            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific"]);
 
             # Botão Editar
             $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
 
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);

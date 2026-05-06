@@ -233,6 +233,7 @@ if ($acesso) {
             /*
              * Verifica no Cadastro de Candidatos do Concurso de 2025
              */
+
             # Concursados somente estatutário
             if ($perfil == 1) {
 
@@ -240,13 +241,13 @@ if ($acesso) {
                 $candidatoClasse = new CandidatoAdm2025();
 
                 # Verifica se já tem algum candidato com esse cpf
-                $idCandidato = $candidatoClasse->get_idCandidatoCPF($cpf);
+                $idCandidato2025 = $candidatoClasse->get_idCandidatoCPF($cpf);
 
                 # Se tiver...
-                if (!empty($idCandidato)) {
+                if (!empty($idCandidato2025)) {
 
                     # Pega os dados desse candidato
-                    $dados = $candidatoClasse->get_dados($idCandidato);
+                    $dados = $candidatoClasse->get_dados($idCandidato2025);
 
                     # Pega os dados da pessoa (caso ja esteja cadastrado)
                     $nome = plm($dados["nome"]);
@@ -697,6 +698,24 @@ if ($acesso) {
                 $dtNasc = date_to_bd($dtNasc);
             }
 
+            # Pega os dados quando for candidato
+            if ($perfil == 1) {
+
+                # Inicia a classe de candidatos
+                $candidatoClasse = new CandidatoAdm2025();
+
+                # Verifica se já tem algum candidato com esse cpf
+                $idCandidato2025 = $candidatoClasse->get_idCandidatoCPF($cpf);
+
+                # Se tiver...
+                if (!empty($idCandidato2025)) {
+
+                    # Pega os dados desse candidato
+                    $dados = $candidatoClasse->get_dados($idCandidato2025);
+                }
+            }
+
+
             # Verifia se houve erro 
             if ($erro == 1) {
                 alert($msgErro);
@@ -712,6 +731,61 @@ if ($acesso) {
                     $idValor = null;
                     $tabela = 'tbpessoa';
 
+                    # Grava mais dados caso seja candidato do Concurso de 2025
+                    # Concursados somente estatutário
+                    if ($perfil == 1 AND !empty($idCandidato2025)) {
+
+                        $endereco = "{$dados["endereco"]} {$dados["num"]} {$dados["complemento"]}";
+                        $cidadeClasse = new Cidade();
+                        $idCidade = $cidadeClasse->get_idCidade($dados["cidade"]);
+
+                        # Trata o número de telefone
+                        if (str_contains($dados["telefone"], '(')) {    // verifica se tem (ddd)
+                            # Pega somente os números
+                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["telefone"]);
+
+                            $telefone = substr($apenasNumeros, 2);
+                            $teledoneDDD = substr($apenasNumeros, 0, 2);
+                        }
+
+                        # Trata o número de celular
+                        if (str_contains($dados["celular"], '(')) {    // verifica se tem (ddd)
+                            # Pega somente os números
+                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["celular"]);
+
+                            $celular = substr($apenasNumeros, 2);
+                            $celularDDD = substr($apenasNumeros, 0, 2);
+                        }
+
+                        array_push($campos,
+                                'nomeMae',
+                                'nomePai',
+                                'endereco',
+                                'bairro',
+                                'cep',
+                                'idCidade',
+                                'emailPessoal',
+                                'telResidencial',
+                                'telResidencialDDD',
+                                'telCelular',
+                                'telCelularDDD'
+                        );
+
+                        array_push($valor,
+                                $dados["nomeMae"],
+                                $dados["nomePai"],
+                                plm($endereco),
+                                plm($dados["bairro"]),
+                                $dados["cep"],
+                                $idCidade,
+                                $dados["email"],
+                                $telefone,
+                                $teledoneDDD,
+                                $celular,
+                                $celularDDD
+                        );
+                    }
+
                     # gravação
                     $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
 
@@ -725,6 +799,14 @@ if ($acesso) {
                     $valor = array($cpf, $pisPasep, $idPessoa);
                     $idValor = null;
                     $tabela = 'tbdocumentacao';
+
+                    # Grava mais dados caso seja candidato do Concurso de 2025
+                    # Concursados somente estatutário
+                    if ($perfil == 1 AND !empty($idCandidato2025)) {
+
+                        array_push($campos, 'identidade');
+                        array_push($valor, $dados["identidade"]);
+                    }
 
                     # gravação
                     $pessoal->gravar($campos, $valor, $idValor, $tabela, null, false);
@@ -748,6 +830,15 @@ if ($acesso) {
                     $campos = array('matricula', 'idPerfil', 'idPessoa', 'idCargo', 'dtAdmissao', 'situacao', 'idFuncional');
                     $valor = array($matricula, $perfil, $idPessoa, $cargo, $dtAdmissao, 1, $idFuncional);
                 }
+
+                # Grava mais dados caso seja candidato do Concurso de 2025
+                # Concursados somente estatutário
+                if ($perfil == 1 AND !empty($idCandidato2025)) {
+
+                    array_push($campos, 'idConcurso');
+                    array_push($valor, $dados["idConcurso"]);
+                }
+
                 $idValor = null;
                 $tabela = 'tbservidor';
 

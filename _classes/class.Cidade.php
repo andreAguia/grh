@@ -47,20 +47,40 @@ class Cidade {
          * 
          * @syntax $cidade->getCidade($id);
          */
-                
         if (empty($id)) {
             return null;
         } else {
             $dadosCidade = $this->get_dados($id);
-            
+
             $estado = new Estado();
             $dadosEstado = $estado->get_dados($dadosCidade["idEstado"]);
-            
-            
+
             return "{$dadosCidade["nome"]} - {$dadosEstado["uf"]}";
         }
+    }
+
+    ###########################################################
+
+    public function get_idCidade($cidade = null) {
+        /**
+         * Retorna o nome e o estado da Cidade
+         * 
+         * @syntax $cidade->getCidade($id);
+         */
+        if (empty($cidade)) {
+            return null;
+        } else {
+            # Pega os dados
+            $select = "SELECT idCidade 
+                         FROM tbcidade
+                        WHERE nome = '{$cidade}'";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select, false);
             
-    }    
+            return $row[0];
+        }
+    }
 
     ###########################################################
 }

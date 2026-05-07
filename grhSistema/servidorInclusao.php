@@ -835,8 +835,26 @@ if ($acesso) {
                 # Concursados somente estatutário
                 if ($perfil == 1 AND !empty($idCandidato2025)) {
 
-                    array_push($campos, 'idConcurso');
-                    array_push($valor, $dados["idConcurso"]);
+                    $classificacaoConcurso = null;
+                    $cotaConcurso = null;
+
+                    # Verifica a classificação e a cota
+                    if ($dados["classifAc"] > 0) {
+                        $classificacaoConcurso = $dados["classifAc"];
+                        $cotaConcurso = "Ampla Concorrência";
+                    } elseif ($dados["classifPcd"] > 0) {
+                        $classificacaoConcurso = $dados["classifPcd"];
+                        $cotaConcurso = "PCD";
+                    } elseif ($dados["classifNi"] > 0) {
+                        $classificacaoConcurso = $dados["classifNi"];
+                        $cotaConcurso = "Negros e Indígenas";
+                    } elseif ($dados["classifHipo"] > 0) {
+                        $classificacaoConcurso = $dados["classifHipo"];
+                        $cotaConcurso = "Hipossuficiente Econômico";
+                    }
+
+                    array_push($campos, 'idConcurso', 'dtPublicConcursoResultado', 'classificacaoConcurso', 'cotasConcurso');
+                    array_push($valor, $dados["idConcurso"], '2026-03-16', $classificacaoConcurso, $cotaConcurso);
                 }
 
                 $idValor = null;

@@ -33,7 +33,7 @@ if ($acesso) {
     }
 
     # Pega a fase
-    $fase = get('fase', 'porCargo');
+    $fase = get('fase', 'aguardaLista');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -146,273 +146,7 @@ if ($acesso) {
 
     switch ($fase) {
         case "":
-        case "porCargo" :
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            $menu1->show();
-
-            $grid->fechaColuna();
-
-            #######################################################
-
-            $grid->abreColuna(3);
-
-            # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($idConcurso, true);
-
-            # menu
-            $concurso->exibeMenu($idConcurso, "Por Cargo");
-
-            # Exibe os servidores deste concurso
-            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
-
-            $grid->fechaColuna();
-
-            #######################################################3
-
-            $grid->abreColuna(9);
-
-            br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
-            loadPage('?fase=porCargoLista');
-            break;
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-            break;
-
-        ###################################################################
-
-        /*
-         * Lista Candidatos por cargo
-         */
-
-        case "porCargoLista" :
-
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            # Vagas
-            $botaoVagas = new Link("Vagas", "?fase=exibeVagas");
-            $botaoVagas->set_class('button');
-            $botaoVagas->set_title('Exibe a tabela de vagas');
-            $botaoVagas->set_target("_blank");
-            $menu1->add_link($botaoVagas, "right");
-
-            # Importar
-            $botaoImportar = new Link("Importar", "importaCandidatos.php");
-            $botaoImportar->set_class('success button');
-            $botaoImportar->set_title('Faz a importação do petec');
-            if (Verifica::acesso($idUsuario, 1)) {
-                $menu1->add_link($botaoImportar, "right");
-            }
-
-            # Relatório
-            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dos Candidatos no número de vagas");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorio");
-            $botaoRel->set_imagem($imagem2);
-            #$menu1->add_link($botaoRel, "right");
-
-            $menu1->show();
-
-            $grid->fechaColuna();
-
-            ###################################################################                       
-
-            $grid->abreColuna(3);
-
-            # Exibe os dados do Concurso
-            $concurso->exibeDadosConcurso($idConcurso, true);
-
-            # menu
-            $concurso->exibeMenu($idConcurso, "Por Cargo");
-
-            # Exibe os servidores deste concurso
-            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
-
-            # Relatórios
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Listagem da Tabela ao Lado');
-            $menu->add_item('titulo1', 'Candidatos na Vaga');
-            $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
-            $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
-            $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
-
-            $menu->add_item('titulo', 'Somente Com Lotação Definida');
-            #$menu->add_item('titulo1', 'Candidatos com Lotação Definida');
-            $menu->add_item('linkWindow', 'Agrupados por Lotação', '?fase=relatorio10');
-
-            $menu->add_item('titulo', 'Aprovados de Todos os Cargos');
-            $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
-            $menu->add_item('linkWindow', 'Para Restaurante', '?fase=relatorio5');
-            $menu->add_item('linkWindow', 'Para Publicação', '?fase=relatorio7');
-            $menu->add_item('linkWindow', 'Para Recepção', '?fase=relatorio8');
-
-            $menu->show();
-
-            $grid->fechaColuna();
-
-            ###################################################################
-            # Campos de Pesquisa
-            $grid->abreColuna(9);
-
-            # Formulário
-            $form = new Form('?');
-
-            # Cargo
-            $result = $pessoal->select("SELECT DISTINCT cargoConcurso,
-                                               cargoConcurso
-                                          FROM tbconcursovagadetalhada
-                                          WHERE idConcurso = {$idConcurso}
-                                       ORDER BY cargoConcurso");
-
-            $controle = new Input('parametroCargoCandidato', 'combo', 'Cargo:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Cargo');
-            $controle->set_autofocus(true);
-            $controle->set_array($result);
-            $controle->set_valor($parametroCargoCandidato);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(9);
-            $form->add_item($controle);
-
-            # Cotas
-            $controle = new Input('parametroCota', 'combo', 'Cota:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Cota');
-            $controle->set_array($arrayCotas);
-            $controle->set_valor($parametroCota);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(3);
-            $form->add_item($controle);
-
-            $form->show();
-
-            ###################################################################
-
-            /*
-             * Rotina quando se seleciona um cargo
-             */
-
-
-            $candidato = new CandidatoAdm2025();
-            $candidato->exibeTabelaVagasCargo($parametroCargoCandidato);
-
-            /*
-             * Quando se tem número de vagas cadastrados
-             */
-            if (!empty($numeroVagas)) {
-
-                if (Verifica::acesso($idUsuario, 1)) {      // somente admin
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, true);
-                } else {
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, false);
-                }
-
-                ####################################################################################
-            } else {
-                /*
-                 * Quando não tem número de vagas cadastradas
-                 */
-
-                # Monta o select
-                $select = "SELECT {$campo},
-                              '---',
-                              inscricao,
-                              idCandidato,
-                              dtNascimento,
-                              idCandidato,                                    
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato,
-                              idCandidato
-                         FROM tbcandidato
-                        WHERE idConcurso = {$idConcurso}";
-
-                # Pega o candidato de acordo com a cota
-                if ($parametroCota <> "Ac") {
-                    $select .= " AND {$campo} IS NOT NULL";
-                }
-
-                # cargo
-                if ($parametroCargoCandidato <> "*") {
-                    $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                }
-
-                # Ordena de acorto do as cotas
-                $select .= " ORDER BY {$campo}";
-
-                # Pega os dados
-                $row = $pessoal->select($select);
-
-                # tabela
-                $tabela = new Tabela();
-                $tabela->set_titulo("Candidatos Aprovados");
-                $tabela->set_subtitulo($subtitulo);
-                $tabela->set_conteudo($row);
-                $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Classificação", "Nota Final", "Obs", "Editar"]);
-                $tabela->set_width([5, 10, 10, 30, 10, 10, 15]);
-                $tabela->set_align(["center", "center", "center", "left", "center"]);
-                $tabela->set_funcao([null, null, null, "plm", "date_to_php"]);
-
-                $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-                $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, "exibeObs"]);
-
-                # Botão Editar
-                $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-                $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-                # Coloca o objeto link na tabela			
-                $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
-
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
-                $tabela->show();
-            }
-
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
-            # Grava no log a atividade            
-            $data = date("Y-m-d H:i:s");
-            $atividade = "Visualizou o cadastro de candidatos do cargo {$parametroCargoCandidato}";
-            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
-            break;
-
-        ###################################################################
-        ###################################################################    
-
-        case "porNome" :
+        case "aguardaLista" :
 
             # Cria um menu
             $menu1 = new MenuBar();
@@ -458,7 +192,7 @@ if ($acesso) {
             $grid1->fechaColuna();
             $grid1->fechaGrid();
 
-            loadPage('?fase=porNomeLista');
+            loadPage('?fase=listaCandidatos');
             break;
 
             $grid->fechaColuna();
@@ -467,12 +201,11 @@ if ($acesso) {
 
         ###################################################################
 
-
         /*
-         * Lista Candidatos por cargo
+         * Lista Candidatos
          */
 
-        case "porNomeLista" :
+        case "listaCandidatos" :
 
             # Cria um menu
             $menu1 = new MenuBar();

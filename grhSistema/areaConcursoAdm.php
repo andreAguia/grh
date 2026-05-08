@@ -188,7 +188,13 @@ if ($acesso) {
         # Chama o menu do Servidor que se quer editar
         case "acessaConcurso" :
             set_session('idConcurso', $idConcurso);
-            loadPage('cadastroConcursoAdm.php');
+
+            # Verifica o Concurso
+            if ($idConcurso == 96) {
+                loadPage("cadastroCandidatosAdm2025.php?fase=porCargo");
+            } else {
+                loadPage('cadastroConcursoAdm.php');
+            }
             break;
 
         ################################################################

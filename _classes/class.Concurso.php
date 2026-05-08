@@ -1020,22 +1020,33 @@ class Concurso {
 
         # Monta o array
         if ($tipo == 1) {   // Administrativo
-            $itensMenu = [
-                ["Candidatos", "cadastroConcursoAdm.php?fase=candidatos", $numCandidatos, "Candidatos"],
+            $menuCandidato = [
+                ["Por Cargo", "cadastroCandidatosAdm2025.php?fase=porCargo", null, "Candidatos ({$numCandidatos})"],
+                ["Por Nome", "cadastroCandidatosAdm2025.php?fase=porNome"],
                 ["Estatística", "cadastroConcursoAdm.php?fase=estatistica"],
                 ["Duplicados", "cadastroConcursoAdm.php?fase=duplicados"],
-                
+            ];
+
+            $menuProcessoSeletivo = [
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao, "Processo Seletivo"],
                 ["Vagas Calculadas", "cadastroConcursoVagaAdm.php", $vagas],
                 ["Vagas Edital", "cadastroConcursoAdm.php?fase=aguardaVagasEdital"],
                 ["Vagas Edital Detalhadas", "cadastroConcursoVagaDetalhadasAdm.php"],
                 ["Provas", "cadastroConcursoProvas.php", $provas],
-                
+            ];
+
+            $menuServidoresEmpossados = [
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidorers Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];
+
+            if ($idConcurso == 96) {
+                $itensMenu = array_merge($menuCandidato, $menuProcessoSeletivo, $menuServidoresEmpossados);
+            } else {
+                $itensMenu = array_merge($menuProcessoSeletivo, $menuServidoresEmpossados);
+            }
         } else {            // Professor
             $itensMenu = [
                 ["Publicações", "cadastroConcursoPublicacao.php", $publicacao],

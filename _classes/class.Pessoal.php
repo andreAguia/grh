@@ -7487,4 +7487,22 @@ class Pessoal extends Bd {
     }
 
     ###########################################################
+
+    /**
+     * Método get_pastaSei
+     * informa o número do processo SEI da pasta funcional do servidor
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_pastaSei($idServidor) {
+        $select = "SELECT pastaSei
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $situacao = parent::select($select, false);
+
+        return $situacao[0];
+    }
+
+    ###########################################################
 }

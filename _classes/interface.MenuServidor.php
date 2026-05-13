@@ -77,9 +77,10 @@ class MenuServidor {
             $grid->fechaColuna();
         }
 
-        # Atendimento
+        # Atendimento e Pasta do Sei
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $grid->abreColuna(12, 6, 4);
+            $this->moduloPastaSei();
             $this->moduloAtendimento();
             $grid->fechaColuna();
         }
@@ -666,13 +667,13 @@ class MenuServidor {
             if ($this->perfil == 1) {
                 $menu->add_item('linkWindow', 'Declaração de Efetivo Exercício', '../grhRelatorios/declaracao.efetivoExercicio.php');
             }
-        }                
+        }
 
         // Somente estatutários, celetistas e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2 OR $this->perfil == 4) {
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício', '../grhRelatorios/declaracao.vinculoEmpregaticio.php');
         }
-        
+
         // Somente estatutários e cedidos
         if ($this->perfil == 1 OR $this->perfil == 2) {
             $menu->add_item('linkWindow', 'Declaração de Vínculo Empregatício - Com Salário', '../grhRelatorios/declaracao.vinculoEmpregaticioComSalario.php');
@@ -696,11 +697,11 @@ class MenuServidor {
         if ($this->perfil == 5) {
             $menu->add_item('linkWindow', 'Declaração para o INSS', '../grhRelatorios/declaracao.inss.contratoNulo.php');
         }
-        
+
         /*
          * Declarações Da Aposentadoria
          */
-        
+
         $menu->add_item('titulo', 'Declarações da Aposentadoria', '#');
         $menu->add_item('linkWindow', 'Declaração Simples ao INSS', '../grhRelatorios/declaracao.inss.simples.php');
 
@@ -1267,6 +1268,48 @@ class MenuServidor {
                 $painel->fecha();
             }
         }
+    }
+
+######################################################################################################################
+
+    /**
+     * Método moduloPastaSei
+     * 
+     * Exibe os remais do setor do servidor
+     */
+    private function moduloPastaSei() {
+
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+        $pastaSei = $pessoal->get_pastaSei($this->idServidor);
+
+        tituloTable("Pasta Funcional Sei");
+        $painel = new Callout();
+        $painel->abre();
+
+        if (empty($pastaSei)) {
+            p("Não Cadastrado", "f16","center");
+        } else {
+            p($pastaSei, "f16","center");
+        }
+
+        $div = new Div("divEdita1");
+        $div->abre();
+
+        $div = new Div("divEdita2");
+        $div->abre();
+
+        # Botão
+        $botaoEditar = new Link("Editar", "servidorPastaSei.php");
+        $botaoEditar->set_class('tiny button secondary');
+        $botaoEditar->set_title('Editar a Pasta Sei do Servidor');
+        $botaoEditar->show();
+
+        $div->fecha();
+
+        $div->fecha();
+
+        $painel->fecha();
     }
 
 ######################################################################################################################

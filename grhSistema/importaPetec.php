@@ -185,6 +185,7 @@ if ($acesso) {
             $menu->add_item('titulo', 'Tabela de Servidores');
             $menu->add_item('link', 'Apagar Dados Petec 1', "?fase=apagaPetec1", null, null, null, 'Deseja mesmo apagar o dados do PETEC 1 da tabela de Servidores ?');
             $menu->add_item('link', 'Apagar Dados Petec 2', "?fase=apagaPetec2", null, null, null, 'Deseja mesmo apagar o dados do PETEC 2 da tabela de Servidores ?');
+            $menu->add_item('link', 'Apagar Dados Petec 3', "?fase=apagaPetec3", null, null, null, 'Deseja mesmo apagar o dados do PETEC 3 da tabela de Servidores ?');
 
             $menu->show();
 
@@ -668,7 +669,7 @@ if ($acesso) {
         case "escolhePetec" :
 
             $grid = new Grid("center");
-            $grid->abreColuna(6);
+            $grid->abreColuna(8);
 
             br(10);
             tituloTable("Escolha para qual Petec se destina essa importação");
@@ -687,7 +688,12 @@ if ($acesso) {
             # Petec 2
             $linkPetec2 = new Link("Incrição para<br/>Portaria 481/25", "?fase=gravaBdPetec2Aviso");
             $linkPetec2->set_class('button');
-            $menu1->add_link($linkPetec2, "right");
+            $menu1->add_link($linkPetec2, "left");
+            
+            # Petec 3
+            $linkPetec2 = new Link("Incrição para<br/>Portaria 518/26", "?fase=gravaBdPetec3Aviso");
+            $linkPetec2->set_class('button');
+            $menu1->add_link($linkPetec2, "left");
 
             $menu1->show();
 
@@ -764,6 +770,42 @@ if ($acesso) {
             $Objetolog = new Intra();
             $data = date("Y-m-d H:i:s");
             $atividade = "Importou o arquivo csv do Petec 2 para o banco de dados";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
+            loadPage("?");
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec3Aviso" :
+
+            br(5);
+            aguarde("Gravando ...");
+
+            loadPage("?fase=gravaBdPetec3");
+            break;
+
+        #################################################  
+
+        case "gravaBdPetec3" :
+
+            $select = "SELECT idServidor
+                         FROM tbpetecimporta
+                        WHERE erro IS NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec3"], ['s'], $tt[0], "tbservidor", "idServidor");
+            }
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Importou o arquivo csv do Petec 3 para o banco de dados";
             $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
 
             loadPage("?");
@@ -877,6 +919,46 @@ if ($acesso) {
 
             loadPage("?");
             break;
+            
+       #################################################
+
+        /*
+         * Exclui os dados de Petec da tabela de servidores
+         */
+
+        case "apagaPetec3" :
+
+            br(5);
+            aguarde("Apagando ...");
+
+            loadPage("?fase=apagaPetec3DeFato");
+            break;
+
+        #################################################      
+
+        case "apagaPetec3DeFato" :
+
+            $select = "SELECT idServidor
+                         FROM tbservidor
+                         WHERE petec3 IS NOT NULL";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select);
+
+            foreach ($row as $tt) {
+
+                # Grava
+                $pessoal->gravar(["petec3"], [null], $tt[0], "tbservidor", "idServidor");
+            }
+            
+            # Registra log
+            $Objetolog = new Intra();
+            $data = date("Y-m-d H:i:s");
+            $atividade = "Excluiu os dados do Petec 3 da tabela de servidores";
+            $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
+            loadPage("?");
+            break;     
     }
 
     $grid1->fechaColuna();

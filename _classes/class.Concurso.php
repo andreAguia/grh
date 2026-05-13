@@ -1021,10 +1021,10 @@ class Concurso {
         # Monta o array
         if ($tipo == 1) {   // Administrativo
             $menuCandidato = [
-                ["Por Cargo", "cadastroCandidatosAdm2025.php?fase=porCargo", null, "Candidatos ({$numCandidatos})"],
-                ["Por Nome", "cadastroCandidatosAdm2025.php?fase=porNome"],
-                ["Estatística", "cadastroConcursoAdm.php?fase=estatistica"],
-                ["Duplicados", "cadastroConcursoAdm.php?fase=duplicados"],
+                ["Por Cargo", "cadastroCandidatosAdm2025PorCargo.php", null, "Candidatos ({$numCandidatos})"],
+                ["Por Nome", "cadastroCandidatosAdm2025PorNome.php"],
+                ["Estatística", "cadastroCandidatosAdm2025Estatistica.php"],
+                ["Duplicados", "cadastroCandidatosAdm2025PorCargo.php?fase=duplicados"],
             ];
 
             $menuProcessoSeletivo = [

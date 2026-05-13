@@ -92,8 +92,8 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar('cadastroCandidatosAdm2025.php');
-    $objeto->set_voltarForm('cadastroCandidatosAdm2025.php');
+    $objeto->set_linkListar($origem);
+    $objeto->set_voltarForm($origem);
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);

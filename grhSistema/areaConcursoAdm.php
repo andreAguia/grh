@@ -191,7 +191,7 @@ if ($acesso) {
 
             # Verifica o Concurso
             if ($idConcurso == 96) {
-                loadPage("cadastroCandidatosAdm2025.php?fase=porCargo");
+                loadPage("cadastroCandidatosAdm2025PorCargo.php");
             } else {
                 loadPage('cadastroConcursoAdm.php');
             }

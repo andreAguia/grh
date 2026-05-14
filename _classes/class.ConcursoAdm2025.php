@@ -226,7 +226,6 @@ class ConcursoAdm2025 {
 
         # Monta o select dos desistentes
         $selectDes = "SELECT {$campo},
-                              'Desistiu',
                               inscricao,
                               idCandidato,
                               dtNascimento,
@@ -260,23 +259,20 @@ class ConcursoAdm2025 {
             $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
             $tabela->set_subtitulo($subtitulo);
             $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Declaração", "Editar"]);
-            $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 25, 5]);
-            $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "center", "left"]);
-            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade", null, null, "nl2br2"]);
+            $tabela->set_label(["#", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Declaração", "Editar"]);
+            $tabela->set_width([5, 10, 20, 10, 5, 10, 10, 25, 5, 5]);
+            $tabela->set_align(["center", "center", "left", "center", "center", "center", "center", "left"]);
+            $tabela->set_funcao(["trataNulo", null, "plm", "date_to_php", "idade", null, null, "nl2br2"]);
 
-            $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
-            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, null, "exibeDeclaracao"]);
+            $tabela->set_classe([null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
+            $tabela->set_metodo([null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, null, "exibeDeclaracao"]);
 
             # Botão Editar
             $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
-
-            $tabela->set_rowspan(1);
-            $tabela->set_grupoCorColuna(1);
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);           
             $tabela->show();
         }
 

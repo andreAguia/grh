@@ -262,7 +262,7 @@ class ConcursoAdm2025 {
             $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
             $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 25, 5]);
             $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "center", "left"]);
-            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade"]);
+            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade",null,null,"nl2br2"]);
 
             $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
             $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific"]);

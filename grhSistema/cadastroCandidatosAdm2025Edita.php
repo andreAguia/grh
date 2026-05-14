@@ -346,6 +346,24 @@ if ($acesso) {
 
     # Log
     $objeto->set_idUsuario($idUsuario);
+    
+    # Dados da rotina de Upload
+    $pasta = PASTA_CONCURSO_DECLARACAO;
+    $nome = "Declaração";
+    $tabela = "tbcandidato";
+    $extensoes = ["pdf"];
+
+    # Botão de Upload
+    if (!empty($idCandidatoPesquisado)) {
+
+        # Botão de Upload
+        $botao = new Button("Upload {$nome}");
+        $botao->set_url("cadastroCandidatosAdm2025Upload.php?fase=upload&id={$idCandidatoPesquisado}");
+        $botao->set_title("Faz o Upload do {$nome}");
+        $botao->set_target("_blank");
+
+        $objeto->set_botaoEditarExtra([$botao]);
+    }
     ################################################################
 
     switch ($fase) {

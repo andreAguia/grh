@@ -234,6 +234,7 @@ class ConcursoAdm2025 {
                               idCandidato,
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               tbcandidato.obs,
+                              idCandidato,
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
                         WHERE tbcandidato.idConcurso = {$idConcurso}
@@ -259,20 +260,20 @@ class ConcursoAdm2025 {
             $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
             $tabela->set_subtitulo($subtitulo);
             $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
+            $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Declaração", "Editar"]);
             $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 25, 5]);
             $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "center", "left"]);
-            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade",null,null,"nl2br2"]);
+            $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade", null, null, "nl2br2"]);
 
-            $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025"]);
-            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific"]);
+            $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
+            $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, null, "exibeDeclaracao"]);
 
             # Botão Editar
             $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
 
             $tabela->set_rowspan(1);
             $tabela->set_grupoCorColuna(1);
@@ -372,4 +373,32 @@ class ConcursoAdm2025 {
         $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
         $tabela->show();
     }
+
+    ###########################################################
+
+    public function exibeDeclaracao($id) {
+        /**
+         * Exibe um link para a publicação
+         * 
+         * @param $idConcursoPublicacao integer null O id do Concurso
+         * 
+         * @syntax $ConcursoPublicacao->exibePublicacao($idConcursoPublicacao);
+         */
+        # Monta o arquivo
+        $arquivo = PASTA_CONCURSO_DECLARACAO . $id . ".pdf";
+
+        # Verifica se ele existe
+        if (file_exists($arquivo)) {
+
+            # Monta o link
+            $link = new Link(null, $arquivo, "Exibe a Declaração");
+            $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
+            $link->set_target("_blank");
+            $link->show();
+        } else {
+            echo "---";
+        }
+    }
+
+###########################################################
 }

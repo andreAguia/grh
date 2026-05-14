@@ -45,6 +45,7 @@ define("PASTA_ESTILOS", "../_css/");                                 # Estilos E
  */
 define("PASTA_FOTOS", "../../_arquivos/fotos/");                            # Fotos dos Servidores
 define("PASTA_CONCURSO", "../../_arquivos/concurso/");                      # Publicações de concurso
+define("PASTA_CONCURSO_DECLARACAO", "../../_arquivos/concursoDeclaracao/"); # Declaração dos candidatos do concurso
 define("PASTA_PUBLICACAO", "../../_arquivos/publicacoes/");                 # Publicações no DOERJ
 define("PASTA_PUBLICACAO_PREMIO", "../../_arquivos/publicacoesPremio/");    # Publicações de Licença Prêmio no DOERJ
 define("PASTA_FUNCIONAL", "../../_arquivos/pastaFuncional/");               # Fotos dos Servidores

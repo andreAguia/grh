@@ -336,17 +336,15 @@ if ($acesso) {
             'size' => 5),
     ));
 
-    # Botão de Upload
-    $botao = new Button("Ofício Perícia");
-    $botao->set_url("?fase=oficioPericia");
-    $botao->set_title("Ofício de encaminhamento do candidato à perícia");
-    $botao->set_target("_blank");
-
-    $objeto->set_botaoEditarExtra([$botao]);
-
     # Log
     $objeto->set_idUsuario($idUsuario);
-    
+
+    # Botão de Ofício
+    $botao1 = new Button("Ofício Perícia");
+    $botao1->set_url("?fase=oficioPericia");
+    $botao1->set_title("Ofício de encaminhamento do candidato à perícia");
+    $botao1->set_target("_blank");
+
     # Dados da rotina de Upload
     $pasta = PASTA_CONCURSO_DECLARACAO;
     $nome = "Declaração";
@@ -357,12 +355,14 @@ if ($acesso) {
     if (!empty($idCandidatoPesquisado)) {
 
         # Botão de Upload
-        $botao = new Button("Upload {$nome}");
-        $botao->set_url("cadastroCandidatosAdm2025Upload.php?fase=upload&id={$idCandidatoPesquisado}");
-        $botao->set_title("Faz o Upload do {$nome}");
-        $botao->set_target("_blank");
+        $botao2 = new Button("Upload {$nome}");
+        $botao2->set_url("cadastroCandidatosAdm2025Upload.php?fase=upload&id={$idCandidatoPesquisado}");
+        $botao2->set_title("Faz o Upload do {$nome}");
+        $botao2->set_target("_blank");
 
-        $objeto->set_botaoEditarExtra([$botao]);
+        $objeto->set_botaoEditarExtra([$botao1, $botao2]);
+    } else {
+        $objeto->set_botaoEditarExtra([$botao1]);
     }
     ################################################################
 
@@ -377,7 +377,6 @@ if ($acesso) {
             break;
 
         ################################################################   
-        
         # Ofício: Encaminhamento do Candidato à Perícia
         case "oficioPericia" :
 
@@ -385,24 +384,24 @@ if ($acesso) {
             $grid = new Grid();
             $grid->abreColuna(12);
             br();
-            
+
             # Título
             tituloTable("Ofício: Encaminhamento do Candidato à Perícia");
             br();
 
             # Monta o formulário
             $form = new Form("../grhRelatorios/oficio.candidato.pericia.php");
-            
+
             # Data do Exame
             $controle = new Input('data', 'date', 'Data do Exame:', 1);
             $controle->set_size(20);
             $controle->set_linha(2);
             $controle->set_col(4);
-            $controle->set_autofocus(true);            
+            $controle->set_autofocus(true);
             $controle->set_required(true);
             $controle->set_title('A data do exame.');
             $form->add_item($controle);
-            
+
             # Hora do Exame
             $controle = new Input('hora', 'hora', 'Hora do Exame:', 1);
             $controle->set_size(20);

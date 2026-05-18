@@ -352,18 +352,13 @@ if ($acesso) {
     $extensoes = ["pdf"];
 
     # Botão de Upload
-    if (!empty($idCandidatoPesquisado)) {
+    $botao2 = new Button("Upload {$nome}");
+    $botao2->set_url("cadastroCandidatosAdm2025Upload.php?fase=upload&id={$idCandidatoPesquisado}");
+    $botao2->set_title("Faz o Upload do {$nome}");
+    $botao2->set_target("_blank");
 
-        # Botão de Upload
-        $botao2 = new Button("Upload {$nome}");
-        $botao2->set_url("cadastroCandidatosAdm2025Upload.php?fase=upload&id={$idCandidatoPesquisado}");
-        $botao2->set_title("Faz o Upload do {$nome}");
-        $botao2->set_target("_blank");
-
-        $objeto->set_botaoEditarExtra([$botao1, $botao2]);
-    } else {
-        $objeto->set_botaoEditarExtra([$botao1]);
-    }
+    $objeto->set_botaoEditarExtra([$botao1, $botao2]);
+    
     ################################################################
 
     switch ($fase) {

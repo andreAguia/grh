@@ -81,6 +81,7 @@ if ($acesso) {
                                      descricao,
                                      data,
                                      pag,
+                                     convocacao,
                                      obs
                                 FROM tbconcursopublicacao
                                WHERE idConcursoPublicacao = ' . $id);
@@ -158,6 +159,13 @@ if ($acesso) {
             'col' => 2,
             'size' => 10),
         array('linha' => 3,
+            'nome' => 'convocacao',
+            'label' => 'Publicação de Convocação de Candidato?:',
+            'tipo' => 'simnao',
+            'title' => 'Usado no cadastro de candidato. Pega a data para a convocação',
+            'col' => 3,
+            'size' => 20),
+        array('linha' => 4,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',

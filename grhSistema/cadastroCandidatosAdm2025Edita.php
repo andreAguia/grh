@@ -36,6 +36,7 @@ if ($acesso) {
 
     # Parametros    
     $idCandidatoPesquisado = get_session("idCandidatoPesquisado");
+    $idConcurso = get_session("idConcurso");
 
     # Começa uma nova página
     $page = new Page();
@@ -116,15 +117,22 @@ if ($acesso) {
     array_unshift($cargo, [null, null]);
 
     # Pega os dados da combo lotacao
-    $selectLotacao = 'SELECT idlotacao, 
+    $lotacao = $pessoal->select('SELECT idlotacao, 
                              concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")),
                              tblotacao.DIR 
                         FROM tblotacao 
                         WHERE ativo = 1
-                        ORDER BY ativo desc, 2';
-
-    $result = $pessoal->select($selectLotacao);
-    array_unshift($result, array(null, null));
+                        ORDER BY ativo desc, 2');
+    array_unshift($lotacao, array(null, null));
+    
+    # Pega os dados da combo da data de convocação
+    $convocacao = $pessoal->select("SELECT data, DATE_FORMAT(data, '%d/%m/%Y')
+                        FROM tbconcursopublicacao 
+                        WHERE idConcurso = {$idConcurso}
+                          AND convocacao = 1   
+                        ORDER BY data");
+    
+    array_unshift($convocacao, array(null, null));
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -157,7 +165,7 @@ if ($acesso) {
             'label' => 'Previsão de Lotacão:',
             'tipo' => 'combo',
             'optgroup' => true,
-            'array' => $result,
+            'array' => $lotacao,
             'size' => 20,
             'col' => 9,
             'title' => 'Em qual setor o candidato poderá ser lotado',
@@ -224,7 +232,8 @@ if ($acesso) {
             'linha' => 5,
             'nome' => 'dtConvocacao',
             'label' => 'Data da Convocação:',
-            'tipo' => 'data',
+            'tipo' => 'combo',
+            'array' => $convocacao,
             'size' => 20,
             'col' => 4,
             'title' => 'Data da Convocação.'),

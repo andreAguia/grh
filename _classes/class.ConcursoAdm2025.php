@@ -277,8 +277,9 @@ class ConcursoAdm2025 {
 
         # Monta o select
         $select = "SELECT {$campo},
-                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'Cadastro de Reserva','---')),
+                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
                               inscricao,
+                              dtConvocacao,
                               idCandidato,
                               dtNascimento,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
@@ -337,20 +338,20 @@ class ConcursoAdm2025 {
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["#", "Situação", "Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Ofício", "Obs", "Editar"]);
-        $tabela->set_width([5, 10, 10, 20, 10, 5, 10, 10, 10, 5, 5]);
-        $tabela->set_align(["center", "center", "center", "left", "center"]);
-        $tabela->set_funcao(["trataNulo", null, null, "plm", "date_to_php", "idade"]);
+        $tabela->set_label(["#", "Situação", "Inscrição", "Convocação", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Ofício", "Obs", "Editar"]);
+        $tabela->set_width([5, 5, 10, 10, 20, 10, 5, 10, 10, 10, 5, 5]);
+        $tabela->set_align(["center", "center", "center", "center", "left", "center"]);
+        $tabela->set_funcao(["trataNulo", null, null, "date_to_php", "plm", "date_to_php", "idade"]);
 
-        $tabela->set_classe([null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo([null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeNumOficio", "exibeObs"]);
+        $tabela->set_classe([null, null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo([null, null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeNumOficio", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, null, null, null, null, null, $botao]);
 
         $tabela->set_rowspan(1);
         $tabela->set_grupoCorColuna(1);
@@ -361,7 +362,7 @@ class ConcursoAdm2025 {
                 'operador' => '=',
                 'id' => "naVaga"),
             array('coluna' => 1,
-                'valor' => 'Cadastro de Reserva',
+                'valor' => 'CR',
                 'operador' => '=',
                 'id' => "reserva")));
 

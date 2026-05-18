@@ -64,6 +64,7 @@ if ($acesso) {
                            tipoDeficiencia,
                            notaFinal,
                            resultado,
+                           dtConvocacao,
                            obs,
                            dtNascimento,
                            cpf,
@@ -221,12 +222,20 @@ if ($acesso) {
             'size' => 30),
         array(
             'linha' => 5,
+            'nome' => 'dtConvocacao',
+            'label' => 'Data da Convocação:',
+            'tipo' => 'data',
+            'size' => 20,
+            'col' => 4,
+            'title' => 'Data da Convocação.'),
+        array(
+            'linha' => 6,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'size' => array(80, 5)),
         array(
-            'linha' => 6,
+            'linha' => 7,
             'nome' => 'dtNascimento',
             'label' => 'Data de Nascimento:',
             'tipo' => 'data',
@@ -234,7 +243,7 @@ if ($acesso) {
             'col' => 4,
             'title' => 'Data de Nascimento.'),
         array(
-            'linha' => 6,
+            'linha' => 7,
             'col' => 4,
             'nome' => 'cpf',
             'label' => 'CPF:',
@@ -243,7 +252,7 @@ if ($acesso) {
             'title' => 'CPF do servidor',
             'size' => 20),
         array(
-            'linha' => 6,
+            'linha' => 7,
             'nome' => 'identidade',
             'label' => 'Identidade:',
             'tipo' => 'texto',

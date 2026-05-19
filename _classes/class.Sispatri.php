@@ -923,34 +923,46 @@ class Sispatri {
 
     public function get_numProblemas() {
 
-        # Pega os dados
-        $select = 'SELECT idsispatri
-                     FROM tbsispatri 
-                    WHERE idServidor Is NULL';
-
         $pessoal = new Pessoal();
-        return $pessoal->count($select);
+        return $pessoal->count('SELECT idsispatri FROM tbsispatri WHERE idServidor Is NULL') + $pessoal->count('SELECT idsispatri FROM tbsispatrin WHERE idServidor Is NULL');
     }
 
 ###########################################################
 
     public function exibeProblemas() {
 
+        # Acessa a classe
+        $pessoal = new Pessoal();
+        
         # Pega os dados
-        $select = 'SELECT cpf,
+        $array1 = $pessoal->select('SELECT cpf,
                           obs,
                           idSispatri
                      FROM tbsispatri 
-                    WHERE idServidor Is NULL';
-
-        $pessoal = new Pessoal();
-        $array = $pessoal->select($select);
+                    WHERE idServidor Is NULL');
 
         # callout("Problema na Importação !!! Veja abaixo os problemas encontrados:", "alert");
 
         $tabela = new Tabela();
-        $tabela->set_titulo("Problemas na Importação !!! Veja abaixo os problemas encontrados:");
-        $tabela->set_conteudo($array);
+        $tabela->set_titulo("Problemas na Importação dos Servidores que Entregaram", null, "Veja abaixo os problemas encontrados:");
+        $tabela->set_conteudo($array1);
+        $tabela->set_label(array("CPF", "Outras informações"));
+        $tabela->set_align(array("center", "left"));
+        $tabela->set_width(array(20, 80));
+        $tabela->set_excluir("?fase=excluir");
+        $tabela->set_idCampo("idSispatri");
+        $tabela->show();
+        
+        # Pega os dados
+        $array2 = $pessoal->select('SELECT cpf,
+                          obs,
+                          idSispatri
+                     FROM tbsispatrin 
+                    WHERE idServidor Is NULL');
+
+        $tabela = new Tabela();
+        $tabela->set_titulo("Problemas na Importação dos Servidores que NÃO Entregaram", null, "Veja abaixo os problemas encontrados:");
+        $tabela->set_conteudo($array2);
         $tabela->set_label(array("CPF", "Outras informações"));
         $tabela->set_align(array("center", "left"));
         $tabela->set_width(array(20, 80));

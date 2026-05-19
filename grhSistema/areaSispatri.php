@@ -55,7 +55,7 @@ if ($acesso) {
 
     # Começa uma nova página
     $page = new Page();
-    if ($fase == "importar") {
+    if ($fase == "importar" OR $fase == "importarN") {
         $page->set_ready('$(document).ready(function(){
                                 $("form input").change(function(){
                                     $("form p").text(this.files.length + " arquivo(s) selecionado");
@@ -93,10 +93,14 @@ if ($acesso) {
         if ($fase == "resumo") {
 
             if (Verifica::acesso($idUsuario, [1, 13])) {
-                $botaoImp = new Link("Importar", "?fase=regras");
-                $botaoImp->set_class('button');
+                $botaoImp = new Link("Importar Os Que Entregaram", "?fase=regras");
+                $botaoImp->set_class('button warning');
                 $botaoImp->set_title('Importa arquivo cvs');
-                $botaoImp->set_accessKey('I');
+                $menu1->add_link($botaoImp, "right");
+                
+                $botaoImp = new Link("Importar Os Que NÃO Entregaram", "?fase=regras2");
+                $botaoImp->set_class('button alert');
+                $botaoImp->set_title('Importa arquivo cvs');
                 $menu1->add_link($botaoImp, "right");
             }
 
@@ -502,7 +506,7 @@ if ($acesso) {
             break;
 
         ################################################################
-        # Importar
+        # Importar os que fizeram
         case "regras" :
 
             $grid = new Grid("center");
@@ -540,6 +544,7 @@ if ($acesso) {
 
             $grid = new Grid("center");
             $grid->abreColuna(6);
+            titulotable("Servidores que Entregaram o Sispatri");
 
             # Gera a área de upload
             echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
@@ -596,7 +601,8 @@ if ($acesso) {
 
         case "importar1" :
 
-            br(5);
+            titulotable("Servidores que Entregaram o Sispatri");
+            br(5);            
             aguarde("Apagando a Base Antiga");
 
             loadPage("?fase=importar2");
@@ -622,6 +628,7 @@ if ($acesso) {
 
         case "importar3" :
 
+            titulotable("Servidores que Entregaram o Sispatri");
             br(5);
             aguarde("Fazendo o upload do arquivo");
 
@@ -703,6 +710,7 @@ if ($acesso) {
 
         case "importar5" :
 
+            titulotable("Servidores que Entregaram o Sispatri");
             br(5);
             aguarde("Vinculando os dados importados<br/>com a base de dados existente.");
 
@@ -737,6 +745,264 @@ if ($acesso) {
                     $campos = array("idServidor");
                     $valor = array($idServidorPesquisado);
                     $pessoal->gravar($campos, $valor, $tt[0], "tbsispatri", "idSispatri");
+                }
+            }
+
+            # Atualiza nas variaveis de sistema a data da importação
+            $intra->set_variavel('dataUltimaImportacao', date("d/m/Y H:i:s"));
+            $intra->set_variavel('usuarioUltimaImportacao', $intra->get_nickUsuario($idUsuario));
+
+            if ($problema > 0) {
+                alert("A importação foi concluída com {$problema} problema(s)");
+                loadPage("?");
+            } else {
+                alert("A importação foi concluída SEM problemas");
+                loadPage("?");
+            }
+            break;
+
+        ################################################################
+        ################################################################
+        # Importar os que NÃO fizeram
+        case "regras2" :
+
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+            titulotable("Servidores que NÃO Entregaram o Sispatri");
+            br(2);
+
+            $painel = new Callout("warning");
+            $painel->abre();
+
+            p("Regras para a importação dos dados do SISPATRI", "center");
+            br();
+            p("- A importação é referente aos servidores que NÃO ENTREGARAM a Declaração do Sispatri;");
+            p("- O arquivo deverá estar no formato de planilha csv;");
+            p("- Deve ser utilizado o ponto e vírgula para separar as colunas;");
+            p("- Na planilha o servidor é identificado pelo CPF;");
+            p("- Linhas que não tiverem o número de CPF serão ignoradas;");
+            p("- Toda nova importação apagará os dados importados anteriormente sobrescrevendo com os novos dados;");
+            $painel->fecha();
+            br();
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Importar
+            $botaoImp = new Link("Continuar", "?fase=importarN");
+            $botaoImp->set_class('button');
+            $botaoImp->set_title('Importa arquivo cvs');
+            $menu1->add_link($botaoImp, "right");
+            $menu1->show();
+
+            $grid->fechaGrid();
+            break;
+
+        case "importarN" :
+
+            $grid = new Grid("center");
+            $grid->abreColuna(6);
+            titulotable("Servidores que NÃO Entregaram o Sispatri");
+
+            # Gera a área de upload
+            echo "<form class='upload' method='post' enctype='multipart/form-data'><br>
+                        <input type='file' name='doc'>
+                        <p>Click aqui ou arraste o arquivo.</p>
+                        <button type='submit' name='submit'>Enviar</button>
+                    </form>";
+
+            $pasta = "../_temp/";
+
+            # Se não existe o programa cria
+            if (!file_exists($pasta) || !is_dir($pasta)) {
+                mkdir($pasta, 0755);
+            }
+
+            # Extensões possíveis
+            $extensoes = array("csv");
+
+            # Pega os valores do php.ini
+            $postMax = limpa_numero(ini_get('post_max_size'));
+            $uploadMax = limpa_numero(ini_get('upload_max_filesize'));
+            $limite = menorValor(array($postMax, $uploadMax));
+
+            $texto = "Extensões Permitidas:";
+
+            foreach ($extensoes as $pp) {
+                $texto .= " $pp";
+            }
+            $texto .= "<br/>Tamanho Máximo do Arquivo: $limite M";
+
+            br();
+            p($texto, "f14", "center");
+
+            if ((isset($_POST["submit"])) && (!empty($_FILES['doc']))) {
+                $upload = new UploadDoc($_FILES['doc'], $pasta, "sispatrin", $extensoes);
+
+                # Salva e verifica se houve erro
+                if ($upload->salvar()) {
+
+                    # Registra log
+                    $Objetolog = new Intra();
+                    $data = date("Y-m-d H:i:s");
+                    $atividade = "Importou arquivo csv do sispatri";
+                    $Objetolog->registraLog($idUsuario, $data, $atividade, null, null, 8);
+
+                    # Volta para o menu
+                    loadPage("?fase=importarN1");
+                } else {
+                    loadPage("?fase=importarN");
+                }
+            }
+            $grid->fechaGrid();
+            break;
+
+        case "importarN1" :
+
+            titulotable("Servidores que NÃO Entregaram o Sispatri");
+            br(5);
+            aguarde("Apagando a Base Antiga");
+
+            loadPage("?fase=importarN2");
+            break;
+
+        case "importarN2" :
+
+            # Apaga a tabela tbsispatri
+            $select = 'SELECT idSispatri
+                         FROM tbsispatrin';
+
+            $row = $pessoal->select($select);
+
+            $pessoal->set_tabela("tbsispatrin");
+            $pessoal->set_idCampo("idSispatri");
+
+            foreach ($row as $tt) {
+                $pessoal->excluir($tt[0]);
+            }
+
+            loadPage("?fase=importarN3");
+            break;
+
+        case "importarN3" :
+            
+            titulotable("Servidores que NÃO Entregaram o Sispatri");
+            br(5);
+            aguarde("Fazendo o upload do arquivo");
+
+            loadPage("?fase=importarN4");
+            break;
+
+        case "importarN4" :
+            # Define o arquivo a ser importado
+            $arquivo = "../_temp/sispatrin.csv";
+            $certos = 0;
+            $linhas = 0;
+
+            # Verifica a existência do arquivo
+            if (file_exists($arquivo)) {
+                $lines = file($arquivo);
+                $linhaDados = false;
+
+                # Percorre o arquivo e guarda os dados em um array
+                foreach ($lines as $linha) {
+
+                    # Zera as variáveis de gravação
+                    $obs = null;
+                    $cpf = null;
+                    $contador = 1;
+
+                    # incrementa as linhas
+                    $linhas++;
+
+                    # Divide as colunas
+                    $parte = explode(";", $linha);
+
+                    # Percorre as partes da linha
+                    foreach ($parte as $pp) {
+
+                        # Verifica se a linha está em branco
+                        if (!empty($pp)) {
+
+                            if ($linhaDados) {
+                                # Guarda a terceira coluna para o cpf
+                                if ($contador == 3) {
+                                    $cpf = $pp;
+                                }
+
+                                # Guarda as outras coluna para a obs
+                                if ($contador == 7) {
+                                    $obs .= $pp;
+                                } else {
+                                    $obs .= "{$pp} | ";
+                                }
+                            } else {
+                                if ($pp == "Nome do Agente") {
+                                    $linhaDados = true;
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
+                            $contador++;
+                        }
+
+
+                        if (validaCpf($cpf)) {
+                            $certos++;
+                        } else {
+                            $cpf = null;
+                        }
+                    }
+
+                    if (!empty($cpf)) {
+                        # Grava na tabela tbsispatrin
+                        $campos = array("cpf", "obs");
+                        $valor = array(utf8_encode($cpf), utf8_encode($obs));
+                        $pessoal->gravar($campos, $valor, null, "tbsispatrin", "idSispatri");
+                    }
+                }
+            }
+            loadPage("?fase=importarN5");
+            break;
+
+        case "importarN5" :
+
+            titulotable("Servidores que NÃO Entregaram o Sispatri");
+            br(5);
+            aguarde("Vinculando os dados importados<br/>com a base de dados existente.");
+
+            loadPage("?fase=importarN6");
+            break;
+
+        case "importarN6" :
+
+            $problema = 0;
+
+            br();
+            $select = 'SELECT idSispatri, cpf FROM tbsispatrin';
+            $row = $pessoal->select($select);
+            $contador = 0;
+
+            foreach ($row as $tt) {
+
+                $cpfFinalizado = $tt[1];
+
+                $select2 = "SELECT idPessoa
+                              FROM tbdocumentacao
+                             WHERE CPF = '$cpfFinalizado'";
+
+                $row2 = $pessoal->select($select2, false);
+
+                if (empty($row2[0])) {
+                    $problema++;
+                } else {
+                    $idServidorPesquisado = $pessoal->get_idServidoridPessoa($row2[0]);
+
+                    # Grava na tabela tbsispatri
+                    $campos = array("idServidor");
+                    $valor = array($idServidorPesquisado);
+                    $pessoal->gravar($campos, $valor, $tt[0], "tbsispatrin", "idSispatri");
                 }
             }
 

@@ -380,6 +380,23 @@ if ($acesso) {
             break;
         ################################################################
 
+        case "excluir2" :
+            # Conecta com o banco de dados
+            $pessoal->set_tabela("tbsispatrin");
+            $pessoal->set_idCampo("idSispatri");
+
+            if ($pessoal->excluir($id)) {
+                $intra->registraLog($idUsuario,
+                        date("Y-m-d H:i:s"),
+                        "Apagou registro importado",
+                        "tbsispatrin",
+                        $id,
+                        3);
+            }
+            loadPage("?");
+            break;
+        ################################################################
+
         case "editaServidor" :
             br(8);
             aguarde();

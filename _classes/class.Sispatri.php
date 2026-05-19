@@ -933,40 +933,39 @@ class Sispatri {
 
         # Acessa a classe
         $pessoal = new Pessoal();
-        
+
         # Pega os dados
         $array1 = $pessoal->select('SELECT cpf,
-                          obs,
+                          situacao,
+                          tbsispatri.obs,
                           idSispatri
-                     FROM tbsispatri 
-                    WHERE idServidor Is NULL');
-
-        # callout("Problema na Importação !!! Veja abaixo os problemas encontrados:", "alert");
-
+                     FROM tbsispatri LEFT JOIN tbservidor USINg (idServidor)
+                    WHERE idServidor Is NULL OR situacao <> 1');
         $tabela = new Tabela();
         $tabela->set_titulo("Problemas na Importação dos Servidores que Entregaram", null, "Veja abaixo os problemas encontrados:");
         $tabela->set_conteudo($array1);
-        $tabela->set_label(array("CPF", "Outras informações"));
-        $tabela->set_align(array("center", "left"));
-        $tabela->set_width(array(20, 80));
+        $tabela->set_label(["CPF", "Situação", "Outras informações"]);
+        $tabela->set_align(["center", "center", "left"]);
+        $tabela->set_width([10, 10, 80]);
         $tabela->set_excluir("?fase=excluir");
         $tabela->set_idCampo("idSispatri");
         $tabela->show();
-        
+
         # Pega os dados
         $array2 = $pessoal->select('SELECT cpf,
-                          obs,
+                           situacao,  
+                          tbsispatrin.obs,
                           idSispatri
-                     FROM tbsispatrin 
-                    WHERE idServidor Is NULL');
+                     FROM tbsispatrin LEFT JOIN tbservidor USINg (idServidor)
+                    WHERE idServidor Is NULL OR situacao <> 1');
 
         $tabela = new Tabela();
         $tabela->set_titulo("Problemas na Importação dos Servidores que NÃO Entregaram", null, "Veja abaixo os problemas encontrados:");
         $tabela->set_conteudo($array2);
-        $tabela->set_label(array("CPF", "Outras informações"));
-        $tabela->set_align(array("center", "left"));
-        $tabela->set_width(array(20, 80));
-        $tabela->set_excluir("?fase=excluir");
+        $tabela->set_label(["CPF", "Situação", "Outras informações"]);
+        $tabela->set_align(["center", "center", "left"]);
+        $tabela->set_width([10, 10, 80]);
+        $tabela->set_excluir("?fase=excluir2");
         $tabela->set_idCampo("idSispatri");
         $tabela->show();
     }

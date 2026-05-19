@@ -682,7 +682,7 @@ class Pessoal extends Bd {
             } else { # senão é uma diretoria genérica
                 $select .= " AND (tblotacao.DIR = '{$idLotacao}')";
             }
-            
+
             $numero = parent::count($select);
             return $numero;
         }
@@ -1584,7 +1584,7 @@ class Pessoal extends Bd {
         $select = "SELECT idPessoa
                      FROM tbdocumentacao
                     WHERE cpf = '{$cpf}'";
-        
+
         $idPessoa = parent::select($select, false);
 
         if (empty($idPessoa[0])) {
@@ -2435,6 +2435,30 @@ class Pessoal extends Bd {
         $situacao = parent::select($select, false);
 
         return $situacao[0];
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_situacaoIdSituacao
+     * informa a situação de um idsituacao
+     * 
+     * @param	string $idServidor idServidor do servidor
+     */
+    function get_situacaoIdSituacao($idSituacao) {
+
+        if (empty($idSituacao)) {
+            return null;
+        } else {
+
+            $select = "SELECT tbsituacao.situacao
+                     FROM tbsituacao
+                    WHERE idSituacao = '{$idSituacao}'";
+
+            $situacao = parent::select($select, false);
+
+            return $situacao[0];
+        }
     }
 
     ###########################################################

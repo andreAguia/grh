@@ -946,14 +946,16 @@ class Sispatri {
         $tabela->set_conteudo($array1);
         $tabela->set_label(["CPF", "Situação", "Outras informações"]);
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_width([10, 10, 80]);
+        $tabela->set_width([15, 10, 75]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_situacaoIdSituacao"]);
         $tabela->set_excluir("?fase=excluir");
         $tabela->set_idCampo("idSispatri");
         $tabela->show();
 
         # Pega os dados
         $array2 = $pessoal->select('SELECT cpf,
-                           situacao,  
+                          situacao,  
                           tbsispatrin.obs,
                           idSispatri
                      FROM tbsispatrin LEFT JOIN tbservidor USINg (idServidor)
@@ -964,7 +966,9 @@ class Sispatri {
         $tabela->set_conteudo($array2);
         $tabela->set_label(["CPF", "Situação", "Outras informações"]);
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_width([10, 10, 80]);
+        $tabela->set_width([15, 10, 75]);
+        $tabela->set_classe([null, "pessoal"]);
+        $tabela->set_metodo([null, "get_situacaoIdSituacao"]);
         $tabela->set_excluir("?fase=excluir2");
         $tabela->set_idCampo("idSispatri");
         $tabela->show();

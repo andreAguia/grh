@@ -781,7 +781,6 @@ class CandidatoAdm2025 {
          * 
          * @syntax Candidato->exibeCotas($id);
          */
-        
         # Verifica se tem o cargo
         if (empty($cargo)) {
 
@@ -1054,6 +1053,8 @@ class CandidatoAdm2025 {
 
             $tab->fechaConteudo();
             $tab->show();
+        } elseif ($cargo == "*") {
+            return null;
         } else {
 
             /*
@@ -1140,6 +1141,30 @@ class CandidatoAdm2025 {
     ###########################################################
 
     /**
+     * Método get_nomeECargo
+     * fornece o nome e cargo de um candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeECargo($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+
+            pLista(
+                    plm($dados["nome"]),
+                    plm($dados["cargo"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
      * Método get_nomeEInscrição
      * fornece o nome e inscrição do Candidato
      * 
@@ -1163,7 +1188,7 @@ class CandidatoAdm2025 {
     ###########################################################
 
     /**
-     * Método get_nomeECargoELotacao
+     * Método get_nomeELotacao
      * fornece o nome, cargo e lotacao de um candidato
      * 
      * @param	string $idCandidato $id do candidato

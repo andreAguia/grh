@@ -160,7 +160,7 @@ class ConcursoAdm2025 {
 
     ###########################################################
 
-    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $exibeErros = false) {
+    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $exibeErros = false) {
         /*
          * Exibe os candidatos em um cargo específico
          */
@@ -243,10 +243,15 @@ class ConcursoAdm2025 {
         if ($cota <> "Ac") {
             $selectDes .= " AND {$campo} IS NOT NULL";
         }
+        
+        # Data de Convocação
+        if ($convocacao <> "*") {
+            $selectDes .= " AND dtConvocacao = '{$convocacao}'";
+        }
 
         # Ordenação
         $selectDes .= " ORDER BY {$campo}";
-
+        
         # Pega os dados
         $rowDes = $pessoal->select($selectDes);
         $numDes = $pessoal->count($selectDes);
@@ -296,6 +301,11 @@ class ConcursoAdm2025 {
         # Cota
         if ($cota <> "Ac") {
             $select .= " AND {$campo} IS NOT NULL";
+        }
+
+        # Data de Convocação
+        if ($convocacao <> "*") {
+            $select .= " AND dtConvocacao = '{$convocacao}'";
         }
 
         # Ordenação

@@ -258,7 +258,7 @@ class ConcursoAdm2025 {
             $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
             #$tabela->set_subtitulo($subtitulo);
             $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Declaração", "Editar"]);
+            $tabela->set_label(["Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Documento", "Editar"]);
             $tabela->set_width([10, 20, 10, 5, 10, 10, 25, 5, 5]);
             $tabela->set_align(["center", "left", "center", "center", "center", "center", "left"]);
             $tabela->set_funcao([null, "plm", "date_to_php", "idade", null, null, "nl2br2"]);
@@ -338,13 +338,13 @@ class ConcursoAdm2025 {
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["#", "Situação", "Inscrição", "Convocação", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Ofício", "Obs", "Editar"]);
+        $tabela->set_label(["#", "Situação", "Inscrição", "Convocação", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
         $tabela->set_width([5, 5, 10, 10, 20, 10, 5, 10, 10, 10, 5, 5]);
         $tabela->set_align(["center", "center", "center", "center", "left", "center"]);
         $tabela->set_funcao(["trataNulo", null, null, "date_to_php", "plm", "date_to_php", "idade"]);
 
-        $tabela->set_classe([null, null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo([null, null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeNumOficio", "exibeObs"]);
+        $tabela->set_classe([null, null, null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "concursoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo([null, null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeDeclaracao", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');

@@ -265,8 +265,8 @@ class ConcursoAdm2025 {
         if ($numDes > 0) {
             # tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Candidatos Que Desistiram da Vaga");
-            #$tabela->set_subtitulo($subtitulo);
+            $tabela->set_titulo("Candidatos Retirados da Vaga");
+            $tabela->set_subtitulo("Por desistência, por não terem respondido o formulário ou por não terem se apresentado");
             $tabela->set_conteudo($rowDes);
             $tabela->set_label(["Inscrição", "Candidato", "Nascimento", "Idade", "Classificação", "Nota Final", "Obs", "Documento", "Editar"]);
             $tabela->set_width([10, 20, 10, 5, 10, 10, 25, 5, 5]);

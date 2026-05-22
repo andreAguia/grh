@@ -246,13 +246,13 @@ if ($acesso) {
 
             # Verifica se tem servidores ativos nesse concurso
             if ($numAtivos > 0) {
-                alert("Existem {$numAtivos} concursados ativos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                alert("Existem {$numAtivos} concursados ativos cadastrados nesse concurso. O Mesmo NÃO poderá ser excluído");
                 loadPage($volta);
             } elseif ($numInativos > 0) {
-                alert("Existem {$numInativos} concursados inativos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                alert("Existem {$numInativos} concursados inativos cadastrados nesse concurso. O Mesmo NÃO poderá ser excluído");
                 loadPage($volta);
             } elseif ($numCandidatos > 0) {
-                alert("Existem {$numCandidatos} candidatos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                alert("Existem {$numCandidatos} candidatos cadastrados nesse concurso. O Mesmo NÃO poderá ser excluído");
                 loadPage($volta);
             } else {
                 $objeto->excluir($id);

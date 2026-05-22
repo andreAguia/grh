@@ -174,6 +174,11 @@ class ConcursoAdm2025 {
 
         # Cadastro de reserva
         $cadReserva = 5;
+        
+        # Tira os erros quando tiver filtro
+        if($convocacao <> "*"){
+            $exibeErros = false;
+        }
 
         # Define os dados de acordo com as cotas
         switch ($cota) {

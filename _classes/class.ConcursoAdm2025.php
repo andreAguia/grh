@@ -255,7 +255,7 @@ class ConcursoAdm2025 {
         }
 
         # Ordenação
-        $selectDes .= " ORDER BY {$campo}";
+        $selectDes .= " ORDER BY nome";
         
         # Pega os dados
         $rowDes = $pessoal->select($selectDes);

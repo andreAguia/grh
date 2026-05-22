@@ -394,8 +394,8 @@ class Concurso {
 
         # Monta o select            
         $select = "SELECT idConcursoPublicacao
-                         FROM tbconcursopublicacao
-                        WHERE idConcurso = $this->idConcurso";
+                     FROM tbconcursopublicacao
+                    WHERE idConcurso = $this->idConcurso";
 
         # Pega os dados
         $pessoal = new Pessoal();
@@ -1855,5 +1855,38 @@ class Concurso {
         }
     }
 
-    #####################################################################################
+    ###########################################################
+
+    /**
+     * Método get_numCandidatosConcurso
+     * 
+     * Exibe o número de candidatos em um determinado concurso
+     */
+    public function get_numCandidatosConcurso($idConcurso) {
+
+        # Verifica se foi informado o id
+        if (empty($idConcurso)) {
+            return null;
+        }
+        
+        # Classe
+        $pessoal = new Pessoal();
+        
+        # Define a variável de retorno
+        $numero = 0;
+
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $dados = $this->get_dados($idConcurso);
+        $tipo = $dados['tipo'];
+
+        # Se for concurso Adm
+        if ($tipo == 1) {            
+            $numero = $pessoal->count("SELECT idCandidato FROM tbcandidato WHERE idConcurso = {$idConcurso}");
+        }
+
+        return $numero;
+    }
+
+    ###########################################################
+
 }

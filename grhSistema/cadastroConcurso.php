@@ -111,7 +111,7 @@ if ($acesso) {
     } else {
         $objeto->set_voltarForm('cadastroConcursoProf.php');
         $objeto->set_linkListar('cadastroConcursoProf.php');
-        $objeto->set_linkAposGravar('cadastroConcursoProf.php');        
+        $objeto->set_linkAposGravar('cadastroConcursoProf.php');
     }
 
     # Parametros da tabela
@@ -214,7 +214,7 @@ if ($acesso) {
 
     # idUsuário para o LogLicença sem vencimentosLicença sem vencimentos
     $objeto->set_idUsuario($idUsuario);
-    
+
     ################################################################
 
     switch ($fase) {
@@ -226,9 +226,37 @@ if ($acesso) {
         ################################################################
 
         case "editar" :
-        case "excluir" :
         case "gravar" :
             $objeto->$fase($id);
+            break;
+
+        case "excluir" :
+
+            # Pega os dados de verificação
+            $numAtivos = $concurso->get_numServidoresAtivosConcurso($id);
+            $numInativos = $concurso->get_numServidoresInativosConcurso($id);
+            $numCandidatos = $concurso->get_numCandidatosConcurso($id);
+
+            # Define a volta
+            if ($tipo == 1) {
+                $volta = 'cadastroConcursoAdm.php';
+            } else {
+                $volta = 'cadastroConcursoProf.php';
+            }
+
+            # Verifica se tem servidores ativos nesse concurso
+            if ($numAtivos > 0) {
+                alert("Existem {$numAtivos} concursados ativos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                loadPage($volta);
+            } elseif ($numInativos > 0) {
+                alert("Existem {$numInativos} concursados inativos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                loadPage($volta);
+            } elseif ($numCandidatos > 0) {
+                alert("Existem {$numCandidatos} candidatos cadastrados nesse concurso/nO Mesmo NÃO poderá ser excluído");
+                loadPage($volta);
+            } else {
+                $objeto->excluir($id);
+            }
             break;
     }
     $page->terminaPagina();

@@ -259,9 +259,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
             $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
 
-            $menu->add_item('titulo', 'Somente Com Lotação Definida');
+            $menu->add_item('titulo', 'Somente Com');
             #$menu->add_item('titulo1', 'Candidatos com Lotação Definida');
-            $menu->add_item('linkWindow', 'Agrupados por Lotação', '?fase=relatorio9');
+            $menu->add_item('linkWindow', 'Lotação Definida - Agrupados por Lotação', '?fase=relatorio9');
+            $menu->add_item('linkWindow', 'Convocação - Agrupados pela Convocação', '?fase=relatorio11');
 
             $menu->add_item('titulo', 'Aprovados de Todos os Cargos');
             $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
@@ -1758,7 +1759,38 @@ if ($acesso) {
 
             break;
 
-        ################################################################        
+        ################################################################    
+
+        case "relatorio11":
+
+            /*
+             *  Todos os Candidatos com Lotação
+             */
+
+            # Pega os candidaatos desse cargo e dessa cota
+            $select = "SELECT inscricao,
+                              tbcandidato.nome,
+                              cargo,
+                              dtConvocacao
+                         FROM tbcandidato
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND dtConvocacao IS NOT NULL
+                     ORDER BY dtConvocacao, nome";
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($pessoal->select($select));
+            $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Convocação"]);
+            $relatorio->set_align(["center", "left", "left"]);
+            $relatorio->set_funcao([null, "plm", "plm","date_to_php"]);
+            $relatorio->set_numGrupo(3);
+            $relatorio->show();
+
+            break;
+
+        ################################################################          
 
         case "editaCandidato" :
             br(8);

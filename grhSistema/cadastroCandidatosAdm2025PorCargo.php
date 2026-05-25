@@ -123,6 +123,7 @@ if ($acesso) {
             AND $fase <> "relatorio8"
             AND $fase <> "relatorio9"
             AND $fase <> "relatorio10"
+            AND $fase <> "relatorio11"
             . "") {
         AreaServidor::cabecalho();
     }

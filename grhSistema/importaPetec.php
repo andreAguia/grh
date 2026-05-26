@@ -103,6 +103,9 @@ if ($acesso) {
             }
 
             $menu1->show();
+            
+            tituloTable("Importa as Inscrição de Servidores no Programa PETEC",null,"A partir do Arquivo CSV da Planilha do Forumlário de Inscrição");
+            br();
 
             $grid->fechaColuna();
 
@@ -180,12 +183,13 @@ if ($acesso) {
             $tabela2->set_label(["Informação", "Quantidade"]);
             $tabela2->set_align(["center", "center"]);
             $tabela2->show();
-
+            
+            tituloTable("Apague a tabela que será importada.");
             $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Tabela de Servidores');
-            $menu->add_item('link', 'Apagar Dados Petec 1', "?fase=apagaPetec1", null, null, null, 'Deseja mesmo apagar o dados do PETEC 1 da tabela de Servidores ?');
-            $menu->add_item('link', 'Apagar Dados Petec 2', "?fase=apagaPetec2", null, null, null, 'Deseja mesmo apagar o dados do PETEC 2 da tabela de Servidores ?');
-            $menu->add_item('link', 'Apagar Dados Petec 3', "?fase=apagaPetec3", null, null, null, 'Deseja mesmo apagar o dados do PETEC 3 da tabela de Servidores ?');
+            $menu->add_item('titulo', 'Tabela de Inscrição Para o Petec');
+            $menu->add_item('link', 'Apagar Dados Petec - Port. 418/25 e 473/25', "?fase=apagaPetec1", null, null, null, 'Deseja mesmo apagar o dados do PETEC 1 da tabela de Servidores ?');
+            $menu->add_item('link', 'Apagar Dados Petec - Port. 481/25', "?fase=apagaPetec2", null, null, null, 'Deseja mesmo apagar o dados do PETEC 2 da tabela de Servidores ?');
+            $menu->add_item('link', 'Apagar Dados Petec - Port. 518/26', "?fase=apagaPetec3", null, null, null, 'Deseja mesmo apagar o dados do PETEC 3 da tabela de Servidores ?');
 
             $menu->show();
 

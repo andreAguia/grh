@@ -1190,7 +1190,7 @@ if ($acesso) {
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_titulo("Relatório de Candidatos Convocados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "Nascimento", "Cpf", "CI", "Cargo"]);
@@ -1298,7 +1298,7 @@ if ($acesso) {
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_titulo("Relatório de Candidatos Convocados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "Cpf"]);
@@ -1615,7 +1615,7 @@ if ($acesso) {
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_titulo("Relatório de Candidatos Convocados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "Manhã", "Tarde"]);
@@ -1753,7 +1753,7 @@ if ($acesso) {
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_titulo("Relatório de Candidatos Convocados");
             #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($resultadoFinal);
             $relatorio->set_label(["Inscrição", "Nome", "E-mail"]);

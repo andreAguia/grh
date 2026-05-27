@@ -265,7 +265,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Lotação Definida - Agrupados por Lotação', '?fase=relatorio9');
             $menu->add_item('linkWindow', 'Convocação - Agrupados pela Convocação', '?fase=relatorio11');
 
-            $menu->add_item('titulo', 'Aprovados de Todos os Cargos');
+            $menu->add_item('titulo', 'Aprovados e Convocados');
             $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
             $menu->add_item('linkWindow', 'Para Restaurante', '?fase=relatorio5');
             #$menu->add_item('linkWindow', 'Para Publicação', '?fase=relatorio7');
@@ -1165,6 +1165,7 @@ if ($acesso) {
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
                                   AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                                  AND dtConvocacao IS NOT NULL    
                              ORDER BY {$campo}";
 
                     # Passa para o array
@@ -1268,6 +1269,7 @@ if ($acesso) {
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
                                   AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                                  AND dtConvocacao IS NOT NULL    
                              ORDER BY {$campo}";
 
                     # Passa para o array
@@ -1584,6 +1586,7 @@ if ($acesso) {
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
                                   AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                                  AND dtConvocacao IS NOT NULL    
                              ORDER BY {$campo}";
 
                     # Passa para o array
@@ -1721,6 +1724,7 @@ if ($acesso) {
                                   AND {$campo} <= tbconcursovagadetalhada.{$campoVaga}
                                   AND cargo = '{$item["cargoConcurso"]}'
                                   AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
+                                  AND dtConvocacao IS NOT NULL    
                              ORDER BY {$campo}";
 
                     # Passa para o array

@@ -23,6 +23,9 @@ if ($acesso) {
     $intra = new Intra();
     $pessoal = new Pessoal();
 
+    # Pega os parâmetros dos relatórios
+    $lotacao = get('lotacao', post('lotacao'));
+
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);
     if ($grh) {
@@ -53,7 +56,7 @@ if ($acesso) {
         $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '301 - Técnico Profissional De Nível Médio – Agrícola E Agropecuária'));
         $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
         $parametroConvocacao = post('parametroConvocacao', get_session('parametroConvocacao', '*'));
-        
+
         # Define os dados de acordo com as cotas
         switch ($parametroCota) {
             // Ampla Concorrência
@@ -1634,25 +1637,68 @@ if ($acesso) {
              *  Todos os Candidatos com Lotação
              */
 
+            # Define variáveis
+            $titulo = null;
+
             # Pega os candidaatos desse cargo e dessa cota
             $select = "SELECT inscricao,
                               tbcandidato.nome,
                               cargo,
                               concat(IFnull(tblotacao.DIR,''),' - ',IFnull(tblotacao.GER,''),' - ',IFnull(tblotacao.nome,'')) lotacao
                          FROM tbcandidato LEFT JOIN tblotacao USING (idLotacao)
-                        WHERE tbcandidato.idConcurso = {$idConcurso}
-                          AND tbcandidato.idLotacao IS NOT NULL
-                     ORDER BY DIR, GER, nome";
+                        WHERE tbcandidato.idConcurso = {$idConcurso}";
+
+            # lotacao
+            if ($lotacao <> "*") {
+                # Verifica se o que veio é numérico
+                if (is_numeric($lotacao)) {
+                    $select .= " AND (tblotacao.idlotacao =  {$lotacao})";
+                    $titulo = null;
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$lotacao}')";
+
+                    $lotacaoClasse = new Lotacao();
+                    if ($lotacao <> "Reitoria" AND $lotacao <> "Prefeitura") {
+                        $titulo = $lotacaoClasse->get_nomeDiretoriaSigla($lotacao) . " - {$lotacao}<br/>";
+                    } else {
+                        $titulo = "{$lotacao}<br/>";
+                    }
+                }
+            } else {
+                $select .= " AND tbcandidato.idLotacao IS NOT NULL";
+            }
+
+
+            $select .= " ORDER BY DIR, GER, nome";
 
             # Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Relatório de Candidatos Aprovados");
-            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_subtitulo($titulo);
             $relatorio->set_conteudo($pessoal->select($select));
             $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Lotação"]);
             $relatorio->set_align(["center", "left", "left"]);
             $relatorio->set_funcao([null, "plm", "plm"]);
             $relatorio->set_numGrupo(3);
+
+            $listaLotacao = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($listaLotacao, array('*', '-- Selecione a Lotação --'));
+
+            $relatorio->set_formCampos(array(
+                array('nome' => 'lotacao',
+                    'label' => 'Lotação:',
+                    'tipo' => 'combo',
+                    'array' => $listaLotacao,
+                    'size' => 30,
+                    'padrao' => $lotacao,
+                    'onChange' => 'formPadrao.submit();',
+                    'linha' => 1)));
+
             $relatorio->show();
 
             break;
@@ -1789,7 +1835,7 @@ if ($acesso) {
             $relatorio->set_conteudo($pessoal->select($select));
             $relatorio->set_label(["Inscrição", "Nome", "Cargo", "Convocação"]);
             $relatorio->set_align(["center", "left", "left"]);
-            $relatorio->set_funcao([null, "plm", "plm","date_to_php"]);
+            $relatorio->set_funcao([null, "plm", "plm", "date_to_php"]);
             $relatorio->set_numGrupo(3);
             $relatorio->show();
 

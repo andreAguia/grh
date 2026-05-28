@@ -205,6 +205,7 @@ if ($acesso) {
             $sexo = null;
             $idCargo = null;
             $idLotacao = null;
+            $idFuncional = null;
 
             /*
              * Verifica no Cadastro de Servidores
@@ -255,6 +256,7 @@ if ($acesso) {
                     $cargo = $dados["cargo"];
                     $idCargo = $candidatoClasse->get_idCargoCargoConcurso($cargo);
                     $idLotacao = $dados["idLotacao"];
+                    $idFuncional = $dados["idFuncional"];
                     $textoMensagem = "candidato";
                 }
             }
@@ -468,6 +470,7 @@ if ($acesso) {
             $controle->set_size(20);
             $controle->set_linha(5);
             $controle->set_col(3);
+            $controle->set_valor($idFuncional);
             $controle->set_title('A IdFuncional do servidor.');
             $form->add_item($controle);
 

@@ -719,8 +719,6 @@ if ($acesso) {
                 }
             }
 
-echo "oi";
-
             # Verifia se houve erro 
             if ($erro == 1) {
                 alert($msgErro);
@@ -739,6 +737,9 @@ echo "oi";
                     # Grava mais dados caso seja candidato do Concurso de 2025
                     # Concursados somente estatutário
                     if ($perfil == 1 AND !empty($idCandidato2025)) {
+                        
+                        echo "oi";
+
 
                         $endereco = "{$dados["endereco"]} {$dados["num"]} {$dados["complemento"]}";
                         $cidadeClasse = new Cidade();

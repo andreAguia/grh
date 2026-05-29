@@ -750,6 +750,7 @@ if ($acesso) {
                             $telefone = substr($apenasNumeros, 2);
                             $teledoneDDD = substr($apenasNumeros, 0, 2);
                         }
+                         echo "oiiii";
 
                         # Trata o número de celular
                         if (str_contains($dados["celular"], '(')) {    // verifica se tem (ddd)
@@ -762,7 +763,7 @@ if ($acesso) {
                         
                         
                         
-                        echo "oiiii";
+                       
 
                         array_push($campos,
                                 'nomeMae',

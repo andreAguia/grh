@@ -373,7 +373,7 @@ if ($acesso) {
                     # Monta o select
                     $select = "SELECT {$campo},
                               '---',
-                              inscricao,
+                              CONCAT(inscricao,'<br/>',cpf),
                               dtConvocacao,
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
@@ -414,7 +414,7 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Situação", "Inscrição", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
+                    $tabela->set_label(["#", "Situação", "Inscrição<br/>CPF", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([5, 10, 10, 10, 30, 5, 10, 10, 10, 5]);
                     $tabela->set_align(["center", "center", "center", "center", "left", "center"]);
                     $tabela->set_funcao([null, null, null, "date_to_php", "plm", "idade"]);
@@ -445,7 +445,7 @@ if ($acesso) {
                      */
 
                     # Monta o select
-                    $select = "SELECT inscricao,
+                    $select = "SELECT CONCAT(inscricao,'<br/>',cpf),
                               dtConvocacao,
                               idCandidato,
                               cargo,
@@ -478,7 +478,7 @@ if ($acesso) {
                     $tabela->set_titulo("Candidatos Aprovados");
                     $tabela->set_subtitulo($subtitulo);
                     $tabela->set_conteudo($row);
-                    $tabela->set_label(["Inscrição", "Convocação", "Candidato", "Cargo", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
+                    $tabela->set_label(["Inscrição<br/>CPF", "Convocação", "Candidato", "Cargo", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
                     $tabela->set_width([10, 10, 25, 25, 5, 10, 10, 5, 5]);
                     $tabela->set_align(["center", "center", "left", "left"]);
                     $tabela->set_funcao([null, "date_to_php", null, "plm", "idade"]);

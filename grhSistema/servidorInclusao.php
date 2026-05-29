@@ -584,10 +584,8 @@ if ($acesso) {
             $matExterna = post('matExterna');
 
             $classe = null;
-            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);            
             
-            echo "oi";
-
             # Inicia flag de perfil ativo
             $temAtivo = false;
 
@@ -633,6 +631,9 @@ if ($acesso) {
                     $erro = 1;
                 }
             }
+            
+            echo "oi";
+
 
             # Verifica se a matrícula já existe
             if (!empty($matricula)) {

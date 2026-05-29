@@ -585,6 +585,8 @@ if ($acesso) {
 
             $classe = null;
             $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+            
+            echo "oi";
 
             # Inicia flag de perfil ativo
             $temAtivo = false;

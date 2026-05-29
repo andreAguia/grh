@@ -584,8 +584,8 @@ if ($acesso) {
             $matExterna = post('matExterna');
 
             $classe = null;
-            $idPessoa = $pessoal->get_idPessoaCPF($cpf);            
-            
+            $idPessoa = $pessoal->get_idPessoaCPF($cpf);
+
             # Inicia flag de perfil ativo
             $temAtivo = false;
 
@@ -741,31 +741,41 @@ if ($acesso) {
                         $endereco = "{$dados["endereco"]} {$dados["num"]} {$dados["complemento"]}";
                         $cidadeClasse = new Cidade();
                         $idCidade = $cidadeClasse->get_idCidade($dados["cidade"]);
-                        
-                        echo "oiiii";
 
-
-                        # Trata o número de telefone
-                        if (str_contains($dados["telefone"], '(')) {    // verifica se tem (ddd)
-                            # Pega somente os números
-                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["telefone"]);
-
-                            $telefone = substr($apenasNumeros, 2);
-                            $teledoneDDD = substr($apenasNumeros, 0, 2);
-                        }
-                         
-                        # Trata o número de celular
-                        if (str_contains($dados["celular"], '(')) {    // verifica se tem (ddd)
-                            # Pega somente os números
-                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["celular"]);
-
-                            $celular = substr($apenasNumeros, 2);
-                            $celularDDD = substr($apenasNumeros, 0, 2);
-                        }
                         
+                        # Telefone
+                        // Remove tudo que não for número (ex: (), -, espaços)
+                        $numeros = preg_replace('/[^0-9]/', '', $dados["telefone"]);
+
+                        // Separa o DDD e o número
+                        $teledoneDDD = substr($numeros, 0, 2);
+                        $telefone = substr($numeros, 2);
                         
-                        
-                       
+                        # Celular
+                        // Remove tudo que não for número (ex: (), -, espaços)
+                        $numeros2 = preg_replace('/[^0-9]/', '', $dados["celular"]);
+
+                        // Separa o DDD e o número
+                        $celularDDD = substr($numeros2, 0, 2);
+                        $celular = substr($numeros2, 2);
+
+//                        # Trata o número de telefone
+//                        if (str_contains($dados["telefone"], '(')) {    // verifica se tem (ddd)
+//                            # Pega somente os números
+//                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["telefone"]);
+//
+//                            $telefone = substr($apenasNumeros, 2);
+//                            $teledoneDDD = substr($apenasNumeros, 0, 2);
+//                        }
+//                         
+//                        # Trata o número de celular
+//                        if (str_contains($dados["celular"], '(')) {    // verifica se tem (ddd)
+//                            # Pega somente os números
+//                            $apenasNumeros = preg_replace('/[^0-9]/', '', $dados["celular"]);
+//
+//                            $celular = substr($apenasNumeros, 2);
+//                            $celularDDD = substr($apenasNumeros, 0, 2);
+//                        }
 
                         array_push($campos,
                                 'nomeMae',

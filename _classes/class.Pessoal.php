@@ -6530,7 +6530,10 @@ class Pessoal extends Bd {
         $row = parent::select($select, false);
 
         if (empty($row[0])) {
-            return null;
+            # Se for vazio pega o diretor
+            $chefia = $this->get_diretor($idLotacao);
+
+            return $chefia;
         } else {
 
             $chefia = $row[0];

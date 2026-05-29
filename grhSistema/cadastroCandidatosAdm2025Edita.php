@@ -257,7 +257,7 @@ if ($acesso) {
             'nome' => 'cpf',
             'label' => 'CPF:',
             'tipo' => 'cpf',
-            'required' => true,
+            //'required' => true,
             'title' => 'CPF do servidor',
             'size' => 20),
         array(

@@ -737,9 +737,6 @@ if ($acesso) {
                     # Grava mais dados caso seja candidato do Concurso de 2025
                     # Concursados somente estatutário
                     if ($perfil == 1 AND !empty($idCandidato2025)) {
-                        
-                        echo "oi";
-
 
                         $endereco = "{$dados["endereco"]} {$dados["num"]} {$dados["complemento"]}";
                         $cidadeClasse = new Cidade();
@@ -762,6 +759,10 @@ if ($acesso) {
                             $celular = substr($apenasNumeros, 2);
                             $celularDDD = substr($apenasNumeros, 0, 2);
                         }
+                        
+                        
+                        
+                        echo "oiiii";
 
                         array_push($campos,
                                 'nomeMae',

@@ -741,6 +741,9 @@ if ($acesso) {
                         $endereco = "{$dados["endereco"]} {$dados["num"]} {$dados["complemento"]}";
                         $cidadeClasse = new Cidade();
                         $idCidade = $cidadeClasse->get_idCidade($dados["cidade"]);
+                        
+                        echo "oiiii";
+
 
                         # Trata o número de telefone
                         if (str_contains($dados["telefone"], '(')) {    // verifica se tem (ddd)
@@ -750,8 +753,7 @@ if ($acesso) {
                             $telefone = substr($apenasNumeros, 2);
                             $teledoneDDD = substr($apenasNumeros, 0, 2);
                         }
-                         echo "oiiii";
-
+                         
                         # Trata o número de celular
                         if (str_contains($dados["celular"], '(')) {    // verifica se tem (ddd)
                             # Pega somente os números

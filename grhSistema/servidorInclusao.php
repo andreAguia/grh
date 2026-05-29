@@ -387,6 +387,7 @@ if ($acesso) {
             $controle->set_size(15);
             $controle->set_col(3);
             $controle->set_required(true);
+            $controle->set_valor(date_to_bd("01/06/2026"));
             $controle->set_linha(3);
             $controle->set_title('A data de admissão do servidor.');
             $form->add_item($controle);

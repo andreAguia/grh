@@ -127,7 +127,8 @@ if ($acesso) {
             AND $fase <> "relatorio9"
             AND $fase <> "relatorio10"
             AND $fase <> "relatorio11"
-            . "") {
+            AND $fase <> "relatorio12"
+            ) {
         AreaServidor::cabecalho();
     }
 
@@ -265,8 +266,9 @@ if ($acesso) {
 
             $menu->add_item('titulo', 'Somente Com');
             #$menu->add_item('titulo1', 'Candidatos com Lotação Definida');
-            $menu->add_item('linkWindow', 'Lotação Definida - Agrupados por Lotação', '?fase=relatorio9');
-            $menu->add_item('linkWindow', 'Convocação - Agrupados pela Convocação', '?fase=relatorio11');
+            $menu->add_item('linkWindow', 'Com Lotação', '?fase=relatorio9');
+            $menu->add_item('linkWindow', 'Convocados', '?fase=relatorio11');
+            $menu->add_item('linkWindow', 'Convocados Com CPF', '?fase=relatorio12');
 
             $menu->add_item('titulo', 'Aprovados e Convocados');
             $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
@@ -1902,7 +1904,39 @@ if ($acesso) {
 
             break;
 
-        ################################################################          
+        ################################################################    
+
+        case "relatorio12":
+
+            /*
+             *  Todos os Candidatos com Lotação
+             */
+
+            # Pega os candidaatos desse cargo e dessa cota
+            $select = "SELECT inscricao,
+                              cpf,
+                              tbcandidato.nome,
+                              cargo,
+                              dtConvocacao
+                         FROM tbcandidato
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND dtConvocacao IS NOT NULL
+                     ORDER BY dtConvocacao, nome";
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            #$relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($pessoal->select($select));
+            $relatorio->set_label(["Inscrição", "Cpf", "Nome", "Cargo", "Convocação"]);
+            $relatorio->set_align(["center", "center", "left", "left"]);
+            $relatorio->set_funcao([null, null, "plm", "plm", "date_to_php"]);
+            $relatorio->set_numGrupo(4);
+            $relatorio->show();
+
+            break;
+
+        ################################################################                 
 
         case "editaCandidato" :
             br(8);

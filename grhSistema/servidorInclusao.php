@@ -681,9 +681,6 @@ if ($acesso) {
                 $msgErro .= 'Você tem que informar o órgão de origem de um servidor cedido!\n';
                 $erro = 1;
             }
-            
-            echo "oi";
-
 
             # formata as datas quando vier de um controle data (vem yyyy/mm/dd)
             $dtAdmissao = date_to_php($dtAdmissao);
@@ -722,6 +719,7 @@ if ($acesso) {
                 }
             }
 
+echo "oi";
 
             # Verifia se houve erro 
             if ($erro == 1) {

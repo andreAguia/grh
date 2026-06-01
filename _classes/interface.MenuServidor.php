@@ -631,6 +631,7 @@ class MenuServidor {
                 $menu->add_item('titulo', 'Admissão', '#');
                 $menu->add_item('linkWindow', 'Carta de Apresentação', '../grhRelatorios/admissao.CartaApresentacao.php');
                 $menu->add_item('linkWindow', 'Ofício de Abertura de Conta', '?fase=oficioAberturaConta');
+                $menu->add_item('linkWindow', 'Declaração de Posse', '../grhRelatorios/declaracao.posse.php');
             }
 
             if ($this->perfil == 1) {

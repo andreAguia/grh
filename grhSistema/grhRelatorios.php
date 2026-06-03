@@ -76,6 +76,7 @@ if ($acesso) {
         ['Cargo em Comissão', 'cargoEmComissao'],
         ['Cedidos', 'cedidos'],
         ['Contatos & Endereços', 'contatos'],
+        ['Concursos', 'concurso'],
         ['Dependentes & Auxílio Creche', 'dependentes'],
         ['Estatutários', 'estatutarios'],
         ['Etiquetas', 'etiquetas'],
@@ -419,6 +420,18 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Outros');
             $menu->add_item('linkWindow', 'Formulário de Saúde por Lotação', '../grhRelatorios/formularioSaude.porLotacao.php');
+
+            $menu->show();
+            break;
+
+        ######################################
+
+        case "concurso";
+            $menu = new Menu();
+            $menu->add_item('titulo', 'Concursos');
+            $menu->add_item('titulo1', 'Administrativos e Técnicos');
+            $menu->add_item('linkWindow', 'Estatutários por Lotação', '../grhRelatorios/concurso.porLotacao.php');
+            $menu->add_item('linkWindow', 'Estatutários por Lotação - Com CPF e Celular', '../grhRelatorios/concurso.porLotacao.comCpf.php');
 
             $menu->show();
             break;

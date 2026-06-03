@@ -52,10 +52,12 @@ if ($acesso) {
         $parametroCargo = post('parametroCargo', get_session('parametroCargo', '*'));
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
         $parametroVaga = post('parametroVaga', get_session('parametroVaga', '*'));
+        $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
 
         set_session('parametroCargo', $parametroCargo);
         set_session('parametroSituacao', $parametroSituacao);
         set_session('parametroVaga', $parametroVaga);
+        set_session('parametroLotacao', $parametroLotacao);
     }
 
     # Começa uma nova página
@@ -473,6 +475,163 @@ if ($acesso) {
                 $lista = new ListaServidores("{$parametroCargo} - Servidores Ativos");
                 $lista->set_cargo($parametroCargo);
                 $atividade = "Visualizou os servidores ativos do cargo " . $parametroCargo . " do concurso " . $concurso->get_nomeConcurso($idConcurso);
+            } else {
+                $lista = new ListaServidores("Servidores Ativos");
+                $atividade = "Visualizou os servidores ativos do concurso " . $concurso->get_nomeConcurso($idConcurso);
+            }
+            $lista->set_situacao(1);
+            $lista->set_concurso($idConcurso);
+            $lista->showTabela();
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+
+         ################################################################
+
+        /*
+         * Servidores Ativos - Por Lotação
+         */
+
+        case "aguardaListaServidoresAtivosLotacao" :
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos - Lotação");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################3
+
+            $grid->abreColuna(9);
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=listaServidoresAtivosLotacao');
+            break;
+
+        case "listaServidoresAtivosLotacao" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos');
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivosLotacao");
+            $botaoRel->set_imagem($imagem2);
+            $menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos - Lotação");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################
+
+            $grid->abreColuna(9);
+
+            # Formulário
+            $form = new Form('?fase=aguardaListaServidoresAtivosLotacao');
+
+            # cargos por nivel
+           $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+
+            # acrescenta todos
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(12);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Lista de Servidores
+            if ($parametroLotacao <> "*") {
+                $lista = new ListaServidores("{$parametroLotacao} - Servidores Ativos");
+                $lista->set_lotacao($parametroLotacao);
+                $atividade = "Visualizou os servidores ativos da lotação " . $parametroLotacao . " do concurso " . $concurso->get_nomeConcurso($idConcurso);
             } else {
                 $lista = new ListaServidores("Servidores Ativos");
                 $atividade = "Visualizou os servidores ativos do concurso " . $concurso->get_nomeConcurso($idConcurso);
@@ -1028,6 +1187,17 @@ if ($acesso) {
             $lista->set_concurso($idConcurso);
             if ($parametroCargo <> "*") {
                 $lista->set_cargo($parametroCargo);
+            }
+            $lista->showRelatorio();
+            break;
+
+         case "relatorioAtivosLotacao" :
+            # Lista de Servidores Ativos
+            $lista = new ListaServidores('Servidores Ativos');
+            $lista->set_situacao(1);
+            $lista->set_concurso($idConcurso);
+            if ($parametroLotacao <> "*") {
+                $lista->set_lotacao($parametroLotacao);
             }
             $lista->showRelatorio();
             break;

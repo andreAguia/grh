@@ -609,11 +609,11 @@ class ListaServidores {
         $conteudo = $servidor->select($this->select, true);
 
         if (($this->situacao == 1) AND ($this->situacaoSinal == "=")) {
-            $label = ["IdFuncional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação"];
+            $label = ["ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Situação"];
             $width = [8, 30, 30, 15, 10, 5, 5];
             $function = [null, null, null, null, null, "date_to_php", "get_situacaoRel"];
         } else {
-            $label = ["IdFuncional", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Saída", "Situação"];
+            $label = ["ID/Matrícula", "Servidor", "Cargo", "Lotação", "Perfil", "Admissão", "Saída", "Situação"];
             $width = [8, 30, 25, 15, 10, 5, 5, 5];
             $function = [null, null, null, null, null, "date_to_php", "date_to_php", "get_situacaoRel"];
         }

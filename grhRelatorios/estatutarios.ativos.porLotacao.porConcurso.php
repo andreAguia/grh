@@ -52,7 +52,7 @@ if ($acesso) {
                  AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)';
 
     # lotacao
-    if (!is_null($parametroLotacao)) {
+    if (!is_null($parametroLotacao) OR $parametroLotacao <> "*") {
         # Verifica se o que veio é numérico
         if (is_numeric($parametroLotacao)) {
             $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';

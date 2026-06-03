@@ -40,6 +40,7 @@ class ListaServidores {
      * da listagem
      */
     private $ordenacao = "tbpessoa.nome asc";   # ordenação da listagem. Padrão 3 por nome
+    private $agrupamento = null;                # Se vai agrupar por alguma coluna
     private $ordenacaoCombo = array();          # Array da combo de ordenação
     private $comissaoPrimeiro = false;          # Define se os cargos comissionados aparecerão (ou não) primeiro
 
@@ -638,6 +639,12 @@ class ListaServidores {
         $relatorio->set_subTotal(false);
         $relatorio->set_bordaInterna(true);
         $relatorio->set_conteudo($conteudo);
+        
+        if(!empty($this->agrupamento)){
+            $relatorio->set_numGrupo($this->agrupamento);
+            $relatorio->set_subTotal(true);
+        }
+        
         $relatorio->show();
     }
 }

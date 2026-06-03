@@ -66,6 +66,7 @@ if ($acesso) {
 
     # Cabeçalho da Página
     if ($fase <> "relatorioAtivos"
+            AND $fase <> "relatorioAtivosLotacao"
             AND $fase <> "relatorioInativos"
             AND $fase <> "relatorioClassificacao"
             AND $fase <> "relatorioTodos") {
@@ -1199,6 +1200,7 @@ if ($acesso) {
             if ($parametroLotacao <> "*") {
                 $lista->set_lotacao($parametroLotacao);
             }
+            $lista->set_agrupamento(3);
             $lista->showRelatorio();
             break;
 

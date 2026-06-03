@@ -632,7 +632,7 @@ if ($acesso) {
             if ($parametroLotacao <> "*") {
                 $lista = new ListaServidores("{$parametroLotacao} - Servidores Ativos");
                 $lista->set_lotacao($parametroLotacao);
-                $lista->set_ordenacao("3 asc, tbpessoa.nome asc");
+                $lista->set_ordenacao("4 asc, tbpessoa.nome asc");
                 $atividade = "Visualizou os servidores ativos da lotação " . $parametroLotacao . " do concurso " . $concurso->get_nomeConcurso($idConcurso);
             } else {
                 $lista = new ListaServidores("Servidores Ativos");

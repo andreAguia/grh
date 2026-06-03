@@ -1199,6 +1199,7 @@ if ($acesso) {
             $lista->set_concurso($idConcurso);
             if ($parametroLotacao <> "*") {
                 $lista->set_lotacao($parametroLotacao);
+                $lista->set_ordenacao("{$ordenacao} asc, tbpessoa.nome asc");
             }
             $lista->set_agrupamento(3);
             $lista->showRelatorio();

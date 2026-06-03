@@ -430,6 +430,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Concursos');
             $menu->add_item('titulo1', 'Administrativos e Técnicos');
+            #$menu->add_item('linkWindow', 'Estatutários com E-mail', '../grhRelatorios/concurso.comEmail.php');
             $menu->add_item('linkWindow', 'Estatutários por Lotação', '../grhRelatorios/concurso.porLotacao.php');
             $menu->add_item('linkWindow', 'Estatutários por Lotação - Com CPF e Celular', '../grhRelatorios/concurso.porLotacao.comCpf.php');
 

@@ -26,8 +26,13 @@ if ($acesso) {
 
     # Pega os parâmetros dos relatórios
     $lotacao = get('lotacao', post('lotacao'));
+    $parametroConcurso = get('concurso', post('concurso'));
     if ($lotacao == "*") {
         $lotacao = null;
+    }
+
+    if ($parametroConcurso == "*") {
+        $parametroConcurso = null;
     }
     $subTitulo = null;
 
@@ -58,6 +63,20 @@ if ($acesso) {
         }
     }
 
+    # concurso
+    if (!is_null($parametroConcurso) AND $parametroConcurso <> "*") {
+        # Verifica se o concurso é de Adm & Tec ou se é de Professor
+        $concurso = new Concurso();
+        $dados = $concurso->get_dados($parametroConcurso);
+        $tipo = $dados['tipo'];
+
+        if ($tipo == 1) {
+            $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
+        } else {
+            $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
+        }
+    }
+
     $select .= ' ORDER BY DIR, GER, tbpessoa.nome';
 
     $result = $servidor->select($select);
@@ -82,6 +101,13 @@ if ($acesso) {
 
     array_unshift($listaLotacao, array('*', '-- Todos --'));
 
+    $listaConcurso = $servidor->select('SELECT idConcurso, concat(anobase," - ",DATE_FORMAT(dtPublicacaoEdital, "%d/%m/%Y")) concurso
+                                          FROM tbconcurso
+                                         WHERE tipo = 1
+                                    ORDER BY 2');
+
+    array_unshift($listaConcurso, array('*', '-- Todos --'));
+
     $relatorio->set_formCampos(array(
         array('nome' => 'lotacao',
             'label' => 'Lotação:',
@@ -90,7 +116,18 @@ if ($acesso) {
             'size' => 30,
             'padrao' => $lotacao,
             'onChange' => 'formPadrao.submit();',
-            'linha' => 1)));
+            'col' => 6,
+            'linha' => 1),
+        array('nome' => 'concurso',
+            'label' => 'Concurso:',
+            'tipo' => 'combo',
+            'array' => $listaConcurso,
+            'size' => 30,
+            'padrao' => $parametroConcurso,
+            'onChange' => 'formPadrao.submit();',
+            'col' => 6,
+            'linha' => 1),
+    ));
 
     $relatorio->show();
     $page->terminaPagina();

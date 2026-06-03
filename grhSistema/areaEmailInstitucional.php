@@ -45,6 +45,7 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
+    $parametroConcurso = post('parametroConcurso', get_session('parametroConcurso',));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
@@ -53,6 +54,7 @@ if ($acesso) {
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroCargo', $parametroCargo);
+    set_session('parametroConcurso', $parametroConcurso);
 
     # Relatório
     $selectRelatorio = get_session("selectRelatorio");
@@ -209,7 +211,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
-            $controle->set_col(6);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             /*
@@ -242,7 +244,27 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_fieldset("Informe o Filtro:");
             $controle->set_linha(2);
-            $controle->set_col(6);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            /*
+             * Concurso
+             */
+            $listaConcurso = $pessoal->select('SELECT idConcurso, concat(anobase," - ",DATE_FORMAT(dtPublicacaoEdital, "%d/%m/%Y")) concurso
+                                          FROM tbconcurso
+                                         WHERE tipo = 1
+                                    ORDER BY 2');
+
+            array_unshift($listaConcurso, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroConcurso', 'combo', 'Concurso:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Concurso');
+            $controle->set_array($listaConcurso);
+            $controle->set_valor($parametroConcurso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
@@ -282,6 +304,20 @@ if ($acesso) {
                 } else {
                     $select .= " AND (tbpessoa.nome LIKE '%{$parametroNome}%')";
                 }
+            }
+
+            # concurso
+            if (!is_null($parametroConcurso) AND $parametroConcurso<>"*") {
+                # Verifica se o concurso é de Adm & Tec ou se é de Professor
+                $concurso = new Concurso();
+                $dados = $concurso->get_dados($parametroConcurso);
+                $tipo = $dados['tipo'];
+                
+                if ($tipo == 1) {
+                    $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
+                } else {
+                    $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
+                }                
             }
 
             # E-mail
@@ -460,6 +496,20 @@ if ($acesso) {
                         $select .= " AND (tbtipocargo.cargo = '{$parametroCargo}')";
                     }
                 }
+            }
+            
+            # concurso
+            if (!is_null($parametroConcurso) AND $parametroConcurso<>"*") {
+                # Verifica se o concurso é de Adm & Tec ou se é de Professor
+                $concurso = new Concurso();
+                $dados = $concurso->get_dados($parametroConcurso);
+                $tipo = $dados['tipo'];
+                
+                if ($tipo == 1) {
+                    $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
+                } else {
+                    $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
+                }                
             }
 
             # Perfil

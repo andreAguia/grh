@@ -1039,6 +1039,7 @@ class Concurso {
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidorers Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Ativos - Lotação", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosLotacao", $ativos],
+                ["Servidores Ativos - Emails", "cadastroConcursoAdm.php?fase=email", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];

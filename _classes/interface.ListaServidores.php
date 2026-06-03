@@ -359,8 +359,8 @@ class ListaServidores {
         }
 
         # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por nome
-        if (($this->ordenacao <> "2 asc") AND ($this->ordenacao <> "2 desc")) {
-            $select .= ", 2 asc";
+        if (($this->ordenacao <> "tbpessoa.nome asc") AND ($this->ordenacao <> "tbpessoa.nome desc")) {
+            $select .= ", tbpessoa.nome asc";
         }
 
 //        # Garante que não importando a ordenação principal a listagem sempre ordenara em segundo plano por admissão

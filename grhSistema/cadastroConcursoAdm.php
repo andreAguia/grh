@@ -574,7 +574,7 @@ if ($acesso) {
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorioAtivosLotacao");
+            $botaoRel->set_url("../grhRelatorios/estatutarios.ativos.porLotacao.porConcurso.php");
             $botaoRel->set_imagem($imagem2);
             $menu->add_link($botaoRel, "right");
 
@@ -1189,19 +1189,6 @@ if ($acesso) {
             if ($parametroCargo <> "*") {
                 $lista->set_cargo($parametroCargo);
             }
-            $lista->showRelatorio();
-            break;
-
-         case "relatorioAtivosLotacao" :
-            # Lista de Servidores Ativos
-            $lista = new ListaServidores('Servidores Ativos');
-            $lista->set_situacao(1);
-            $lista->set_concurso($idConcurso);
-            if ($parametroLotacao <> "*") {
-                $lista->set_lotacao($parametroLotacao);   
-                $lista->set_ordenacao("DIR asc,GER asc");
-            }
-            $lista->set_agrupamento(3);
             $lista->showRelatorio();
             break;
 

@@ -244,9 +244,8 @@ if ($acesso) {
 
             $grid->fechaColuna();
             $grid->abreColuna(9);
-            
-            #################################################################################
 
+            #################################################################################
             # Exibe a tabela de problemas
             $selectProblemas = "SELECT obs
                                   FROM tbtransporte
@@ -264,13 +263,14 @@ if ($acesso) {
             $tabela->set_align(["left"]);
             $tabela->set_bordaInterna(true);
             $tabela->show();
-            
+
             #################################################################################                                  
             # Servidores que receberam
             if ($parametroRecebeu == "Sim") {
                 $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')
                          FROM tbtransporte JOIN tbservidor USING (idServidor) 
@@ -322,6 +322,7 @@ if ($acesso) {
                 $select = "SELECT tbservidor.idfuncional,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
+                              tbservidor.dtAdmissao,
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}'),
                               CONCAT(tbservidor.idServidor,'-','{$parametroMes}','-','{$parametroAno}')
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)                                         
@@ -374,15 +375,15 @@ if ($acesso) {
 
             $tabela = new Tabela();
             $tabela->set_titulo('Área de Auxílio Transporte - ' . get_nomeMes($parametroMes) . " / {$parametroAno}");
-            $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Situação", "Recebeu?"]);
-            $tabela->set_width([10, 30, 20, 30, 10]);
+            $tabela->set_label(["IdFuncional", "Servidor", "Lotação", "Admissão", "Situação", "Recebeu?"]);
+            $tabela->set_width([10, 20, 20, 10, 30, 10]);
             $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "left", "left"]);
+            $tabela->set_align(["center", "left", "left", "center", "left"]);
             $tabela->set_classe([null, "pessoal", "pessoal"]);
             $tabela->set_metodo([null, "get_nomeECargoEPerfilESituacao", "get_lotacao"]);
-            $tabela->set_funcao([null, null, null, "exibeSituacaoAuxilioTransporte", "exibeRecebeuAuxilioTransporte"]);
+            $tabela->set_funcao([null, null, null, "date_to_php", "exibeSituacaoAuxilioTransporte", "exibeRecebeuAuxilioTransporte"]);
             #$tabela->set_bordaInterna(true);
-            
+
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');
             $tabela->show();

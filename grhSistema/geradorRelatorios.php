@@ -53,6 +53,7 @@ $postDtNascimento = post('postDtNascimento');
 $postSexo = post('postSexo');
 $postIdade = post('postIdade');
 $postTelefone = post('postTelefone');
+$postEmailPessoal = post('postEmailPessoal');
 
 # Dados Financeiros
 $postNivelFaixaPadrao = post('postNivelFaixaPadrao');
@@ -506,6 +507,15 @@ if ($acesso) {
     $controle->set_valor($postTelefone);
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
+    $form->add_item($controle);
+    
+    # E-mail Pessoal
+    $controle = new Input('postEmailPessoal', 'simnao', 'E-mail:', 1);
+    $controle->set_title('E-mail do Servidor');
+    $controle->set_valor($postEmailPessoal);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $controle->set_linha(8);
     $form->add_item($controle);
     
     /*
@@ -1118,6 +1128,17 @@ if ($acesso) {
         $method[] = "get_telefoneCelular";
         $function[] = "";
     }
+    
+    # E-mail Pessoal
+    if ($postEmailPessoal) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "E-mail Pessoal";
+        $align[] = "left";
+        $class[] = "Pessoal";
+        $method[] = "get_emailPessoal";
+        $function[] = "";
+    }
+
 
     # Assinatura
     if ($postAssinatura) {

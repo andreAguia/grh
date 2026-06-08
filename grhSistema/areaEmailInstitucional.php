@@ -107,14 +107,21 @@ if ($acesso) {
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
 
-            # e-mail
+            # e-mail Institucional
             if ($parametroTipo <> "Sem E-mail Institucional") {
-                $botaoci = new Link("Enviar e-mails", "?fase=email");
+                $botaoci = new Link("Enviar e-mails<br/>Institucionais", "?fase=email1", null, "Institucional");
                 $botaoci->set_target("_blank");
                 $botaoci->set_class('button');
                 $botaoci->set_title('Relação de e-mails dos servidores desta listagem');
                 $menu1->add_link($botaoci, "right");
             }
+
+            # e-mail Pessoal
+            $botaoci = new Link("Enviar e-mails<br/>Pessoais", "?fase=email2");
+            $botaoci->set_target("_blank");
+            $botaoci->set_class('button');
+            $botaoci->set_title('Relação de e-mails dos servidores desta listagem');
+            $menu1->add_link($botaoci, "right");
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
@@ -278,7 +285,8 @@ if ($acesso) {
                               idServidor,
                               idServidor,
                               dtAdmissao,
-                              emailUenf                              
+                              emailUenf,
+                              emailPessoal                          
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbperfil USING (idPerfil)
                                               LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
@@ -307,17 +315,17 @@ if ($acesso) {
             }
 
             # concurso
-            if (!is_null($parametroConcurso) AND $parametroConcurso<>"*") {
+            if (!is_null($parametroConcurso) AND $parametroConcurso <> "*") {
                 # Verifica se o concurso é de Adm & Tec ou se é de Professor
                 $concurso = new Concurso();
                 $dados = $concurso->get_dados($parametroConcurso);
                 $tipo = $dados['tipo'];
-                
+
                 if ($tipo == 1) {
                     $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
                 } else {
                     $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
-                }                
+                }
             }
 
             # E-mail
@@ -375,10 +383,10 @@ if ($acesso) {
 
             # Monta a tabela
             $tabela = new Tabela();
-            $tabela->set_titulo("Área do E-mail Institucional");
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional"]);
-            $tabela->set_align(["center", "left", "center", "center", "left"]);
-            $tabela->set_width([10, 30, 30, 10, 30]);
+            $tabela->set_titulo("Área do E-mail");
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional", "E-mail Pessoal"]);
+            $tabela->set_align(["center", "left", "center", "center", "left", "left"]);
+            $tabela->set_width([10, 20, 20, 10, 20, 20]);
             $tabela->set_funcao([null, null, null, "date_to_php"]);
             $tabela->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargo", "get_lotacao"]);
@@ -446,7 +454,7 @@ if ($acesso) {
             }
 
             $relatorio->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Lotação", "Admissão", "E-mail Institucional"]);
-            $relatorio->set_align(["center", "left", "center", "center", "left"]);
+            $relatorio->set_align(["center", "left", "center", "center"]);
             $relatorio->set_width([10, 30, 30, 10, 30]);
             $relatorio->set_funcao([null, null, null, "date_to_php"]);
             $relatorio->set_classe(["Pessoal", "Pessoal", "Pessoal"]);
@@ -459,7 +467,7 @@ if ($acesso) {
 
         ################################################################
 
-        case "email" :
+        case "email1" :
             # Exibe a lista de email para ser compiada e colada
             # quando se deseja enviar e-mails para todos os
             # servidores da listagem
@@ -497,19 +505,94 @@ if ($acesso) {
                     }
                 }
             }
-            
+
             # concurso
-            if (!is_null($parametroConcurso) AND $parametroConcurso<>"*") {
+            if (!is_null($parametroConcurso) AND $parametroConcurso <> "*") {
                 # Verifica se o concurso é de Adm & Tec ou se é de Professor
                 $concurso = new Concurso();
                 $dados = $concurso->get_dados($parametroConcurso);
                 $tipo = $dados['tipo'];
-                
+
                 if ($tipo == 1) {
                     $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
                 } else {
                     $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
-                }                
+                }
+            }
+
+            # Perfil
+            if (!empty($parametroPerfil)) {
+                $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
+            } else {
+                $select .= " AND tbperfil.tipo <> 'Outros'";
+            }
+
+            $select .= " ORDER BY tbpessoa.nome";
+
+            $pessoal = new Pessoal();
+            $retorno = $pessoal->select($select);
+
+            foreach ($retorno as $item) {
+                if (!empty($item[0])) {
+                    echo $item[0] . ", ";
+                }
+            }
+
+            break;
+
+        ################################################################
+
+        case "email2" :
+            # Exibe a lista de email para ser compiada e colada
+            # quando se deseja enviar e-mails para todos os
+            # servidores da listagem
+            # Pega os dados
+
+            $select = "SELECT tbpessoa.emailPessoal
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)       
+                                              JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                         WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                           AND tbservidor.situacao = 1";
+            # Lotacao
+            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
+                # Verifica se o que veio é numérico
+                if (is_numeric($parametroLotacao)) {
+                    $select .= " AND (tblotacao.idlotacao = '{$parametroLotacao}')";
+                } else { # senão é uma diretoria genérica
+                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                }
+            }
+
+            # Cargo
+            if (!empty($parametroCargo)) {
+                if (is_numeric($parametroCargo)) {
+                    $select .= " AND (tbcargo.idcargo = {$parametroCargo})";
+                } else { # senão é nivel do cargo
+                    if ($parametroCargo == "Professor") {
+                        $select .= " AND (tbcargo.idcargo = 128 OR  tbcargo.idcargo = 129)";
+                    } elseif ($parametroCargo == "Administrativo") {
+                        $select .= " AND (tbcargo.idcargo <> 128 AND  tbcargo.idcargo <> 129)";
+                    } else {
+                        $select .= " AND (tbtipocargo.cargo = '{$parametroCargo}')";
+                    }
+                }
+            }
+
+            # concurso
+            if (!is_null($parametroConcurso) AND $parametroConcurso <> "*") {
+                # Verifica se o concurso é de Adm & Tec ou se é de Professor
+                $concurso = new Concurso();
+                $dados = $concurso->get_dados($parametroConcurso);
+                $tipo = $dados['tipo'];
+
+                if ($tipo == 1) {
+                    $select .= ' AND (tbservidor.idConcurso = ' . $parametroConcurso . ')';
+                } else {
+                    $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
+                }
             }
 
             # Perfil

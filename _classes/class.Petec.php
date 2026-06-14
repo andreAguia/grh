@@ -14,6 +14,7 @@ class Petec {
         # 4 - Nome do arquivo pdf da portaria
         # 5 - Meses
         # 6 - Valor
+        # 7 - Tema do Curso
         # Verifica se foi preenchido
         if (is_null($idMarcador)) {
             return null;
@@ -27,7 +28,8 @@ class Petec {
                         "10/03/2026",
                         74,
                         "Agosto, Setembro, Outubro e Novembro de 2025",
-                        "R$ 3.000,00"
+                        "R$ 3.000,00",
+                        "Curso cuja temática envolva, de algum modo, o aperfeiçoamento tecnológico, inclusive, mas não somente, na área de inteligência artificial."
                     ];
                     break;
 
@@ -39,7 +41,8 @@ class Petec {
                         "10/03/2026",
                         75,
                         "Dezembro de 2025 e Janeiro de 2026",
-                        "R$ 3.000,00"
+                        "R$ 3.000,00",
+                        "Curso cuja temática envolva, de algum modo, o aperfeiçoamento tecnológico, inclusive, mas não somente, na área de inteligência artificial."
                     ];
                     break;
 
@@ -51,7 +54,8 @@ class Petec {
                         "30/06/2026",
                         76,
                         "Fevereiro, Março, Abril e Maio de 2026",
-                        "R$ 3.000,00"
+                        "R$ 3.000,00",
+                        "Curso(s) cuja temática envolva o aprimoramento tecnológico, inclusive, mas não exclusivamente, na área de inteligência artificial."
                     ];
 
                 case 8 :
@@ -62,7 +66,8 @@ class Petec {
                         "18/12/2026",
                         88,
                         "Junho, Julho, Agosto, Setembro, Outubro, Novembro e Dezembro de 2026",
-                        "R$ 3.000,00"
+                        "R$ 3.000,00",
+                        "Curso devendo obrigatoriamente contemplar as duas temáticas: Inteligência Artificial (IA) e Lei Geral de Proteção de Dados (LGPD)."
                     ];
                     break;
             }
@@ -288,9 +293,9 @@ class Petec {
         # Tabela
         $tabela = new Tabela();
         $tabela->set_conteudo([
-            ["418/25 e 473/25", $this->get_numInscritos(1,$lotacao), $this->get_numNaoInscritos(1,$lotacao)],
-            ["481/25", $this->get_numInscritos(2,$lotacao), $this->get_numNaoInscritos(2,$lotacao)],
-            ["518/26", $this->get_numInscritos(3,$lotacao), $this->get_numNaoInscritos(3,$lotacao)],
+            ["418/25 e 473/25", $this->get_numInscritos(1, $lotacao), $this->get_numNaoInscritos(1, $lotacao)],
+            ["481/25", $this->get_numInscritos(2, $lotacao), $this->get_numNaoInscritos(2, $lotacao)],
+            ["518/26", $this->get_numInscritos(3, $lotacao), $this->get_numNaoInscritos(3, $lotacao)],
         ]);
         $tabela->set_titulo("Inscrição de Servidores");
         $tabela->set_subtitulo($labelLotação);
@@ -711,7 +716,7 @@ class Petec {
     ###########################################################
 
     /*
-     * Retorna o número de registros da tabela temporária do upload
+     * Exibe Dados da Portaria
      */
 
     function exibeDadosPortaria($idMarcador) {
@@ -719,12 +724,21 @@ class Petec {
         # Exibe os dados da Portaria
         $dados = $this->get_arrayPetec($idMarcador);
 
-        p("Prazo de Entrega: {$dados[3]}", "pPetecLabel");
-        #p($dados[3], "pPetecInfo");
+        # Tema
+        p("Tema do Curso:", "pPetecLabel");
+        p($dados[7], "pPetecTema");
+        
+        # Horas
         p("Mínimo de Horas: {$dados[2]}", "pPetecLabel");
-        #p($dados[2], "pPetecInfo");
+        #p($dados[2], "pPetecTema");
+        
+        # A Partir de
         p("Cursos a Partir de: {$dados[1]}", "pPetecLabel");
-        #p($dados[1], "pPetecInfo");
+        #p($dados[1], "pPetecTema");
+        
+        # Prazo de Entrega
+        p("Prazo de Entrega: {$dados[3]}", "pPetecLabel");
+        #p($dados[3], "pPetecTema");
     }
 
     ###########################################################
@@ -903,7 +917,7 @@ class Petec {
                     $select1 .= " AND (tblotacao.DIR = '{$lotacao}')";
                 }
             }
-            
+
             $pessoal = new Pessoal();
             $row = $pessoal->select($select1, false);
 

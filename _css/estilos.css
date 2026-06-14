@@ -402,6 +402,15 @@ p#pPetecInfo{
     text-align: center;
 }
 
+p#pPetecTema{
+    padding-bottom: 4px;
+    padding-top: 0px;
+    margin: 0px;
+    font-size: 12px;
+    text-align: center;
+    color: blue;
+}
+
 /*******************************************
  * Cadastro de Concurso
  *******************************************/

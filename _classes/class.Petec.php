@@ -51,7 +51,7 @@ class Petec {
                         "481/25",
                         "18/12/2025",
                         20,
-                        "31/07/2026<br/>PRORROGADO",
+                        "31/07/2026",
                         76,
                         "Fevereiro, Março, Abril e Maio de 2026",
                         "R$ 3.000,00",

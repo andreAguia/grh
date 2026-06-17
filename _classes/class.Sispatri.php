@@ -777,8 +777,10 @@ class Sispatri {
 
 ###########################################################
 
-    public function get_numServidoresAtivos() {
+    public function get_numServidoresAtivosEntregaramDec() {
 
+        # Informa o número de Servidores Ativos que entregaram o sispatri
+        # E que não foram retirados por estarem cedidos, etc
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional
                     FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
@@ -789,6 +791,70 @@ class Sispatri {
                    AND tbperfil.tipo <> "Outros" 
                    AND tbservidor.situacao = 1
                    AND (retiraSispatri <> "s" OR retiraSispatri is NULL)';
+
+        # Lotacao
+        if (!empty($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->count($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
+    public function get_numServidoresAtivosRetiradosEntregaram() {
+
+        # Informa o número de Servidores Ativos que entregaram o sispatri
+        # E que foram retirados por estarem cedidos, etc
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional
+                     FROM tbsispatri LEFT JOIN tbservidor USING (idServidor)
+                                          JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                          JOIN tbperfil USING (idPerfil)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbperfil.tipo <> "Outros" 
+                   AND tbservidor.situacao = 1
+                   AND retiraSispatri = "s"';
+
+        # Lotacao
+        if (!empty($this->lotacao)) {
+            # Verifica se o que veio é numérico
+            if (is_numeric($this->lotacao)) {
+                $select .= ' AND (tblotacao.idlotacao = "' . $this->lotacao . '")';
+            } else { # senão é uma diretoria genérica
+                $select .= ' AND (tblotacao.DIR = "' . $this->lotacao . '")';
+            }
+        }
+
+        $pessoal = new Pessoal();
+        $retorno = $pessoal->count($select);
+
+        return $retorno;
+    }
+
+###########################################################
+
+    public function get_numServidoresAtivosRetirados() {
+
+        # Informa o número de Servidores Ativos Retirados da listagem
+        # Pega os dados
+        $select = 'SELECT tbservidor.idfuncional
+                     FROM tbservidor JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                     JOIN tbperfil USING (idPerfil)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                   AND tbperfil.tipo <> "Outros" 
+                   AND tbservidor.situacao = 1
+                   AND retiraSispatri = "s"';
 
         # Lotacao
         if (!empty($this->lotacao)) {
@@ -978,16 +1044,26 @@ class Sispatri {
 
     public function exibeResumo() {
 
-        # Servidores ativos que Entregaram o sispatri
-        $numSispatriAtivos = $this->get_numServidoresAtivos();
-
         # Servidores no total
         $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numServidoresAtivos($this->lotacao);
+        
+        # Servidores Retirados
+        $totalServRetirados = $this->get_numServidoresAtivosRetirados();
+
+        # Servidores ativos que Entregaram o Sispatri
+        $numServidoresEntregaram = $this->get_numServidoresAtivosEntregaramDec();
+        $numServidoresEntregaramRetirados = $this->get_numServidoresAtivosRetiradosEntregaram();
+        $totalServidoresEntregaram = $numServidoresEntregaram + $numServidoresEntregaramRetirados;
+
+        # Servidores Ativos que NÃO ENTREGARAM o Sisptri
+        $numServidoresNaoEntregaramRetirados = $totalServRetirados - $numServidoresEntregaramRetirados;        
+        $numServidoresNaoEntregaram = $numServidores - $numServidoresEntregaram - $totalServRetirados;        
+        $totalServidoresNaoEntregaram = $numServidoresNaoEntregaram + $numServidoresNaoEntregaramRetirados;
 
         $array = array(
-            array("Entregaram o Sispatri", $numSispatriAtivos),
-            array("Não Entregaram", $numServidores - $numSispatriAtivos)
+            array("Sim", $numServidoresEntregaram, $numServidoresEntregaramRetirados, $totalServidoresEntregaram),
+            array("Não", $numServidoresNaoEntregaram, $numServidoresNaoEntregaramRetirados, $totalServidoresNaoEntregaram)
         );
 
 //        tituloTable("Servidores Ativos");
@@ -1001,9 +1077,9 @@ class Sispatri {
         $tabela->set_titulo("Servidores Ativos");
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_conteudo($array);
-        $tabela->set_label(["Descrição", "Servidores"]);
-        $tabela->set_align(["left", "center"]);
-        $tabela->set_colunaSomatorio(1);
+        $tabela->set_label(["Entregaram", "Servidores", "Retirados", "Total"]);
+        #$tabela->set_align(["left", "center"]);
+        $tabela->set_colunaSomatorio([1, 2, 3]);
         $tabela->set_totalRegistro(false);
         $tabela->show();
     }
@@ -1013,7 +1089,7 @@ class Sispatri {
     public function exibeResumoPorCargoEntregaram() {
 
         # Servidores ativos que Entregaram o sispatri
-        $numSispatriAtivos = $this->get_numServidoresAtivos();
+        $numSispatriAtivos = $this->get_numServidoresAtivosEntregaramDec();
 
         # Servidores no total
         $pessoal = new Pessoal();
@@ -1069,7 +1145,7 @@ class Sispatri {
     public function exibeResumoPorCargoNaoEntregaram() {
 
         # Servidores ativos que Entregaram o sispatri
-        $numSispatriAtivos = $this->get_numServidoresAtivos();
+        $numSispatriAtivos = $this->get_numServidoresAtivosEntregaramDec();
 
         # Classe
         $pessoal = new Pessoal();
@@ -1913,7 +1989,7 @@ class Sispatri {
     public function exibeResumoRetirados() {
 
         # Servidores ativos que Entregaram o sispatri
-        $numSispatriAtivos = $this->get_numServidoresAtivos();
+        $numSispatriAtivos = $this->get_numServidoresAtivosEntregaramDec();
 
         # Servidores no total
         $pessoal = new Pessoal();

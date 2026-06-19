@@ -22,17 +22,17 @@ class CalendarioPgto {
             ["Janeiro", "04/02"],
             ["Fevereiro", "04/03"],
             ["Março", "06/04"],
-            ["Abril", "06/05"],
-            ["Maio", "03/06"],
-            ["13º Salário (1ª Parcela)", "30/06"],
-            ["Junho", "03/07"],
-            ["Julho", "05/08"],
-            ["Agosto", "03/09"],
-            ["Setembro", "05/10"],
-            ["Outubro", "05/11"],
-            ["Novembro", "03/12"],
-            ["13º Salário (2ª Parcela)", "18/12"],
-            ["Dezembro", "06/01/2027"]
+            ["Abril", "01/05"],
+            ["Maio", "01/06"],
+            ["13º Salário (1ª Parcela)", "26/05"],
+            ["Junho", "01/07"],
+            ["Julho", "01/08"],
+            ["Agosto", "01/09"],
+            ["Setembro", "01/10"],
+            ["Outubro", "01/11"],
+            ["Novembro", "01/12"],
+            ["13º Salário (2ª Parcela)", "19/12"],
+            ["Dezembro", "01/01/2027"]
         ];
 
         # Exemplo mais complexo

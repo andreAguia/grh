@@ -122,7 +122,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -132,11 +132,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -160,7 +160,7 @@ class Sispatri {
         } else {
             $select .= ' ORDER BY 4, 2';
         }
-
+        
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
 
@@ -209,7 +209,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -219,11 +219,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -315,7 +315,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -325,11 +325,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -421,7 +421,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -431,11 +431,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -529,7 +529,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .=  'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -539,11 +539,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -635,7 +635,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -645,11 +645,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 
@@ -730,7 +730,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -740,11 +740,11 @@ class Sispatri {
 
                     # Percorre as palavras
                     foreach ($palavras as $item) {
-                        $select .= 'AND (tbpessoa.nome LIKE "%' . $item . '%")';
+                        $select .= ' AND (tbpessoa.nome LIKE "%' . $item . '%")';
                     }
                 } else {
                     $select .= ' AND (';
-                    $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                    $select .= ' tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
                 }
             }
 

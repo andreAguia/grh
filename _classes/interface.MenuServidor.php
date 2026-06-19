@@ -1186,23 +1186,27 @@ class MenuServidor {
             }
         }
 
-        $div = new Div("divEdita1");
-        $div->abre();
+        # Edição do ramal
+        if ($idLotacao <> 113 AND $idLotacao <> 117) {
 
-        $div = new Div("divEdita2");
-        $div->abre();
+            $div = new Div("divEdita1");
+            $div->abre();
 
-        set_session("origemRamal", "servidorMenu.php");
+            $div = new Div("divEdita2");
+            $div->abre();
 
-        # Botão
-        $botaoEditar = new Link("Editar", "areaTelefones.php?fase=editar&id={$idLotacao}");
-        $botaoEditar->set_class('tiny button secondary');
-        $botaoEditar->set_title('Editar ramais do setor');
-        $botaoEditar->show();
+            set_session("origemRamal", "servidorMenu.php");
 
-        $div->fecha();
+            # Botão
+            $botaoEditar = new Link("Editar", "areaTelefones.php?fase=editar&id={$idLotacao}");
+            $botaoEditar->set_class('tiny button secondary');
+            $botaoEditar->set_title('Editar ramais do setor');
+            $botaoEditar->show();
 
-        $div->fecha();
+            $div->fecha();
+
+            $div->fecha();
+        }
 
         $painel->fecha();
     }
@@ -1289,9 +1293,9 @@ class MenuServidor {
         $painel->abre();
 
         if (empty($pastaSei)) {
-            p("Não Cadastrado", "f16","center");
+            p("Não Cadastrado", "f16", "center");
         } else {
-            p($pastaSei, "f16","center");
+            p($pastaSei, "f16", "center");
         }
 
         $div = new Div("divEdita1");

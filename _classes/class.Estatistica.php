@@ -197,7 +197,7 @@ class Estatistica {
                 }
                         
                 $select .= ' GROUP BY 1, tbpessoa.sexo
-                     ORDER BY grupo desc';
+                     ORDER BY tbperfil.nome desc';
 
                 $this->labelTabela = ["Perfil", "Feminino", "Masculino", "Total"];
                 $this->labelGrafico = ["Perfil", "Feminino", "Masculino"];

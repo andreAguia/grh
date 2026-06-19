@@ -31,9 +31,9 @@ if ($acesso) {
 
     # Verifica a fase do programa
     if (Verifica::acesso($idUsuario, 12)) {
-        $fase = get('fase', 'ver');
-    }else{
         $fase = get('fase', 'editar');
+    } else {
+        $fase = get('fase', 'ver');
     }
 
     # Pega o idPessoa

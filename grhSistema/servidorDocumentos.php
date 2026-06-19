@@ -30,9 +30,9 @@ if ($acesso) {
 
     # Verifica a fase do programa
     if (Verifica::acesso($idUsuario, 12)) {
-        $fase = get('fase', 'ver');
-    } else {
         $fase = get('fase', 'editar');
+    } else {
+        $fase = get('fase', 'ver');
     }
 
     # Pega dados dessa matrícula
@@ -119,14 +119,14 @@ if ($acesso) {
                                   FROM tbestado
                               ORDER BY 2');
     array_unshift($estado, array(null, null));
-    
+
     # combo de categoria da carteira de habilitação
     $categoria = $pessoal->select('SELECT categoria,
                                        categoria
                                   FROM tbhabilitacaocategoria
                               ORDER BY idHabilitacaoCategoria');
     array_unshift($categoria, array(null, null));
-    
+
     # Campos para o formulario
     $campos = array(
         array('linha' => 1,

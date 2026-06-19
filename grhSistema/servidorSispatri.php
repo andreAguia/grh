@@ -48,7 +48,8 @@ if ($acesso) {
     $objeto->set_nome('Retira Nome da Lista do Sispatri?');
 
     # select do edita
-    $objeto->set_selectEdita("SELECT retiraSispatri
+    $objeto->set_selectEdita("SELECT retiraSispatri,
+                                     motivoRetiradaSispatri
                                 FROM tbservidor
                                WHERE idServidor = {$idServidorPesquisado}");
 
@@ -82,7 +83,15 @@ if ($acesso) {
             'label' => 'Retira Nome da Lista do Sispatri',
             'size' => 10,
             'col' => 3,
-            'tipo' => 'simnao3')));
+            'tipo' => 'simnao3'),
+        array('nome' => 'motivoRetiradaSispatri',
+            'label' => 'Motivo:',
+            'tipo' => 'texto',
+            'size' => 250,
+            'col' => 9,
+            'title' => 'Motivo da retirada da lista.',
+            'linha' => 1),
+        ));
     # Log
     $objeto->set_idUsuario($idUsuario);
     $objeto->set_idServidorPesquisado($idServidorPesquisado);

@@ -1047,7 +1047,7 @@ class Sispatri {
         # Servidores no total
         $pessoal = new Pessoal();
         $numServidores = $pessoal->get_numServidoresAtivos($this->lotacao);
-        
+
         # Servidores Retirados
         $totalServRetirados = $this->get_numServidoresAtivosRetirados();
 
@@ -1057,8 +1057,8 @@ class Sispatri {
         $totalServidoresEntregaram = $numServidoresEntregaram + $numServidoresEntregaramRetirados;
 
         # Servidores Ativos que NÃO ENTREGARAM o Sisptri
-        $numServidoresNaoEntregaramRetirados = $totalServRetirados - $numServidoresEntregaramRetirados;        
-        $numServidoresNaoEntregaram = $numServidores - $numServidoresEntregaram - $totalServRetirados;        
+        $numServidoresNaoEntregaramRetirados = $totalServRetirados - $numServidoresEntregaramRetirados;
+        $numServidoresNaoEntregaram = $numServidores - $numServidoresEntregaram - $totalServRetirados;
         $totalServidoresNaoEntregaram = $numServidoresNaoEntregaram + $numServidoresNaoEntregaramRetirados;
 
         $array = array(
@@ -1254,7 +1254,7 @@ class Sispatri {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Ativos Retirados da Listagem');
             $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
-            $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Situação"]);
+            $tabela->set_label(["IdFuncional", "Nome", "Cargo", "Lotação", "Situação", "Motivo"]);
             $tabela->set_conteudo($result);
             $tabela->set_align(["center", "left", "left", "left"]);
             $tabela->set_classe([null, null, "pessoal"]);
@@ -2055,7 +2055,8 @@ class Sispatri {
                          tbpessoa.nome,
                          tbservidor.idServidor,
                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,
-                         tbservidor.idServidor
+                         tbservidor.idServidor,
+                         motivoRetiradaSispatri
                     FROM tbservidor JOIN tbpessoa USING (idPessoa)
                                     JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                     JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)

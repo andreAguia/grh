@@ -160,7 +160,7 @@ class Sispatri {
         } else {
             $select .= ' ORDER BY 4, 2';
         }
-        
+
         $pessoal = new Pessoal();
         $retorno = $pessoal->select($select);
 
@@ -529,7 +529,7 @@ class Sispatri {
         if (!is_null($this->matNomeId)) {
             if (is_numeric($this->matNomeId)) {
                 $select .= ' AND ((';
-                $select .=  'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
+                $select .= 'tbpessoa.nome LIKE "%' . $this->matNomeId . '%")';
             } else {
 
                 # Verifica se tem espaços
@@ -1079,6 +1079,7 @@ class Sispatri {
         $tabela->set_conteudo($array);
         $tabela->set_label(["Entregaram", "Servidores", "Retirados", "Total"]);
         #$tabela->set_align(["left", "center"]);
+        $tabela->set_width([25, 25, 25, 25]);
         $tabela->set_colunaSomatorio([1, 2, 3]);
         $tabela->set_totalRegistro(false);
         $tabela->show();

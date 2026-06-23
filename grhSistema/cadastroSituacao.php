@@ -128,7 +128,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'required' => true,
             'autofocus' => true,
-            'size' => 15),
+            'size' => 50),
         array('linha' => 2,
             'nome' => 'obs',
             'label' => 'Observação:',

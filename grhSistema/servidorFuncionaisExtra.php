@@ -5,6 +5,7 @@
  * 
  */
 
+# Pega o idServidor
 $pessoal = new Pessoal();
 $idServidorPesquisado = get_session('idServidorPesquisado');
 
@@ -113,19 +114,19 @@ if (!is_null($dtSaida)) {
 }
 
 # Verifica se um servidor ativo data de saida ou motivo preenchido
-if (($situacao == 1) AND ((!is_null($dtSaida)) OR (!is_null($motivo)))) {
+if (($situacao == 1 OR $situacao == 8) AND ((!is_null($dtSaida)) OR (!is_null($motivo)))) {
     $erro = 1;
     $msgErro .= 'Esse servidor está ativo no sistema. Deverá ter a data de saída e o motivo em branco!\n';
 }
 
-# Verifica se um servidor com situacao <> 1 tiver a data de saida ou motivo em branco
-if (($situacao <> 1) AND ((is_null($dtSaida)) OR (is_null($motivo)))) {
+# Verifica se um servidor com situacao <> 1 AND <> 9 tiver a data de saida ou motivo em branco
+if (($situacao <> 1 AND $situacao <> 8) AND ((is_null($dtSaida)) OR (is_null($motivo)))) {
     $erro = 1;
     $msgErro .= 'A data de saída e o motivo devem ser preenchidos para todo servidor inativo!\n';
 }
 
 # Verifica se o servidor está sendo exonerado / demitido mas ainda possui cargo em comissão
-if (($situacao <> 1) AND (!empty($pessoal->get_cargoComissao($idServidorPesquisado)))) {
+if (($situacao <> 1 AND $situacao <> 8) AND (!empty($pessoal->get_cargoComissao($idServidorPesquisado)))) {
     # Pega os dados do cargo em comissão
 
     $dados = $pessoal->get_cargoComissaoDados($idServidorPesquisado);

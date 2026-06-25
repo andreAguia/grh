@@ -1006,9 +1006,11 @@ class Sispatri {
                           tbsispatri.obs,
                           idSispatri
                      FROM tbsispatri LEFT JOIN tbservidor USINg (idServidor)
-                    WHERE idServidor Is NULL OR situacao <> 1');
+                    WHERE idServidor Is NULL OR situacao <> 1
+                    ORDER BY situacao');
         $tabela = new Tabela();
         $tabela->set_titulo("Problemas na Importação dos Servidores que Entregaram", null, "Veja abaixo os problemas encontrados:");
+        $tabela->set_subtitulo("Servidores que estão na listagem do Sispatri,<br/> mas não foram encontrados no cadastro de ativos do Sistema de Pessoal");
         $tabela->set_conteudo($array1);
         $tabela->set_label(["CPF", "Situação", "Outras informações"]);
         $tabela->set_align(["center", "center", "left"]);
@@ -1029,6 +1031,7 @@ class Sispatri {
 
         $tabela = new Tabela();
         $tabela->set_titulo("Problemas na Importação dos Servidores que NÃO Entregaram", null, "Veja abaixo os problemas encontrados:");
+        $tabela->set_subtitulo("Servidores que estão na listagem do Sispatri,<br/>mas não foram encontrados no cadastro de ativos do Sistema de Pessoal");
         $tabela->set_conteudo($array2);
         $tabela->set_label(["CPF", "Situação", "Outras informações"]);
         $tabela->set_align(["center", "center", "left"]);

@@ -307,6 +307,7 @@ if ($acesso) {
 
             $menu->add_item('titulo1', 'Dependentes');
             $menu->add_item('linkWindow', 'Relatório Servidores Ativos - com Dependente (Filhos)', '../grhRelatorios/dependentes.servidores.ativos.comFilho.php');
+            $menu->add_item('linkWindow', 'Relatório Servidores Ativos - com Dependente (Filhos) até 7 anos com E-mail', '../grhRelatorios/dependentes.servidores.ativos.comFilho7.email.php');
             $menu->add_item('linkWindow', 'Relatório de Dependentes - Filhos de Servidores Ativos', '../grhRelatorios/dependentes.filhos.ativos.php');
 
             $menu->add_item('titulo1', 'Auxílio Creche');

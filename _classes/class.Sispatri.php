@@ -174,7 +174,7 @@ class Sispatri {
         # Pega os dados
         $select = 'SELECT tbservidor.idfuncional,
                           tbservidor.idServidor,
-                          concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")) lotacao,';
+                          dtAdmissao,';
 
         # Exibe o afastamento ou não
         if ($this->exibeAfastamento) {
@@ -1314,22 +1314,22 @@ class Sispatri {
         $tabela->set_titulo('Servidores Ativos que NÃO Entregaram a Declaração do Sispatri');
         $tabela->set_subtitulo($pessoal->get_nomeLotacao($this->lotacao));
         $tabela->set_classe([null, "pessoal"]);
-        $tabela->set_metodo([null, "get_nomeECargo"]);
+        $tabela->set_metodo([null, "get_nomeECargoELotacao"]);
         $tabela->set_idCampo('idServidor');
         $tabela->set_editar('?fase=editaServidor');
         $tabela->set_conteudo($result);
 
-        $label = ["IdFuncional", "Servidor", "Lotação"];
-        $align = ["center", "left", "left"];
-        $funcao = [null, null, null];
-        $width = [10, 30, 20];
+        $label = ["IdFuncional", "Servidor", "Admissão"];
+        $align = ["center", "left", "center"];
+        $funcao = [null, null, "date_to_php"];
+        $width = [10, 35, 10];
 
         # Exibe o afastamento ou não
         if ($this->exibeAfastamento) {
             array_push($label, "Afastamentos");
             array_push($align, "left");
             array_push($funcao, "exibeAfastamentoAtual");
-            array_push($width, 20);
+            array_push($width, 25);
         }
 
         # Exibe o e-mail ou não

@@ -45,7 +45,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo('Relatório Servidores Ativos com Dependentes (Filhos)');
-    $relatorio->set_subtitulo('Ordenado pelo Nome do Servidor');
+    $relatorio->set_subtitulo('Com Idade de 0 a 7 anos - Ordenado pelo Nome do Servidor');
     $relatorio->set_label(['IdFuncional', 'Nome', 'E-mail', 'Nome do Filho(a)', 'Idade']);
     $relatorio->set_width([10, 20, 20, 30, 10]);
     $relatorio->set_align(["center", "left", "left", "left"]);

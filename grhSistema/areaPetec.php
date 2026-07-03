@@ -73,7 +73,7 @@ if ($acesso) {
 
     ################################################################
     # Cabeçalho da Página
-    if ($fase <> "relatorio") {
+    if ($fase <> "relatorio" AND $fase <> "exibeEmails") {
         AreaServidor::cabecalho();
         br();
 
@@ -122,7 +122,7 @@ if ($acesso) {
             $botao1->set_class('hollow button');
         }
         $menu1->add_link($botao1, "right");
-        
+
         # Portaria 518/26
         $botao1 = new Link("Portaria 518/26", "?fase=exibeLista&parametroMarcador=8");
         if ($parametroMarcador == 8) {
@@ -148,9 +148,21 @@ if ($acesso) {
         $botaoRel->set_target("_blank");
         $botaoRel->set_imagem($imagem);
 
-        if ($fase <> "geral") {
+        if ($fase <> "geral" AND $fase <> "geral2") {
             if ($parametroSituacao == "Pendentes") {
                 $menu1->add_link($botaoRel, "right");
+            }
+        }
+
+        # E-mails
+        $botaoEmail = new Link("E-mails", "?fase=exibeEmails&parametroMarcador={$parametroMarcador}");
+        $botaoEmail->set_class('button');
+        $botaoEmail->set_title("Informa os e-mails dos servidores");
+        $botaoEmail->set_target("_blank");
+
+        if ($fase <> "geral" AND $fase <> "geral2") {
+            if ($parametroSituacao == "Pendentes") {
+                $menu1->add_link($botaoEmail, "right");
             }
         }
 
@@ -428,6 +440,27 @@ if ($acesso) {
 
             # Horas Insuficientes
             $listaPetec->exibeHorasInsuficientes();
+            break;
+        
+        ################################################################
+        # Exibe Email
+        case "exibeEmails" :
+
+            # Título            
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
+            
+            titulo("Não Entregaram");
+            br();
+
+            # Não Entregaram Certificado            
+            $listaPetec->exibeNaoEntregaramEmails();
+            br(2);
+            
+            titulo("Horas Insuficientes");
+            br();
+
+            # Horas Insuficientes
+            #$listaPetec->exibeHorasInsuficientesEmails();
             break;
     }
     $grid->fechaColuna();

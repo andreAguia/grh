@@ -460,7 +460,7 @@ if ($acesso) {
             br();
 
             # Horas Insuficientes
-            #$listaPetec->exibeHorasInsuficientesEmails();
+            $listaPetec->exibeHorasInsuficientesEmails();
             break;
     }
     $grid->fechaColuna();

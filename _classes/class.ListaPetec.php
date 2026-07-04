@@ -129,6 +129,7 @@ class ListaPetec {
                     $item["idServidor"], // Nome do Servidor e Cargo
                     $item["idServidor"], // Lotação
                     $item["idServidor"], // Perfil
+                    $item["idServidor"], // Admissão
                     $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
                     $item["idServidor"]  // Botão Editar
                 ];
@@ -148,7 +149,8 @@ class ListaPetec {
         $pessoal = new Pessoal();
         $formacao = new Formacao();
 
-        $select2 = "SELECT tbpessoa.emailUenf
+        $select2 = "SELECT emailUenf,
+                           idServidor
                       FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                       LEFT JOIN tbperfil USING (idPerfil)
                                            JOIN tbhistlot USING (idServidor)
@@ -176,8 +178,23 @@ class ListaPetec {
         }
 
         $select2 .= " ORDER BY tbpessoa.nome";
+
         $result2 = $pessoal->select($select2);
-        return $result2;
+
+        foreach ($result2 as $item) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Os não entregues o somatório é zero
+            if ($somatorioHoras[0] == 0) {
+                $novoArray[] = [
+                    $item["emailUenf"]
+                ];
+            }
+        }
+
+        return $novoArray;
     }
 
     ##############################################################
@@ -191,8 +208,8 @@ class ListaPetec {
         $formacao = new Formacao();
 
         $select2 = "SELECT tbservidor.idServidor,
-                               tbpessoa.nome
-                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                           tbpessoa.nome
+                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbperfil USING (idPerfil)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -234,6 +251,7 @@ class ListaPetec {
                     $item["idServidor"], // Nome do Servidor e Cargo
                     $item["idServidor"], // Lotação
                     $item["idServidor"], // Perfil
+                    $item["idServidor"], // Admissão
                     $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
                     $item["idServidor"]  // Botão Editar
                 ];
@@ -243,7 +261,66 @@ class ListaPetec {
         return $novoArray;
     }
 
+    
     ##############################################################
+
+    public function get_arrayHorasInsuficientesEmails() {
+
+        $novoArray = array();
+
+        # Inicia as Classes
+        $pessoal = new Pessoal();
+        $formacao = new Formacao();
+
+        $select2 = "SELECT tbservidor.idServidor,
+                           emailUenf
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbperfil.tipo <> 'Outros'
+                        AND situacao = 1";
+
+        # Verifica se tem filtro por lotação
+        if ($this->lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($this->lotacao)) {
+                $select2 .= " AND tblotacao.idlotacao = {$this->lotacao}";
+            } else { # senão é uma diretoria genérica
+                $select2 .= " AND tblotacao.DIR = '{$this->lotacao}'";
+            }
+        }
+
+        # Inscrição
+        if ($this->inscricao <> "Todos") {
+            if ($this->inscricao == "Inscritos") {
+                $select2 .= " AND tbservidor.{$this->nomeCampo} = 's'";
+            } else {
+                $select2 .= " AND (tbservidor.{$this->nomeCampo} <> 's' OR tbservidor.{$this->nomeCampo} IS NULL)";
+            }
+        }
+
+        $select2 .= " ORDER BY tbpessoa.nome";
+        $result2 = $pessoal->select($select2);
+
+        foreach ($result2 as $item) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Horas Insuficientes são de 0 às horas exigidas na Portaria
+            if ($somatorioHoras[0] > 0 AND $somatorioHoras[0] < $this->horas) {
+                $novoArray[] = [
+                    $item["emailUenf"]
+                ];
+            }
+        }
+
+        return $novoArray;
+    }
+
+    ##############################################################
+
 
     public function get_arraySituacaoRegular() {
 
@@ -348,7 +425,7 @@ class ListaPetec {
     ##############################################################
 
     public function exibeNaoEntregaram() {
-        
+
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {
@@ -359,7 +436,7 @@ class ListaPetec {
         } else {
             $subtitulo = "Servidores Inscritos e Não Inscritos";
         }
-        
+
         if ($this->relatorio) {
             $tabela = new Relatorio();
             $tabela->set_titulo("Portaria Petec {$this->portaria}");
@@ -369,19 +446,19 @@ class ListaPetec {
 
             $tabela->set_bordaInterna(true);
             $tabela->set_dataImpressao(false);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Que NÃO Entregaram Certificados');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas", "Editar"]);
         }
 
-        $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
+        #$tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
         $tabela->set_conteudo($this->get_arrayNaoEntregaram());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_dtAdmissao"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -392,7 +469,7 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
     }
@@ -400,10 +477,10 @@ class ListaPetec {
     ##############################################################
 
     public function exibeNaoEntregaramEmails() {
-        
+
         # Pega os Emails
-        foreach($this->get_arrayNaoEntregaramEmails() as $item){
-            echo $item[0],", ";
+        foreach ($this->get_arrayNaoEntregaramEmails() as $item) {
+            echo $item[0], ", ";
         }
     }
 
@@ -437,19 +514,19 @@ class ListaPetec {
             $tabela->set_menuRelatorio(false);
             $tabela->set_log(false);
             $tabela->set_bordaInterna(true);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas"]);
         } else {
             $tabela = new Tabela();
             $tabela->set_titulo('Servidores Com Horas Insuficientes');
             $tabela->set_subtitulo($subtitulo);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Horas", "Editar"]);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas", "Editar"]);
         }
 
         $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
         $tabela->set_conteudo($this->get_arrayHorasInsuficientes());
         $tabela->set_align(["center", "center", "left"]);
-        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal"]);
-        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_dtAdmissao"]);
 
         if (!$this->relatorio) {
 //            $tabela->set_rowspan(0);
@@ -460,9 +537,19 @@ class ListaPetec {
         if (!$this->relatorio) {
             $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-            $tabela->set_link([null, null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
         }
         $tabela->show();
+    }
+
+    ##############################################################
+
+    public function exibeHorasInsuficientesEmails() {
+
+        # Pega os Emails
+        foreach ($this->get_arrayHorasInsuficientesEmails() as $item) {
+            echo $item[0], ", ";
+        }
     }
 
     ##############################################################

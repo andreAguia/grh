@@ -261,7 +261,6 @@ class ListaPetec {
         return $novoArray;
     }
 
-    
     ##############################################################
 
     public function get_arrayHorasInsuficientesEmails() {
@@ -320,7 +319,6 @@ class ListaPetec {
     }
 
     ##############################################################
-
 
     public function get_arraySituacaoRegular() {
 
@@ -479,8 +477,14 @@ class ListaPetec {
     public function exibeNaoEntregaramEmails() {
 
         # Pega os Emails
-        foreach ($this->get_arrayNaoEntregaramEmails() as $item) {
-            echo $item[0], ", ";
+        $arrayEmails = $this->get_arrayNaoEntregaramEmails();
+
+        if (count($arrayEmails) > 0) {
+            foreach ($arrayEmails as $item) {
+                echo $item[0], ", ";
+            }
+        } else {
+            mensagem("Nenhum Email Encontrado");
         }
     }
 
@@ -547,8 +551,14 @@ class ListaPetec {
     public function exibeHorasInsuficientesEmails() {
 
         # Pega os Emails
-        foreach ($this->get_arrayHorasInsuficientesEmails() as $item) {
-            echo $item[0], ", ";
+        $arrayEmails = $this->get_arrayHorasInsuficientesEmails();
+
+        if (count($arrayEmails) > 0) {
+            foreach ($this->get_arrayHorasInsuficientesEmails() as $item) {
+                echo $item[0], ", ";
+            }
+        } else {
+            mensagem("Nenhum Email Encontrado");
         }
     }
 

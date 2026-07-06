@@ -376,7 +376,6 @@ if ($acesso) {
 
         case "exibeLista2" :
 
-
             # Quadro de Quantidades
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeTituloGeral();
@@ -385,8 +384,15 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
-            #$petec->exibeDadosPortaria2($idMarcador);
             $listaPetec->exibeQuadroQuantidades();
+
+            tituloTable("Dados da Portaria");
+            $painel = new Callout();
+            $painel->abre();
+            
+            $petec->exibeDadosPortaria($parametroMarcador);
+            
+            $painel->fecha();
 
             $grid->fechaColuna();
 
@@ -441,26 +447,26 @@ if ($acesso) {
             # Horas Insuficientes
             $listaPetec->exibeHorasInsuficientes();
             break;
-        
+
         ################################################################
         # Exibe Email
         case "exibeEmails" :
 
             # Título            
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
-            
+
             titulo("Não Entregaram");
             br();
 
             # Não Entregaram Certificado            
             $listaPetec->exibeNaoEntregaramEmails();
             br(2);
-            
+
             titulo("Horas Insuficientes");
             br();
 
             # Horas Insuficientes
-            #$listaPetec->exibeHorasInsuficientesEmails();
+            $listaPetec->exibeHorasInsuficientesEmails();
             break;
     }
     $grid->fechaColuna();

@@ -27,7 +27,7 @@ if ($acesso) {
     $matricula = $pessoal->get_matricula($idServidorPesquisado);
     $lotacao = $pessoal->get_lotacao($idServidorPesquisado);
     $dtAdmin = $pessoal->get_dtAdmissao($idServidorPesquisado);
-    $cargoEfetivo = $pessoal->get_cargo($idServidorPesquisado);
+    $cargoEfetivo = $pessoal->get_cargoSimples($idServidorPesquisado);
     $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
     $idPessoa = $pessoal->get_idPessoa($idServidorPesquisado);
     $pis = $pessoal->get_Pis($idPessoa);

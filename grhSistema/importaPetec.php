@@ -465,7 +465,7 @@ if ($acesso) {
                     $erroMsg = "ERRO - CPF não Encontrado";
                     $erro++;
                 } else {
-                    $obs = "OK - Encontrado -> {$pessoal->get_nome($idServidor)}";
+                    $obs = "OK - Encontrado -> {$pessoal->get_nome($idServidor)} - {$pessoal->get_situacao($idServidor)}";
                     $erroMsg = null;
                     $importado++;
                 }

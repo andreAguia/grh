@@ -610,7 +610,7 @@ class ListaPetec {
 
         $tabela = new Tabela();
         $tabela->set_titulo("Resumo");
-        #$tabela->set_titulo("Resumo<br/>{$this->nomeLotacao}");
+        $tabela->set_subtitulo($this->nomeLotacao);
         # Inscrição
         if ($this->inscricao <> "Todos") {
             if ($this->inscricao == "Inscritos") {

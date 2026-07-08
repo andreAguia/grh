@@ -176,6 +176,40 @@ class Petec {
 
 ###########################################################
 
+    function exibeNumInscritos($idMarcador = null, $idLotacao = "Todos") {
+        /**
+         * Exibe um Callout co o número de inscritos
+         */
+        
+        # Verifica se tem id
+        if (empty($idMarcador)) {
+            return false;
+        }
+
+        /**
+         * Verifica se o servidor está inscrito no petec1
+         */
+        if ($idMarcador == 4 OR $idMarcador == 5) {
+            calloutWarning($this->get_numInscritos(1, $idLotacao) . " Servidores", "Inscritos", "center");
+        }
+
+        /**
+         * Verifica se o servidor está inscrito no petec2
+         */
+        if ($idMarcador == 6) {
+            calloutWarning($this->get_numInscritos(2, $idLotacao) . " Servidores", "Inscritos", "center");
+        }
+
+        /**
+         * Verifica se o servidor está inscrito no petec3
+         */
+        if ($idMarcador == 8) {
+            calloutWarning($this->get_numInscritos(3, $idLotacao) . " Servidores", "Inscritos", "center");
+        }
+    }
+
+###########################################################
+
     function exibeQuadroPortariasPetec($soPdf = false) {
         /**
          * Exibe um quadro com as regras das portarias
@@ -359,6 +393,11 @@ class Petec {
             $formacao = new Formacao();
             $dados = $formacao->somatorioHoras($idServidor, $idMarcador);
 
+            # Pega os temas para Petec 518/26
+            if ($idMarcador == 8) {
+                $temas = $this->get_temas($idServidor, $idMarcador);
+            }
+
             # Pega os valores
             $horasInformadas = $dados[0];
             $minutosInformados = $dados[1];
@@ -383,7 +422,18 @@ class Petec {
             } else {
                 # Se for inscrito exibe a situação
                 if ($resultado >= 0) {
-                    p("Situação OK", "pHoraOk");
+                    // Verifica se é Petec 518/26
+                    // Que tem regra do tema do curso
+                    if ($idMarcador == 8) {
+                        // Verifica se o array tem IA
+                        if (in_array("IA", array_column($temas, 'tema')) AND in_array("LGPD", array_column($temas, 'tema'))) {
+                            p("Situação OK", "pHoraOk");
+                        } else {
+                            p("Não Tem os Dois Temas Exigidos na Portaria", "pHorasFaltam");
+                        }
+                    } else {
+                        p("Situação OK", "pHoraOk");
+                    }
                 } else {
                     $resultado = abs($resultado);
                     if (empty($minutosInformados)) {
@@ -727,15 +777,13 @@ class Petec {
         # Tema
         p("Tema do Curso:", "pPetecLabel");
         p($dados[7], "pPetecTema");
-        
+
         # Horas
         p("Mínimo de Horas: {$dados[2]}", "pPetecLabel");
         #p($dados[2], "pPetecTema");
-        
         # A Partir de
         p("Cursos a Partir de: {$dados[1]}", "pPetecLabel");
         #p($dados[1], "pPetecTema");
-        
         # Prazo de Entrega
         p("Prazo de Entrega: {$dados[3]}", "pPetecLabel");
         #p($dados[3], "pPetecTema");
@@ -855,8 +903,8 @@ class Petec {
      * Retorna o número de servidores inscritos em um petec e uma lotação
      */
 
-    function get_numInscritos($petec = null, $lotacao = null) {
-
+    function get_numInscritos($petec = null, $lotacao = "Todos") {
+        
         # Verifica se foi informada a petec
         if (empty($petec)) {
             return null;
@@ -922,6 +970,34 @@ class Petec {
             $row = $pessoal->select($select1, false);
 
             return $row[0];
+        }
+    }
+
+    ###########################################################
+
+    /*
+     * Retorna array com os temas
+     */
+
+    function get_temas($idServidor, $idMarcador) {
+
+        # Verifica se foi informada a petec
+        if (empty($idMarcador) OR empty($idServidor)) {
+            return null;
+        } else {
+            # Petec - Inscritos
+            $select1 = "SELECT tema
+                          FROM tbformacao LEFT JOIN tbservidor USING (idPessoa)
+                         WHERE idServidor = {$idServidor}
+                           AND (tbformacao.marcador1 = {$idMarcador} OR
+                               tbformacao.marcador2 = {$idMarcador} OR
+                               tbformacao.marcador3 = {$idMarcador} OR
+                               tbformacao.marcador4 = {$idMarcador})";
+
+            $pessoal = new Pessoal();
+            $row = $pessoal->select($select1);
+
+            return $row;
         }
     }
 

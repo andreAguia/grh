@@ -150,11 +150,11 @@ if ($acesso) {
 
     # Somente se for estatutário
     if ($idPerfil == 1) {
-        $texto = "Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
+        $texto = "Declaro para os devidos fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                 . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, através de Concurso Público, lotado(a) no(a)"
                 . " {$lotacao}, ";
     } else {
-        $texto = "Declaro para os devidor fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
+        $texto = "Declaro para os devidos fins que {$texto1} <b>" . strtoupper($nomeServidor) . "</b>,"
                 . " ID funcional nº {$idFuncional}, admitido(a) em {$dtAdmin}, {$textoExtra} lotado(a) no(a) {$lotacao}, ";
     }
 

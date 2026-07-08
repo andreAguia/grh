@@ -197,24 +197,44 @@ class Formacao {
             # Pega os dados
             $dados = $this->get_dados($id);
 
+            # Pega o tema
+            $tema = $dados["tema"];
+
             # Marcador 1
-            if (!empty($dados['marcador1'])) {
-                p($this->get_marcador($dados['marcador1']), "pNota");
+            if (!empty($dados['marcador1'])) {                
+
+                if ($dados['marcador1'] == 8 AND !empty($tema)) {
+                    p($this->get_marcador($dados['marcador1']) ." (".$tema.")", "pNota");
+                }else{
+                    p($this->get_marcador($dados['marcador1']), "pNota");
+                }
             }
 
             # Marcador 2
             if (!empty($dados['marcador2'])) {
-                p($this->get_marcador($dados['marcador2']), "pNota");
+                if ($dados['marcador2'] == 8 AND !empty($tema)) {
+                    p($this->get_marcador($dados['marcador2']) ." (".$tema.")", "pNota");
+                }else{
+                    p($this->get_marcador($dados['marcador2']), "pNota");
+                }
             }
 
             # Marcador 3
             if (!empty($dados['marcador3'])) {
-                p($this->get_marcador($dados['marcador3']), "pNota");
+                if ($dados['marcador3'] == 8 AND !empty($tema)) {
+                    p($this->get_marcador($dados['marcador3']) ." (".$tema.")", "pNota");
+                }else{
+                    p($this->get_marcador($dados['marcador3']), "pNota");
+                }
             }
 
             # Marcador 4
             if (!empty($dados['marcador4'])) {
-                p($this->get_marcador($dados['marcador4']), "pNota");
+                if ($dados['marcador4'] == 8 AND !empty($tema)) {
+                    p($this->get_marcador($dados['marcador4']) ." (".$tema.")", "pNota");
+                }else{
+                    p($this->get_marcador($dados['marcador4']), "pNota");
+                }
             }
         }
     }

@@ -376,7 +376,7 @@ if ($acesso) {
 
         case "exibeLista2" :
 
-            # Quadro de Quantidades
+            # Quadro de Quantidades            
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, $linkservidor);
             $listaPetec->exibeTituloGeral();
 
@@ -384,6 +384,7 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
+            $petec->exibeNumInscritos($parametroMarcador,$parametroLotacao);
             $listaPetec->exibeQuadroQuantidades();
 
             tituloTable("Dados da Portaria");

@@ -202,7 +202,7 @@ class Formacao {
 
             # Marcador 1
             if (!empty($dados['marcador1'])) {
-                
+
                 // Verifica se o marcador é o do Petec 518
                 if ($dados['marcador1'] == 8) {
                     // Verifica se o tema está em branco
@@ -219,7 +219,7 @@ class Formacao {
 
             # Marcador 2
             if (!empty($dados['marcador2'])) {
-                
+
                 // Verifica se o marcador é o do Petec 518
                 if ($dados['marcador2'] == 8) {
                     // Verifica se o tema está em branco
@@ -249,7 +249,7 @@ class Formacao {
                     p($this->get_marcador($dados['marcador3']), "pNota");
                 }
             }
-            
+
             # Marcador 4
             if (!empty($dados['marcador4'])) {
                 // Verifica se o marcador é o do Petec 518
@@ -419,9 +419,41 @@ class Formacao {
 
         # Formata para exibição
         if (empty($somatorio[1])) {
-            return "{$somatorio[0]} h";
+            $retorno = "{$somatorio[0]} h";
         } else {
-            return "{$somatorio[0]} h e {$somatorio[1]} m";
+            $retorno = "{$somatorio[0]} h e {$somatorio[1]} m";
+        }
+
+        # Verifica o Tema caso seja Paetec 518
+        if ($idMarcador == 8) {
+            if ($this->temPetec518STemaEmBranco($idServidor)) {
+                $retorno .= "<br><span class='label warning'>Falta o Tema</span>";
+            }
+        }
+
+        return $retorno;
+    }
+
+    ###########################################################
+
+    function temPetec518STemaEmBranco($idServidor = null) {
+        /**
+         * Informa se o servidor tem algum certificado Petec 518 sem tema cadastrado
+         */
+        $select = "SELECT tema
+                     FROM tbformacao LEFT JOIN tbservidor USING (idPessoa)
+                    WHERE idServidor = {$idServidor}
+                      AND (tbformacao.marcador1 = 8 OR
+                           tbformacao.marcador2 = 8 OR
+                           tbformacao.marcador3 = 8 OR
+                           tbformacao.marcador4 = 8)
+                      AND tema IS NULL";
+
+        $pessoal = new Pessoal();
+        if (count($pessoal->select($select)) > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 

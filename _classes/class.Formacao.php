@@ -201,38 +201,67 @@ class Formacao {
             $tema = $dados["tema"];
 
             # Marcador 1
-            if (!empty($dados['marcador1'])) {                
-
-                if ($dados['marcador1'] == 8 AND !empty($tema)) {
-                    p($this->get_marcador($dados['marcador1']) ." (".$tema.")", "pNota");
-                }else{
+            if (!empty($dados['marcador1'])) {
+                
+                // Verifica se o marcador é o do Petec 518
+                if ($dados['marcador1'] == 8) {
+                    // Verifica se o tema está em branco
+                    if (empty($tema)) {
+                        p($this->get_marcador($dados['marcador1']), "pNota");
+                        label("Falta o Tema");
+                    } else {
+                        p($this->get_marcador($dados['marcador1']) . " (" . $tema . ")", "pNota");
+                    }
+                } else {
                     p($this->get_marcador($dados['marcador1']), "pNota");
                 }
             }
 
             # Marcador 2
             if (!empty($dados['marcador2'])) {
-                if ($dados['marcador2'] == 8 AND !empty($tema)) {
-                    p($this->get_marcador($dados['marcador2']) ." (".$tema.")", "pNota");
-                }else{
+                
+                // Verifica se o marcador é o do Petec 518
+                if ($dados['marcador2'] == 8) {
+                    // Verifica se o tema está em branco
+                    if (empty($tema)) {
+                        p($this->get_marcador($dados['marcador2']), "pNota");
+                        label("Falta o Tema");
+                    } else {
+                        p($this->get_marcador($dados['marcador2']) . " (" . $tema . ")", "pNota");
+                    }
+                } else {
                     p($this->get_marcador($dados['marcador2']), "pNota");
                 }
             }
 
             # Marcador 3
             if (!empty($dados['marcador3'])) {
-                if ($dados['marcador3'] == 8 AND !empty($tema)) {
-                    p($this->get_marcador($dados['marcador3']) ." (".$tema.")", "pNota");
-                }else{
+                // Verifica se o marcador é o do Petec 518
+                if ($dados['marcador3'] == 8) {
+                    // Verifica se o tema está em branco
+                    if (empty($tema)) {
+                        p($this->get_marcador($dados['marcador3']), "pNota");
+                        label("Falta o Tema");
+                    } else {
+                        p($this->get_marcador($dados['marcador3']) . " (" . $tema . ")", "pNota");
+                    }
+                } else {
                     p($this->get_marcador($dados['marcador3']), "pNota");
                 }
             }
-
+            
             # Marcador 4
             if (!empty($dados['marcador4'])) {
-                if ($dados['marcador4'] == 8 AND !empty($tema)) {
-                    p($this->get_marcador($dados['marcador4']) ." (".$tema.")", "pNota");
-                }else{
+                // Verifica se o marcador é o do Petec 518
+                if ($dados['marcador4'] == 8) {
+                    // Verifica se o tema está em branco
+                    if (empty($tema)) {
+                        p($this->get_marcador($dados['marcador4']), "pNota");
+                        label("Falta o Tema");
+                    } else {
+                        p($this->get_marcador($dados['marcador4']) . " (" . $tema . ")", "pNota");
+                    }
+                } else {
                     p($this->get_marcador($dados['marcador4']), "pNota");
                 }
             }

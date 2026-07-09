@@ -432,10 +432,8 @@ class Formacao {
             }
 
             // Verifica se só tem um tema
-            if (!$this->temPetec518So1Temas($idServidor)) {
-                if (!empty($somatorio[1])) {
-                    $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
-                }
+            if ($this->temPetec518So1Tema($idServidor)) {
+                $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
             }
         }
 
@@ -468,7 +466,7 @@ class Formacao {
 
     ###########################################################
 
-    function temPetec518So1Temas($idServidor = null) {
+    function temPetec518So1Tema($idServidor = null) {
         /**
          * Informa se o servidor tem apenas 1 tema
          */
@@ -484,6 +482,8 @@ class Formacao {
 
         $pessoal = new Pessoal();
         $numTemas = $pessoal->select($select, false);
+
+        var_dump($numTemas);
 
         if ($numTemas[0] == 1) {
             return true;

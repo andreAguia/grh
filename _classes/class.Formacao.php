@@ -426,8 +426,15 @@ class Formacao {
 
         # Verifica o Tema caso seja Paetec 518
         if ($idMarcador == 8) {
+            // Verifica se os certificados Tem Tema cadastrado
             if ($this->temPetec518STemaEmBranco($idServidor)) {
                 $retorno .= "<br><span class='label warning'>Falta o Tema</span>";
+            } else {
+
+                // Verifica se só tem um tema
+                if (!$this->temPetec518_2Temas($idServidor)) {
+                    $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
+                }
             }
         }
 
@@ -440,6 +447,7 @@ class Formacao {
         /**
          * Informa se o servidor tem algum certificado Petec 518 sem tema cadastrado
          */
+        # Monta o Select
         $select = "SELECT tema
                      FROM tbformacao LEFT JOIN tbservidor USING (idPessoa)
                     WHERE idServidor = {$idServidor}
@@ -451,6 +459,32 @@ class Formacao {
 
         $pessoal = new Pessoal();
         if (count($pessoal->select($select)) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ###########################################################
+
+    function temPetec518_2Temas($idServidor = null) {
+        /**
+         * Informa se o servidor tem os 2 temas
+         */
+        # Monta o Select
+        $select = "SELECT COUNT(DISTINCT tema)
+                     FROM tbformacao LEFT JOIN tbservidor USING (idPessoa)
+                    WHERE idServidor = {$idServidor}
+                      AND (tbformacao.marcador1 = 8 OR
+                           tbformacao.marcador2 = 8 OR
+                           tbformacao.marcador3 = 8 OR
+                           tbformacao.marcador4 = 8)
+                      AND tema IS NOT NULL";
+
+        $pessoal = new Pessoal();
+        $numTemas = $pessoal->select($select, false);
+
+        if ($numTemas[0] == 2) {
             return true;
         } else {
             return false;

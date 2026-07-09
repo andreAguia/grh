@@ -433,7 +433,8 @@ class Formacao {
 
                 // Verifica se só tem um tema
                 if (!$this->temPetec518_2Temas($idServidor)) {
-                    $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
+                    if (!empty($somatorio[1]))
+                        $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
                 }
             }
         }

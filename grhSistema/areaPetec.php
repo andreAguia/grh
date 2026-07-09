@@ -384,15 +384,15 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 3);
 
             # Dados da Portaria
-            $petec->exibeNumInscritos($parametroMarcador,$parametroLotacao);
+            $petec->exibeNumInscritos($parametroMarcador, $parametroLotacao);
             $listaPetec->exibeQuadroQuantidades();
 
             tituloTable("Dados da Portaria");
             $painel = new Callout();
             $painel->abre();
-            
+
             $petec->exibeDadosPortaria($parametroMarcador);
-            
+
             $painel->fecha();
 
             $grid->fechaColuna();
@@ -403,11 +403,11 @@ if ($acesso) {
 
             if ($parametroSituacao == "Pendentes") {
 
-                # Não Entregaram Certificado    
-                $listaPetec->exibeNaoEntregaram();
-
                 # Horas Insuficientes
                 $listaPetec->exibeHorasInsuficientes();
+
+                # Não Entregaram Certificado    
+                $listaPetec->exibeNaoEntregaram();
             } else {
 
                 # Situação Regular

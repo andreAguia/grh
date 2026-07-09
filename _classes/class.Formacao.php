@@ -208,7 +208,7 @@ class Formacao {
                     // Verifica se o tema está em branco
                     if (empty($tema)) {
                         p($this->get_marcador($dados['marcador1']), "pNota");
-                        label("Falta o Tema");
+                        label("Falta o Tema", "alert");
                     } else {
                         p($this->get_marcador($dados['marcador1']) . " (" . $tema . ")", "pNota");
                     }
@@ -225,7 +225,7 @@ class Formacao {
                     // Verifica se o tema está em branco
                     if (empty($tema)) {
                         p($this->get_marcador($dados['marcador2']), "pNota");
-                        label("Falta o Tema");
+                        label("Falta o Tema", "alert");
                     } else {
                         p($this->get_marcador($dados['marcador2']) . " (" . $tema . ")", "pNota");
                     }
@@ -241,7 +241,7 @@ class Formacao {
                     // Verifica se o tema está em branco
                     if (empty($tema)) {
                         p($this->get_marcador($dados['marcador3']), "pNota");
-                        label("Falta o Tema");
+                        label("Falta o Tema", "alert");
                     } else {
                         p($this->get_marcador($dados['marcador3']) . " (" . $tema . ")", "pNota");
                     }
@@ -257,7 +257,7 @@ class Formacao {
                     // Verifica se o tema está em branco
                     if (empty($tema)) {
                         p($this->get_marcador($dados['marcador4']), "pNota");
-                        label("Falta o Tema");
+                        label("Falta o Tema", "alert");
                     } else {
                         p($this->get_marcador($dados['marcador4']) . " (" . $tema . ")", "pNota");
                     }

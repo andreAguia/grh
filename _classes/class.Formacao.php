@@ -429,13 +429,12 @@ class Formacao {
             // Verifica se os certificados Tem Tema cadastrado
             if ($this->temPetec518STemaEmBranco($idServidor)) {
                 $retorno .= "<br><span class='label warning'>Falta o Tema</span>";
-            } else {
+            }
 
-                // Verifica se só tem um tema
-                if (!$this->temPetec518_2Temas($idServidor)) {
-                    if (!empty($somatorio[1])) {
-                        $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
-                    }
+            // Verifica se só tem um tema
+            if (!$this->temPetec518So1Temas($idServidor)) {
+                if (!empty($somatorio[1])) {
+                    $retorno .= "<br><span class='label warning'>Só Tem Um Tema</span>";
                 }
             }
         }
@@ -469,9 +468,9 @@ class Formacao {
 
     ###########################################################
 
-    function temPetec518_2Temas($idServidor = null) {
+    function temPetec518So1Temas($idServidor = null) {
         /**
-         * Informa se o servidor tem os 2 temas
+         * Informa se o servidor tem apenas 1 tema
          */
         # Monta o Select
         $select = "SELECT COUNT(DISTINCT tema)
@@ -486,7 +485,7 @@ class Formacao {
         $pessoal = new Pessoal();
         $numTemas = $pessoal->select($select, false);
 
-        if ($numTemas[0] == 2) {
+        if ($numTemas[0] == 1) {
             return true;
         } else {
             return false;

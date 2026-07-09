@@ -483,8 +483,6 @@ class Formacao {
         $pessoal = new Pessoal();
         $numTemas = $pessoal->select($select, false);
 
-        var_dump($numTemas);
-
         if ($numTemas[0] == 1) {
             return true;
         } else {

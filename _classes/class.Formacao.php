@@ -428,7 +428,7 @@ class Formacao {
         if ($idMarcador == 8) {
             // Verifica se os certificados Tem Tema cadastrado
             if ($this->temPetec518STemaEmBranco($idServidor)) {
-                $retorno .= "<br><span class='label warning'>Falta o Tema</span>";
+                $retorno .= "<br><span class='label alert'>Falta o Tema</span>";
             }
 
             // Verifica se só tem um tema

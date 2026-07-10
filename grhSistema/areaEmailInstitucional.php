@@ -45,7 +45,7 @@ if ($acesso) {
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
     $parametroCargo = post('parametroCargo', get_session('parametroCargo'));
-    $parametroConcurso = post('parametroConcurso', get_session('parametroConcurso',));
+    $parametroConcurso = post('parametroConcurso', get_session('parametroConcurso'));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
@@ -187,7 +187,7 @@ if ($acesso) {
                                          FROM tbperfil
                                      ORDER BY idPerfil');
 
-            array_unshift($comboPerfil, array(null, "Todos"));
+            array_unshift($comboPerfil, array("Todos", "Todos"));
 
             # Perfil
             $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
@@ -368,7 +368,7 @@ if ($acesso) {
             }
 
             # Perfil
-            if (!empty($parametroPerfil)) {
+            if ($parametroPerfil <> "Todos") {
                 $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
             } else {
                 $select .= " AND tbperfil.tipo <> 'Outros'";

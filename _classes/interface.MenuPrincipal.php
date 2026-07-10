@@ -990,7 +990,7 @@ class MenuPrincipal {
         $menu->add_item($botao);
 
         $botao = new BotaoGrafico();
-        $botao->set_label('Área do E-mail Institucional');
+        $botao->set_label('Área do E-mail');
         $botao->set_url('areaEmailInstitucional.php?grh=1');
         $botao->set_imagem(PASTA_FIGURAS . 'e-mail.png', $tamanhoImage, $tamanhoImage);
         $botao->set_title('Área dos Contatos dos Servidores');

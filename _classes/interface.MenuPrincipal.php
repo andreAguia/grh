@@ -1233,6 +1233,7 @@ class MenuPrincipal {
         $menu->add_item('link', 'Tipos de Progressão', 'cadastroProgressao.php?grh=1', 'Acessa o Cadastro de Progressão');
         $menu->add_item('link', 'Categoria de Habilitação', 'cadastroHabilitacaoCategoria.php?grh=1', 'Acessa o Cadastro de Categorias de Habilitação');
         $menu->add_item('link', 'Marcadores para Cad. de Formação', 'cadastroMarcador.php?grh=1', 'Acessa o Cadastro Marcadores para o Cadastro de Formação');
+        $menu->add_item('link', 'Situação de Candidato', 'cadastroCandidatoSituacao.php?grh=1', 'Acessa o Cadastro de Situação de Candidatos do Concurso');
 
         $menu->show();
         $painel->fecha();

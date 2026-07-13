@@ -66,6 +66,7 @@ if ($acesso) {
                            notaFinal,
                            resultado,
                            dtConvocacao,
+                           idCandidatoSituacao,
                            obs,
                            dtNascimento,
                            cpf,
@@ -133,6 +134,14 @@ if ($acesso) {
                         ORDER BY data");
     
     array_unshift($convocacao, array(null, null));
+    
+    # Pega os dados da combo situação
+    $situacaoCandidato = $pessoal->select('SELECT idCandidatoSituacao,
+                                         situacao
+                                    FROM tbcandidatosituacao
+                                ORDER BY situacao');
+
+    array_unshift($situacaoCandidato, [null, null]);
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -237,6 +246,14 @@ if ($acesso) {
             'size' => 20,
             'col' => 4,
             'title' => 'Data da Convocação.'),
+        array('nome' => 'idCandidatoSituacao',
+            'label' => 'Situação do Candidato:',
+            'tipo' => 'combo',
+            'array' => $situacaoCandidato,
+            'size' => 20,
+            'col' => 4,
+            'title' => 'Situação do Servidor',
+            'linha' => 5),        
         array(
             'linha' => 6,
             'nome' => 'obs',

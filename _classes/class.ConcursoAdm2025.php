@@ -230,7 +230,7 @@ class ConcursoAdm2025 {
         }
 
         # Monta o select dos desistentes
-        $selectDes = "SELECT  inscricao,
+        $selectDes = "SELECT  IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
                               idCandidato,
@@ -239,6 +239,7 @@ class ConcursoAdm2025 {
                               idCandidato,
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                     LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
                         WHERE tbcandidato.idConcurso = {$idConcurso}
                           AND ({$campo} = 0 OR {$campo} IS NULL)
                           AND cargo = '{$cargoConcurso}'";
@@ -287,7 +288,7 @@ class ConcursoAdm2025 {
         # Monta o select
         $select = "SELECT {$campo},
                               if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
-                              inscricao,
+                              IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
                               dtConvocacao,
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
@@ -297,6 +298,7 @@ class ConcursoAdm2025 {
                               idCandidato,
                               idCandidato
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                          LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
                         WHERE tbcandidato.idConcurso = {$idConcurso}
                           AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
                           AND cargo = '{$cargoConcurso}'";
@@ -351,7 +353,7 @@ class ConcursoAdm2025 {
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["#", "Situação", "Inscrição", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
+        $tabela->set_label(["#", "Colocação", "Inscrição", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
         $tabela->set_width([5, 5, 10, 10, 30, 5, 10, 10, 10, 5, 5]);
         $tabela->set_align(["center", "center", "center", "center", "left"]);
         $tabela->set_funcao(["trataNulo", null, null, "date_to_php", "plm", "idade"]);

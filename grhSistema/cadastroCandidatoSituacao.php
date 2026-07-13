@@ -58,7 +58,7 @@ if ($acesso) {
 
     ################################################################
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Situação');
+    $objeto->set_nome('Situação do Candidato');
 
     # Botão de voltar da lista
     $objeto->set_voltarLista('grh.php');
@@ -94,7 +94,7 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
-    #$objeto->set_linkExcluir('?fase=excluir');
+    $objeto->set_linkExcluir('?fase=excluir');
     $objeto->set_linkGravar('?fase=gravar');
     $objeto->set_linkListar('?fase=listar');
 

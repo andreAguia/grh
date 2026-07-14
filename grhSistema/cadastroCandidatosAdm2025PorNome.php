@@ -219,6 +219,7 @@ if ($acesso) {
                                   idCandidato,
                                   CONVERT(notaFinal, DECIMAL(10,2)),
                                   idCandidato,
+                                  idCandidato,
                                   idCandidato
                              FROM tbcandidato
                            WHERE tbcandidato.idConcurso = {$idConcurso}";
@@ -249,18 +250,18 @@ if ($acesso) {
                 $tabela->set_titulo("Cadastro de Candidatos Aprovados");
                 #$tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($row);
-                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Classificação do Candidato", "Nota Final", "Obs", "Editar"]);
-                $tabela->set_width([10, 20, 30, 10, 10, 10, 5, 5]);
+                $tabela->set_label(["Inscrição", "Candidato", "Cargo", "Vagas do Cargo", "Classificação do Candidato", "Nota Final", "Documento", "Obs", "Editar"]);
+                $tabela->set_width([10, 20, 25, 10, 10, 10, 5, 5, 5]);
                 $tabela->set_align(["center", "left", "left"]);
 
-                $tabela->set_classe([null, "CandidatoAdm2025", null, "ConcursoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-                $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "get_vagasGeral", "exibeClassific", null, "exibeObs"]);
+                $tabela->set_classe([null, "CandidatoAdm2025", null, "ConcursoAdm2025", "CandidatoAdm2025", null, "concursoAdm2025", "CandidatoAdm2025"]);
+                $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "get_vagasGeral", "exibeClassific", null, "exibeDeclaracao", "exibeObs"]);
                 $tabela->set_funcao([null, "plm", "plm"]);
 
                 # Botão Editar
                 $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
                 $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-                $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+                $tabela->set_link([null, null, null, null, null, null, null, null, $botao]);
 
                 $tabela->set_bordaInterna(true);
                 $tabela->show();

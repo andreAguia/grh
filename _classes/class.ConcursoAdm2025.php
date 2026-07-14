@@ -176,7 +176,7 @@ class ConcursoAdm2025 {
         $cadReserva = 5;
 
         # Tira os erros quando tiver filtro
-        if ($convocacao <> "*") {
+        if ($convocacao <> "*" OR $situacao <> "*") {
             $exibeErros = false;
         }
 
@@ -253,7 +253,7 @@ class ConcursoAdm2025 {
         if ($convocacao <> "*") {
             $selectDes .= " AND dtConvocacao = '{$convocacao}'";
         }
-        
+
         # Situacao
         if ($situacao <> "*") {
             $selectDes .= " AND  idCandidatoSituacao = '{$situacao}'";
@@ -290,7 +290,7 @@ class ConcursoAdm2025 {
             $tabela->show();
         }
 
-        # Monta o select
+        # Monta o select da listagem principal
         $select = "SELECT {$campo},
                               if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
                               IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
@@ -317,8 +317,8 @@ class ConcursoAdm2025 {
         if ($convocacao <> "*") {
             $select .= " AND dtConvocacao = '{$convocacao}'";
         }
-        
-         # Situacao
+
+        # Situacao
         if ($situacao <> "*") {
             $select .= " AND  idCandidatoSituacao = '{$situacao}'";
         }
@@ -346,8 +346,8 @@ class ConcursoAdm2025 {
 
 //                    # acerta a listagem - Retirei opis ja resolveu
 //                    # Caso apareça algum outro erro eu reativo
-                    // $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
-                    // $pessoal->update($sql);
+                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
+                    $pessoal->update($sql);
                 }
             }
 

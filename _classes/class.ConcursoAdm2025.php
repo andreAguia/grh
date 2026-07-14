@@ -160,7 +160,7 @@ class ConcursoAdm2025 {
 
     ###########################################################
 
-    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $exibeErros = false) {
+    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $situacao = "*", $exibeErros = false) {
         /*
          * Exibe os candidatos em um cargo específico
          */
@@ -253,6 +253,11 @@ class ConcursoAdm2025 {
         if ($convocacao <> "*") {
             $selectDes .= " AND dtConvocacao = '{$convocacao}'";
         }
+        
+        # Situacao
+        if ($situacao <> "*") {
+            $selectDes .= " AND  idCandidatoSituacao = '{$situacao}'";
+        }
 
         # Ordenação
         $selectDes .= " ORDER BY nome";
@@ -312,6 +317,11 @@ class ConcursoAdm2025 {
         if ($convocacao <> "*") {
             $select .= " AND dtConvocacao = '{$convocacao}'";
         }
+        
+         # Situacao
+        if ($situacao <> "*") {
+            $select .= " AND  idCandidatoSituacao = '{$situacao}'";
+        }
 
         # Ordenação
         $select .= " ORDER BY {$campo}";
@@ -336,9 +346,8 @@ class ConcursoAdm2025 {
 
 //                    # acerta a listagem - Retirei opis ja resolveu
 //                    # Caso apareça algum outro erro eu reativo
-                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio}
-                             WHERE idCandidato = {$linha['idCandidato']}";
-                    $pessoal->update($sql);
+                    // $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
+                    // $pessoal->update($sql);
                 }
             }
 

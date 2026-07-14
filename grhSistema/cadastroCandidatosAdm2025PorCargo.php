@@ -56,6 +56,7 @@ if ($acesso) {
         $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '301 - Técnico Profissional De Nível Médio – Agrícola E Agropecuária'));
         $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
         $parametroConvocacao = post('parametroConvocacao', get_session('parametroConvocacao', '*'));
+        $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
 
         # Define os dados de acordo com as cotas
         switch ($parametroCota) {
@@ -109,6 +110,7 @@ if ($acesso) {
         set_session('parametroCargoCandidato', $parametroCargoCandidato);
         set_session('parametroCota', $parametroCota);
         set_session('parametroConvocacao', $parametroConvocacao);
+        set_session('parametroSituacao', $parametroSituacao);
     }
 
     # Começa uma nova página
@@ -128,7 +130,7 @@ if ($acesso) {
             AND $fase <> "relatorio10"
             AND $fase <> "relatorio11"
             AND $fase <> "relatorio12"
-            ) {
+    ) {
         AreaServidor::cabecalho();
     }
 
@@ -338,6 +340,24 @@ if ($acesso) {
             $controle->set_col(4);
             $form->add_item($controle);
 
+            # Situação
+            $arraySituacao = $pessoal->select('SELECT idCandidatoSituacao,
+                                                      situacao
+                                                 FROM tbcandidatosituacao
+                                             ORDER BY situacao');
+
+            array_unshift($arraySituacao, array("*", "Todos"));
+
+            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+            $controle->set_size(20);
+            $controle->set_title('Filtra por Situação do Candidato');
+            $controle->set_array($arraySituacao);
+            $controle->set_valor($parametroSituacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(2);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
             $form->show();
 
             ###################################################################
@@ -355,9 +375,9 @@ if ($acesso) {
             if (!empty($numeroVagas)) {
 
                 if (Verifica::acesso($idUsuario, 1)) {      // somente admin
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, true);
+                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, true);
                 } else {
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, false);
+                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, false);
                 }
 
                 ####################################################################################
@@ -399,6 +419,11 @@ if ($acesso) {
                     # Cargo
                     if ($parametroCargoCandidato <> "*") {
                         $select .= " AND cargo = '{$parametroCargoCandidato}'";
+                    }
+
+                    # Situacao
+                    if ($parametroSituacao <> "*") {
+                        $select .= " AND  idCandidatoSituacao = '{$parametroSituacao}'";
                     }
 
                     # Ordena de acorto do as cotas
@@ -467,6 +492,11 @@ if ($acesso) {
                     # Data de Convocação
                     if ($parametroConvocacao <> "*") {
                         $select .= " AND dtConvocacao = '{$parametroConvocacao}'";
+                    }
+
+                    # Situacao
+                    if ($parametroSituacao <> "*") {
+                        $select .= " AND  idCandidatoSituacao = '{$parametroSituacao}'";
                     }
 
                     # Ordena pelo nome

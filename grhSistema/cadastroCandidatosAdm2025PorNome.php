@@ -212,7 +212,7 @@ if ($acesso) {
 
             ###################################################################
             # Monta o select
-            $select = "SELECT inscricao,
+            $select = "SELECT IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
                                   idCandidato,
                                   cargo,
                                   cargo,
@@ -221,7 +221,7 @@ if ($acesso) {
                                   idCandidato,
                                   idCandidato,
                                   idCandidato
-                             FROM tbcandidato
+                             FROM tbcandidato LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
                            WHERE tbcandidato.idConcurso = {$idConcurso}";
 
             if (!is_null($parametroNome)) {

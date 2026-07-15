@@ -58,6 +58,9 @@ $postEmailPessoal = post('postEmailPessoal');
 # Dados Financeiros
 $postNivelFaixaPadrao = post('postNivelFaixaPadrao');
 
+# Processos
+$postProcessoAvaliacao = post('postProcessoAvaliacao');
+
 # Outros
 $postAssinatura = post('postAssinatura');
 $postLinha = post('postLinha');
@@ -76,7 +79,7 @@ $parametroPerfil = post('parametroPerfil', 1);
 $parametroDataAdmissaoSinal = post('parametroDataAdmissaoSinal', 1);
 $parametroDataAdmissao = post('parametroDataAdmissao', 1);
 
-# Oedenação
+# Ordenação
 $parametroOrdenaTipo = post('parametroOrdenaTipo', 'asc');
 $parametroOrdena = post('parametroOrdena', "tbpessoa.nome");
 $parametroAgrupamento = post('parametroAgrupamento', '---');
@@ -232,7 +235,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     /*
      * Junto com o Nome
      */
@@ -295,7 +298,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     /*
      * Outros Dados
      */
@@ -394,7 +397,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # Órgão de Origem de um Cadido
     $controle = new Input('postOrgaoOrigem', 'simnao', 'Órgão Origem:', 1);
     $controle->set_size(4);
@@ -508,7 +511,7 @@ if ($acesso) {
     $controle->set_onChange('formPadrao.submit();');
     $controle->set_col($tamColunas);
     $form->add_item($controle);
-    
+
     # E-mail Pessoal
     $controle = new Input('postEmailPessoal', 'simnao', 'E-mail:', 1);
     $controle->set_title('E-mail do Servidor');
@@ -517,7 +520,22 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(8);
     $form->add_item($controle);
-    
+
+    /*
+     * Processos
+     */
+
+    # Assinatura
+    $controle = new Input('postProcessoAvaliacao', 'simnao', 'Avaliação:', 1);
+    $controle->set_size(5);
+    $controle->set_linha(9);
+    $controle->set_fieldset('Número do Processo');
+    $controle->set_title('Processo de Avaliação');
+    $controle->set_valor($postProcessoAvaliacao);
+    $controle->set_onChange('formPadrao.submit();');
+    $controle->set_col($tamColunas);
+    $form->add_item($controle);
+
     /*
      * Outros
      */
@@ -550,8 +568,8 @@ if ($acesso) {
     $controle->set_col($tamColunas);
     $controle->set_linha(3);
     $form->add_item($controle);
-    
-     /*
+
+    /*
      * Sistema
      */
 
@@ -988,7 +1006,7 @@ if ($acesso) {
         $method[] = "get_FaixaAtual";
         $function[] = "trataNulo";
     }
-    
+
     # Órgão de Origem
     if ($postOrgaoOrigem) {
         $field[] = "tbservidor.idServidor";
@@ -1118,7 +1136,7 @@ if ($acesso) {
         $method[] = "get_idade";
         $function[] = "";
     }
-    
+
     # Telefone
     if ($postTelefone) {
         $field[] = "tbservidor.idServidor";
@@ -1128,7 +1146,7 @@ if ($acesso) {
         $method[] = "get_telefoneCelular";
         $function[] = "";
     }
-    
+
     # E-mail Pessoal
     if ($postEmailPessoal) {
         $field[] = "tbservidor.idServidor";
@@ -1136,6 +1154,16 @@ if ($acesso) {
         $align[] = "left";
         $class[] = "Pessoal";
         $method[] = "get_emailPessoal";
+        $function[] = "";
+    }
+
+    # Processo de Avaliação
+    if ($postProcessoAvaliacao) {
+        $field[] = "tbservidor.idServidor";
+        $label[] = "Proc. Avaliação";
+        $align[] = "left";
+        $class[] = "Avaliacao";
+        $method[] = "getProcessoSei";
         $function[] = "";
     }
 
@@ -1150,11 +1178,11 @@ if ($acesso) {
         $method[] = "";
         $function[] = "";
     }
-    
+
     /*
      * Sistema
      */
-    
+
     # idServidor
     if ($postIdServidor) {
         $field[] = "tbservidor.idServidor";
@@ -1164,10 +1192,10 @@ if ($acesso) {
         $method[] = "";
         $function[] = "";
     }
-    
+
     # idPessoa
     if ($postIdPessoa) {
-       $field[] = "tbservidor.idPessoa";
+        $field[] = "tbservidor.idPessoa";
         $label[] = "idPessoa";
         $align[] = "center";
         $class[] = "";

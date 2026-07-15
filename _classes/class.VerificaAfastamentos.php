@@ -196,7 +196,13 @@ class VerificaAfastamentos {
         if (!empty($afast)) {
             # Verifica se é Licença ou afastamento
             if (mb_stripos($afast['nome'], 'Afastamento') === false) {
-                $this->afastamento = "Licença";
+                if ($afast['nome'] == "Faltas") {
+                    $this->afastamento = "Falta";
+                } elseif ($afast['nome'] == "Suspensão") {
+                    $this->afastamento = "Suspensão";
+                } else {
+                    $this->afastamento = "Licença";
+                }
             } else {
                 $this->afastamento = "Afastamento";
             }

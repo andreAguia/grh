@@ -799,7 +799,7 @@ class LicencaPremio {
             $relatorio->set_numeroOrdem(true);
             $relatorio->set_numeroOrdemTipo("d");
             $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
+            $relatorio->set_dataImpressao(true);
             $relatorio->set_conteudo($result);
             $relatorio->set_log(false);
             $relatorio->show();
@@ -834,7 +834,7 @@ class LicencaPremio {
             $relatorio->set_numeroOrdem(true);
             $relatorio->set_numeroOrdemTipo("d");
             $relatorio->set_totalRegistro(false);
-            $relatorio->set_dataImpressao(false);
+            $relatorio->set_dataImpressao(true);
             $relatorio->set_conteudo($result);
             $relatorio->set_log(false);
             $relatorio->show();

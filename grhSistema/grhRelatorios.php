@@ -682,6 +682,9 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Vencimento de Triênios');
             $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.mensal.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.anual.php');
+            
+            $menu->add_item('titulo1', 'Outros');
+            $menu->add_item('linkWindow', 'Relatório Servidores Sem Direito a Triênio', '../grhRelatorios/trienio.semDireito.php');
 
             $menu->show();
             break;

@@ -46,7 +46,7 @@ if ($acesso) {
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo("Relatório de Servidores Estatutários Ativos");
-    $relatorio->set_subtitulo("Afetados Pela Lei Complementar 194/2021</br>Com Mais de 3 Anos de Admissão<br/>Ordenados Decrescentemente Pela Data de Admissão");
+    $relatorio->set_subtitulo("Afetados Pela Lei Complementar 194/2021</br>Com Mais de 3 Anos de Admissão<br/>Ordenado Pela Data de Admissão");
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Edital Concurso']);
     $relatorio->set_align(["center", "left"]);
     $relatorio->set_width([10, 25, 20, 10, 15]);

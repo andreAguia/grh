@@ -39,16 +39,17 @@ if ($acesso) {
                 WHERE idPerfil = 1
                   AND situacao = 1
                   AND tbconcurso.dtPublicacaoEdital >= '{$dataLei}'
+                  AND tbservidor.dtAdmissao <= DATE_SUB(NOW(), INTERVAL 3 YEAR);    
             ORDER BY tbservidor.dtAdmissao";
 
     $result = $servidor->select($select);
 
     $relatorio = new Relatorio();
     $relatorio->set_titulo("Relatório de Servidores Estatutários Ativos");
-    $relatorio->set_subtitulo("Afetados Pela Lei Complementar 194/2021</br>Ordenados Decrescentemente Pela Data de Admissão");
+    $relatorio->set_subtitulo("Afetados Pela Lei Complementar 194/2021</br>Com Mais de 3 Anos de Admissão<br/>Ordenados Decrescentemente Pela Data de Admissão");
     $relatorio->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Edital Concurso']);
     $relatorio->set_align(["center", "left"]);
-    $relatorio->set_width([10, 20, 10, 10, 15]);
+    $relatorio->set_width([10, 25, 20, 10, 15]);
     $relatorio->set_funcao([null, null, null, "date_to_php"]);
 
     $relatorio->set_classe([null, null, "pessoal", null, "pessoal"]);

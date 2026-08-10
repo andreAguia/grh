@@ -33,6 +33,7 @@ if ($acesso) {
                       tbpessoa.nome,
                       tbservidor.idServidor,
                       tbservidor.dtAdmissao,
+                      tbservidor.idServidor,
                       tbservidor.idServidor
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                       JOIN tbconcurso USING (idConcurso)
@@ -47,13 +48,13 @@ if ($acesso) {
     $relatorio = new Relatorio();
     $relatorio->set_titulo("Relatório de Servidores Estatutários Ativos");
     $relatorio->set_subtitulo("Afetados Pela Lei Complementar 194/2021</br>Com Mais de 3 Anos de Admissão<br/>Ordenado Pela Data de Admissão");
-    $relatorio->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Edital Concurso']);
+    $relatorio->set_label(['IdFuncional', 'Servidor', 'Cargo', 'Admissão', 'Edital Concurso','Processo Avaliação']);
     $relatorio->set_align(["center", "left"]);
-    $relatorio->set_width([10, 25, 20, 10, 15]);
+    #$relatorio->set_width([10, 25, 20, 10, 15]);
     $relatorio->set_funcao([null, null, null, "date_to_php"]);
 
-    $relatorio->set_classe([null, null, "pessoal", null, "pessoal"]);
-    $relatorio->set_metodo([null, null, "get_cargoSimples", null, "get_concursoDataEdital"]);
+    $relatorio->set_classe([null, null, "pessoal", null, "pessoal", "Avaliacao"]);
+    $relatorio->set_metodo([null, null, "get_cargoSimples", null, "get_concursoDataEdital", "getProcessoSei"]);
 
     $relatorio->set_conteudo($result);
     #$relatorio->set_numGrupo(3);

@@ -6515,6 +6515,13 @@ class Pessoal extends Bd {
         $diretor = $this->get_diretor($idLotacao);
         $reitor = $this->get_reitor();
 
+        # Cria a função str_contains somente se o servidor for antigo
+        if (!function_exists('str_contains')) {
+            function str_contains(string $haystack, string $needle): bool {
+                return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+            }
+        }
+
         # Verifica se é o setor de cedidos (113)
         if (is_null($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
@@ -6617,7 +6624,7 @@ class Pessoal extends Bd {
                         }
                     }
                 }
-                
+
                 # Verifica se a lotação é assessoria
                 if (str_contains($nomeLotacao, "Assessoria")) {
                     # Verifica se é assessor II
@@ -6629,7 +6636,7 @@ class Pessoal extends Bd {
                             return $diretor;
                         }
                     }
-                    
+
                     # Verifica se é assessor III
                     if ($item[1] == 22) { // 22 - assessor III
                         # Verifica se não é ele mesmo
@@ -6640,7 +6647,7 @@ class Pessoal extends Bd {
                         }
                     }
                 }
-                
+
                 # Verifica se a lotação é Vila Maria
                 if (str_contains($nomeLotacao, "Vila")) {
                     # Dá preferencia para Diretor
@@ -6653,7 +6660,7 @@ class Pessoal extends Bd {
                         }
                     }
                 }
-                
+
                 # Verifica se a lotação é Auditoria
                 if (str_contains($nomeLotacao, "Auditoria")) {
                     # Dá preferencia para Diretor
@@ -6698,6 +6705,13 @@ class Pessoal extends Bd {
         $nomeLotacao = $this->get_nomeLotacao2($idLotacao);
         $diretor = $this->get_diretor($idLotacao);
         $reitor = $this->get_reitor();
+        
+        # Cria a função str_contains somente se o servidor for antigo
+        if (!function_exists('str_contains')) {
+            function str_contains(string $haystack, string $needle): bool {
+                return $needle !== '' && mb_strpos($haystack, $needle) !== false;
+            }
+        }
 
         # Verifica se é o setor de cedidos (113)
         if (empty($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
@@ -6776,7 +6790,7 @@ class Pessoal extends Bd {
                     # Diretor
                     return $diretor;
                 }
-                
+
                 # Verifica se a lotação é Hospital
                 if (str_contains($nomeLotacao, "Hospital")) {
                     # Dá preferencia para Chefe do Hospital Veterinário
@@ -6784,20 +6798,20 @@ class Pessoal extends Bd {
                         return $item[0];
                     }
                 }
-                
+
                 # Verifica se a lotação é assessoria
                 if (str_contains($nomeLotacao, "Assessoria")) {
                     # Verifica se é assessor II
                     if ($item[1] == 21) { // 21 - assessor II
                         return $item[0];
                     }
-                    
+
                     # Verifica se é assessor III
                     if ($item[1] == 22) { // 22 - assessor III
                         return $item[0];
                     }
                 }
-                
+
                 # Verifica se a lotação é Vila Maria
                 if (str_contains($nomeLotacao, "Vila")) {
                     # Dá preferencia para Diretor
@@ -6805,7 +6819,7 @@ class Pessoal extends Bd {
                         return $item[0];
                     }
                 }
-                
+
                 # Verifica se a lotação é Auditoria
                 if (str_contains($nomeLotacao, "Auditoria")) {
                     # Dá preferencia para Diretor

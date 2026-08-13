@@ -6506,16 +6506,23 @@ class Pessoal extends Bd {
          * 
          * @param $idLotacao integer o id da lotaçao
          */
-        # Pega a lotação do servidor
+        # Classes
+        $lotacaoClasse = new Lotacao();
+
+        # Pega dados
         $idLotacao = $this->get_idLotacao($idServidor);
+        $nomeLotacao = $this->get_nomeLotacao2($idLotacao);
+        $diretor = $this->get_diretor($idLotacao);
+        $reitor = $this->get_reitor();
 
         # Verifica se é o setor de cedidos (113)
         if (is_null($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
         }
 
-        # Monta o select
-        $select = "SELECT tbservidor.idServidor
+        # Pega os cargos em comissão da lotação do servidor
+        $select = "SELECT tbservidor.idServidor,
+                          tbcomissao.idTipoComissao
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -6525,35 +6532,141 @@ class Pessoal extends Bd {
                       AND tbcomissao.dtExo is null
                       AND (tbtipocomissao.idTipoComissao <> 19 AND tbtipocomissao.idTipoComissao <> 25)
                       AND (tblotacao.idlotacao = {$idLotacao}) 
-                 ORDER BY tbtipocomissao.simbolo LIMIT 1";
+                 ORDER BY tbtipocomissao.simbolo";
 
-        $row = parent::select($select, false);
+        $row = parent::select($select);
+        $numCargos = count($row);
 
-        if (empty($row[0])) {
-            # Se for vazio pega o diretor
-            $chefia = $this->get_diretor($idLotacao);
+        # Se não tiver nenhum cargo em comissão no setor
+        if ($numCargos == 0) {
+            # Escolhe o hierarquico superior
+            return $diretor;
+        }
 
-            return $chefia;
-        } else {
+        # Se tiver mais de um cargo em comissão na lotação 
+        if ($numCargos > 0) {
 
-            $chefia = $row[0];
+            # Verifica se tiver mais de um cargo em comissão no setor qual seria o ideal
+            foreach ($row as $item) {
 
-            # Verifica se o servidor é o cargo em comissão e procura o diretor
-            if (($chefia == $idServidor) or (is_null($chefia))) {
-                $chefia = $this->get_diretor($idLotacao);
+                # Verifica se a lotação do servidor é laboratório
+                if (str_contains($nomeLotacao, "Laboratório")) {
+
+                    # Dá preferencia para quem é chefe de laboratório
+                    if ($item[1] == 17) { // 17 - chefe de laboratório
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $diretor;
+                        }
+                    }
+                }
+
+                # Verifica se a lotação é gerência
+                if (str_contains($nomeLotacao, "Gerência")) {
+                    # Dá preferencia para quem é gerente
+                    if ($item[1] == 21) { // 21 - gerente
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $diretor;
+                        }
+                    }
+                }
+
+                # Verifica se a lotação é pro-reitoria
+                if (str_contains($nomeLotacao, "Pró-Reitoria") OR str_contains($nomeLotacao, "Pró Reitoria")) {
+                    # Dá preferencia para quem é pro-reitor
+                    if ($item[1] == 15) { // 15 - Pró-reitor
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $reitor;
+                        }
+                    }
+                }
+
+                # Verifica se a lotação é secretaria
+                if (str_contains($nomeLotacao, "Secretaria")) {
+                    # Verifica se ele não é o diretor
+                    if ($idServidor <> $diretor) {
+                        return $diretor;
+                    } else {
+                        return $this->get_reitor();
+                    }
+                }
+
+                # Verifica se a lotação é biblioteca
+                if (str_contains($nomeLotacao, "Biblioteca")) {
+                    # Retorna o diretor
+                    return $diretor;
+                }
+
+                # Verifica se a lotação é Hospital
+                if (str_contains($nomeLotacao, "Hospital")) {
+                    # Dá preferencia para Chefe do Hospital Veterinário
+                    if ($item[1] == 18) { // 18 - Chefe do Hospital Veterinário
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $reitor;
+                        }
+                    }
+                }
+                
+                # Verifica se a lotação é assessoria
+                if (str_contains($nomeLotacao, "Assessoria")) {
+                    # Verifica se é assessor II
+                    if ($item[1] == 21) { // 21 - assessor II
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $diretor;
+                        }
+                    }
+                    
+                    # Verifica se é assessor III
+                    if ($item[1] == 22) { // 22 - assessor III
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $reitor;
+                        }
+                    }
+                }
+                
+                # Verifica se a lotação é Vila Maria
+                if (str_contains($nomeLotacao, "Vila")) {
+                    # Dá preferencia para Diretor
+                    if ($item[1] == 16) { // 16 - Diretor
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $reitor;
+                        }
+                    }
+                }
+                
+                # Verifica se a lotação é Auditoria
+                if (str_contains($nomeLotacao, "Auditoria")) {
+                    # Dá preferencia para Diretor
+                    if ($item[1] == 22) { // 22 - Auditor
+                        # Verifica se não é ele mesmo
+                        if ($idServidor <> $item[0]) {
+                            return $item[0];
+                        } else {
+                            return $reitor;
+                        }
+                    }
+                }
             }
-
-            # Verifica se o servidor é diretor
-            if (($chefia == $idServidor) or (is_null($chefia))) {
-                $chefia = $this->get_reitor();
-            }
-
-            # Verifica se o servidor é o reitor
-            if ($chefia == $idServidor) {
-                $chefia = null;
-            }
-
-            return $chefia;
         }
     }
 
@@ -6578,13 +6691,22 @@ class Pessoal extends Bd {
          * 
          * @param $idLotacao integer o id da lotaçao
          */
+        # Classes
+        $lotacaoClasse = new Lotacao();
+
+        # Pega dados
+        $nomeLotacao = $this->get_nomeLotacao2($idLotacao);
+        $diretor = $this->get_diretor($idLotacao);
+        $reitor = $this->get_reitor();
+
         # Verifica se é o setor de cedidos (113)
         if (empty($idLotacao) OR $idLotacao == 113 OR $idLotacao == "Outros") {
             return null;
         }
 
         # Monta o select
-        $select = "SELECT tbservidor.idServidor
+        $select = "SELECT tbservidor.idServidor,
+                          tbcomissao.idTipoComissao
                      FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                           JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                           JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -6601,14 +6723,97 @@ class Pessoal extends Bd {
             $select .= " AND (tblotacao.DIR = '$idLotacao')";
         }
 
-        $select .= " ORDER BY tbtipocomissao.simbolo LIMIT 1";
+        $select .= " ORDER BY tbtipocomissao.simbolo";
 
-        $row = parent::select($select, false);
+        $row = parent::select($select);
+        $numCargos = count($row);
 
-        if (empty($row[0])) {
-            return null;
-        } else {
-            return $row[0];
+        # Se não tiver nenhum cargo em comissão no setor
+        if ($numCargos == 0) {
+            # Escolhe o hierarquico superior
+            return $diretor;
+        }
+
+        # Se tiver mais de um cargo em comissão na lotação 
+        if ($numCargos > 0) {
+
+            # Verifica se tiver mais de um cargo em comissão no setor qual seria o ideal
+            foreach ($row as $item) {
+
+                # Verifica se a lotação do servidor é laboratório
+                if (str_contains($nomeLotacao, "Laboratório")) {
+
+                    # Chefe de laboratório
+                    if ($item[1] == 17) { // 17 - chefe de laboratório
+                        return $item[0];
+                    }
+                }
+
+                # Verifica se a lotação é gerência
+                if (str_contains($nomeLotacao, "Gerência")) {
+                    # Gerente
+                    if ($item[1] == 21) { // 21 - gerente
+                        return $item[0];
+                    }
+                }
+
+                # Verifica se a lotação é pro-reitoria
+                if (str_contains($nomeLotacao, "Pró-Reitoria") OR str_contains($nomeLotacao, "Pró Reitoria")) {
+                    # Pro-reitor
+                    if ($item[1] == 15) { // 15 - Pró-reitor
+                        return $item[0];
+                    }
+                }
+
+                # Verifica se a lotação é secretaria
+                if (str_contains($nomeLotacao, "Secretaria")) {
+                    # Diretor
+                    return $diretor;
+                }
+
+                # Verifica se a lotação é biblioteca
+                if (str_contains($nomeLotacao, "Biblioteca")) {
+                    # Diretor
+                    return $diretor;
+                }
+                
+                # Verifica se a lotação é Hospital
+                if (str_contains($nomeLotacao, "Hospital")) {
+                    # Dá preferencia para Chefe do Hospital Veterinário
+                    if ($item[1] == 18) { // 18 - Chefe do Hospital Veterinário
+                        return $item[0];
+                    }
+                }
+                
+                # Verifica se a lotação é assessoria
+                if (str_contains($nomeLotacao, "Assessoria")) {
+                    # Verifica se é assessor II
+                    if ($item[1] == 21) { // 21 - assessor II
+                        return $item[0];
+                    }
+                    
+                    # Verifica se é assessor III
+                    if ($item[1] == 22) { // 22 - assessor III
+                        return $item[0];
+                    }
+                }
+                
+                # Verifica se a lotação é Vila Maria
+                if (str_contains($nomeLotacao, "Vila")) {
+                    # Dá preferencia para Diretor
+                    if ($item[1] == 16) { // 16 - Diretor
+                        return $item[0];
+                    }
+                }
+                
+                # Verifica se a lotação é Auditoria
+                if (str_contains($nomeLotacao, "Auditoria")) {
+                    # Dá preferencia para Diretor
+                    if ($item[1] == 22) { // 22 - Auditor
+                        return $item[0];
+                    }
+                }
+            }
         }
     }
 

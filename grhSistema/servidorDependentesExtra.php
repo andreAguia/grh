@@ -10,7 +10,6 @@ $pessoal = new Pessoal();
 
 # Dados do Dependente
 $parentesco = $campoValor[3];
-$dtNasc = date_to_php($campoValor[1]);
 $cpf = $campoValor[2];
 $auxEduc = $campoValor[6];
 $auxEducacaoDtInicial = date_to_php($campoValor[7]);
@@ -25,38 +24,55 @@ $dtAdmissao = $pessoal->get_dtAdmissao($idServidor);
  */
 
 # verifica se dependente é filho
-if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9) {
+if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9 OR $parentesco == 10) {
 
-    # Calcula a data limite de termino
-    $dataHistoricaFinal = "22/12/2021";     // Data da Publicação da Portaria 95/2021
-    $dataIdade = addMeses(addAnos($dtNasc, 6), 11);
-    $dataLimite = dataMenor($dataIdade, $dataHistoricaFinal);
-
-    # verifica se data é posterior a data limite
-    if ($campoValor[11] > date_to_bd($dataLimite)) {
+    # Pega a data de nascimento
+    if (empty($campoValor[1])) {
         $erro = 1;
-        $msgErro .= 'A data de término está alem da data limite! (' . $dataLimite . ')\n';
-    }
-}
-
-
-/*
- * Auxílio Educação
- */
-
-# Inicia a classe
-$aux = new AuxilioEducacao();
-$idadeLimite = $aux->get_idadeFinalLei();
-
-if ($auxEduc == "Sim") {
-
-    if ($aux->verificaDireitoAuxEduca($parentesco)) {
-        $intra = new Intra();
-        $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-        $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+        $msgErro .= 'É necessário cadastrar a data de nascimento para esse tipo de parente\n';
     } else {
-        $erro = 1;
-        $msgErro .= 'esse dependente Não Tem Direito ao Auxílio Educação\n';
+        $dtNasc = date_to_php($campoValor[1]);
+
+        # Calcula a data limite de termino
+        $dataHistoricaFinal = "22/12/2021";     // Data da Publicação da Portaria 95/2021
+        $dataIdade = addMeses(addAnos($dtNasc, 6), 11);
+        $dataLimite = dataMenor($dataIdade, $dataHistoricaFinal);
+
+        # verifica se data é posterior a data limite
+        if ($campoValor[11] > date_to_bd($dataLimite)) {
+            $erro = 1;
+            $msgErro .= 'A data de término está alem da data limite! (' . $dataLimite . ')\n';
+        }
+    }
+
+    /*
+     * Auxílio Educação
+     */
+
+    # Inicia a classe
+    $aux = new AuxilioEducacao();
+    $idadeLimite = $aux->get_idadeFinalLei();
+
+    if ($auxEduc == "Sim") {
+
+        if ($aux->verificaDireitoAuxEduca($parentesco)) {
+            $intra = new Intra();
+            $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+            $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+        } else {
+            $erro = 1;
+            $msgErro .= 'esse dependente Não Tem Direito ao Auxílio Educação\n';
+        }
+    }
+
+    # Coloca o auxEducação como Não quando tinha 24 anos ou mais na data da publicação da lei
+    $intra = new Intra();
+    $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
+
+    $anos24 = get_dataIdade($dtNasc, $idadeLimite);
+    if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
+        $campoValor[6] = "Não";
+        $campoValor[7] = null;
     }
 }
 
@@ -66,12 +82,4 @@ if ($auxEduc == "Sim") {
 //    $erro = 1;
 //    $msgErro .= 'O CPF deverá ser informado para o dependente com Auxílio Educação\n';
 //}
-# Coloca o auxEducação como Não quando tinha 24 anos ou mais na data da publicação da lei
-$intra = new Intra();
-$dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
 
-$anos24 = get_dataIdade($dtNasc, $idadeLimite);
-if (dataMenor($dataHistoricaInicial, $anos24) == $anos24) {
-    $campoValor[6] = "Não";
-    $campoValor[7] = null;
-}

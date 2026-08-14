@@ -222,7 +222,7 @@ if ($acesso) {
             'tipo' => 'data',
             'size' => 12,
             'maxLength' => 20,
-            'required' => true,
+            #'required' => true,
             'title' => 'Data de Nascimento.',
             'col' => 3,
             'linha' => 1),

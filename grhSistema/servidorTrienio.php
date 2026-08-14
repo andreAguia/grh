@@ -318,13 +318,14 @@ if ($acesso) {
                 $tabela->set_idCampo('idAverbacao');
                 #$tabela->set_editar('?fase=editar&id=');
                 #$tabela->set_excluir('?fase=excluir&id=');
-                $tabela->show();
+                #$tabela->show(); /// Retirei pois questionei a utilidade
             }
 
             ###
             # Função para acrescentar a rotina extra
 
-            function exibeObs($idServidor) {
+            # Exibe a observação do triênio cadastrada no bd
+            function exibeObs($idServidor) {                 
                 $tt = new trienio();
                 $tt->exibeObsGeral($idServidor);
             }

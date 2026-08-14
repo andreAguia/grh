@@ -724,9 +724,10 @@ class PlanoCargos {
                 pLista(
                         $row2[0] . " - R$ " . formataMoeda($row2[1]),
                         $row2[2]
-                );
+                );                
             } else {
-                return null;
+                echo "Plano do Servidor<br/>é Diferente do Atual!!";
+                #return null;
             }
         }
     }
@@ -771,7 +772,8 @@ class PlanoCargos {
         $select = "SELECT idPlano
                      FROM tbprogressao JOIN tbclasse USING (idClasse)
                                        JOIN tbplano USING (idPlano)
-                    WHERE idServidor = {$idServidor}";
+                    WHERE idServidor = {$idServidor}
+                    ORDER BY dtInicial DESC";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);

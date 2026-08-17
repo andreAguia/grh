@@ -448,7 +448,7 @@ class Concurso {
         /**
          * Exibe um quadro com os docentes sem concurso
          * 
-         * @syntax $plano->exibeQuadroDocentesSemConcurso();
+         * @syntax $plano->exibeQuadroServidoresConcursoPorCargo();
          */
         $select = "SELECT distinct tbtipocargo.sigla,
                           (SELECT COUNT(idServidor) FROM tbservidor JOIN tbcargo USING (idCargo) WHERE situacao = 1 AND idTipoCargo = tt.idTipoCargo AND idConcurso = {$idConcurso}),

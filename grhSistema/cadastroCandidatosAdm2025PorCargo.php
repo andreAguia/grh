@@ -251,7 +251,7 @@ if ($acesso) {
 
             # Exibe os dados do Concurso
             $concurso->exibeDadosConcurso($idConcurso, true);
-
+            
             # menu
             $concurso->exibeMenu($idConcurso, "Por Cargo");
 

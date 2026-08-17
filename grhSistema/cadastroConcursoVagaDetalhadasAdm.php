@@ -62,6 +62,7 @@ if ($acesso) {
                                      tbconcursovagadetalhada.vagasPcd,
                                      tbconcursovagadetalhada.vagasNi,
                                      tbconcursovagadetalhada.vagasHipo,
+                                     tbconcursovagadetalhada.idConcursoVagaDetalhada,
                                      idConcursoVagaDetalhada
                                  FROM tbconcursovagadetalhada JOIN tbcargo USING (idCargo)
                                                               JOIN tbtipocargo USING (idTipoCargo)
@@ -88,11 +89,14 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["Cargo", "Vagas AC", "Vagas PCD (5%)", "Vagas Ni (20%)", "Vagas Hipo (10%)"]);
-    $objeto->set_width([60, 8, 8, 8, 8]);
+    $objeto->set_label(["Cargo", "Vagas AC", "Vagas PCD (5%)", "Vagas Ni (20%)", "Vagas Hipo (10%)", "Obs"]);
+    $objeto->set_width([55, 8, 8, 8, 8, 5]);
     $objeto->set_align(["left"]);
     $objeto->set_colunaSomatorio([1, 2, 3, 4]);
     $objeto->set_totalRegistro(false);
+
+    $objeto->set_classe([null, null, null, null, null, "ConcursoAdm2025"]);
+    $objeto->set_metodo([null, null, null, null, null, "exibeObsVagasDetalhadas"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

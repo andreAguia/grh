@@ -344,10 +344,10 @@ class ConcursoAdm2025 {
                     $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]} - {$inicio}</span>";
                     $problemas++;
 
-//                    # acerta a listagem - Retirei opis ja resolveu
+//                    # acerta a listagem - Retirei pois ja resolveu
 //                    # Caso apareça algum outro erro eu reativo
-                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
-                    $pessoal->update($sql);
+//                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
+//                    $pessoal->update($sql);
                 }
             }
 

@@ -268,28 +268,19 @@ class ConcursoAdm2025 {
 
         # Verifica se houve alguma desistência
         if ($numDes > 0) {
-            # tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Candidatos Retirados da Vaga");
-            $tabela->set_subtitulo("Por desistência, por não terem respondido o formulário ou por não terem se apresentado");
-            $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["Inscrição", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Documento", "Editar"]);
-            $tabela->set_width([10, 25, 5, 10, 10, 30, 5, 5]);
-            $tabela->set_align(["center", "left", "center", "center", "center", "left"]);
-            $tabela->set_funcao([null, "plm", "idade", null, null, "nl2br2"]);
 
-            $tabela->set_classe([null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, null, "exibeDeclaracao"]);
+            # Monta o esquema de abas
+            # Menu de Abas
+            $tab = new Tab([
+                "Aprovados",
+                "Retirados da Vaga"
+            ]);
+            
 
-            # Botão Editar
-            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-            # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
-            $tabela->show();
+            $tab->abreConteudo();
         }
 
+            
         # Monta o select da listagem principal
         $select = "SELECT {$campo},
                               if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
@@ -392,6 +383,36 @@ class ConcursoAdm2025 {
 
         $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
         $tabela->show();
+
+        if ($numDes > 0) {
+            
+            $tab->fechaConteudo();
+            $tab->abreConteudo();
+            
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Candidatos Retirados da Vaga");
+            $tabela->set_subtitulo("Por desistência, por não terem respondido o formulário ou por não terem se apresentado");
+            $tabela->set_conteudo($rowDes);
+            $tabela->set_label(["Inscrição", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Documento", "Editar"]);
+            $tabela->set_width([10, 25, 5, 10, 10, 30, 5, 5]);
+            $tabela->set_align(["center", "left", "center", "center", "center", "left"]);
+            $tabela->set_funcao([null, "plm", "idade", null, null, "nl2br2"]);
+
+            $tabela->set_classe([null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
+            $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, null, "exibeDeclaracao"]);
+
+            # Botão Editar
+            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+            $tabela->show();
+
+            $tab->fechaConteudo();
+            $tab->show();
+        }
     }
 
     ###########################################################

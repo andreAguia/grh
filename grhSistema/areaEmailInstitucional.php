@@ -475,12 +475,14 @@ if ($acesso) {
 
             $select = "SELECT tbpessoa.emailUenf
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbperfil USING (idPerfil)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                          LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)       
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                          WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
                            AND tbservidor.situacao = 1";
+            
             # Lotacao
             if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
                 # Verifica se o que veio é numérico
@@ -519,9 +521,9 @@ if ($acesso) {
                     $select .= ' AND (tbvagahistorico.idConcurso = ' . $parametroConcurso . ')';
                 }
             }
-
+            
             # Perfil
-            if (!empty($parametroPerfil)) {
+            if ($parametroPerfil <> "Todos") {
                 $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
             } else {
                 $select .= " AND tbperfil.tipo <> 'Outros'";
@@ -550,6 +552,7 @@ if ($acesso) {
 
             $select = "SELECT tbpessoa.emailPessoal
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbperfil USING (idPerfil)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                          LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)       
                                               JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
@@ -596,7 +599,7 @@ if ($acesso) {
             }
 
             # Perfil
-            if (!empty($parametroPerfil)) {
+            if ($parametroPerfil <> "Todos") {
                 $select .= " AND tbservidor.idPerfil = {$parametroPerfil}";
             } else {
                 $select .= " AND tbperfil.tipo <> 'Outros'";

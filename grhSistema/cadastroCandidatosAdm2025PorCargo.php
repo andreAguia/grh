@@ -251,7 +251,7 @@ if ($acesso) {
 
             # Exibe os dados do Concurso
             $concurso->exibeDadosConcurso($idConcurso, true);
-            
+
             # menu
             $concurso->exibeMenu($idConcurso, "Por Cargo");
 
@@ -369,110 +369,12 @@ if ($acesso) {
             $candidato = new CandidatoAdm2025();
             $candidato->exibeTabelaVagasCargo($parametroCargoCandidato);
 
-            /*
-             * Quando se tem número de vagas cadastrados
+            /**
+             * Todos os Cargos 
              */
-            if (!empty($numeroVagas)) {
-
-                if (Verifica::acesso($idUsuario, 1)) {      // somente admin
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, true);
-                } else {
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, false);
-                }
-
-                ####################################################################################
-            } else {
-                /*
-                 * Quando não tem número de vagas cadastradas
-                 */
-
-                if ($parametroCargoCandidato <> "*") {
-
-                    /*
-                     * Com um cargo definido 
-                     */
-
-                    # Monta o select
-                    $select = "SELECT {$campo},
-                              '---',
-                              IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
-                              dtConvocacao,
-                              idCandidato,
-                              DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
-                              idCandidato,                                    
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato,
-                              idCandidato
-                         FROM tbcandidato LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
-                        WHERE idConcurso = {$idConcurso}";
-
-                    # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "Ac") {
-                        $select .= " AND {$campo} IS NOT NULL";
-                    }
-
-                    # Data de Convocação
-                    if ($parametroConvocacao <> "*") {
-                        $select .= " AND dtConvocacao = '{$parametroConvocacao}'";
-                    }
-
-                    # Cargo
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " AND cargo = '{$parametroCargoCandidato}'";
-                    }
-
-                    # Situacao
-                    if ($parametroSituacao <> "*") {
-                        $select .= " AND  idCandidatoSituacao = '{$parametroSituacao}'";
-                    }
-
-                    # Ordena de acorto do as cotas
-                    if ($parametroCargoCandidato <> "*") {
-                        $select .= " ORDER BY {$campo}";
-                    } else {
-                        $select .= " ORDER BY nome";
-                    }
-
-                    # Pega os dados
-                    $row = $pessoal->select($select);
-
-                    # tabela
-                    $tabela = new Tabela();
-                    $tabela->set_titulo("Candidatos Aprovados");
-                    $tabela->set_subtitulo($subtitulo);
-                    $tabela->set_conteudo($row);
-                    $tabela->set_label(["#", "Colocação", "Inscrição", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Editar"]);
-                    $tabela->set_width([5, 10, 10, 10, 30, 5, 10, 10, 10, 5]);
-                    $tabela->set_align(["center", "center", "center", "center", "left", "center"]);
-                    $tabela->set_funcao([null, null, null, "date_to_php", "plm", "idade"]);
-
-                    $tabela->set_classe([null, null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025"]);
-
-                    if ($parametroCargoCandidato <> "*") {
-                        $tabela->set_metodo([null, null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, "exibeObs"]);
-                    } else {
-                        $tabela->set_metodo([null, null, null, null, "get_nomeECargo", null, "exibeClassific", null, "exibeObs"]);
-                    }
-
-                    # Botão Editar
-                    $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-                    $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-                    # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
-
-                    if ($parametroCargoCandidato <> "*") {
-                        $tabela->set_rowspan(0);
-                        $tabela->set_grupoCorColuna(0);
-                    }
-                    $tabela->show();
-                } else {
-                    /*
-                     * Todos os Cargos 
-                     */
-
-                    # Monta o select
-                    $select = "SELECT IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
+            if ($parametroCargoCandidato == "*") {
+                # Monta o select
+                $select = "SELECT IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
                               dtConvocacao,
                               idCandidato,
                               cargo,
@@ -485,47 +387,56 @@ if ($acesso) {
                          FROM tbcandidato LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
                         WHERE idConcurso = {$idConcurso}";
 
-                    # Pega o candidato de acordo com a cota
-                    if ($parametroCota <> "Ac") {
-                        $select .= " AND {$campo} IS NOT NULL";
-                    }
+                # Pega o candidato de acordo com a cota
+                if ($parametroCota <> "Ac") {
+                    $select .= " AND {$campo} IS NOT NULL";
+                }
 
-                    # Data de Convocação
-                    if ($parametroConvocacao <> "*") {
-                        $select .= " AND dtConvocacao = '{$parametroConvocacao}'";
-                    }
+                # Data de Convocação
+                if ($parametroConvocacao <> "*") {
+                    $select .= " AND dtConvocacao = '{$parametroConvocacao}'";
+                }
 
-                    # Situacao
-                    if ($parametroSituacao <> "*") {
-                        $select .= " AND  idCandidatoSituacao = '{$parametroSituacao}'";
-                    }
+                # Situacao
+                if ($parametroSituacao <> "*") {
+                    $select .= " AND  idCandidatoSituacao = '{$parametroSituacao}'";
+                }
 
-                    # Ordena pelo nome
-                    $select .= " ORDER BY nome";
+                # Ordena pelo nome
+                $select .= " ORDER BY nome";
 
-                    # Pega os dados
-                    $row = $pessoal->select($select);
+                # Pega os dados
+                $row = $pessoal->select($select);
 
-                    # tabela
-                    $tabela = new Tabela();
-                    $tabela->set_titulo("Candidatos Aprovados");
-                    $tabela->set_subtitulo($subtitulo);
-                    $tabela->set_conteudo($row);
-                    $tabela->set_label(["Inscrição", "Convocação", "Candidato", "Cargo", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
-                    $tabela->set_width([10, 10, 25, 20, 5, 10, 10, 5, 5, 5]);
-                    $tabela->set_align(["center", "center", "left", "left"]);
-                    $tabela->set_funcao([null, "date_to_php", null, "plm", "idade"]);
+                # tabela
+                $tabela = new Tabela();
+                $tabela->set_titulo("Candidatos Aprovados");
+                $tabela->set_subtitulo($subtitulo);
+                $tabela->set_conteudo($row);
+                $tabela->set_label(["Inscrição", "Convocação", "Candidato", "Cargo", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
+                $tabela->set_width([10, 10, 25, 20, 5, 10, 10, 5, 5, 5]);
+                $tabela->set_align(["center", "center", "left", "left"]);
+                $tabela->set_funcao([null, "date_to_php", null, "plm", "idade"]);
 
-                    $tabela->set_classe([null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "concursoAdm2025", "CandidatoAdm2025"]);
-                    $tabela->set_metodo([null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeDeclaracao", "exibeObs"]);
+                $tabela->set_classe([null, null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "concursoAdm2025", "CandidatoAdm2025"]);
+                $tabela->set_metodo([null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeClassific", null, "exibeDeclaracao", "exibeObs"]);
 
-                    # Botão Editar
-                    $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-                    $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+                # Botão Editar
+                $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+                $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
-                    # Coloca o objeto link na tabela			
-                    $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
-                    $tabela->show();
+                # Coloca o objeto link na tabela			
+                $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+                $tabela->show();
+            } else {
+                /**
+                 * Quando escolhe um cargo
+                 */
+                # Exibe a lista de Candidatos    
+                if (Verifica::acesso($idUsuario, 1)) {      // exibe os erros para somente admin
+                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, true);
+                } else {
+                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, false);
                 }
             }
 

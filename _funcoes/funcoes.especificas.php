@@ -749,11 +749,16 @@ function get_nomeSimples($nome) {
     $parte = explode(" ", $nome);
 
     # Verifica se e nome composto
-    $nomesCompostos = array("Ana", "Maria", "Andre", "André");
+    $nomesPegaSegundo = array("Ana", "Maria", "Andre", "André");
+
+    # Segundo nome a ser rejeitado
+    $nomesPegaUltimo = array("Patrícia", "Patricia");
 
     # Verifica se o nome em questao e composto e insere o segundo nome
-    if (in_array($parte[0], $nomesCompostos)) {
+    if (in_array($parte[0], $nomesPegaSegundo)) {
         $nomeSimples = $parte[0] . " " . $parte[1];
+    }elseif (in_array($parte[0], $nomesPegaUltimo)) {
+        $nomeSimples = $parte[0] . " " . end($parte);
     } else {
         $nomeSimples = $parte[0];
     }
@@ -1585,8 +1590,8 @@ function ressaltaVaga($texto) {
 
 function exibeDadosPetec($idServidor) {
 
-   $petec = new Petec();
-   $petec->exibeDadosPetec($idServidor);
+    $petec = new Petec();
+    $petec->exibeDadosPetec($idServidor);
 }
 
 ###########################################################

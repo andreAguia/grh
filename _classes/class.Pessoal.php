@@ -93,7 +93,7 @@ class Pessoal extends Bd {
             $idCampo = $this->idCampo;
         }
 
-        # efetua a exclus�o
+        # efetua a exclusão
         parent::excluir($idValor, $tabela, $idCampo);
 
         return true;

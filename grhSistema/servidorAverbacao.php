@@ -372,7 +372,7 @@ if ($acesso) {
                 $mensagem2 = "Atenção - Períodos com Sobreposição de Dias !!!<br/>
                               Verifique se não há dias sobrepostos entre os períodos averbados<br/>ou se algum período averbado ultrapassa a data de admissão na UENF: " . date_to_php($dtAdmissao);
 
-                calloutAlert($mensagem2, "ff");
+                calloutAlert($mensagem2, "Alerta");
             }
 
             calloutWarning($mensagem1, "Atenção");

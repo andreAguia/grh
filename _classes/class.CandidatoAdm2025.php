@@ -1253,7 +1253,7 @@ class CandidatoAdm2025 {
 
                 # Retorno
                 if (empty($idFuncional)) {
-                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>Admissão:{$dtAdm}<br/>{$cargoEfetivo}</b>";
+                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>Admissão: {$dtAdm}<br/>{$cargoEfetivo}</b>";
                 } else {
                     $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>ID Funcional: {$idFuncional}<br/>Admissão: {$dtAdm}<br/>{$cargoEfetivo}</b>";
                 }

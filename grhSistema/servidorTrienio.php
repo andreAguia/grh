@@ -30,13 +30,8 @@ if ($acesso) {
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
 
-    # Verifica se tem direito
-    if ($trienio->temDireito($idServidorPesquisado)) {
-        # Verifica a fase do programa
-        $fase = get('fase', 'listar');
-    } else {
-        $fase = "aviso";
-    }
+    # Verifica a fase do programa
+    $fase = get('fase', 'listar');
 
     # pega o id (se tiver)
     $id = soNumeros(get('id'));
@@ -51,10 +46,18 @@ if ($acesso) {
     # Abre um novo objeto Modelo
     $objeto = new Modelo();
 
+    # Verifica se tem direito
+    if ($trienio->temDireito($idServidorPesquisado)) {
+        $mensagemTrienio = null;
+    } else {
+        $mensagemTrienio = "Conforme a Lei Complementar 194/2021, esse servidor não tem direito ao triênio pois o concurso ao qual foi aprovado teve seu edital publicado após a data definida pela lei."
+                . "<br/>Verifique se o servidor tem vínculo anterior que permita o cadastro do triênio.";
+    }
+
     ################################################################
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra("get_DadosServidor");
-    $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "calloutAlert"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $mensagemTrienio]);
 
     # Pega os dados do último percentual
     $ultimoPercentual = $trienio->getPercentual($idServidorPesquisado);
@@ -323,9 +326,9 @@ if ($acesso) {
 
             ###
             # Função para acrescentar a rotina extra
-
             # Exibe a observação do triênio cadastrada no bd
-            function exibeObs($idServidor) {                 
+
+            function exibeObs($idServidor) {
                 $tt = new trienio();
                 $tt->exibeObsGeral($idServidor);
             }
@@ -342,22 +345,6 @@ if ($acesso) {
 
         case "gravar":
             $objeto->gravar($id, "servidorTrienioExtra.php");
-            break;
-
-        case "aviso":
-            botaoVoltar("servidorMenu.php");
-            get_DadosServidor($idServidorPesquisado);
-
-            # Limita a página
-            $grid = new Grid();
-            $grid->abreColuna(12);
-
-            tituloTable("Importante");
-            callout("Conforme a Lei Complementar 194/2021, esse servidor não tem direito ao triênio pois o concurso ao qual foi aprovado teve seu edital publicado após a data definida pela lei.");
-
-            $grid->fechaColuna();
-            $grid->fechaGrid();
-
             break;
     }
     $page->terminaPagina();

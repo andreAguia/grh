@@ -337,8 +337,8 @@ class ConcursoAdm2025 {
 
 //                    # acerta a listagem - Retirei pois ja resolveu
 //                    # Caso apareça algum outro erro eu reativo
-//                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
-//                    $pessoal->update($sql);
+                    $sql = "UPDATE tbcandidato SET {$campo} = {$inicio} WHERE idCandidato = {$linha['idCandidato']}";
+                    $pessoal->update($sql);
                 }
             }
 

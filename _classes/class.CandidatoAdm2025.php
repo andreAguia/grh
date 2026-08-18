@@ -1244,12 +1244,18 @@ class CandidatoAdm2025 {
 
                 # Verifica se é ativo
                 $situacao = $pessoal->get_situacao($idServidor);
+                
+                # Pega a Admissão
+                $dtAdm = $pessoal->get_dtAdmissao($idServidor);
+                
+                # Pega o Cargo
+                $cargoEfetivo = $pessoal->get_cargoSimples($idServidor);
 
                 # Retorno
                 if (empty($idFuncional)) {
-                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}</b>";
+                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>Admissão:{$dtAdm}<br/>{$cargoEfetivo}</b>";
                 } else {
-                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>ID Funcional: {$idFuncional}</b>";
+                    $retorno = "<b>Servidor {$perfil} {$pessoal->get_situacao($idServidor)}<br/>ID Funcional: {$idFuncional}<br/>Admissão: {$dtAdm}<br/>{$cargoEfetivo}</b>";
                 }
             }
 

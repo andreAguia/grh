@@ -122,6 +122,8 @@ class MenuServidor {
         # Foto
         $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
+        br();
+        $this->moduloPasta();
         $grid->fechaColuna();
 
         # Financeiro
@@ -272,18 +274,7 @@ class MenuServidor {
                     $menu->add_item($botao);
                 }
             }
-        }
-
-        # Pasta Funcional
-        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $botao = new BotaoGrafico();
-            $botao->set_label('Pasta Funcional');
-            $botao->set_url('servidorPasta.php?grh=1');
-            #$botao->set_url('servidorPasta2.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
-            $botao->set_title('Pasta funcional do servidor');
-            $menu->add_item($botao);
-        }
+        }        
 
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
@@ -1083,6 +1074,45 @@ class MenuServidor {
             $botao->set_url('servidorAuxilioFuneral.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'funeral.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Dados do auxílio funeral');
+            $menu->add_item($botao);
+        }
+
+        $menu->show();
+        br();
+    }
+
+    ######################################################################################################################
+
+    /**
+     * Método moduloPasta
+     *  
+     * Exibe as pastas funcionais
+     */
+    private function moduloPasta() {
+        titulo('Documentos');
+        br();
+        
+        $menu = new MenuGrafico(2);
+
+        # Pasta Funcional
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $botao = new BotaoGrafico();
+            $botao->set_label('Pasta Funcional');
+            $botao->set_url('servidorPasta.php?grh=1');
+            #$botao->set_url('servidorPasta2.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Pasta funcional do servidor');
+            $menu->add_item($botao);
+        }
+        
+        # Documentos
+        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $botao = new BotaoGrafico();
+            $botao->set_label('Documentos');
+            $botao->set_url('servidorPasta.php?grh=1');
+            #$botao->set_url('servidorPasta2.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $this->tamanhoImagem, $this->tamanhoImagem);
+            $botao->set_title('Pasta funcional do servidor');
             $menu->add_item($botao);
         }
 

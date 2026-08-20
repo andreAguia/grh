@@ -58,7 +58,7 @@ class MenuServidor {
             $grid->abreColuna(12, 6, 3);
             if ($situacao == "Ativo") {
                 $this->moduloOcorrencias();
-                $this->moduloVinculos();                
+                $this->moduloVinculos();
             } else {
                 $this->moduloOcorrencias();
             }
@@ -84,12 +84,11 @@ class MenuServidor {
             $this->moduloAtendimento();
             $grid->fechaColuna();
         }
-        
+
         # Foto
         $grid->abreColuna(4, 6, 2);
         $this->moduloFoto();
         $grid->fechaColuna();
-
 
         # Funcionais
         $grid->abreColuna(12, 6, 6);
@@ -108,10 +107,10 @@ class MenuServidor {
         $grid->abreColuna(8, 6, 3);
         $this->moduloPessoais();
         $grid->fechaColuna();
-        
+
         # Documentos e Benefícios
         $grid->abreColuna(8, 6, 3);
-        
+
         $this->moduloPasta();
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
@@ -120,7 +119,7 @@ class MenuServidor {
             br(15);
         }
 
-        $grid->fechaColuna();        
+        $grid->fechaColuna();
 
         # Financeiro
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
@@ -157,7 +156,6 @@ class MenuServidor {
 
 //        titulo('Foto');
 //        br();
-
         # Inicia o Grid
         $grid = new Grid();
         $grid->abreColuna(12);
@@ -1092,13 +1090,19 @@ class MenuServidor {
 
         # Pasta Funcional
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
+            $classePasta = new PastaFuncional();
+
             $botao = new BotaoGrafico();
             $botao->set_label('Pasta Funcional');
-            $botao->set_url('emDesenvolvimento.php');
+            if (empty($classePasta->get_linkPastaGoogleDrive($this->idServidor))) {
+                $botao->set_url('areaPastaFuncional.php?fase=pastaNaoCadastrada');
+            } else {
+                $botao->set_url($classePasta->get_linkPastaGoogleDrive($this->idServidor));
+            }
             $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Pasta funcional do servidor');
             $menu->add_item($botao);
-            $botao->set_target('_blank');            
+            $botao->set_target('_blank');
         }
 
         # Documentos

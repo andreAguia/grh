@@ -110,5 +110,48 @@ class PastaFuncional {
         }
     }
 
+###########################################################
+
+    public function exibePastaGoogleDrive($link) {
+        /**
+         * Exibe um link para a pasta no Google Drive
+         * 
+         * @param $link varchar null O link da pasta no google Drive
+         * 
+         * @syntax $pastaFuncional->exibePastaGoogleDrive($link);
+
+         */
+        
+        if(empty($link)){
+            return "---";
+        }else{      
+
+            # Monta o link
+            $link = new Link(null, $link, "Exibe a Pasta Funcional");
+            $link->set_imagem(PASTA_FIGURAS . "doc.png", 20, 20);
+            $link->set_target("_blank");
+            $link->show();
+        }
+    }
+
 ##########################################################################################
+
+    public function get_linkPastaGoogleDrive($idServidor) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT pastaFuncional
+                     FROM tbservidor
+                    WHERE idServidor = {$idServidor}";
+
+        $retorno = $pessoal->select($select, false);
+        return $retorno[0];
+    }
+
+###########################################################
 }

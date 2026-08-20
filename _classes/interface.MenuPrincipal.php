@@ -235,7 +235,7 @@ class MenuPrincipal {
      * Método moduloSispatri
      */
     private function moduloSispatri() {
-        
+
         Titulo("Sispatri 2026");
 
         $botao = new BotaoGrafico();
@@ -996,22 +996,6 @@ class MenuPrincipal {
         $botao->set_title('Área dos Contatos dos Servidores');
         $menu->add_item($botao);
 
-        if (Verifica::acesso($this->idUsuario, 1)) {
-            $botao = new BotaoGrafico();
-            $botao->set_label('Recadastramento');
-            $botao->set_url('areaRecadastramento.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Recadastramento de Servidores');
-            $menu->add_item($botao);
-
-            $botao = new BotaoGrafico();
-            $botao->set_label('Problemas na Progressão');
-            $botao->set_url('areaProblemasProgressao.php?grh=1');
-            $botao->set_imagem(PASTA_FIGURAS . 'bug-tracker.svg', $tamanhoImage, $tamanhoImage);
-            $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
-            $menu->add_item($botao);
-        }
-
         $botao = new BotaoGrafico();
         $botao->set_label('Instagram da GRH');
         $botao->set_url('https://www.instagram.com/grh_uenf/');
@@ -1020,6 +1004,31 @@ class MenuPrincipal {
         $botao->set_target("_blank");
         $menu->add_item($botao);
 
+        if (Verifica::acesso($this->idUsuario, 1)) {
+            $botao = new BotaoGrafico();
+            $botao->set_label('Recadastramento');
+            $botao->set_url('areaRecadastramento.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'recadastramento.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Recadastramento de Servidores');
+            $menu->add_item($botao);
+
+            # Problemas de Progressão
+            $botao = new BotaoGrafico();
+            $botao->set_label('Problemas na Progressão');
+            $botao->set_url('areaProblemasProgressao.php?grh=1');
+            $botao->set_imagem(PASTA_FIGURAS . 'bug-tracker.svg', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
+            $menu->add_item($botao);
+            
+            # Pastas Funcionais
+            $botao = new BotaoGrafico();
+            $botao->set_label('Pastas Funcionais');
+            $botao->set_url('areaPastaFuncional.php');
+            $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $tamanhoImage, $tamanhoImage);
+            $botao->set_title('Pastas funcionais dos servidores');
+            $botao->set_target("_blank5");
+            $menu->add_item($botao);
+        }
         $menu->show();
         $painel->fecha();
     }

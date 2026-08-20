@@ -18,4 +18,4 @@ $page->iniciaPagina();
 # Cabeçalho da Página
 AreaServidor::cabecalho();
 
-emConstrucao("Lamentamos profundamente, mas<br/>esta rotina ainda não está pronta.</br></br>Que Tal Tomar um Café?", 3, PASTA_FIGURAS_GERAIS . 'cafe.png');
+emConstrucao("Lamentamos profundamente, mas<br/>esta rotina ainda não está pronta.</br></br>Que tal tomar um café?", 3, PASTA_FIGURAS_GERAIS . 'cafe.png');

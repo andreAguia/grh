@@ -86,26 +86,26 @@ if ($acesso) {
         case "exibeLista" :
             br();
 
-            # Cria um menu
-            $menu1 = new MenuBar();
-
-            # Voltar
-            $botaoVoltar = new Link("Voltar", "grh.php");
-            $botaoVoltar->set_class('button');
-            $botaoVoltar->set_title('Voltar a página anterior');
-            $botaoVoltar->set_accessKey('V');
-            $menu1->add_link($botaoVoltar, "left");
-
-            # Relatórios
-            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
-            $botaoRel = new Button();
-            $botaoRel->set_title("Relatório dessa pesquisa");
-            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
-            $botaoRel->set_target("_blank");
-            $botaoRel->set_imagem($imagem);
-            #$menu1->add_link($botaoRel,"right");
-
-            $menu1->show();
+//            # Cria um menu
+//            $menu1 = new MenuBar();
+//
+//            # Voltar
+//            $botaoVoltar = new Link("Voltar", "grh.php");
+//            $botaoVoltar->set_class('button');
+//            $botaoVoltar->set_title('Voltar a página anterior');
+//            $botaoVoltar->set_accessKey('V');
+//            $menu1->add_link($botaoVoltar, "left");
+//
+//            # Relatórios
+//            $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+//            $botaoRel = new Button();
+//            $botaoRel->set_title("Relatório dessa pesquisa");
+//            $botaoRel->set_url("../grhRelatorios/acumulacao.geral.php");
+//            $botaoRel->set_target("_blank");
+//            $botaoRel->set_imagem($imagem);
+//            #$menu1->add_link($botaoRel,"right");
+//
+//            $menu1->show();
 
             ###
             # Formulário de Pesquisa

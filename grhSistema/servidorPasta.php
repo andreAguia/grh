@@ -69,7 +69,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo
-    $objeto->set_nome('Documentos da Pasta Funcional');
+    $objeto->set_nome('Documentos');
 
     $objeto->set_voltarLista($origem);
     $objeto->set_voltarForm('?fase=listar');

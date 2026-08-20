@@ -55,11 +55,10 @@ class MenuServidor {
 
         # Ocorrências e Vinculos
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(12, 6, 4);
+            $grid->abreColuna(12, 6, 3);
             if ($situacao == "Ativo") {
                 $this->moduloOcorrencias();
-                $this->moduloVinculos();
-                $this->moduloChefiaImediata();
+                $this->moduloVinculos();                
             } else {
                 $this->moduloOcorrencias();
             }
@@ -77,21 +76,23 @@ class MenuServidor {
             $grid->fechaColuna();
         }
 
-        # Atendimento e Pasta do Sei
+        # Atendimento
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(12, 6, 4);
-            $this->moduloPastaSei();
+            $grid->abreColuna(12, 6, 3);
+            #$this->moduloPastaSei();
+            $this->moduloChefiaImediata();
             $this->moduloAtendimento();
             $grid->fechaColuna();
         }
+        
+        # Foto
+        $grid->abreColuna(4, 6, 2);
+        $this->moduloFoto();
+        $grid->fechaColuna();
+
 
         # Funcionais
-        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(12, 6, 6);
-        } else {
-            $grid->abreColuna(12, 6, 5);
-        }
-
+        $grid->abreColuna(12, 6, 6);
         $this->moduloFuncionais();
 
         # Mostra os ramais se for bolsista
@@ -103,28 +104,23 @@ class MenuServidor {
         }
         $grid->fechaColuna();
 
-        # Pessoais e Benefícios
-        if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
-            $grid->abreColuna(8, 6, 4);
-        } else {
-            $grid->abreColuna(8, 6, 5);
-        }
-
+        # Pessoais 
+        $grid->abreColuna(8, 6, 3);
         $this->moduloPessoais();
+        $grid->fechaColuna();
+        
+        # Documentos e Benefícios
+        $grid->abreColuna(8, 6, 3);
+        
+        $this->moduloPasta();
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $this->moduloBeneficios();
         } else {
             br(15);
         }
-        $grid->fechaColuna();
 
-        # Foto
-        $grid->abreColuna(4, 6, 2);
-        $this->moduloFoto();
-        br();
-        $this->moduloPasta();
-        $grid->fechaColuna();
+        $grid->fechaColuna();        
 
         # Financeiro
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
@@ -159,8 +155,8 @@ class MenuServidor {
      */
     private function moduloFoto() {
 
-        titulo('Foto');
-        br();
+//        titulo('Foto');
+//        br();
 
         # Inicia o Grid
         $grid = new Grid();
@@ -208,7 +204,7 @@ class MenuServidor {
         titulo('Funcionais');
         br();
 
-        $menu = new MenuGrafico(4);
+        $menu = new MenuGrafico(5);
 
         # Funcionais
         $botao = new BotaoGrafico();
@@ -274,7 +270,7 @@ class MenuServidor {
                     $menu->add_item($botao);
                 }
             }
-        }        
+        }
 
         # Cessão
         if (($this->perfil == 1) OR ($this->perfil == 4)) {   // Ser for estatutário
@@ -468,7 +464,7 @@ class MenuServidor {
         $painel->abre();
 
         #p("Ocorrências", "palertaServidor");
-        p("Pendências", "palertaServidor");
+        p("Avisos", "palertaServidor");
 
         # Verifica se tem alguma ocorrência
         if ($qtdMensagem > 0) {
@@ -774,7 +770,7 @@ class MenuServidor {
         br();
 
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário
-            $menu = new MenuGrafico(3);
+            $menu = new MenuGrafico(2);
         } else {
             $menu = new MenuGrafico(4);
         }
@@ -1091,26 +1087,25 @@ class MenuServidor {
     private function moduloPasta() {
         titulo('Documentos');
         br();
-        
+
         $menu = new MenuGrafico(2);
 
         # Pasta Funcional
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Pasta Funcional');
-            $botao->set_url('servidorPasta.php?grh=1');
-            #$botao->set_url('servidorPasta2.php?grh=1');
+            $botao->set_url('emDesenvolvimento.php');
             $botao->set_imagem(PASTA_FIGURAS . 'arquivo.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Pasta funcional do servidor');
             $menu->add_item($botao);
+            $botao->set_target('_blank');            
         }
-        
+
         # Documentos
         if ($this->perfilTipo <> "Outros") { // Ser não for estagiário ou bolsista
             $botao = new BotaoGrafico();
             $botao->set_label('Documentos');
             $botao->set_url('servidorPasta.php?grh=1');
-            #$botao->set_url('servidorPasta2.php?grh=1');
             $botao->set_imagem(PASTA_FIGURAS . 'ficha.png', $this->tamanhoImagem, $this->tamanhoImagem);
             $botao->set_title('Pasta funcional do servidor');
             $menu->add_item($botao);

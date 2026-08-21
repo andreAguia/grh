@@ -1559,8 +1559,8 @@ class Pessoal extends Bd {
 
             # Monta select
             $select = "SELECT idPessoa
-                     FROM tbpessoa
-                    WHERE nome COLLATE utf8mb4_0900_ai_ci like '%{$nome}%'";
+                         FROM tbpessoa
+                        WHERE nome = '{$nome}'";
 
             $id_pessoa = parent::select($select, false);
 
@@ -2651,9 +2651,9 @@ class Pessoal extends Bd {
         } else {
 
             if (is_numeric($idServidor)) {
-                $select = 'SELECT tbpessoa.nome
+                $select = "SELECT tbpessoa.nome
                             FROM tbservidor JOIN tbpessoa ON(tbservidor.idPessoa = tbpessoa.idPessoa)
-                           WHERE idServidor = ' . $idServidor;
+                           WHERE idServidor = {$idServidor}";
 
                 if ($idServidor == 0) {
                     $nome[0] = "";
@@ -3162,13 +3162,15 @@ class Pessoal extends Bd {
      * @param   integer $idPessoa    idPessoa do servidor
      */
     function get_nomeidPessoa($idPessoa) {
-        $select = 'SELECT tbpessoa.nome
+        if (empty($idPessoa)) {
+            return null;
+        } else {
+            $select = "SELECT tbpessoa.nome
                          FROM tbpessoa
-                        WHERE idPessoa = ' . $idPessoa;
+                        WHERE idPessoa = {$idPessoa}";
 
-        $nome = parent::select($select, false);
-
-        return $nome[0];
+            return parent::select($select, false)[0];
+        }
     }
 
     ###########################################################
@@ -6517,9 +6519,11 @@ class Pessoal extends Bd {
 
         # Cria a função str_contains somente se o servidor for antigo
         if (!function_exists('str_contains')) {
+
             function str_contains(string $haystack, string $needle): bool {
                 return $needle !== '' && mb_strpos($haystack, $needle) !== false;
             }
+
         }
 
         # Verifica se é o setor de cedidos (113)
@@ -6705,12 +6709,14 @@ class Pessoal extends Bd {
         $nomeLotacao = $this->get_nomeLotacao2($idLotacao);
         $diretor = $this->get_diretor($idLotacao);
         $reitor = $this->get_reitor();
-        
+
         # Cria a função str_contains somente se o servidor for antigo
         if (!function_exists('str_contains')) {
+
             function str_contains(string $haystack, string $needle): bool {
                 return $needle !== '' && mb_strpos($haystack, $needle) !== false;
             }
+
         }
 
         # Verifica se é o setor de cedidos (113)

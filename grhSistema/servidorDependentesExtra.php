@@ -56,10 +56,19 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9 OR $parentesco == 1
     if ($auxEduc == "Sim") {
 
         if ($aux->verificaDireitoAuxEduca($parentesco)) {
+
+            # Pega a data da Portaria
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-            $dataCalculada = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
-            $campoValor[7] = date_to_bd(dataMaiorArray([$dataCalculada, $campoValor[7]]));
+
+            # Verifica o que veio depois (data da portaria, admissão ou nascimento do filho
+            $dataCalculada = dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]);
+
+            # Verifica se a data é anterior a data calculada
+            if (dataMaior($auxEducacaoDtInicial, $dataCalculada) == $dataCalculada) {
+                $erro = 1;
+                $msgErro .= 'esse dependente só teve direito a partir de ' . $dataCalculada . '\n';
+            }
         } else {
             $erro = 1;
             $msgErro .= 'esse dependente Não Tem Direito ao Auxílio Educação\n';

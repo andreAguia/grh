@@ -58,7 +58,8 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9 OR $parentesco == 1
         if ($aux->verificaDireitoAuxEduca($parentesco)) {
             $intra = new Intra();
             $dataHistoricaInicial = $intra->get_variavel('dataHistoricaInicialAuxEducacao');
-            $campoValor[7] = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+            $dataCalculada = date_to_bd(dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]));
+            $campoValor[7] = date_to_bd(dataMaiorArray([$dataCalculada, $campoValor[7]]));
         } else {
             $erro = 1;
             $msgErro .= 'esse dependente Não Tem Direito ao Auxílio Educação\n';

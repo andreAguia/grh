@@ -21,6 +21,7 @@ if ($acesso) {
 
     # Verifica a fase do programa
     $fase = get('fase');
+    set_session('areaPasta', false);
 
     # Pega o id
     $idPessoa = get('idPessoa');
@@ -106,7 +107,6 @@ if ($acesso) {
 //            #$menu1->add_link($botaoRel,"right");
 //
 //            $menu1->show();
-
             ###
             # Formulário de Pesquisa
             $form = new Form('?');
@@ -268,9 +268,9 @@ if ($acesso) {
             break;
 
         ################################################################
-        # Diz que não tem posta cadastrada
+        # Diz que não tem pasta cadastrada
         case "pastaNaoCadastrada" :
-            emConstrucao("Esta pasta funcional ainda não foi cadastrada.</br></br>Que tal tomar um café?", 3, PASTA_FIGURAS_GERAIS . 'cafe.png');
+            emConstrucao("Esta pasta funcional ainda não foi cadastrada.</br></br>Entre em contato com o administrador do sistema para cadastrar esta pasta.<br/>Enquanto isso, que tal tomar um café?", 3, PASTA_FIGURAS_GERAIS . 'cafe.png');
             break;
 
         ################################################################

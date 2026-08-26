@@ -28,7 +28,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Cadastro do servidor - Pasta Sei";
+        $atividade = "Cadastro do servidor - Pasta Funcional";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7, $idServidorPesquisado);
     }
@@ -50,7 +50,7 @@ if ($acesso) {
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Pasta Funcional');
-    
+
     # select do edita
     $objeto->set_selectEdita("SELECT pastaFuncional
                                 FROM tbservidor

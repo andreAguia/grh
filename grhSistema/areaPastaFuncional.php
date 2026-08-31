@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Área de Fotografia
+ * Área de Pasta Funcional
  *  
  * By Alat
  */
@@ -31,7 +31,7 @@ if ($acesso) {
     $grh = get('grh', false);
     if ($grh) {
         # Grava no log a atividade
-        $atividade = "Visualizou a área de fotografia";
+        $atividade = "Visualizou a área de pasta funcional";
         $data = date("Y-m-d H:i:s");
         $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
     }
@@ -154,7 +154,7 @@ if ($acesso) {
 
             # Situação
             $result = $pessoal->select('SELECT idsituacao, situacao
-                                             FROM tbsituacao                                
+                                          FROM tbsituacao                                
                                          ORDER BY 1');
             array_unshift($result, array('*', '-- Todos --'));
 
@@ -239,7 +239,7 @@ if ($acesso) {
                 $tabela->set_align(["center", "left"]);
                 $tabela->set_funcao([null, null, "date_to_php"]);
                 $tabela->set_classe(["Pessoal", "Pessoal", null, "PastaFuncional"]);
-                $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoEPerfil", null, "exibePastaGoogleDrive"]);
+                $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoEPerfilESituacao", null, "exibePastaGoogleDrive"]);
                 $tabela->set_conteudo($resumo);
 
                 $tabela->set_editar('?fase=editaServidor');

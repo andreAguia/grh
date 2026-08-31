@@ -182,8 +182,7 @@ if ($acesso) {
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
-                          AND situacao = 1";
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             # Nome
             if (!is_null($parametroNome)) {

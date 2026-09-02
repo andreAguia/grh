@@ -201,9 +201,11 @@ if ($acesso) {
                               dtAdmissao,
                               pastaFuncional
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                              JOIN tbperfil USING (idPerfil)    
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbperfil.tipo <> 'Outros'";
 
             # Nome
             if (!is_null($parametroNome)) {

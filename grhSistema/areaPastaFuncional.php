@@ -44,12 +44,14 @@ if ($acesso) {
     $parametroPasta = post('parametroPasta', retiraAspas(get_session('parametroPasta', "Todos")));
     $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', $pessoal->get_idLotacao($intra->get_idServidor($idUsuario))));
+    $parametroAno = post('parametroAno', get_session('parametroAno', "Todos"));
 
     # Joga os parâmetros par as sessions    
     set_session('parametroNome', $parametroNome);
     set_session('parametroPasta', $parametroPasta);
     set_session('parametroLotacao', $parametroLotacao);
     set_session('parametroSituacao', $parametroSituacao);
+    set_session('parametroAno', $parametroAno);
 
     # Começa uma nova página
     $page = new Page();
@@ -118,7 +120,7 @@ if ($acesso) {
             $controle->set_valor($parametroNome);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(3);
+            $controle->set_col(4);
             $controle->set_autofocus(true);
             $form->add_item($controle);
 
@@ -138,7 +140,7 @@ if ($acesso) {
             $controle->set_valor($parametroLotacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(5);
+            $controle->set_col(8);
             $form->add_item($controle);
 
             # Pasta Funcional
@@ -149,7 +151,7 @@ if ($acesso) {
             $controle->set_valor($parametroPasta);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             # Situação
@@ -165,7 +167,26 @@ if ($acesso) {
             $controle->set_valor($parametroSituacao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
-            $controle->set_col(2);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            # Cria um array com os anos possíveis
+            $anoInicial = 1999;
+            $anoAtual = date('Y');
+            $anoExercicio = arrayPreenche($anoInicial, $anoAtual, "d");
+            
+            array_unshift($anoExercicio, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroAno', 'combo', 'Ano de Admissão:', 1);
+            $controle->set_size(8);
+            $controle->set_title('Filtra por Ano de Admissão');
+            $controle->set_array($anoExercicio);
+            $controle->set_valor(date("Y"));
+            $controle->set_valor($parametroAno);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             $form->show();
@@ -224,6 +245,11 @@ if ($acesso) {
             # situação
             if (($parametroSituacao <> "*") AND ($parametroSituacao <> "")) {
                 $select .= " AND (tbservidor.situacao = '{$parametroSituacao}')";
+            }
+            
+            # Admissão
+            if (($parametroAno <> "*") AND ($parametroAno <> "")) {
+                $select .= " AND (YEAR(tbservidor.dtAdmissao) = '{$parametroAno}')";
             }
 
             $select .= " ORDER BY tbpessoa.nome";

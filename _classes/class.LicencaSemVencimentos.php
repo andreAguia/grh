@@ -155,9 +155,18 @@ class LicencaSemVencimentos {
             $dtRetorno = date_to_php($dtRetorno);
         }
 
+        # Inicio e Período
         $retorno = "Início : " . trataNulo($dtInicial) . "<br/>"
-                . "Período: " . trataNulo($numDias) . "<br/>"
-                . "Término: " . trataNulo($dtTermino) . "<br/>"
+                . "Período: " . trataNulo($numDias);
+
+        # Verifica se exibe o tempo concomitante
+        $tempoC = $this->get_ultimoTempoConsecutivo($dados["idServidor"], $dados["idLicencaSemVencimentos"]);
+        if ($tempoC <> $numDias) {
+            $retorno .= " ({$tempoC})<br/>";
+        }
+
+        # Término e retorno
+        $retorno .= "Término: " . trataNulo($dtTermino) . "<br/>"
                 . "Retornou: " . trataNulo($dtRetorno);
 
         # Verifica se estamos a 90 dias da data Termino
@@ -174,6 +183,13 @@ class LicencaSemVencimentos {
             } elseif ($dias == 0) {
                 $retorno .= "<br/><span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
             }
+        }
+
+
+
+        # Verifica se chega a 4 anos (1460 dias)
+        if ($tempoC >= 1460) {
+            $retorno .= "<br/><br/><span title='O servior tem que retornar!' class='alert label'>REASSUNÇÃO</span>";
         }
 
         return $retorno;
@@ -239,76 +255,76 @@ class LicencaSemVencimentos {
         # Verifica Dados do Rioprevidência
         if ($optouContribuir == 1) {
             p("Optou pagar");
-        } elseif ($optouContribuir == 2) {
-            p("Optou NÃO pagar", "naoPagar");
-        }
 
-        # Verifica o CRP
-        if ($crp) {
-            echo "Entregou CRP";
-        } else {
-            echo "Não Entregou CRP";
-
-            # Verifica se estamos a 90 dias da data Termino
-            if (!empty($dtRetorno)) {
-                # Passa para o formato brasileiro
-                $dtRetorno = date_to_php($dtRetorno);
-
-                # Calcula a data limite da entrega
-                $dtLimite = addDias($dtRetorno, 90);
-
-                if (jaPassou($dtLimite)) {
-                    p("Data já Passou!", "jaPassou");
-                } else {
-                    p("Entregar até: $dtLimite", "plsvPassou");
-                }
-
-                # Calcula quantos dias faltam para essa data
-                $hoje = date("d/m/Y");
-                $dias = dataDif($hoje, $dtLimite);
-
-                if (($dias > 0) AND ($dias < 90)) {
-                    if ($dias == 1) {
-                        echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
-                    } else {
-                        echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
-                    }
-                } elseif ($dias == 0) {
-                    echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
-                }
+            # Verifica o CRP
+            if ($crp) {
+                echo "Entregou CRP";
             } else {
-                if (!empty($dttermino)) {
+                echo "Não Entregou CRP";
+
+                # Verifica se estamos a 90 dias da data Termino
+                if (!empty($dtRetorno)) {
                     # Passa para o formato brasileiro
-                    $dttermino = date_to_php($dttermino);
+                    $dtRetorno = date_to_php($dtRetorno);
 
-                    # Verifica se já passou 
-                    if (jaPassou($dttermino)) {
+                    # Calcula a data limite da entrega
+                    $dtLimite = addDias($dtRetorno, 90);
 
-                        # Calcula a data limite da entrega
-                        $dtLimite = addDias($dttermino, 90);
+                    if (jaPassou($dtLimite)) {
+                        p("Data já Passou!", "jaPassou");
+                    } else {
+                        p("Entregar até: $dtLimite", "plsvPassou");
+                    }
 
-                        if (jaPassou($dtLimite)) {
-                            p("Data já Passou!", "jaPassou");
+                    # Calcula quantos dias faltam para essa data
+                    $hoje = date("d/m/Y");
+                    $dias = dataDif($hoje, $dtLimite);
+
+                    if (($dias > 0) AND ($dias < 90)) {
+                        if ($dias == 1) {
+                            echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
                         } else {
-                            p("Entregar até: $dtLimite", "plsvPassou");
+                            echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
                         }
+                    } elseif ($dias == 0) {
+                        echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                    }
+                } else {
+                    if (!empty($dttermino)) {
+                        # Passa para o formato brasileiro
+                        $dttermino = date_to_php($dttermino);
 
-                        # Calcula quantos dias faltam para essa data
-                        $hoje = date("d/m/Y");
-                        $dias = dataDif($hoje, $dtLimite);
+                        # Verifica se já passou 
+                        if (jaPassou($dttermino)) {
 
-                        if (($dias > 0) AND ($dias < 90)) {
-                            if ($dias == 1) {
-                                echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
+                            # Calcula a data limite da entrega
+                            $dtLimite = addDias($dttermino, 90);
+
+                            if (jaPassou($dtLimite)) {
+                                p("Data já Passou!", "jaPassou");
                             } else {
-                                echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
+                                p("Entregar até: $dtLimite", "plsvPassou");
                             }
-                        } elseif ($dias == 0) {
-                            echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+
+                            # Calcula quantos dias faltam para essa data
+                            $hoje = date("d/m/Y");
+                            $dias = dataDif($hoje, $dtLimite);
+
+                            if (($dias > 0) AND ($dias < 90)) {
+                                if ($dias == 1) {
+                                    echo "<span title='Falta Apenas $dias dia para o término do prazo para entregar o CRP.' class='warning label'>Falta $dias dia</span>";
+                                } else {
+                                    echo "<span title='Faltam $dias dias para o término do prazo para entregar o CRP!' class='warning label'>Faltam $dias dias</span>";
+                                }
+                            } elseif ($dias == 0) {
+                                echo "<span title='Hoje Termina o benefício!' class='warning label'>Termina Hoje!</span>";
+                            }
                         }
                     }
                 }
             }
+        } elseif ($optouContribuir == 2) {
+            p("Optou NÃO pagar", "naoPagar");
         }
     }
 
@@ -408,6 +424,7 @@ class LicencaSemVencimentos {
 
         $tabela = new Tabela();
         $tabela->set_titulo($titulo);
+        $tabela->set_subtitulo("Ordenado pela Data de Solicitação");
         $tabela->set_conteudo($result);
 
         $tabela->set_label(["#", "Status", "Tipo", "Nome", "Licença / Afastemento", "Dados", "Período", "Rioprevidência"]);
@@ -580,11 +597,68 @@ class LicencaSemVencimentos {
             return null;
         }
 
-        $pessoal = new Pessoal();
         $row = $this->get_dados($id);
 
         # Retorno
         return $row["processo"];
+    }
+
+    ##########################################################
+
+    function get_ultimoTempoConsecutivo($idServidor = null, $idLicencaSemVencimentos = null) {
+
+        /**
+         * Informa o tempo (em dias) consecutivo de licença de um servidor
+         * Até a licença indicada em $idLicencaSemVencimentos
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            # Pega array com os dias publicados
+            $select = "SELECT dtInicial,
+                              numDias,
+                              dtTermino,
+                              idLicencaSemVencimentos
+                     FROM tblicencasemvencimentos
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtInicial";
+
+            $array = $pessoal->select($select);
+
+            # Inicia as variáveis de analise
+            $totalDias = 0;
+            $dataFinalAnterior = "";
+
+            # Percorre as licenças
+            foreach ($array as $item) {
+
+                # Analise
+                if (empty($dataFinalAnterior)) {
+                    # Primeira Vez
+                    $dataFinalAnterior = $item["dtTermino"];
+                    $totalDias = $item["numDias"];
+                } else {
+                    # Verifica se é concomitante igual a data ou a data logo apos
+                    if ($dataFinalAnterior == $item["dtInicial"] OR date('Y-m-d', strtotime($dataFinalAnterior . ' +1 day')) == $item["dtInicial"]) {
+                        $totalDias += $item["numDias"];
+                    } else {
+                        $totalDias = $item["numDias"];
+                    }
+                    $dataFinalAnterior = $item["dtTermino"];
+                }
+
+                if (!empty($idLicencaSemVencimentos) AND $idLicencaSemVencimentos == $item["idLicencaSemVencimentos"]) {
+                    return $totalDias;
+                }
+            }
+
+            # Retorna os últimos dias consecutivos
+            return $totalDias;
+        }
     }
 
     ###########################################################

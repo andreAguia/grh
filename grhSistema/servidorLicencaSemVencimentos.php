@@ -141,9 +141,6 @@ if ($acesso) {
     $objeto->set_rotinaExtra("get_DadosServidor");
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
-    $objeto->set_rotinaExtraListar("exibeRegraStatusLSV");
-    $objeto->set_rotinaExtraEditar("exibeRegraStatusLSV");
-
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Hstórico de Licença / Afastamentos Sem Vencimentos');
 
@@ -451,8 +448,8 @@ if ($acesso) {
             $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
                     . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
 
-            $objeto->set_rotinaExtraListar(array("callout"));
-            $objeto->set_rotinaExtraListarParametro(array($mensagem));
+            $objeto->set_rotinaExtraListar(["callout", "exibeRegraStatusLSV"]);
+            $objeto->set_rotinaExtraListarParametro([$mensagem, null]);
             $objeto->listar();
             break;
 
@@ -461,8 +458,8 @@ if ($acesso) {
             $mensagem = "Informamos que quando a data de retorno antecipado estiver preenchido, o sistema NÃO fará o calculo automático dos dias nem da data final da licença.<br/>"
                     . "O sistema entende que quando se há um retorno antecipado a data final deverá refletir a data publicada e os dias representarão o período de licença de fato.";
 
-            $objeto->set_rotinaExtraEditar(array("callout"));
-            $objeto->set_rotinaExtraEditarParametro(array($mensagem));
+            $objeto->set_rotinaExtraEditar(["callout", "exibeRegraStatusLSV"]);
+            $objeto->set_rotinaExtraEditarParametro([$mensagem, null]);
             $objeto->editar($id);
             break;
 

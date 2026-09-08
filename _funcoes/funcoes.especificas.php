@@ -1028,9 +1028,9 @@ function exibeRegraStatusLSV() {
     $tabela = new Tabela();
     #$tabela->set_titulo("Regras de mudança do Status");
     $tabela->set_conteudo($conteudo);
-    $tabela->set_label(array("", ""));
-    $tabela->set_width(array(20, 80));
-    $tabela->set_align(array("left", "left"));
+    $tabela->set_label(["", ""]);
+    $tabela->set_width([20, 80]);
+    $tabela->set_align(["left", "left"]);
     $tabela->set_totalRegistro(false);
     $tabela->show();
 

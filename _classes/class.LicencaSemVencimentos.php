@@ -188,8 +188,8 @@ class LicencaSemVencimentos {
 
 
         # Verifica se chega a 4 anos (1460 dias)
-        if ($tempoC >= 1460) {
-            $retorno .= "<br/><br/><span title='O servior tem que retornar!' class='alert label'>REASSUNÇÃO</span>";
+        if ($tempoC >= 1460 AND empty($dtRetorno)) {
+            $retorno .= "<br/><br/><span title='O servidor tem que retornar!' class='alert label'>REASSUNÇÃO</span>";
         }
 
         return $retorno;
@@ -260,7 +260,7 @@ class LicencaSemVencimentos {
             if ($crp) {
                 echo "Entregou CRP";
             } else {
-                echo "Não Entregou CRP";
+                p("Não Entregou CRP", "jaPassou");
 
                 # Verifica se estamos a 90 dias da data Termino
                 if (!empty($dtRetorno)) {
@@ -324,7 +324,7 @@ class LicencaSemVencimentos {
                 }
             }
         } elseif ($optouContribuir == 2) {
-            p("Optou NÃO pagar", "naoPagar");
+            echo "Optou NÃO pagar";
         }
     }
 
@@ -658,6 +658,34 @@ class LicencaSemVencimentos {
 
             # Retorna os últimos dias consecutivos
             return $totalDias;
+        }
+    }
+
+    ##########################################################
+
+    function get_idUltimaLicenca($idServidor = null) {
+
+        /**
+         * Informa o id da última licença sem vencimentos
+         * Usada na rotina de verificação do período de um ano para se pedir
+         * Nova licença, quando o ultimo período foi de 4 anos
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        if (empty($idServidor)) {
+            return null;
+        } else {
+
+            # Pega array com os dias publicados
+            $select = "SELECT idLicencaSemVencimentos
+                              idLicencaSemVencimentos
+                     FROM tblicencasemvencimentos
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtInicial DESC 
+                    LIMIT 1";
+
+            return $pessoal->select($select, false);
         }
     }
 

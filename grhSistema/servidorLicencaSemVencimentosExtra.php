@@ -30,7 +30,7 @@ if (empty($numDias)) {
 /*
  *  Verifica se já tem outro afastamento nesse período
  */
-if (!empty($dtInicial) AND!empty($numDias)) {
+if (!empty($dtInicial) AND !empty($numDias)) {
     $verifica = new VerificaAfastamentos($idServidor);
     $verifica->setPeriodo($dtInicial, addDias($dtInicial, $numDias));
     $verifica->setIsento("tblicencasemvencimentos", $id);
@@ -55,5 +55,38 @@ if (!is_null($aposentadoria->get_dataAposentadoriaCompulsoria($idServidor))) {
     if ($dtTermino >= date_to_bd($dataCompulsoria)) {
         $erro = 1;
         $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
+    }
+}
+
+/*
+ *  Verifica se a ultima licença sem vencimentos foi de 4 anos
+ *  Pois se for tem que cumprir o período de 1 ano
+ */
+
+# Pega a ultima licença
+$lsv = new LicencaSemVencimentos();
+$ultimaLicenca = $lsv->get_idUltimaLicenca($idServidor);
+
+echo "id: {$id} = {$ultimaLicenca["idLicencaSemVencimentos"]}";
+
+# Verifica se não está editando a ultima licença
+if (!empty($id) AND $id <> $ultimaLicenca["idLicencaSemVencimentos"]) {
+
+# Verifica o tempo acumulado dessa ultima licença
+    if ($lsv->get_ultimoTempoConsecutivo($idServidor) >= 1460) {
+        # Pega os dados desta licença
+        $dados = $lsv->get_dados($ultimaLicenca["idLicencaSemVencimentos"]);
+
+        # Verifica se a data de inicio atende a anualidade exigida pela lei
+        # A data de termino
+        $dtTermino = date_to_php($dados["dtTermino"]);
+
+        # Um ano após
+        $dataLimite = addAnos($dtTermino, 1);
+
+        if (dataMaior($dataLimite, $dtInicial) == $dataLimite) {
+            $erro = 1;
+            $msgErro .= 'O servidor tem que aguardar 1 ano a contar do término da última licença sem vencimentos para solicitar outra licença sem vencimentos. Somente após ' . $dataLimite . '.\n';
+        }
     }
 }

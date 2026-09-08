@@ -71,16 +71,7 @@ if ($acesso) {
         case "lista" :
 
             br(4);
-            aguarde();
-            br();
-
-            # Limita a tela
-            $grid1 = new Grid("center");
-            $grid1->abreColuna(5);
-            p("Aguarde...", "center");
-            $grid1->fechaColuna();
-            $grid1->fechaGrid();
-
+            aguarde("Aguarde !!");
             loadPage('?fase=exibeLista');
             break;
 
@@ -288,9 +279,13 @@ if ($acesso) {
             break;
 
         ################################################################
-        # Chama o menu do Servidor que se quer editar
+        # Chama o link da pasta Funcional
         case "editaServidor" :
+            br(4);
+            aguarde("Aguarde !!");
+            
             set_session('idServidorPesquisado', $id);
+            set_session('origem', "areaPastaFuncional.php");
             loadPage('servidorPastaFuncional.php');
             break;
 

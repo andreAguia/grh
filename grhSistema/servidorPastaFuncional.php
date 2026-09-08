@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Observações do servidor
+ * Pasta Funcional  do servidor
  *  
  * By Alat
  */
@@ -13,7 +13,7 @@ $idServidorPesquisado = null;
 include ("_config.php");
 
 # Define o link da volta
-$voltaCtc = "areaPastaFuncional.php";
+$origem = get_session('origem');
 
 # Permissão de Acesso
 $acesso = Verifica::acesso($idUsuario, [1, 2, 12]);
@@ -63,8 +63,8 @@ if ($acesso) {
 
     # Caminhos
     $objeto->set_linkGravar('?fase=gravar');
-    $objeto->set_linkListar($voltaCtc);    
-    $objeto->set_voltarForm($voltaCtc);
+    $objeto->set_linkListar($origem);    
+    $objeto->set_voltarForm($origem);
 
     # retira o botão incluir
     $objeto->set_botaoIncluir(false);

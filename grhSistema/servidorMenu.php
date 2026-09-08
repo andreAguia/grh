@@ -74,7 +74,7 @@ if ($acesso) {
         $menu = new MenuBar();
 
         # Verifica a origem
-        if (empty($origem)) {
+        if (empty($origem) OR $origem == "servidorMenu.php") {
             $caminhoVolta = 'servidor.php';
         } else {
             $caminhoVolta = $origem;
@@ -85,7 +85,7 @@ if ($acesso) {
         $linkBotao1->set_title('Volta para a página anterior');
         $linkBotao1->set_accessKey('V');
         $menu->add_link($linkBotao1, "left");
-        
+
         # Atendimentos
         $linkAtend = new Link("Registro de Atendimentos", "servidorAtendimento.php");
         $linkAtend->set_class('button');
@@ -101,6 +101,12 @@ if ($acesso) {
         $menu->add_link($linkProc, "right");
 
         if (Verifica::acesso($idUsuario, 1)) {
+            # Link da Pasta Funcional
+            $linkPf = new Link("Link da Pasta", "?fase=editaServidor");
+            $linkPf->set_class('button success');
+            $linkPf->set_title('Altera o link do GoogleDrive da pasta funcional do servidor');
+            #$linkPf->set_target("_blank4");
+            $menu->add_link($linkPf, "right");
 
             # Histórico
             $linkBotao4 = new Link("Histórico", "../../areaServidor/sistema/admin_historico.php?idServidor=" . $idServidorPesquisado);
@@ -429,7 +435,17 @@ if ($acesso) {
             $grid->fechaGrid();
             break;
 
-        ###################################################################
+        ################################################################
+        # Chama o link da pasta Funcional
+        case "editaServidor" :
+            br(4);
+            aguarde("Aguarde !!");
+
+            set_session('origem', "servidorMenu.php");
+            loadPage('servidorPastaFuncional.php');
+            break;
+
+        ################################################################
     }
 
     $grid->fechaColuna();

@@ -199,6 +199,7 @@ class CargoComissao {
         /**
          * 
          * Informa o número de servidores ativos nomeados para esse cargo
+         * Não são considerados os designados pois não recebem por não existir ainda o cargo 
          * 
          */
         # Pega os dados
@@ -207,6 +208,7 @@ class CargoComissao {
                                           JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
                     WHERE tbcomissao.idTipoComissao = {$idTipoCargo}
                       AND situacao = 1
+                      AND tipo <> 3
                       AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                       AND tbtiponomeacao.visibilidade <> 2";
 
@@ -328,6 +330,7 @@ class CargoComissao {
         $designados = $this->get_numServidoresDesignados($idTipoCargo);
         $proTempore = $this->get_numServidoresProTempore($idTipoCargo);
         $dispoinivel = $this->get_vagasDisponiveis($idTipoCargo);
+        // $temporario = $this->get_numServidoresDesignadosTemporario($idTipoCargo);
 
         $simbolo = $this->get_simbolo($idTipoCargo);
         $valor = $this->get_valor($idTipoCargo);
@@ -336,29 +339,29 @@ class CargoComissao {
         $pessoal = new Pessoal();
         $nomeCargo = $pessoal->get_nomeCargoComissao($idTipoCargo);
 
+        # Classe dos tipos de nomeação
+        $tipoNomeacao = new TipoNomeacao();
+
         # Coloca no array
-        $dados[] = array($nomeCargo, $simbolo, "R$ " . formataMoeda($valor), $vagas, $nomeados, $dispoinivel, $proTempore, $designados);
+        $dados[] = array($nomeCargo, $simbolo, "R$ " . formataMoeda($valor), $vagas, $nomeados, $proTempore, $designados, $dispoinivel);
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($dados);
-        $tabela->set_label(["Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Disponíveis", "Pro Tempore", "Designados"]);
+        $tabela->set_label(["Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Pro Tempore", "Disponíveis", "Designados"]);
+        $tabela->set_title([null, null, null, null, $tipoNomeacao->get_descricao(1), $tipoNomeacao->get_descricao(2), null, $tipoNomeacao->get_descricao(3)]);
+        $tabela->set_width([23, 11, 11, 11, 11, 11, 11, 11]);
         $tabela->set_totalRegistro(false);
         $tabela->set_align(["center"]);
         $tabela->set_titulo($nomeCargo);
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 5,
-                'valor' => 0,
-                'operador' => '<',
-                'id' => "comissaoVagasNegativas"),
-            array('coluna' => 5,
-                'valor' => 0,
+
+        $formatacaoCondicional = array(
+            array('coluna' => 0,
+                'valor' => $nomeCargo,
                 'operador' => '=',
-                'id' => "comissaoSemVagas"),
-            array('coluna' => 5,
-                'valor' => 0,
-                'operador' => '>',
-                'id' => "comissaoSemVagas")));
+                'id' => 'listaDados'));
+
+        $tabela->set_formatacaoCondicional($formatacaoCondicional);
         $tabela->show();
 
         # Exibe alerta de nomeação a maios que vagas

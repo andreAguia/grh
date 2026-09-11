@@ -41,6 +41,7 @@ if ($acesso) {
     $parametroCargo = get('parametroCargo', get_session('parametroCargo', 13));
     $parametroDescricao = post('parametroDescricao', get_session('parametroDescricao', 'Todos'));
     $parametroStatus = post('parametroStatus', get_session('parametroStatus', "Vigente"));
+    $parametroTipo2 = post('parametroTipo2', get_session('parametroTipo2', 'Todos'));
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMes = post('parametroMes', get_session('parametroMes', date('m')));
 
@@ -53,6 +54,7 @@ if ($acesso) {
     set_session('parametroCargo', $parametroCargo);
     set_session('parametroDescricao', $parametroDescricao);
     set_session('parametroStatus', $parametroStatus);
+    set_session('parametroTipo2', $parametroTipo2);
     set_session('parametroAno', $parametroAno);
     set_session('parametroMes', $parametroMes);
 
@@ -75,7 +77,7 @@ if ($acesso) {
         $menu1 = new MenuBar();
 
         # Voltar
-        if ($fase == "inicial") {
+        if ($fase == "inicial2") {
             $linkVoltar = new Link("Voltar", "grh.php");
         } else {
             $linkVoltar = new Link("Voltar", "?");
@@ -92,7 +94,7 @@ if ($acesso) {
         $menu1->add_link($botao, "right");
 
         # Cadastro de Cargos em Comissão
-        if ($fase == "inicial") {
+        if ($fase == "inicial2") {
             $botao = new Button('Cargos');
             $botao->set_title('Acessa o Cadastro de Cargos em Comissão');
             $botao->set_url("cadastroCargoComissao.php");
@@ -118,6 +120,16 @@ if ($acesso) {
 
     switch ($fase) {
         case "inicial":
+            
+            br(4);
+            aguarde("Aguarde...");
+            loadPage('?fase=inicial2');
+            break;
+
+        ################################################################
+        
+        case "inicial2":
+            
             $grid = new Grid();
 
             ####################################
@@ -205,7 +217,27 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
             $controle->set_autofocus(true);
-            $controle->set_col(9);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $select2 = 'SELECT idTipoNomeacao,
+                              nome
+                         FROM tbtiponomeacao
+                        WHERE idTipoNomeacao <> 4
+                     ORDER BY idTipoNomeacao';
+
+            $arrayTipo = $pessoal->select($select2);
+            array_unshift($arrayTipo, array("Todos", "Todos"));
+
+            # Tipo
+            $controle = new Input('parametroTipo2', 'combo', 'Tipo de Nomeação', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Tipo de Nomeação');
+            $controle->set_array($arrayTipo);
+            $controle->set_valor($parametroTipo2);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(3);
             $form->add_item($controle);
 
             # Status
@@ -233,6 +265,9 @@ if ($acesso) {
                 $painel->fecha();
             }
 
+            # Define o subtítulo
+            $subtitulo = $comissao->get_descricaoTipoCargo($parametroCargo);
+
             # select
             $select = "SELECT tbcomissao.idComissao,
                               tbcomissao.idComissao,
@@ -250,14 +285,25 @@ if ($acesso) {
             # Descrição
             if ($parametroDescricao <> "Todos") {
                 $select .= " AND tbcomissao.idDescricaoComissao = $parametroDescricao";
+                $subtitulo = $comissao->get_descricao($parametroDescricao);
             }
 
             # Tipo
+            if ($parametroTipo2 <> "Todos") {
+                $select .= " AND tipo = {$parametroTipo2}";
+                $subtitulo .= "<br/>Nomeação: {$tipoNom->get_nome($parametroTipo2)}";
+            }else{
+                $subtitulo .= "<br/>Nomeação: Todas";
+            }
+
+            # Status
             if ($parametroStatus == "Vigente") {
                 $select .= " AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo)
                         ORDER BY tbpessoa.nome, tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
+                $subtitulo .= " | Status: {$parametroStatus}";
             } else {
                 $select .= " ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
+                $subtitulo .= " | Status: Todos";
             }
 
             $result = $pessoal->select($select);
@@ -271,7 +317,7 @@ if ($acesso) {
             $tabela->set_conteudo($result);
             $tabela->set_label($label);
             $tabela->set_titulo("Servidores Nomeados");
-            $tabela->set_subtitulo($comissao->get_descricaoTipoCargo($parametroCargo));
+            $tabela->set_subtitulo($subtitulo);
             $tabela->set_align($align);
             $tabela->set_classe($classe);
             $tabela->set_metodo($metodo);

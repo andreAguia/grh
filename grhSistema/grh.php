@@ -50,6 +50,7 @@ if ($acesso) {
     set_session('parametroInstituicao');
     set_session('parametroNivel');
     set_session('parametroTipo');
+    set_session('parametroTipo2');
     set_session('parametroEscolaridade');
     set_session('parametroPerfil');
     set_session('parametroPasta');

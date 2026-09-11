@@ -65,7 +65,7 @@ if ($parentesco == 2 OR $parentesco == 8 OR $parentesco == 9 OR $parentesco == 1
             $dataCalculada = dataMaiorArray([$dataHistoricaInicial, $dtAdmissao, $dtNasc]);
 
             # Verifica se a data é anterior a data calculada
-            if (dataMaior($auxEducacaoDtInicial, $dataCalculada) == $dataCalculada) {
+            if ($auxEducacaoDtInicial <> $dataCalculada AND dataMaior($auxEducacaoDtInicial, $dataCalculada) == $dataCalculada) {
                 $erro = 1;
                 $msgErro .= 'esse dependente só teve direito a partir de ' . $dataCalculada . '\n';
             }

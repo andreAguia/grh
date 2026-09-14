@@ -113,9 +113,9 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(array("Tarefa", "Encarregado Principal", "Vice-Encarregado", "Sub-Vice-Encarregado"));
-    $objeto->set_width(array(60, 10, 10, 10));
-    $objeto->set_align(array("left"));
+    $objeto->set_label(["Tarefa", "Encarregado Principal", "Vice-Encarregado", "Sub-Vice-Encarregado"]);
+    $objeto->set_width([60, 10, 10, 10]);
+    $objeto->set_align(["left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

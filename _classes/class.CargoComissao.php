@@ -311,7 +311,8 @@ class CargoComissao {
 
         $vagas = $this->get_vagas($idTipoCargo);
         $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
-        $dispoinivel = $vagas - $nomeados;
+        $proTempore = $this->get_numServidoresProTempore($idTipoCargo);
+        $dispoinivel = $vagas - ($nomeados + $proTempore);
 
         return $dispoinivel;
     }
@@ -329,7 +330,9 @@ class CargoComissao {
         $nomeados = $this->get_numServidoresNomeados($idTipoCargo);
         $designados = $this->get_numServidoresDesignados($idTipoCargo);
         $proTempore = $this->get_numServidoresProTempore($idTipoCargo);
-        $dispoinivel = $this->get_vagasDisponiveis($idTipoCargo);
+        $disponivel = $this->get_vagasDisponiveis($idTipoCargo);
+        $totalNomeados = $nomeados + $proTempore;
+
         // $temporario = $this->get_numServidoresDesignadosTemporario($idTipoCargo);
 
         $simbolo = $this->get_simbolo($idTipoCargo);
@@ -342,14 +345,31 @@ class CargoComissao {
         # Classe dos tipos de nomeação
         $tipoNomeacao = new TipoNomeacao();
 
-        # Coloca no array
-        $dados[] = array($nomeCargo, $simbolo, "R$ " . formataMoeda($valor), $vagas, $nomeados, $proTempore, $designados, $dispoinivel);
+        # Formata de acordo com o valor
+        if ($disponivel < 0) {
+            # Coloca no array
+            $dados[] = array(
+                $nomeCargo,
+                $simbolo,
+                "R$ " . formataMoeda($valor),
+                "Padrão: {$nomeados}<br/>Pro Tempore: {$proTempore}<br/><hr id='grosso1'>Nomeados: {$totalNomeados}",
+                "<span id='vermelho'>Vagas: {$vagas}<br/> - Nomeados: {$totalNomeados}<br/><hr id='grosso1'>Disponíveis: {$disponivel}</span>",
+                $designados);
+        } else {
+            # Coloca no array
+            $dados[] = array(
+                $nomeCargo,
+                $simbolo,
+                "R$ " . formataMoeda($valor),
+                "Padrão: {$nomeados}<br/>Pro Tempore: {$proTempore}<br/><hr id='grosso1'>Nomeados: {$totalNomeados}",
+                "Vagas: {$vagas}<br/> - Nomeados: {$totalNomeados}<br/><hr id='grosso1'>Disponíveis: {$disponivel}",
+                $designados);
+        }
 
         # Monta a tabela
         $tabela = new Tabela();
         $tabela->set_conteudo($dados);
-        $tabela->set_label(["Cargo", "Símbolo", "Valor", "Vagas", "Nomeados", "Pro Tempore", "Disponíveis", "Designados"]);
-        $tabela->set_title([null, null, null, null, $tipoNomeacao->get_descricao(1), $tipoNomeacao->get_descricao(2), null, $tipoNomeacao->get_descricao(3)]);
+        $tabela->set_label(["Cargo", "Símbolo", "Valor", "Nomeados", "Disponíveis", "Designados"]);
         $tabela->set_width([23, 11, 11, 11, 11, 11, 11, 11]);
         $tabela->set_totalRegistro(false);
         $tabela->set_align(["center"]);
@@ -365,13 +385,8 @@ class CargoComissao {
         $tabela->show();
 
         # Exibe alerta de nomeação a maios que vagas
-        if ($nomeados > $vagas) {
-
-            titulotable("Atenção");
-            $painel = new Callout("warning");
-            $painel->abre();
-            p("Existem mais servidores nomeados que vagas !!<br/>$vagas Vagas - $nomeados Servidores Nomeados", "center", "f14");
-            $painel->fecha();
+        if ($totalNomeados > $vagas) {
+            calloutAlert("Existem mais servidores nomeados que vagas !!", $titulo = "Atenção", $align = "center");
         }
     }
 
@@ -496,14 +511,14 @@ class CargoComissao {
 
         # Pega os Servidores com a mesma descrição
         $select = "SELECT tbpessoa.nome,
-                          tbcomissao.dtNom,
-                          tbcomissao.dtExo,
-                          idComissao
-                     FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                     LEFT JOIN tbcomissao USING(idServidor)
-                                     LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
-                                          JOIN tbtipocomissao ON(tbcomissao.idTipoComissao=tbtipocomissao.idTipoComissao)
-                   WHERE tbcomissao.idDescricaoComissao = {$idDescricaoComissao}
+                tbcomissao.dtNom,
+                tbcomissao.dtExo,
+                idComissao
+                FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                LEFT JOIN tbcomissao USING(idServidor)
+                LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                JOIN tbtipocomissao ON(tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                WHERE tbcomissao.idDescricaoComissao = {$idDescricaoComissao}
                 ORDER BY tbdescricaocomissao.descricao, tbcomissao.dtNom desc";
 
         $pessoal = new Pessoal();
@@ -538,12 +553,12 @@ class CargoComissao {
          */
         # Pega os dados
         $select = "SELECT dtNom,
-                          dtAtoNom,
-                          numProcNom,
-                          dtPublicNom,
-                          tipo
-                     FROM tbcomissao 
-                    WHERE idComissao = {$idComissao}";
+                dtAtoNom,
+                numProcNom,
+                dtPublicNom,
+                tipo
+                FROM tbcomissao
+                WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -592,11 +607,11 @@ class CargoComissao {
          */
         # Pega os dados
         $select = "SELECT dtExo,
-                          dtAtoExo,
-                          numProcExo,
-                          dtPublicExo
-                     FROM tbcomissao 
-                    WHERE idComissao = {$idComissao}";
+                dtAtoExo,
+                numProcExo,
+                dtPublicExo
+                FROM tbcomissao
+                WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $dados = $pessoal->select($select, false);
@@ -639,8 +654,9 @@ class CargoComissao {
         $simbolo = $this->get_simbolo($idTipoCargo);
         $descricao = $this->get_descricaoTipoCargo($idTipoCargo);
 
-        p("{$simbolo} - {$descricao}", "pRelatorioSubtitulo");
-        p("{$vagas} vaga(s) | {$nomeados} nomeado(s) | {$designado} designado(s) | {$disponiveis} disponível(is)", "f14", "center");
+        p("{$simbolo} - {$descricao} ", "pRelatorioSubtitulo");
+        p("{$vagas} vaga(s) | {$nomeados} nomeado(s) | {$designado} designado(s) | {$disponiveis} disponível(is) ", "f14 ", "center"
+        );
     }
 
     ###########################################################
@@ -770,8 +786,8 @@ class CargoComissao {
          */
         # Pega os dados
         $select = "SELECT idComissao
-                     FROM tbcomissao
-                    WHERE idDescricaoComissao = {$idDescricao}";
+                FROM tbcomissao
+                WHERE idDescricaoComissao = {$idDescricao}";
 
         $pessoal = new Pessoal();
         return $pessoal->count($select);
@@ -786,9 +802,9 @@ class CargoComissao {
      */
     public function get_obs($idTipoCargo) {
 
-        $select = "SELECT obs                             
-                     FROM tbtipocomissao 
-                    WHERE idTipoComissao = {$idTipoCargo}";
+        $select = "SELECT obs
+                FROM tbtipocomissao
+                WHERE idTipoComissao = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -804,9 +820,9 @@ class CargoComissao {
      */
     public function exibeObs($idTipoCargo) {
 
-        $select = "SELECT obs                             
-                     FROM tbtipocomissao 
-                    WHERE idTipoComissao = {$idTipoCargo}";
+        $select = "SELECT obs
+                FROM tbtipocomissao
+                WHERE idTipoComissao = {$idTipoCargo}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);
@@ -827,9 +843,9 @@ class CargoComissao {
      */
     public function exibeObsCargo($idComissao) {
 
-        $select = "SELECT obs                             
-                     FROM tbcomissao
-                    WHERE idComissao = {$idComissao}";
+        $select = "SELECT obs
+                FROM tbcomissao
+                WHERE idComissao = {$idComissao}";
 
         $pessoal = new Pessoal();
         $row = $pessoal->select($select, false);

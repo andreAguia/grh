@@ -386,7 +386,7 @@ class CargoComissao {
 
         # Exibe alerta de nomeação a maios que vagas
         if ($totalNomeados > $vagas) {
-            calloutAlert("Existem mais servidores nomeados que vagas !!", $titulo = "Atenção", $align = "center");
+            calloutAlert("Existem mais servidores nomeados que vagas !!", "Atenção", "center");
         }
     }
 

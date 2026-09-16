@@ -22,6 +22,8 @@ class VagaDocentes {
     public function setCargo($cargo) {
         $this->cargo = $cargo;
     }
+    
+    #######################################################
 
     public function show() {
 
@@ -39,8 +41,12 @@ class VagaDocentes {
                           idVaga,
                           idVaga
                      FROM tbvaga p LEFT JOIN tbcargo USING (idCargo)
-                    WHERE centro = '{$this->centro}' 
-                      AND idCargo = {$this->cargo}";
+                    WHERE idCargo = {$this->cargo}";
+        
+        # Lotação
+        if ($this->centro <> "Todos") {
+            $select .= " AND centro = '{$this->centro}'";
+        }                      
         
         # Laboratório de Origem
         if ($this->laboratorio <> "*") {

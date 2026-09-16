@@ -122,6 +122,7 @@ if ($acesso) {
             $form = new Form('?');
 
             # Centros Possíveis
+            #$centros = array("CBB", "CCH", "CCT", "CCTA","Todos"); Retirei o Todos pois não estava dando certo
             $centros = array("CBB", "CCH", "CCT", "CCTA");
 
             $controle = new Input('parametroCentro', 'combo', 'Centro:', 1);

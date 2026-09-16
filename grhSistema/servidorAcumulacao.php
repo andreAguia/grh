@@ -137,6 +137,7 @@ if ($acesso) {
 
     # Parametros da tabela
     $objeto->set_label(["Conclusão", "Resultado", "Data da<br/>Publicação", "Processo", "Dados do Segundo Vínculo", "Documentos"]);
+    $objeto->set_width([10, 10, 10, 15, 30, 20]);
     $objeto->set_align(["center", "center", "center", "center", "left", "left"]);
     $objeto->set_classe([null, "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao", "Acumulacao"]);
     $objeto->set_metodo([null, "get_resultado", "exibePublicacao", "exibeProcesso", "exibeDadosOutroVinculo", "exibeBotaoDocumentos"]);

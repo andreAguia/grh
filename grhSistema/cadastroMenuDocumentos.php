@@ -150,7 +150,7 @@ if ($acesso) {
                                WHERE tipo = 1 
                             ORDER BY categoria, titulo');
     array_unshift($servico, array(null, null));
-    
+
     # Pega os dados da combo de rotina
     $rotina = $intra->select('SELECT idRotina,
                                      CONCAT(categoria," - ",nome)

@@ -18,7 +18,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Verifica a fase do programa
     $fase = get('fase', 'upload');
 
@@ -35,13 +35,13 @@ if ($acesso) {
                             });');
     }
     $page->iniciaPagina();
-    
+
     # Dados da rotina de Upload
     $pasta = PASTA_DOCUMENTOS;
     $nome = "Documento";
     $tabela = "tbmenudocumentos";
     $extensoes = ["pdf"];
-    
+
     ################################################################
 
     switch ($fase) {
@@ -157,8 +157,8 @@ if ($acesso) {
             if (!file_exists("{$pasta}_apagados/") || !is_dir("{$pasta}_apagados/")) {
                 mkdir("{$pasta}_apagados/", 0755);
             }
-            
-            if(empty($id)){
+
+            if (empty($id)) {
                 alert("algo está errado");
             }
 

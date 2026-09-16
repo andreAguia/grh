@@ -169,6 +169,11 @@ class Vaga {
 
         # Conecta o banco
         $pessoal = new Pessoal();
+        
+        # Trata a diretoria
+        if($dir == "*" OR $dir == "Todos"){
+            $dir = null;
+        }
 
         # Inicia o contador
         $disponivel = 0;
@@ -178,11 +183,11 @@ class Vaga {
                      FROM tbvaga
                     WHERE true";
 
-        if (!vazio($idCargo)) {
+        if (!empty($idCargo)) {
             $select .= " AND idCargo = $idCargo";
         }
 
-        if (!vazio($dir)) {
+        if (!empty($dir)) {
             $select .= " AND centro = '$dir'";
         }
 
@@ -220,6 +225,11 @@ class Vaga {
 
         # Conecta o banco
         $pessoal = new Pessoal();
+        
+        # Trata a diretoria
+        if($dir == "*" OR $dir == "Todos"){
+            $dir = null;
+        }
 
         # Inicia o contador
         $ocupado = 0;
@@ -229,11 +239,11 @@ class Vaga {
                      FROM tbvaga
                      WHERE true";
 
-        if (!vazio($idCargo)) {
+        if (!empty($idCargo)) {
             $select .= " AND idCargo = $idCargo";
         }
 
-        if (!vazio($dir)) {
+        if (!empty($dir)) {
             $select .= " AND centro = '$dir'";
         }
 

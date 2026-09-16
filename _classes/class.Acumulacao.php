@@ -415,7 +415,7 @@ class Acumulacao {
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Licitude", "../grhRelatorios/despacho.Acumulacao.CienciaLicitude.php");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho: Ciência da Ilicitude", "?fase=despachoCienciaIlicitude&id={$idAcumulacao}");
         $menu->add_item('linkWindow', "\u{1F5A8} Despacho de Conclusão Temporária", "../grhRelatorios/despacho.Acumulacao.ConclusaoTemporaria.php");
-        $menu->add_item('linkWindow', "\u{1F5A8} Lista de Verificação (docx - Download)", "../../_arquivos/outros/Acumulacao - Lista de Verificacao.docx");
+        $menu->add_item('link', "\u{1F5A8} Lista de Verificação (docx - Download)", "../../_arquivos/outros/Acumulacao - Lista de Verificacao.docx");
         $menu->show();
     }
 

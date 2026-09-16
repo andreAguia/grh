@@ -211,21 +211,21 @@ if ($acesso) {
             foreach ($servidores as $item) {
                 $idades[] = $item[1];
             }
-            
+
             # Pega todas as idades para calcular a moda
             $selectModa = "SELECT TIMESTAMPDIFF(YEAR, tbpessoa.dtNasc, NOW()) AS idade
                              FROM tbpessoa JOIN tbservidor USING (idPessoa)
                                            JOIN tbperfil USING (idPerfil) 
                             WHERE situacao = 1 
                                  AND tbperfil.tipo <> 'Outros'";
-            $servidoresModa = $pessoal->select($selectModa);            
-            foreach($servidoresModa as $item){
+            $servidoresModa = $pessoal->select($selectModa);
+            foreach ($servidoresModa as $item) {
                 $arrayModa[] = $item[0];
             }
-            
+
             # Soma a coluna do count
             $total = array_sum(array_column($servidores, "jj"));
-            
+
             # Dados da tabela
             $dados[] = array("Maior Idade", maiorValor($idades));
             $dados[] = array("Menor Idade", menorValor($idades));
@@ -2326,9 +2326,11 @@ if ($acesso) {
 
             ########
             # Monta o select
-            $select = 'SELECT CONCAT(IFnull(tblotacao.dir,"")," - ",IFnull(tblotacao.ger,"")) lotacao,                          
-                              CONCAT(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao) efetivo, 
-                              count(tbservidor.idServidor) as jj
+            $select = 'SELECT tblotacao.dir,
+                              CONCAT(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao) efetivo,
+                              SUM(tbcomissao.tipo = 1) AS total_padrao,
+                              SUM(tbcomissao.tipo = 2) AS total_protempore,
+                              SUM(tbcomissao.tipo = 3) AS total_designacao
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)                                              
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
@@ -2341,28 +2343,36 @@ if ($acesso) {
                      AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo) 
                      AND situacao = 1';
 
-            if ($parametroLotacao <> '*') {
-                $select .= ' AND tblotacao.dir="' . $parametroLotacao . '"';
-            }
-
             if ($parametroPerfil <> '*') {
                 $select .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
             }
 
-            $select .= ' GROUP BY lotacao, efetivo
-                         ORDER BY lotacao, efetivo, tbtipocomissao.simbolo';
+            if ($parametroLotacao <> '*') {
+                $select .= ' AND tblotacao.dir="' . $parametroLotacao . '"';
+
+                $select .= ' GROUP BY efetivo
+                             ORDER BY efetivo, tbtipocomissao.simbolo';
+            } else {
+                $select .= ' GROUP BY tblotacao.dir, efetivo
+                             ORDER BY tblotacao.dir, efetivo, tbtipocomissao.simbolo';
+            }
+
+
+
+
             #echo $select;
             $servidores = $pessoal->select($select);
 
             # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "jj"));
+            $total = array_sum(array_column($servidores, "total_padrao")) + array_sum(array_column($servidores, "total_protempore")) + array_sum(array_column($servidores, "total_designacao"));
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(["Gerência / Laboratório", "Cargo", "Nº de Servidores"]);
+            $tabela->set_label(["Diretoria", "Cargo", "Nomeados", "Pro Tempore", "Designado"]);
             $tabela->set_align(["left", "left"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
+            #$tabela->set_colunaSomatorio([[2, 3, 4]]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

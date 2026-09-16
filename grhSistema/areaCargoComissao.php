@@ -177,6 +177,7 @@ if ($acesso) {
 
             $menu->add_item('titulo', 'Relatórios');
             $menu->add_item('linkWindow', 'Cargo Vigente e Anterior', '../grhRelatorios/cargoComissao.vigentes.php');
+            $menu->add_item('linkWindow', 'Servidores com Cargo', '../grhRelatorios/cargoComissao.geral.php');
             $menu->add_item('linkWindow', 'Cargo Eletivos por Lotação', '../grhRelatorios/cargoComissao.eletivos.lotacao.php');
             $menu->add_item('linkWindow', 'Planilhão Histórico', '../grhRelatorios/cargoComissao.planilhao.historico.php');
             $menu->add_item('linkWindow', 'Planilhão Vigente', '../grhRelatorios/cargoComissao.planilhao.vigente.php');

@@ -133,6 +133,7 @@ if ($acesso) {
             array('Por Perfil', 'perfil'),
             array('Por Cargo - Geral', 'cargo'),
             array('Por Cargo - Adm/Tec', 'cargoAdm'),
+            array('Por Cargo Em Comissão', 'cargoComi'),
             array('Por Lotação x Cargo', 'cargoGerencia'),
             array('Por Professores x Diretoria', 'professorDiretoria'),
             array('Por Diretoria', 'diretoria'),
@@ -2258,6 +2259,108 @@ if ($acesso) {
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
             $tabela->set_label(["Gerência / Laboratório", "Cargo Efetivo", "Nº de Servidores"]);
+            $tabela->set_align(["left", "left"]);
+            $tabela->set_rodape("Total de Servidores: " . $total);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $painel->fecha();
+            break;
+
+####################################################################################################            
+
+        case "cargoComi":
+
+            # Abre o painel
+            $painel = new Callout();
+            $painel->abre();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística por Diretoria/Gerência x Cargo/Função";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
+
+            titulotable("por Cargo em Comissão");
+            br();
+
+            ########
+            # Formulário de Pesquisa
+            $form = new Form('?fase=cargoComi');
+
+            # Lotação
+            $result = $pessoal->select('SELECT DISTINCT DIR, DIR
+                                      FROM tblotacao
+                                     WHERE ativo
+                                  ORDER BY DIR');
+            array_unshift($result, array("*", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Diretoria/Centro:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            # Perfil
+            $result = $pessoal->select($selectPerfil);
+            array_unshift($result, array("*", 'Todos'));
+
+            $controle = new Input('parametroPerfil', 'combo', 'Perfil:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Perfil');
+            $controle->set_array($result);
+            $controle->set_valor($parametroPerfil);
+            $controle->set_optgroup(true);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(6);
+            $form->add_item($controle);
+
+            $form->show();
+
+            ########
+            # Monta o select
+            $select = 'SELECT CONCAT(IFnull(tblotacao.dir,"")," - ",IFnull(tblotacao.ger,"")) lotacao,                          
+                              CONCAT(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao) efetivo, 
+                              count(tbservidor.idServidor) as jj
+                         FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)                                              
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                         LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
+                                         LEFT JOIN tbdescricaocomissao USING (idDescricaoComissao)
+                                              JOIN tbtipocomissao ON (tbcomissao.idTipoComissao = tbtipocomissao.idTipoComissao)
+                                              JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                                              JOIN tbperfil USING (idPerfil)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbtiponomeacao.visibilidade <> 2
+                     AND (tbcomissao.dtExo IS null OR CURDATE() < tbcomissao.dtExo) 
+                     AND situacao = 1';
+
+            if ($parametroLotacao <> '*') {
+                $select .= ' AND tblotacao.dir="' . $parametroLotacao . '"';
+            }
+
+            if ($parametroPerfil <> '*') {
+                $select .= ' AND tbservidor.idPerfil="' . $parametroPerfil . '"';
+            }
+
+            $select .= ' GROUP BY lotacao, efetivo
+                         ORDER BY lotacao, efetivo, tbtipocomissao.simbolo';
+            #echo $select;
+            $servidores = $pessoal->select($select);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(["Gerência / Laboratório", "Cargo", "Nº de Servidores"]);
             $tabela->set_align(["left", "left"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
 

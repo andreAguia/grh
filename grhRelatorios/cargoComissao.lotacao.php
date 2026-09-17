@@ -72,7 +72,7 @@ if ($acesso) {
     $relatorio->set_funcao([null, null, null, "date_to_php"]);
     $relatorio->set_align(["center", "left", "left", "center", "center"]);
     $relatorio->set_classe([null, null, "CargoComissao"]);
-    $relatorio->set_metodo([null, null, "get_descricaoCargo"]);
+    $relatorio->set_metodo([null, null, "get_descricaoCargoETipo"]);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(5);
     #$relatorio->set_botaoVoltar('../sistema/areaServidor.php');

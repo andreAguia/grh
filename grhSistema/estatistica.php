@@ -2360,13 +2360,10 @@ if ($acesso) {
                              ORDER BY tblotacao.dir, efetivo, tbtipocomissao.simbolo';
             }
 
-
-
-
             #echo $select;
             $servidores = $pessoal->select($select);
 
-            # Soma a coluna do count
+            # Soma as colunas
             $total = array_sum(array_column($servidores, "total_padrao_estatutario"));
             $total += array_sum(array_column($servidores, "total_padrao_outros"));
             $total += array_sum(array_column($servidores, "total_protempore_estatutario"));

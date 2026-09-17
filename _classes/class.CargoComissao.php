@@ -86,6 +86,35 @@ class CargoComissao {
 
     ###########################################################
 
+    function get_descricaoCargoETipo($idComissao) {
+
+        /**
+         * fornece a descrição do cargo em comissão e o tipo de nomeação
+         */
+        # Pega os dados
+        $select = "SELECT tbdescricaocomissao.descricao,
+                          tbtiponomeacao.nome,
+                          idTipoNomeacao
+                     FROM tbdescricaocomissao JOIN tbcomissao USING (idDescricaoComissao)
+                                              JOIN tbtiponomeacao ON (tbcomissao.tipo = tbtiponomeacao.idTipoNomeacao)
+                    WHERE idComissao = {$idComissao}";
+
+        $pessoal = new Pessoal();
+        $dados = $pessoal->select($select, false);
+
+        if (empty($dados[0])) {
+            return null;
+        } else {
+            if ($dados[2] <> 1) {
+                return "{$dados[0]} ({$dados[1]})";
+            } else {
+                return $dados[0];
+            }
+        }
+    }
+
+    ###########################################################
+
     function get_descricao($idDescricaoComissao) {
 
         /**

@@ -2333,7 +2333,8 @@ if ($acesso) {
                               SUM(tbcomissao.tipo = 2 AND tbservidor.idPerfil = 1) AS total_protempore_estatutario,
                               SUM(tbcomissao.tipo = 2 AND tbservidor.idPerfil <> 1) AS total_protempore_outros,
                               SUM(tbcomissao.tipo = 3 AND tbservidor.idPerfil = 1) AS total_designacao_estatutario,
-                              SUM(tbcomissao.tipo = 3 AND tbservidor.idPerfil <> 1) AS total_designacao_outros
+                              SUM(tbcomissao.tipo = 3 AND tbservidor.idPerfil <> 1) AS total_designacao_outros,
+                              SUM(tbcomissao.tipo <= 3) AS total_geral
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)                                              
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
@@ -2374,13 +2375,13 @@ if ($acesso) {
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(["Diretoria", "Cargo", "Nomeados", null, "Pro Tempore", null, "Designados", null]);
-            $tabela->set_colspanLabel([null, null, 2, null, 2, null, 2, null]);
-            $tabela->set_label2([null, null, "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro"]);
-            $tabela->set_width([5, 25, 10, 10, 10, 10, 10, 10]);
+            $tabela->set_label(["Diretoria", "Cargo", "Nomeados", null, "Pro Tempore", null, "Designados", null, "Total"]);
+            $tabela->set_colspanLabel([null, null, 2, null, 2, null, 2, null, null]);
+            $tabela->set_label2([null, null, "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro", null]);
+            $tabela->set_width([5, 29, 8, 8, 8, 8, 8, 8, 8]);
             $tabela->set_align(["left", "left"]);
-            $tabela->set_rodape("Total de Servidores: " . $total);
-            #$tabela->set_colunaSomatorio([[2, 3, 4, 5, 6, 7]]);
+            $tabela->set_rodape("Total Geral de Servidores: " . $total);
+            $tabela->set_colunaSomatorio([2, 3, 4, 5, 6, 7, 8]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

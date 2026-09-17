@@ -2328,9 +2328,12 @@ if ($acesso) {
             # Monta o select
             $select = 'SELECT tblotacao.dir,
                               CONCAT(tbtipocomissao.simbolo," - ",tbtipocomissao.descricao) efetivo,
-                              SUM(tbcomissao.tipo = 1) AS total_padrao,
-                              SUM(tbcomissao.tipo = 2) AS total_protempore,
-                              SUM(tbcomissao.tipo = 3) AS total_designacao
+                              SUM(tbcomissao.tipo = 1 AND tbservidor.idPerfil = 1) AS total_padrao_estatutario,
+                              SUM(tbcomissao.tipo = 1 AND tbservidor.idPerfil <> 1) AS total_padrao_outros,
+                              SUM(tbcomissao.tipo = 2 AND tbservidor.idPerfil = 1) AS total_protempore_estatutario,
+                              SUM(tbcomissao.tipo = 2 AND tbservidor.idPerfil <> 1) AS total_protempore_outros,
+                              SUM(tbcomissao.tipo = 3 AND tbservidor.idPerfil = 1) AS total_designacao_estatutario,
+                              SUM(tbcomissao.tipo = 3 AND tbservidor.idPerfil <> 1) AS total_designacao_outros
                          FROM tbservidor LEFT JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)                                              
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
                                          LEFT JOIN tbcomissao ON (tbservidor.idServidor = tbcomissao.idServidor)
@@ -2364,15 +2367,23 @@ if ($acesso) {
             $servidores = $pessoal->select($select);
 
             # Soma a coluna do count
-            $total = array_sum(array_column($servidores, "total_padrao")) + array_sum(array_column($servidores, "total_protempore")) + array_sum(array_column($servidores, "total_designacao"));
+            $total = array_sum(array_column($servidores, "total_padrao_estatutario"));
+            $total += array_sum(array_column($servidores, "total_padrao_outros"));
+            $total += array_sum(array_column($servidores, "total_protempore_estatutario"));
+            $total += array_sum(array_column($servidores, "total_protempore_outros"));
+            $total += array_sum(array_column($servidores, "total_designacao_estatutario"));
+            $total += array_sum(array_column($servidores, "total_designacao_outros"));
 
             # Tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($servidores);
-            $tabela->set_label(["Diretoria", "Cargo", "Nomeados", "Pro Tempore", "Designado"]);
+            $tabela->set_label(["Diretoria", "Cargo", "Nomeados", null, "Pro Tempore", null, "Designados", null]);
+            $tabela->set_colspanLabel([null, null, 2, null, 2, null, 2, null]);
+            $tabela->set_label2([null, null, "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro", "Estatutarios", "Cedidos e ExtraQuadro"]);
+            $tabela->set_width([5, 25, 10, 10, 10, 10, 10, 10]);
             $tabela->set_align(["left", "left"]);
             $tabela->set_rodape("Total de Servidores: " . $total);
-            #$tabela->set_colunaSomatorio([[2, 3, 4]]);
+            #$tabela->set_colunaSomatorio([[2, 3, 4, 5, 6, 7]]);
 
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);

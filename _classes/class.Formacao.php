@@ -313,10 +313,15 @@ class Formacao {
             # Pega os dados
             $dados = $this->get_dados($idFormacao);
 
-            if (empty($dados["minutos"])) {
-                return "{$dados["horas"]} h";
+            # Se não tiver a informação de hora
+            if (empty($dados["minutos"]) AND empty($dados["horas"])) {
+                return "---";
             } else {
-                return "{$dados["horas"]} h e {$dados["minutos"]} m";
+                if (empty($dados["minutos"])) {
+                    return "{$dados["horas"]} h";
+                } else {
+                    return "{$dados["horas"]} h e {$dados["minutos"]} m";
+                }
             }
         }
     }

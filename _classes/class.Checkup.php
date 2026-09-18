@@ -3941,8 +3941,8 @@ class Checkup {
                 # Verifica se o ultimo
                 if ($lsv->get_ultimoTempoConsecutivo($item[4]) >= 1460) {
 
-                    # Verifica se a licença é antiga
-                    if ($item[7] > -20) {
+                    # Verifica se a licença é antiga (Da um desconto de 100 dias)
+                    if ($item[7] > -100) {
                         $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
                         $arrayExib[] = $item;
                     }

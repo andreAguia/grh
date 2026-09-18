@@ -62,7 +62,7 @@ if ($acesso) {
             processo com as bases de dados mencionada em nome de <b>{$nomeServidor}</b>, 
                 Id Funcional {$idFuncional}.");
 
-        $dec->set_texto("E, por nada mais constar, eu {$nome}, {$cargo},
+        $dec->set_texto("E, por nada mais constar, eu, {$nome}, {$cargo},
             ID Funcional nº {$idFuncionalLogado}, lavrei a presente Certidão, "
             . "que dato e assino.");
 

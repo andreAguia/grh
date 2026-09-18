@@ -510,7 +510,7 @@ class Checkup {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }
             $select .= ' ORDER BY tbpessoa.nome, tbdependente.dtNasc';
-            
+
             $result = $servidor->select($select);
             $count = $servidor->count($select);
             $titulo = 'Parentes com idade até 24 anos sem CPF Cadastrado';
@@ -525,7 +525,7 @@ class Checkup {
             $tabela->set_funcao([null, null, null, "date_to_php"]);
             $tabela->set_editar($this->linkEditar);
             $tabela->set_idCampo('idServidor');
-            
+
             $tabela->set_rowspan(0);
             $tabela->set_grupoCorColuna(0);
 
@@ -3922,25 +3922,30 @@ class Checkup {
                                                   JOIN tbperfil USING (idPerfil)
                      WHERE dtRetorno IS NULL
                        AND situacao = 1';
-            
+
             if (!empty($idServidor)) {
                 $select .= ' AND idServidor = "' . $idServidor . '"';
             }
             $select .= ' ORDER BY 7 desc';
 
             $result = $servidor->select($select);
-            
+
             # Cria array de exibição
             $arrayExib = [];
-            
+
             # Classe da licença sem vencimentos
             $lsv = new LicencaSemVencimentos();
-                        
+
             # Percorre o array do banco e analisa
-            foreach($result as $item){
-                if($lsv->get_ultimoTempoConsecutivo($item[4]) >= 1460) {
-                    $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
-                    $arrayExib[] = $item;
+            foreach ($result as $item) {
+                # Verifica se o ultimo
+                if ($lsv->get_ultimoTempoConsecutivo($item[4]) >= 1460) {
+
+                    # Verifica se a licença é antiga
+                    if ($item[7] > -20) {
+                        $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
+                        $arrayExib[] = $item;
+                    }
                 }
             }
             $count = count($arrayExib);
@@ -3949,10 +3954,9 @@ class Checkup {
             # Exibe a tabela
             $tabela = new Tabela();
             $tabela->set_conteudo($arrayExib);
-            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes','Dias Em Licença']);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes', 'Total de Dias']);
             $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
             $tabela->set_titulo($titulo);
-            $tabela->set_subtitulo("ESTE ALERTA ESTÁ EM FASE DE TESTES");
             $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
             $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
@@ -3988,7 +3992,6 @@ class Checkup {
     }
 
     ##########################################################
-
 
     /**
      * Método get_servidorComTerminoReducaoMenos45Dias

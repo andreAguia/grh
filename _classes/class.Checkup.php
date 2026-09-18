@@ -3897,6 +3897,100 @@ class Checkup {
     ##########################################################
 
     /**
+     * Método get_servidorCom4AnosLicencaSemVencimentos
+     * 
+     * Servidor Com 4 anos ou mais de licença sem vencimentos
+     */
+    public function get_servidorCom4AnosLicencaSemVencimentos($idServidor = null, $catEscolhida = null) {
+
+        if (empty($catEscolhida) OR $catEscolhida == "beneficios" OR !empty($idServidor)) {
+
+
+            $servidor = new Pessoal();
+            $metodo = explode(":", __METHOD__);
+
+            $select = 'SELECT idfuncional,
+                          matricula,
+                          tbpessoa.nome,
+                          tbperfil.nome,
+                          idServidor,
+                          idServidor,
+                          ADDDATE(dtInicial,numDias-1) as dtFim,
+                          TIMESTAMPDIFF(DAY,CURRENT_DATE,dtTermino)
+                     FROM tblicencasemvencimentos JOIN tbservidor USING (idServidor)
+                                                  JOIN tbpessoa USING (idPessoa)
+                                                  JOIN tbperfil USING (idPerfil)
+                     WHERE dtRetorno IS NULL
+                       AND situacao = 1';
+            
+            if (!empty($idServidor)) {
+                $select .= ' AND idServidor = "' . $idServidor . '"';
+            }
+            $select .= ' ORDER BY 7 desc';
+
+            $result = $servidor->select($select);
+            
+            # Cria array de exibição
+            $arrayExib = [];
+            
+            # Classe da licença sem vencimentos
+            $lsv = new LicencaSemVencimentos();
+                        
+            # Percorre o array do banco e analisa
+            foreach($result as $item){
+                if($lsv->get_ultimoTempoConsecutivo($item[4]) >= 1460) {
+                    $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
+                    $arrayExib[] = $item;
+                }
+            }
+            $count = count($arrayExib);
+            $titulo = 'Servidores com 4 anos (ou mais) de Licença Sem Vencimentos.';
+
+            # Exibe a tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($arrayExib);
+            $tabela->set_label(['IdFuncional', 'Matrícula', 'Nome', 'Perfil', 'Cargo', 'Lotação', 'Data Final', 'Dias Faltantes','Dias Em Licença']);
+            $tabela->set_align(['center', 'center', 'left', 'center', 'left']);
+            $tabela->set_titulo($titulo);
+            $tabela->set_subtitulo("ESTE ALERTA ESTÁ EM FASE DE TESTES");
+            $tabela->set_classe([null, null, null, null, "Pessoal", "Pessoal"]);
+            $tabela->set_metodo([null, null, null, null, "get_cargo", "get_lotacao"]);
+            $tabela->set_funcao([null, "dv", null, null, null, null, "date_to_php"]);
+            $tabela->set_editar($this->linkEditar);
+            $tabela->set_idCampo('idServidor');
+
+            # Verifica se é de um único servidor
+            if (!empty($idServidor)) {
+                if ($count > 0) {
+                    return $titulo;
+                }
+            } else {  # Vários servidores
+                if ($this->lista) {
+                    if ($count > 0) {
+                        $tabela->show();
+                        set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
+                    } else {
+                        br();
+                        tituloTable($titulo);
+                        $callout = new Callout();
+                        $callout->abre();
+                        p('Nenhum item encontrado !!', 'center');
+                        $callout->fecha();
+                    }
+                } else {
+                    if ($count > 0) {
+                        $retorna = [$count . ' ' . $titulo, $metodo[2], $catEscolhida];
+                        return $retorna;
+                    }
+                }
+            }
+        }
+    }
+
+    ##########################################################
+
+
+    /**
      * Método get_servidorComTerminoReducaoMenos45Dias
      * 
      * Servidor Com Redução terminando em menos de 45 dias

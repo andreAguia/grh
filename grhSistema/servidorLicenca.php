@@ -308,9 +308,33 @@ if ($acesso) {
         $objeto = new Modelo();
 
         ################################################################
-        # Exibe os dados do Servidor
-        $objeto->set_rotinaExtra("get_DadosServidor");
-        $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+        # Verifica quantos dias o servidor tem de licença médica código 117, 118 e 119
+        # Pois essa licança tem limite de fruíção de 730 dias (2 ano)
+        $licancaMedica = new LicencaMedica();
+        $diasLicenca117 = $licancaMedica->get_numDiasLicenca117($idServidorPesquisado);
+
+        if ($diasLicenca117 < 365) {
+            # Exibe os dados do Servidor
+            $objeto->set_rotinaExtra("get_DadosServidor");
+            $objeto->set_rotinaExtraParametro($idServidorPesquisado);
+        } else {
+
+            if ($diasLicenca117 >= 365 AND $diasLicenca117 < 730) {
+                $rotina = "calloutWarning";
+                $mensagem = "O servidor tem {$diasLicenca117} dias de Licença por motivo de doença em pessoa da família.<br/>
+                         O salário deverá ser reduzido em 1/3 enquanto estiver fruindo esta licença.";
+            }
+
+            if ($diasLicenca117 >= 730) {
+                $rotina = "calloutAlert";
+                $mensagem = "O servidor tem {$diasLicenca117} dias de Licença por motivo de doença em pessoa da família.<br/>
+                         Não poderá solicitar mais esta licença.";
+            }
+
+            # Exibe os dados do Servidor
+            $objeto->set_rotinaExtra(["get_DadosServidor", $rotina]);
+            $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $mensagem]);
+        }
 
         # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
         $objeto->set_nome('Afastamentos e Licenças');

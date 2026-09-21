@@ -135,10 +135,9 @@ if ($acesso) {
         $controle->set_size(30);
         $controle->set_title('Filtra por Alta');
         $controle->set_array([
-            [1, "Última Licença Com Alta"],
+            [1, "Última Licença Com Alta - A Vencer"],
             [2, "Última Licença Sem Alta - A Vencer"],
-            [3, "Última Licença Sem Alta - Em Aberto"],
-            [4, "Todas as Licenças"]]);
+            [3, "Última Licença Sem Alta - Em Aberto"]]);
         $controle->set_valor($parametroAlta);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
@@ -236,10 +235,11 @@ if ($acesso) {
                 $subtitulo = "<b>SEM ALTA - EM ABERTO</b>";
                 $mensagem1 = "Servidores com a licença em aberto deverão se apresentar com <b>URGÊNCIA</b> para um novo exame pericial.";
             } elseif ($parametroAlta == 1) {
-                # Última licença com Alta
-                $select .= " AND alta = 1";
+                # Última licença com Alta a vencer
+                $select .= " AND alta = 1
+                             AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
                 $titulo = "Servidores Com a Última Licença Médica";
-                $subtitulo = "COM ALTA";
+                $subtitulo = "COM ALTA - A VENCER";
                 $mensagem1 = "Servidores já devem estar em seus setores no dia imediatamente após ao término da licença. ";
             } elseif ($parametroAlta == 4) {
                 # Todas as Licenças

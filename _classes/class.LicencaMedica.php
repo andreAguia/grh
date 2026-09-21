@@ -47,7 +47,7 @@ class LicencaMedica {
         }
     }
 
-###########################################################
+    ###########################################################
 
     /**
      * Método getnumBim
@@ -121,6 +121,25 @@ class LicencaMedica {
 
         # Retorna a data
         return $dtInicioLicenca;
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numDiasLicenca117
+     * informa o número de dias fruídos em licença artigo 117 (id 2)
+     * 
+     * @param	integer $idServidor id do servidor
+     */
+    function get_numDiasLicenca117($idServidor) {
+        $select = "SELECT SUM(numDias) AS total
+                     FROM tblicenca
+                    WHERE idTpLicenca = 2
+                      AND idServidor = {$idServidor}";
+
+        $pessoal = new Pessoal();
+        $row = $pessoal->select($select, false);
+        return $row[0];
     }
 
     ###########################################################

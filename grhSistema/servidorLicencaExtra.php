@@ -187,10 +187,11 @@ if ($idTpLicenca == "Inicial") {
 
     # Verifica se é licença médica artigo 117 e 119 
     if ($idTpLicenca == 2) {
+        $licancaMedica = new LicencaMedica();
+        $diasLicenca117 = $licancaMedica->get_numDiasLicenca117($idServidor);
+        
         # Verifica se é inclusão
         if (empty($id)) {
-            $licancaMedica = new LicencaMedica();
-            $diasLicenca117 = $licancaMedica->get_numDiasLicenca117($idServidor);
 
             # Verifica se é mais que 730
             if ($diasLicenca117 >= 730) {
@@ -206,6 +207,19 @@ if ($idTpLicenca == "Inicial") {
                 $erro = 1;
                 $msgErro .= 'Com essa licença, o servidor extrapola o limite de 730 dias para essa licença. Ele só pode fruir ' . $valorQuePode . ' dias.\n';
             }
+        } else {
+            # Quando é edição
+            # Pega o que estava gravado
+            $licenca = new Licenca();
+            $dados = $licenca->get_dados($id);
+            
+            $diasAlterado = ($diasLicenca117 - $dados["numDias"]) + $numDias;
+            # Verifica se é mais que 730
+            if ($diasAlterado > 730) {
+                $erro = 1;
+                $msgErro .= 'O Servidor já atingiu o limite de 730 dias para a Licença por motivo de doença em pessoa da família! Não é possível incluir mais essa licença.\n';
+            }
+            
         }
     }
 }

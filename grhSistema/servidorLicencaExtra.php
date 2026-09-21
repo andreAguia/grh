@@ -54,7 +54,7 @@ if ($idTpLicenca == "Inicial") {
             alert("Servidor ja está com afastamento, mas um parecer da assessoria jurídica permitiu acumular licença eleitoral com outro afastamento.");
         } elseif ($verifica->getTipo() == 17) {
             alert("Servidor ja está com afastamento, mas um parecer da assessoria jurídica permitiu acumular licença eleitoral com outro afastamento.");
-        }else{
+        } else {
             $erro = 1;
             $msgErro .= 'Já existe um(a) ' . $verifica->getAfastamento() . ' (' . $verifica->getDetalhe() . ') nesse período!\n(' . $id . ')';
         }
@@ -147,7 +147,7 @@ if ($idTpLicenca == "Inicial") {
      */
     $dtSaida = $pessoal->get_dtSaida($idServidor);
 
-# Se tiver data de saida
+    # Se tiver data de saida
     if (!is_null($dtSaida)) {
         $dtSaida = date_to_bd($dtSaida);
         if ($dtInicial > $dtSaida) {
@@ -178,6 +178,34 @@ if ($idTpLicenca == "Inicial") {
         if ($dtTermino >= date_to_bd($dataCompulsoria)) {
             $erro = 1;
             $msgErro .= 'A Data da aposentadoria compulsória deste servidor é ' . $dataCompulsoria . '. Todos os afastamentos deverão iniciar e terminar antes desta data!\n';
+        }
+    }
+
+    /*
+     *  Verifica o limite de dias na licença médica artigo 117 e 119 
+     */
+
+    # Verifica se é licença médica artigo 117 e 119 
+    if ($idTpLicenca == 2) {
+        # Verifica se é inclusão
+        if (empty($id)) {
+            $licancaMedica = new LicencaMedica();
+            $diasLicenca117 = $licancaMedica->get_numDiasLicenca117($idServidor);
+
+            # Verifica se é mais que 730
+            if ($diasLicenca117 >= 730) {
+                $erro = 1;
+                $msgErro .= 'O Servidor já atingiu o limite de 730 dias para a Licença por motivo de doença em pessoa da família! Não é possível incluir mais essa licença.\n';
+            }
+
+            # Verifica se é menos que 730 mas com a presente licença atinge esse valor
+            if ($diasLicenca117 < 730 AND ($diasLicenca117 + $numDias) > 730) {
+                # Pega o valor exato que pode
+                $valorQuePode = 730 - $diasLicenca117;
+
+                $erro = 1;
+                $msgErro .= 'Com essa licença, o servidor extrapola o limite de 730 dias para essa licença. Ele só pode fruir ' . $valorQuePode . ' dias.\n';
+            }
         }
     }
 }

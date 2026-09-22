@@ -159,7 +159,7 @@ if ($acesso) {
             'tipo' => 'texto',
             'required' => true,
             'autofocus' => true,
-            'size' => 30),
+            'size' => 150),
         array('linha' => 1,
             'nome' => 'servidores',
             'col' => 3,

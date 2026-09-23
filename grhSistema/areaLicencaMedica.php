@@ -148,9 +148,9 @@ if ($acesso) {
             }
 
             if ($parametroAlta == 4) {
-                $menu->add_item('link', '<b>Somatório de Dias Licença 117</b>', '?parametroAlta=4');
+                $menu->add_item('link', '<b>Somatório - Artigo 117</b>', '?parametroAlta=4');
             } else {
-                $menu->add_item('link', 'Somatório de Dias Licença 117', '?parametroAlta=4');
+                $menu->add_item('link', 'Somatório - Artigo 117', '?parametroAlta=4');
             }
 
             $menu->show();
@@ -182,7 +182,7 @@ if ($acesso) {
                 # Monta a tabela
                 $tabela = new Tabela();
                 $tabela->set_titulo("Total de Dias Fruídos na Licença Médica Por Motivo de Doença em Pessoa da Família - Artigo 117");
-                $tabela->set_subtitulo("Conforme o Artigo 119 do Estatuto do Servidro Público Não é permitido tirar mais de 730 dias desse tipo de Licença");
+                $tabela->set_subtitulo("Conforme o Artigo 119 do Estatuto do Servidro Público, Decreto 2479 de 08/03/1979,<br/>não é permitido tirar mais de 730 dias (2 anos) da Licença por Motivo de Doença em Pessoa da Família");
                 $tabela->set_conteudo($resumo);
                 $tabela->set_label(["Servidor", "Situação", "Total de Dias"]);
                 $tabela->set_align(["left", "left", "center"]);

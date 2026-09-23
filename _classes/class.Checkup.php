@@ -4500,8 +4500,7 @@ class Checkup {
                                      LEFT JOIN tbperfil USING (idPerfil)
                                      LEFT JOIN tbsituacao ON (tbservidor.situacao = tbsituacao.idSituacao)
                                      LEFT JOIN tbconcurso USING (idConcurso)
-                    WHERE dtAdmissao > (SELECT dtPublicacaoEdital FROM tbconcurso WHERE idConcurso = 3)
-                      AND idConcurso <> 3
+                    WHERE dtAdmissao < dtPublicacaoEdital
                       AND (idPerfil = 1 OR idPerfil = 4)
                       AND (idCargo <> 128 AND idCargo <> 129)';
             if (!empty($idServidor)) {
@@ -4511,7 +4510,7 @@ class Checkup {
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);
-            $titulo = "Servidor(es) concursado(s) antes do concurso de 2012 admitido(s) depois deste concurso";
+            $titulo = "Servidor(es) concursado(s) com a data de admissão anterior ao concurso";
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -4533,8 +4532,7 @@ class Checkup {
             } else {  # Vários servidores
                 if ($this->lista) {
                     if ($count > 0) {
-                        callout("Servidor concursado antes do concurso de 2012 não pode ser admitido "
-                                . "depois deste concurso.");
+                        callout("Servidor(es) concursado(s) com a data de admissão anterior ao concurso");
                         $tabela->show();
                         set_session('origem', "alertas.php?fase=tabela&alerta=" . $metodo[2]);
                     } else {

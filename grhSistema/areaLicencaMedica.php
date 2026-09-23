@@ -41,6 +41,9 @@ if ($acesso) {
     # Joga os parâmetros par as sessions
     set_session('parametroAlta', $parametroAlta);
 
+    # Licenças consideradas
+    $arrayLicencas = [1, 30, 2];
+
     # Relatório
     $selectRelatorio = get_session("selectRelatorio");
 
@@ -152,14 +155,6 @@ if ($acesso) {
 
             $menu->show();
 
-            # Licenças consideradas
-            $arrayLicencas = [1, 30, 2];
-            $mensagem2 = null;
-            foreach ($arrayLicencas as $item) {
-                $mensagem2 .= "{$licenca->exibeNomeSimples($item)}<br/>";
-            }
-            calloutWarning($mensagem2, "As licenças consideradas são:");
-
             $grid->fechaColuna();
 
             #################################
@@ -167,9 +162,10 @@ if ($acesso) {
             $grid->abreColuna(9);
 
             if ($parametroAlta == 4) {
+                # PAra o somatório de dias na licença 117
                 construcao("Rotina em Desenvolvimento");
             } else {
-
+                # Para a relação de servidores com as licenças
                 # Pega os dados
                 $select = "SELECT tbservidor.idServidor,
                               tblicenca.idLicenca,
@@ -267,6 +263,13 @@ if ($acesso) {
                 $tabela->set_editarBotao("bullet_edit.png");
                 $tabela->set_idCampo('idServidor');
                 $tabela->show();
+
+                # Exibe mensagem sobre as licenças
+                $mensagem2 = null;
+                foreach ($arrayLicencas as $item) {
+                    $mensagem2 .= "{$licenca->exibeNomeSimples($item)}<br/>";
+                }
+                calloutWarning($mensagem2, "As licenças consideradas são:");
             }
             break;
 

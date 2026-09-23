@@ -36,13 +36,9 @@ if ($acesso) {
     $id = soNumeros(get('id'));
 
     # Pega os parâmetros
-    $parametroNomeMat = post('parametroNomeMat', get_session('parametroNomeMat'));
-    $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao'));
-    $parametroAlta = post('parametroAlta', get_session('parametroAlta', 3));
+    $parametroAlta = get('parametroAlta', get_session('parametroAlta', 3));
 
-    # Joga os parâmetros par as sessions    
-    set_session('parametroNomeMat', $parametroNomeMat);
-    set_session('parametroLotacao', $parametroLotacao);
+    # Joga os parâmetros par as sessions
     set_session('parametroAlta', $parametroAlta);
 
     # Relatório
@@ -97,54 +93,6 @@ if ($acesso) {
         #$menu1->add_link($botaoRel, "right");
 
         $menu1->show();
-
-        ################################################################
-        # Formulário de Pesquisa
-        $form = new Form('?');
-
-        $controle = new Input('parametroNomeMat', 'texto', 'Nome, Matrícula ou id:', 1);
-        $controle->set_size(100);
-        $controle->set_title('Nome do servidor');
-        $controle->set_valor($parametroNomeMat);
-        $controle->set_autofocus(true);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(3);
-        $form->add_item($controle);
-
-        # Lotação
-        $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                                      FROM tblotacao
-                                                     WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                                      FROM tblotacao
-                                                     WHERE ativo)
-                                                  ORDER BY 2');
-        array_unshift($result, array('*', '-- Todos --'));
-
-        $controle = new Input('parametroLotacao', 'combo', 'Lotação:', 1);
-        $controle->set_size(30);
-        $controle->set_title('Filtra por Lotação');
-        $controle->set_array($result);
-        $controle->set_valor($parametroLotacao);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(5);
-        $form->add_item($controle);
-
-        $controle = new Input('parametroAlta', 'combo', 'Situação da Licença:', 1);
-        $controle->set_size(30);
-        $controle->set_title('Filtra por Alta');
-        $controle->set_array([
-            [1, "Última Licença Com Alta - A Vencer"],
-            [2, "Última Licença Sem Alta - A Vencer"],
-            [3, "Última Licença Sem Alta - Em Aberto"]]);
-        $controle->set_valor($parametroAlta);
-        $controle->set_onChange('formPadrao.submit();');
-        $controle->set_linha(1);
-        $controle->set_col(4);
-        $form->add_item($controle);
-
-        $form->show();
     }
 
 ################################################################
@@ -169,170 +117,157 @@ if ($acesso) {
 
         case "lista" :
 
-            # Define as licenças consideradas
-            $arrayLicencas = [1, 30, 2];
+            # Área Lateral
+            $grid->fechaColuna();
+            $grid->abreColuna(3);
 
-            # Pega os dados
-            $select = "SELECT tbservidor.idServidor,
+            ########################################
+            # Menu
+
+            $menu = new Menu("menuProcedimentos");
+            $menu->add_item('titulo', 'Menu');
+            if ($parametroAlta == 1) {
+                $menu->add_item('link', '<b>Licença Com Alta - A Vencer</b>', '?parametroAlta=1');
+            } else {
+                $menu->add_item('link', 'Licença Com Alta - A Vencer', '?parametroAlta=1');
+            }
+
+            if ($parametroAlta == 2) {
+                $menu->add_item('link', '<b>Licença Sem Alta - A Vencer</b>', '?parametroAlta=2');
+            } else {
+                $menu->add_item('link', 'Licença Sem Alta - A Vencer', '?parametroAlta=2');
+            }
+
+            if ($parametroAlta == 3) {
+                $menu->add_item('link', '<b>Licença Sem Alta - Em Aberto</b>', '?parametroAlta=3');
+            } else {
+                $menu->add_item('link', 'Licença Sem Alta - Em Aberto', '?parametroAlta=3');
+            }
+
+            if ($parametroAlta == 4) {
+                $menu->add_item('link', '<b>Somatório de Dias Licença 117</b>', '?parametroAlta=4');
+            } else {
+                $menu->add_item('link', 'Somatório de Dias Licença 117', '?parametroAlta=4');
+            }
+
+            $menu->show();
+
+            # Licenças consideradas
+            $arrayLicencas = [1, 30, 2];
+            $mensagem2 = null;
+            foreach ($arrayLicencas as $item) {
+                $mensagem2 .= "{$licenca->exibeNomeSimples($item)}<br/>";
+            }
+            calloutWarning($mensagem2, "As licenças consideradas são:");
+
+            $grid->fechaColuna();
+
+            #################################
+
+            $grid->abreColuna(9);
+
+            if ($parametroAlta == 4) {
+                construcao("Rotina em Desenvolvimento");
+            } else {
+
+                # Pega os dados
+                $select = "SELECT tbservidor.idServidor,
                               tblicenca.idLicenca,
                               tblicenca.idLicenca,
                               tblicenca.idTpLicenca,
                               tbservidor.idServidor
                          FROM tbservidor JOIN tbpessoa USING (idPessoa)
-                                         JOIN tblicenca USING (idServidor)
-                                         JOIN tbhistlot USING (idServidor)
-                                         JOIN tblotacao ON (tbhistlot.lotacao = tblotacao.idLotacao)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                                         JOIN tblicenca USING (idServidor)                                         
+                        WHERE situacao = 1";
 
-            if ($parametroAlta == 2 OR $parametroAlta == 3) {
-                $select .= " AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (";
+                if ($parametroAlta == 2 OR $parametroAlta == 3) {
+                    $select .= " AND tblicenca.dtInicial = (select max(dtInicial) from tblicenca where tblicenca.idServidor = tbservidor.idServidor AND (";
 
-                $contador1 = count($arrayLicencas);
+                    $contador1 = count($arrayLicencas);
+                    foreach ($arrayLicencas as $item) {
+                        $contador1--;
+                        if ($contador1 > 0) {
+                            $select .= "tblicenca.idTpLicenca = {$item} OR ";
+                        } else {
+                            $select .= "tblicenca.idTpLicenca = {$item}";
+                        }
+                    }
+                    $select .= "))";
+                }
+
+                # Continua
+                $select .= " AND (";
+
+                $contador2 = count($arrayLicencas);
                 foreach ($arrayLicencas as $item) {
-                    $contador1--;
-                    if ($contador1 > 0) {
+                    $contador2--;
+                    if ($contador2 > 0) {
                         $select .= "tblicenca.idTpLicenca = {$item} OR ";
                     } else {
                         $select .= "tblicenca.idTpLicenca = {$item}";
                     }
                 }
-                $select .= "))";
-            }
 
-            # Continua
-            $select .= "AND situacao = 1
-                        AND (";
+                # Continua
+                $select .= ") AND idPerfil = 1";
 
-            $contador2 = count($arrayLicencas);
-            foreach ($arrayLicencas as $item) {
-                $contador2--;
-                if ($contador2 > 0) {
-                    $select .= "tblicenca.idTpLicenca = {$item} OR ";
-                } else {
-                    $select .= "tblicenca.idTpLicenca = {$item}";
-                }
-            }
+                $subtitulo = null;
+                $titulo = null;
 
-            # Continua
-            $select .= ") AND idPerfil = 1";
-
-            $subtitulo = null;
-            $titulo = null;
-
-            # Alta
-            if ($parametroAlta == 2) {
-                # Última licença sem alta a vencer
-                $select .= " AND alta <> 1 
+                # Alta
+                if ($parametroAlta == 2) {
+                    # Última licença sem alta a vencer
+                    $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
-                $titulo = "Servidores Com a Última Licença Médica";
-                $subtitulo = "SEM ALTA - A VENCER";
-                $mensagem1 = "Servidores devem se apresentar para um novo exame pericial até 5 (cinco) dias antes do término da licença anterior.";
-            } elseif ($parametroAlta == 3) {
-                # Última licença Sem Alta - Em Aberto
-                $select .= " AND alta <> 1 
+                    $titulo = "Servidores Com a Última Licença Médica";
+                    $subtitulo = "SEM ALTA - A VENCER";
+                    $mensagem1 = "Servidores devem se apresentar para um novo exame pericial até 5 (cinco) dias antes do término da licença anterior.";
+                } elseif ($parametroAlta == 3) {
+                    # Última licença Sem Alta - Em Aberto
+                    $select .= " AND alta <> 1 
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) < 0";
-                $titulo = "Servidores Com a Última Licença Médica";
-                $subtitulo = "<b>SEM ALTA - EM ABERTO</b>";
-                $mensagem1 = "Servidores com a licença em aberto deverão se apresentar com <b>URGÊNCIA</b> para um novo exame pericial.";
-            } elseif ($parametroAlta == 1) {
-                # Última licença com Alta a vencer
-                $select .= " AND alta = 1
+                    $titulo = "Servidores Com a Última Licença Médica";
+                    $subtitulo = "<b>SEM ALTA - EM ABERTO</b>";
+                    $mensagem1 = "Servidores com a licença em aberto deverão se apresentar com <b>URGÊNCIA</b> para um novo exame pericial.";
+                } elseif ($parametroAlta == 1) {
+                    # Última licença com Alta a vencer
+                    $select .= " AND alta = 1
                              AND TIMESTAMPDIFF(DAY,CURDATE(),ADDDATE(dtInicial,numDias-1)) >= 0";
-                $titulo = "Servidores Com a Última Licença Médica";
-                $subtitulo = "COM ALTA - A VENCER";
-                $mensagem1 = "Servidores já devem estar em seus setores no dia imediatamente após ao término da licença. ";
-            } elseif ($parametroAlta == 4) {
-                # Todas as Licenças
-                $titulo = "Todas as Licença Médicas";
-                $mensagem1 = "Todas as licenças cadastradas.";
-            }
-
-
-            # Licenças consideradas
-            $mensagem2 = null;
-            foreach ($arrayLicencas as $item) {
-                $mensagem2 .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- {$licenca->exibeNomeSimples($item)}<br/>";
-            }
-
-            # Matrícula, nome ou id
-            if (!is_null($parametroNomeMat)) {
-                if (is_numeric($parametroNomeMat)) {
-                    $select .= " AND ((tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
-                } else {
-
-                    # Verifica se tem espaços
-                    if (strpos($parametroNomeMat, ' ') !== false) {
-                        # Separa as palavras
-                        $palavras = explode(' ', $parametroNomeMat);
-
-                        # Percorre as palavras
-                        foreach ($palavras as $item) {
-                            $select .= " AND (tbpessoa.nome LIKE '%{$item}%')";
-                        }
-                    } else {
-                        $select .= " AND (tbpessoa.nome LIKE '%{$parametroNomeMat}%')";
-                    }
+                    $titulo = "Servidores Com a Última Licença Médica";
+                    $subtitulo = "COM ALTA - A VENCER";
+                    $mensagem1 = "Servidores já devem estar em seus setores no dia imediatamente após ao término da licença. ";
                 }
 
-                if (is_numeric($parametroNomeMat)) {
-                    $select .= " OR (tbservidor.matricula LIKE '%{$parametroNomeMat}%')
-                                 OR (tbservidor.idfuncional LIKE '%{$parametroNomeMat}%'))";
+                $select .= "  ORDER BY ADDDATE(dtInicial,numDias-1)";
+
+                if ($parametroAlta == "Com Alta") {
+                    $select .= " DESC";
                 }
-            }
 
-            # Lotação
-            if (($parametroLotacao <> "*") AND ($parametroLotacao <> "")) {
-                if (is_numeric($parametroLotacao)) {
-                    $select .= ' AND (tblotacao.idlotacao = "' . $parametroLotacao . '")';
-                } else { # senão é uma diretoria genérica
-                    $select .= ' AND (tblotacao.DIR = "' . $parametroLotacao . '")';
+                $resumo = $pessoal->select($select);
+
+                # Guarde o select para o relatório
+                set_session('selectRelatorio', $select);
+
+                # Monta a tabela
+                $tabela = new Tabela();
+                $tabela->set_titulo($titulo);
+                if (!empty($subtitulo)) {
+                    $tabela->set_subtitulo("{$subtitulo}<br/>{$mensagem1}");
                 }
+                $tabela->set_conteudo($resumo);
+                $tabela->set_label(["Servidor", "Período", "Situação", "Tipo"]);
+                $tabela->set_align(["left", "left", "center", "left"]);
+                $tabela->set_width([20, 20, 20, 30]);
+                $tabela->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
+                $tabela->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
+
+                $tabela->set_editar('?fase=editaServidor&id=');
+                $tabela->set_nomeColunaEditar("Acessar");
+                $tabela->set_editarBotao("bullet_edit.png");
+                $tabela->set_idCampo('idServidor');
+                $tabela->show();
             }
-
-            $select .= "  ORDER BY ADDDATE(dtInicial,numDias-1)";
-
-            if ($parametroAlta == "Com Alta") {
-                $select .= " DESC";
-            }
-
-            #echo $select;
-            # Guarde o select para o relatório
-            set_session('selectRelatorio', $select);
-
-            $resumo = $pessoal->select($select);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
-
-            tituloTable("Procedimento:");
-            callout($mensagem1);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(6);
-
-            tituloTable("As licenças consideradas são:");
-            callout($mensagem2);
-
-            $grid->fechaColuna();
-            $grid->abreColuna(12);
-
-            # Monta a tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo($titulo);
-            if (!empty($subtitulo)) {
-                $tabela->set_subtitulo($subtitulo);
-            }
-            $tabela->set_conteudo($resumo);
-            $tabela->set_label(["Servidor", "Período", "Situação", "Tipo"]);
-            $tabela->set_align(["left", "left", "center", "left"]);
-            $tabela->set_classe(["pessoal", "Licenca", "Licenca", "Licenca"]);
-            $tabela->set_metodo(["get_nomeECargoELotacao", "exibePeriodo", "analisaTermino", "exibeNomeSimples"]);
-
-            $tabela->set_editar('?fase=editaServidor&id=');
-            $tabela->set_nomeColunaEditar("Acessar");
-            $tabela->set_editarBotao("bullet_edit.png");
-            $tabela->set_idCampo('idServidor');
-            $tabela->show();
             break;
 
         ################################################################

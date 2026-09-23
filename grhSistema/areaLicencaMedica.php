@@ -163,7 +163,54 @@ if ($acesso) {
 
             if ($parametroAlta == 4) {
                 # PAra o somatório de dias na licença 117
-                construcao("Rotina em Desenvolvimento");
+                $select = "SELECT DISTINCT tbservidor.idServidor,
+                                           CASE
+                                                WHEN SUM(numDias) >= 730 THEN 'Não Pode Mais Pedir Licença'
+                                                WHEN SUM(numDias) >= 365 AND  SUM(numDias) < 730 THEN 'Redução de 1/3 do Salário'
+                                                ELSE '---'
+                                            END,
+                                           SUM(numDias) as somatorio
+                             FROM tbservidor JOIN tbpessoa USING (idPessoa)
+                                             JOIN tblicenca USING (idServidor)                                         
+                        WHERE situacao = 1 
+                          AND tblicenca.idTpLicenca = 2
+                          GROUP BY tbservidor.idServidor
+                          ORDER BY somatorio DESC";
+
+                $resumo = $pessoal->select($select);
+
+                # Monta a tabela
+                $tabela = new Tabela();
+                $tabela->set_titulo("Total de Dias Fruídos na Licença Médica Por Motivo de Doença em Pessoa da Família - Artigo 117");
+                $tabela->set_subtitulo("Conforme o Artigo 119 do Estatuto do Servidro Público Não é permitido tirar mais de 730 dias desse tipo de Licença");
+                $tabela->set_conteudo($resumo);
+                $tabela->set_label(["Servidor", "Situação", "Total de Dias"]);
+                $tabela->set_align(["left", "left", "center"]);
+                $tabela->set_width([40, 40, 10]);
+                $tabela->set_classe(["pessoal"]);
+                $tabela->set_metodo(["get_nomeECargoELotacao"]);
+
+                $tabela->set_editar('?fase=editaServidor&id=');
+                $tabela->set_nomeColunaEditar("Acessar");
+                $tabela->set_editarBotao("bullet_edit.png");
+                $tabela->set_idCampo('idServidor');
+                
+                $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 1,
+                    'valor' => 'Não Pode Mais Pedir Licença',
+                    'operador' => '=',
+                    'id' => 'licencaEmAberto'),
+                array('coluna' => 1,
+                    'valor' => 'Redução de 1/3 do Salário',
+                    'operador' => '=',
+                    'id' => 'reducaoSalario'),
+                array('coluna' => 1,
+                    'valor' => '---',
+                    'operador' => '=',
+                    'id' => 'licencaNormal'),
+            ));
+                
+                $tabela->show();
             } else {
                 # Para a relação de servidores com as licenças
                 # Pega os dados

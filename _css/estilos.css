@@ -1107,7 +1107,6 @@ hr#vagasAdm{
     border: 1px solid #000;
 }
 
-
 /*******************************************
  * Manual de Procedimentos
  *******************************************/
@@ -1370,6 +1369,14 @@ tr#naoApto{
  *******************************************/
 tr#licencaEmAberto{
     background-color: #ffcccc;
+}
+
+tr#reducaoSalario{
+    background-color: #b8bae0;
+}
+
+tr#licencaNormal{
+    background-color: #aacfbe;
 }
 
 /*******************************************

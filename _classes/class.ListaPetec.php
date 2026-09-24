@@ -383,6 +383,63 @@ class ListaPetec {
 
     ##############################################################
 
+    public function get_arraySituacaoRegularEmails() {
+
+        $novoArray = array();
+
+        # Inicia as Classes
+        $pessoal = new Pessoal();
+        $formacao = new Formacao();
+
+        $select2 = "SELECT tbservidor.idServidor,
+                           emailUenf
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbperfil.tipo <> 'Outros'
+                        AND situacao = 1";
+
+        # Verifica se tem filtro por lotação
+        if ($this->lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($this->lotacao)) {
+                $select2 .= " AND tblotacao.idlotacao = {$this->lotacao}";
+            } else { # senão é uma diretoria genérica
+                $select2 .= " AND tblotacao.DIR = '{$this->lotacao}'";
+            }
+        }
+
+        # Inscrição
+        if ($this->inscricao <> "Todos") {
+            if ($this->inscricao == "Inscritos") {
+                $select2 .= " AND tbservidor.{$this->nomeCampo} = 's'";
+            } else {
+                $select2 .= " AND (tbservidor.{$this->nomeCampo} <> 's' OR tbservidor.{$this->nomeCampo} IS NULL)";
+            }
+        }
+
+        $select2 .= " ORDER BY tbpessoa.nome";
+        $result2 = $pessoal->select($select2);
+
+        foreach ($result2 as $item) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Situação regular é igual ou maior que as horas da portaria
+            if ($somatorioHoras[0] >= $this->horas) {
+                $novoArray[] = [
+                    $item["emailUenf"]
+                ];
+            }
+        }
+
+        return $novoArray;
+    }
+
+    ##############################################################
+
     public function exibeTituloGeral() {
 
         # Exibe o título
@@ -596,6 +653,22 @@ class ListaPetec {
         # Coloca o objeto link na tabela			
         $tabela->set_link([null, null, null, null, null, null, $botao]);
         $tabela->show();
+    }
+
+    ##############################################################
+
+    public function exibeSituacaoRegularmEmails() {
+
+        # Pega os Emails
+        $arrayEmails = $this->get_arraySituacaoRegularEmails();
+
+        if (count($arrayEmails) > 0) {
+            foreach ($arrayEmails as $item) {
+                echo $item[0], ", ";
+            }
+        } else {
+            mensagem("Nenhum Email Encontrado");
+        }
     }
 
     ##############################################################

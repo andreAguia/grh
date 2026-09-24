@@ -161,9 +161,9 @@ if ($acesso) {
         $botaoEmail->set_target("_blank");
 
         if ($fase <> "geral" AND $fase <> "geral2") {
-            if ($parametroSituacao == "Pendentes") {
-                $menu1->add_link($botaoEmail, "right");
-            }
+            #if ($parametroSituacao == "Pendentes") {
+            $menu1->add_link($botaoEmail, "right");
+            #}
         }
 
         $menu1->show();
@@ -453,21 +453,38 @@ if ($acesso) {
         # Exibe Email
         case "exibeEmails" :
 
-            # Título            
-            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
+            # Pendentes
+            if ($parametroSituacao == "Pendentes") {
 
-            titulo("Não Entregaram");
-            br();
+                # Título            
+                $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
 
-            # Não Entregaram Certificado            
-            $listaPetec->exibeNaoEntregaramEmails();
-            br(2);
+                titulo("Não Entregaram");
+                br();
 
-            titulo("Horas Insuficientes");
-            br();
+                # Não Entregaram Certificado            
+                $listaPetec->exibeNaoEntregaramEmails();
+                br(2);
 
-            # Horas Insuficientes
-            $listaPetec->exibeHorasInsuficientesEmails();
+                titulo("Horas Insuficientes");
+                br();
+
+                # Horas Insuficientes
+                $listaPetec->exibeHorasInsuficientesEmails();
+            }
+
+            # Regulares
+            if ($parametroSituacao == "Regulares") {
+
+                # Título            
+                $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
+
+                titulo("Regulares");
+                br();
+
+                # Não Entregaram Certificado            
+                $listaPetec->exibeSituacaoRegularmEmails();
+            }
             break;
     }
     $grid->fechaColuna();

@@ -42,14 +42,10 @@ if ($acesso) {
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
     $parametroCurso = post('parametroCurso', get_session('parametroCurso', 'Todos'));
     $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
-    $parametroAno = post('parametroAno', get_session('parametroAno'));
+    $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
-    $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
-
-    if ($grh) {
-        $parametroAno = 'Todos';
-    }
-
+    #$parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
+    
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
     set_session('parametroEscolaridade', $parametroEscolaridade);
@@ -59,8 +55,7 @@ if ($acesso) {
     set_session('parametroPerfil', $parametroPerfil);
     set_session('parametroAno', $parametroAno);
     set_session('parametroMarcador', $parametroMarcador);
-    set_session('parametroSituacao', $parametroSituacao);
-
+    #set_session('parametroSituacao', $parametroSituacao);
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
@@ -121,6 +116,69 @@ if ($acesso) {
             $form = new Form('?');
 
             /*
+             * Curso
+             */
+
+            # Pega os dados da combo curso
+            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
+                                                       habilitacao
+                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
+                                     ORDER BY habilitacao');
+            array_unshift($curso, array("Todos", "Todos"));
+
+            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Curso');
+            $controle->set_array($curso);
+            $controle->set_valor($parametroCurso);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $controle->set_autofocus(true);
+            $form->add_item($controle);
+
+            /*
+             * Instituição
+             */
+            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
+                                                   instEnsino
+                                              FROM tbformacao
+                                             WHERE instEnsino <> ""
+                                          ORDER BY instEnsino');
+            array_unshift($instEnsino, array("Todos", "Todos"));
+
+            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
+            $controle->set_size(200);
+            $controle->set_title('Instituiçlão de Ensino');
+            $controle->set_array($instEnsino);
+            $controle->set_valor($parametroInstituicao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            /*
+             *  Lotação
+             */
+            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
+                                              FROM tblotacao
+                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
+                                              FROM tblotacao
+                                             WHERE ativo)
+                                          ORDER BY 2');
+            array_unshift($result, array("Todos", 'Todas'));
+
+            $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Lotação');
+            $controle->set_array($result);
+            $controle->set_valor($parametroLotacao);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            /*
              *  Nivel do Cargo    
              */
             $controle = new Input('parametroNivel', 'combo', 'Cargo do Servidor:', 1);
@@ -128,10 +186,9 @@ if ($acesso) {
             $controle->set_title('Nível do Cargo');
             $controle->set_valor($parametroNivel);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(2);
             $controle->set_array(["Todos", "Doutorado", "Superior", "Médio", "Fundamental", "Elementar"]);
-            $controle->set_autofocus(true);
             $form->add_item($controle);
 
             /*
@@ -153,87 +210,27 @@ if ($acesso) {
             $controle->set_optgroup(true);
             $controle->set_valor($parametroPerfil);
             $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
+            $controle->set_linha(2);
             $controle->set_col(2);
             $form->add_item($controle);
 
-            # Situação
-            $result = $pessoal->select('SELECT idsituacao, situacao
-                                          FROM tbsituacao                                
-                                      ORDER BY 1');
-            array_unshift($result, array('Todos', 'Todos'));
+//            # Situação
+//            $result = $pessoal->select('SELECT idsituacao, situacao
+//                                          FROM tbsituacao                                
+//                                      ORDER BY 1');
+//            array_unshift($result, array('Todos', 'Todos'));
+//
+//            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
+//            $controle->set_size(30);
+//            $controle->set_title('Filtra por Situação');
+//            $controle->set_array($result);
+//            $controle->set_valor($parametroSituacao);
+//            $controle->set_onChange('formPadrao.submit();');
+//            $controle->set_linha(1);
+//            $controle->set_col(2);
+//            $form->add_item($controle);
 
-            $controle = new Input('parametroSituacao', 'combo', 'Situação:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Situação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroSituacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(2);
-            $form->add_item($controle);
 
-            /*
-             *  Lotação
-             */
-            $result = $pessoal->select('(SELECT idlotacao, concat(IFnull(tblotacao.DIR,"")," - ",IFnull(tblotacao.GER,"")," - ",IFnull(tblotacao.nome,"")) lotacao
-                                              FROM tblotacao
-                                             WHERE ativo) UNION (SELECT distinct DIR, DIR
-                                              FROM tblotacao
-                                             WHERE ativo)
-                                          ORDER BY 2');
-            array_unshift($result, array("Todos", 'Todas'));
-
-            $controle = new Input('parametroLotacao', 'combo', 'Lotação do Servidor:', 1);
-            $controle->set_size(30);
-            $controle->set_title('Filtra por Lotação');
-            $controle->set_array($result);
-            $controle->set_valor($parametroLotacao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(1);
-            $controle->set_col(6);
-            $form->add_item($controle);
-
-            /*
-             * Curso
-             */
-
-            # Pega os dados da combo curso
-            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
-                                              habilitacao
-                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
-                                     ORDER BY habilitacao');
-            array_unshift($curso, array("Todos", "Todos"));
-
-            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
-            $controle->set_size(200);
-            $controle->set_title('Curso');
-            $controle->set_valor($parametroCurso);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(6);
-            $controle->set_array($curso);
-            $form->add_item($controle);
-
-            /*
-             * Instituição
-             */
-            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
-                                                   instEnsino
-                                              FROM tbformacao
-                                             WHERE instEnsino <> ""
-                                          ORDER BY instEnsino');
-            array_unshift($instEnsino, array("Todos", "Todos"));
-
-            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
-            $controle->set_size(200);
-            $controle->set_title('Instituiçlão de Ensino');
-            $controle->set_valor($parametroInstituicao);
-            $controle->set_onChange('formPadrao.submit();');
-            $controle->set_linha(2);
-            $controle->set_col(6);
-            $controle->set_array($instEnsino);
-            $form->add_item($controle);
 
             /*
              * Ano de Termino
@@ -249,11 +246,12 @@ if ($acesso) {
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                                          LEFT JOIN tbcargo USING (idCargo)
                                          LEFT JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-            if ($parametroSituacao <> "Todos") {
-                $selectano .= " AND situacao = {$parametroSituacao}";
-            }
+//            if ($parametroSituacao <> "Todos") {
+//                $selectano .= " AND situacao = {$parametroSituacao}";
+//            }
 
             if ($parametroPerfil <> "Todos") {
                 $selectano .= " AND idPerfil = {$parametroPerfil}";
@@ -353,11 +351,8 @@ if ($acesso) {
                                          JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
                                     LEFT JOIN tbcargo USING (idCargo)
                                     LEFT JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-
-            if ($parametroSituacao <> "Todos") {
-                $select .= " AND situacao = {$parametroSituacao}";
-            }
+                        WHERE situacao = 1
+                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
             if ($parametroPerfil <> "Todos") {
                 $select .= " AND idPerfil = {$parametroPerfil}";
@@ -372,11 +367,11 @@ if ($acesso) {
             }
 
             if ($parametroCurso <> "Todos") {
-                $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
+                $select .= " AND tbformacao.habilitacao = '{$parametroCurso}'";
             }
 
             if ($parametroInstituicao <> "Todos") {
-                $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
+                $select .= " AND tbformacao.instEnsino = '{$parametroInstituicao}'";
             }
 
             if ($parametroAno <> "Todos") {
@@ -407,7 +402,7 @@ if ($acesso) {
             }
 
             $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
-            
+
             $result = $pessoal->select($select);
 
             $tabela = new Tabela();
@@ -419,10 +414,8 @@ if ($acesso) {
             $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
             $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
 
-            if ($parametroSituacao == 1) {
-                $tabela->set_rowspan(0);
-                $tabela->set_grupoCorColuna(0);
-            }
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
 
             $tabela->set_idCampo('idServidor');
             $tabela->set_editar('?fase=editaServidor');

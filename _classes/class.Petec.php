@@ -331,6 +331,7 @@ class Petec {
             ["481/25", $this->get_numInscritos(2, $lotacao), $this->get_numNaoInscritos(2, $lotacao)],
             ["518/26", $this->get_numInscritos(3, $lotacao), $this->get_numNaoInscritos(3, $lotacao)],
         ]);
+        
         $tabela->set_titulo("Inscrição de Servidores");
         $tabela->set_subtitulo($labelLotação);
         $tabela->set_label(["Portarias", "Inscritos", null]);

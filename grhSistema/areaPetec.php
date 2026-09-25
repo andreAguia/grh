@@ -161,9 +161,7 @@ if ($acesso) {
         $botaoEmail->set_target("_blank");
 
         if ($fase <> "geral" AND $fase <> "geral2") {
-            #if ($parametroSituacao == "Pendentes") {
             $menu1->add_link($botaoEmail, "right");
-            #}
         }
 
         $menu1->show();
@@ -403,6 +401,11 @@ if ($acesso) {
 
             if ($parametroSituacao == "Pendentes") {
 
+                if ($parametroMarcador == 8) {
+                    # Só um tema
+                    $listaPetec->exibe518UmTemaCom20OuMaisHoras();
+                }
+
                 # Horas Insuficientes
                 $listaPetec->exibeHorasInsuficientes();
 
@@ -415,7 +418,7 @@ if ($acesso) {
             }
             break;
 
-        ##############################################################################################################
+##############################################################################################################
 
         case "editaServidor" :
             br(8);
@@ -435,8 +438,8 @@ if ($acesso) {
             loadPage('servidorFormacao.php');
             break;
 
-        ################################################################
-        # Relatório
+################################################################
+# Relatório
         case "relatorio" :
 
             # Título            
@@ -449,27 +452,33 @@ if ($acesso) {
             $listaPetec->exibeHorasInsuficientes();
             break;
 
-        ################################################################
-        # Exibe Email
+################################################################
+# Exibe Email
         case "exibeEmails" :
+
+            # Inicia a Classe
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
 
             # Pendentes
             if ($parametroSituacao == "Pendentes") {
 
-                # Título            
-                $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
+                # Só um tema
+                if ($parametroMarcador == 8) {
+                    titulo("Só um tema com 20 ou mais horas");
+                    br();
+                    $listaPetec->exibe518UmTemaCom20OuMaisHorasEmails();
+                    br(2);
+                }
 
+                # Não Entregaram Certificado
                 titulo("Não Entregaram");
                 br();
-
-                # Não Entregaram Certificado            
                 $listaPetec->exibeNaoEntregaramEmails();
                 br(2);
 
+                # Horas Insuficientes
                 titulo("Horas Insuficientes");
                 br();
-
-                # Horas Insuficientes
                 $listaPetec->exibeHorasInsuficientesEmails();
             }
 

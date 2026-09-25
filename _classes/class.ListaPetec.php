@@ -365,7 +365,7 @@ class ListaPetec {
             $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
 
             # Situação regular é igual ou maior que as horas da portaria
-            if ($somatorioHoras[0] >= $this->horas) {
+            if ($somatorioHoras[0] >= $this->horas AND !$formacao->temPetec518So1Tema($item["idServidor"])) {
                 $novoArray[] = [
                     $item["idServidor"], // Matricula
                     $item["idServidor"], // Inscrito
@@ -428,7 +428,7 @@ class ListaPetec {
             $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
 
             # Situação regular é igual ou maior que as horas da portaria
-            if ($somatorioHoras[0] >= $this->horas) {
+            if ($somatorioHoras[0] >= $this->horas AND !$formacao->temPetec518So1Tema($item["idServidor"])) {
                 $novoArray[] = [
                     $item["emailUenf"]
                 ];
@@ -675,11 +675,19 @@ class ListaPetec {
 
     public function exibeQuadroQuantidades() {
 
+        # Monta o array        
         $arrayTabela = [
             ["Não Entregaram Certificados", count($this->get_arrayNaoEntregaram())],
-            ["Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())],
-            ["Em Situação Regular", count($this->get_arraySituacaoRegular())]
+            ["Com Horas Insuficientes", count($this->get_arrayHorasInsuficientes())]
         ];
+
+        # Somente para a Petec 518. Quando se tem apenas um tema
+        if ($this->idMarcador == 8) {
+            $arrayTabela[] = ["Com Apenas Um Tema e 20 ou Mais Horas", count($this->get_array518UmTemaCom20OuMaisHoras())];
+        }
+
+        # Servidores Em Situação Regular
+        $arrayTabela[] = ["Em Situação Regular", count($this->get_arraySituacaoRegular())];
 
         $tabela = new Tabela();
         $tabela->set_titulo("Resumo");
@@ -705,5 +713,199 @@ class ListaPetec {
         $tabela->show();
     }
 
-    ###########################################################
+    ##############################################################
+
+    public function get_array518UmTemaCom20OuMaisHoras() {
+
+        $novoArray = array();
+
+        # Inicia as Classes
+        $pessoal = new Pessoal();
+        $formacao = new Formacao();
+
+        $select2 = "SELECT tbservidor.idServidor,
+                           tbpessoa.nome
+                      FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbperfil.tipo <> 'Outros'
+                        AND situacao = 1";
+
+        # Verifica se tem filtro por lotação
+        if ($this->lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($this->lotacao)) {
+                $select2 .= " AND tblotacao.idlotacao = {$this->lotacao}";
+            } else { # senão é uma diretoria genérica
+                $select2 .= " AND tblotacao.DIR = '{$this->lotacao}'";
+            }
+        }
+
+        # Inscrição
+        if ($this->inscricao <> "Todos") {
+            if ($this->inscricao == "Inscritos") {
+                $select2 .= " AND tbservidor.{$this->nomeCampo} = 's'";
+            } else {
+                $select2 .= " AND (tbservidor.{$this->nomeCampo} <> 's' OR tbservidor.{$this->nomeCampo} IS NULL)";
+            }
+        }
+
+        $select2 .= " ORDER BY tbpessoa.nome";
+        $result2 = $pessoal->select($select2);
+
+        foreach ($result2 as $item) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Verifica se tem somente um tema e se tem 20 ou mais horas
+            if ($formacao->temPetec518So1Tema($item["idServidor"]) AND $somatorioHoras[0] >= $this->horas) {
+                $novoArray[] = [
+                    $item["idServidor"], // Matricula
+                    $item["idServidor"], // Inscrito
+                    $item["idServidor"], // Nome do Servidor e Cargo
+                    $item["idServidor"], // Lotação
+                    $item["idServidor"], // Perfil
+                    $item["idServidor"], // Admissão
+                    $formacao->exibeSomatorioHorasMinutos($item["idServidor"], $this->idMarcador), // Horas
+                    $item["idServidor"]  // Botão Editar
+                ];
+            }
+        }
+
+        return $novoArray;
+    }
+
+    ##############################################################
+
+    public function exibe518UmTemaCom20OuMaisHoras() {
+
+        # Inscrição
+        if ($this->inscricao <> "Todos") {
+            if ($this->inscricao == "Inscritos") {
+                $subtitulo = "Servidores Inscritos";
+            } else {
+                $subtitulo = "Servidores NÃO Inscritos";
+            }
+        } else {
+            $subtitulo = "Servidores Inscritos e Não Inscritos";
+        }
+
+
+        if ($this->relatorio) {
+            br(2);
+            $tabela = new Relatorio();
+            #$tabela->set_titulo("Portaria Petec {$this->portaria}");
+            #$tabela->set_tituloLinha2('Servidores em Situação Irregular');
+            $tabela->set_subtitulo('Servidores Com Apenas Um Tema Cadastrado');
+            $tabela->set_subTotal(false);
+            #$tabela->set_totalRegistro(false);
+            #$tabela->set_dataImpressao(false);
+            $tabela->set_cabecalhoRelatorio(false);
+            $tabela->set_menuRelatorio(false);
+            $tabela->set_log(false);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas"]);
+        } else {
+            $tabela = new Tabela();
+            $tabela->set_titulo('Servidores Com Apenas Um Tema e 20 ou Mais Horas');
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_label(["IdFuncional<br/>Matrícula", "Inscrito?", "Servidor", "Lotação", "Perfil", "Admissão", "Horas", "Editar"]);
+        }
+
+        $tabela->set_width([10, 10, 30, 25, 10, 10, 5]);
+        $tabela->set_conteudo($this->get_array518UmTemaCom20OuMaisHoras());
+        $tabela->set_align(["center", "center", "left"]);
+        $tabela->set_classe(['pessoal', "Petec", "pessoal", "pessoal", "pessoal", "pessoal"]);
+        $tabela->set_metodo(["get_idFuncionalEMatricula", "exibeIncricao" . plm($this->nomeCampo), "get_nomeECargoSimples", "get_lotacao", "get_perfil", "get_dtAdmissao"]);
+
+        if (!$this->relatorio) {
+//            $tabela->set_rowspan(0);
+//            $tabela->set_grupoCorColuna(0);
+        }
+
+        # Botão Editar
+        if (!$this->relatorio) {
+            $botao = new Link(null, "{$this->linkServidor}&id=", 'Acessa o servidor');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
+        }
+        $tabela->show();
+    }
+
+    ##############################################################
+
+    public function get_array518UmTemaCom20OuMaisHorasEmails() {
+
+        $novoArray = array();
+
+        # Inicia as Classes
+        $pessoal = new Pessoal();
+        $formacao = new Formacao();
+
+        $select2 = "SELECT tbservidor.idServidor,
+                           emailUenf
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                                              JOIN tbhistlot USING (idServidor)
+                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                        WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                        AND tbperfil.tipo <> 'Outros'
+                        AND situacao = 1";
+
+        # Verifica se tem filtro por lotação
+        if ($this->lotacao <> "Todos") {  // senão verifica o da classe
+            if (is_numeric($this->lotacao)) {
+                $select2 .= " AND tblotacao.idlotacao = {$this->lotacao}";
+            } else { # senão é uma diretoria genérica
+                $select2 .= " AND tblotacao.DIR = '{$this->lotacao}'";
+            }
+        }
+
+        # Inscrição
+        if ($this->inscricao <> "Todos") {
+            if ($this->inscricao == "Inscritos") {
+                $select2 .= " AND tbservidor.{$this->nomeCampo} = 's'";
+            } else {
+                $select2 .= " AND (tbservidor.{$this->nomeCampo} <> 's' OR tbservidor.{$this->nomeCampo} IS NULL)";
+            }
+        }
+
+        $select2 .= " ORDER BY tbpessoa.nome";
+        $result2 = $pessoal->select($select2);
+
+        foreach ($result2 as $item) {
+
+            # Pega o somatório das horas (somente horas e não minutos)
+            $somatorioHoras = $formacao->somatorioHoras($item["idServidor"], $this->idMarcador);
+
+            # Verifica se tem somente um tema e se tem 20 ou mais horas
+            if ($formacao->temPetec518So1Tema($item["idServidor"]) AND $somatorioHoras[0] >= $this->horas) {
+                $novoArray[] = [
+                    $item["emailUenf"]
+                ];
+            }
+        }
+
+        return $novoArray;
+    }
+
+    ##############################################################
+
+    public function exibe518UmTemaCom20OuMaisHorasEmails() {
+
+        # Pega os Emails
+        $arrayEmails = $this->get_arrayHorasInsuficientesEmails();
+
+        if (count($arrayEmails) > 0) {
+            foreach ($this->get_array518UmTemaCom20OuMaisHorasEmails() as $item) {
+                echo $item[0], ", ";
+            }
+        } else {
+            mensagem("Nenhum Email Encontrado");
+        }
+    }
+
+    ##############################################################
 }

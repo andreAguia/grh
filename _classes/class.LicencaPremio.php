@@ -720,11 +720,13 @@ class LicencaPremio {
             $tabela->set_numeroOrdem(true);
             $tabela->set_numeroOrdemTipo("d");
 
-            $tabela->set_mensagemPosTabela("Obs. Antes de informar ao servidor sobre a licença prêmio,"
-                    . " verifique se o mesmo possui algum afastamento"
-                    . " específico que poderia alterar as datas da"
-                    . " licença. O sistema, ainda, não verifica"
-                    . " essa informação.");
+            if (!$reduzido) {
+                $tabela->set_mensagemPosTabela("Obs. Antes de informar ao servidor sobre a licença prêmio,"
+                        . " verifique se o mesmo possui algum afastamento"
+                        . " específico que poderia alterar as datas da"
+                        . " licença. O sistema, ainda, não verifica"
+                        . " essa informação.");
+            }
 
             $tabela->set_colunaSomatorio([2, 3, 4]);
 

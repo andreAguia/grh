@@ -798,10 +798,10 @@ class ListaPetec {
             $tabela = new Relatorio();
             #$tabela->set_titulo("Portaria Petec {$this->portaria}");
             #$tabela->set_tituloLinha2('Servidores em Situação Irregular');
-            $tabela->set_subtitulo('Servidores Com Apenas Um Tema Cadastrado');
+            $tabela->set_subtitulo('Servidores Com Apenas Um Tema e 20 ou Mais Horas');
             $tabela->set_subTotal(false);
             #$tabela->set_totalRegistro(false);
-            #$tabela->set_dataImpressao(false);
+            $tabela->set_dataImpressao(false);
             $tabela->set_cabecalhoRelatorio(false);
             $tabela->set_menuRelatorio(false);
             $tabela->set_log(false);

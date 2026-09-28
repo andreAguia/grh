@@ -418,7 +418,7 @@ if ($acesso) {
             }
             break;
 
-##############################################################################################################
+        ##############################################################################################################
 
         case "editaServidor" :
             br(8);
@@ -438,22 +438,27 @@ if ($acesso) {
             loadPage('servidorFormacao.php');
             break;
 
-################################################################
-# Relatório
+        ################################################################
+        # Relatório
         case "relatorio" :
 
             # Título            
             $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
 
-            # Não Entregaram Certificado            
+            # Não Entregaram Certificado    
             $listaPetec->exibeNaoEntregaram();
+            
+            if ($parametroMarcador == 8) {
+                # Só um tema
+                $listaPetec->exibe518UmTemaCom20OuMaisHoras();
+            }
 
             # Horas Insuficientes
             $listaPetec->exibeHorasInsuficientes();
             break;
 
-################################################################
-# Exibe Email
+        ################################################################
+        # Exibe Email
         case "exibeEmails" :
 
             # Inicia a Classe

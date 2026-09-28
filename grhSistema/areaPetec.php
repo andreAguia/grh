@@ -443,11 +443,12 @@ if ($acesso) {
         case "relatorio" :
 
             # Título            
-            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
-
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);            
+            
             # Não Entregaram Certificado    
             $listaPetec->exibeNaoEntregaram();
-            
+
+            # Se For Petec 518
             if ($parametroMarcador == 8) {
                 # Só um tema
                 $listaPetec->exibe518UmTemaCom20OuMaisHoras();

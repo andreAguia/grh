@@ -98,7 +98,7 @@ if ($acesso) {
                                   FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)";
 
             if (!empty($parametroCurso)) {
-                $select .= " AND habilitacao LIKE = '%{$parametroCurso}%'";
+                $select .= " WHERE habilitacao LIKE '%{$parametroCurso}%'";
             }
 
             $select .= " ORDER BY habilitacao";

@@ -100,7 +100,7 @@ if ($acesso) {
             $menu1->add_link($botaoVoltar, "left");
 
             # Todos os Cursos - Somente Admin - Por enquanto
-            if (Verifica::acesso($this->idUsuario, 1)) {
+            if (Verifica::acesso($idUsuario, 1)) {
                 $botaoCursos = new Link("Lista de Cursos", "areaFormacaoCursos.php");
                 $botaoCursos->set_class('button');
                 $botaoCursos->set_title("Lista dos Cursos");

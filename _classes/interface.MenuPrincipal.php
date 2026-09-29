@@ -54,7 +54,7 @@ class MenuPrincipal {
 
         # Módulos
         #$this->moduloSispatri();           // Sispatri
-        #$this->moduloEventos();             // Eventos
+        #$this->moduloEventos();            // Eventos
         $this->moduloSistemas();            // Sistemas
         $this->moduloAreaEspecial();        // Área Especial        
         $this->moduloTabelaAuxiliares();    // Tabelas Auxiliares
@@ -307,11 +307,7 @@ class MenuPrincipal {
     private function moduloNiverUenf() {
 
         # Pega a idade da Uenf
-        $dataNascimento = "16/08/1993";
-        list($dia, $mes, $ano) = explode('/', $dataNascimento);
-        $hoje = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-        $nascimento = mktime(0, 0, 0, $mes, $dia, $ano);
-        $idade = floor((((($hoje - $nascimento) / 60) / 60) / 24) / 365.25);
+        $idade = idade(DATA_ANIVERSARIO_UENF);        
 
         $painel = new Callout();
         $painel->abre();

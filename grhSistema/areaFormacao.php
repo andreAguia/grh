@@ -45,7 +45,6 @@ if ($acesso) {
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
     #$parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
-    
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
     set_session('parametroEscolaridade', $parametroEscolaridade);
@@ -99,6 +98,15 @@ if ($acesso) {
             $botaoVoltar->set_title('Voltar a página anterior');
             $botaoVoltar->set_accessKey('V');
             $menu1->add_link($botaoVoltar, "left");
+
+            # Todos os Cursos - Somente Admin - Por enquanto
+            if (Verifica::acesso($this->idUsuario, 1)) {
+                $botaoCursos = new Link("Lista de Cursos", "areaFormacaoCursos.php");
+                $botaoCursos->set_class('button');
+                $botaoCursos->set_title("Lista dos Cursos");
+                $botaoCursos->set_target("_blank");
+                $menu1->add_link($botaoCursos, "right");
+            }
 
             # Relatórios
             $imagem = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);

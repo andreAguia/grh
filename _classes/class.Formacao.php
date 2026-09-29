@@ -496,4 +496,20 @@ class Formacao {
     }
 
     ###########################################################
+
+    function get_numCertificados($nome) {
+
+        /**
+         * Fornece o número de certificados do curso informado
+         */
+        # Pega os dados
+        $select = "SELECT COUNT(*)
+                     FROM tbformacao
+                    WHERE habilitacao = '{$nome}'";
+        
+        $pessoal = new Pessoal();
+        return $pessoal->select($select, false)[0];
+    }
+
+    ###########################################################
 }

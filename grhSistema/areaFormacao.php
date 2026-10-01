@@ -339,12 +339,12 @@ if ($acesso) {
                 }
 
                 if (!empty($parametroCurso)) {
-                    $select .= " AND tbformacao.habilitacao = '{$parametroCurso}'";
+                    $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
                     $subTitulo .= "| Curso: {$parametroCurso} ";
                 }
 
                 if (!empty($parametroInstituicao)) {
-                    $select .= " AND tbformacao.instEnsino = '{$parametroInstituicao}'";
+                    $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
                     $subTitulo .= "| Instituição: {$parametroInstituicao} ";
                 }
 

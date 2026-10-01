@@ -40,11 +40,12 @@ if ($acesso) {
     $parametroPerfil = post('parametroPerfil', get_session('parametroPerfil', 1));
     $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', 66));
     $parametroEscolaridade = post('parametroEscolaridade', get_session('parametroEscolaridade', 'Todos'));
-    $parametroCurso = post('parametroCurso', get_session('parametroCurso', 'Todos'));
-    $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao', 'Todos'));
+    $parametroCurso = post('parametroCurso', get_session('parametroCurso'));
+    $parametroInstituicao = post('parametroInstituicao', get_session('parametroInstituicao'));
     $parametroAno = post('parametroAno', get_session('parametroAno', date("Y")));
     $parametroMarcador = post('parametroMarcador', get_session('parametroMarcador', 'Todos'));
     #$parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', 1));
+    #
     # Joga os parâmetros par as sessions   
     set_session('parametroNivel', $parametroNivel);
     set_session('parametroEscolaridade', $parametroEscolaridade);
@@ -128,16 +129,16 @@ if ($acesso) {
              */
 
             # Pega os dados da combo curso
-            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
-                                                       habilitacao
-                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
-                                     ORDER BY habilitacao');
-            array_unshift($curso, array("Todos", "Todos"));
+//            $curso = $pessoal->select('SELECT DISTINCT habilitacao, 
+//                                                       habilitacao
+//                                         FROM tbformacao JOIN tbescolaridade USING (idEscolaridade)
+//                                     ORDER BY habilitacao');
+//            array_unshift($curso, array("Todos", "Todos"));
 
-            $controle = new Input('parametroCurso', 'combo', 'Curso:', 1);
+            $controle = new Input('parametroCurso', 'texto', 'Curso:', 1);
             $controle->set_size(200);
             $controle->set_title('Curso');
-            $controle->set_array($curso);
+//            $controle->set_array($curso);
             $controle->set_valor($parametroCurso);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -148,17 +149,17 @@ if ($acesso) {
             /*
              * Instituição
              */
-            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
-                                                   instEnsino
-                                              FROM tbformacao
-                                             WHERE instEnsino <> ""
-                                          ORDER BY instEnsino');
-            array_unshift($instEnsino, array("Todos", "Todos"));
+//            $instEnsino = $pessoal->select('SELECT DISTINCT instEnsino, 
+//                                                   instEnsino
+//                                              FROM tbformacao
+//                                             WHERE instEnsino <> ""
+//                                          ORDER BY instEnsino');
+//            array_unshift($instEnsino, array("Todos", "Todos"));
 
-            $controle = new Input('parametroInstituicao', 'combo', 'Instituição:', 1);
+            $controle = new Input('parametroInstituicao', 'texto', 'Instituição:', 1);
             $controle->set_size(200);
             $controle->set_title('Instituiçlão de Ensino');
-            $controle->set_array($instEnsino);
+//            $controle->set_array($instEnsino);
             $controle->set_valor($parametroInstituicao);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(1);
@@ -244,61 +245,13 @@ if ($acesso) {
              * Ano de Termino
              */
 
-            # Pega os dados da combo ano
-            $selectano = "SELECT DISTINCT anoTerm, 
-                                          anoTerm
-                                     FROM tbformacao LEFT JOIN tbpessoa USING (idPessoa)
-                                              JOIN tbservidor USING (idPessoa)
-                                         LEFT JOIN tbescolaridade USING (idEscolaridade)
-                                              JOIN tbhistlot USING (idServidor)
-                                              JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)                                 
-                                         LEFT JOIN tbcargo USING (idCargo)
-                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
-                        WHERE situacao = 1
-                          AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
-
-//            if ($parametroSituacao <> "Todos") {
-//                $selectano .= " AND situacao = {$parametroSituacao}";
-//            }
-
-            if ($parametroPerfil <> "Todos") {
-                $selectano .= " AND idPerfil = {$parametroPerfil}";
-            }
-
-            if ($parametroNivel <> "Todos") {
-                $selectano .= " AND tbtipocargo.nivel = '{$parametroNivel}'";
-            }
-
-            if ($parametroEscolaridade <> "Todos") {
-                $selectano .= " AND tbformacao.idEscolaridade = {$parametroEscolaridade}";
-            }
-
-            if ($parametroCurso <> "Todos") {
-                $selectano .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
-            }
-
-            if ($parametroInstituicao <> "Todos") {
-                $selectano .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
-            }
-
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $selectano .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $selectano .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
-                }
-            }
-
-            $selectano .= " ORDER BY anoTerm";
-
-            $anoExercicio = $pessoal->select($selectano);
-            array_unshift($anoExercicio, array("Todos", "Todos"));
+            $anosPossiveis = range(date("Y"), 1970);
+            array_unshift($anosPossiveis, "Todos");
 
             $controle = new Input('parametroAno', 'combo', 'Ano Término:', 1);
             $controle->set_size(8);
             $controle->set_title('Filtra por Ano exercício');
-            $controle->set_array($anoExercicio);
+            $controle->set_array($anosPossiveis);
             $controle->set_valor($parametroAno);
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_linha(2);
@@ -344,9 +297,17 @@ if ($acesso) {
 
             $form->show();
 
-            ##############
-            # Pega os dados
-            $select = "SELECT tbservidor.idServidor,
+            # Subtitulo
+            $subTitulo = null;
+
+            # Verifica se exibe a tabela ou a mensagem de muitos registros
+            if (empty($parametroCurso) AND empty($parametroInstituicao) AND $parametroLotacao == "Todos") {
+                calloutAlert("Este filtro retornou muitos registros!!<br/>Indique um Curso, uma Instituição ou uma Lotação");
+            } else {
+
+                ##############
+                # Pega os dados
+                $select = "SELECT tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbescolaridade.escolaridade,
                               idFormacao,
@@ -362,72 +323,83 @@ if ($acesso) {
                         WHERE situacao = 1
                           AND tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)";
 
-            if ($parametroPerfil <> "Todos") {
-                $select .= " AND idPerfil = {$parametroPerfil}";
-            }
-
-            if ($parametroNivel <> "Todos") {
-                $select .= " AND tbtipocargo.nivel = '{$parametroNivel}'";
-            }
-
-            if ($parametroEscolaridade <> "Todos") {
-                $select .= " AND tbformacao.idEscolaridade = {$parametroEscolaridade}";
-            }
-
-            if ($parametroCurso <> "Todos") {
-                $select .= " AND tbformacao.habilitacao = '{$parametroCurso}'";
-            }
-
-            if ($parametroInstituicao <> "Todos") {
-                $select .= " AND tbformacao.instEnsino = '{$parametroInstituicao}'";
-            }
-
-            if ($parametroAno <> "Todos") {
-                if (empty($parametroAno)) {
-                    $select .= " AND tbformacao.anoTerm IS NULL";
-                } else {
-                    $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
+                if ($parametroPerfil <> "Todos") {
+                    $select .= " AND idPerfil = {$parametroPerfil}";
+                    $subTitulo .= "| Perfil: " . $pessoal->get_nomePerfil($parametroPerfil) . " ";
                 }
-            }
 
-            if ($parametroMarcador <> "Todos") {
+                if ($parametroNivel <> "Todos") {
+                    $select .= " AND tbtipocargo.nivel = '{$parametroNivel}'";
+                    $subTitulo .= "| Cargo: {$parametroNivel} ";
+                }
 
-                $select .= " AND ("
-                        . "tbformacao.marcador1 = {$parametroMarcador} OR "
-                        . "tbformacao.marcador2 = {$parametroMarcador} OR "
-                        . "tbformacao.marcador3 = {$parametroMarcador} OR "
-                        . "tbformacao.marcador4 = {$parametroMarcador}
+                if ($parametroEscolaridade <> "Todos") {
+                    $select .= " AND tbformacao.idEscolaridade = {$parametroEscolaridade}";
+                    $subTitulo .= "| Escolaridade: " . $pessoal->get_escolaridade($parametroEscolaridade) . " ";
+                }
+
+                if (!empty($parametroCurso)) {
+                    $select .= " AND tbformacao.habilitacao = '{$parametroCurso}'";
+                    $subTitulo .= "| Curso: {$parametroCurso} ";
+                }
+
+                if (!empty($parametroInstituicao)) {
+                    $select .= " AND tbformacao.instEnsino = '{$parametroInstituicao}'";
+                    $subTitulo .= "| Instituição: {$parametroInstituicao} ";
+                }
+
+                if ($parametroAno <> "Todos") {
+                    if (empty($parametroAno)) {
+                        $select .= " AND tbformacao.anoTerm IS NULL";
+                    } else {
+                        $select .= " AND tbformacao.anoTerm = '{$parametroAno}'";
+                        $subTitulo .= "| Ano: {$parametroAno} ";
+                    }
+                }
+
+                if ($parametroMarcador <> "Todos") {
+
+                    $select .= " AND ("
+                            . "tbformacao.marcador1 = {$parametroMarcador} OR "
+                            . "tbformacao.marcador2 = {$parametroMarcador} OR "
+                            . "tbformacao.marcador3 = {$parametroMarcador} OR "
+                            . "tbformacao.marcador4 = {$parametroMarcador}
                                 )";
-            }
 
-            # Verifica se tem filtro por lotação
-            if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
-                if (is_numeric($parametroLotacao)) {
-                    $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
-                } else { # senão é uma diretoria genérica
-                    $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                    $subTitulo .= "| Marcador: {$parametroMarcador} ";
                 }
+
+                # Verifica se tem filtro por lotação
+                if ($parametroLotacao <> "Todos") {  // senão verifica o da classe
+                    if (is_numeric($parametroLotacao)) {
+                        $select .= " AND (tblotacao.idlotacao = {$parametroLotacao})";
+                        $subTitulo .= "| Lotação: " . $pessoal->get_nomeLotacao($parametroLotacao) . " ";
+                    } else { # senão é uma diretoria genérica
+                        $select .= " AND (tblotacao.DIR = '{$parametroLotacao}')";
+                        $subTitulo .= "| Lotação: {$parametroLotacao} ";
+                    }
+                }
+
+                $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
+
+                $result = $pessoal->select($select);
+
+                $tabela = new Tabela();
+                $tabela->set_titulo('Cadastro de Formação Servidores');
+                $tabela->set_subtitulo($subTitulo . " |");
+                $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
+                $tabela->set_conteudo($result);
+                $tabela->set_align(["center", "left", "center", "center", "left"]);
+                $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
+                $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
+
+                $tabela->set_rowspan(0);
+                $tabela->set_grupoCorColuna(0);
+
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('?fase=editaServidor');
+                $tabela->show();
             }
-
-            $select .= " ORDER BY tbpessoa.nome, tbformacao.anoTerm";
-
-            $result = $pessoal->select($select);
-
-            $tabela = new Tabela();
-            $tabela->set_titulo('Cadastro de Formação Servidores');
-            #$tabela->set_subtitulo('Filtro: '.$relatorioParametro);
-            $tabela->set_label(["IdFuncional<br/>Matrícula", "Servidor", "Nível do Curso", "Marcadores", "Curso", "Certificado"]);
-            $tabela->set_conteudo($result);
-            $tabela->set_align(["center", "left", "center", "center", "left"]);
-            $tabela->set_classe(['pessoal', "pessoal", null, "Formacao", "Formacao", "Formacao"]);
-            $tabela->set_metodo(["get_idFuncionalEMatricula", "get_nomeECargoELotacaoESituacao", null, "exibeMarcador", "exibeCurso", "exibeCertificado"]);
-
-            $tabela->set_rowspan(0);
-            $tabela->set_grupoCorColuna(0);
-
-            $tabela->set_idCampo('idServidor');
-            $tabela->set_editar('?fase=editaServidor');
-            $tabela->show();
 
             $grid->fechaColuna();
             $grid->fechaGrid();
@@ -485,12 +457,12 @@ if ($acesso) {
                 $subTitulo .= "Filtro Curso de Nível: {$pessoal->get_escolaridade($parametroEscolaridade)}<br/>";
             }
 
-            if ($parametroCurso <> "Todos") {
+            if (!empty($parametroCurso)) {
                 $select .= " AND tbformacao.habilitacao LIKE '%{$parametroCurso}%'";
                 $subTitulo .= "Filtro Curso: {$parametroCurso}<br/>";
             }
 
-            if ($parametroInstituicao <> "Todos") {
+            if (!empty($parametroInstituicao)) {
                 $select .= " AND tbformacao.instEnsino LIKE '%{$parametroInstituicao}%'";
                 $subTitulo .= "Filtro Instituição: {$parametroInstituicao}<br/>";
             }

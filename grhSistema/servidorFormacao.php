@@ -83,9 +83,18 @@ if ($acesso) {
     $objeto = new Modelo();
 
     ################################################################
+    # Verifica se tem duplicata de certificados
+    $duplicata = $pessoal->select("SELECT habilitacao, COUNT(*) AS total FROM tbformacao WHERE idPessoa = {$idPessoa} GROUP BY habilitacao HAVING COUNT(*) > 1");
+
+    $mensagemDuplicata = null;
+    
+    if(count($duplicata) >= 1){
+        $mensagemDuplicata = "Este Servidor Parece ter Cursos Duplicados";
+    }
+
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeDadosPetec"]);
-    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado]);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeDadosPetec", "calloutAlert"]);
+    $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado, $mensagemDuplicata]);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
     $objeto->set_nome('Cadastro da Formação Escolar do Servidor');
@@ -109,7 +118,7 @@ if ($acesso) {
                                          LEFT JOIN tbformacaomarcador B ON (marcador2 = B.idFormacaoMarcador) 
                                          LEFT JOIN tbformacaomarcador C ON (marcador3 = C.idFormacaoMarcador) 
                                          LEFT JOIN tbformacaomarcador D ON (marcador4 = D.idFormacaoMarcador) 
-                        WHERE idPessoa={$idPessoa}";
+                        WHERE idPessoa = {$idPessoa}";
 
     if (!empty($parametro)) {
         $selectFormacao .= " AND (escolaridade LIKE '%{$parametro}%' 
@@ -166,6 +175,21 @@ if ($acesso) {
     $objeto->set_metodo([null, null, "exibeMarcador", null, null, "exibeHora", "exibeObs", "exibeCertificado"]);
 
     #$objeto->set_colunaSomatorio(5);
+
+    # Se Tiver duplicata
+    if(count($duplicata) >= 1){
+        $arrayCompara = null;
+
+        foreach ($duplicata as $item) {
+            $arrayCompara[] = $item[0];
+        }
+        
+        $objeto->set_formatacaoCondicional(array(
+            array('coluna' => 3,
+            'valor' => $arrayCompara,
+            'operador' => 'in_array',
+            'id' => "comissaoVagasNegativas")));
+    }
 
     $objeto->set_rowspan(0);
     $objeto->set_grupoCorColuna(0);
@@ -268,7 +292,7 @@ if ($acesso) {
         array('nome' => 'tema',
             'label' => 'Tema:',
             'tipo' => 'combo',
-            'array' => [null,"IA","LGPD"],
+            'array' => [null, "IA", "LGPD"],
             'size' => 5,
             'col' => 2,
             'title' => 'Tema do Curso. Exigido pela portaria Petec 518/26 .',

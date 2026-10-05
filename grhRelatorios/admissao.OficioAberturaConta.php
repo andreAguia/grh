@@ -62,11 +62,11 @@ if ($acesso) {
     #$oficio->set_obsFinal("<hr id='geral'>");
     $oficio->set_obsFinal("<hr>");
     $oficio->set_obsFinal("Prezado(a) Servidor(a) do Governo do Estado do Rio de Janeiro,");
-    $oficio->set_obsFinal("Este protocolo de abertura de conta salário deverá ser entregue na área de Recursos Humanos da UENF, a fim de proceder o cadastro para recebimento de créditos provenientes de folha de pagamento.");
+    $oficio->set_obsFinal("Este protocolo de abertura de conta deverá ser entregue na área de Recursos Humanos da UENF, a fim de proceder o cadastro para recebimento de créditos provenientes de folha de pagamento.");
     $oficio->set_obsFinal("<br/>");
     $oficio->set_obsFinal("&nbsp;________________&nbsp;&nbsp;&nbsp;_____________________ &nbsp;&nbsp;&nbsp;&nbsp;_______________________________________");
     $oficio->set_obsFinal("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Agência"
-            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conta Salário"
+            . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Conta"
             . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
             . "Banco Bradesco - Carimbo e Assinatura");
 

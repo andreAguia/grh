@@ -1594,4 +1594,16 @@ function exibeDadosPetec($idServidor) {
     $petec->exibeDadosPetec($idServidor);
 }
 
+##########################################################
+/**
+ * Função que exibe tela do petec nova versao
+ * 
+ */
+
+function exibeQuadroPetec($idServidor) {
+
+    $petec = new Petec();
+    $petec->exibeQuadroPetec($idServidor);
+}
+
 ###########################################################

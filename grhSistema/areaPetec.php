@@ -21,6 +21,9 @@ if ($acesso) {
     $formacao = new Formacao();
     $petec = new Petec();
 
+    # Pega o array de portarias Petec
+    $petecArray = $formacao->get_arrayMarcadores("Petec");
+
     # Verifica a fase do programa
     $fase = get('fase', "geral");
     $portaria = get('portaria', "geral");
@@ -96,41 +99,20 @@ if ($acesso) {
         }
         $menu1->add_link($botao1, "right");
 
-        # Portaria 418/25
-        $botao1 = new Link("Portaria 418/25", "?fase=exibeLista&parametroMarcador=4");
-        if ($parametroMarcador == "4") {
-            $botao1->set_class('button');
-        } else {
-            $botao1->set_class('hollow button');
+        # Percorre os Marcadores do Petec e preenche o menu
+        foreach ($petecArray as $itemMenu) {
+            
+            # Pega os dados deste marcador
+            $dadosMarcador = $petec->get_arrayPetec($itemMenu[0]);
+            
+            $botao1 = new Link("Portaria {$dadosMarcador[0]}", "?fase=exibeLista&parametroMarcador={$itemMenu[0]}");
+            if ($parametroMarcador == $itemMenu[0]) {
+                $botao1->set_class('button');
+            } else {
+                $botao1->set_class('hollow button');
+            }
+            $menu1->add_link($botao1, "right");
         }
-        $menu1->add_link($botao1, "right");
-
-        # Portaria 473/25
-        $botao1 = new Link("Portaria 473/25", "?fase=exibeLista&parametroMarcador=5");
-        if ($parametroMarcador == 5) {
-            $botao1->set_class('button');
-        } else {
-            $botao1->set_class('hollow button');
-        }
-        $menu1->add_link($botao1, "right");
-
-        # Portaria 481/25
-        $botao1 = new Link("Portaria 481/25", "?fase=exibeLista&parametroMarcador=6");
-        if ($parametroMarcador == 6) {
-            $botao1->set_class('button');
-        } else {
-            $botao1->set_class('hollow button');
-        }
-        $menu1->add_link($botao1, "right");
-
-        # Portaria 518/26
-        $botao1 = new Link("Portaria 518/26", "?fase=exibeLista&parametroMarcador=8");
-        if ($parametroMarcador == 8) {
-            $botao1->set_class('button');
-        } else {
-            $botao1->set_class('hollow button');
-        }
-        $menu1->add_link($botao1, "right");
 
         # Importar
         $botaoImportar = new Link("Importar", "importaPetec.php");
@@ -191,11 +173,7 @@ if ($acesso) {
         $controle->set_valor($parametroLotacao);
         $controle->set_onChange('formPadrao.submit();');
         $controle->set_linha(1);
-        if ($fase <> "geral" AND $fase <> "geral2") {
-            $controle->set_col(6);
-        } else {
-            $controle->set_col(12);
-        }
+        $controle->set_col(6);
         $form->add_item($controle);
 
         /*
@@ -280,10 +258,17 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 9);
 
             # Quadro das Portarias
-            $petec->exibeQuadroPortariasPetec2();
+            $petec->exibeQuadroPortariasPetec();
+
+            $grid->fechaColuna();
+
+            ##############
+
+            $grid->abreColuna(12, 12, 12);
 
             # Monta o select
             $select = "SELECT tbservidor.idServidor,
+                              tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
                               tbservidor.idServidor,
@@ -313,16 +298,14 @@ if ($acesso) {
             $align[] = "left";
             $classe[] = "Pessoal";
             $metodo[] = "get_nomeECargoELotacaoEPerfilESituacao";
-            $width[] = 27;
-
-            $petecArray = $formacao->get_arrayMarcadores("Petec");
+            $width[] = 20;
 
             foreach ($petecArray as $item) {
                 $label[] = $item[1];
                 $align[] = "center";
                 $classe[] = "Petec";
                 $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-                $width[] = 17;
+                $width[] = 15;
             }
 
             $label[] = "Editar";
@@ -345,7 +328,7 @@ if ($acesso) {
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
             # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, $botao]);
+            $tabela->set_link([null, null, null, null, null, null, $botao]);
             $tabela->show();
             break;
 
@@ -443,8 +426,8 @@ if ($acesso) {
         case "relatorio" :
 
             # Título            
-            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);            
-            
+            $listaPetec = new ListaPetec($parametroMarcador, $parametroLotacao, $parametroInscricao, null, true);
+
             # Não Entregaram Certificado    
             $listaPetec->exibeNaoEntregaram();
 

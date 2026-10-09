@@ -87,13 +87,13 @@ if ($acesso) {
     $duplicata = $pessoal->select("SELECT habilitacao, COUNT(*) AS total FROM tbformacao WHERE idPessoa = {$idPessoa} GROUP BY habilitacao HAVING COUNT(*) > 1");
 
     $mensagemDuplicata = null;
-    
-    if(count($duplicata) >= 1){
+
+    if (count($duplicata) >= 1) {
         $mensagemDuplicata = "Este Servidor Parece ter Cursos Duplicados";
     }
 
     # Exibe os dados do Servidor
-    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeDadosPetec", "calloutAlert"]);
+    $objeto->set_rotinaExtra(["get_DadosServidor", "exibeQuadroPetec", "calloutAlert"]);
     $objeto->set_rotinaExtraParametro([$idServidorPesquisado, $idServidorPesquisado, $mensagemDuplicata]);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
@@ -175,20 +175,19 @@ if ($acesso) {
     $objeto->set_metodo([null, null, "exibeMarcador", null, null, "exibeHora", "exibeObs", "exibeCertificado"]);
 
     #$objeto->set_colunaSomatorio(5);
-
     # Se Tiver duplicata
-    if(count($duplicata) >= 1){
+    if (count($duplicata) >= 1) {
         $arrayCompara = null;
 
         foreach ($duplicata as $item) {
             $arrayCompara[] = $item[0];
         }
-        
+
         $objeto->set_formatacaoCondicional(array(
             array('coluna' => 3,
-            'valor' => $arrayCompara,
-            'operador' => 'in_array',
-            'id' => "comissaoVagasNegativas")));
+                'valor' => $arrayCompara,
+                'operador' => 'in_array',
+                'id' => "comissaoVagasNegativas")));
     }
 
     $objeto->set_rowspan(0);
@@ -292,11 +291,11 @@ if ($acesso) {
         array('nome' => 'tema',
             'label' => 'Tema:',
             'tipo' => 'combo',
-            'array' => [null, "IA", "LGPD"],
+            'array' => [null, "IA", "LGPD", "Acolhimento", "Governança"],
             'size' => 5,
             'col' => 2,
             'title' => 'Tema do Curso. Exigido pela portaria Petec 518/26 .',
-            'helptext' => 'Somente para Petec 518/26',
+            'helptext' => 'Petec 518/26 e 557/26',
             'linha' => 2),
         array('nome' => 'marcador1',
             'label' => '',
@@ -452,48 +451,7 @@ if ($acesso) {
 
             ################################################
             # Resumo dos certificados entregues
-            $select = "SELECT tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor,
-                          tbservidor.idServidor
-                     FROM tbservidor 
-                    WHERE idServidor = {$idServidorPesquisado}";
-
-            $pessoal = new Pessoal();
-            $result2 = $pessoal->select($select);
-
-            # Define as colunas
-            $label = array();
-            $align = array();
-            $classe = array();
-            $metodo = array();
-
-            foreach ($arrayMarcadores as $item) {
-                $label[] = $item[1];
-                $align[] = "center";
-                $classe[] = "Petec";
-                $metodo[] = "somatorioHorasPortaria{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-            }
-
-            $relatorio = new Relatorio();
-            #$tabela->set_subtitulo("Totalização dos Certificados Entregues");
-            $relatorio->set_conteudo($result2);
-
-            $relatorio->set_label($label);
-            $relatorio->set_align($align);
-
-            $relatorio->set_classe($classe);
-            $relatorio->set_metodo($metodo);
-            $relatorio->set_totalRegistro(false);
-            $relatorio->set_cabecalhoRelatorio(false);
-            $relatorio->set_menuRelatorio(false);
-
-            $relatorio->set_bordaInterna(false);
-            $relatorio->set_exibeLinhaFinal(false);
-            $relatorio->set_dataImpressao(false);
-            $relatorio->set_log(false);
-
-            $relatorio->show();
+            $petec->exibeQuadroPetec($idServidorPesquisado, true);
             br();
 
             # Pega o idPessoa

@@ -42,24 +42,12 @@ class ListaPetec {
         $this->horas = $dados[2];
         $this->entrega = $dados[3];
         $this->pdf = $dados[4];
+        $this->nomeCampo = $dados[8];
 
         # Variáveis da pesquisa
         $this->lotacao = $lotacao;
         $this->inscricao = $inscricao;
         $this->linkServidor = $linkServidor;
-
-        # Do nome do campo na tabela
-        if ($this->idMarcador == 4 OR $this->idMarcador == 5) {
-            $this->nomeCampo = "petec1";
-        }
-
-        if ($this->idMarcador == 6) {
-            $this->nomeCampo = "petec2";
-        }
-
-        if ($this->idMarcador == 8) {
-            $this->nomeCampo = "petec3";
-        }
 
         # Forma do resultado
         $this->relatorio = $relatorio;

@@ -42,7 +42,8 @@ if ($acesso) {
     # select do edita
     $objeto->set_selectEdita("SELECT petec1,
                                      petec2,
-                                     petec3
+                                     petec3,
+                                     petec4
                                 FROM tbservidor
                                WHERE idServidor = {$idServidorPesquisado}");
 
@@ -90,6 +91,13 @@ if ($acesso) {
         array('linha' => 3,
             'nome' => 'petec3',
             'label' => 'Inscrito no Petec - Portaria 518/26:',
+            'tipo' => 'simnao3',
+            'col' => 4,
+            'size' => 10,
+            'size' => 150),
+        array('linha' => 4,
+            'nome' => 'petec4',
+            'label' => 'Inscrito no Petec - Portaria 557/26:',
             'tipo' => 'simnao3',
             'col' => 4,
             'size' => 10,

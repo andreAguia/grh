@@ -23,6 +23,7 @@ if ($acesso) {
 
     # Pega o array de portarias Petec
     $petecArray = $formacao->get_arrayMarcadores("Petec");
+    $numPortariasPetec = count($petecArray);
 
     # Verifica a fase do programa
     $fase = get('fase', "geral");
@@ -101,10 +102,10 @@ if ($acesso) {
 
         # Percorre os Marcadores do Petec e preenche o menu
         foreach ($petecArray as $itemMenu) {
-            
+
             # Pega os dados deste marcador
             $dadosMarcador = $petec->get_arrayPetec($itemMenu[0]);
-            
+
             $botao1 = new Link("Portaria {$dadosMarcador[0]}", "?fase=exibeLista&parametroMarcador={$itemMenu[0]}");
             if ($parametroMarcador == $itemMenu[0]) {
                 $botao1->set_class('button');
@@ -267,13 +268,16 @@ if ($acesso) {
             $grid->abreColuna(12, 12, 12);
 
             # Monta o select
-            $select = "SELECT tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor,
-                              tbservidor.idServidor
+            $select = "SELECT tbservidor.idServidor,";
+            $arrayLink[] = null;
+
+            # Insere colunas na quantidade das portarias Petec
+            for ($i = 1; $i <= $numPortariasPetec; $i++) {
+                $select .= " tbservidor.idServidor,";
+                $arrayLink[] = null;
+            }
+
+            $select .= "      tbservidor.idServidor
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                               JOIN tbhistlot USING (idServidor)
                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
@@ -305,7 +309,7 @@ if ($acesso) {
                 $align[] = "center";
                 $classe[] = "Petec";
                 $metodo[] = "somatorioHoras{$item[0]}"; // Gambiarra para fazer funcionar. Depois eu vejo um modo melhor de fazer isso...
-                $width[] = 15;
+                $width[] = intval(80 / $numPortariasPetec);
             }
 
             $label[] = "Editar";
@@ -327,8 +331,9 @@ if ($acesso) {
             $botao = new Link(null, "{$linkservidor}&id=", 'Acessa o servidor');
             $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
-            # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, $botao]);
+            # Coloca o objeto link na tabela
+            $arrayLink[] = $botao;
+            $tabela->set_link($arrayLink);
             $tabela->show();
             break;
 

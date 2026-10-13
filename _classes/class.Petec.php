@@ -83,7 +83,7 @@ class Petec {
                         "29/09/2026",
                         30,
                         "30/06/2027",
-                        95,
+                        97,
                         "Janeiro, Fevereiro, Março, Abril, Maio e Junho de 2027",
                         "R$ 3.000,00",
                         "I - Desenvolvimento, inclusão e acolhimento de estudantes e membros da comunidade universitária com necessidades específicas;<br/>"

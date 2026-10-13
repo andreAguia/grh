@@ -462,12 +462,15 @@ if ($acesso) {
                 # Incrementa o contador
                 $contador++;
 
-                # Pega os dados do Petec
-                $arrayPetec = $petec->get_arrayPetec($item[0]);
+                # Verifica se está inscrito(Só exibe os inscritos)
+                if ($petec->estaInscrito($idServidorPesquisado, $item[0])) {
 
-                p("Certificados Entregues - Portaria " . $arrayPetec[0], "pRelatorioSubtitulo");
+                    # Pega os dados do Petec
+                    $arrayPetec = $petec->get_arrayPetec($item[0]);
 
-                $selectFormacao = "SELECT anoTerm,
+                    p("Certificados Entregues - Portaria " . $arrayPetec[0], "pRelatorioSubtitulo");
+
+                    $selectFormacao = "SELECT anoTerm,
                               escolaridade,
                               idFormacao,
                               CONCAT(habilitacao,'<br/>', instEnsino),
@@ -486,37 +489,40 @@ if ($acesso) {
                               OR D.marcador LIKE '%{$arrayPetec[0]}%')
                          ORDER BY anoTerm desc, A.marcador desc, B.marcador desc, C.marcador desc, D.marcador desc";
 
-                $result = $pessoal->select($selectFormacao);
+                    $result = $pessoal->select($selectFormacao);
 
-                $relatorio = new Relatorio();
+                    $relatorio = new Relatorio();
 
-                $relatorio->set_cabecalhoRelatorio(false);
-                $relatorio->set_menuRelatorio(false);
-                $relatorio->set_subTotal(true);
-                $relatorio->set_totalRegistro(false);
-                $relatorio->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso / Instituição", "Carga Horária"]);
-                $relatorio->set_width([10, 15, 20, 45, 10]);
-                $relatorio->set_align(["center", "center", "center", "left"]);
-                $relatorio->set_classe([null, null, "Formacao", null, "Formacao"]);
-                $relatorio->set_metodo([null, null, "exibeMarcador", null, "exibeHora"]);
-                #$relatorio->set_colunaSomatorio(4);
+                    $relatorio->set_cabecalhoRelatorio(false);
+                    $relatorio->set_menuRelatorio(false);
+                    $relatorio->set_subTotal(true);
+                    $relatorio->set_totalRegistro(false);
+                    $relatorio->set_label(["Ano de Término", "Nível do Curso", "Marcadores", "Curso / Instituição", "Carga Horária"]);
+                    $relatorio->set_width([10, 15, 20, 45, 10]);
+                    $relatorio->set_align(["center", "center", "center", "left"]);
+                    $relatorio->set_classe([null, null, "Formacao", null, "Formacao"]);
+                    $relatorio->set_metodo([null, null, "exibeMarcador", null, "exibeHora"]);
+                    #$relatorio->set_colunaSomatorio(4);
 
-                $relatorio->set_conteudo($result);
-                $relatorio->set_botaoVoltar(false);
-                $relatorio->set_bordaInterna(false);
-                $relatorio->set_exibeLinhaFinal(false);
-                $relatorio->set_logServidor($idServidorPesquisado);
+                    $relatorio->set_conteudo($result);
+                    $relatorio->set_botaoVoltar(false);
+                    $relatorio->set_bordaInterna(false);
+                    $relatorio->set_exibeLinhaFinal(false);
+                    $relatorio->set_logServidor($idServidorPesquisado);
 
-                if ($contador < $contadorMarcadores) {
+                    if ($contador < $contadorMarcadores) {
 
-                    $relatorio->set_dataImpressao(false);
-                    $relatorio->set_log(false);
-                    $relatorio->show();
-                    hr();
+                        $relatorio->set_dataImpressao(false);
+                        $relatorio->set_log(false);
+                        $relatorio->show();
+                        hr();
+                    } else {
+                        $relatorio->set_logDetalhe("Visualizou o Relatório do Petec");
+                        $relatorio->set_dataImpressao(true);
+                        $relatorio->show();
+                    }
                 } else {
-                    $relatorio->set_logDetalhe("Visualizou o Relatório do Petec");
-                    $relatorio->set_dataImpressao(true);
-                    $relatorio->show();
+                    $contadorMarcadores--;
                 }
             }
             break;

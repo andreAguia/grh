@@ -743,8 +743,24 @@ class Petec {
         # Conecta
         $pessoal = new Pessoal();
 
+        # Pega todos os marcadores Petec
         $formacao = new Formacao();
         $petec = $formacao->get_arrayMarcadores("Petec");
+
+        # Inicia o array dos Petec inscritos
+        $arrayPetec = array();
+
+        # Só exibe as Petecs inscritas no relatório
+        if ($relatorio) {
+            # Percorre o array e mantem somente os que são inscritos
+            foreach ($petec as $item) {
+                if ($this->estaInscrito($idServidor, $item[0])) {
+                    $arrayPetec[] = $item;
+                }
+            }
+        }else{
+            $arrayPetec = $petec;
+        }
 
         # Exibe a tabela de valores
         if ($relatorio) {
@@ -757,7 +773,7 @@ class Petec {
 
         # Cabeçalho
         echo "<tr>";
-        foreach ($petec as $item) {
+        foreach ($arrayPetec as $item) {
             echo "<th>";
             echo $item[1];
             echo "</th>";
@@ -766,7 +782,7 @@ class Petec {
         echo "<tr>";
 
         # Percorre o array
-        foreach ($petec as $item) {
+        foreach ($arrayPetec as $item) {
             # Pega os dados desse marcados
             $array = $this->get_arrayPetec($item[0]);
 

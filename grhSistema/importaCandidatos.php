@@ -66,7 +66,7 @@ if ($acesso) {
             $menu1 = new MenuBar();
 
             # Voltar
-            $linkVoltar = new Link("Voltar", "cadastroCandidatosAdm2025.php");
+            $linkVoltar = new Link("Voltar", "cadastroCandidatosAdm2025PorCargo.php");
             $linkVoltar->set_class('button');
             $linkVoltar->set_title('Voltar para página anterior');
             $linkVoltar->set_accessKey('V');

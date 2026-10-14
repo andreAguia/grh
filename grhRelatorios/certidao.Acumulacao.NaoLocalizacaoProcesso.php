@@ -27,29 +27,25 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
 
-    # Verifica se o perfil permite a declaração
-    $idPerfil = $pessoal->get_idPerfil($idServidorPesquisado);
-    if (($idPerfil == 1) OR ($idPerfil == 4)) {
+    # Servidor
+    $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
+    $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
+    $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
 
-        # Servidor
-        $nomeServidor = $pessoal->get_nome($idServidorPesquisado);
-        $idFuncional = $pessoal->get_idFuncional($idServidorPesquisado);
-        $idSituacao = $pessoal->get_idSituacao($idServidorPesquisado);
+    # Servidor Logado
+    $assina = $intra->get_idServidor($idUsuario);
+    $nome = $pessoal->get_nome($assina);
+    $cargo = $pessoal->get_cargoSimples($assina);
+    $idFuncionalLogado = $pessoal->get_idFuncional($assina);
 
-        # Servidor Logado
-        $assina = $intra->get_idServidor($idUsuario);
-        $nome = $pessoal->get_nome($assina);
-        $cargo = $pessoal->get_cargoSimples($assina);
-        $idFuncionalLogado = $pessoal->get_idFuncional($assina);
+    # Monta a Declaração
+    $dec = new Declaracao();
+    $dec->set_declaracaoNome("CERTIDÃO");
+    $dec->set_carimboCnpj(true);
+    #$dec->set_assinatura(true);
+    $dec->set_data(date("d/m/Y"));
 
-        # Monta a Declaração
-        $dec = new Declaracao();
-        $dec->set_declaracaoNome("CERTIDÃO");
-        $dec->set_carimboCnpj(true);
-        #$dec->set_assinatura(true);
-        $dec->set_data(date("d/m/Y"));
-
-        $dec->set_texto("Certifico, em cumprimento ao inc. IV, do art. 3º da Portaria 
+    $dec->set_texto("Certifico, em cumprimento ao inc. IV, do art. 3º da Portaria 
             SEPLAG/SUBAP nº 65/2012, que foi realizada consulta no Sistema
             SEI/RJ, objetivando evitar a duplicidade de análise de processos de
             acumulação de cargos, com base nos seguintes parâmetros de busca de
@@ -62,26 +58,21 @@ if ($acesso) {
             processo com as bases de dados mencionada em nome de <b>{$nomeServidor}</b>, 
                 Id Funcional {$idFuncional}.");
 
-        $dec->set_texto("E, por nada mais constar, eu, {$nome}, {$cargo},
+    $dec->set_texto("E, por nada mais constar, eu, {$nome}, {$cargo},
             ID Funcional nº {$idFuncionalLogado}, lavrei a presente Certidão, "
             . "que dato e assino.");
 
-        $dec->set_rodapeSoUntimaPag(true);
+    $dec->set_rodapeSoUntimaPag(true);
 
-        $dec->set_origemNome($nome);
-        $dec->set_origemDescricao($cargo);
-        $dec->set_origemIdFuncional($idFuncionalLogado);
-        $dec->show();
+    $dec->set_origemNome($nome);
+    $dec->set_origemDescricao($cargo);
+    $dec->set_origemIdFuncional($idFuncionalLogado);
+    $dec->show();
 
-        # Grava o log da visualização do relatório
-        $data = date("Y-m-d H:i:s");
-        $atividades = 'Visualizou a certidão de não localização de processo de acumulação';
-        $tipoLog = 4;
-        $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
-    } else {
-        br(4);
-        p("A Declaração de Atribuições é somente para Servidores Concursados", "f14", "center");
-    }
-
+    # Grava o log da visualização do relatório
+    $data = date("Y-m-d H:i:s");
+    $atividades = 'Visualizou a certidão de não localização de processo de acumulação';
+    $tipoLog = 4;
+    $intra->registraLog($idUsuario, $data, $atividades, null, null, $tipoLog, $idServidorPesquisado);
     $page->terminaPagina();
 }

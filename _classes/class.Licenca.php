@@ -277,6 +277,11 @@ class Licenca {
                     case 12: // Nojo
                         $this->exibeDocumentoAfastamentoPdf($id);
                         break;
+                    
+                    case 14: // Adoção Materna
+                    case 15: // Adoção Paterna
+                        $this->exibeDocumentoAfastamentoPdf($id);
+                        break;
 
                     default:
                         echo "---";

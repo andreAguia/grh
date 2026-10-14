@@ -433,11 +433,7 @@ if ($acesso) {
                  * Quando escolhe um cargo
                  */
                 # Exibe a lista de Candidatos    
-                if (Verifica::acesso($idUsuario, 1)) {      // exibe os erros para somente admin
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, true);
-                } else {
-                    $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao, false);
-                }
+                $concurso2025->exibe_listaCandidatosCargo($parametroCargoCandidato, $parametroCota, $parametroConvocacao, $parametroSituacao);
             }
 
 

@@ -160,7 +160,7 @@ class ConcursoAdm2025 {
 
     ###########################################################
 
-    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $situacao = "*", $exibeErros = false) {
+    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $situacao = "*") {
         /*
          * Exibe os candidatos em um cargo específico
          */
@@ -229,66 +229,13 @@ class ConcursoAdm2025 {
             $subtitulo .= " - {$numeroVagas} Vaga(s)";
         }
 
-        # Monta o select dos desistentes
-        $selectDes = "SELECT  IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
-                              idCandidato,
-                              DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
-                              idCandidato,
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              tbcandidato.obs,
-                              idCandidato,
-                              idCandidato
-                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                                     LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
-                        WHERE tbcandidato.idConcurso = {$idConcurso}
-                          AND ({$campo} = 0 OR {$campo} IS NULL)
-                          AND cargo = '{$cargoConcurso}'";
-
-        # Cota
-        if ($cota <> "Ac") {
-            $selectDes .= " AND {$campo} IS NOT NULL";
-        }
-
-        # Data de Convocação
-        if ($convocacao <> "*") {
-            $selectDes .= " AND dtConvocacao = '{$convocacao}'";
-        }
-
-        # Situacao
-        if ($situacao <> "*") {
-            $selectDes .= " AND  idCandidatoSituacao = '{$situacao}'";
-        }
-
-        # Ordenação
-        $selectDes .= " ORDER BY nome";
-
-        # Pega os dados
-        $rowDes = $pessoal->select($selectDes);
-        $numDes = $pessoal->count($selectDes);
-
-        # Verifica se houve alguma desistência
-        if ($numDes > 0) {
-
-            # Monta o esquema de abas
-            # Menu de Abas
-            $tab = new Tab([
-                "Aprovados",
-                "Retirados da Vaga"
-            ]);
-            
-
-            $tab->abreConteudo();
-        }
-
-            
-        # Monta o select da listagem principal
-        $select = "SELECT {$campo},
+        # Monta o select 
+        $select = "SELECT     idCandidato,
                               if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
                               IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
                               dtConvocacao,
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
-                              idCandidato,
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato,
                               idCandidato,
@@ -319,49 +266,26 @@ class ConcursoAdm2025 {
 
         # Pega os dados
         $row = $pessoal->select($select);
-
-        # Verifica se tem erro na classificação
-        if ($exibeErros) {
-            $inicio = 0;
-            $problemas = 0;
-
-            # Cria um laço
-            foreach ($row as $key => $linha) {
-                # incrementa o início
-                $inicio++;
-
-                # Verifica se classificação é igual ao início
-                if ($linha[$campo] <> $inicio) {
-                    $row[$key][0] = "<span class='label warnning' title='Númedo Errado!'>{$linha[$campo]} - {$inicio}</span>";
-                    $problemas++;
-                }
-            }
-
-            # Informa se houve problemas
-            if ($problemas > 0) {
-                callout("{$problemas} Problemas encontrados na classificação deste cargo");
-            }
-        }
-
+        
         # tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["#", "Colocação", "Inscrição", "Convocação", "Candidato", "Idade", "Classificação", "Nota Final", "Documento", "Obs", "Editar"]);
-        $tabela->set_width([5, 5, 10, 10, 30, 5, 10, 10, 10, 5, 5]);
+        $tabela->set_label(["Classificação", "Colocação", "Inscrição", "Convocação", "Candidato", "Idade", "Nota Final", "Documento", "Obs", "Editar"]);
+        $tabela->set_width([5, 5, 10, 10, 30, 5, 10, 10, 5, 5]);
         $tabela->set_align(["center", "center", "center", "center", "left"]);
-        $tabela->set_funcao(["trataNulo", null, null, "date_to_php", "plm", "idade"]);
+        $tabela->set_funcao([null, null, null, "date_to_php", "plm", "idade"]);
 
-        $tabela->set_classe([null, null, null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, "concursoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo([null, null, null, null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, "exibeDeclaracao", "exibeObs"]);
+        $tabela->set_classe(["CandidatoAdm2025", null, null, null, "CandidatoAdm2025", null, null, "concursoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo(["exibeClassific", null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeDeclaracao", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
 
         $tabela->set_rowspan(1);
         $tabela->set_grupoCorColuna(1);
@@ -378,36 +302,6 @@ class ConcursoAdm2025 {
 
         $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
         $tabela->show();
-
-        if ($numDes > 0) {
-            
-            $tab->fechaConteudo();
-            $tab->abreConteudo();
-            
-            # Tabela
-            $tabela = new Tabela();
-            $tabela->set_titulo("Candidatos Retirados da Vaga");
-            $tabela->set_subtitulo("Por desistência, por não terem respondido o formulário ou por não terem se apresentado");
-            $tabela->set_conteudo($rowDes);
-            $tabela->set_label(["Inscrição", "Candidato", "Idade", "Classificação", "Nota Final", "Obs", "Documento", "Editar"]);
-            $tabela->set_width([10, 25, 5, 10, 10, 30, 5, 5]);
-            $tabela->set_align(["center", "left", "center", "center", "center", "left"]);
-            $tabela->set_funcao([null, "plm", "idade", null, null, "nl2br2"]);
-
-            $tabela->set_classe([null, "CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "concursoAdm2025"]);
-            $tabela->set_metodo([null, "get_nomeECargoELotacaoESituacao", null, "exibeClassific", null, null, "exibeDeclaracao"]);
-
-            # Botão Editar
-            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
-
-            # Coloca o objeto link na tabela			
-            $tabela->set_link([null, null, null, null, null, null, null, $botao]);
-            $tabela->show();
-
-            $tab->fechaConteudo();
-            $tab->show();
-        }
     }
 
     ###########################################################

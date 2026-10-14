@@ -59,6 +59,12 @@ if ($acesso) {
         $nome = "Atestado de Óbito";
         $tabela = "tblicenca";
         $extensoes = ["pdf"];
+    } elseif ($tipo == 14 OR $tipo == 15) {
+        # Dados da rotina de Upload
+        $pasta = PASTA_AFASTAMENTOS;
+        $nome = "Certidãoff";
+        $tabela = "tblicenca";
+        $extensoes = ["pdf"];    
     } else{
         # Dados da rotina de Upload
         $pasta = PASTA_BIM;

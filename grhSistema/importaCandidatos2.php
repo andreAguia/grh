@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Importa Petec
+ * Importa Candidatos
  *  
  * By Alat
  */

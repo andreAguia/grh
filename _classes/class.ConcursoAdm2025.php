@@ -160,7 +160,7 @@ class ConcursoAdm2025 {
 
     ###########################################################
 
-    function exibe_listaCandidatosCargo($cargoConcurso = null, $cota = "Ac", $convocacao = "*", $situacao = "*") {
+    function exibe_listaCandidatosCargo($cargoConcurso = "*", $cota = "Ac", $convocacao = "*", $situacao = "*") {
         /*
          * Exibe os candidatos em um cargo específico
          */
@@ -232,19 +232,22 @@ class ConcursoAdm2025 {
         # Monta o select 
         $select = "SELECT     idCandidato,
                               if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
-                              IF(tbcandidatosituacao.situacao IS NULL, inscricao, CONCAT(inscricao,'<br/><br><span class=\'label alert\'>',tbcandidatosituacao.situacao,'</span>')),
-                              dtConvocacao,
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato,
+                              dtConvocacao,
+                              idCandidato,  
+                              idCandidato,
                               idCandidato,
                               idCandidato
-                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                                          LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
-                        WHERE tbcandidato.idConcurso = {$idConcurso}
-                          AND ({$campo} <> 0 AND {$campo} IS NOT NULL)
-                          AND cargo = '{$cargoConcurso}'";
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)                                          
+                        WHERE tbcandidato.idConcurso = {$idConcurso}";
+
+        # Cargo
+        if ($cargoConcurso <> "*") {
+            $select .= " AND cargo = '{$cargoConcurso}'";
+        }
 
         # Cota
         if ($cota <> "Ac") {
@@ -262,30 +265,34 @@ class ConcursoAdm2025 {
         }
 
         # Ordenação
-        $select .= " ORDER BY {$campo}";
+        if ($cargoConcurso == "*") {
+            $select .= " ORDER BY cargo, {$campo}";
+        } else {
+            $select .= " ORDER BY {$campo}";
+        }
 
         # Pega os dados
         $row = $pessoal->select($select);
-        
+
         # tabela
         $tabela = new Tabela();
         $tabela->set_titulo("Candidatos Aprovados");
         $tabela->set_subtitulo($subtitulo);
         $tabela->set_conteudo($row);
-        $tabela->set_label(["Classificação", "Colocação", "Inscrição", "Convocação", "Candidato", "Idade", "Nota Final", "Documento", "Obs", "Editar"]);
-        $tabela->set_width([5, 5, 10, 10, 30, 5, 10, 10, 5, 5]);
-        $tabela->set_align(["center", "center", "center", "center", "left"]);
-        $tabela->set_funcao([null, null, null, "date_to_php", "plm", "idade"]);
+        $tabela->set_label(["Classificação", "Colocação", "Candidato", "Idade", "Nota Final", "Convocação", "Data da Convocação", "Situação", "Doc", "Obs", "Editar"]);
+        $tabela->set_width([5, 5, 20, 5, 10, 20, 10, 5, 5, 5]);
+        $tabela->set_align(["center", "center", "left", "center", "center", "left", "center", "left"]);
+        $tabela->set_funcao([null, null, null, "idade", null, null, "date_to_php"]);
 
-        $tabela->set_classe(["CandidatoAdm2025", null, null, null, "CandidatoAdm2025", null, null, "concursoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo(["exibeClassific", null, null, null, "get_nomeECargoELotacaoESituacao", null, null, "exibeDeclaracao", "exibeObs"]);
+        $tabela->set_classe(["CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo(["exibeClassific", null, "get_nomeEInscricao", null, null, "get_cargoELotacaoESituacao", null, "exibeSituacao", "exibeDeclaracao", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
         $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
 
         # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+        $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
 
         $tabela->set_rowspan(1);
         $tabela->set_grupoCorColuna(1);

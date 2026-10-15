@@ -1419,4 +1419,105 @@ class CandidatoAdm2025 {
     }
 
     ###########################################################
+
+    /**
+     * Método get_nomeECargoELotacaoEAtivo
+     * fornece o nome, cargo e lotacao de um candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_cargoELotacaoESituacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Define as variávels de retorno
+            $retorno = null;
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+
+            # Verifica se tem alguem com esse cpf
+            $idPessoa = $pessoal->get_idPessoaCPF($dados["cpf"]);
+
+            # Monta as variáveis de saída
+            $linha1 = null;
+            $linha2 = null;
+
+            if (!empty($idPessoa)) {
+                # Pega o idServidor
+                $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+
+                # Pega o perfil
+                $perfil = $pessoal->get_perfil($idServidor);
+
+                # Pega o idFuncional
+                $idFuncional = $pessoal->get_idFuncional($idServidor);
+
+                # Verifica se é ativo
+                $situacao = $pessoal->get_situacao($idServidor);
+
+                # Pega a Admissão
+                $dtAdm = $pessoal->get_dtAdmissao($idServidor);
+
+                # Pega a Saída
+                $dtSai = $pessoal->get_dtSaida($idServidor);
+
+                $linha1 = "{$perfil} {$pessoal->get_situacao($idServidor)}";
+
+                # Mescla as Duas
+                if (empty($dtSai)) {
+                    $datas = "Admissão: {$dtAdm}";
+                } else {
+                    $datas = "Admissão: {$dtAdm} - Saída: {$dtSai}";
+                }
+
+                # Pega o Cargo
+                $cargoEfetivo = $pessoal->get_cargoSimples($idServidor);
+
+                # Retorno
+                if (empty($idFuncional)) {
+                    $linha2 = "{$datas}<br/>{$cargoEfetivo}";
+                } else {
+                    $linha2 = "ID Funcional: {$idFuncional}<br/>{$datas}<br/>{$cargoEfetivo}";
+                }
+            }
+
+            # Retorna
+            pLista(
+                    $linha1,
+                    $linha2,
+                    $pessoal->get_nomeLotacao($dados["idLotacao"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    public function exibeSituacao($id) {
+
+        /**
+         * Exibea situação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT situacao
+                     FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                                 LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
+                    WHERE idCandidato = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Pega a obs
+        if (empty($row["situacao"])) {
+            return null;
+        } else {
+            p($row["situacao"], "vermelho");
+        }
+    }
+
+    ###########################################################
 }

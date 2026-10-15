@@ -240,7 +240,7 @@ class ConcursoAdm2025 {
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
                               CONVERT(notaFinal, DECIMAL(10,2)),
                               idCandidato,
-                              dtConvocacao,
+                              idCandidato,
                               idCandidato,  
                               idCandidato,
                               idCandidato,
@@ -286,10 +286,10 @@ class ConcursoAdm2025 {
         $tabela->set_label(["Classificação", "Colocação", "Candidato", "Idade", "Nota Final", "Convocação", "Data da Convocação", "Situação", "Doc", "Obs", "Editar"]);
         $tabela->set_width([5, 5, 20, 5, 10, 20, 10, 5, 5, 5]);
         $tabela->set_align(["center", "center", "left", "center", "center", "left", "center", "left"]);
-        $tabela->set_funcao([null, null, null,  "idade", null, null, "date_to_php"]);
+        $tabela->set_funcao([null, null, null, "idade"]);
 
-        $tabela->set_classe(["CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", null, "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo([$metodo, null, "get_nomeEInscricao", null, null, "get_cargoELotacaoESituacao", null, "exibeSituacao", "exibeDeclaracao", "exibeObs"]);
+        $tabela->set_classe(["CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
+        $tabela->set_metodo([$metodo, null, "get_nomeEInscricao", null, null, "get_cargoELotacaoESituacao", "exibeDtConvocacao", "exibeSituacao", "exibeDeclaracao", "exibeObs"]);
 
         # Botão Editar
         $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');

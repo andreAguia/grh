@@ -1542,13 +1542,13 @@ class CandidatoAdm2025 {
             # Inicia as variáveis
             $return = null;
             $marcador = false;
-            
+
             # PCD
             if (!empty($dados["classifPcd"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
-                
+
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
@@ -1565,7 +1565,7 @@ class CandidatoAdm2025 {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
@@ -1580,7 +1580,7 @@ class CandidatoAdm2025 {
                 }
 
                 $marcador = true;
-            }            
+            }
 
             # Negros e Indígenas
             if (!empty($dados["classifNi"])) {
@@ -1591,7 +1591,7 @@ class CandidatoAdm2025 {
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
-                }                
+                }
 
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
@@ -1600,7 +1600,7 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
-                
+
                 $marcador = true;
             }
 
@@ -1622,14 +1622,14 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
-                
+
                 $marcador = true;
             }
 
             return $return;
         }
     }
-    
+
     ###########################################################
 
     public function exibeClassificNi($id = null) {
@@ -1653,7 +1653,7 @@ class CandidatoAdm2025 {
             # Inicia as variáveis
             $return = null;
             $marcador = false;
-            
+
             # Negros e Indígenas
             if (!empty($dados["classifNi"])) {
 
@@ -1663,7 +1663,7 @@ class CandidatoAdm2025 {
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
-                }                
+                }
 
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
@@ -1672,16 +1672,16 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
-                
+
                 $marcador = true;
             }
-                        
+
             # AC
             if (!empty($dados["classifAc"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
@@ -1696,19 +1696,19 @@ class CandidatoAdm2025 {
                 }
 
                 $marcador = true;
-            }            
+            }
 
             # PCD
             if (!empty($dados["classifPcd"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
                 }
-                
+
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
@@ -1738,14 +1738,14 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
-                
+
                 $marcador = true;
             }
 
             return $return;
         }
     }
-    
+
     ###########################################################
 
     public function exibeClassifiHipo($id = null) {
@@ -1769,7 +1769,7 @@ class CandidatoAdm2025 {
             # Inicia as variáveis
             $return = null;
             $marcador = false;
-            
+
             # Hipossuficiente Econômic
             if (!empty($dados["classifHipo"])) {
 
@@ -1788,16 +1788,16 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
-                
+
                 $marcador = true;
             }
-                        
+
             # AC
             if (!empty($dados["classifAc"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifAc"], "Ac", $cargo);
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
@@ -1812,19 +1812,19 @@ class CandidatoAdm2025 {
                 }
 
                 $marcador = true;
-            }            
+            }
 
             # PCD
             if (!empty($dados["classifPcd"])) {
 
                 # Pega a situação desta vaga
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
-                
+
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
                 }
-                
+
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
@@ -1845,7 +1845,7 @@ class CandidatoAdm2025 {
                 # Salta linha se necessário
                 if ($marcador) {
                     $return .= "<br/><hr id='geral1'/>";
-                }                
+                }
 
                 if ($situacaoVaga == "V") {
                     $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
@@ -1854,13 +1854,46 @@ class CandidatoAdm2025 {
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
-                
+
                 $marcador = true;
             }
 
             return $return;
         }
     }
-    
+
+    ###########################################################
+
+    public function exibeDtConvocacao($id) {
+
+        /**
+         * Exibea situação
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT dtConvocacao, 
+                         cotaConvocacao
+                     FROM tbcandidato
+                    WHERE idCandidato = {$id}";
+
+        $row = $pessoal->select($select, false);
+
+        # Define array de Cotas
+        $concurso2025 = new ConcursoAdm2025();
+        $arrayCotas = $concurso2025->get_arrayCotas();
+
+        if (empty($row["dtConvocacao"])) {
+            return null;
+        } else {
+            if (empty($row["cotaConvocacao"])) {
+                return date_to_php($row["dtConvocacao"]);
+            } else {
+                return date_to_php($row["dtConvocacao"]) . "<br/><span id='azul'>" . $row["cotaConvocacao"]."</span>";
+            }
+        }
+    }
+
     ###########################################################
 }

@@ -66,6 +66,7 @@ if ($acesso) {
                            notaFinal,
                            resultado,
                            dtConvocacao,
+                           cotaConvocacao,
                            idCandidatoSituacao,
                            obs,
                            dtNascimento,
@@ -142,6 +143,11 @@ if ($acesso) {
                                 ORDER BY situacao');
 
     array_unshift($situacaoCandidato, [null, null]);
+    
+    # Define array de Cotas
+    $concurso2025 = new ConcursoAdm2025();
+    $arrayCotas = $concurso2025->get_arrayCotas();
+    array_unshift($arrayCotas, [null, null]);
 
     # Campos para o formulario
     $objeto->set_campos(array(
@@ -246,6 +252,15 @@ if ($acesso) {
             'size' => 20,
             'col' => 4,
             'title' => 'Data da Convocação.'),
+        array(
+            'linha' => 5,
+            'nome' => 'cotaConvocacao',
+            'label' => 'Convocado em Qual Cota?',
+            'tipo' => 'combo',
+            'array' => $arrayCotas,
+            'size' => 20,
+            'col' => 4,
+            'title' => 'Cota da Convocação'),
         array('nome' => 'idCandidatoSituacao',
             'label' => 'Situação do Candidato:',
             'tipo' => 'combo',

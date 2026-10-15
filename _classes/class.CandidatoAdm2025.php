@@ -1464,32 +1464,31 @@ class CandidatoAdm2025 {
                 # Pega a Saída
                 $dtSai = $pessoal->get_dtSaida($idServidor);
 
-                $linha1 = "{$perfil} {$pessoal->get_situacao($idServidor)}";
+                # Pega a Situação
+                $situacao = $pessoal->get_situacao($idServidor);
 
-                # Mescla as Duas
+                # Exibe a Situação
+                if ($situacao == "Ativo") {
+                    echo "<span id='verde'>{$perfil} {$situacao}</span>";
+                } else {
+                    echo "<span id='vermelho'>{$perfil} {$situacao}</span>";
+                }
+
+                # Datas de entreda e Saída
                 if (empty($dtSai)) {
-                    $datas = "Admissão: {$dtAdm}";
+                    $linha2 = "Admissão: {$dtAdm}";
                 } else {
-                    $datas = "Admissão: {$dtAdm} - Saída: {$dtSai}";
+                    $linha2 = "Admissão: {$dtAdm}<br/>Saída: {$dtSai}";
                 }
 
-                # Pega o Cargo
-                $cargoEfetivo = $pessoal->get_cargoSimples($idServidor);
-
-                # Retorno
-                if (empty($idFuncional)) {
-                    $linha2 = "{$datas}<br/>{$cargoEfetivo}";
-                } else {
-                    $linha2 = "ID Funcional: {$idFuncional}<br/>{$datas}<br/>{$cargoEfetivo}";
-                }
+                # Retorna
+                pLista(
+                        "ID Funcional: {$idFuncional}",
+                        $linha2,
+                        $pessoal->get_cargoSimples($idServidor),
+                        $pessoal->get_nomeLotacao($dados["idLotacao"])
+                );
             }
-
-            # Retorna
-            pLista(
-                    $linha1,
-                    $linha2,
-                    $pessoal->get_nomeLotacao($dados["idLotacao"])
-            );
         }
     }
 
@@ -1505,9 +1504,9 @@ class CandidatoAdm2025 {
 
         # Pega array com os dias publicados
         $select = "SELECT situacao
-                     FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
-                                 LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
-                    WHERE idCandidato = {$id}";
+                            FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)
+                            LEFT JOIN tbcandidatosituacao USING (idCandidatoSituacao)
+                            WHERE idCandidato = {$id}";
 
         $row = $pessoal->select($select, false);
 
@@ -1515,7 +1514,8 @@ class CandidatoAdm2025 {
         if (empty($row["situacao"])) {
             return null;
         } else {
-            p($row["situacao"], "vermelho");
+            p($row["situacao"], "vermelho"
+            );
         }
     }
 
@@ -1550,9 +1550,9 @@ class CandidatoAdm2025 {
                 $situacaoVaga = $concursoAdm->get_situacaoClassifVaga($dados["classifPcd"], "Pcd", $cargo);
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
                 } else {
                     $return .= "Pcd - {$dados["classifPcd"]}";
                 }
@@ -1568,13 +1568,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
                 } else {
                     $return .= "Ac - {$dados["classifAc"]}";
                 }
@@ -1590,13 +1590,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
@@ -1612,13 +1612,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
@@ -1632,7 +1632,8 @@ class CandidatoAdm2025 {
 
     ###########################################################
 
-    public function exibeClassificNi($id = null) {
+    public function exibeClassificNi(
+            $id = null) {
         /**
          * Exibe a classificação Ni desse candidato
          * 
@@ -1662,13 +1663,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
@@ -1684,13 +1685,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
                 } else {
                     $return .= "Ac - {$dados["classifAc"]}";
                 }
@@ -1706,13 +1707,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
                 } else {
                     $return .= "Pcd - {$dados["classifPcd"]}";
                 }
@@ -1728,13 +1729,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
@@ -1748,7 +1749,8 @@ class CandidatoAdm2025 {
 
     ###########################################################
 
-    public function exibeClassifiHipo($id = null) {
+    public function exibeClassifiHipo(
+            $id = null) {
         /**
          * Exibe a classificação Hipo desse candidato
          * 
@@ -1778,13 +1780,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Hipo - {$dados["classifHipo"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Hipo - {$dados["classifHipo"]}</span>";
                 } else {
                     $return .= "Hipo - {$dados["classifHipo"]}";
                 }
@@ -1800,13 +1802,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ac - {$dados["classifAc"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ac - {$dados["classifAc"]}</span>";
                 } else {
                     $return .= "Ac - {$dados["classifAc"]}";
                 }
@@ -1822,13 +1824,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Pcd - {$dados["classifPcd"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Pcd - {$dados["classifPcd"]}</span>";
                 } else {
                     $return .= "Pcd - {$dados["classifPcd"]}";
                 }
@@ -1844,13 +1846,13 @@ class CandidatoAdm2025 {
 
                 # Salta linha se necessário
                 if ($marcador) {
-                    $return .= "<br/><hr id='geral1'/>";
+                    $return .= "<br/><hr id = 'geral1'/>";
                 }
 
                 if ($situacaoVaga == "V") {
-                    $return .= "<span class='label success' title='Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label success' title = 'Dentro do Número de Vagas'>Ni - {$dados["classifNi"]}</span>";
                 } elseif ($situacaoVaga == "R") {
-                    $return .= "<span class='label warning' title='No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
+                    $return .= "<span class = 'label warning' title = 'No Cadastro de Reserva'>Ni - {$dados["classifNi"]}</span>";
                 } else {
                     $return .= "Ni - {$dados["classifNi"]}";
                 }
@@ -1864,7 +1866,8 @@ class CandidatoAdm2025 {
 
     ###########################################################
 
-    public function exibeDtConvocacao($id) {
+    public function exibeDtConvocacao(
+            $id) {
 
         /**
          * Exibea situação
@@ -1873,10 +1876,10 @@ class CandidatoAdm2025 {
         $pessoal = new Pessoal();
 
         # Pega array com os dias publicados
-        $select = "SELECT dtConvocacao, 
-                         cotaConvocacao
-                     FROM tbcandidato
-                    WHERE idCandidato = {$id}";
+        $select = "SELECT dtConvocacao,
+                            cotaConvocacao
+                            FROM tbcandidato
+                            WHERE idCandidato = {$id}";
 
         $row = $pessoal->select($select, false);
 
@@ -1890,7 +1893,7 @@ class CandidatoAdm2025 {
             if (empty($row["cotaConvocacao"])) {
                 return date_to_php($row["dtConvocacao"]);
             } else {
-                return date_to_php($row["dtConvocacao"]) . "<br/><span id='azul'>" . $row["cotaConvocacao"]."</span>";
+                return date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
             }
         }
     }

@@ -279,6 +279,9 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Para Recepção', '?fase=relatorio8');
             $menu->add_item('linkWindow', 'Com E-mail', '?fase=relatorio10');
 
+            $menu->add_item('titulo', 'TCE');
+            $menu->add_item('linkWindow', 'Planilha TCE', '?fase=planilhaTce');
+
             $menu->show();
 
             $grid->fechaColuna();
@@ -1849,7 +1852,93 @@ if ($acesso) {
             $candidato->exibeTabelaVagasCargo();
             break;
 
-        ################################################################       
+        ################################################################   
+
+        case "planilhaTce":
+
+            /*
+             *  Planilha TCE
+             */
+
+            # Pega a cota
+            switch ($parametroCota) {
+                // Ampla Concorrência
+                case "Ac":
+                    #$numeroVagas = $concurso->get_numVagasAcAprovadas($idConcurso, $item["cargoConcurso"]);
+                    $campo = "classifAc";
+                    $campoVaga = "vagas";
+                    $subtitulo = "Ampla Concorrência";
+                    break;
+
+                // Pcd
+                case "Pcd":
+                    #$numeroVagas = $concurso->get_numVagasPcdAprovadas($idConcurso, $item["cargoConcurso"]);
+                    $campo = "classifPcd";
+                    $campoVaga = "vagasPcd";
+                    $subtitulo = "Cota: PCD";
+                    break;
+
+                // Negros e Indígenas
+                case "Ni":
+                    #$numeroVagas = $concurso->get_numVagasNiAprovadas($idConcurso, $item["cargoConcurso"]);
+                    $campo = "classifNi";
+                    $campoVaga = "vagasNi";
+                    $subtitulo = "Cota: Negros e Indígenas";
+                    break;
+
+                // Hipossuficiente Econômico
+                case "Hipo":
+                    #$numeroVagas = $concurso->get_numVagasHipoAprovadas($idConcurso, $item["cargoConcurso"]);
+                    $campo = "classifHipo";
+                    $campoVaga = "vagasHipo";
+                    $subtitulo = "Cota: Hipossuficiente Econômico";
+                    break;
+            }
+
+
+
+            # Pega os candidaatos desse cargo e dessa cota
+            $select = "SELECT cargo,
+                              tbcandidato.nome,
+                              cpf,
+                              idCandidato,
+                              cotaConvocacao,
+                              {$campo},
+                              idCandidato,
+                              idCandidato,
+                              idCandidato
+                         FROM tbcandidato
+                        WHERE tbcandidato.idConcurso = {$idConcurso}
+                          AND {$campo} IS NOT NULL  
+                     ORDER BY cargo, {$campo}";
+
+            # Relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($pessoal->select($select));
+            $relatorio->set_label([
+                "Cargo",
+                "Nome",
+                "Cpf",
+                "Tipo Ato",
+                "Tipo Vaga Ocupada",
+                "Classificação",
+                "Nomeação Fora da Ordem",
+                "Justificativa Fora da Ordem",
+                "Nomeado por Decisão Judicial"]);
+            $relatorio->set_align(["left", "left"]);
+
+            $relatorio->set_classe([null, null, null, "CandidatoAdm2025"]);
+            $relatorio->set_metodo([null, null, null, "get_tceTipoAto"]);
+
+            #$relatorio->set_funcao([null, null, "plm", "plm", "date_to_php"]);
+            #$relatorio->set_numGrupo(4);
+            $relatorio->show();
+
+            break;
+
+        ################################################################   
     }
     $grid->fechaColuna();
     $grid->fechaGrid();

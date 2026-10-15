@@ -1866,8 +1866,7 @@ class CandidatoAdm2025 {
 
     ###########################################################
 
-    public function exibeDtConvocacao(
-            $id) {
+    public function exibeDtConvocacao($id) {
 
         /**
          * Exibea situação
@@ -1895,6 +1894,48 @@ class CandidatoAdm2025 {
             } else {
                 return date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
             }
+        }
+    }
+
+    ###########################################################
+
+    public function get_tceTipoAto($id) {
+
+        /**
+         * Planilha TCE - Exibe o tipo do ato
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        # Pega a Situação
+        switch ($dados["idCandidatoSituacao"]) {
+            case 1 :
+                return "ATO3";
+                break;
+
+            case 2 :
+                return "ATO3";
+                break;
+
+            case 3 :
+                return "ATO4";
+                break;
+
+            case 4 :
+                return "ATO3";
+                break;
+
+            case 5 :
+                return "ATO3";
+                break;
+
+            case null :
+                if (!empty($dados["dtConvocacao"])) {
+                    return "ATO1";
+                } else {
+                    return null;
+                }
+                break;
         }
     }
 

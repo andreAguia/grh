@@ -1909,12 +1909,13 @@ if ($acesso) {
                               idCandidato
                          FROM tbcandidato
                         WHERE tbcandidato.idConcurso = {$idConcurso}
-                          AND {$campo} IS NOT NULL  
+                          AND {$campo} IS NOT NULL
+                          AND (dtConvocacao IS NOT NULL OR idCandidatoSituacao IS NOT NULL)
                      ORDER BY cargo, {$campo}";
 
             # Relatório
             $relatorio = new Relatorio();
-            $relatorio->set_titulo("Relatório de Candidatos Aprovados");
+            $relatorio->set_titulo("Planilha TCE");
             $relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($pessoal->select($select));
             $relatorio->set_label([

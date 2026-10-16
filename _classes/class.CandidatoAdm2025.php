@@ -1446,6 +1446,7 @@ class CandidatoAdm2025 {
             $linha2 = null;
 
             if (!empty($idPessoa)) {
+                
                 # Pega o idServidor
                 $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
 
@@ -1479,6 +1480,11 @@ class CandidatoAdm2025 {
                     $linha2 = "Admissão: {$dtAdm}";
                 } else {
                     $linha2 = "Admissão: {$dtAdm}<br/>Saída: {$dtSai}";
+                }
+                
+                # Verifica se o cargo é diferente e alerta
+                if($this->get_idCargoCargoConcurso($dados["cargo"]) <> $pessoal->get_idCargo($idServidor)) {
+                     echo "<br/><span id='vermelho'>Cargo Diferente</span>";
                 }
 
                 # Retorna

@@ -130,6 +130,7 @@ if ($acesso) {
             AND $fase <> "relatorio10"
             AND $fase <> "relatorio11"
             AND $fase <> "relatorio12"
+            AND $fase <> "planilhaTce"
     ) {
         AreaServidor::cabecalho();
     }
@@ -1906,11 +1907,12 @@ if ($acesso) {
                               justificativa,
                               idCandidato,
                               idCandidato,
-                              idCandidato,
-                              dtConvocacao,                              
-                              idCandidato,
-                              idCandidato,
-                              idCandidato,
+                              numAtoNomeacao,
+                              dtAtoNomeacao,
+                              dtPublicAto,
+                              numProcessoJudicial,
+                              numAtoPortariaSE,
+                              dtAtoPortariaSE,
                               idCandidato
                          FROM tbcandidato
                         WHERE tbcandidato.idConcurso = {$idConcurso}
@@ -1937,9 +1939,9 @@ if ($acesso) {
                 "Numero do Ato de Nomeação",
                 "Data do Ato de Nomeação",
                 "Data da Publicação do Ato de Nomeação",
-                "Nº Prucesso Judicial",
-                "Nº Ato da Porteria Sem Efeito",
-                "Data Ato da Porteria Sem Efeito"                
+                "Nº Processo Judicial",
+                "Nº Ato da Portaria Sem Efeito",
+                "Data Ato da Portaria Sem Efeito"                
             ]);
             $relatorio->set_align(["left", "left"]);
 
@@ -1947,7 +1949,7 @@ if ($acesso) {
             $relatorio->set_metodo([null, null, null, "get_tceTipoAto", "get_tceTipoVaga", null, "get_tceForaOrdem", null, "get_tceSubJudice", "get_tceSubJudiceForaOrdem"]);
             #$relatorio->set_width([20, 20, 10, 10, 10, 5, 5, 10, 10, 10]);
 
-            $relatorio->set_funcao([null, null, null, null, null, null, null, null, null, null, null, "date_to_php"]);
+            $relatorio->set_funcao([null, null, null, null, null, null, null, null, null, null, null, "date_to_php", "date_to_php"]);
             #$relatorio->set_numGrupo(4);
             $relatorio->show();
 

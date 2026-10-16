@@ -1895,15 +1895,20 @@ if ($acesso) {
                     break;
             }
 
-
-
             # Pega os candidaatos desse cargo e dessa cota
             $select = "SELECT cargo,
                               tbcandidato.nome,
                               cpf,
                               idCandidato,
-                              cotaConvocacao,
+                              idCandidato,
                               {$campo},
+                              idCandidato,
+                              justificativa,
+                              idCandidato,
+                              idCandidato,
+                              idCandidato,
+                              dtConvocacao,                              
+                              idCandidato,
                               idCandidato,
                               idCandidato,
                               idCandidato
@@ -1927,13 +1932,22 @@ if ($acesso) {
                 "Classificação",
                 "Nomeação Fora da Ordem",
                 "Justificativa Fora da Ordem",
-                "Nomeado por Decisão Judicial"]);
+                "Nomeado por Decisão Judicial",
+                "Nomeado por Decisão Judicial Fora da Ordem",
+                "Numero do Ato de Nomeação",
+                "Data do Ato de Nomeação",
+                "Data da Publicação do Ato de Nomeação",
+                "Nº Prucesso Judicial",
+                "Nº Ato da Porteria Sem Efeito",
+                "Data Ato da Porteria Sem Efeito"                
+            ]);
             $relatorio->set_align(["left", "left"]);
 
-            $relatorio->set_classe([null, null, null, "CandidatoAdm2025"]);
-            $relatorio->set_metodo([null, null, null, "get_tceTipoAto"]);
+            $relatorio->set_classe([null, null, null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
+            $relatorio->set_metodo([null, null, null, "get_tceTipoAto", "get_tceTipoVaga", null, "get_tceForaOrdem", null, "get_tceSubJudice", "get_tceSubJudiceForaOrdem"]);
+            #$relatorio->set_width([20, 20, 10, 10, 10, 5, 5, 10, 10, 10]);
 
-            #$relatorio->set_funcao([null, null, "plm", "plm", "date_to_php"]);
+            $relatorio->set_funcao([null, null, null, null, null, null, null, null, null, null, null, "date_to_php"]);
             #$relatorio->set_numGrupo(4);
             $relatorio->show();
 

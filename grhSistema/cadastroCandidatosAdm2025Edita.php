@@ -68,6 +68,10 @@ if ($acesso) {
                            dtConvocacao,
                            cotaConvocacao,
                            idCandidatoSituacao,
+                           nomeacaoForaOrdem,
+                           justificativa,                           
+                           subJudice,
+                           subJudiceForaOrdem,
                            obs,
                            dtNascimento,
                            cpf,
@@ -126,16 +130,16 @@ if ($acesso) {
                         WHERE ativo = 1
                         ORDER BY ativo desc, 2');
     array_unshift($lotacao, array(null, null));
-    
+
     # Pega os dados da combo da data de convocação
     $convocacao = $pessoal->select("SELECT data, DATE_FORMAT(data, '%d/%m/%Y')
                         FROM tbconcursopublicacao 
                         WHERE idConcurso = {$idConcurso}
                           AND convocacao = 1   
                         ORDER BY data");
-    
+
     array_unshift($convocacao, array(null, null));
-    
+
     # Pega os dados da combo situação
     $situacaoCandidato = $pessoal->select('SELECT idCandidatoSituacao,
                                          situacao
@@ -143,7 +147,7 @@ if ($acesso) {
                                 ORDER BY situacao');
 
     array_unshift($situacaoCandidato, [null, null]);
-    
+
     # Define array de Cotas
     $concurso2025 = new ConcursoAdm2025();
     $arrayCotas = $concurso2025->get_arrayCotas();
@@ -268,15 +272,43 @@ if ($acesso) {
             'size' => 20,
             'col' => 4,
             'title' => 'Situação do Servidor',
-            'linha' => 5),        
+            'linha' => 5),
+        array('nome' => 'nomeacaoForaOrdem',
+            'label' => 'Nomeação Fora da Ordem?:',
+            'tipo' => 'simnao2',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Foi nomeado fora da ordem?',
+            'linha' => 6),
+        array('nome' => 'justificativa',
+            'label' => 'Justificativa da Nomeação Fora da Ordem:',
+            'tipo' => 'texto',
+            'size' => 250,
+            'col' => 9,
+            'title' => 'Justificativa da Nomeação Fora da Ordem',
+            'linha' => 6),
+        array('nome' => 'subJudice',
+            'label' => 'Sub Judice:',
+            'tipo' => 'simnao2',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Entrou Sub Judice',
+            'linha' => 5),
+        array('nome' => 'subJudiceForaOrdem',
+            'label' => 'Sub Judice Fora da Ordem?:',
+            'tipo' => 'simnao2',
+            'size' => 20,
+            'col' => 3,
+            'title' => 'Entrou Sub Judice fora da Ordem',
+            'linha' => 5),
         array(
-            'linha' => 6,
+            'linha' => 7,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'size' => array(80, 5)),
         array(
-            'linha' => 7,
+            'linha' => 8,
             'nome' => 'dtNascimento',
             'label' => 'Data de Nascimento:',
             'tipo' => 'data',
@@ -284,7 +316,7 @@ if ($acesso) {
             'col' => 4,
             'title' => 'Data de Nascimento.'),
         array(
-            'linha' => 7,
+            'linha' => 8,
             'col' => 4,
             'nome' => 'cpf',
             'label' => 'CPF:',
@@ -293,7 +325,7 @@ if ($acesso) {
             'title' => 'CPF do servidor',
             'size' => 20),
         array(
-            'linha' => 7,
+            'linha' => 8,
             'nome' => 'identidade',
             'label' => 'Identidade:',
             'tipo' => 'texto',
@@ -301,84 +333,84 @@ if ($acesso) {
             'col' => 4,
             'size' => 50),
         array(
-            'linha' => 3,
+            'linha' => 9,
             'nome' => 'nomeMae',
             'label' => 'Nome da Mãe:',
             'tipo' => 'texto',
             'col' => 6,
             'size' => 200),
         array(
-            'linha' => 3,
+            'linha' => 9,
             'nome' => 'nomePai',
             'label' => 'Nome do Pai:',
             'tipo' => 'texto',
             'col' => 6,
             'size' => 200),
         array(
-            'linha' => 5,
+            'linha' => 10,
             'nome' => 'email',
             'label' => 'Email:',
             'tipo' => 'email',
             'col' => 4,
             'size' => 50),
         array(
-            'linha' => 5,
+            'linha' => 10,
             'nome' => 'telefone',
             'label' => 'telefone:',
             'tipo' => 'texto',
             'col' => 4,
             'size' => 50),
         array(
-            'linha' => 5,
+            'linha' => 10,
             'nome' => 'celular',
             'label' => 'celular:',
             'tipo' => 'texto',
             'col' => 4,
             'size' => 50),
         array(
-            'linha' => 6,
+            'linha' => 11,
             'nome' => 'endereco',
             'label' => 'Endereço:',
             'tipo' => 'texto',
             'col' => 9,
             'size' => 250),
         array(
-            'linha' => 6,
+            'linha' => 11,
             'nome' => 'num',
             'label' => 'Número:',
             'tipo' => 'texto',
             'col' => 3,
             'size' => 50),
         array(
-            'linha' => 7,
+            'linha' => 12,
             'nome' => 'complemento',
             'label' => 'Complemento:',
             'tipo' => 'texto',
             'col' => 6,
             'size' => 250),
         array(
-            'linha' => 7,
+            'linha' => 12,
             'nome' => 'bairro',
             'label' => 'Bairro:',
             'tipo' => 'texto',
             'col' => 6,
             'size' => 250),
         array(
-            'linha' => 8,
+            'linha' => 13,
             'nome' => 'cep',
             'label' => 'Cep:',
             'tipo' => 'texto',
             'col' => 3,
             'size' => 30),
         array(
-            'linha' => 8,
+            'linha' => 13,
             'nome' => 'cidade',
             'label' => 'Cidade:',
             'tipo' => 'texto',
             'col' => 7,
             'size' => 100),
         array(
-            'linha' => 8,
+            'linha' => 13,
             'nome' => 'estado',
             'label' => 'Estado:',
             'tipo' => 'texto',
@@ -408,7 +440,7 @@ if ($acesso) {
     $botao2->set_target("_blank");
 
     $objeto->set_botaoEditarExtra([$botao1, $botao2]);
-    
+
     ################################################################
 
     switch ($fase) {

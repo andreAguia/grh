@@ -1874,13 +1874,11 @@ class CandidatoAdm2025 {
         # Conecta ao Banco de Dados
         $pessoal = new Pessoal();
 
-        # Pega array com os dias publicados
-        $select = "SELECT dtConvocacao,
-                            cotaConvocacao
-                            FROM tbcandidato
-                            WHERE idCandidato = {$id}";
+        # Variável de retorno
+        $retorno = null;
 
-        $row = $pessoal->select($select, false);
+        # Pega os dados do candidato
+        $row = $this->get_dados($id);
 
         # Define array de Cotas
         $concurso2025 = new ConcursoAdm2025();
@@ -1890,11 +1888,17 @@ class CandidatoAdm2025 {
             return null;
         } else {
             if (empty($row["cotaConvocacao"])) {
-                return date_to_php($row["dtConvocacao"]);
+                $retorno = date_to_php($row["dtConvocacao"]);
             } else {
-                return date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
+                $retorno = date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
+            }
+
+            if ($row["subJudice"] == 1) {
+                $retorno .= "<br/><span id = 'vermelho'>SUB JUDICE</span>";
             }
         }
+
+        return $retorno;
     }
 
     ###########################################################
@@ -1936,6 +1940,83 @@ class CandidatoAdm2025 {
                     return null;
                 }
                 break;
+        }
+    }
+
+    ###########################################################
+
+    public function get_tceTipoVaga($id) {
+
+        /**
+         * Planilha TCE - Exibe o tipo do ato
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        # Pega a Situação
+        switch ($dados["cotaConvocacao"]) {
+            case "Ni" :
+                return "ETNICA";
+                break;
+
+            case null :
+                return null;
+                break;
+
+            default:
+                return maiuscula($dados["cotaConvocacao"]);
+                break;
+        }
+    }
+
+    ###########################################################
+
+    public function get_tceForaOrdem($id) {
+
+        /**
+         * Planilha TCE - Exibe se foi nomeado fora da Ordem
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        if ($dados["nomeacaoForaOrdem"] == 1) {
+            return "SIM";
+        } else {
+            return "NÃO";
+        }
+    }
+
+    ###########################################################
+
+    public function get_tceSubJudice($id) {
+
+        /**
+         * Planilha TCE - Exibe se foi nomeado Sub Judice
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        if ($dados["subJudice"] == 1) {
+            return "SIM";
+        } else {
+            return "NÃO";
+        }
+    }
+
+    ###########################################################
+
+    public function get_tceSubJudiceForaOrdem($id) {
+
+        /**
+         * Planilha TCE - Exibe se foi nomeado Sub Judice fora da Ordem
+         */
+        # Pega os dados
+        $dados = $this->get_dados($id);
+
+        if ($dados["subJudiceForaOrdem"] == 1) {
+            return "SIM";
+        } else {
+            return "NÃO";
         }
     }
 

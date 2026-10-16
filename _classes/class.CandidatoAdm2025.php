@@ -1884,19 +1884,16 @@ class CandidatoAdm2025 {
         $concurso2025 = new ConcursoAdm2025();
         $arrayCotas = $concurso2025->get_arrayCotas();
 
-        if (empty($row["dtConvocacao"])) {
-            return null;
+        if (empty($row["cotaConvocacao"])) {
+            $retorno = date_to_php($row["dtConvocacao"]);
         } else {
-            if (empty($row["cotaConvocacao"])) {
-                $retorno = date_to_php($row["dtConvocacao"]);
-            } else {
-                $retorno = date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
-            }
-
-            if ($row["subJudice"] == 1) {
-                $retorno .= "<br/><span id = 'vermelho'>SUB JUDICE</span>";
-            }
+            $retorno = date_to_php($row["dtConvocacao"]) . "<br/><span id = 'azul'>" . $row["cotaConvocacao"] . "</span>";
         }
+
+        if ($row["subJudice"] == 1) {
+            $retorno .= "<br/><span id = 'vermelho'>SUB JUDICE</span>";
+        }
+
 
         return $retorno;
     }

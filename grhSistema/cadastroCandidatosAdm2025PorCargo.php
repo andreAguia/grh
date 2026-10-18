@@ -259,31 +259,31 @@ if ($acesso) {
             # Exibe os servidores deste concurso
             $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
 
-            # Relatórios
-            $menu = new Menu("menuProcedimentos");
-            $menu->add_item('titulo', 'Listagem da Tabela ao Lado');
-            $menu->add_item('titulo1', 'Candidatos na Vaga');
-            $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
-            $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
-            $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
-
-            $menu->add_item('titulo', 'Somente Com');
-            #$menu->add_item('titulo1', 'Candidatos com Lotação Definida');
-            $menu->add_item('linkWindow', 'Com Lotação', '?fase=relatorio9');
-            $menu->add_item('linkWindow', 'Convocados', '?fase=relatorio11');
-            $menu->add_item('linkWindow', 'Convocados Com CPF', '?fase=relatorio12');
-
-            $menu->add_item('titulo', 'Aprovados e Convocados');
-            $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
-            $menu->add_item('linkWindow', 'Para Restaurante', '?fase=relatorio5');
-            #$menu->add_item('linkWindow', 'Para Publicação', '?fase=relatorio7');
-            $menu->add_item('linkWindow', 'Para Recepção', '?fase=relatorio8');
-            $menu->add_item('linkWindow', 'Com E-mail', '?fase=relatorio10');
-
-            $menu->add_item('titulo', 'TCE');
-            $menu->add_item('linkWindow', 'Planilha TCE', '?fase=planilhaTce');
-
-            $menu->show();
+//            # Relatórios
+//            $menu = new Menu("menuProcedimentos");
+////            $menu->add_item('titulo', 'Listagem da Tabela ao Lado');
+////            $menu->add_item('titulo1', 'Candidatos na Vaga');
+////            $menu->add_item('linkWindow', 'Com CPF / E-mail / Tel', '?fase=relatorio1');
+////            $menu->add_item('linkWindow', 'Com CPF / Ident e Nascimento', '?fase=relatorio2');
+////            $menu->add_item('linkWindow', 'Com Pontuação', '?fase=relatorio3');
+////
+////            $menu->add_item('titulo', 'Somente Com');
+////            #$menu->add_item('titulo1', 'Candidatos com Lotação Definida');
+////            $menu->add_item('linkWindow', 'Com Lotação', '?fase=relatorio9');
+////            $menu->add_item('linkWindow', 'Convocados', '?fase=relatorio11');
+////            $menu->add_item('linkWindow', 'Convocados Com CPF', '?fase=relatorio12');
+////
+////            $menu->add_item('titulo', 'Aprovados e Convocados');
+////            $menu->add_item('linkWindow', 'Para Perícia', '?fase=relatorio4');
+////            $menu->add_item('linkWindow', 'Para Restaurante', '?fase=relatorio5');
+////            #$menu->add_item('linkWindow', 'Para Publicação', '?fase=relatorio7');
+////            $menu->add_item('linkWindow', 'Para Recepção', '?fase=relatorio8');
+////            $menu->add_item('linkWindow', 'Com E-mail', '?fase=relatorio10');
+//
+//            $menu->add_item('titulo', 'Relatórios');
+//            $menu->add_item('linkWindow', 'Planilha TCE', '?fase=planilhaTce');
+//
+//            $menu->show();
 
             $grid->fechaColuna();
 
@@ -1902,28 +1902,33 @@ if ($acesso) {
                               cpf,
                               idCandidato,
                               idCandidato,
-                              {$campo},
+                              CASE
+                                 WHEN cotaConvocacao = 'Ac' THEN classifAc
+                                 WHEN cotaConvocacao = 'Ni' THEN classifNi
+                                 WHEN cotaConvocacao = 'Pcd' THEN classifPcd
+                                 WHEN cotaConvocacao = 'Hipo' THEN classifHipo
+                                 ELSE null
+                              END,
                               idCandidato,
                               justificativa,
                               idCandidato,
                               idCandidato,
-                              numAtoNomeacao,
-                              dtAtoNomeacao,
-                              dtPublicAto,
+                              idCandidato,
+                              idCandidato,
+                              idCandidato,
                               numProcessoJudicial,
                               numAtoPortariaSE,
                               dtAtoPortariaSE,
                               idCandidato
                          FROM tbcandidato
                         WHERE tbcandidato.idConcurso = {$idConcurso}
-                          AND {$campo} IS NOT NULL
                           AND (dtConvocacao IS NOT NULL OR idCandidatoSituacao IS NOT NULL)
-                     ORDER BY cargo, {$campo}";
+                     ORDER BY cargo, classifAc";
 
             # Relatório
             $relatorio = new Relatorio();
             $relatorio->set_titulo("Planilha TCE");
-            $relatorio->set_subtitulo($subtitulo);
+            #$relatorio->set_subtitulo($subtitulo);
             $relatorio->set_conteudo($pessoal->select($select));
             $relatorio->set_label([
                 "Cargo",
@@ -1941,16 +1946,15 @@ if ($acesso) {
                 "Data da Publicação do Ato de Nomeação",
                 "Nº Processo Judicial",
                 "Nº Ato da Portaria Sem Efeito",
-                "Data Ato da Portaria Sem Efeito"                
+                "Data Ato da Portaria Sem Efeito"
             ]);
+
             $relatorio->set_align(["left", "left"]);
-
-            $relatorio->set_classe([null, null, null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
-            $relatorio->set_metodo([null, null, null, "get_tceTipoAto", "get_tceTipoVaga", null, "get_tceForaOrdem", null, "get_tceSubJudice", "get_tceSubJudiceForaOrdem"]);
+            $relatorio->set_classe([null, null, null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025"]);
+            $relatorio->set_metodo([null, null, null, "get_tceTipoAto", "get_tceTipoVaga", null, "get_tceForaOrdem", null, "get_tceSubJudice", "get_tceSubJudiceForaOrdem", "get_numAtoNomeacao", "get_dtNomeacao", "get_dtPubicAto"]);
             #$relatorio->set_width([20, 20, 10, 10, 10, 5, 5, 10, 10, 10]);
-
-            $relatorio->set_funcao([null, null, null, null, null, null, null, null, null, null, null, "date_to_php", "date_to_php"]);
-            #$relatorio->set_numGrupo(4);
+            #$relatorio->set_funcao([null, null, null, null, null, null, null, null, null, null, null, "date_to_php", "date_to_php"]);
+            #$relatorio->set_numGrupo(0);
             $relatorio->show();
 
             break;

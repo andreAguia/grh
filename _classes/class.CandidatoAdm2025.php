@@ -1064,6 +1064,16 @@ class CandidatoAdm2025 {
             $classeConcursoAdm2025 = new ConcursoAdm2025();
             $obs = $classeConcursoAdm2025->get_obsCargo($cargo);
 
+            # Função extra
+
+            function ficaVermelho($valor) {
+                if ($valor == 0) {
+                    return "<span class = 'label alert'>0</span>";
+                } else {
+                    return $valor;
+                }
+            }
+
             # Pega os dados
             $select = "SELECT vagas,
                               cargoConcurso,
@@ -1098,8 +1108,8 @@ class CandidatoAdm2025 {
             $tabela->set_label2(["Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga", "Vagas", "Aprovados", "Na Vaga"]);
             $tabela->set_colspanLabel([3, null, null, 3, null, null, 3, null, null, 3, null, null]);
             #$tabela->set_width([37, 5, 5, 5,  5, 5, 5,  5, 5, 5,  5, 5, 5]);
-            $tabela->set_funcao(["trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero", "trataNuloZero"]);
 
+            $tabela->set_funcao(["ficaVermelho", "trataNuloZero", "trataNuloZero", "ficaVermelho", "trataNuloZero", "trataNuloZero", "ficaVermelho", "trataNuloZero", "trataNuloZero", "ficaVermelho", "trataNuloZero", "trataNuloZero"]);
             $tabela->set_classe([null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025"]);
             $tabela->set_metodo([null, "get_numCandidatoAc", "get_numCandidatoAcNaVaga", null, "get_numCandidatoPcd", "get_numCandidatoPcdNaVaga", null, "get_numCandidatoNi", "get_numCandidatoNiNaVaga", null, "get_numCandidatoHipo", "get_numCandidatoHipoNaVaga"]);
 
@@ -1180,6 +1190,30 @@ class CandidatoAdm2025 {
 
             pLista(
                     plm($dados["nome"]),
+                    plm($dados["inscricao"])
+            );
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeECargoEInscricao
+     * fornece o nome e inscrição do Candidato
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_nomeECargoEInscricao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+
+            pLista(
+                    plm($dados["nome"]),
+                    plm($dados["cargo"]),
                     plm($dados["inscricao"])
             );
         }
@@ -1446,7 +1480,7 @@ class CandidatoAdm2025 {
             $linha2 = null;
 
             if (!empty($idPessoa)) {
-                
+
                 # Pega o idServidor
                 $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
 
@@ -1481,10 +1515,10 @@ class CandidatoAdm2025 {
                 } else {
                     $linha2 = "Admissão: {$dtAdm}<br/>Saída: {$dtSai}";
                 }
-                
+
                 # Verifica se o cargo é diferente e alerta
-                if($this->get_idCargoCargoConcurso($dados["cargo"]) <> $pessoal->get_idCargo($idServidor)) {
-                     echo "<br/><span id='vermelho'>Cargo Diferente</span>";
+                if ($this->get_idCargoCargoConcurso($dados["cargo"]) <> $pessoal->get_idCargo($idServidor)) {
+                    echo "<br/><span id='vermelho'>Cargo Diferente</span>";
                 }
 
                 # Retorna
@@ -2020,6 +2054,105 @@ class CandidatoAdm2025 {
             return "SIM";
         } else {
             return "NÃO";
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_dtNomeacao
+     * fornece a data da nmomeação, que nesse caso,
+     * é a data de admissão para quando o candidato já foi admitido
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_dtNomeacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega os Dados
+            $dados = $this->get_dados($idCandidato);
+            $pessoal = new Pessoal();
+
+            # Verifica se tem alguem com esse cpf
+            $idPessoa = $pessoal->get_idPessoaCPF($dados["cpf"]);
+
+            if (empty($idPessoa)) {
+                return null;
+            } else {
+                # Pega o idServidor (prioridade se for ativo)
+                $idServidor = $pessoal->get_idServidoridPessoa($idPessoa);
+
+                # Exibe somente os Estatutários
+                if ($pessoal->get_perfil($idServidor) == "Estatutário") {
+
+                    # Só continua se estamos falando do mesmo cargo
+                    if ($this->get_idCargoCargoConcurso($dados["cargo"]) == $pessoal->get_idCargo($idServidor)) {
+
+                        # Retorna a data de admissão
+                        return $pessoal->get_dtAdmissao($idServidor);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_numAtoNomeacao
+     * fornece o número do ato de nomeação
+     * até agora 10/2026 temos 3 situações para esse número
+     * Preciso melhorar esta rotina para os próximos candidatos
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_numAtoNomeacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega a data de nomeação
+            $dtNomeacao = $this->get_dtNomeacao($idCandidato);
+            
+            if($dtNomeacao == "01/06/2026"){
+                return "DORJ 02/06/2026 - Pág 25 e 26";
+            }
+            
+            if($dtNomeacao == "02/06/2026" OR $dtNomeacao == "03/06/2026"){
+                return "DORJ 08/06/2026 - Pág 23 e 24";
+            }
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_dtPubicAto
+     * fornece a data de publicação do ato de nomeação
+     * até agora 10/2026 temos 3 situações para esse número
+     * Preciso melhorar esta rotina para os próximos candidatos
+     * 
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_dtPubicAto($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+
+            # Pega a data de nomeação
+            $dtNomeacao = $this->get_dtNomeacao($idCandidato);
+            
+            if($dtNomeacao == "01/06/2026"){
+                return "02/06/2026";
+            }
+            
+            if($dtNomeacao == "02/06/2026" OR $dtNomeacao == "03/06/2026"){
+                return "08/06/2026";
+            }
         }
     }
 

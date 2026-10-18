@@ -1024,7 +1024,7 @@ class Concurso {
                 ["Por Cargo", "cadastroCandidatosAdm2025PorCargo.php", null, "Candidatos ({$numCandidatos})"],
                 ["Por Nome", "cadastroCandidatosAdm2025PorNome.php"],
                 ["Estatística", "cadastroCandidatosAdm2025Estatistica.php"],
-                ["Duplicados", "cadastroCandidatosAdm2025PorCargo.php?fase=duplicados"],
+                //["Duplicados", "cadastroCandidatosAdm2025PorCargo.php?fase=duplicados"],
             ];
 
             $menuProcessoSeletivo = [
@@ -1036,15 +1036,19 @@ class Concurso {
             ];
 
             $menuServidoresEmpossados = [
-                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidorers Empossados"],
+                ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidores Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
                 ["Servidores Ativos - Lotação", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosLotacao", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];
 
+            $menuRelatórios = [
+                ["Planilha TCE", "cadastroCandidatosAdm2025PorCargo.php?fase=planilhaTce", null, "Relatórios", "linkWindow"],
+            ];
+
             if ($idConcurso == 96) {
-                $itensMenu = array_merge($menuCandidato, $menuProcessoSeletivo, $menuServidoresEmpossados);
+                $itensMenu = array_merge($menuCandidato, $menuProcessoSeletivo, $menuServidoresEmpossados, $menuRelatórios);
             } else {
                 $itensMenu = array_merge($menuProcessoSeletivo, $menuServidoresEmpossados);
             }
@@ -1082,16 +1086,22 @@ class Concurso {
                 $item[0] = "<b>{$item[0]}</b>";
             }
 
+            # O tipo de link
+            if (isset($item[4])) {
+                $tipoLink = $item[4];
+            } else {
+                $tipoLink = "link";
+            }
+
             # Verifica se tem contagem
             if (empty($item[2])) {
-                $menu->add_item('link', $item[0], $item[1]);
+                $menu->add_item($tipoLink, $item[0], $item[1]);
             } else {
-                $menu->add_item('link', "{$item[0]} ({$item[2]})", $item[1]);
+                $menu->add_item($tipoLink, "{$item[0]} ({$item[2]})", $item[1]);
             }
         }
 
         $menu->show();
-
         $painel->fecha();
     }
 
@@ -1869,10 +1879,10 @@ class Concurso {
         if (empty($idConcurso)) {
             return null;
         }
-        
+
         # Classe
         $pessoal = new Pessoal();
-        
+
         # Define a variável de retorno
         $numero = 0;
 
@@ -1881,7 +1891,7 @@ class Concurso {
         $tipo = $dados['tipo'];
 
         # Se for concurso Adm
-        if ($tipo == 1) {            
+        if ($tipo == 1) {
             $numero = $pessoal->count("SELECT idCandidato FROM tbcandidato WHERE idConcurso = {$idConcurso}");
         }
 
@@ -1889,5 +1899,4 @@ class Concurso {
     }
 
     ###########################################################
-
 }

@@ -219,27 +219,17 @@ class ConcursoAdm2025 {
                 break;
         }
 
-        # Define o cadastro de reserva, quando se tem o número de vagas
-        if (empty($numeroVagas)) {
-            $numeroVagas = null;
-            $cadastroReserva = null;
-            $foraCadastro = null;
-            if ($cargoConcurso <> "*") {
-                $subtitulo .= " - SEM Vagas";
-            }
-        } else {
-            $cadastroReserva = $cadReserva * $numeroVagas;
-            $foraCadastro = $numeroVagas + $cadastroReserva;
-            $subtitulo .= " - {$numeroVagas} Vaga(s)";
-        }
+        /*
+         *  Todos os Cargos
+         */
 
-        # Monta o select 
-        $select = "SELECT     idCandidato,
-                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
+        if ($cargoConcurso == "*") {
+            # Monta o select 
+            $select = "SELECT idCandidato,                              
+                              idCandidato,
                               idCandidato,
                               DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
-                              CONVERT(notaFinal, DECIMAL(10,2)),
-                              idCandidato,
+                              CONVERT(notaFinal, DECIMAL(10,2)),                              
                               idCandidato,
                               idCandidato,  
                               idCandidato,
@@ -248,71 +238,150 @@ class ConcursoAdm2025 {
                          FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)                                          
                         WHERE tbcandidato.idConcurso = {$idConcurso}";
 
-        # Cargo
-        if ($cargoConcurso <> "*") {
-            $select .= " AND cargo = '{$cargoConcurso}'";
-        }
+            # Cota
+            if ($cota <> "Ac") {
+                $select .= " AND {$campo} IS NOT NULL";
+            }
 
-        # Cota
-        if ($cota <> "Ac") {
-            $select .= " AND {$campo} IS NOT NULL";
-        }
+            # Data de Convocação
+            if ($convocacao <> "*") {
+                $select .= " AND dtConvocacao = '{$convocacao}'";
+            }
 
-        # Data de Convocação
-        if ($convocacao <> "*") {
-            $select .= " AND dtConvocacao = '{$convocacao}'";
-        }
+            # Situacao
+            if ($situacao <> "*") {
+                $select .= " AND  idCandidatoSituacao = '{$situacao}'";
+            }
 
-        # Situacao
-        if ($situacao <> "*") {
-            $select .= " AND  idCandidatoSituacao = '{$situacao}'";
-        }
+            # Ordenação
+            $select .= " ORDER BY nome";
 
-        # Ordenação
-        if ($cargoConcurso == "*") {
-            $select .= " ORDER BY cargo, {$campo}";
+            # Pega os dados
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Candidatos Aprovados");
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_conteudo($row);
+            $tabela->set_bordaInterna(true);
+            $tabela->set_label(["Classificação", "Situação", "Candidato", "Idade", "Nota Final", "Data da Convocação", "Convocação", "Doc", "Obs", "Editar"]);
+            $tabela->set_width([5, 5, 28, 5, 7, 10, 20, 5, 5]);
+            $tabela->set_align(["center", "center", "left", "center", "center", "center", "left", "center", "left"]);
+            $tabela->set_funcao([null, null, null, "idade"]);
+
+            $tabela->set_classe(["CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025", null, null, "CandidatoAdm2025", "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
+            $tabela->set_metodo([$metodo, "exibeSituacao", "get_nomeECargoEInscricao", null, null, "exibeDtConvocacao", "get_cargoELotacaoESituacao", "exibeDeclaracao", "exibeObs"]);
+
+            # Botão Editar
+            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, $botao]);
+
+            $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
+            $tabela->show();
         } else {
-            $select .= " ORDER BY {$campo}";
-        }
+            /*
+             *  Quando se escolhe o Cargo
+             */
 
-        # Pega os dados
-        $row = $pessoal->select($select);
+            # Define o cadastro de reserva, quando se tem o número de vagas
+            if (empty($numeroVagas)) {
+                $numeroVagas = null;
+                $cadastroReserva = null;
+                $foraCadastro = null;
+                if ($cargoConcurso <> "*") {
+                    $subtitulo .= " - SEM Vagas";
+                }
+            } else {
+                $cadastroReserva = $cadReserva * $numeroVagas;
+                $foraCadastro = $numeroVagas + $cadastroReserva;
+                $subtitulo .= " - {$numeroVagas} Vaga(s)";
+            }
 
-        # tabela
-        $tabela = new Tabela();
-        $tabela->set_titulo("Candidatos Aprovados");
-        $tabela->set_subtitulo($subtitulo);
-        $tabela->set_conteudo($row);
-        $tabela->set_label(["Classificação", "Colocação", "Candidato", "Idade", "Nota Final", "Convocação", "Data da Convocação", "Situação", "Doc", "Obs", "Editar"]);
-        $tabela->set_width([5, 5, 20, 5, 10, 20, 10, 5, 5, 5]);
-        $tabela->set_align(["center", "center", "left", "center", "center", "left", "center", "left"]);
-        $tabela->set_funcao([null, null, null, "idade"]);
+            # Monta o select 
+            $select = "SELECT idCandidato,
+                              if({$campo} <= tbconcursovagadetalhada.{$campoVaga},'Vaga',if({$campo} BETWEEN tbconcursovagadetalhada.{$campoVaga} AND tbconcursovagadetalhada.{$campoVaga}*{$cadReserva}+tbconcursovagadetalhada.{$campoVaga},'CR','---')),
+                              idCandidato,
+                              idCandidato,
+                              DATE_FORMAT(dtNascimento,'%d/%m/%Y'),
+                              CONVERT(notaFinal, DECIMAL(10,2)),                              
+                              idCandidato,
+                              idCandidato,  
+                              idCandidato,
+                              idCandidato,
+                              idCandidato
+                         FROM tbcandidato JOIN tbconcursovagadetalhada ON (tbcandidato.cargo = tbconcursovagadetalhada. cargoConcurso)                                          
+                        WHERE tbcandidato.idConcurso = {$idConcurso}";
 
-        $tabela->set_classe(["CandidatoAdm2025", null, "CandidatoAdm2025", null, null, "CandidatoAdm2025", "CandidatoAdm2025", "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
-        $tabela->set_metodo([$metodo, null, "get_nomeEInscricao", null, null, "get_cargoELotacaoESituacao", "exibeDtConvocacao", "exibeSituacao", "exibeDeclaracao", "exibeObs"]);
+            # Cargo
+            if ($cargoConcurso <> "*") {
+                $select .= " AND cargo = '{$cargoConcurso}'";
+            }
 
-        # Botão Editar
-        $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
-        $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+            # Cota
+            if ($cota <> "Ac") {
+                $select .= " AND {$campo} IS NOT NULL";
+            }
 
-        # Coloca o objeto link na tabela			
-        $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
+            # Data de Convocação
+            if ($convocacao <> "*") {
+                $select .= " AND dtConvocacao = '{$convocacao}'";
+            }
+
+            # Situacao
+            if ($situacao <> "*") {
+                $select .= " AND  idCandidatoSituacao = '{$situacao}'";
+            }
+
+            # Ordenação
+            if ($cargoConcurso == "*") {
+                $select .= " ORDER BY cargo, {$campo}";
+            } else {
+                $select .= " ORDER BY {$campo}";
+            }
+
+            # Pega os dados
+            $row = $pessoal->select($select);
+
+            # tabela
+            $tabela = new Tabela();
+            $tabela->set_titulo("Candidatos Aprovados");
+            $tabela->set_subtitulo($subtitulo);
+            $tabela->set_conteudo($row);
+            $tabela->set_label(["Classificação", "Colocação", "Situação", "Candidato", "Idade", "Nota Final", "Data da Convocação", "Convocação", "Doc", "Obs", "Editar"]);
+            $tabela->set_width([5, 5, 5, 20, 5, 10, 10, 20, 5, 5]);
+            $tabela->set_align(["center", "center", "center", "left", "center", "center", "center", "left"]);
+            $tabela->set_funcao([null, null, null, null, "idade"]);
+
+            $tabela->set_classe(["CandidatoAdm2025", null, "CandidatoAdm2025", "CandidatoAdm2025", null, null, "CandidatoAdm2025", "CandidatoAdm2025", "concursoAdm2025", "CandidatoAdm2025"]);
+            $tabela->set_metodo([$metodo, null, "exibeSituacao", "get_nomeEInscricao", null, null, "exibeDtConvocacao", "get_cargoELotacaoESituacao", "exibeDeclaracao", "exibeObs"]);
+
+            # Botão Editar
+            $botao = new Link(null, "?fase=editaCandidato&id=", 'Acessa os dados do Candidato');
+            $botao->set_imagem(PASTA_FIGURAS . 'bullet_edit.png', 20, 20);
+
+            # Coloca o objeto link na tabela			
+            $tabela->set_link([null, null, null, null, null, null, null, null, null, null, $botao]);
 
 //        $tabela->set_rowspan(1);
 //        $tabela->set_grupoCorColuna(1);
 
-        $tabela->set_formatacaoCondicional(array(
-            array('coluna' => 1,
-                'valor' => 'Vaga',
-                'operador' => '=',
-                'id' => "naVaga"),
-            array('coluna' => 1,
-                'valor' => 'CR',
-                'operador' => '=',
-                'id' => "reserva")));
+            $tabela->set_formatacaoCondicional(array(
+                array('coluna' => 1,
+                    'valor' => 'Vaga',
+                    'operador' => '=',
+                    'id' => "naVaga"),
+                array('coluna' => 1,
+                    'valor' => 'CR',
+                    'operador' => '=',
+                    'id' => "reserva")));
 
-        $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
-        $tabela->show();
+            $tabela->set_mensagemPosTabela("O Cadastro de Reserva é de 5 vezes o número de vagas");
+            $tabela->show();
+        }
     }
 
     ###########################################################

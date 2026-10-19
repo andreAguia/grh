@@ -1969,6 +1969,10 @@ class CandidatoAdm2025 {
             case 5 :
                 return "ATO3";
                 break;
+            
+            case 6 :
+                return "ATO2";
+                break;
 
             case null :
                 if (!empty($dados["dtConvocacao"])) {

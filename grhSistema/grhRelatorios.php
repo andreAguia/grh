@@ -140,6 +140,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Aniversariantes');
             $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantes.anual.lotacao.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Aposentados por Mês de Aniversario', '../grhRelatorios/aniversariantes.aposentados.anual.php');
 
             $menu->show();
             break;
@@ -182,6 +183,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Cargo - Administrativo e Técnicos', '../grhRelatorios/aposentados.admtec.porCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentados.porPeriodo.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Pelo Mês de Aniversário', '../grhRelatorios/aniversariantes.aposentados.anual.php');
 
             $menu->show();
             break;

@@ -33,13 +33,14 @@ if ($acesso) {
 
     $select = "SELECT tbpessoa.dtNasc,
                       tbservidor.idFuncional,
+                      tbdocumentacao.cpf,
                       tbpessoa.nome,
                       tbservidor.idServidor,
-                      tbservidor.idServidor,
                       tbservidor.idServidor
-                 FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
-                   AND MONTH(dtNasc) = {$relatorioMes}
+                 FROM tbpessoa LEFT JOIN tbservidor USING (idPessoa)
+                                    JOIN tbdocumentacao USING (idPessoa)
                 WHERE tbservidor.situacao = 2
+                   AND MONTH(dtNasc) = {$relatorioMes}
              ORDER BY day(tbpessoa.dtNasc)";
 
     $result = $servidor->select($select);
@@ -49,12 +50,12 @@ if ($acesso) {
     $relatorio->set_subtitulo(get_nomeMes($relatorioMes));
     $relatorio->set_conteudo($result);
 
-    $relatorio->set_label(["Dia", "IdFuncional", "Nome", "Cargo", "Emails"]);
-    $relatorio->set_align(["center", "center", "left", "left"]);
-    $relatorio->set_classe([null, null, null, 'Pessoal', 'Pessoal']);
-    $relatorio->set_metodo([null, null, null, 'get_cargoSimples', 'get_emails']);
+    $relatorio->set_label(["Dia", "IdFuncional", "Cpf", "Nome", "Emails"]);
+    $relatorio->set_align(["center", "center", "center", "left"]);
+    $relatorio->set_classe([null, null, null, null, 'Pessoal']);
+    $relatorio->set_metodo([null, null, null, null, 'get_emails']);
     $relatorio->set_funcao(["date_to_php"]);
-    $relatorio->set_bordaInterna(true);    
+    $relatorio->set_bordaInterna(true);
 
     $relatorio->set_formCampos(array(
         array('nome' => 'mes',

@@ -32,7 +32,9 @@ if ($acesso) {
     ######
 
     $select = "SELECT tbpessoa.dtNasc,
+                      tbservidor.idFuncional,
                       tbpessoa.nome,
+                      tbservidor.idServidor,
                       tbservidor.idServidor,
                       tbservidor.idServidor
                  FROM tbpessoa LEFT JOIN tbservidor ON (tbpessoa.idPessoa = tbservidor.idPessoa)
@@ -47,11 +49,12 @@ if ($acesso) {
     $relatorio->set_subtitulo(get_nomeMes($relatorioMes));
     $relatorio->set_conteudo($result);
 
-    $relatorio->set_label(["Dia", "Nome", "Cargo"]);
-    $relatorio->set_align(["center", "left", "left"]);
-    $relatorio->set_classe([null, null, 'Pessoal']);
-    $relatorio->set_metodo([null, null, 'get_cargoSimples']);
+    $relatorio->set_label(["Dia", "IdFuncional", "Nome", "Cargo", "Emails"]);
+    $relatorio->set_align(["center", "center", "left", "left"]);
+    $relatorio->set_classe([null, null, null, 'Pessoal', 'Pessoal']);
+    $relatorio->set_metodo([null, null, null, 'get_cargoSimples', 'get_emails']);
     $relatorio->set_funcao(["date_to_php"]);
+    $relatorio->set_bordaInterna(true);    
 
     $relatorio->set_formCampos(array(
         array('nome' => 'mes',
@@ -66,6 +69,6 @@ if ($acesso) {
             'linha' => 1)));
 
     $relatorio->show();
-    
+
     $page->terminaPagina();
 }

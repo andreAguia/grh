@@ -25,7 +25,7 @@ if ($acesso) {
     # Começa uma nova página
     $page = new Page();
     $page->iniciaPagina();
-    
+
     # Cabeçalho da Página
     AreaServidor::cabecalho();
 
@@ -140,7 +140,7 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Aniversariantes');
             $menu->add_item('linkWindow', 'Relatório Anual de Aniversariantes por Lotação', '../grhRelatorios/aniversariantes.anual.lotacao.php');
-            $menu->add_item('linkWindow', 'Relatório Anual de Aposentados por Mês de Aniversario', '../grhRelatorios/aniversariantes.aposentados.anual.php');
+            $menu->add_item('linkWindow', 'Relatório Anual de Aposentados por Mês de Aniversario Com E-mail', '../grhRelatorios/aniversariantes.aposentados.mensal.php');
 
             $menu->show();
             break;
@@ -160,7 +160,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores - com Afastamento Maior que 30 Dias', '../grhRelatorios/afastamento.geral.maiorque30.php');
             $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Afastamento - Com os Cedidos', '../grhRelatorios/afastamento.geral.mensal.ccedidos.php');
             $menu->add_item('linkWindow', 'Relatório Mensal de Servidores com Afastamento - Sem os Cedidos', '../grhRelatorios/afastamento.geral.mensal.scedidos.php');
-            
+
             #$menu->add_item('linkWindow', 'Relatório de Servidores Ativos Com Afastamentos em um Mês Específico', '../grhRelatorios/geralServidoresAtivosCheck.afastamentos.php');
 
             $menu->show();
@@ -183,7 +183,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Cargo - Administrativo e Técnicos', '../grhRelatorios/aposentados.admtec.porCargo.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Com Tempo de Serviço Publico Averbado', '../grhRelatorios/aposentados.tempo.publico.averbado.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Por Período', '../grhRelatorios/aposentados.porPeriodo.php');
-            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Pelo Mês de Aniversário', '../grhRelatorios/aniversariantes.aposentados.anual.php');
+            $menu->add_item('linkWindow', 'Relatório de Servidores Aposentados - Pelo Mês de Aniversário Com E-mail', '../grhRelatorios/aniversariantes.aposentados.mensal.php');
 
             $menu->show();
             break;
@@ -403,7 +403,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos - Por Lotação', '../grhRelatorios/financeiro.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.geral2.php');
             $menu->add_item('linkWindow', 'Relatório de Estatutarios Por Cargo Com Faixa e Nivel do Plano de Cargos', '../grhRelatorios/financeiro.porLotacao.porCargo.php');
-            
+
             $menu->show();
             break;
 
@@ -456,7 +456,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.cpf.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geral.servidores.ativos.cpf.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 3 Assinaturas', '../grhRelatorios/geral.servidores.ativos.assinatura2.php');            
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 3 Assinaturas', '../grhRelatorios/geral.servidores.ativos.assinatura2.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geral.servidores.ativos.cpf.assinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email', '../grhRelatorios/geral.servidores.ativos.email.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geral.servidores.ativos.email.cpf.php');
@@ -537,7 +537,7 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Horário');
             $menu->add_item('linkWindow', 'Relatório de Horário dos Servidores Ativos - Por Lotação - Com Cargo', '../grhRelatorios/lotacao.horario.servidores.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Horário dos Servidores Ativos - Por Lotação', '../grhRelatorios/lotacao.horario.servidores.ativos2.php');
-            
+
             $menu->add_item('titulo1', 'Movimentação de Lotação');
             $menu->add_item('linkWindow', 'Relatório Mensal de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.mensal.lotacao.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Movimentação de Lotação de Servidores', '../grhRelatorios/movimentacao.anual.lotacao.php');
@@ -684,7 +684,7 @@ if ($acesso) {
             $menu->add_item('titulo1', 'Vencimento de Triênios');
             $menu->add_item('linkWindow', 'Relatório Mensal de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.mensal.php');
             $menu->add_item('linkWindow', 'Relatório Anual de Vencimento de Triênios', '../grhRelatorios/trienio.vencimento.anual.php');
-            
+
             $menu->add_item('titulo1', 'Outros');
             $menu->add_item('linkWindow', 'Relatório Servidores Afetados Pela Lei Complementar 194/2021 - Com Mais de 3 Anos', '../grhRelatorios/trienio.semDireito.php');
 
@@ -709,7 +709,7 @@ if ($acesso) {
         case "historico";
             $menu = new Menu();
             $menu->add_item('titulo', 'Histórico');
-            
+
             $menu->add_item('titulo1', 'Servidores Ex-Fenorte');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos', '../grhRelatorios/historico.exFenorte.ativos.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ex-Fenorte Ativos - Agrupador por Cargo', '../grhRelatorios/historico.exFenorte.porCargo.ativos.php');
@@ -723,10 +723,10 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos - em um Determinado Ano', '../grhRelatorios/historico.servidores.ativos.porAno.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Admissão - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoAdmissao.php');
             $menu->add_item('linkWindow', 'Relatório de Servidores -  com E-mail e CPF - por Ano de Saída - por Tipo de Cargo', '../grhRelatorios/historico.servidores.admissao.email.cpf.porAnoSaida.php');
-            
+
             $menu->add_item('titulo1', 'Servidores Ex-CLT');
             $menu->add_item('linkWindow', 'Relatório de Servidores Ativos Ex-CLT - Com Idade', '../grhRelatorios/historico.exClt.ativo.idade.php');
-            
+
             $menu->show();
             break;
 

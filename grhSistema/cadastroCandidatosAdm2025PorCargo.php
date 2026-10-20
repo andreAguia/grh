@@ -136,9 +136,8 @@ if ($acesso) {
     }
 
     # Define array de Cotas
-    $concurso2025 = new ConcursoAdm2025();
-    $arrayCotas = $concurso2025->get_arrayCotas();
-    #$idConcurso - $concurso2025->get_idConcurso();
+    $concurso = new Concurso();
+    $arrayCotas = $concurso->get_arrayCotas();
 
     $grid = new Grid();
     $grid->abreColuna(12);

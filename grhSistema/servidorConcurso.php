@@ -261,7 +261,8 @@ if ($acesso) {
                 array('linha' => 2,
                     'nome' => 'cotasConcurso',
                     'label' => 'Cota:',
-                    'tipo' => 'texto',
+                    'tipo' => 'combo',
+                    'array' => [null, "Ampla Concorrência", "PCD", "Negros e Indígenas", "Hipo"],
                     'size' => 50,
                     'title' => 'Informar, se tiver, que tipo de cota é a vaga.',
                     'col' => 4)

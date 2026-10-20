@@ -2161,4 +2161,21 @@ class CandidatoAdm2025 {
     }
 
     ###########################################################
+
+    /**
+     * Método get_cotaConvocacao
+     *  
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_cotaConvocacao($idCandidato) {
+        if (empty($idCandidato)) {
+            return null;
+        } else {
+            # Pega os dados
+            $dados = $this->get_dados($idCandidato);            
+            return $dados["cotaConvocacao"];            
+        }
+    }
+
+    ###########################################################
 }

@@ -63,7 +63,7 @@ if ($acesso) {
     $menu1 = new MenuBar();
 
     # Voltar
-    $linkVoltar = new Link("Voltar",  "areaConcursoAdm.php");
+    $linkVoltar = new Link("Voltar", "areaConcursoAdm.php");
     $linkVoltar->set_class('button');
     $linkVoltar->set_title('Voltar para página anterior');
     $linkVoltar->set_accessKey('V');
@@ -121,10 +121,10 @@ if ($acesso) {
             p("Todos os Candidatos", "estatisticaTexto");
 
             $painel->fecha();
-            
+
             $grid2->fechaColuna();
             $grid2->abreColuna(8);
-            
+
             $grid2->fechaColuna();
             $grid2->abreColuna(5);
 
@@ -234,8 +234,8 @@ if ($acesso) {
             $painel->abre();
 
             # Define array de Cotas
-            $concurso2025 = new ConcursoAdm2025();
-            $arrayCotas = $concurso2025->get_arrayCotas();
+            $concurso = new Concurso();
+            $arrayCotas = $concurso->get_arrayCotas();
 
             # Grava no log a atividade
             $atividade = "Visualizou a área de estatística de candidatos nas vagas por idade";

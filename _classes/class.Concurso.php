@@ -1038,6 +1038,7 @@ class Concurso {
             $menuServidoresEmpossados = [
                 ["Classificação", "cadastroConcursoAdm.php?fase=aguardaClassificacao", null, "Servidores Empossados"],
                 ["Servidores Ativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos", $ativos],
+                ["Servidores Ativos - Cotas", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosCotas", $ativos],
                 ["Servidores Ativos - Lotação", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosLotacao", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
@@ -1896,6 +1897,21 @@ class Concurso {
         }
 
         return $numero;
+    }
+
+    ###########################################################
+
+    function get_arrayCotas() {
+        /**
+         * Fornece e padroniza o array com as cotas
+         */
+        $array = [
+            ["Ac", "Ampla Concorrência"],
+            ["Pcd", "PCD"],
+            ["Ni", "Negros e Indígenas"],
+            ["Hipo", "Hipossuficiente Econômico"],
+        ];
+        return $array;
     }
 
     ###########################################################

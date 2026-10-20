@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Cadastro de Servidores
+ * Inclusão de Servidores
  *  
  * By Alat
  */
@@ -258,6 +258,9 @@ if ($acesso) {
                     $idLotacao = $dados["idLotacao"];
                     $idFuncional = $dados["idFuncional"];
                     $textoMensagem = "candidato";
+                    $cotasConcurso = $dados["cotaConvocacao"];
+
+                    echo $cotasConcurso;
                 }
             }
 
@@ -313,6 +316,20 @@ if ($acesso) {
             $controle->set_col(3);
             $controle->set_title('O perfil do Servidor.');
             $controle->set_array($comboPerfil);
+            $form->add_item($controle);
+
+            $concurso = new Concurso();
+            $arrayCotas = $concurso->get_arrayCotas();
+
+            # Cota 
+            $controle = new Input('cotasConcurso', 'combo', 'Cotas:', 1);
+            $controle->set_size(50);
+            $controle->set_linha(1);
+            $controle->set_required(true);
+            $controle->set_valor($cotasConcurso);
+            $controle->set_col(3);
+            $controle->set_title('O perfil do Servidor.');
+            $controle->set_array($arrayCotas);
             $form->add_item($controle);
 
             # Nome
@@ -578,6 +595,7 @@ if ($acesso) {
             $dtAdmissao = post('dtAdmissao');
             $pisPasep = post('pisPasep');
             $cargo = post('cargo');
+            $cotasDigitadas = post('cotasConcurso');
 
             $situacao = post('situacao');
             $orgaoOrigem = post('orgaoOrigem');
@@ -742,7 +760,6 @@ if ($acesso) {
                         $cidadeClasse = new Cidade();
                         $idCidade = $cidadeClasse->get_idCidade($dados["cidade"]);
 
-                        
                         # Telefone
                         // Remove tudo que não for número (ex: (), -, espaços)
                         $numeros = preg_replace('/[^0-9]/', '', $dados["telefone"]);
@@ -750,7 +767,7 @@ if ($acesso) {
                         // Separa o DDD e o número
                         $teledoneDDD = substr($numeros, 0, 2);
                         $telefone = substr($numeros, 2);
-                        
+
                         # Celular
                         // Remove tudo que não for número (ex: (), -, espaços)
                         $numeros2 = preg_replace('/[^0-9]/', '', $dados["celular"]);
@@ -859,16 +876,16 @@ if ($acesso) {
                     $cotaConcurso = null;
 
                     # Verifica a classificação e a cota
-                    if ($dados["classifAc"] > 0) {
+                    if ($dados['cotaConvocacao'] == 'Ac') {
                         $classificacaoConcurso = $dados["classifAc"];
                         $cotaConcurso = "Ampla Concorrência";
-                    } elseif ($dados["classifPcd"] > 0) {
+                    } elseif ($dados["cotaConvocacao"] == "Pcd") {
                         $classificacaoConcurso = $dados["classifPcd"];
                         $cotaConcurso = "PCD";
-                    } elseif ($dados["classifNi"] > 0) {
+                    } elseif ($dados["cotaConvocacao"] == "Ni") {
                         $classificacaoConcurso = $dados["classifNi"];
                         $cotaConcurso = "Negros e Indígenas";
-                    } elseif ($dados["classifHipo"] > 0) {
+                    } elseif ($dados["cotaConvocacao"] == "Hipo") {
                         $classificacaoConcurso = $dados["classifHipo"];
                         $cotaConcurso = "Hipossuficiente Econômico";
                     }

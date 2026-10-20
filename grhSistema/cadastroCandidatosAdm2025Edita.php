@@ -155,8 +155,8 @@ if ($acesso) {
     array_unshift($situacaoCandidato, [null, null]);
 
     # Define array de Cotas
-    $concurso2025 = new ConcursoAdm2025();
-    $arrayCotas = $concurso2025->get_arrayCotas();
+    $concurso = new Concurso();
+    $arrayCotas = $concurso->get_arrayCotas();
     array_unshift($arrayCotas, [null, null]);
 
     # Campos para o formulario

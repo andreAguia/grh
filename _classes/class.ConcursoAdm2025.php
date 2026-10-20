@@ -264,7 +264,7 @@ class ConcursoAdm2025 {
             $tabela->set_titulo("Candidatos Aprovados");
             $tabela->set_subtitulo($subtitulo);
             $tabela->set_conteudo($row);
-            $tabela->set_bordaInterna(true);
+            #$tabela->set_bordaInterna(true);
             $tabela->set_label(["Classificação", "Situação", "Candidato", "Idade", "Nota Final", "Data da Convocação", "Convocação", "Doc", "Obs", "Editar"]);
             $tabela->set_width([5, 5, 28, 5, 7, 10, 20, 5, 5]);
             $tabela->set_align(["center", "center", "left", "center", "center", "center", "left", "center", "left"]);

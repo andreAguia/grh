@@ -52,6 +52,7 @@ if ($acesso) {
         # Pega as variáveis
         $idServidorPesquisado = get('idServidorPesquisado');
         $concurso = new Concurso($idConcurso);
+        $concurso2025 = new ConcursoAdm2025();
 
         $parametroCargoCandidato = post('parametroCargoCandidato', get_session('parametroCargoCandidato', '301 - Técnico Profissional De Nível Médio – Agrícola E Agropecuária'));
         $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
@@ -136,7 +137,6 @@ if ($acesso) {
     }
 
     # Define array de Cotas
-    $concurso = new Concurso();
     $arrayCotas = $concurso->get_arrayCotas();
 
     $grid = new Grid();

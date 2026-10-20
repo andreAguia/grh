@@ -1921,8 +1921,8 @@ class CandidatoAdm2025 {
         $row = $this->get_dados($id);
 
         # Define array de Cotas
-        $concurso2025 = new ConcursoAdm2025();
-        $arrayCotas = $concurso2025->get_arrayCotas();
+        $concurso = new Concurso();
+        $arrayCotas = $concurso->get_arrayCotas();
 
         if (empty($row["cotaConvocacao"])) {
             $retorno = date_to_php($row["dtConvocacao"]);

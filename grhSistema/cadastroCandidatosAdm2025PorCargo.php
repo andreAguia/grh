@@ -58,6 +58,9 @@ if ($acesso) {
         $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
         $parametroConvocacao = post('parametroConvocacao', get_session('parametroConvocacao', '*'));
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
+        
+        # Inicia o subtítulo
+        $subtitulo = null;
 
         # Define os dados de acordo com as cotas
         switch ($parametroCota) {

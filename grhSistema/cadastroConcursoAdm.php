@@ -53,11 +53,13 @@ if ($acesso) {
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
         $parametroVaga = post('parametroVaga', get_session('parametroVaga', '*'));
         $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
+        $parametroCota = post('parametroCota', get_session('parametroCota', '*'));
 
         set_session('parametroCargo', $parametroCargo);
         set_session('parametroSituacao', $parametroSituacao);
         set_session('parametroVaga', $parametroVaga);
         set_session('parametroLotacao', $parametroLotacao);
+        set_session('parametroCota', $parametroCota);
     }
 
     # Começa uma nova página
@@ -559,7 +561,7 @@ if ($acesso) {
             $grid->abreColuna(12);
 
             # Informa a origem
-            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivos');
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosCotas');
 
             $vagaAdm = new VagaAdm();
 
@@ -578,9 +580,9 @@ if ($acesso) {
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url("?fase=relatorioAtivos");
+            $botaoRel->set_url('servidor.php?fase=editar&id=');
             $botaoRel->set_imagem($imagem2);
-            $menu->add_link($botaoRel, "right");
+            #$menu->add_link($botaoRel, "right");
 
             $menu->show();
 
@@ -627,7 +629,22 @@ if ($acesso) {
             $controle->set_onChange('formPadrao.submit();');
             $controle->set_autofocus(true);
             $controle->set_linha(1);
-            $controle->set_col(12);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            # Array de Cotas
+            $arrayCotas = $concurso->get_arrayCotas();
+            array_unshift($arrayCotas, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroCota', 'combo', 'Cota:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cota');
+            $controle->set_array($arrayCotas);
+            $controle->set_valor($parametroCota);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(4);
             $form->add_item($controle);
 
             $form->show();
@@ -649,10 +666,17 @@ if ($acesso) {
 
             if ($parametroCargo <> "*") {
                 $select .= " AND tbtipocargo.idTipoCargo = {$parametroCargo}";
-                $atividade .= " do cargo " . $parametroCargo;
+                $atividade .= " do cargo {$parametroCargo}";
+            }
+            
+            if ($parametroCota <> "*") {
+                $select .= " AND cotasConcurso = '{$parametroCota}'";
+                $atividade .= " na cota {$parametroCota}";
             }
 
             $select .= " AND situacao = 1 ORDER BY tbpessoa.nome";
+            
+            echo $select;
 
             $conteudo = $pessoal->select($select);
 
@@ -661,19 +685,19 @@ if ($acesso) {
 
             $tabela->set_titulo("Servidorea Ativos");
             $tabela->set_conteudo($conteudo);
-            $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "lotação", "Admissão"]);
+            $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
             #$tabela->set_width($width);
             $tabela->set_align(["center", "left", "center", "left", "left"]);
             $tabela->set_classe([null, null, null, "pessoal", "pessoal"]);
             $tabela->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
             $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
             #$tabela->set_totalRegistro(true);
-            $tabela->set_idCampo('idServidor');
-            #$tabela->set_editar($this->caminho);
+            $tabela->set_idCampo('idServidor');            
+            $tabela->set_editar('servidor.php?fase=editar&id=');
             $tabela->show();
 
             $atividade .= " do concurso " . $concurso->get_nomeConcurso($idConcurso);
-            
+
             $grid->fechaColuna();
             $grid->fechaGrid();
 

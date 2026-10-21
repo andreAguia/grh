@@ -316,6 +316,31 @@ class Cessao {
 
 ###########################################################
 
+    public function getidUltimaCessao($idServidor) {
+        /*
+         * Retornao id da última cessão desse servidor
+         * Objetivo é encontrar problemas de servidor com mais de 1 cessão vigente
+         */
+
+        # Conecta com o banco de dados
+        $servidor = new Pessoal();
+
+        $select = "SELECT idHistCessao
+                     FROM tbhistcessao
+                    WHERE idServidor = {$idServidor}
+                 ORDER BY dtInicio desc 
+                   LIMIT 1";
+
+        $row = $servidor->select($select, false);
+        if (empty($row[0])) {
+            return null;
+        } else {
+            return $row[0];
+        }
+    }
+
+###########################################################
+
     public function getNumLancamentosFrequencia($idHistCessao) {
         /*
          * Retorna o número de lançamento de frequencia nesta cessão

@@ -250,6 +250,10 @@ if ($acesso) {
     );
 
     if ($tipoCargo == "Adm/Tec") {
+        # Pega o array de cotas
+        $classeConcurso = new Concurso();
+        $arrayCotas = $classeConcurso->get_arrayCotas();
+        
         array_push($campos,
                 array('linha' => 2,
                     'nome' => 'classificacaoConcurso',
@@ -262,7 +266,7 @@ if ($acesso) {
                     'nome' => 'cotasConcurso',
                     'label' => 'Cota:',
                     'tipo' => 'combo',
-                    'array' => [null, "Ampla Concorrência", "PCD", "Negros e Indígenas", "Hipo"],
+                    'array' => $arrayCotas,
                     'size' => 50,
                     'title' => 'Informar, se tiver, que tipo de cota é a vaga.',
                     'col' => 4)

@@ -658,6 +658,7 @@ if ($acesso) {
                               cotasConcurso,
                               idServidor,
                               idServidor,
+                              idServidor,
                               tbservidor.dtAdmissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
@@ -668,7 +669,7 @@ if ($acesso) {
                 $select .= " AND tbtipocargo.idTipoCargo = {$parametroCargo}";
                 $atividade .= " do cargo {$parametroCargo}";
             }
-            
+
             if ($parametroCota <> "*") {
                 $select .= " AND cotasConcurso = '{$parametroCota}'";
                 $atividade .= " na cota {$parametroCota}";
@@ -681,18 +682,36 @@ if ($acesso) {
             # Monta a tabela
             $tabela = new Tabela();
 
-            $tabela->set_titulo("Servidorea Ativos");
-            $tabela->set_conteudo($conteudo);
-            $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
-            #$tabela->set_width($width);
-            $tabela->set_align(["center", "left", "center", "left", "left"]);
-            $tabela->set_classe([null, null, null, "pessoal", "pessoal"]);
-            $tabela->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
-            $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
-            #$tabela->set_totalRegistro(true);
-            $tabela->set_idCampo('idServidor');            
-            $tabela->set_editar('servidor.php?fase=editar&id=');
-            $tabela->show();
+            # Verifica se é admin
+            if (Verifica::acesso($idUsuario, 1)) {
+                # Somente Admin
+                $tabela->set_titulo("Servidorea Ativos");
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão"]);
+                #$tabela->set_width($width);
+                $tabela->set_align(["center", "left", "center", "center", "left", "left"]);
+                $tabela->set_classe([null, null, null, "CandidatoAdm2025", "pessoal", "pessoal"]);
+                $tabela->set_metodo([null, null, null, "get_cotaConvocacaoIdServidor", "get_cargo", "get_lotacao"]);
+                $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
+                #$tabela->set_totalRegistro(true);
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->show();
+            } else {
+                # Os Réles Mortais
+                $tabela->set_titulo("Servidorea Ativos");
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
+                #$tabela->set_width($width);
+                $tabela->set_align(["center", "left", "center", "left", "left"]);
+                $tabela->set_classe([null, null, null, "pessoal", "pessoal"]);
+                $tabela->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
+                $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
+                #$tabela->set_totalRegistro(true);
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->show();
+            }
 
             $atividade .= " do concurso " . $concurso->get_nomeConcurso($idConcurso);
 

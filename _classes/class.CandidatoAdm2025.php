@@ -2178,4 +2178,29 @@ class CandidatoAdm2025 {
     }
 
     ###########################################################
+
+    /**
+     * Método get_cotaConvocacao
+     *  
+     * @param	string $idCandidato $id do candidato
+     */
+    function get_cotaConvocacaoIdServidor($idServidor) {
+        if (empty($idServidor)) {
+            return null;
+        } else {
+            
+            # Dados do Servidor
+            $pessoal = new Pessoal();
+            $idPessoa = $pessoal->get_idPessoa($idServidor);
+            $cpf = $pessoal->get_cpf($idPessoa);
+            
+            # Dados do Candidato
+            $idCandidato = $this->get_idCandidatoCPF($cpf);
+            
+            # Retorno
+            return $this->get_cotaConvocacao($idCandidato);        
+        }
+    }
+
+    ###########################################################
 }

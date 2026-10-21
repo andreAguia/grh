@@ -81,12 +81,7 @@ if ($acesso) {
             $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao},"
                     . " a contar da data de retorno em {$dtRetorno},";
 
-            if ($idPerfil == 1) {
-                $texto .= " data de sua posse no Cargo Público de {$cargoServidor}, previamente aprovado em Concurso Público.";
-            } else {
-                $texto .= " {$cargoServidor}.";
-            }
-
+            $texto .= " {$cargoServidor}.";
             $carta->set_texto($texto);
 
             #$carta->set_saltoRodape(3);

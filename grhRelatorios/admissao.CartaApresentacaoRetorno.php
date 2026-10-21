@@ -78,10 +78,9 @@ if ($acesso) {
 
             $carta->set_assinatura(true);
 
-            $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, para exercer suas atividades na {$lotacao},"
-                    . " a contar da data de retorno em {$dtRetorno},";
-
-            $texto .= " {$cargoServidor}.";
+            $texto = "Apresentamos a V.Sª. o(a) Sr(a) <b>{$nomeServidor}</b>, {$cargoServidor}, para exercer suas atividades na {$lotacao},"
+                    . " a contar da data de retorno em {$dtRetorno}.";
+            
             $carta->set_texto($texto);
 
             #$carta->set_saltoRodape(3);

@@ -675,8 +675,6 @@ if ($acesso) {
             }
 
             $select .= " AND situacao = 1 ORDER BY tbpessoa.nome";
-            
-            echo $select;
 
             $conteudo = $pessoal->select($select);
 

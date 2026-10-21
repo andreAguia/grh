@@ -695,7 +695,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->set_editar('servidorConcurso.php?fase=editar');
                 $tabela->show();
             } else {
                 # Os Réles Mortais

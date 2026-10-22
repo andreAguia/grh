@@ -9,21 +9,6 @@ class ConcursoAdm2025 {
      */
     ###########################################################
 
-    function get_arrayCotas() {
-        /**
-         * Fornece e padroniza o array com as cotas
-         */
-        $array = [
-            ["Ac", "Ampla Concorrência"],
-            ["Pcd", "PCD"],
-            ["Ni", "Negros e Indígenas"],
-            ["Hipo", "Hipossuficiente Econômico"],
-        ];
-        return $array;
-    }
-
-    ###########################################################
-
     function get_idConcurso() {
         /**
          * informa o idConcurso 

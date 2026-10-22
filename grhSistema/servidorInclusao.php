@@ -206,6 +206,8 @@ if ($acesso) {
             $idCargo = null;
             $idLotacao = null;
             $idFuncional = null;
+            $cotasConcurso = null;
+            $classificacao = null;
 
             /*
              * Verifica no Cadastro de Servidores
@@ -260,7 +262,27 @@ if ($acesso) {
                     $textoMensagem = "candidato";
                     $cotasConcurso = $dados["cotaConvocacao"];
 
-                    echo $cotasConcurso;
+                    switch ($cotasConcurso) {
+                        // Ampla Concorrência
+                        case "Ac":
+                            $classificacao = $dados["classifAc"];
+                            break;
+
+                        // Pcd
+                        case "Pcd":
+                            $classificacao = $dados["classifPcd"];
+                            break;
+
+                        // Negros e Indígenas
+                        case "Ni":
+                            $classificacao = $dados["classifNi"];
+                            break;
+
+                        // Hipossuficiente Econômico
+                        case "Hipo":
+                            $classificacao = $dados["classifHipo"];
+                            break;
+                    }
                 }
             }
 
@@ -320,17 +342,27 @@ if ($acesso) {
 
             $concurso = new Concurso();
             $arrayCotas = $concurso->get_arrayCotas();
+            array_unshift($arrayCotas, array(null, null));
 
-            # Cota 
-            $controle = new Input('cotasConcurso', 'combo', 'Cotas:', 1);
-            $controle->set_size(50);
-            $controle->set_linha(1);
-            $controle->set_required(true);
-            $controle->set_valor($cotasConcurso);
-            $controle->set_col(3);
-            $controle->set_title('O perfil do Servidor.');
-            $controle->set_array($arrayCotas);
-            $form->add_item($controle);
+            if ($perfil == 1) {
+
+                # Cota 
+                $controle = new Input('cotasConcurso', 'combo', 'Cotas:', 1);
+                $controle->set_size(50);
+                $controle->set_linha(1);
+                $controle->set_valor($cotasConcurso);
+                $controle->set_col(3);
+                $controle->set_array($arrayCotas);
+                $form->add_item($controle);
+
+                # Classificação 
+                $controle = new Input('classificacao', 'texto', 'Classificação:', 1);
+                $controle->set_size(5);
+                $controle->set_linha(1);
+                $controle->set_valor($classificacao);
+                $controle->set_col(3);
+                $form->add_item($controle);
+            }
 
             # Nome
             $controle = new Input('nome', 'texto', 'Nome:', 1);
@@ -561,12 +593,6 @@ if ($acesso) {
                 $form->add_item($controle);
             }
 
-            # Dados dos Candidatos
-            if (!empty($idCandidato)) {
-                
-            }
-
-
             $form->show();
 
             $callout->fecha();
@@ -596,6 +622,7 @@ if ($acesso) {
             $pisPasep = post('pisPasep');
             $cargo = post('cargo');
             $cotasDigitadas = post('cotasConcurso');
+            $classificacao = post('classificacao');
 
             $situacao = post('situacao');
             $orgaoOrigem = post('orgaoOrigem');
@@ -630,6 +657,12 @@ if ($acesso) {
             # Verifica se o Nome foi digitado
             if (empty($nome)) {
                 $msgErro .= 'Você tem que informar o Nome do Servidor!\n';
+                $erro = 1;
+            }
+
+            # Verifica se é estatutário e tem a cota preenchida
+            if ($perfil == 1 AND empty($cotasDigitadas)) {
+                $msgErro .= 'Servidor Concursado deve digitar a cota!\n';
                 $erro = 1;
             }
 
@@ -872,26 +905,8 @@ if ($acesso) {
                 # Concursados somente estatutário
                 if ($perfil == 1 AND !empty($idCandidato2025)) {
 
-                    $classificacaoConcurso = null;
-                    $cotaConcurso = null;
-
-                    # Verifica a classificação e a cota
-                    if ($dados['cotaConvocacao'] == 'Ac') {
-                        $classificacaoConcurso = $dados["classifAc"];
-                        $cotaConcurso = "Ampla Concorrência";
-                    } elseif ($dados["cotaConvocacao"] == "Pcd") {
-                        $classificacaoConcurso = $dados["classifPcd"];
-                        $cotaConcurso = "PCD";
-                    } elseif ($dados["cotaConvocacao"] == "Ni") {
-                        $classificacaoConcurso = $dados["classifNi"];
-                        $cotaConcurso = "Negros e Indígenas";
-                    } elseif ($dados["cotaConvocacao"] == "Hipo") {
-                        $classificacaoConcurso = $dados["classifHipo"];
-                        $cotaConcurso = "Hipossuficiente Econômico";
-                    }
-
-                    array_push($campos, 'idConcurso', 'dtPublicConcursoResultado', 'classificacaoConcurso', 'cotasConcurso');
-                    array_push($valor, $dados["idConcurso"], '2026-03-16', $classificacaoConcurso, $cotaConcurso);
+                    array_push($campos, 'idConcurso', 'dtPublicConcursoResultado', 'classificacaoConcurso', 'cotasConcurso', 'dtPublicConvocacao');
+                    array_push($valor, $dados["idConcurso"], '2026-03-16', $classificacao, $cotasDigitadas, $dados["dtConvocacao"]);
                 }
 
                 $idValor = null;

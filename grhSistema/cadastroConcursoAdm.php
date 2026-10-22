@@ -39,6 +39,8 @@ if ($acesso) {
         $fase = get('fase', 'aguardaClassificacao');
     }
 
+    # Pega o id
+    $id = get("id");
 
     # Volta quando não temos o idconcurso
     if (empty($idConcurso)) {
@@ -53,7 +55,7 @@ if ($acesso) {
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
         $parametroVaga = post('parametroVaga', get_session('parametroVaga', '*'));
         $parametroLotacao = post('parametroLotacao', get_session('parametroLotacao', '*'));
-        $parametroCota = post('parametroCota', get_session('parametroCota', '*'));
+        $parametroCota = post('parametroCota', get_session('parametroCota', 'Ac'));
 
         set_session('parametroCargo', $parametroCargo);
         set_session('parametroSituacao', $parametroSituacao);
@@ -656,9 +658,13 @@ if ($acesso) {
             $select = "SELECT idFuncional,
                               tbpessoa.nome,
                               cotasConcurso,
-                              idServidor,
-                              idServidor,
-                              idServidor,
+                              idServidor,";
+            
+            if (Verifica::acesso($idUsuario, 1)) {
+                $select .= " idServidor,";
+            }
+                             
+            $select .= "      idServidor,
                               tbservidor.dtAdmissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
@@ -673,6 +679,9 @@ if ($acesso) {
             if ($parametroCota <> "*") {
                 $select .= " AND cotasConcurso = '{$parametroCota}'";
                 $atividade .= " na cota {$parametroCota}";
+                $subtitulo = "Cota: {$concurso->get_NomeCota($parametroCota)}";
+            }else{
+                $subtitulo = "Cota: Todas";
             }
 
             $select .= " AND situacao = 1 ORDER BY tbpessoa.nome";
@@ -686,6 +695,7 @@ if ($acesso) {
             if (Verifica::acesso($idUsuario, 1)) {
                 # Somente Admin
                 $tabela->set_titulo("Servidorea Ativos");
+                $tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($conteudo);
                 $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão"]);
                 #$tabela->set_width($width);
@@ -695,7 +705,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('servidorConcurso.php?fase=editar');
+                $tabela->set_editar('?fase=editaServidorCotas&id=');
                 $tabela->show();
             } else {
                 # Os Réles Mortais
@@ -709,7 +719,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('servidor.php?fase=editar&id=');
+                $tabela->set_editar('?fase=editaServidorCotas&id=');
                 $tabela->show();
             }
 
@@ -722,6 +732,22 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
+            
+        ################################################################
+
+        case "editaServidorCotas" :
+            br(8);
+            aguarde();
+            
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosCotas');
+
+            # Carrega a página específica
+            loadPage('servidorConcurso.php?fase=editar');
+            break;            
 
         ################################################################
 

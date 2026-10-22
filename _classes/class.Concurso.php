@@ -1024,7 +1024,7 @@ class Concurso {
                 ["Por Cargo", "cadastroCandidatosAdm2025PorCargo.php", null, "Candidatos ({$numCandidatos})"],
                 ["Por Nome", "cadastroCandidatosAdm2025PorNome.php"],
                 ["Estatística", "cadastroCandidatosAdm2025Estatistica.php"],
-                //["Duplicados", "cadastroCandidatosAdm2025PorCargo.php?fase=duplicados"],
+                    //["Duplicados", "cadastroCandidatosAdm2025PorCargo.php?fase=duplicados"],
             ];
 
             $menuProcessoSeletivo = [
@@ -1912,6 +1912,26 @@ class Concurso {
             ["Hipo", "Hipossuficiente Econômico"],
         ];
         return $array;
+    }
+
+    ###########################################################
+
+    function get_NomeCota($cota = null) {
+        /**
+         * Fornece o nome da cota
+         */
+        
+        # Verifica se chegou a cota
+        if (empty($cota)) {
+            return null;
+        } else {
+            # Percorre o array
+            foreach ($this->get_arrayCotas() as $item) {
+                if ($item[0] == $cota) {
+                    return $item[1];
+                }
+            }
+        }
     }
 
     ###########################################################

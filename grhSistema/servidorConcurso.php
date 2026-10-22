@@ -45,7 +45,7 @@ if ($acesso) {
 
     # Cabeçalho da Página
     AreaServidor::cabecalho();
-
+            
     # Pega o idConcurso
     $idConcursoServidor = $pessoal->get_idConcurso($idServidorPesquisado);
 
@@ -253,7 +253,7 @@ if ($acesso) {
         # Pega o array de cotas
         $classeConcurso = new Concurso();
         $arrayCotas = $classeConcurso->get_arrayCotas();
-        
+
         array_push($campos,
                 array('linha' => 2,
                     'nome' => 'classificacaoConcurso',

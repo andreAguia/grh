@@ -59,6 +59,11 @@ if ($acesso) {
         $parametroConvocacao = post('parametroConvocacao', get_session('parametroConvocacao', '*'));
         $parametroSituacao = post('parametroSituacao', get_session('parametroSituacao', '*'));
         
+        # Acerta o paramatro Cotas 
+        if($parametroCota == "*"){
+            $parametroCota = "Ac";
+        }
+        
         # Inicia o subtítulo
         $subtitulo = null;
 

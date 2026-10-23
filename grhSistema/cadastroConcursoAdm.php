@@ -73,6 +73,7 @@ if ($acesso) {
             AND $fase <> "relatorioAtivosLotacao"
             AND $fase <> "relatorioInativos"
             AND $fase <> "relatorioClassificacao"
+            AND $fase <> "relatorioAtivosCotas"
             AND $fase <> "relatorioTodos") {
 
         AreaServidor::cabecalho();
@@ -582,9 +583,9 @@ if ($acesso) {
             $botaoRel = new Button();
             $botaoRel->set_title("Relatório dos Servidores");
             $botaoRel->set_target("_blank");
-            $botaoRel->set_url('servidor.php?fase=editar&id=');
+            $botaoRel->set_url("?fase=relatorioAtivosCotas");
             $botaoRel->set_imagem($imagem2);
-            #$menu->add_link($botaoRel, "right");
+            $menu->add_link($botaoRel, "right");
 
             $menu->show();
 
@@ -659,11 +660,11 @@ if ($acesso) {
                               tbpessoa.nome,
                               cotasConcurso,
                               idServidor,";
-            
+
             if (Verifica::acesso($idUsuario, 1)) {
                 $select .= " idServidor,";
             }
-                             
+
             $select .= "      idServidor,
                               tbservidor.dtAdmissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
@@ -680,7 +681,7 @@ if ($acesso) {
                 $select .= " AND cotasConcurso = '{$parametroCota}'";
                 $atividade .= " na cota {$parametroCota}";
                 $subtitulo = "Cota: {$concurso->get_NomeCota($parametroCota)}";
-            }else{
+            } else {
                 $subtitulo = "Cota: Todas";
             }
 
@@ -732,13 +733,13 @@ if ($acesso) {
             $data = date("Y-m-d H:i:s");
             $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
             break;
-            
+
         ################################################################
 
         case "editaServidorCotas" :
             br(8);
             aguarde();
-            
+
             # Informa o $id Servidor
             set_session('idServidorPesquisado', $id);
 
@@ -747,7 +748,7 @@ if ($acesso) {
 
             # Carrega a página específica
             loadPage('servidorConcurso.php?fase=editar');
-            break;            
+            break;
 
         ################################################################
 
@@ -1437,7 +1438,6 @@ if ($acesso) {
          * Relatórios
          */
 
-
         case "relatorioAtivos" :
             # Lista de Servidores Ativos
             $lista = new ListaServidores('Servidores Ativos');
@@ -1554,6 +1554,56 @@ if ($acesso) {
 
             $relatorio->set_numGrupo(0);
 //            $relatorio->set_grupoCorColuna(0);
+
+            $relatorio->show();
+            break;
+        ###############################################################
+
+        case "relatorioAtivosCotas" :
+            # Pega os dados
+            $dados = $concurso->get_dados($idConcurso);
+
+            # Monta o select
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              cotasConcurso,
+                              idServidor,
+                              idServidor,
+                              tbservidor.dtAdmissao
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                         WHERE idConcurso = {$idConcurso}";
+
+            if ($parametroCargo <> "*") {
+                $select .= " AND tbtipocargo.idTipoCargo = {$parametroCargo}";
+                #$atividade .= " do cargo {$parametroCargo}";
+            }
+
+            if ($parametroCota <> "*") {
+                $select .= " AND cotasConcurso = '{$parametroCota}'";
+                #$atividade .= " na cota {$parametroCota}";
+                $subtitulo = "Cota: {$concurso->get_NomeCota($parametroCota)}";
+            } else {
+                $subtitulo = "Cota: Todas";
+            }
+
+            $select .= " AND situacao = 1 ORDER BY tbpessoa.nome";
+
+            $conteudo = $pessoal->select($select);
+
+            # relatório
+            $relatorio = new Relatorio();
+            $relatorio->set_titulo("Servidores Ativos<br/>Concurso {$dados["anobase"]}");
+            $relatorio->set_subtitulo($subtitulo);
+            $relatorio->set_conteudo($conteudo);
+
+            $relatorio->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
+            #$relatorio->set_width($width);
+            $relatorio->set_align(["center", "left", "center", "left", "left"]);
+            $relatorio->set_classe([null, null, null, "pessoal", "pessoal"]);
+            $relatorio->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
+            $relatorio->set_funcao([null, null, null, null, null, "date_to_php"]);
 
             $relatorio->show();
             break;

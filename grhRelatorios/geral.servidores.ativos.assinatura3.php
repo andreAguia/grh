@@ -24,14 +24,19 @@ if ($acesso) {
     $page = new Page();
     $page->iniciaPagina();
 
+    # Parâmetros
+    $letraInicial = maiuscula(post("letraInicial", "A"));
+    $letraFinal = maiuscula(post("letraFinal", "Z"));
+
     ######
 
-    $select = 'SELECT tbpessoa.nome,"",LEFT(tbpessoa.nome, 1) as pl
+    $select = "SELECT tbpessoa.nome,'',LEFT(tbpessoa.nome, 1) as pl
                  FROM tbservidor LEFT JOIN tbpessoa ON (tbservidor.idPessoa = tbpessoa.idPessoa)
                                       JOIN tbperfil USING (idPerfil)     
                WHERE tbservidor.situacao = 1
-                 AND tbperfil.tipo <> "Outros"
-             ORDER BY tbpessoa.nome';
+                 AND LEFT(tbpessoa.nome, 1) BETWEEN '{$letraInicial}' AND '{$letraFinal}'
+                 AND tbperfil.tipo <> 'Outros'
+             ORDER BY tbpessoa.nome";
 
     $result = $servidor->select($select);
 
@@ -47,6 +52,26 @@ if ($acesso) {
     $relatorio->set_numeroOrdem(true);
     $relatorio->set_conteudo($result);
     $relatorio->set_numGrupo(2);
+
+    $relatorio->set_formCampos(array(
+        array('nome' => 'letraInicial',
+            'label' => 'Letre Inicial:',
+            'tipo' => 'texto',
+            'autofocus' => true,
+            'col' => 4,
+            'size' => 5,
+            'padrao' => $letraInicial,
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1),
+        array('nome' => 'letraFinal',
+            'label' => 'Letre Final:',
+            'tipo' => 'texto',
+            'col' => 4,
+            'size' => 5,
+            'padrao' => $letraFinal,
+            'onChange' => 'formPadrao.submit();',
+            'linha' => 1),
+    ));
 
     $relatorio->show();
 

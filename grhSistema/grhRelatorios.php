@@ -455,9 +455,7 @@ if ($acesso) {
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com Sexo - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.sexo.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF - Agrupados por Lotação', '../grhRelatorios/geral.servidores.ativos.cpf.porLotacao.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Com CPF', '../grhRelatorios/geral.servidores.ativos.cpf.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 3 Assinaturas', '../grhRelatorios/geral.servidores.ativos.assinatura2.php');
-            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 1 Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura3.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura.php');            
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Assinatura e CPF', '../grhRelatorios/geral.servidores.ativos.cpf.assinatura.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email', '../grhRelatorios/geral.servidores.ativos.email.php');
             $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - Email Uenf e CPF', '../grhRelatorios/geral.servidores.ativos.email.cpf.php');
@@ -517,6 +515,8 @@ if ($acesso) {
             $menu = new Menu();
             $menu->add_item('titulo', 'Semana do Servidor');
             $menu->add_item('linkWindow', 'Lista de Números para Sorteio', '../grhRelatorios/semanaServidor.listaNumeros.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 3 Assinaturas', '../grhRelatorios/geral.servidores.ativos.assinatura2.php');
+            $menu->add_item('linkWindow', 'Relatório Geral de Servidores Ativos - 1 Assinatura', '../grhRelatorios/geral.servidores.ativos.assinatura3.php');
             $menu->show();
             break;
 

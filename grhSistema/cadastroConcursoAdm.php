@@ -904,7 +904,7 @@ if ($acesso) {
 
             $select .= "      idServidor,
                               tbservidor.dtAdmissao,
-                              tbservidor.dtSaida
+                              tbservidor.dtDemissao
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                          LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)

@@ -903,7 +903,8 @@ if ($acesso) {
             }
 
             $select .= "      idServidor,
-                              tbservidor.dtAdmissao
+                              tbservidor.dtAdmissao,
+                              tbservidor.dtSaida
                          FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
                                          LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
                                          LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
@@ -935,12 +936,12 @@ if ($acesso) {
                 $tabela->set_titulo("Servidorea Inativos");
                 $tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($conteudo);
-                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão"]);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão", "Saída"]);
                 #$tabela->set_width($width);
                 $tabela->set_align(["center", "left", "center", "center", "left", "left"]);
                 $tabela->set_classe([null, null, null, "CandidatoAdm2025", "pessoal", "pessoal"]);
                 $tabela->set_metodo([null, null, null, "get_cotaConvocacaoIdServidor", "get_cargo", "get_lotacao"]);
-                $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
+                $tabela->set_funcao([null, null, null, null, null, null, "date_to_php", "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidorInativoCotas&id=');
@@ -949,12 +950,12 @@ if ($acesso) {
                 # Os Réles Mortais
                 $tabela->set_titulo("Servidores Inativos");
                 $tabela->set_conteudo($conteudo);
-                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão", "Saída"]);
                 #$tabela->set_width($width);
                 $tabela->set_align(["center", "left", "center", "left", "left"]);
                 $tabela->set_classe([null, null, null, "pessoal", "pessoal"]);
                 $tabela->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
-                $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
+                $tabela->set_funcao([null, null, null, null, null, "date_to_php", "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
                 $tabela->set_editar('?fase=editaServidorInativoCotas&id=');

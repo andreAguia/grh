@@ -1041,6 +1041,7 @@ class Concurso {
                 ["Servidores Ativos - Cotas", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosCotas", $ativos],
                 ["Servidores Ativos - Lotação", "cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosLotacao", $ativos],
                 ["Servidores Inativos", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativos", $inativos],
+                ["Servidores Inativos - Cotas", "cadastroConcursoAdm.php?fase=aguardaListaServidoresInativosCotas", $ativos],
                 ["Todos os Servidores", "cadastroConcursoAdm.php?fase=aguardaListaServidoresTodos", $ativos + $inativos],
             ];
 

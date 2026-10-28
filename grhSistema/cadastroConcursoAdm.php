@@ -890,7 +890,7 @@ if ($acesso) {
             $form->show();
 
             # Log
-            $atividade = "Visualizou os servidores ativos do";
+            $atividade = "Visualizou os servidores inativos do";
 
             # Monta o select
             $select = "SELECT idFuncional,
@@ -943,7 +943,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editaServidorCotas&id=');
+                $tabela->set_editar('?fase=editaServidorInativoCotas&id=');
                 $tabela->show();
             } else {
                 # Os Réles Mortais
@@ -957,7 +957,7 @@ if ($acesso) {
                 $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
                 #$tabela->set_totalRegistro(true);
                 $tabela->set_idCampo('idServidor');
-                $tabela->set_editar('?fase=editaServidorCotas&id=');
+                $tabela->set_editar('?fase=editaServidorInativoCotas&id=');
                 $tabela->show();
             }
 
@@ -982,6 +982,22 @@ if ($acesso) {
 
             # Informa a origem
             set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresAtivosCotas');
+
+            # Carrega a página específica
+            loadPage('servidorConcurso.php?fase=editar');
+            break;
+
+        ################################################################
+
+        case "editaServidorInativoCotas" :
+            br(8);
+            aguarde();
+
+            # Informa o $id Servidor
+            set_session('idServidorPesquisado', $id);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresInativosCotas');
 
             # Carrega a página específica
             loadPage('servidorConcurso.php?fase=editar');

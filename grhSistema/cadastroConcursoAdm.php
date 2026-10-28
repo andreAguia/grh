@@ -695,7 +695,7 @@ if ($acesso) {
             # Verifica se é admin
             if (Verifica::acesso($idUsuario, 1)) {
                 # Somente Admin
-                $tabela->set_titulo("Servidorea Ativos");
+                $tabela->set_titulo("Servidores Ativos");
                 $tabela->set_subtitulo($subtitulo);
                 $tabela->set_conteudo($conteudo);
                 $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão"]);
@@ -710,7 +710,244 @@ if ($acesso) {
                 $tabela->show();
             } else {
                 # Os Réles Mortais
-                $tabela->set_titulo("Servidorea Ativos");
+                $tabela->set_titulo("Servidores Ativos");
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
+                #$tabela->set_width($width);
+                $tabela->set_align(["center", "left", "center", "left", "left"]);
+                $tabela->set_classe([null, null, null, "pessoal", "pessoal"]);
+                $tabela->set_metodo([null, null, null, "get_cargo", "get_lotacao"]);
+                $tabela->set_funcao([null, null, null, null, null, "date_to_php"]);
+                #$tabela->set_totalRegistro(true);
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('?fase=editaServidorCotas&id=');
+                $tabela->show();
+            }
+
+            $atividade .= " do concurso " . $concurso->get_nomeConcurso($idConcurso);
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+
+            # Grava no log a atividade
+            $data = date("Y-m-d H:i:s");
+            $intra->registraLog($idUsuario, $data, $atividade, null, null, 7);
+            break;
+
+        ################################################################
+
+        /*
+         * Servidores Inativos - Cotas
+         */
+
+        case "aguardaListaServidoresInativosCotas" :
+
+            # Cria um menu
+            $menu1 = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu1->add_link($botaoVoltar, "left");
+
+            $menu1->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos - Cotas");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################3
+
+            $grid->abreColuna(9);
+
+            br(4);
+            aguarde();
+            br();
+
+            # Limita a tela
+            $grid1 = new Grid("center");
+            $grid1->abreColuna(5);
+            p("Aguarde...", "center");
+            $grid1->fechaColuna();
+            $grid1->fechaGrid();
+
+            loadPage('?fase=listaServidoresInativosCotas');
+            break;
+
+            $grid->fechaColuna();
+            $grid->fechaGrid();
+            break;
+
+        case "listaServidoresInativosCotas" :
+
+            # Limita o tamanho da tela
+            $grid = new Grid();
+            $grid->abreColuna(12);
+
+            # Informa a origem
+            set_session('origem', 'cadastroConcursoAdm.php?fase=aguardaListaServidoresInativosCotas');
+
+            $vagaAdm = new VagaAdm();
+
+            # Cria um menu
+            $menu = new MenuBar();
+
+            # Voltar
+            $botaoVoltar = new Link("Voltar", "areaConcursoAdm.php");
+            $botaoVoltar->set_class('button');
+            $botaoVoltar->set_title('Voltar a página anterior');
+            $botaoVoltar->set_accessKey('V');
+            $menu->add_link($botaoVoltar, "left");
+
+            # Relatório
+            $imagem2 = new Imagem(PASTA_FIGURAS . 'print.png', null, 15, 15);
+            $botaoRel = new Button();
+            $botaoRel->set_title("Relatório dos Servidores");
+            $botaoRel->set_target("_blank");
+            $botaoRel->set_url("?fase=relatorioAtivosCotas");
+            $botaoRel->set_imagem($imagem2);
+            #$menu->add_link($botaoRel, "right");
+
+            $menu->show();
+
+            $grid->fechaColuna();
+
+            ######################
+            # Menu
+            $grid->abreColuna(3);
+
+            # Exibe os dados do Concurso
+            $concurso->exibeDadosConcurso($idConcurso, true);
+
+            # menu
+            $concurso->exibeMenu($idConcurso, "Servidores Ativos - Cotas");
+
+            # Exibe os servidores deste concurso
+            $concurso->exibeQuadroServidoresConcursoPorCargo($idConcurso);
+
+            $grid->fechaColuna();
+
+            ######################
+
+            $grid->abreColuna(9);
+
+            # Formulário
+            $form = new Form('?fase=aguardaListaServidoresInativosCotas');
+
+            # cargos por nivel
+            $result = $pessoal->select('SELECT idTipoCargo,
+                                               cargo
+                                          FROM tbtipocargo
+                                         WHERE cargo <> "Professor Associado" 
+                                           AND cargo <> "Professor Titular" 
+                                      ORDER BY 2');
+
+            # acrescenta todos
+            array_unshift($result, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroCargo', 'combo', 'Cargo:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cargo');
+            $controle->set_array($result);
+            $controle->set_valor($parametroCargo);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(8);
+            $form->add_item($controle);
+
+            # Array de Cotas
+            $arrayCotas = $concurso->get_arrayCotas();
+            array_unshift($arrayCotas, array('*', '-- Todos --'));
+
+            $controle = new Input('parametroCota', 'combo', 'Cota:', 1);
+            $controle->set_size(30);
+            $controle->set_title('Filtra por Cota');
+            $controle->set_array($arrayCotas);
+            $controle->set_valor($parametroCota);
+            $controle->set_onChange('formPadrao.submit();');
+            $controle->set_autofocus(true);
+            $controle->set_linha(1);
+            $controle->set_col(4);
+            $form->add_item($controle);
+
+            $form->show();
+
+            # Log
+            $atividade = "Visualizou os servidores ativos do";
+
+            # Monta o select
+            $select = "SELECT idFuncional,
+                              tbpessoa.nome,
+                              cotasConcurso,
+                              idServidor,";
+
+            if (Verifica::acesso($idUsuario, 1)) {
+                $select .= " idServidor,";
+            }
+
+            $select .= "      idServidor,
+                              tbservidor.dtAdmissao
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tbcargo ON (tbservidor.idCargo = tbcargo.idCargo)
+                                         LEFT JOIN tbtipocargo ON (tbcargo.idTipoCargo = tbtipocargo.idTipoCargo)
+                         WHERE idConcurso = {$idConcurso}";
+
+            if ($parametroCargo <> "*") {
+                $select .= " AND tbtipocargo.idTipoCargo = {$parametroCargo}";
+                $atividade .= " do cargo {$parametroCargo}";
+            }
+
+            if ($parametroCota <> "*") {
+                $select .= " AND cotasConcurso = '{$parametroCota}'";
+                $atividade .= " na cota {$parametroCota}";
+                $subtitulo = "Cota: {$concurso->get_NomeCota($parametroCota)}";
+            } else {
+                $subtitulo = "Cota: Todas";
+            }
+
+            $select .= " AND situacao <> 1 ORDER BY tbpessoa.nome";
+
+            $conteudo = $pessoal->select($select);
+
+            # Monta a tabela
+            $tabela = new Tabela();
+
+            # Verifica se é admin
+            if (Verifica::acesso($idUsuario, 1)) {
+                # Somente Admin
+                $tabela->set_titulo("Servidorea Inativos");
+                $tabela->set_subtitulo($subtitulo);
+                $tabela->set_conteudo($conteudo);
+                $tabela->set_label(["idFuncional", "Nome", "Cota", "Cota Candidato", "Cargo", "Lotação", "Admissão"]);
+                #$tabela->set_width($width);
+                $tabela->set_align(["center", "left", "center", "center", "left", "left"]);
+                $tabela->set_classe([null, null, null, "CandidatoAdm2025", "pessoal", "pessoal"]);
+                $tabela->set_metodo([null, null, null, "get_cotaConvocacaoIdServidor", "get_cargo", "get_lotacao"]);
+                $tabela->set_funcao([null, null, null, null, null, null, "date_to_php"]);
+                #$tabela->set_totalRegistro(true);
+                $tabela->set_idCampo('idServidor');
+                $tabela->set_editar('?fase=editaServidorCotas&id=');
+                $tabela->show();
+            } else {
+                # Os Réles Mortais
+                $tabela->set_titulo("Servidores Inativos");
                 $tabela->set_conteudo($conteudo);
                 $tabela->set_label(["idFuncional", "Nome", "Cota", "Cargo", "Lotação", "Admissão"]);
                 #$tabela->set_width($width);

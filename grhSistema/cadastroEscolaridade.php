@@ -104,9 +104,9 @@ if ($acesso) {
     }
 
     # Parametros da tabela
-    $objeto->set_label(array("Id", "Escolaridade", "Obs"));
+    $objeto->set_label(["Id", "Escolaridade", "Obs"]);
     #$objeto->set_width(array(5,40,45));
-    $objeto->set_align(array("center", "left", "left"));
+    $objeto->set_align(["center", "left", "left"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');
@@ -125,12 +125,13 @@ if ($acesso) {
             'tipo' => 'texto',
             'required' => true,
             'autofocus' => true,
+            'col' => 8,
             'size' => 40),
         array('linha' => 2,
             'nome' => 'obs',
             'label' => 'Observação:',
             'tipo' => 'textarea',
-            'size' => array(80, 5))));
+            'size' => array(80, 8))));
 
     # idUsuário para o Log
     $objeto->set_idUsuario($idUsuario);

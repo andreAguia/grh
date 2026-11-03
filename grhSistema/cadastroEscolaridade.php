@@ -129,6 +129,7 @@ if ($acesso) {
             'size' => 40),
         array('linha' => 2,
             'nome' => 'obs',
+            'col' => 8,
             'label' => 'Observação:',
             'tipo' => 'textarea',
             'size' => array(80, 8))));

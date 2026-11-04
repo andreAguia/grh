@@ -39,7 +39,11 @@ if ($acesso) {
     }
 
     # pega o id (se tiver)
-    $id = soNumeros(get('id'));    
+    $id = soNumeros(get('id'));
+    
+    # Pega o parametro de pesquisa (se tiver)
+    $parametro = post('parametro', retiraAspas(get_session('sessionParametro')));
+    set_session('sessionParametro', $parametro);
 
     # Começa uma nova página
     $page = new Page();
@@ -57,31 +61,44 @@ if ($acesso) {
 
     # botão de voltar da lista
     $objeto->set_voltarLista($voltarLista);
+    
+    # controle de pesquisa
+    $objeto->set_parametroLabel('Pesquisar');
+    $objeto->set_parametroValue($parametro);
 
     # select da lista
-    $objeto->set_selectLista('SELECT idClasse,
-                                     tbclasse.nivel,
-                                     tbtipocargo.cargo,
-                                     faixa,
-                                     valor,
-                                     idClasse
-                                FROM tbclasse JOIN tbplano USING (idPlano)
-                                         LEFT JOIN tbtipocargo USING (idTipoCargo)
-                               WHERE tbplano.idPlano LIKE "%' . $parametroPlano . '%"   
-                            ORDER BY 
-                              CASE WHEN tbclasse.nivel = "Doutorado" THEN "zzz" END,
-                                     tbclasse.nivel,
-                                     SUBSTRING(faixa, 1, 1), 
-                                     valor');
+    $selectEdita = "SELECT idClasse,
+                           tbclasse.nivel,
+                           tbtipocargo.cargo,
+                           faixa,
+                           valor,
+                           idClasse
+                      FROM tbclasse JOIN tbplano USING (idPlano)
+                               LEFT JOIN tbtipocargo USING (idTipoCargo)
+                     WHERE tbplano.idPlano = {$parametroPlano}";
+    
+    if(!empty($parametro)){
+        $selectEdita .= " AND (tbclasse.nivel LIKE '%{$parametro}%' 
+                           OR faixa LIKE '%{$parametro}%' 
+                           OR tbtipocargo.cargo LIKE '%{$parametro}%')"; 
+    }
+                        
+      $selectEdita .= "  ORDER BY 
+                         CASE WHEN tbclasse.nivel = 'Doutorado' THEN 'zzz' END,
+                                   tbclasse.nivel,
+                                   SUBSTRING(faixa, 1, 1), 
+                                  valor";
+    
+    $objeto->set_selectLista($selectEdita);
 
     # select do edita
-    $objeto->set_selectEdita('SELECT nivel,
+    $objeto->set_selectEdita("SELECT nivel,
                                      idTipoCargo,
                                      faixa,
                                      valor,
                                      idPlano
                                 FROM tbclasse
-                               WHERE idClasse = ' . $id);
+                               WHERE idClasse = {$id}");
 
     # Caminhos
     $objeto->set_linkEditar('?fase=editar');
@@ -90,9 +107,9 @@ if ($acesso) {
     $objeto->set_linkExcluir('?fase=excluir');
 
     # Parametros da tabela
-    $objeto->set_label(array("id", "Nível", "Cargo", "Faixa", "Valor"));
-    $objeto->set_width(array(10,20,20,15,15));
-    $objeto->set_funcao(array(null, null, null, null, "formataMoeda"));
+    $objeto->set_label(["id", "Nível", "Cargo", "Faixa", "Valor"]);
+    $objeto->set_width([10,20,20,15,15]);
+    $objeto->set_funcao([null, null, null, null, "formataMoeda"]);
     $objeto->set_rowspan([1]);
     $objeto->set_grupoCorColuna(1);
     

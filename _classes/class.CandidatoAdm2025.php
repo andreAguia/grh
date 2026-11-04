@@ -1951,26 +1951,32 @@ class CandidatoAdm2025 {
         # Pega a Situação
         switch ($dados["idCandidatoSituacao"]) {
             case 1 :
+                // Não Respondeu ao Formulário
                 return "ATO3";
                 break;
 
             case 2 :
+                // Desistiu da Vaga
                 return "ATO3";
                 break;
 
             case 3 :
+                // Reclassificação
                 return "ATO4";
                 break;
 
             case 4 :
+                // Faltou a Perícia
                 return "ATO3";
                 break;
 
             case 5 :
+                // Exoneração
                 return "ATO3";
                 break;
             
             case 6 :
+                // Torna Sem Efeito
                 return "ATO2";
                 break;
 

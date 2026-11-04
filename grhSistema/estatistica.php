@@ -136,6 +136,7 @@ if ($acesso) {
             array('Por Cargo Em Comissão', 'cargoComi'),
             array('Por Lotação x Cargo', 'cargoGerencia'),
             array('Por Professores x Diretoria', 'professorDiretoria'),
+            array('Por Professores x Lotação', 'professorLotacao'),
             array('Por Diretoria', 'diretoria'),
             array('Por Gerência', 'gerencia'),
             array('Por Filhos', 'filhos'),
@@ -2445,7 +2446,61 @@ if ($acesso) {
             $painel->fecha();
             break;
 
-####################################################################################################                        
+####################################################################################################            
+
+        case "professorLotacao":
+
+            # Abre o painel
+            $painel = new Callout();
+            $painel->abre();
+
+            # Grava no log a atividade
+            $atividade = "Visualizou a área de estatística de professores por Diretoria";
+            $intra->registraLog($idUsuario, date("Y-m-d H:i:s"), $atividade, null, null, 7);
+
+            titulotable("Professores por Diretoria");
+            br();
+
+            ########
+            # Monta o select
+            $select = 'SELECT CONCAT(tblotacao.dir," - ",tblotacao.nome) as lotacao,
+                              CONCAT(tbtipocargo.sigla," - ",tbcargo.nome) efetivo, 
+                              count(tbservidor.idServidor) as jj
+                         FROM tbservidor LEFT  JOIN tbhistlot ON (tbservidor.idServidor = tbhistlot.idServidor)
+                                               JOIN tblotacao ON (tbhistlot.lotacao=tblotacao.idLotacao)
+                                               JOIN tbcargo USING (idCargo)
+                                               JOIN tbtipocargo USING (idTipoCargo)
+                                               JOIN tbperfil USING (idPerfil)
+                   WHERE tbhistlot.data = (select max(data) from tbhistlot where tbhistlot.idServidor = tbservidor.idServidor)
+                     AND tbperfil.tipo <> "Outros"  
+                     AND situacao = 1
+                     AND ativo
+                     AND tbtipocargo.tipo = "Professor"
+                GROUP BY tblotacao.dir, tblotacao.ger, efetivo
+                ORDER BY tblotacao.dir, tblotacao.ger, efetivo, tbcargo.nome';
+            #echo $select;
+            $servidores = $pessoal->select($select);
+
+            # Soma a coluna do count
+            $total = array_sum(array_column($servidores, "jj"));
+
+            # Tabela
+            $tabela = new Tabela();
+            $tabela->set_conteudo($servidores);
+            $tabela->set_label(["Lotação", "Cargo", "Nº de Servidores"]);
+            #$tabela->set_width(array(80,20));
+            $tabela->set_align(["left", "left"]);
+            $tabela->set_rodape("Total de Servidores: " . $total);
+
+            $tabela->set_rowspan(0);
+            $tabela->set_grupoCorColuna(0);
+
+            $tabela->show();
+
+            $painel->fecha();
+            break;
+
+####################################################################################################                              
 
         case "filhos":
 

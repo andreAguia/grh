@@ -170,11 +170,11 @@ class LicencaSemVencimentos {
                 . "Retornou: " . trataNulo($dtRetorno);
 
         # Verifica se estamos a 90 dias da data Termino
-        if ((!vazio($dtTermino)) AND (vazio($dtRetorno))) {
+        if ((!empty($dtTermino)) AND (empty($dtRetorno))) {
             $hoje = date("d/m/Y");
             $dias = dataDif($hoje, $dtTermino);
 
-            if (($dias > 0) AND ($dias < 90)) {
+            if ($dias > 0 AND $dias < 90) {
                 if ($dias == 1) {
                     $retorno .= "<br/><span title='Falta Apenas $dias dia para o término do benefício. Entrar em contato com o servidor para avaliar renovação do benefício!' class='warning label'>Faltam $dias dias</span>";
                 } else {
@@ -185,10 +185,8 @@ class LicencaSemVencimentos {
             }
         }
 
-
-
         # Verifica se chega a 4 anos (1460 dias)
-        if ($tempoC >= 1460 AND empty($dtRetorno)) {
+        if ($tempoC >= 1460 AND empty($dtRetorno) AND $dias < 30) {
             $retorno .= "<br/><br/><span title='O servidor tem que retornar!' class='alert label'>REASSUNÇÃO</span>";
         }
 

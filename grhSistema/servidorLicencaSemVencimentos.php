@@ -142,7 +142,7 @@ if ($acesso) {
     $objeto->set_rotinaExtraParametro($idServidorPesquisado);
 
     # Nome do Modelo (aparecerá nos fildset e no caption da tabela)
-    $objeto->set_nome('Hstórico de Licença / Afastamentos Sem Vencimentos');
+    $objeto->set_nome('Histórico de Licença / Afastamentos Sem Vencimentos');
 
     # botão de voltar da lista
     if (empty($origem)) {

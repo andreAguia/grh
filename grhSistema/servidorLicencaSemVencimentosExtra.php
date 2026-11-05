@@ -67,8 +67,6 @@ if (!is_null($aposentadoria->get_dataAposentadoriaCompulsoria($idServidor))) {
 $lsv = new LicencaSemVencimentos();
 $ultimaLicenca = $lsv->get_idUltimaLicenca($idServidor);
 
-echo "id: {$id} = {$ultimaLicenca["idLicencaSemVencimentos"]}";
-
 # Verifica se não está editando a ultima licença
 if (!empty($id) AND $id <> $ultimaLicenca["idLicencaSemVencimentos"]) {
 

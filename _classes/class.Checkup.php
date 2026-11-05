@@ -3899,7 +3899,7 @@ class Checkup {
     /**
      * Método get_servidorCom4AnosLicencaSemVencimentos
      * 
-     * Servidor Com 4 anos ou mais de licença sem vencimentos
+     * Servidor Com 4 anos ou mais de licença sem vencimentos e com 30 dias para o termino (reassunção)
      */
     public function get_servidorCom4AnosLicencaSemVencimentos($idServidor = null, $catEscolhida = null) {
 
@@ -3909,7 +3909,7 @@ class Checkup {
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
 
-            $select = 'SELECT idfuncional,
+            $select = "SELECT idfuncional,
                           matricula,
                           tbpessoa.nome,
                           tbperfil.nome,
@@ -3921,12 +3921,13 @@ class Checkup {
                                                   JOIN tbpessoa USING (idPessoa)
                                                   JOIN tbperfil USING (idPerfil)
                      WHERE dtRetorno IS NULL
-                       AND situacao = 1';
+                       AND ADDDATE(dtInicial,numDias-1) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 30 DAY);
+                       AND situacao = 1";
 
             if (!empty($idServidor)) {
-                $select .= ' AND idServidor = "' . $idServidor . '"';
+                $select .= " AND idServidor = {$idServidor}";
             }
-            $select .= ' ORDER BY 7 desc';
+            $select .= " ORDER BY 7 desc";
 
             $result = $servidor->select($select);
 
@@ -3942,14 +3943,12 @@ class Checkup {
                 if ($lsv->get_ultimoTempoConsecutivo($item[4]) >= 1460) {
 
                     # Verifica se a licença é antiga (Da um desconto de 100 dias)
-                    if ($item[7] > -100) {
-                        $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
-                        $arrayExib[] = $item;
-                    }
+                    $item[] = $lsv->get_ultimoTempoConsecutivo($item[4]);
+                    $arrayExib[] = $item;
                 }
             }
             $count = count($arrayExib);
-            $titulo = 'Servidores com 4 anos (ou mais) de Licença Sem Vencimentos.';
+            $titulo = 'Servidores que farão 4 anos de licença sem vencimentos nos próximos 30 dias. (Reassunção)';
 
             # Exibe a tabela
             $tabela = new Tabela();
@@ -5140,24 +5139,26 @@ class Checkup {
             $servidor = new Pessoal();
             $metodo = explode(":", __METHOD__);
 
-            $select = 'SELECT tbservidor.idFuncional,
-                          tbpessoa.nome,
-                        tbperfil.nome,
-                        tbtipolicenca.nome,
-                        tblicencasemvencimentos.dtInicial,
-                        tblicencasemvencimentos.numDias,
-                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
-                        tbservidor.idServidor
-                   FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
-                                   LEFT JOIN tblicencasemvencimentos USING (idServidor)
-                                   LEFT JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
-                                   LEFT JOIN tbperfil USING (idPerfil)
-                  WHERE tbservidor.situacao = 1
-                    AND YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = "' . date('Y') . '"';
+            $select = "SELECT tbservidor.idFuncional,
+                              tbpessoa.nome,
+                              tbperfil.nome,
+                              tbtipolicenca.nome,
+                              tblicencasemvencimentos.dtInicial,
+                              tblicencasemvencimentos.numDias,
+                              ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),
+                              tbservidor.idServidor
+                         FROM tbservidor LEFT JOIN tbpessoa USING (idPessoa)
+                                         LEFT JOIN tblicencasemvencimentos USING (idServidor)
+                                         LEFT JOIN tbtipolicenca ON (tblicencasemvencimentos.idTpLicenca = tbtipolicenca.idTpLicenca)
+                                         LEFT JOIN tbperfil USING (idPerfil)
+                         WHERE tbservidor.situacao = 1
+                           AND YEAR(ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1)) = YEAR(NOW())";
+           
             if (!empty($idServidor)) {
-                $select .= ' AND idServidor = "' . $idServidor . '"';
+                $select .= " AND idServidor = {$idServidor}";
             }
-            $select .= ' ORDER BY 7';
+            
+            $select .= " ORDER BY 7";
 
             $result = $servidor->select($select);
             $count = $servidor->count($select);

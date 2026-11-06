@@ -98,9 +98,32 @@ class Licenca {
         $pessoal = new Pessoal();
 
         # Pega array com os dias publicados
-        $select = 'SELECT obs
+        $select = "SELECT obs
                      FROM tblicenca
-                    WHERE idLicenca = ' . $id;
+                    WHERE idLicenca = {$id}";
+
+        $retorno = $pessoal->select($select, false);
+        if (empty($retorno[0])) {
+            echo "---";
+        } else {
+            toolTip("Obs", $retorno[0]);
+        }
+    }
+
+##########################################################################################
+
+    public function exibeTipoLicencaObs($idTpLicenca) {
+
+        /**
+         * Exibe um botao que exibirá a observação (quando houver)
+         */
+        # Conecta ao Banco de Dados
+        $pessoal = new Pessoal();
+
+        # Pega array com os dias publicados
+        $select = "SELECT obs
+                     FROM tbtipolicenca
+                    WHERE idTpLicenca = {$idTpLicenca}";
 
         $retorno = $pessoal->select($select, false);
         if (empty($retorno[0])) {

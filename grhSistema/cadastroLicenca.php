@@ -73,6 +73,7 @@ if ($acesso) {
                                       dtPeriodo,
                                       limite_sexo,
                                       tempoServico,
+                                      idTpLicenca,
                                       idTpLicenca
                                  FROM tbtipolicenca
                                 WHERE nome LIKE '%{$parametro}%'
@@ -110,12 +111,13 @@ if ($acesso) {
     $objeto->set_linkListar('?fase=listar');
 
     # Parametros da tabela
-    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço Público"]);
-    $objeto->set_width([5, 27, 9, 9, 9, 9, 9, 9, 9]);
+    $objeto->set_label(["id", "Licença / Afastamento", "Período</br>(em dias)", "Perícia", "Publicação", "Processo", "Período Aquisitivo", "Gênero", "Suspende Tempo de Serviço Público", "Obs"]);
+    $objeto->set_width([5, 26, 8, 8, 8, 8, 8, 8, 8, 8]);
     $objeto->set_funcao([null, null, null, "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", "ressaltaSimNao", null, "ressaltaSimNao"]);
     $objeto->set_align(["center", "left"]);
-    $objeto->set_classe([null, "Licenca"]);
-    $objeto->set_metodo([null, "exibeNome"]);
+
+    $objeto->set_classe([null, "Licenca", null, null, null, null, null, null, null, "Licenca"]);
+    $objeto->set_metodo([null, "exibeNome", null, null, null, null, null, null, null, "exibeTipoLicencaObs"]);
 
     # Classe do banco de dados
     $objeto->set_classBd('Pessoal');

@@ -19,6 +19,9 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    
+    # Define a pasta padrão do upload
+    $pasta = PASTA_AFASTAMENTOS;
 
     # Verifica se veio menu grh e registra o acesso no log
     $grh = get('grh', false);

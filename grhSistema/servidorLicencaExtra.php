@@ -189,7 +189,7 @@ if ($idTpLicenca == "Inicial") {
     if ($idTpLicenca == 2) {
         $licancaMedica = new LicencaMedica();
         $diasLicenca117 = $licancaMedica->get_numDiasLicenca117($idServidor);
-        
+
         # Verifica se é inclusão
         if (empty($id)) {
 
@@ -212,14 +212,30 @@ if ($idTpLicenca == "Inicial") {
             # Pega o que estava gravado
             $licenca = new Licenca();
             $dados = $licenca->get_dados($id);
-            
+
             $diasAlterado = ($diasLicenca117 - $dados["numDias"]) + $numDias;
             # Verifica se é mais que 730
             if ($diasAlterado > 730) {
                 $erro = 1;
                 $msgErro .= 'O Servidor já atingiu o limite de 730 dias para a Licença por motivo de doença em pessoa da família! Não é possível incluir mais essa licença.\n';
             }
-            
+        }
+    }
+
+    /*
+     * Verifica se a licença é a temporária gestante 
+     * e se está no período em qe essa licança vigorou
+     * de: 12/08/2009 a 11/09/2009
+     */
+
+    # Define as datas de vigência da Licença
+    $dtInicialVigencia = "12/08/2009";
+    $dtFinalVigencia = "11/09/2009";
+
+    if ($idTpLicenca == 18) {
+        if (!entre(date_to_php($dtInicial), $dtInicialVigencia, $dtFinalVigencia)) {
+            $msgErro .= 'Essa Licença vigorou somente entre ' . $dtInicialVigencia . ' e ' . $dtFinalVigencia . '!\n';
+            $erro = 1;
         }
     }
 }

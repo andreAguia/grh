@@ -661,7 +661,7 @@ if ($acesso) {
 
         $objeto->set_botaoListarExtra([$botaoRel, $botaoCalendario]);
 
-        # Botão de Upload Bim (somente no ver de licenças médicas)
+        # Botão de Upload Bim (somente no ver de algumas licenças)
         if (!empty($id)) {
             # Pega o tipo de licença
             $tipo = $pessoal->get_tipoLicenca($id);
@@ -744,7 +744,7 @@ if ($acesso) {
                 }
             }
             
-            if ($tipo == 14 OR $tipo == 15) { // Adoção Materna e Paterna
+            if ($tipo == 13 OR $tipo == 14 OR $tipo == 15) { // Adoção Materna e Paterna
                 if (Verifica::acesso($idUsuario, [1, 16])) {
 
                     # Dados da rotina de Upload

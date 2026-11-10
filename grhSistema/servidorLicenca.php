@@ -19,7 +19,7 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
-    
+
     # Define a pasta padrão do upload
     $pasta = PASTA_AFASTAMENTOS;
 
@@ -379,7 +379,8 @@ if ($acesso) {
                                         WHEN 2 THEN "Não"
                                         ELSE "---"
                                         end,
-                                     idLicenca,   
+                                     idLicenca,
+                                     idLicenca,
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
@@ -401,7 +402,8 @@ if ($acesso) {
                      SELECT YEAR(dtInicial),
                                   tblicenca.idTpLicenca,
                                       "---",
-                                     idLicenca,   
+                                     idLicenca,
+                                     "---",
                                      dtInicial,
                                      numdias,
                                      ADDDATE(dtInicial,numDias-1),
@@ -426,6 +428,7 @@ if ($acesso) {
                             6,
                              "---",
                             "",
+                            "---",
                             dtInicial,
                             tblicencapremio.numdias,
                             ADDDATE(dtInicial,tblicencapremio.numDias-1),
@@ -448,6 +451,7 @@ if ($acesso) {
                                        tblicencasemvencimentos.idTpLicenca,
                                        "---",
                                        "",
+                                       "---",
                                        tblicencasemvencimentos.dtInicial,
                                        tblicencasemvencimentos.numDias,
                                        ADDDATE(tblicencasemvencimentos.dtInicial,tblicencasemvencimentos.numDias-1),                                 
@@ -462,7 +466,7 @@ if ($acesso) {
             $selectLicença .= ' AND tblicencasemvencimentos.idTpLicenca = ' . $parametro;
         }
 
-        $selectLicença .= ' ) ORDER BY 5 desc';
+        $selectLicença .= ' ) ORDER BY 6 desc';
 
         $objeto->set_selectLista($selectLicença);
 
@@ -509,12 +513,12 @@ if ($acesso) {
         }
 
         # Parametros da tabela
-        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Documento", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
+        $objeto->set_label(["Ano", "Licença ou Afastamento", "Alta", "Documento", "Declaração GRH", "Inicio", "Dias", "Término", "Processo", "Publicação", "Obs"]);
         #$objeto->set_width([5, 20, 5, 5, 10, 10, 5, 10, 10, 10, 5]);
         $objeto->set_align([null, "left"]);
-        $objeto->set_funcao([null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
-        $objeto->set_classe([null, "Licenca", null, "Licenca"]);
-        $objeto->set_metodo([null, "exibeNome", null, "exibeDoc"]);
+        $objeto->set_funcao([null, null, null, null, null, 'date_to_php', null, 'date_to_php', 'exibeProcesso', 'date_to_php', "exibeObsLicenca"]);
+        $objeto->set_classe([null, "Licenca", null, "Licenca", "Licenca"]);
+        $objeto->set_metodo([null, "exibeNome", null, "exibeDoc", "exibeDeclaracaoGrh"]);
         $objeto->set_rowspan(0);
         $objeto->set_grupoCorColuna(0);
 
@@ -528,7 +532,8 @@ if ($acesso) {
         $objeto->set_idCampo('idLicenca');
 
         # Pega os dados da combo licenca do formulário
-        $result = $pessoal->select('SELECT idTpLicenca, tbtipolicenca.nome
+        $result = $pessoal->select('SELECT idTpLicenca, 
+                                           tbtipolicenca.nome
                                       FROM tbtipolicenca
                                      WHERE idTpLicenca <> 6
                                        AND idTpLicenca <> 5
@@ -744,8 +749,8 @@ if ($acesso) {
                     $objeto->set_botaoEditarExtra([$botao]);
                 }
             }
-            
-            if ($tipo == 13 OR $tipo == 14 OR $tipo == 15) { // Adoção Materna e Paterna
+
+            if ($tipo == 13 OR $tipo == 3 OR$tipo == 14 OR $tipo == 15) { // Adoção Materna e Paterna, Licença Paternidade e Maternidade
                 if (Verifica::acesso($idUsuario, [1, 16])) {
 
                     # Dados da rotina de Upload

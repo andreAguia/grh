@@ -292,8 +292,8 @@ class Licenca {
                         $suspensao->exibePublicacaoPdf($id);
                         break;
 
-                    case 3: // Declaração
-                        $this->exibeDeclaracaoLicencaGestante($id);
+                    case 3: // Gestante
+                        $this->exibeDocumentoAfastamentoPdf($id);
                         break;
 
                     case 11: // Casamento
@@ -312,6 +312,30 @@ class Licenca {
                         break;
                 }
             }
+        }
+    }
+
+    ##############################################################
+
+    public function exibeDeclaracaoGrh($id = null) {
+        # Verifica se o id foi informado
+        if (empty($id)) {
+            return "---";
+        } else {
+            # Pega o tipo de licença
+            $pessoal = new Pessoal();
+            $tipo = $pessoal->get_tipoLicenca($id);
+
+            # Exibe de acordo com o tipo de licença            
+            switch ($tipo) {
+                    case 3: // Declaração
+                        $this->exibeDeclaracaoLicencaGestante($id);
+                        break;
+
+                    default:
+                        echo "---";
+                        break;
+                }
         }
     }
 

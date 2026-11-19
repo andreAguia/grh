@@ -23,7 +23,7 @@ class Despacho {
     private $rodapeTelefone = "Telefones: (22) 2739-7064  (22) 2748-6008  (22) 2748-6073";
 
     # do menu do relatório
-    private $formCampos = null;    // array com campos para o formulario
+    private $formCampos = null;  // array com campos para o formulario
     private $formLink = null;    // para onde vai o post
 
     ###########################################################

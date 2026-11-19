@@ -230,9 +230,14 @@ if ($acesso) {
             $menu->add_link($botaoSenha, "right");
             $menu->show();
 
+
+            # Informa se estamos em manutenção
+            if ($intra->get_variavel('manutencao')) {
+                label('Em Manutenção');
+            }
+
             $grid->fechaColuna();
             $grid->fechaGrid();
-
             ################################################################################
             /*
              *  Rotinas de controle 

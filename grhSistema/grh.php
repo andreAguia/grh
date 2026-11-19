@@ -18,6 +18,11 @@ if ($acesso) {
     # Conecta ao Banco de Dados
     $pessoal = new Pessoal();
     $intra = new Intra();
+    
+    # Informa se estamos em manutenção
+    if ($intra->get_variavel('manutencao')) {
+        label('Em Manutenção');
+    }
 
     # Verifica a fase do programa
     $fase = get('fase', 'menu');
@@ -229,12 +234,6 @@ if ($acesso) {
             $botaoSenha->set_title('Altera a senha do usuário logado');
             $menu->add_link($botaoSenha, "right");
             $menu->show();
-
-
-            # Informa se estamos em manutenção
-            if ($intra->get_variavel('manutencao')) {
-                label('Em Manutenção');
-            }
 
             $grid->fechaColuna();
             $grid->fechaGrid();

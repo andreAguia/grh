@@ -307,7 +307,7 @@ class MenuPrincipal {
     private function moduloNiverUenf() {
 
         # Pega a idade da Uenf
-        $idade = idade(DATA_ANIVERSARIO_UENF);        
+        $idade = idade(DATA_ANIVERSARIO_UENF);
 
         $painel = new Callout();
         $painel->abre();
@@ -526,10 +526,159 @@ class MenuPrincipal {
         # Caso seja exibe uma mensagem
         if (!empty($sortudos)) {
             if (($idServidor == $sortudos[0]) OR ($idServidor == $sortudos[1]) OR ($idServidor == $sortudos[2]) OR ($idServidor == $sortudos[3])) {
-                $painel2 = new Callout("warning");
+                $painel2 = new Callout("warning", "minhaDiv");
                 $painel2->abre();
 
                 p("Parabéns servidor!!<br/>Hoje é seu dia de balcão!!", "center");
+
+//                # css
+//                echo "<style>
+//                body {
+//                    margin: 0;
+//                    padding: 0;
+//                    font-family: sans-serif;
+//                }
+//                canvas {
+//                    position: fixed;
+//                    top: 0;
+//                    left: 0;
+//                    width: 100%;
+//                    height: 100%;
+//                    pointer-events: none;
+//                    z-index: 9999;
+//                }
+//                .btn-container {
+//                    position: absolute;
+//                    top: 50%;
+//                    left: 50%;
+//                    transform: translate(-50%, -50%);
+//                    z-index: 10;
+//                    padding: 30px 50px;
+//                    background-color: #f4f4f4;
+//                    border: 2px solid #ccc;
+//                    border-radius: 10px;
+//                    text-align: center;
+//                }
+//            </style>";
+//                echo "
+//                    <canvas id=\"canvasFogos\"></canvas>
+//
+//                <script>
+//                    const canvas = document.getElementById('canvasFogos');
+//                    const ctx = canvas.getContext('2d');
+//
+//                    function ajustarCanvas() {
+//                        canvas.width = window.innerWidth;
+//                        canvas.height = window.innerHeight;
+//                    }
+//                    ajustarCanvas();
+//                    window.addEventListener('resize', ajustarCanvas);
+//
+//                    let particulas = [];
+//                    const cores = ['#FF5733', '#33FF57', '#3357FF', '#F3FF33', '#FF33F3', '#33FFF0', '#FFAF33'];
+//
+//                    class Particula {
+//                        constructor(x, y, cor) {
+//                            this.x = x;
+//                            this.y = y;
+//                            this.cor = cor;
+//                            this.raio = Math.random() * 3 + 1;
+//
+//                            const angulo = Math.random() * Math.PI * 2;
+//                            const velocidade = Math.random() * 6 + 2;
+//
+//                            this.vx = Math.cos(angulo) * velocidade;
+//                            this.vy = Math.sin(angulo) * velocidade;
+//
+//                            this.alpha = 1;
+//                            this.gravidade = 0.08;
+//                        }
+//
+//                        desenhar() {
+//                            ctx.save();
+//                            ctx.globalAlpha = this.alpha;
+//                            ctx.beginPath();
+//                            ctx.arc(this.x, this.y, this.raio, 0, Math.PI * 2);
+//                            ctx.fillStyle = this.cor;
+//                            ctx.fill();
+//                            ctx.restore();
+//                        }
+//
+//                        atualizar() {
+//                            this.x += this.vx;
+//                            this.y += this.vy;
+//                            this.vy += this.gravidade;
+//                            this.alpha -= 0.015;
+//                        }
+//                    }
+//
+//                    function criarExplosao(x, y) {
+//                        const quantidade = 80;
+//                        const corAleatoria = cores[Math.floor(Math.random() * cores.length)];
+//                        for (let i = 0; i < quantidade; i++) {
+//                            particulas.push(new Particula(x, y, corAleatoria));
+//                        }
+//                    }
+//
+//                    function criarExplosaoManual() {
+//                        const alvo = document.getElementById('minhaDiv');
+//                        if (!alvo) return;
+//                        const rect = alvo.getBoundingClientRect();
+//
+//                        // Dispara nos cantos e topo da div
+//                        criarExplosao(rect.left - 30, rect.top - 30);
+//                        setTimeout(() => criarExplosao(rect.right + 30, rect.top - 30), 200);
+//                        setTimeout(() => criarExplosao(rect.left + rect.width / 2, rect.top - 50), 400);
+//                    }
+//
+//                    function animar() {
+//                        // Mantém o rastro luminoso sem pintar o fundo de preto
+//                        ctx.globalCompositeOperation = 'destination-out';
+//                        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+//                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+//                        ctx.globalCompositeOperation = 'source-over';
+//
+//                        particulas = particulas.filter(p => p.alpha > 0);
+//
+//                        particulas.forEach(particula => {
+//                            particula.atualizar();
+//                            particula.desenhar();
+//                        });
+//
+//                        requestAnimationFrame(animar);
+//                    }
+//
+//                    // Fogos automáticos ao redor da div a cada 500ms
+//                    setInterval(() => {
+//                        const alvo = document.getElementById('minhaDiv');
+//                        if (!alvo) return;
+//
+//                        const rect = alvo.getBoundingClientRect();
+//                        const margem = 100; // Distância em pixels ao redor da div
+//
+//                        const minX = rect.left - margem;
+//                        const maxX = rect.right + margem;
+//                        const minY = rect.top - margem;
+//                        const maxY = rect.bottom + margem;
+//
+//                        let xAleatorio, yAleatorio;
+//
+//                        // Sorteia um ponto na margem externa, sem cobrir o interior da div
+//                        do {
+//                            xAleatorio = Math.random() * (maxX - minX) + minX;
+//                            yAleatorio = Math.random() * (maxY - minY) + minY;
+//                        } while (
+//                            xAleatorio > rect.left && 
+//                            xAleatorio < rect.right && 
+//                            yAleatorio > rect.top && 
+//                            yAleatorio < rect.bottom
+//                        );
+//
+//                        criarExplosao(xAleatorio, yAleatorio);
+//                    }, 500);
+//
+//                    animar();
+//                </script>";
 
                 $painel2->fecha();
 
@@ -1016,7 +1165,7 @@ class MenuPrincipal {
             $botao->set_imagem(PASTA_FIGURAS . 'bug-tracker.svg', $tamanhoImage, $tamanhoImage);
             $botao->set_title('Verifica os problemas de lançamento na progressão / Enquadramento de servidores');
             $menu->add_item($botao);
-            
+
             # Pastas Funcionais
             $botao = new BotaoGrafico();
             $botao->set_label('Pastas Funcionais');

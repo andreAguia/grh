@@ -680,6 +680,29 @@ class Lotacao {
         }
     }
 
+    ###########################################################
+
+    public function get_siglaDiretoria($idLotacao = null) {
+        /**
+         * Retorna a sigla da diretoria de um idLotação
+         * 
+         * @syntax $this->getLotacaoAnterior($idRpa);
+         */
+        if (empty($idLotacao)) {
+            return null;
+        } else {
+            $pessoal = new Pessoal();
+
+            # Pega o servidor desta alteração de lotação
+            $select = "SELECT dir
+                         FROM tblotacao 
+                        WHERE idlotacao = {$idLotacao}";
+            
+            $row = $pessoal->select($select, false);
+            return $row["dir"];
+        }
+    }
+
     ##########################################################################################
 
     public function exibeObs($id) {

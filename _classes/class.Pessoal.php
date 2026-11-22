@@ -6023,7 +6023,7 @@ class Pessoal extends Bd {
 
     ##########################################################################################
 
-    public function get_foto($idServidor, $largura = 75, $altura = 100) {
+    public function get_foto($idServidor, $largura = 80, $altura = 100) {
 
         # Função que retorna a foto do servidor
         #

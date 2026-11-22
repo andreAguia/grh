@@ -3619,9 +3619,9 @@ class Pessoal extends Bd {
 
     /**
      * Método get_nomelotacao
-     * Informa o nome da lota��o a partir do id
+     * Informa o nome da lotação a partir do id
      *
-     * @param	string $id  id da lota��o
+     * @param	string $id  id da lotação
      */
     public function get_nomeLotacao($idLotacao) {
         if (!is_numeric($idLotacao))
@@ -3686,7 +3686,29 @@ class Pessoal extends Bd {
     ###########################################################
 
     /**
-     * Método get_nomeCOmpletolotacao
+     * Método get_nomelotacao4
+     * Informa o nome da lotação a partir do id
+     *
+     * @param	string $id  id da lotação
+     */
+    public function get_nomeLotacao4($idLotacao) {
+        if (!is_numeric($idLotacao))
+            return $idLotacao;
+        else {
+            $select = "SELECT DIR,
+                              GER
+                         FROM tblotacao
+                        WHERE idLotacao = {$idLotacao}";
+
+            $row = parent::select($select, false);
+            return "{$row[0]} - {$row[1]}";
+        }
+    }
+
+    ###########################################################
+
+    /**
+     * Método get_nomeCompletoLotacao
      * Informa o nome da COmpleto lota��o a partir do id
      *
      * @param	string $id  id da lota��o

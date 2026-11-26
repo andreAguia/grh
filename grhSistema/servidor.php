@@ -75,6 +75,9 @@ if ($acesso) {
     set_session('parametroPreenchido');
     set_session('parametroAcordo');
 
+    # Zera a origem
+    set_session('origem');
+
     # Agrupamento do Relatório
     $agrupamentoEscolhido = post('agrupamento', 0);
 
